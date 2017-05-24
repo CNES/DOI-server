@@ -29,9 +29,12 @@ public class DoiServer {
         Component component = new Component();
         //component.getServers().add(startHttpsServer(component, 443));
         component.getServers().add(startHttpServer(component, 8182));
+        component.getClients().add(Protocol.HTTP);
+        component.getClients().add(Protocol.HTTPS);
 
         // Attach the application to the component and start it  
         component.getDefaultHost().attachDefault(new DoiApplication());
+        component.getLogService().setResponseLogFormat("{ciua} {cri} {ra} {m} {rp} {rq} {S} {ES} {es} {hh} {cig} {fi}");
         component.start();
     }
 
