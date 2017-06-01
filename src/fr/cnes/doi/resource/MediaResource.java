@@ -26,38 +26,31 @@ import org.restlet.resource.Get;
 import org.restlet.resource.ResourceException;
 
 /**
- * DOI resource to retrieve a given DOI.
- * @author Jean-Christophe Malapert
+ *
+ * @author malapert
+ * https://data.datacite.org/
  */
-public class DoiResource extends BaseResource {
-    private String doiName;
+public class MediaResource extends BaseResource {
+
+    private String mediaName;
 
     @Override
-    protected void doInit() throws ResourceException {
+    protected void doInit() throws ResourceException {   
         super.doInit();
-        setDescription("The resource can retrieve a DOI");                        
-        this.doiName = getAttribute(DoiMdsApplication.DOI_TEMPLATE); 
+        this.mediaName = getAttribute(DoiMdsApplication.DOI_TEMPLATE);
     }
-    
-    /**
-     * Returns a DOI.
-     * @return 
-     */
+
     @Get
-    public Representation getDoi() {
+    public Representation getMedias() {
         try {
+            setStatus(Status.SUCCESS_OK);
             ClientMDS client = new ClientMDS(ClientMDS.Context.DEV);
-            String doi = client.getDoi(this.doiName);
-            if(doi != null && !doi.isEmpty()) {
-                setStatus(Status.SUCCESS_OK);
-            } else {
-                setStatus(Status.SUCCESS_NO_CONTENT);
-            }
-            return new StringRepresentation(doi, MediaType.TEXT_PLAIN);          
+            String medias = client.getMedia(this.mediaName);
+            return new StringRepresentation(medias, MediaType.TEXT_URI_LIST);
         } catch (ClientException ex) {
-            throw new ResourceException(ex);
+            throw new ResourceException(ex.getStatus(), ex.getMessage());
         }
-    }    
+    } 
     
     private ParameterInfo addQueryParameter() {
         ParameterInfo param = new ParameterInfo();
@@ -65,80 +58,72 @@ public class DoiResource extends BaseResource {
         param.setStyle(ParameterStyle.TEMPLATE);
         param.setDocumentation("DOI name");
         param.setRequired(true);
-        param.setType("xs:string");    
-        return param;
+        param.setType("xs:string"); 
+        return param;        
     }
     
-    private RepresentationInfo doiRepresentation() {
+    private RepresentationInfo mediaRepresentation() {
         final RepresentationInfo repInfo = new RepresentationInfo();
         repInfo.setMediaType(MediaType.TEXT_PLAIN);        
         final DocumentationInfo docInfo = new DocumentationInfo();
-        docInfo.setTitle("DOI Representation");
-        docInfo.setTextContent("This request returns an URL associated with a given DOI.");
-        repInfo.setDocumentation(docInfo);        
+        docInfo.setTitle("Media representation");
+        docInfo.setTextContent("This request returns a key-value list of media types/urls for a given DOI name");
+        repInfo.setDocumentation(docInfo);
         return repInfo;
     }
     
     private ResponseInfo getSuccessfullResponse() {
         ResponseInfo responseInfo = new ResponseInfo();        
         final List<RepresentationInfo> repsInfo = new ArrayList<>();        
-        repsInfo.add(doiRepresentation());        
+        repsInfo.add(mediaRepresentation());        
         responseInfo.getStatuses().add(Status.SUCCESS_OK);
         responseInfo.setDocumentation("Operation successful");
-        responseInfo.setRepresentations(repsInfo); 
+        responseInfo.setRepresentations(repsInfo);          
         return responseInfo;
     }
-    
+
     @Override
     protected final void describeGet(final MethodInfo info) {
         info.setName(Method.GET);
-        info.setDocumentation("Get a specific DOI");
-      
+        info.setDocumentation("Get a specific media for a given DOI");
+       
         final RequestInfo request = new RequestInfo();
         request.getParameters().add(addQueryParameter());
         info.setRequest(request);
-        
+      
         info.getResponses().add(getSuccessfullResponse());
-        
+                
         ResponseInfo responseInfo = new ResponseInfo();
-        responseInfo.getStatuses().add(Status.SUCCESS_NO_CONTENT);
-        responseInfo.setDocumentation("DOI is known to MDS, but is not minted (or not resolvable e.g. due to handle's latency)");
+        responseInfo.getStatuses().add(Status.CLIENT_ERROR_UNAUTHORIZED);
         RepresentationInfo rep = new RepresentationInfo();
         rep.setReference("explainRepresentation");
-        responseInfo.getRepresentations().add(rep);        
-        info.getResponses().add(responseInfo);
-        
-        responseInfo = new ResponseInfo();
-        responseInfo.getStatuses().add(Status.CLIENT_ERROR_UNAUTHORIZED);
+        responseInfo.getRepresentations().add(rep);
         responseInfo.setDocumentation("no login");
-        rep = new RepresentationInfo();
-        rep.setReference("explainRepresentation");
-        responseInfo.getRepresentations().add(rep);        
         info.getResponses().add(responseInfo);       
         
         responseInfo = new ResponseInfo();
         responseInfo.getStatuses().add(Status.CLIENT_ERROR_FORBIDDEN);
-        responseInfo.setDocumentation("login problem or dataset belongs to another party");
         rep = new RepresentationInfo();
         rep.setReference("explainRepresentation");
         responseInfo.getRepresentations().add(rep);        
+        responseInfo.setDocumentation("login problem or dataset belongs to another party");
         info.getResponses().add(responseInfo); 
 
         responseInfo = new ResponseInfo();
         responseInfo.getStatuses().add(Status.CLIENT_ERROR_NOT_FOUND);
-        responseInfo.setDocumentation("DOI does not exist in our database");
         rep = new RepresentationInfo();
         rep.setReference("explainRepresentation");
-        responseInfo.getRepresentations().add(rep);        
+        responseInfo.getRepresentations().add(rep);          
+        responseInfo.setDocumentation("DOI does not exist in our database");
         info.getResponses().add(responseInfo); 
         
         responseInfo = new ResponseInfo();
         responseInfo.getStatuses().add(Status.SERVER_ERROR_INTERNAL);
-        responseInfo.setDocumentation("server internal error, try later and if problem persists please contact us");
         rep = new RepresentationInfo();
         rep.setReference("explainRepresentation");
-        responseInfo.getRepresentations().add(rep);        
+        responseInfo.getRepresentations().add(rep);          
+        responseInfo.setDocumentation("server internal error, try later and if problem persists please contact us");
         info.getResponses().add(responseInfo);
     }     
-  
+      
 }

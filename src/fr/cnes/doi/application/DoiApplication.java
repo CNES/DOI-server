@@ -5,26 +5,29 @@
  */
 package fr.cnes.doi.application;
 
-import fr.cnes.doi.resource.DoiResource;
 import org.restlet.Application;
 import org.restlet.Restlet;
-import org.restlet.data.ChallengeScheme;
-import org.restlet.routing.Extractor;
+import org.restlet.ext.wadl.WadlApplication;
 import org.restlet.routing.Redirector;
 import org.restlet.routing.Router;
-import org.restlet.security.ChallengeAuthenticator;
-import org.restlet.security.MapVerifier;
 
 /**
  *
  * @author malapert
+ * https://search.datacite.org/help.html
  */
-public class DoiApplication extends Application {
+public class DoiApplication extends WadlApplication {
     
     public static final String DATA_CITE_URL = "https://mds.datacite.org";
     public static final String DOI_RESOURCE = "/doi";
     public static final String METADATA_RESOURCE = "/metadata";
     public static final String MEDIA_RESOURCE = "/media";
+    
+    public DoiApplication() {
+        setAuthor("Jean-Christophe Malapert (DNO/ISA/VIP)");
+        setName("Digital Object Identifier Application");
+        setOwner("CNES");       
+    }
 
     @Override
     public Restlet createInboundRoot() {
@@ -39,11 +42,11 @@ public class DoiApplication extends Application {
 //
 //        return authenticator;
         Router router = new Router(getContext());
-        String target = "http://www.google.com/search?q=site:mysite.org+{keywords}";
+        String target = "http://status.datacite.org";
         Redirector redirector = new Redirector(getContext(), target, Redirector.MODE_SERVER_OUTBOUND);
-        Extractor extractor = new Extractor(getContext(), redirector);
-        extractor.extractFromQuery("keywords", "kwd", true);
-        router.attach("/search", extractor);
+        router.attach("/status", redirector);
         return router;
     }
+    
+    
 }
