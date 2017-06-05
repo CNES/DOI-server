@@ -5,233 +5,142 @@
  */
 package fr.cnes.doi.server;
 
+import fr.cnes.doi.settings.JettySettings;
+import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.application.DoiCrossCiteApplication;
 import fr.cnes.doi.application.DoiMdsApplication;
 import fr.cnes.doi.application.DoiStatusApplication;
 import fr.cnes.doi.application.WebSiteApplication;
-import fr.cnes.doi.utils.Utils;
-import gnu.getopt.Getopt;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import fr.cnes.doi.settings.DoiSettings;
+import fr.cnes.doi.logging.DoiLogDataServer;
+import fr.cnes.doi.logging.MonitoringLogFilter;
+import fr.cnes.doi.logging.DoiSecurityLogFilter;
+import fr.cnes.doi.resource.DoiResource;
+import fr.cnes.doi.resource.DoisResource;
+import fr.cnes.doi.resource.MetadataResource;
+import fr.cnes.doi.resource.MetadatasResource;
+import fr.cnes.doi.settings.EmailSettings;
+import fr.cnes.doi.settings.ProxySettings;
 import java.security.KeyStore;
-import java.util.Enumeration;
-import java.util.Properties;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.restlet.Application;
 import org.restlet.Component;
 import org.restlet.Context;
 import org.restlet.Server;
+import org.restlet.data.Method;
 import org.restlet.data.Parameter;
 import org.restlet.data.Protocol;
-import org.restlet.engine.Engine;
+import org.restlet.routing.Filter;
 import org.restlet.security.Group;
 import org.restlet.security.MemoryRealm;
 import org.restlet.security.Role;
 import org.restlet.security.User;
+import org.restlet.service.LogService;
+import org.restlet.service.Service;
 import org.restlet.util.Series;
 
 /**
- * DOI server
  *
- * @author Jean-Christophe Malapert
+ * @author malapert
  */
-public class DoiServer {
-
-    /**
-     * Configuration file.
-     */
-    static Properties configServer;
-
-    public static final String VERSION = "1.0.0";
+public class DoiServer extends Component {
 
     public static final String MDS_URI = "/mds";
     public static final String CITATION_URI = "/citation";
     public static final String STATUS_URI = "/status";
 
-    public static final String PROPERTY_LOGIN_MDS = "LOGIN_MDS";
-    public static final String PROPERTY_PASSWD_MDS = "PASSWD_MDS";
-    public static final String PROPERTY_DOI_PREFIX_CNES = "DOI_PREFIX_CNES";
-    public static final String PROPERTY_CONTACT_ADMIN = "CONTACT_ADMIN";
-    public static final String PROPERTY_LOG_FORMAT = "LOG_FORMAT";
-    public static final String PROPERTY_HTTP_PORT = "HTTP_PORT";
+    public static final String DEFAULT_HTTP_PORT = "8182";
 
-    public static Component component;
+    private final DoiSettings settings;
 
-    static {
-        loadProperties();
+    private static final Logger LOGGER = Logger.getLogger(DoiServer.class.getName());
+
+    public DoiServer(final DoiSettings settings) {
+        super();
+        this.settings = settings;        
+        startWithProxy(settings);
     }
 
     /**
-     * Loads the configuration file <i>config.properties</i> from DoiServer
-     * package.
+     * Init Monitoring
+     * @return monitoring object
      */
-    private static void loadProperties() {
-        configServer = new Properties();
-        InputStream in = DoiServer.class.getResourceAsStream("config.properties");
-        try {
-            configServer.load(in);
-            in.close();
-        } catch (IOException e) {
-        }
+    private DoiMonitoring initMonitoring() {
+        LOGGER.entering(getClass().getName(),"initMonitoring");
+        DoiMonitoring monitoring = new DoiMonitoring();
+        monitoring.register(Method.GET, MDS_URI + DoiMdsApplication.DOI_URI, DoisResource.LIST_ALL_DOIS);
+        monitoring.register(Method.POST, MDS_URI + DoiMdsApplication.DOI_URI, DoisResource.CREATE_DOI);
+        monitoring.register(Method.GET, MDS_URI + DoiMdsApplication.DOI_NAME_URI, DoiResource.GET_DOI);
+        monitoring.register(Method.POST, MDS_URI + DoiMdsApplication.METADATAS_URI, MetadatasResource.CREATE_METADATA);
+        monitoring.register(Method.GET, MDS_URI + DoiMdsApplication.METADATAS_URI + DoiMdsApplication.DOI_NAME_URI, MetadataResource.GET_METADATA);
+        monitoring.register(Method.DELETE, MDS_URI + DoiMdsApplication.METADATAS_URI + DoiMdsApplication.DOI_NAME_URI, MetadataResource.DELETE_METADATA);
+        LOGGER.exiting(getClass().getName(),"initMonitoring");        
+        return monitoring;
     }
+    
+    private void initLogServices() {
+        LOGGER.entering(getClass().getName(),"initLogServices");
+        this.setLogService(new DoiLogDataServer("fr.cnes.doi.api", true));
 
-    private static void displayHelp() {
-        System.out.println("------------ Help for DOI Server -----------");
-        System.out.println();
-        System.out.println("Usage: java -jar DOI.jar [OPTIONS]");
-        System.out.println();
-        System.out.println("with OPTIONS:");
-        System.out.println("  -h                     : This output");
-        System.out.println("  -c <string>            : Crypts a string in the standard output");
-        System.out.println("  -e <string>            : Encrypts a string in the standard output");
-        System.out.println("  -s                     : Starts the server");
-        System.out.println("  -d                     : Displays the property file");
-        System.out.println("  -f <path>              : Path to the configuation file");
-        System.out.println("  -v                     : DOI server version");
-        System.out.println();
-        System.out.println();
-    }
-
-    private static void stopServer(Thread server) {
-        try {
-            try {
-                component.stop();
-            } catch (Exception ex) {
-                Logger.getLogger(DoiServer.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
-                server.interrupt();
-                server.join();
-            }
-        } catch (InterruptedException e) {
-        }
-    }
-
-    private static void launchServer() {
-        final Thread server = new Thread() {
+        LogService logServiceApplication = new DoiLogDataServer("fr.cnes.doi.app", true) {
+            /*
+           * (non-Javadoc)
+           * 
+           * @see org.restlet.service.LogService#createInboundFilter(org.restlet.Context)
+             */
             @Override
-            public void run() {
-                try {
-                    component.start();
-                } catch (Exception ex) {
-                    Logger.getLogger(DoiServer.class.getName()).log(Level.SEVERE, null, ex);
-                }
+            public Filter createInboundFilter(Context context) {
+                return new MonitoringLogFilter(context, initMonitoring(), this);
             }
         };
+        this.getServices().add(logServiceApplication);
+        //final String securityLoggerName = settings.getString("Starter.SecurityLogName");
 
-        Runtime.getRuntime().addShutdownHook(new Thread() {
+        Service logServiceSecurity = new LogService(true) {
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.restlet.service.LogService#createInboundFilter(org.restlet.Context)
+             */
             @Override
-            public void run() {
-                System.out.println("interrupt received, killing server…");
-                stopServer(server);
+            public Filter createInboundFilter(Context context) {
+                return new DoiSecurityLogFilter("fr.cnes.doi.security");
             }
-        });
-
-        server.start();
+        };
+        this.getServices().add(logServiceSecurity);        
+        LOGGER.exiting(getClass().getName(),"initLogServices");        
     }
 
-    private static void displayDefaultConfiguration() {
-        Enumeration em = configServer.keys();
-        while (em.hasMoreElements()) {
-            String str = (String) em.nextElement();
-            System.out.println(str + "=" + configServer.get(str));
-        }
-    }
+    /**
+     * Configures the Server
+     */
+    private void configureServer() {        
+        LOGGER.entering(getClass().getName(), "init");                
 
-    private static void loadCustomConfiguration(String arg) {
-        try {
-            configServer.load(new FileInputStream(arg));
-        } catch (IOException ex) {
-            Logger.getLogger(DoiServer.class.getName()).log(Level.SEVERE, "Cannot find {0}", ex.getMessage());
-        }
-    }
+        Server serverHttp = startHttpServer(settings.getInt(Consts.SERVER_HTTP_PORT, DEFAULT_HTTP_PORT));
+        //Server serverHttps = startHttpsServer(this, 443);
+                
+        //this.getServers().add(serverHttps);
+        this.getServers().add(serverHttp);
+        this.getClients().add(Protocol.HTTP);
+        this.getClients().add(Protocol.HTTPS);
+        this.getClients().add(Protocol.CLAP);
+                    
+        // Add configuration parameters to Servers
+        JettySettings jettyProps = new JettySettings(serverHttp, settings);
+        jettyProps.addParamsToServerContext();        
+        //jettyProps = new JettySettings(serverHttps, settings);
+        //jettyProps.addParamsToServerContext();                
 
-    private static void displayVersion() {
-        System.out.println("DOI (CNES) " + VERSION + "\n");
-    }
+        Application appDoiProject = new DoiMdsApplication();
 
-    public static void main(String[] argv) {
+        // Attach the application to the this and start it
+        this.getDefaultHost().attach(MDS_URI, appDoiProject);
+        this.getDefaultHost().attach(CITATION_URI, new DoiCrossCiteApplication());
+        this.getDefaultHost().attach(STATUS_URI, new DoiStatusApplication());
+        this.getDefaultHost().attachDefault(new WebSiteApplication());        
 
-        try {
-            configServer();
-        } catch (Exception ex) {
-            Logger.getLogger(DoiServer.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        int c;
-        String arg;
-
-        // 
-        Getopt g = new Getopt("java -jar DOI.jar", argv, "hvdse:c:f:");
-        //
-        while ((c = g.getopt()) != -1) {
-            switch (c) {
-                case 'h':
-                    displayHelp();
-                    break;
-                //    
-                case 's':
-                    launchServer();
-                    break;
-                //
-                case 'e':
-                    arg = g.getOptarg();
-                    System.out.println(Utils.decrypt(arg));
-                    break;
-                //    
-                case 'c':
-                    arg = g.getOptarg();
-                    System.out.println(Utils.encrypt(arg));
-                    break;
-                //    
-                case 'd':
-                    displayDefaultConfiguration();
-                    break;
-                //    
-                case 'f':
-                    arg = g.getOptarg();
-                    loadCustomConfiguration(arg);
-                    break;
-                //    
-                case 'v':
-                    displayVersion();
-                    break;
-                //
-                case '?':
-                    break; // getopt() already printed an error
-                //
-                default:
-                    System.out.print("getopt() returned " + c + "\n");
-            }
-        }
-        //
-        for (int i = g.getOptind(); i < argv.length; i++) {
-            System.out.println("Non option argv element: " + argv[i] + "\n");
-        }
-
-    }
-
-    private static void configServer() throws Exception {
-
-        Engine.setLogLevel(java.util.logging.Level.INFO);
-
-        // Create a new Restlet component and add a HTTP and HTTPS server connector to it
-        component = new Component();
-        //component.getServers().add(startHttpsServer(component, 443));
-        component.getServers().add(startHttpServer(component, Integer.valueOf(configServer.getProperty(DoiServer.PROPERTY_HTTP_PORT))));
-        component.getClients().add(Protocol.HTTP);
-        component.getClients().add(Protocol.HTTPS);
-        component.getClients().add(Protocol.CLAP);
-
-        Application appDoiProject = new DoiMdsApplication(configServer);
-
-        // Attach the application to the component and start it
-        component.getDefaultHost().attach(MDS_URI, appDoiProject);
-        component.getDefaultHost().attach(CITATION_URI, new DoiCrossCiteApplication());
-        component.getDefaultHost().attach(STATUS_URI, new DoiStatusApplication());
-        component.getDefaultHost().attachDefault(new WebSiteApplication());
-
+        // Set authentication
         MemoryRealm realm = new MemoryRealm();
         Role project1 = new Role(appDoiProject, "Project1");
         Role project2 = new Role(appDoiProject, "Project2");
@@ -250,34 +159,51 @@ public class DoiServer {
         realm.map(human, project1);
         realm.map(human, project2);
 
-        component.getLogService().setResponseLogFormat(configServer.getProperty(DoiServer.PROPERTY_LOG_FORMAT));
-
+        this.getLogService().setResponseLogFormat(settings.getLogFormat());
+        
+        LOGGER.exiting(getClass().getName(), "init");
+    }
+    
+    /**
+     * Starts with proxy.
+     * @param settings 
+     */
+    private void startWithProxy(final DoiSettings settings) {
+        LOGGER.entering(getClass().getName(), "startWithProxy");
+        initLogServices();
+        ProxySettings.getInstance().init(settings);
+        EmailSettings.getInstance().init(settings);
+        configureServer();
+        LOGGER.exiting(getClass().getName(), "startWithProxy");        
     }
 
     /**
      * Creates a HTTP server
      *
-     * @param component component
+     * @param this this
      * @param port HTTP port
      * @return the HTTP server
      * @throws Exception
      */
-    private static Server startHttpServer(final Component component, final Integer port) throws Exception {
-        return new Server(Protocol.HTTP, port, component);
+    private Server startHttpServer(final Integer port) {
+        LOGGER.entering(getClass().getName(), "startHttpServer", port);
+        Server server = new Server(Protocol.HTTP, port, this);
+        LOGGER.exiting(getClass().getName(), "startHttpServer");
+        return server;
     }
 
     /**
      * Creates a HTTPS server
      *
-     * @param component component
+     * @param this this
      * @param port HTTPS port
      * @return the HTTPS server
      * @throws Exception
      */
-    private static Server startHttpsServer(final Component component, final Integer port) throws Exception {
+    private Server startHttpsServer(final Integer port) {
+        LOGGER.entering(getClass().getName(), "startHttpsServer", port);
         // create embedding https jetty server
-        Server server = new Server(new Context(), Protocol.HTTPS, port, component);
-
+        Server server = new Server(new Context(), Protocol.HTTPS, port, this);
         Series<Parameter> parameters = server.getContext().getParameters();
         parameters.add("keystore", "jks/keystore.jks");
         parameters.add("keyStorePath", "jks/keystore.jks");
@@ -294,37 +220,9 @@ public class DoiServer {
         parameters.add("trustStoreType", KeyStore.getDefaultType());
         parameters.add("allowRenegotiate", "true");
         parameters.add("type", "1");
-
+        LOGGER.exiting(getClass().getName(), "startHttpsServer", server);
         return server;
     }
 
-}
-// Generating a self-signed certificate
-//--------------------------------------
-//keytool -keystore serverKey.jks -alias server -genkey -keyalg RSA
-//-keysize 2048 -dname "CN=simpson.org,OU=Simpson family,O=The Simpsons,C=US"
-//-sigalg "SHA1withRSA"
-//
-//Note that you’ll be prompted for passwords for the keystore and the key itself. Let’s
-//enter password as the example value. This certificate can then be exported as an inde-
-//pendent certificate file server.crt, using this command (providing the same password):
-//keytool -exportcert -keystore serverKey.jks -alias server -file serverKey.crt
-//
-// Generating a certificate request
-//----------------------------------
-//keytool -certreq -keystore serverKey.jks -alias server -file serverKey.csr
-//
-// Importing a trusted certificate
-//----------------------------------
-//After approval of the certificate request, the CA will provide a certificate file, usually in
-//PEM or DER format. It needs to be imported back into the keystore to be used as a
-//server certificate:
-//keytool -import -keystore serverKey.jks -alias server -file serverKey.crt
-//This command is also used for importing CA certificates into a special keystore that’s
-//going to be used as a truststore—on the client side, for example. In this case the
-//-trustcacerts options may also be required:
-//keytool -import -keystore clientTrust.jks -trustcacerts -alias server -file serverKey.crt
-//This trusted certificate may also be imported explicitly into your browser or used by a
-//programmatic HTTPS client. This is useful if you’re deploying your own infrastruc-
-//ture, or during development phases.
 
+}

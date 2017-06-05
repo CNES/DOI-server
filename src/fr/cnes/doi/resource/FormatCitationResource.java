@@ -11,8 +11,8 @@ import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
 /**
- *
- * @author malapert
+ * Formats a citation.
+ * @author Jean-Christophe Malapert
  */
 public class FormatCitationResource extends ServerResource {
     
@@ -31,7 +31,10 @@ public class FormatCitationResource extends ServerResource {
 
     @Get
     public String getFormat() {
-        return this.app.getClient().getFormat(this.doiName, this.style, this.language);
+        getLogger().entering(getClass().getName(), "getFormat",new Object[]{this.doiName, this.language, this.style});
+        final String result = this.app.getClient().getFormat(this.doiName, this.style, this.language);
+        getLogger().exiting(getClass().getName(), "getFormats", result);
+        return result;
     }
     
 }

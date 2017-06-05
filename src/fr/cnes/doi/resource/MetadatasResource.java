@@ -5,7 +5,6 @@
  */
 package fr.cnes.doi.resource;
 
-import fr.cnes.doi.client.ClientMDS;
 import fr.cnes.doi.client.ClientException;
 import java.io.IOException;
 import java.net.URL;
@@ -33,10 +32,13 @@ import org.restlet.util.Series;
 import org.xml.sax.SAXException;
 
 /**
- *
- * @author malapert
+ * Resourece to handle a collection of metadata.
+ * @author Jean-Christophe Malapert
  */
 public class MetadatasResource extends BaseResource {
+    
+    public static final String CREATE_METADATA = "Create Metadata";
+
     
     @Override
     protected void doInit() throws ResourceException {
@@ -53,6 +55,7 @@ public class MetadatasResource extends BaseResource {
      */
     @Post
     public String createMetadata(final Representation entity) {   
+        getLogger().entering(getClass().getName(), "createMetadata");
         String result;
         try {
             setStatus(Status.SUCCESS_CREATED);
@@ -69,15 +72,18 @@ public class MetadatasResource extends BaseResource {
             //creator.setCreatorName(projectDM.getAlternateName());
             //resource.getCreators().getCreator().add(creator);
             resource.setPublisher("Centre National d'Etudes Spatiales (CNES)");            
-            ClientMDS client = new ClientMDS(ClientMDS.Context.DEV, this.doiApp.getLoginMds(), this.doiApp.getPwdMds());            
-            result = client.createMetadata(resource);
+            result = this.doiApp.getClient().createMetadata(resource);
         } catch (ClientException ex) {
+            getLogger().exiting(getClass().getName(), "createMetadata", ex.getMessage());
             throw new ResourceException(ex.getStatus(), ex.getMessage());
         } catch (JAXBException | IOException ex) {
+            getLogger().exiting(getClass().getName(), "createMetadata", ex.getMessage());
             throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "invalid XML");
         } catch (SAXException ex) {
+            getLogger().exiting(getClass().getName(), "createMetadata", ex.getMessage());
             throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "DataCite schema not available");
         }
+        getLogger().exiting(getClass().getName(), "createMetadata", result);
         return result;
     }           
     

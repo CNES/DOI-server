@@ -9,17 +9,23 @@ import fr.cnes.doi.client.ClientCrossCiteCitation;
 import fr.cnes.doi.resource.FormatCitationResource;
 import fr.cnes.doi.resource.LanguageCitationResource;
 import fr.cnes.doi.resource.StyleCitationResource;
-import org.restlet.Application;
+import fr.cnes.doi.settings.ProxySettings;
 import org.restlet.Restlet;
 import org.restlet.routing.Router;
 
 /**
- *
- * @author malapert
+ * Application to get citation based on DOI metadata.
+ * @author Jean-Christophe Malapert
  */
-public class DoiCrossCiteApplication extends Application {
+public class DoiCrossCiteApplication extends BaseApplication {
     
-    private final ClientCrossCiteCitation client = new ClientCrossCiteCitation();    
+    private final ClientCrossCiteCitation client = new ClientCrossCiteCitation();
+    
+    public DoiCrossCiteApplication() {
+        super();  
+        client.setProxyAuthentication(this.proxySettings.getProxyAuthentication());
+    }
+    
     
     @Override
     public Restlet createInboundRoot() {

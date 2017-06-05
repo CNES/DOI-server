@@ -5,7 +5,6 @@
  */
 package fr.cnes.doi.application;
 
-import org.restlet.Application;
 import org.restlet.Restlet;
 import org.restlet.ext.wadl.WadlApplication;
 import org.restlet.routing.Redirector;
@@ -13,7 +12,7 @@ import org.restlet.routing.Router;
 
 /**
  *
- * @author malapert
+ * @author Jean-Christophe Malapert
  * https://search.datacite.org/help.html
  */
 public class DoiApplication extends WadlApplication {
@@ -24,6 +23,7 @@ public class DoiApplication extends WadlApplication {
     public static final String MEDIA_RESOURCE = "/media";
     
     public DoiApplication() {
+        super();
         setAuthor("Jean-Christophe Malapert (DNO/ISA/VIP)");
         setName("Digital Object Identifier Application");
         setOwner("CNES");       
@@ -43,7 +43,7 @@ public class DoiApplication extends WadlApplication {
 //        return authenticator;
         Router router = new Router(getContext());
         String target = "http://status.datacite.org";
-        Redirector redirector = new Redirector(getContext(), target, Redirector.MODE_SERVER_OUTBOUND);
+        Redirector redirector = new Redirector(getContext(), target, Redirector.MODE_SERVER_OUTBOUND);        
         router.attach("/status", redirector);
         return router;
     }

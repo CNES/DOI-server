@@ -8,15 +8,14 @@ package fr.cnes.doi.client;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import org.datacite.schema.kernel_4.Resource;
+import org.restlet.data.ChallengeResponse;
 import org.restlet.data.ChallengeScheme;
 import org.restlet.data.Form;
 import org.restlet.data.MediaType;
@@ -26,7 +25,6 @@ import org.restlet.data.Status;
 import org.restlet.engine.Engine;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
-import org.restlet.resource.ResourceException;
 
 /**
  * 1/ server
@@ -220,6 +218,10 @@ public class ClientMDS {
         this(context);
         this.client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, login, pwd);
     }
+    
+    public void setProxyAuthentication(final ChallengeResponse authentication) {
+       this.client.setProxyChallengeResponse(authentication);
+    }    
 
     /**
      * Returns the {@link TEST_MODE} or an empty parameter according to

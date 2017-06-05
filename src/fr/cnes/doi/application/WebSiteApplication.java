@@ -5,19 +5,16 @@
  */
 package fr.cnes.doi.application;
 
-import org.restlet.Application;
 import org.restlet.Restlet;
 import org.restlet.data.LocalReference;
-import org.restlet.representation.Representation;
-import org.restlet.resource.ClientResource;
 import org.restlet.resource.Directory;
 import org.restlet.routing.Router;
 
 /**
- *
- * @author malapert
+ * Application to expose the web site.
+ * @author Jean-Christophe
  */
-public class WebSiteApplication extends Application {
+public class WebSiteApplication extends BaseApplication {
 
     @Override
     public Restlet createInboundRoot() {

@@ -5,7 +5,6 @@
  */
 package fr.cnes.doi.resource;
 
-import fr.cnes.doi.client.ClientMDS;
 import fr.cnes.doi.client.ClientException;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,16 +18,19 @@ import org.restlet.ext.wadl.ParameterStyle;
 import org.restlet.ext.wadl.RepresentationInfo;
 import org.restlet.ext.wadl.RequestInfo;
 import org.restlet.ext.wadl.ResponseInfo;
+import org.restlet.representation.Representation;
+import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
 import org.restlet.util.Series;
 
 /**
- *
- * @author malapert
+ * Resource to handle a collection of media.
+ * @author Jean-Christophe Malapert
  */
 public class MediasResource extends BaseResource {
     
+    public static final String CREATE_MEDIA = "Create media";
 
     @Override
     protected void doInit() throws ResourceException {
@@ -38,18 +40,24 @@ public class MediasResource extends BaseResource {
     /**
      * TODO check doi name
      * @param mediaForm 
+     * @return  
      */
     @Post
-    public void createMedia(final Form mediaForm) {
-        try {
+    public Representation createMedia(final Form mediaForm) {
+        getLogger().entering(getClass().getName(), "createMedia", mediaForm.getMatrixString());
+        final String result;
+        try {         
+            setStatus(Status.SUCCESS_OK);
             Series headers = (Series) getRequestAttributes().get("org.restlet.http.headers");
             String selectedRole = headers.getFirstValue("selectedRole", "");            
             checkPermission(mediaForm.getFirstValue("doi"), selectedRole);            
-            ClientMDS client = new ClientMDS(ClientMDS.Context.DEV, this.doiApp.getLoginMds(), this.doiApp.getPwdMds());
-            client.createMedia(mediaForm);
+            result = this.doiApp.getClient().createMedia(mediaForm);
         } catch (ClientException ex) {
+            getLogger().exiting(getClass().getName(), "createMedia", ex.getMessage());                    
             throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST);
         }
+        getLogger().exiting(getClass().getName(), "createMedia", result);        
+        return new StringRepresentation(result);
     }    
  
     private ResponseInfo postSuccessFullResponse() {

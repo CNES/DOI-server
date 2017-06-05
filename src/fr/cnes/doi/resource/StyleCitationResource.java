@@ -12,8 +12,8 @@ import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
 /**
- *
- * @author malapert
+ * Get Styles for citation.
+ * @author Jean-Christophe Malapert
  */
 public class StyleCitationResource extends ServerResource {
     private DoiCrossCiteApplication app;
