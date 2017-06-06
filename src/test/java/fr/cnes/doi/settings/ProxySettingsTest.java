@@ -23,7 +23,7 @@ import org.restlet.data.ChallengeResponse;
  */
 public class ProxySettingsTest {
     
-    private InputStream inputStream = SettingsSuite.class.getResourceAsStream("/resources/doi.properties");
+    private InputStream inputStream = SettingsSuite.class.getResourceAsStream("/doi.properties");
     private ProxySettings instance = ProxySettings.getInstance();        
     
     public ProxySettingsTest() {
