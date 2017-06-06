@@ -20,7 +20,6 @@ import java.io.OutputStream;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
-import org.apache.commons.lang.StringUtils;
 
 /**
  * DOI Settings.
@@ -128,8 +127,8 @@ public class DoiSettings {
     public String getSecret(final String key) {
         final String result;
         final String value = getString(key);
-        if (StringUtils.isEmpty(value)) {
-            result = null;
+        if (Utils.isEmpty(value)) {
+            result = value;
         } else {
             result = Utils.decrypt(value);
         }

@@ -5,6 +5,7 @@
  */
 package fr.cnes.doi.settings;
 
+import fr.cnes.doi.utils.Utils;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,7 +16,6 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import org.apache.commons.lang.StringUtils;
 
 /**
  *
@@ -69,9 +69,9 @@ public class EmailSettings {
     }
 
     public void sendEmail(final String subject, final String msg) {
-        if(StringUtils.isEmpty(getHostName()) && StringUtils.isEmpty(getPort())
-           && StringUtils.isEmpty(getAuthUser()) && StringUtils.isEmpty(getAuthPwd())
-           && StringUtils.isEmpty(getTlsEnable())) {
+        if(Utils.isEmpty(getHostName()) && Utils.isEmpty(getPort())
+           && Utils.isEmpty(getAuthUser()) && Utils.isEmpty(getAuthPwd())
+           && Utils.isEmpty(getTlsEnable())) {
             LOGGER.warning("Required parameters are not defined");
             LOGGER.info("Simulates the email to send ... ");
             LOGGER.log(Level.INFO, "Subject: {0}", subject);
