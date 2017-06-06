@@ -7,6 +7,7 @@ package fr.cnes.doi.server;
 
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
+import fr.cnes.doi.settings.EmailSettings;
 import fr.cnes.doi.utils.Utils;
 import gnu.getopt.Getopt;
 import java.io.IOException;
@@ -47,7 +48,7 @@ public class Starter {
         help.append("with OPTIONS:\n");
         help.append("  -h                     : This output\n");
         help.append("  -c <string>            : Crypts a string in the standard output\n");
-        help.append("  -e <string>            : Encrypts a string in the standard output\n");
+        help.append("  -e <string>            : Decrypts a string in the standard output\n");
         help.append("  -s                     : Starts the server\n");
         help.append("  -d                     : Displays the property file\n");
         help.append("  -f <path>              : Path to the configuation file\n");
@@ -75,6 +76,7 @@ public class Starter {
                 LOGGER.info("Unable to stop the server");
             } finally {
                 GLOBAL_LOGGER.info("Interrups the server, which is stopping");
+                EmailSettings.getInstance().sendEmail("[DOI] Stopping Server", "Ther server has been interrupted");                
                 server.interrupt();
                 server.join();
             }

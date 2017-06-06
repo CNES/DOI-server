@@ -159,7 +159,7 @@ public class DoiServer extends Component {
         realm.map(human, project1);
         realm.map(human, project2);
 
-        this.getLogService().setResponseLogFormat(settings.getLogFormat());
+        this.getLogService().setResponseLogFormat(settings.getString(Consts.LOG_FORMAT));
         
         LOGGER.exiting(getClass().getName(), "init");
     }

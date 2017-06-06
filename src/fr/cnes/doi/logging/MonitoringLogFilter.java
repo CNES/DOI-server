@@ -5,9 +5,9 @@
  */
 package fr.cnes.doi.logging;
 
-import com.sun.mail.handlers.message_rfc822;
 import fr.cnes.doi.server.DoiMonitoring;
 import fr.cnes.doi.settings.EmailSettings;
+import java.util.Date;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,6 +27,10 @@ import org.restlet.service.LogService;
  * @author Jean-Christophe Malapert
  */
 public class MonitoringLogFilter extends LogFilter {
+    
+    private static final Date startDateMonitoring = new Date();
+    
+    private static final float THRESHOLD_SPEED_PERCENT = 130;
 
     /**
      * The logger to log to
@@ -82,7 +86,7 @@ public class MonitoringLogFilter extends LogFilter {
     
     private void sendAlertIfNeeded(double mean, double currentDuration, final String path, final Method method) {
         double elevation = currentDuration * 100.0 / mean;
-        if(elevation > 30) {
+        if(elevation > THRESHOLD_SPEED_PERCENT) {
             EmailSettings email = EmailSettings.getInstance();
             String subject = "Speed performance alert for "+path;
             String msg = "Dear administrator,\nthe speed performance of the application "+path+""

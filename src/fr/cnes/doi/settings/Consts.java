@@ -32,7 +32,8 @@ public class Consts {
     public static final String PROPERTY_LOG_FILE = "PROPERTY_LOG_FILE";
 
     public static final String LOGSERVICE_LOGNAME = "Starter.LogService.logName";
-    public static final String LOGSERVICE_ACTIVE = "Starter.LogService.active";;
+    public static final String LOGSERVICE_ACTIVE = "Starter.LogService.active";
+    public static final String LOG_FORMAT = "Starter.Log.format";
     
     
     // Server
@@ -40,11 +41,12 @@ public class Consts {
     public static final String SERVER_CONTACT_ADMIN = "Starter.Server.contactAdmin";
     
 
-    public static final String PROXY_HOST = "Starter.PROXY_HOST";
-    public static final String PROXY_PORT = "Starter.PROXY_PORT";
-    public static final String PROXY_USER = "Starter.PROXY_USER";
-    public static final String PROXY_PASSWORD = "Starter.PROXY_PASSWORD";
-    public static final String NONPROXY_HOSTS = "Starter.NONPROXY_HOSTS";       
+    public static final String PROXY_USED = "Starter.Proxy.used";
+    public static final String PROXY_HOST = "Starter.Proxy.host";
+    public static final String PROXY_PORT = "Starter.Proxy.port";
+    public static final String PROXY_USER = "Starter.Proxy.login";
+    public static final String PROXY_PASSWORD = "Starter.Proxy.pwd";
+    public static final String NONPROXY_HOSTS = "Starter.NoProxy.hosts";       
     
 
     // Jetty contants

@@ -167,7 +167,11 @@ public class DoiSettings {
      * @return the value
      */
     public boolean getBoolean(final String key) {
-        return Boolean.getBoolean(getString(key));
+        if(getString(key) == null) {
+            throw new IllegalArgumentException("Key not found");
+        } else {
+            return Boolean.getBoolean(getString(key));   
+        }        
     }
 
     /**
@@ -235,20 +239,15 @@ public class DoiSettings {
         properties.load(is);
         fillConcurrentMap(properties);
     }
-
-    public String getLogFormat() {
-        return map.get(PROPERTY_LOG_FORMAT);
-    }
-
-    public String getLogFile() {
-        return map.getOrDefault(PROPERTY_LOG_FILE, "");
-    }
-
-    public String getLogServiceName() {
-        return map.getOrDefault(LOGSERVICE_LOGNAME, "");
-    }
-
-    public String getLogServiceActive() {
-        return map.getOrDefault(LOGSERVICE_ACTIVE, "");
-    }
+    
+    /**
+     * Sets a custom properties file.
+     * @param is Input stream
+     * @throws java.io.IOException
+     */
+    public void setPropertiesFile(final InputStream is) throws IOException {
+        Properties properties = new Properties();
+        properties.load(is);
+        fillConcurrentMap(properties);
+    }    
 }
