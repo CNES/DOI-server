@@ -6,15 +6,14 @@
 package fr.cnes.doi.resource;
 
 import fr.cnes.doi.application.DoiCrossCiteApplication;
-import fr.cnes.doi.client.ClientCrossCiteCitation;
 import java.util.List;
 import org.restlet.resource.Get;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
 /**
- *
- * @author malapert
+ * Get Language for citation.
+ * @author Jean-christophe Malapert
  */
 public class LanguageCitationResource extends ServerResource {
     

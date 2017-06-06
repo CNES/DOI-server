@@ -5,10 +5,10 @@
  */
 package fr.cnes.doi.resource;
 
-import fr.cnes.doi.client.ClientMDS;
 import fr.cnes.doi.client.ClientException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import org.restlet.data.Form;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
@@ -28,12 +28,13 @@ import org.restlet.resource.ResourceException;
 import org.restlet.util.Series;
 
 /**
- *
- * @author malapert
+ * Resource to handle a collection of DOI.
+ * @author Jean-Christophe Malapert
  */
 public class DoisResource extends BaseResource {
     
-    public static final String DOI_PREFIX_CNES = "DOI_PREFIX_CNES";
+    public static final String LIST_ALL_DOIS = "List all DOIs";
+    public static final String CREATE_DOI = "Create a DOI";
               
 
     @Override
@@ -48,14 +49,17 @@ public class DoisResource extends BaseResource {
      */
     @Get
     public Representation getDois() {
+        getLogger().entering(getClass().getName(), "getDois");
         try {
             setStatus(Status.SUCCESS_OK);
-            ClientMDS client = new ClientMDS(ClientMDS.Context.DEV);
-            String dois = client.getDoiCollection();
+            String dois = this.doiApp.getClient().getDoiCollection();
+            getLogger().exiting(getClass().getName(), "getDois", dois);
             return new StringRepresentation(dois, MediaType.TEXT_URI_LIST);
         } catch (ClientException ex) {
+            getLogger().log(Level.WARNING, ex.getMessage(), ex);
+            getLogger().exiting(getClass().getName(), "getDois", ex.getMessage());
             throw new ResourceException(ex.getStatus(), ex.getMessage());
-        }
+        }        
     } 
     
     /**
@@ -79,18 +83,21 @@ public class DoisResource extends BaseResource {
      * TODO Check this method (The form or two lines as input)
      */    
     @Post("form")   
-    public String createDoi(final Form doiForm) {        
+    public String createDoi(final Form doiForm) {         
+        getLogger().entering(getClass().getName(), "createDoi", doiForm.getMatrixString());        
         String result;        
         Series headers = (Series) getRequestAttributes().get("org.restlet.http.headers");
         String selectedRole = headers.getFirstValue("selectedRole", "");
         checkPermission(doiForm.getFirstValue("doi"), selectedRole);
         try {
             setStatus(Status.SUCCESS_CREATED);
-            ClientMDS client = new ClientMDS(ClientMDS.Context.DEV, this.doiApp.getLoginMds(), this.doiApp.getPwdMds());            
-            result = client.createDoi(doiForm);            
-        } catch (ClientException ex) {            
+            result = this.doiApp.getClient().createDoi(doiForm);            
+        } catch (ClientException ex) {         
+            getLogger().log(Level.WARNING, ex.getMessage(), ex);
+            getLogger().exiting(getClass().getName(), "createDoi", ex.getMessage());            
             throw new ResourceException(ex.getStatus(), ex.getMessage());
         }
+        getLogger().exiting(getClass().getName(), "createDoi", result);
         return result;
     }
         
@@ -159,7 +166,7 @@ public class DoisResource extends BaseResource {
     
     @Override
     protected final void describeGet(final MethodInfo info) {
-        info.setName(Method.GET);
+        info.setName(Method.GET);        
         info.setDocumentation("Retrieves the DOI collection");       
         info.getResponses().add(getSuccessFullResponse());
         info.getResponses().add(getNoContentResponse());

@@ -6,7 +6,6 @@
 package fr.cnes.doi.resource;
 
 import fr.cnes.doi.application.DoiMdsApplication;
-import fr.cnes.doi.client.ClientMDS;
 import fr.cnes.doi.client.ClientException;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,12 +24,14 @@ import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Get;
 import org.restlet.resource.ResourceException;
 
-/**
- *
- * @author malapert
+/** 
+ * Resource to handle to Media.
+ * @author Jean-Christophe Malapert
  * https://data.datacite.org/
  */
 public class MediaResource extends BaseResource {
+    
+    public static final String GET_MEDIAS = "Get Medias";
 
     private String mediaName;
 
@@ -42,12 +43,14 @@ public class MediaResource extends BaseResource {
 
     @Get
     public Representation getMedias() {
+        getLogger().entering(getClass().getName(), "getMedias", this.mediaName);
         try {
             setStatus(Status.SUCCESS_OK);
-            ClientMDS client = new ClientMDS(ClientMDS.Context.DEV);
-            String medias = client.getMedia(this.mediaName);
+            String medias = this.doiApp.getClient().getMedia(this.mediaName);
+            getLogger().exiting(getClass().getName(), "getMedias", medias);
             return new StringRepresentation(medias, MediaType.TEXT_URI_LIST);
         } catch (ClientException ex) {
+            getLogger().exiting(getClass().getName(), "getMedias", ex.getMessage());            
             throw new ResourceException(ex.getStatus(), ex.getMessage());
         }
     } 

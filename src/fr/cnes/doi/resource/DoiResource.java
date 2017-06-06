@@ -30,7 +30,12 @@ import org.restlet.resource.ResourceException;
  * @author Jean-Christophe Malapert
  */
 public class DoiResource extends BaseResource {
-    private String doiName;
+    public static final String GET_DOI = "Get DOI";
+    
+    /**
+     * DOI template.
+     */
+    private String doiName;        
 
     @Override
     protected void doInit() throws ResourceException {
@@ -45,16 +50,18 @@ public class DoiResource extends BaseResource {
      */
     @Get
     public Representation getDoi() {
+        getLogger().entering(getClass().getName(), "getDoi", this.doiName);
         try {
-            ClientMDS client = new ClientMDS(ClientMDS.Context.DEV);
-            String doi = client.getDoi(this.doiName);
+            String doi = this.doiApp.getClient().getDoi(this.doiName);
             if(doi != null && !doi.isEmpty()) {
                 setStatus(Status.SUCCESS_OK);
             } else {
                 setStatus(Status.SUCCESS_NO_CONTENT);
             }
+            getLogger().exiting(getClass().getName(), "getDoi", doi);
             return new StringRepresentation(doi, MediaType.TEXT_PLAIN);          
         } catch (ClientException ex) {
+            getLogger().exiting(getClass().getName(), "getDoi", ex.getMessage());
             throw new ResourceException(ex);
         }
     }    

@@ -17,8 +17,8 @@ import org.restlet.ext.xml.XmlRepresentation;
 import org.restlet.representation.InputRepresentation;
 
 /**
- *
- * @author malapert
+ * Generates a WADL based on a patch of the Restlet XSLT.
+ * @author Jean-Christoph Malapert
  */
 public class WadlCnesRepresentation extends WadlRepresentation {
     
@@ -34,12 +34,6 @@ public class WadlCnesRepresentation extends WadlRepresentation {
 
         if (wadl2htmlXsltUrl != null) {
             try {
-                // The SAX source is systematically generated:
-                // - when instantiated using an ApplicationInfo or a
-                // ResourceInfo the sax source is null.
-                // - when instantiated using an XML representation, the
-                // underlying sax source is exhausted, because we parse it in
-                // order to recover the WADL document.
                 setSaxSource(XmlRepresentation.getSaxSource(this));
                 InputRepresentation xslRep = new InputRepresentation(
                         wadl2htmlXsltUrl.openStream(),

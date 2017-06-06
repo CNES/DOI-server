@@ -8,15 +8,14 @@ package fr.cnes.doi.client;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import org.datacite.schema.kernel_4.Resource;
+import org.restlet.data.ChallengeResponse;
 import org.restlet.data.ChallengeScheme;
 import org.restlet.data.Form;
 import org.restlet.data.MediaType;
@@ -26,7 +25,6 @@ import org.restlet.data.Status;
 import org.restlet.engine.Engine;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
-import org.restlet.resource.ResourceException;
 
 /**
  * 1/ server
@@ -54,7 +52,7 @@ import org.restlet.resource.ResourceException;
 public class ClientMDS {
 
     public static final String DATA_CITE_URL = "https://mds.datacite.org";
-    public static final String DATA_CITE_TEST_URL = "https://mds.test.datacite.org/doi";
+    public static final String DATA_CITE_TEST_URL = "https://mds.test.datacite.org";
     public static final String DOI_RESOURCE = "doi";
     public static final String METADATA_RESOURCE = "metadata";
     public static final String MEDIA_RESOURCE = "media";
@@ -68,7 +66,7 @@ public class ClientMDS {
      * Options for each context
      */
     public enum Context {
-        DEV(true, true, DATA_CITE_TEST_URL, Level.ALL),
+        DEV(false, true, DATA_CITE_TEST_URL, Level.ALL),
         PRE_PROD(false, true, DATA_CITE_URL, Level.FINE),
         PROD(false, false, DATA_CITE_URL, Level.INFO);
 
@@ -189,7 +187,9 @@ public class ClientMDS {
     public ClientMDS(final Context context) {
         this.context = context;
         this.testMode = this.context.hasTestMode() ? TEST_MODE : null;
-        Engine.setLogLevel(context.getLevelLog());
+        this.client.getLogger().setUseParentHandlers(true);        
+        this.client.getLogger().setLevel(Level.ALL);        
+        this.client.setLoggable(true);
     }
 
     /**
@@ -218,8 +218,20 @@ public class ClientMDS {
      */
     public ClientMDS(final Context context, final String login, final String pwd) {
         this(context);
+        this.client.getLogger().log(Level.FINEST, "Authentication with HTTP_BASIC : {0}/{1}", new Object[]{login, pwd});
         this.client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, login, pwd);
     }
+    
+    /**
+     * Sets Proxy authentication.
+     * @param authentication authentication
+     */
+    public void setProxyAuthentication(final ChallengeResponse authentication) {
+       this.client.getLogger().finest("Proxy Authentication :\n"
+               + "- login:"+authentication.getIdentifier()+"\n"
+               + "- pwd:"+authentication.getSecret()+"\n");
+       this.client.setProxyChallengeResponse(authentication);
+    }    
 
     /**
      * Returns the {@link TEST_MODE} or an empty parameter according to
@@ -242,7 +254,7 @@ public class ClientMDS {
         split[0] = TEST_DOI_PREFIX;
         String testingPrefix = String.join("/", split);
         String message = String.format("DOI %s has been renamed as %s for testing", doiName, testingPrefix);
-        Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, message);
+        this.client.getLogger().log(Level.FINE, message);
         return testingPrefix;
     }
 
@@ -351,7 +363,7 @@ public class ClientMDS {
     public String getDoi(final String doiName) throws ClientException {
         String result = null;
         Reference url = createReferenceWithDOI(DOI_RESOURCE, doiName);
-        Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "GET {0}", url.toString());
+        this.client.getLogger().log(Level.INFO, "GET {0}", url.toString());
 
         this.client.setReference(url);
         Representation rep = this.client.get();
@@ -380,7 +392,7 @@ public class ClientMDS {
     public String getDoiCollection() throws ClientException {
         String result = null;
         Reference url = createReference(DOI_RESOURCE);
-        Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "GET {0}", url.toString());
+        this.client.getLogger().log(Level.INFO, "GET {0}", url.toString());
 
         this.client.setReference(url);
         Representation rep = this.client.get();
@@ -432,6 +444,7 @@ public class ClientMDS {
             String requestBody = POST_DOI+"="+form.getFirstValue(POST_DOI)+"\n"+POST_URL+"="+form.getFirstValue(POST_URL);
             requestBody = new String(requestBody.getBytes("UTF-8"), "UTF-8");
             this.client.getRequestAttributes().put("charset","UTF-8");
+            this.client.getLogger().log(Level.INFO, "POST {0} with parameters {1}", new Object[]{url, requestBody});
             Representation rep = this.client.post(requestBody, MediaType.TEXT_PLAIN);
             Status responseStatus = this.client.getStatus();           
             result = getText(rep, responseStatus);            
@@ -484,6 +497,7 @@ public class ClientMDS {
         Reference url = createReferenceWithDOI(METADATA_RESOURCE, doiName);
         Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "GET {0}", url.toString());
         this.client.setReference(url);
+        this.client.getLogger().info("GET "+url);
         Representation rep = this.client.get(MediaType.APPLICATION_XML);
         Status status = this.client.getStatus();
         client.release();
@@ -666,12 +680,6 @@ public class ClientMDS {
             this.client.release();
         }
         return result;
-    }
-
-    public static void main(String[] args) throws Exception {
-        ClientMDS client = new ClientMDS(Context.PROD);
-        String result = client.getDoi("10.41/121L21M");
-        System.out.println(result);
     }
 
 }

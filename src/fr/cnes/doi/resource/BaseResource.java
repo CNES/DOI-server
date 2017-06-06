@@ -6,8 +6,8 @@
 package fr.cnes.doi.resource;
 
 import fr.cnes.doi.application.DoiMdsApplication;
-import static fr.cnes.doi.resource.DoisResource.DOI_PREFIX_CNES;
 import java.util.List;
+import java.util.logging.Level;
 import org.restlet.data.Status;
 import org.restlet.ext.wadl.WadlServerResource;
 import org.restlet.resource.ResourceException;
@@ -17,7 +17,7 @@ import org.restlet.security.Role;
  * Base resource for the different resources.
  * @author Jean-Christophe Malapert
  */
-public class BaseResource extends WadlServerResource {
+public class BaseResource extends WadlServerResource {       
     
     /**
      * DOI Mds application.
@@ -58,12 +58,15 @@ public class BaseResource extends WadlServerResource {
      * @return the project name associated to the user
      */
     private String getRoleName(String selectedRole) {
+        getLogger().entering(getClass().getName(), "getRoleName",selectedRole);
         final String roleName;
         if(hasSelectedRole(selectedRole)) {
             if(isInRole(selectedRole)) {
                 roleName = selectedRole;
             } else {
-                throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED,"DOIServer : The user is not allowed to use this feature");                                
+                getLogger().log(Level.WARNING, "DOIServer : The role {0} is not allowed to use this feature", selectedRole);
+                getLogger().exiting(getClass().getName(), "getRoleName");
+                throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED,"DOIServer : The role "+selectedRole+" is not allowed to use this feature");                                
             }
         } else {
             List<Role> roles = getClientInfo().getRoles();
@@ -71,9 +74,12 @@ public class BaseResource extends WadlServerResource {
                 Role role = roles.get(0);
                 roleName = role.getName();                
             } else {
+                getLogger().log(Level.WARNING, "DOIServer : Cannot know which role must be applied");
+                getLogger().exiting(getClass().getName(), "getRoleName");                
                 throw new ResourceException(Status.CLIENT_ERROR_CONFLICT, "DOIServer : Cannot know which role must be applied");                
             }            
         }
+        getLogger().exiting(getClass().getName(), "getRoleName", roleName);
         return roleName;
     }
     
@@ -85,11 +91,15 @@ public class BaseResource extends WadlServerResource {
      * @param selectedRole Selected role
      */
     protected void checkPermission(final String doiName, final String selectedRole) {
+        getLogger().entering(getClass().getName(), "checkPermission", new Object[]{doiName, selectedRole});
         String projectName = getRoleName(selectedRole);
-        String prefixCNES = this.doiApp.getConfig().getProperty(DOI_PREFIX_CNES);        
+        String prefixCNES = this.doiApp.getDataCentrePrefix();
         if(!doiName.startsWith(prefixCNES+"/"+projectName+"/")) {
+            getLogger().log(Level.WARNING, "You are not allowed to use this method : {0} with {1}", new Object[]{doiName, selectedRole});
+            getLogger().exiting(getClass().getName(), "checkPermission");
             throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, "You are not allowed to use this method");
         }
+        getLogger().exiting(getClass().getName(), "checkPermission");        
     }      
     
 }

@@ -8,6 +8,7 @@ package fr.cnes.doi.client;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.List;
+import org.restlet.data.ChallengeResponse;
 import org.restlet.data.Reference;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
@@ -30,6 +31,10 @@ public class ClientCrossCiteCitation {
     
     public ClientCrossCiteCitation() {
         
+    }
+    
+    public void setProxyAuthentication(final ChallengeResponse authentication) {
+        client.setProxyChallengeResponse(authentication);
     }
     
     public List<String> getStyles() {

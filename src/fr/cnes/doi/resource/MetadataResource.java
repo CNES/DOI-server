@@ -7,7 +7,6 @@ package fr.cnes.doi.resource;
 
 import fr.cnes.doi.application.DoiMdsApplication;
 import fr.cnes.doi.client.ClientException;
-import fr.cnes.doi.client.ClientMDS;
 import java.util.ArrayList;
 import java.util.List;
 import org.restlet.data.Method;
@@ -29,6 +28,10 @@ import org.restlet.util.Series;
  * @author malapert
  */
 public class MetadataResource extends BaseResource {
+    
+    public static final String GET_METADATA = "Get a Metadata";
+    public static final String DELETE_METADATA = "Delete a Metadata";
+    
     private String doiName;
 
     @Override
@@ -40,11 +43,14 @@ public class MetadataResource extends BaseResource {
 
     @Get
     public Representation getMetadata() {
+        getLogger().entering(getClass().getName(), "getMetadata", this.doiName);
         try {
             setStatus(Status.SUCCESS_OK);
-            ClientMDS client = new ClientMDS(ClientMDS.Context.DEV);
-            return client.getMetadata(this.doiName);
+            Representation rep = this.doiApp.getClient().getMetadata(this.doiName);
+            getLogger().exiting(getClass().getName(), "getMetadata");
+            return rep;
         } catch (ClientException ex) {
+            getLogger().exiting(getClass().getName(), "getMetadata", ex.getMessage());
             throw new ResourceException(ex);
         }        
     }
@@ -55,13 +61,15 @@ public class MetadataResource extends BaseResource {
         try {         
             Series headers = (Series) getRequestAttributes().get("org.restlet.http.headers");
             String selectedRole = headers.getFirstValue("selectedRole", "");            
+            getLogger().entering(getClass().getName(), "deleteMetadata", new Object[]{this.doiName, selectedRole});
             checkPermission(this.doiName, selectedRole);
             setStatus(Status.SUCCESS_OK);
-            ClientMDS client = new ClientMDS(ClientMDS.Context.DEV, this.doiApp.getLoginMds(), this.doiApp.getPwdMds());
-            rep = client.deleteMetadata(this.doiName);            
+            rep = this.doiApp.getClient().deleteMetadata(this.doiName);            
         } catch (ClientException ex) {
+            getLogger().exiting(getClass().getName(), "deleteMetadata", ex.getMessage());            
             throw new ResourceException(ex);
         }
+        getLogger().exiting(getClass().getName(), "deleteMetadata");
         return rep;         
     }
     
