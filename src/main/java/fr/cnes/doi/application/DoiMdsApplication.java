@@ -92,7 +92,10 @@ public class DoiMdsApplication extends BaseApplication {
         setStatusService(new CnesStatusService());
         getServices().add(createCoreService());
         client = new ClientMDS(ClientMDS.Context.DEV, getLoginMds(), getPwdMds());
-        client.setProxyAuthentication(proxy.getProxyAuthentication());
+        if(DoiSettings.getInstance().getBoolean(Consts.PROXY_USED)) {
+            client.setProxyAuthentication(proxy.getProxyAuthentication());
+        }
+        
         
         LOGGER.exiting(DoiMdsApplication.class.getName(), "Constructor");
         
