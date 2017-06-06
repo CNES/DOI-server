@@ -22,7 +22,7 @@ import static org.junit.Assert.*;
  */
 public class EmailSettingsTest {
     
-    private InputStream inputStream = SettingsSuite.class.getResourceAsStream("/resources/doi.properties");
+    private InputStream inputStream = SettingsSuite.class.getResourceAsStream("/doi.properties");
     private EmailSettings instance = EmailSettings.getInstance();    
     
     public EmailSettingsTest() {
