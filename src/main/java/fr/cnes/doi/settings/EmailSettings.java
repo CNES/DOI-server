@@ -5,39 +5,41 @@
  */
 package fr.cnes.doi.settings;
 
-import fr.cnes.doi.utils.Utils;
-import java.util.Properties;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
+import org.restlet.Client;
+import org.restlet.Request;
+import org.restlet.Response;
+import org.restlet.data.ChallengeResponse;
+import org.restlet.data.ChallengeScheme;
+import org.restlet.data.LocalReference;
+import org.restlet.data.MediaType;
+import org.restlet.data.Method;
+import org.restlet.data.Protocol;
+import org.restlet.data.Status;
+import org.restlet.ext.freemarker.TemplateRepresentation;
+import org.restlet.representation.Representation;
+import org.restlet.resource.ClientResource;
 
 /**
- *
- * @author malapert
+ * Email settings and method do send an email.
+ * @author Jean-Christophe Malapert
  */
 public class EmailSettings {
-
-    public static final String SMTP_HOST_NAME = "Starter.mail.send.server";
-    public static final String SMTP_PORT = "Starter.mail.send.port";
-    public static final String SMTP_STARTTLS_ENABLE = "Starter.mail.send.tls";
-    public static final String SMTP_AUTH_USER = "Starter.mail.send.identifier";
-    public static final String SMTP_AUTH_PWD = "Starter.mail.send.secret";
-    public static final String CONTACT_ADMIN = "Starter.Server.contactAdmin";
+    
+    private static final boolean DEFAULT_DEBUG = false;
     
     private static final Logger LOGGER = Logger.getLogger(EmailSettings.class.getName());
 
-    private String hostName;
-    private String port;
+    private String smtpUrl;
+    private String smtpProtocol;
     private String tlsEnable;
     private String authUser;
     private String authPwd;
     private String contactAdmin;
+    private boolean debug = DEFAULT_DEBUG;
     
 
     private EmailSettings() {
@@ -61,73 +63,77 @@ public class EmailSettings {
     }
 
     public void init(final DoiSettings settings) {
-        this.hostName = settings.getString(SMTP_HOST_NAME);
-        this.port = settings.getSecret(SMTP_PORT);
-        this.authUser = settings.getString(SMTP_AUTH_USER);
-        this.authPwd = settings.getSecret(SMTP_AUTH_PWD);
-        this.tlsEnable = settings.getString(SMTP_STARTTLS_ENABLE);
-    }
-
-    public void sendEmail(final String subject, final String msg) {
-        if(Utils.isEmpty(getHostName()) && Utils.isEmpty(getPort())
-           && Utils.isEmpty(getAuthUser()) && Utils.isEmpty(getAuthPwd())
-           && Utils.isEmpty(getTlsEnable())) {
-            LOGGER.warning("Required parameters are not defined");
-            LOGGER.info("Simulates the email to send ... ");
-            LOGGER.log(Level.INFO, "Subject: {0}", subject);
-            LOGGER.log(Level.INFO, "Message: {0}", msg);           
-        } else {
-            sendMessage(subject, msg);
-        }
-
+        this.smtpProtocol = settings.getString(Consts.SMTP_PROTOCOL);
+        this.smtpUrl = settings.getString(Consts.SMTP_URL);
+        this.authUser = settings.getSecret(Consts.SMTP_AUTH_USER);
+        this.authPwd = settings.getSecret(Consts.SMTP_AUTH_PWD);
+        this.tlsEnable = settings.getString(Consts.SMTP_STARTTLS_ENABLE);
     }
     
-    private void sendMessage(final String subject, final String msg) {
-        final String username = getAuthUser();
-        final String password = getAuthPwd();
-
-        Properties props = new Properties();
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", getTlsEnable());
-        props.put("mail.smtp.host", getHostName());
-        props.put("mail.smtp.port", getPort());
-
-        Session session = Session.getInstance(props,
-                new javax.mail.Authenticator() {
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(username, password);
-            }
-        });
-
-        try {
-
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(getContactAdmin()));
-            message.setRecipients(Message.RecipientType.TO,
-                    InternetAddress.parse(getContactAdmin()));
-            message.setSubject(subject);
-            message.setText(msg);
-
-            Transport.send(message);
-
-        } catch (MessagingException e) {
-            throw new RuntimeException(e);
-        }        
+    public void setDebug(boolean isEnabled) {
+        this.debug = isEnabled;
     }
+    
+    public boolean getDebug() {
+        return this.debug;
+    }
+    
+    /**
+     * Sends a message by email.
+     * @param subject Email's subject
+     * @param msg  Email's message
+     */
+    public void sendMessage(final String subject, final String msg) {
+        try {
+            final Request request = new Request(Method.POST, getSmtpURL());
+            request.setChallengeResponse(new ChallengeResponse(ChallengeScheme.SMTP_PLAIN, getAuthUser(), getAuthPwd()));               
+            sendMail(Protocol.valueOf(getSmtpProtocol()), request, Boolean.getBoolean(getTlsEnable()), subject, msg);
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
+    }    
+            
+    /**
+     * Sends email.
+     * @param protocol Protocol (SMTP or SMTPS)
+     * @param request request
+     * @param startTls startTls
+     * @param subject Email's subject
+     * @param msg Email's message
+     * @throws Exception 
+     */
+    private void sendMail(final Protocol protocol, final Request request, boolean startTls, final String subject, final String msg) throws Exception {
+        final Client client = new Client(protocol);
+        client.getContext().getParameters().add("debug", String.valueOf(getDebug()));
+        client.getContext().getParameters().add("startTls", Boolean.toString(startTls).toLowerCase());
+        Map<String, String> dataModel = new TreeMap<>();
+        dataModel.put("subject", subject);
+        dataModel.put("message", msg);
+        dataModel.put("from", DoiSettings.getInstance().getString(Consts.SERVER_CONTACT_ADMIN, "L-doi-support@cnes.fr"));
+        dataModel.put("to", DoiSettings.getInstance().getString(Consts.SERVER_CONTACT_ADMIN, "L-doi-support@cnes.fr"));
+        Representation mailFtl = new ClientResource(LocalReference.createClapReference("class/resources/email.ftl")).get();
+        Representation mail = new TemplateRepresentation(mailFtl, dataModel, MediaType.TEXT_XML);
+        request.setEntity(mail);
+        final Response response = client.handle(request);
+        Status status = response.getStatus();
+        if(status.isError()) {
+            LOGGER.severe("Cannot send the email!");
+        } 
+        client.stop();
+    }       
 
     /**
      * @return the hostName
      */
-    public String getHostName() {
-        return hostName;
+    public String getSmtpURL() {
+        return smtpUrl;
     }
 
     /**
      * @return the port
      */
-    public String getPort() {
-        return port;
+    public String getSmtpProtocol() {
+        return smtpProtocol;
     }
 
     /**

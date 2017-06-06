@@ -46,7 +46,13 @@ public class Consts {
     public static final String PROXY_PORT = "Starter.Proxy.port";
     public static final String PROXY_USER = "Starter.Proxy.login";
     public static final String PROXY_PASSWORD = "Starter.Proxy.pwd";
-    public static final String NONPROXY_HOSTS = "Starter.NoProxy.hosts";       
+    public static final String NONPROXY_HOSTS = "Starter.NoProxy.hosts"; 
+
+    public static final String SMTP_PROTOCOL = "Starter.mail.send.protocol";    
+    public static final String SMTP_URL = "Starter.mail.send.server";
+    public static final String SMTP_STARTTLS_ENABLE = "Starter.mail.send.tls";
+    public static final String SMTP_AUTH_USER = "Starter.mail.send.identifier";
+    public static final String SMTP_AUTH_PWD = "Starter.mail.send.secret";    
     
 
     // Jetty contants

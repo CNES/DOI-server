@@ -19,7 +19,7 @@ public class WebSiteApplication extends BaseApplication {
     @Override
     public Restlet createInboundRoot() {
         Router router = new Router(getContext());
-        Directory directory = new Directory(getContext(), LocalReference.createClapReference("class/resources"));       
+        Directory directory = new Directory(getContext(), LocalReference.createClapReference("class/website"));       
         router.attach("/resources/", directory);        
         return router;
     }

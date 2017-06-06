@@ -51,7 +51,7 @@ public class CnesStatusService extends StatusService {
         dataModel.put("logo", "/resources/images/Cnes-logo.png");
         dataModel.put("contactAdmin", settings.getString(Consts.SERVER_CONTACT_ADMIN, ""));
         LOGGER.log(Level.FINER, "Data model for CNES status page", dataModel);
-        Representation mailFtl = new ClientResource(LocalReference.createClapReference(getClass().getPackage()) + "/CnesStatus.ftl").get();
+        Representation mailFtl = new ClientResource(LocalReference.createClapReference("class/CnesStatus.ftl")).get();
         return new TemplateRepresentation(mailFtl, dataModel, MediaType.TEXT_HTML);
     }
 }

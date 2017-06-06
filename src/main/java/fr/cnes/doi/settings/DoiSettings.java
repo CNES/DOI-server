@@ -5,11 +5,6 @@
  */
 package fr.cnes.doi.settings;
 
-import static fr.cnes.doi.settings.Consts.LOGSERVICE_ACTIVE;
-import static fr.cnes.doi.settings.Consts.LOGSERVICE_LOGNAME;
-import static fr.cnes.doi.settings.Consts.PROPERTY_LOG_FILE;
-import static fr.cnes.doi.settings.Consts.PROPERTY_LOG_FORMAT;
-import fr.cnes.doi.server.Starter;
 import fr.cnes.doi.utils.Utils;
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,6 +15,11 @@ import java.io.OutputStream;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.restlet.data.LocalReference;
+import org.restlet.representation.Representation;
+import org.restlet.resource.ClientResource;
 
 /**
  * DOI Settings.
@@ -55,12 +55,14 @@ public class DoiSettings {
      */
     private Properties loadConfigurationFile(String path) {
         Properties properties = new Properties();
-        InputStream in = Starter.class.getResourceAsStream(path);
+        ClientResource client = new ClientResource(LocalReference.createClapReference("class/config.properties"));
+        Representation configurationFile = client.get();
         try {
-            properties.load(in);
-            in.close();
-        } catch (IOException e) {
+            properties.load(configurationFile.getStream());
+        } catch (IOException e) {           
             throw new RuntimeException("Unable to load " + path);
+        } finally {
+            client.release();
         }
         return properties;
     }
@@ -200,8 +202,15 @@ public class DoiSettings {
      * Displays the configuration file.
      */
     public void displayConfigFile() {
-        InputStream in = Starter.class.getResourceAsStream(CONFIG_PROPERTIES);
-        copyStream(in, System.out);
+        ClientResource client = new ClientResource(LocalReference.createClapReference("class/"+CONFIG_PROPERTIES));
+        Representation configurationFile = client.get();
+        try {
+            copyStream(configurationFile.getStream(), System.out);
+        } catch (IOException ex) {
+            Logger.getLogger(DoiSettings.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            client.release();
+        }
     }
 
     /**

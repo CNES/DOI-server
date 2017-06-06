@@ -53,39 +53,39 @@ public class EmailSettingsTest {
     }
 
 
-    /**
-     * Test of sendEmail method, of class EmailSettings.
-     */
-    @Test
-    public void testSendEmail() {
-        System.out.println("sendEmail");
-        String subject = "Mysubject";
-        String msg = "message";
-        instance.sendEmail(subject, msg);
-        assertTrue(true);
-    }
+//    /**
+//     * Test of sendEmail method, of class EmailSettings.
+//     */
+//    @Test
+//    public void testSendEmail() {
+//        System.out.println("sendEmail");
+//        String subject = "Mysubject";
+//        String msg = "message";
+//        instance.sendEmail(subject, msg);
+//        assertTrue(true);
+//    }
 
-    /**
-     * Test of getHostName method, of class EmailSettings.
-     */
-    @Test
-    public void testGetHostName() {
-        System.out.println("getHostName");
-        String expResult = "";
-        String result = instance.getHostName();
-        assertEquals(expResult, result);
-    }
+//    /**
+//     * Test of getHostName method, of class EmailSettings.
+//     */
+//    @Test
+//    public void testGetHostName() {
+//        System.out.println("getHostName");
+//        String expResult = "";
+//        String result = instance.getHostName();
+//        assertEquals(expResult, result);
+//    }
 
-    /**
-     * Test of getPort method, of class EmailSettings.
-     */
-    @Test
-    public void testGetPort() {
-        System.out.println("getPort");
-        String expResult = "";
-        String result = instance.getPort();
-        assertEquals(expResult, result);
-    }
+//    /**
+//     * Test of getPort method, of class EmailSettings.
+//     */
+//    @Test
+//    public void testGetPort() {
+//        System.out.println("getPort");
+//        String expResult = "";
+//        String result = instance.getPort();
+//        assertEquals(expResult, result);
+//    }
 
     /**
      * Test of getTlsEnable method, of class EmailSettings.

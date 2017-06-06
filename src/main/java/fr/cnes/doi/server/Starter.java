@@ -10,11 +10,15 @@ import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.settings.EmailSettings;
 import fr.cnes.doi.utils.Utils;
 import gnu.getopt.Getopt;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
+import org.restlet.data.LocalReference;
+import org.restlet.representation.Representation;
+import org.restlet.resource.ClientResource;
 
 /**
  * DOI server
@@ -24,12 +28,16 @@ import java.util.logging.Logger;
 public class Starter {
 
     static {
-        final InputStream inputStream = Starter.class.getResourceAsStream("logging.properties");
+        ClientResource client = new ClientResource(LocalReference.createClapReference("class/logging.properties"));
+        InputStream is = Starter.class.getResourceAsStream("logging.properties");
+        //Representation logging = client.get();        
         try {
-            LogManager.getLogManager().readConfiguration(inputStream);
+            LogManager.getLogManager().readConfiguration(is);
         } catch (final IOException e) {
             Logger.getAnonymousLogger().severe("Could not load default logging.properties file");
             Logger.getAnonymousLogger().severe(e.getMessage());
+        } finally {
+            client.release();
         }
     }
 
@@ -38,12 +46,13 @@ public class Starter {
 
     private static DoiServer doiServer;
 
-    private static void displayHelp() {
+    private static void displayHelp() {        
         GLOBAL_LOGGER.entering(Starter.class.getName(), "displayHelp");
+        DoiSettings settings = DoiSettings.getInstance();
         StringBuilder help = new StringBuilder();
         help.append("------------ Help for DOI Server -----------\n");
         help.append("\n");
-        help.append("Usage: java -jar DOI.jar [OPTIONS]\n");
+        help.append("Usage: java -jar ").append(settings.getString(Consts.APP_NAME)).append("-").append(settings.getString(Consts.VERSION)).append(".jar [OPTIONS]\n");
         help.append("\n");
         help.append("with OPTIONS:\n");
         help.append("  -h                     : This output\n");
@@ -76,7 +85,7 @@ public class Starter {
                 LOGGER.info("Unable to stop the server");
             } finally {
                 GLOBAL_LOGGER.info("Interrups the server, which is stopping");
-                EmailSettings.getInstance().sendEmail("[DOI] Stopping Server", "Ther server has been interrupted");                
+                EmailSettings.getInstance().sendMessage("[DOI] Stopping Server", "Ther server has been interrupted");                
                 server.interrupt();
                 server.join();
             }

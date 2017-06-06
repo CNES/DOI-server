@@ -95,7 +95,7 @@ public class MonitoringLogFilter extends LogFilter {
                     + "--------\n"
                     + " * Mean : "+mean+"\n"
                     + " * current : "+currentDuration+"\n";
-            email.sendEmail(subject, msg);
+            email.sendMessage(subject, msg);
         }
     }
 
