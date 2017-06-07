@@ -8,3 +8,4 @@ target/
 store/
 nbproject/
 nbactions.xml
+*.log
