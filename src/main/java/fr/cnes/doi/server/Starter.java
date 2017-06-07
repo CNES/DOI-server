@@ -29,10 +29,10 @@ public class Starter {
 
     static {
         ClientResource client = new ClientResource(LocalReference.createClapReference("class/logging.properties"));
-        InputStream is = Starter.class.getResourceAsStream("logging.properties");
-        //Representation logging = client.get();        
+        //InputStream is = Starter.class.getResourceAsStream("logging.properties");
+        Representation logging = client.get();        
         try {
-            LogManager.getLogManager().readConfiguration(is);
+            LogManager.getLogManager().readConfiguration(logging.getStream());
         } catch (final IOException e) {
             Logger.getAnonymousLogger().severe("Could not load default logging.properties file");
             Logger.getAnonymousLogger().severe(e.getMessage());
@@ -153,12 +153,13 @@ public class Starter {
 
     public static void main(String[] argv) {
         final DoiSettings settings = DoiSettings.getInstance();
+        final String progName = "java -jar "+settings.getString(Consts.APP_NAME)+"-"+settings.getString(Consts.VERSION)+".jar";
 
         int c;
-        String arg;
+        String arg;                
 
         // 
-        Getopt g = new Getopt("java -jar DOI.jar", argv, "hvdse:c:f:");
+        Getopt g = new Getopt(progName, argv, "hvdse:c:f:");
         //
         while ((c = g.getopt()) != -1) {
             switch (c) {
@@ -216,6 +217,10 @@ public class Starter {
         //
         for (int i = g.getOptind(); i < argv.length; i++) {
             LOGGER.log(Level.INFO, "Non option argv element: {0}\n", argv[i]);
+        }
+        
+        if(argv.length == 0) {
+            displayHelp();
         }
 
     }
