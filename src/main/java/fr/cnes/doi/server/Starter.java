@@ -68,10 +68,10 @@ public class Starter {
         help.append("  -h|--help                    : This output\n");
         help.append("  -c <string>                  : Crypts a string in the standard output\n");
         help.append("  -e <string>                  : Decrypts a string in the standard output\n");
-        help.append("  -d                           : Displays the property file\n");
-        help.append("  -f <path>                    : Path to the configuation file\n");
+        help.append("  -d                           : Displays the configuration file\n");
+        help.append("  -f <path>                    : Loads the configuation file\n");
         help.append("  -y|--cryptProperties <path>  : crypts the properties file on the output standard\n");
-        help.append("  -z|--decryptProperties <path>: Decrypts the properties and loads it\n");        
+        help.append("  -z|--decryptProperties <path>: Decrypts the properties on the output standard\n");        
         help.append("  -v|--version                 : DOI server version\n");
         help.append("\n");
         help.append("\n");
@@ -257,14 +257,6 @@ public class Starter {
                         String content = new String(encoded, Charset.forName("UTF-8"));
                         content = Utils.decrypt(content, settings.getSecretKey());
                         LOGGER.info(content);
-                        InputStream contentStream = new ByteArrayInputStream(content.getBytes("UTF-8"));
-                        {
-                            try {
-                                settings.setPropertiesFile(contentStream);
-                            } catch (IOException ex) {
-                                LOGGER.info(ex.getMessage());
-                            }
-                        }
                     } catch(Exception ex) {
                         LOGGER.info("Error: " + ex.toString());
                     }    
