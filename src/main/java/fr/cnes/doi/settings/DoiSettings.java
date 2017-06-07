@@ -31,6 +31,7 @@ public class DoiSettings {
     public static final String CONFIG_PROPERTIES = "config.properties";
 
     private final ConcurrentHashMap<String, String> map = new ConcurrentHashMap<>();
+    private String secretKey = Utils.DEFAULT_SECRET_KEY;
 
     /**
      * private constructor
@@ -97,6 +98,22 @@ public class DoiSettings {
     public static DoiSettings getInstance() {
         return DoiSettingsHolder.INSTANCE;
     }
+    
+    /**
+     * Returns the secret key.
+     * @return the secret key.
+     */
+    public String getSecretKey() {
+        return this.secretKey;
+    }
+    
+    /**
+     * Sets the secret key.
+     * @param secretKey the secret key.
+     */
+    public void setSecretKey(final String secretKey) {
+        this.secretKey = secretKey;
+    }
 
     /**
      * Returns the value of the key as string.
@@ -132,7 +149,7 @@ public class DoiSettings {
         if (Utils.isEmpty(value)) {
             result = value;
         } else {
-            result = Utils.decrypt(value);
+            result = Utils.decrypt(value, getSecretKey());
         }
         return result;
     }

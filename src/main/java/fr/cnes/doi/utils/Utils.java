@@ -22,7 +22,7 @@ public class Utils {
 
     public static final String CIPHER_ALGORITHM = "AES";
     public static final String KEY_ALGORITHM = "AES";
-    public static final String SECRET_KEY = "16BYTESSECRETKEY";
+    public static final String DEFAULT_SECRET_KEY = "16BYTESSECRETKEY";
 
     
     public static boolean isEmpty(final CharSequence cs) {
@@ -36,15 +36,19 @@ public class Utils {
      * @return the decrypted string
      */
     public static String decrypt(final String encryptedInput) {
+        return decrypt(encryptedInput, DEFAULT_SECRET_KEY);
+    }
+    
+    public static String decrypt(final String encryptedInput, final String secretKey) {
         try {
             Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
-            cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(SECRET_KEY.getBytes("UTF-8"), KEY_ALGORITHM));
+            cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(secretKey.getBytes("UTF-8"), KEY_ALGORITHM));
             return new String(cipher.doFinal(Base64.getDecoder().decode(encryptedInput)), "UTF-8");
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | UnsupportedEncodingException |IllegalBlockSizeException | BadPaddingException ex) {
             Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
             throw new RuntimeException(ex);
         }
-    }
+    }    
 
     /**
      * Encrypts the string.
@@ -53,13 +57,17 @@ public class Utils {
      * @return the encrypted string.
      */
     public static String encrypt(final String str) {
+        return encrypt(str, DEFAULT_SECRET_KEY);
+    }
+    
+    public static String encrypt(final String str, final String secretKey) {
         try {
             Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
-            cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(SECRET_KEY.getBytes("UTF-8"), KEY_ALGORITHM));
+            cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(secretKey.getBytes("UTF-8"), KEY_ALGORITHM));
             return Base64.getEncoder().encodeToString(cipher.doFinal(str.getBytes("UTF-8")));
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | UnsupportedEncodingException | IllegalBlockSizeException | BadPaddingException ex) {
             Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
             throw new RuntimeException(ex);
         }
-    }
+    }    
 }

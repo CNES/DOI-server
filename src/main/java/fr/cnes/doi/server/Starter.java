@@ -10,15 +10,19 @@ import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.settings.EmailSettings;
 import fr.cnes.doi.utils.Utils;
 import gnu.getopt.Getopt;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import org.restlet.data.LocalReference;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
+import gnu.getopt.LongOpt;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * DOI server
@@ -30,7 +34,7 @@ public class Starter {
     static {
         ClientResource client = new ClientResource(LocalReference.createClapReference("class/logging.properties"));
         //InputStream is = Starter.class.getResourceAsStream("logging.properties");
-        Representation logging = client.get();        
+        Representation logging = client.get();
         try {
             LogManager.getLogManager().readConfiguration(logging.getStream());
         } catch (final IOException e) {
@@ -40,28 +44,35 @@ public class Starter {
             client.release();
         }
     }
-
+    
+    public static final int BITS_16 = 16;
+    
     private static final Logger LOGGER = Logger.getLogger(Starter.class.getName());
     private static final Logger GLOBAL_LOGGER = Logger.getGlobal();
 
     private static DoiServer doiServer;
 
-    private static void displayHelp() {        
+    private static void displayHelp() {
         GLOBAL_LOGGER.entering(Starter.class.getName(), "displayHelp");
         DoiSettings settings = DoiSettings.getInstance();
         StringBuilder help = new StringBuilder();
         help.append("------------ Help for DOI Server -----------\n");
         help.append("\n");
-        help.append("Usage: java -jar ").append(settings.getString(Consts.APP_NAME)).append("-").append(settings.getString(Consts.VERSION)).append(".jar [OPTIONS]\n");
-        help.append("\n");
+        help.append("Usage: java -jar ").append(settings.getString(Consts.APP_NAME)).append("-").append(settings.getString(Consts.VERSION)).append(".jar [--secret <key>] [OPTIONS] [-s]\n");
+        help.append("\n\n");
+        help.append("with :\n");
+        help.append("  --secret <key>               : The 16 bits secret key to crypt/decrypt\n");
+        help.append("                                 If not provided, a default one is used\n\n");
+        help.append("  -s                           : Starts the server\n");        
         help.append("with OPTIONS:\n");
-        help.append("  -h                     : This output\n");
-        help.append("  -c <string>            : Crypts a string in the standard output\n");
-        help.append("  -e <string>            : Decrypts a string in the standard output\n");
-        help.append("  -s                     : Starts the server\n");
-        help.append("  -d                     : Displays the property file\n");
-        help.append("  -f <path>              : Path to the configuation file\n");
-        help.append("  -v                     : DOI server version\n");
+        help.append("  -h|--help                    : This output\n");
+        help.append("  -c <string>                  : Crypts a string in the standard output\n");
+        help.append("  -e <string>                  : Decrypts a string in the standard output\n");
+        help.append("  -d                           : Displays the property file\n");
+        help.append("  -f <path>                    : Path to the configuation file\n");
+        help.append("  -y|--cryptProperties <path>  : crypts the properties file on the output standard\n");
+        help.append("  -z|--decryptProperties <path>: Decrypts the properties and loads it\n");        
+        help.append("  -v|--version                 : DOI server version\n");
         help.append("\n");
         help.append("\n");
         LOGGER.info(help.toString());
@@ -85,7 +96,7 @@ public class Starter {
                 LOGGER.info("Unable to stop the server");
             } finally {
                 GLOBAL_LOGGER.info("Interrups the server, which is stopping");
-                EmailSettings.getInstance().sendMessage("[DOI] Stopping Server", "Ther server has been interrupted");                
+                EmailSettings.getInstance().sendMessage("[DOI] Stopping Server", "Ther server has been interrupted");
                 server.interrupt();
                 server.join();
             }
@@ -153,16 +164,34 @@ public class Starter {
 
     public static void main(String[] argv) {
         final DoiSettings settings = DoiSettings.getInstance();
-        final String progName = "java -jar "+settings.getString(Consts.APP_NAME)+"-"+settings.getString(Consts.VERSION)+".jar";
+        final String progName = "java -jar " + settings.getString(Consts.APP_NAME) + "-" + settings.getString(Consts.VERSION) + ".jar";
 
         int c;
-        String arg;                
+        String arg;
 
+        StringBuffer sb = new StringBuffer();
+        LongOpt[] longopts = new LongOpt[5];
+        longopts[0] = new LongOpt("help", LongOpt.NO_ARGUMENT, null, 'h');
+        longopts[1] = new LongOpt("version", LongOpt.NO_ARGUMENT, null, 'v');
+        longopts[2] = new LongOpt("secret", LongOpt.REQUIRED_ARGUMENT, sb, 0);
+        longopts[3] = new LongOpt("decryptProperties", LongOpt.REQUIRED_ARGUMENT, null, 'z');
+        longopts[4] = new LongOpt("cryptProperties", LongOpt.REQUIRED_ARGUMENT, null, 'y');
+        
+        
         // 
-        Getopt g = new Getopt(progName, argv, "hvdse:c:f:");
+        Getopt g = new Getopt(progName, argv, "hvdse:c:f:y:z:", longopts);
         //
         while ((c = g.getopt()) != -1) {
             switch (c) {
+                case 0:
+                    String secretKey = g.getOptarg();
+                    if(secretKey.length() != BITS_16) {
+                        throw new IllegalArgumentException("The secret key must have 16 characters.");
+                    } else {
+                        settings.setSecretKey(secretKey);
+                    }
+                    break;
+                //                   
                 case 'h':
                     GLOBAL_LOGGER.fine("h option is selected");
                     displayHelp();
@@ -176,13 +205,13 @@ public class Starter {
                 case 'e':
                     GLOBAL_LOGGER.fine("e option is selected");
                     arg = g.getOptarg();
-                    System.out.println(Utils.decrypt(arg));
+                    System.out.println(Utils.decrypt(arg, settings.getSecretKey()));
                     break;
                 //    
                 case 'c':
                     GLOBAL_LOGGER.fine("c option is selected");
                     arg = g.getOptarg();
-                    System.out.println(Utils.encrypt(arg));
+                    System.out.println(Utils.encrypt(arg, settings.getSecretKey()));
                     break;
                 //    
                 case 'd':
@@ -205,8 +234,41 @@ public class Starter {
                 case 'v':
                     GLOBAL_LOGGER.fine("v option is selected");
                     displayVersion();
-                    break;
-                //
+                    break;                
+                //    
+                case 'y':
+                    GLOBAL_LOGGER.fine("y option is selected");
+                    arg = g.getOptarg();
+                    try {
+                        byte[] encodedFile = Files.readAllBytes(Paths.get(arg));
+                        String contentFile = new String(encodedFile, Charset.forName("UTF-8"));
+                        contentFile = Utils.encrypt(contentFile, settings.getSecretKey());
+                        LOGGER.info(contentFile);
+                    } catch (Exception ex) {
+                        LOGGER.info("Error: " + ex.toString());
+                    }
+                    break; 
+                //    
+                case 'z':
+                    GLOBAL_LOGGER.fine("z option is selected");
+                    arg = g.getOptarg();
+                    try {
+                        byte[] encoded = Files.readAllBytes(Paths.get(arg));
+                        String content = new String(encoded, Charset.forName("UTF-8"));
+                        content = Utils.decrypt(content, settings.getSecretKey());
+                        LOGGER.info(content);
+                        InputStream contentStream = new ByteArrayInputStream(content.getBytes("UTF-8"));
+                        {
+                            try {
+                                settings.setPropertiesFile(contentStream);
+                            } catch (IOException ex) {
+                                LOGGER.info(ex.getMessage());
+                            }
+                        }
+                    } catch(Exception ex) {
+                        LOGGER.info("Error: " + ex.toString());
+                    }    
+                    break;                    
                 case '?':
                     break; // getopt() already printed an error
                 //
@@ -218,8 +280,8 @@ public class Starter {
         for (int i = g.getOptind(); i < argv.length; i++) {
             LOGGER.log(Level.INFO, "Non option argv element: {0}\n", argv[i]);
         }
-        
-        if(argv.length == 0) {
+
+        if (argv.length == 0) {
             displayHelp();
         }
 
