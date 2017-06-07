@@ -26,6 +26,11 @@ public class DoiSettingsTest {
     private DoiSettings instance;
     
     public DoiSettingsTest() {
+    	
+    	// -Dprivate.key=toto dans les param de la JVM au lancement du test (à mettre dans le lancement de SettingsSuite)
+    	System.out.println(System.getProperty("private.key"));
+    	
+    	
         instance = DoiSettings.getInstance();  
         try {
             instance.setPropertiesFile(inputStream);
