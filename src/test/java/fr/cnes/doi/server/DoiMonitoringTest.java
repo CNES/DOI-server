@@ -22,7 +22,7 @@ public class DoiMonitoringTest {
     private DoiMonitoring instance;
     
     public DoiMonitoringTest() {
-        
+        instance = new DoiMonitoring();
     }
     
     @BeforeClass
@@ -49,8 +49,7 @@ public class DoiMonitoringTest {
         System.out.println("register");
         Method name = Method.GET;
         String path = "/test";
-        String description = "myTest";
-        instance = new DoiMonitoring();
+        String description = "myTest";        
         instance.register(name, path, description);
         assertTrue(true);
     }

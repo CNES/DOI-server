@@ -46,11 +46,7 @@ import org.restlet.service.CorsService;
  * @author Jean-Christophe Malapert
  */
 public class DoiMdsApplication extends BaseApplication {   
-    
-
-    //Define role names
-    //public static final String ROLE_USER = "user";
-    //public static final String ROLE_OWNER = "owner";    
+       
     public static final String PROJECT_TEMPLATE = "projectName";
     public static final String DOI_TEMPLATE = "doiName";
 
@@ -261,12 +257,14 @@ public class DoiMdsApplication extends BaseApplication {
         return this.config.getString(Consts.INIST_DOI);
     }
     
+    /**
+     * Returns the client.
+     * @return the client
+     */
     public ClientMDS getClient() {
         return this.client;
     }
-    
-    
-
+        
     @Override
     public final ApplicationInfo getApplicationInfo(final Request request, final Response response) {
         final ApplicationInfo result = super.getApplicationInfo(request, response);

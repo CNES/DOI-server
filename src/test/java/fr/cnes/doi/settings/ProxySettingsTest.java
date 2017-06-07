@@ -5,10 +5,16 @@
  */
 package fr.cnes.doi.settings;
 
+import fr.cnes.doi.utils.Utils;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -23,16 +29,20 @@ import org.restlet.data.ChallengeResponse;
  */
 public class ProxySettingsTest {
     
-    private InputStream inputStream = SettingsSuite.class.getResourceAsStream("/doi.properties");
+    private InputStream inputStream = SettingsSuite.class.getResourceAsStream("/config.properties");
     private ProxySettings instance = ProxySettings.getInstance();        
     
     public ProxySettingsTest() {
-        DoiSettings doiSettings = DoiSettings.getInstance();  
+        DoiSettings doiSettings = DoiSettings.getInstance(); 
+        String result = new BufferedReader(new InputStreamReader(inputStream)).lines().collect(Collectors.joining("\n"));
+        String secretKey = System.getProperty("private.key");        
+        result = Utils.decrypt(result, secretKey);
+        InputStream stream = new ByteArrayInputStream(result.getBytes(Charset.forName("UTF-8")));
         try {
-            doiSettings.setPropertiesFile(inputStream);
+            doiSettings.setPropertiesFile(stream);
         } catch (IOException ex) {
             Logger.getLogger(EmailSettingsTest.class.getName()).log(Level.SEVERE, null, ex);
-        }   
+        }           
         instance.init(doiSettings);                
     }    
     
@@ -53,29 +63,14 @@ public class ProxySettingsTest {
     }
 
     /**
-     * Test of reset method, of class ProxySettings.
-     */
-    @Test
-    public void testReset() {
-        System.out.println("reset");
-        ProxySettings instance = null;
-        instance.reset();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
      * Test of isWithProxy method, of class ProxySettings.
      */
     @Test
     public void testIsWithProxy() {
         System.out.println("isWithProxy");
-        ProxySettings instance = null;
         boolean expResult = false;
         boolean result = instance.isWithProxy();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -85,10 +80,8 @@ public class ProxySettingsTest {
     public void testSetWithProxy() {
         System.out.println("setWithProxy");
         boolean withProxy = false;
-        ProxySettings instance = null;
         instance.setWithProxy(withProxy);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertFalse(instance.isWithProxy());
     }
 
     /**
@@ -97,12 +90,9 @@ public class ProxySettingsTest {
     @Test
     public void testGetProxyHost() {
         System.out.println("getProxyHost");
-        ProxySettings instance = null;
-        String expResult = "";
+        String expResult = "proxy-HTTP2.cnes.fr";
         String result = instance.getProxyHost();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -111,12 +101,9 @@ public class ProxySettingsTest {
     @Test
     public void testGetProxyPort() {
         System.out.println("getProxyPort");
-        ProxySettings instance = null;
-        String expResult = "";
+        String expResult = "8050";
         String result = instance.getProxyPort();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -125,12 +112,8 @@ public class ProxySettingsTest {
     @Test
     public void testGetProxyUser() {
         System.out.println("getProxyUser");
-        ProxySettings instance = null;
-        String expResult = "";
         String result = instance.getProxyUser();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertNotNull(result);
     }
 
     /**
@@ -139,12 +122,8 @@ public class ProxySettingsTest {
     @Test
     public void testGetProxyPassword() {
         System.out.println("getProxyPassword");
-        ProxySettings instance = null;
-        String expResult = "";
         String result = instance.getProxyPassword();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertNotNull(result);
     }
 
     /**
@@ -152,13 +131,9 @@ public class ProxySettingsTest {
      */
     @Test
     public void testGetProxyAuthentication() {
-        System.out.println("getProxyAuthentication");
-        ProxySettings instance = null;
-        ChallengeResponse expResult = null;
+        System.out.println("getProxyAuthentication");        
         ChallengeResponse result = instance.getProxyAuthentication();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertNull(result);
     }
 
     /**
@@ -167,12 +142,9 @@ public class ProxySettingsTest {
     @Test
     public void testGetNonProxyHosts() {
         System.out.println("getNonProxyHosts");
-        ProxySettings instance = null;
         String expResult = "";
         String result = instance.getNonProxyHosts();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
     
 }

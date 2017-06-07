@@ -41,8 +41,15 @@ public class CnesStatusService extends StatusService {
         this.settings = DoiSettings.getInstance();
     }
 
+    /**
+     * Returns the representation of the status page.
+     * @param status Status
+     * @param request request
+     * @param response response
+     * @return the representation of the status page
+     */
     @Override
-    public Representation getRepresentation(Status status, Request request, Response response) {
+    public Representation getRepresentation(final Status status, final Request request, final Response response) {
         Map<String, String> dataModel = new TreeMap<>();       
         dataModel.put("applicationName", Application.getCurrent().getName());
         dataModel.put("statusCode", String.valueOf(response.getStatus().getCode()));

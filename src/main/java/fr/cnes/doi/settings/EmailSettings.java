@@ -10,6 +10,7 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.restlet.Client;
+import org.restlet.Context;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.data.ChallengeResponse;
@@ -68,6 +69,7 @@ public class EmailSettings {
         this.authUser = settings.getSecret(Consts.SMTP_AUTH_USER);
         this.authPwd = settings.getSecret(Consts.SMTP_AUTH_PWD);
         this.tlsEnable = settings.getString(Consts.SMTP_STARTTLS_ENABLE);
+        this.contactAdmin = settings.getString(Consts.SERVER_CONTACT_ADMIN);
     }
     
     public void setDebug(boolean isEnabled) {
@@ -82,15 +84,19 @@ public class EmailSettings {
      * Sends a message by email.
      * @param subject Email's subject
      * @param msg  Email's message
+     * @return True when the message is sent
      */
-    public void sendMessage(final String subject, final String msg) {
+    public boolean sendMessage(final String subject, final String msg) {
+        boolean result;
         try {
             final Request request = new Request(Method.POST, getSmtpURL());
             request.setChallengeResponse(new ChallengeResponse(ChallengeScheme.SMTP_PLAIN, getAuthUser(), getAuthPwd()));               
-            sendMail(Protocol.valueOf(getSmtpProtocol()), request, Boolean.getBoolean(getTlsEnable()), subject, msg);
+            result = sendMail(Protocol.valueOf(getSmtpProtocol()), request, Boolean.getBoolean(getTlsEnable()), subject, msg);
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
+            result = false;
         }
+        return result;
     }    
             
     /**
@@ -100,10 +106,13 @@ public class EmailSettings {
      * @param startTls startTls
      * @param subject Email's subject
      * @param msg Email's message
-     * @throws Exception 
+     * @return True when the message is sent
      */
-    private void sendMail(final Protocol protocol, final Request request, boolean startTls, final String subject, final String msg) throws Exception {
+    private boolean sendMail(final Protocol protocol, final Request request, boolean startTls, final String subject, final String msg) throws Exception {        
+        boolean result;
         final Client client = new Client(protocol);
+        Context context = new Context();
+        client.setContext(context);
         client.getContext().getParameters().add("debug", String.valueOf(getDebug()));
         client.getContext().getParameters().add("startTls", Boolean.toString(startTls).toLowerCase());
         Map<String, String> dataModel = new TreeMap<>();
@@ -111,15 +120,19 @@ public class EmailSettings {
         dataModel.put("message", msg);
         dataModel.put("from", DoiSettings.getInstance().getString(Consts.SERVER_CONTACT_ADMIN, "L-doi-support@cnes.fr"));
         dataModel.put("to", DoiSettings.getInstance().getString(Consts.SERVER_CONTACT_ADMIN, "L-doi-support@cnes.fr"));
-        Representation mailFtl = new ClientResource(LocalReference.createClapReference("class/resources/email.ftl")).get();
+        Representation mailFtl = new ClientResource(LocalReference.createClapReference("class/email.ftl")).get();
         Representation mail = new TemplateRepresentation(mailFtl, dataModel, MediaType.TEXT_XML);
         request.setEntity(mail);
         final Response response = client.handle(request);
         Status status = response.getStatus();
         if(status.isError()) {
-            LOGGER.severe("Cannot send the email!");
-        } 
+            LOGGER.severe("Cannot send the email!");  
+            result = false;
+        } else {
+            result = true;
+        }
         client.stop();
+        return result;
     }       
 
     /**

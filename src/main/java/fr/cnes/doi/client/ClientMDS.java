@@ -66,7 +66,8 @@ public class ClientMDS {
      * Options for each context
      */
     public enum Context {
-        DEV(false, true, DATA_CITE_TEST_URL, Level.ALL),
+        DEV(true, true, DATA_CITE_TEST_URL, Level.ALL),
+        POST_DEV(false, true, DATA_CITE_TEST_URL, Level.ALL),        
         PRE_PROD(false, true, DATA_CITE_URL, Level.FINE),
         PROD(false, false, DATA_CITE_URL, Level.INFO);
 

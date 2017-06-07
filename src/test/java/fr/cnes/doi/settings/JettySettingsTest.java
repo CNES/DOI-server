@@ -22,7 +22,7 @@ import static org.junit.Assert.*;
  */
 public class JettySettingsTest {
     
-    private InputStream inputStream = SettingsSuite.class.getResourceAsStream("/doi.properties");
+    private InputStream inputStream = SettingsSuite.class.getResourceAsStream("/config.properties");
     private DoiSettings doiSettings = DoiSettings.getInstance();  
     private JettySettings instance;
     

@@ -5,10 +5,16 @@
  */
 package fr.cnes.doi.settings;
 
+import fr.cnes.doi.utils.Utils;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -22,21 +28,20 @@ import static org.junit.Assert.*;
  */
 public class DoiSettingsTest {
                
-    private InputStream inputStream = SettingsSuite.class.getResourceAsStream("/doi.properties");
+    private InputStream inputStream = SettingsSuite.class.getResourceAsStream("/config.properties");
     private DoiSettings instance;
     
     public DoiSettingsTest() {
-    	
-    	// -Dprivate.key=toto dans les param de la JVM au lancement du test (à mettre dans le lancement de SettingsSuite)
-    	System.out.println("mykey="+System.getProperty("private.key"));
-    	
-    	
         instance = DoiSettings.getInstance();  
+        String result = new BufferedReader(new InputStreamReader(inputStream)).lines().collect(Collectors.joining("\n"));
+        String secretKey = System.getProperty("private.key");        
+        result = Utils.decrypt(result, secretKey);
+        InputStream stream = new ByteArrayInputStream(result.getBytes(Charset.forName("UTF-8")));
         try {
-            instance.setPropertiesFile(inputStream);
+            instance.setPropertiesFile(stream);
         } catch (IOException ex) {
-            Logger.getLogger(DoiSettingsTest.class.getName()).log(Level.SEVERE, null, ex);
-        }        
+            Logger.getLogger(EmailSettingsTest.class.getName()).log(Level.SEVERE, null, ex);
+        }          
     }
     
     @BeforeClass
@@ -75,8 +80,8 @@ public class DoiSettingsTest {
     @Test
     public void testGetString_String() {
         System.out.println("getString");
-        String key = Consts.APP_NAME;        
-        String expResult = "Data Object Identifier Server";
+        String key = Consts.COPYRIGHT;        
+        String expResult = "Copyright 2017 CNES";
         String result = instance.getString(key);
         assertEquals(expResult, result);
     }
@@ -88,8 +93,8 @@ public class DoiSettingsTest {
     public void testGetSecret() {
         System.out.println("getSecret");
         String key = Consts.INIST_LOGIN;       
-        String expResult = "myLoginDoi";
         String result = instance.getSecret(key);
+        assertNotNull(result);
     }
 
     /**
@@ -136,7 +141,7 @@ public class DoiSettingsTest {
     public void testGetLong_String() {
         System.out.println("getLong");
         String key = Consts.PROXY_PORT;
-        Long expResult = 8888L;
+        Long expResult = 8050L;
         Long result = instance.getLong(key);
         assertEquals(expResult, result);
     }
@@ -149,7 +154,7 @@ public class DoiSettingsTest {
         System.out.println("getLong");
         String key = Consts.PROXY_PORT;
         String defaultValue = "";
-        Long expResult = 8888L;
+        Long expResult = 8050L;
         Long result = instance.getLong(key, defaultValue);
         assertEquals(expResult, result);
     }

@@ -21,9 +21,15 @@ public class DoiCrossCiteApplication extends BaseApplication {
     
     private final ClientCrossCiteCitation client = new ClientCrossCiteCitation();
     
+    /**
+     * Constructs the application by setting the proxy authentication
+     * to the ClientCrossCiteCitation proxy when the configuration is set.
+     */
     public DoiCrossCiteApplication() {
         super();  
-        client.setProxyAuthentication(this.proxySettings.getProxyAuthentication());
+        if(this.proxySettings.isWithProxy()) {
+            client.setProxyAuthentication(this.proxySettings.getProxyAuthentication());
+        }
     }
     
     
@@ -36,6 +42,10 @@ public class DoiCrossCiteApplication extends BaseApplication {
         return router;
     }
     
+    /**
+     * Returns the client.
+     * @return the client
+     */
     public ClientCrossCiteCitation getClient() {
         return this.client;
     }

@@ -5,6 +5,7 @@
  */
 package fr.cnes.doi.settings;
 
+import fr.cnes.doi.utils.Utils;
 import java.util.Properties;
 import org.restlet.data.ChallengeResponse;
 import org.restlet.data.ChallengeScheme;
@@ -64,6 +65,8 @@ public final class ProxySettings {
      * Proxy configuration enable / disable
      */
     private boolean proxySet = false;
+    
+    private DoiSettings settings;
 
     
     /**
@@ -95,40 +98,44 @@ public final class ProxySettings {
      * @param settings
      */
     public void init(final DoiSettings settings) {
+        this.settings = settings;
+        this.proxyHost = settings.getString(Consts.PROXY_HOST);
+        this.proxyPort = settings.getString(Consts.PROXY_PORT);
 
-        proxyHost = settings.getString(Consts.PROXY_HOST);
-        proxyPort = settings.getString(Consts.PROXY_PORT);
+        this.proxyUser = settings.getSecret(Consts.PROXY_USER);
+        this.proxyPassword = settings.getSecret(Consts.PROXY_PASSWORD);
+        this.nonProxyHosts = settings.getString(Consts.NONPROXY_HOSTS);
+        
+        this.proxySet = settings.getBoolean(Consts.PROXY_USED);
 
-        proxyUser = settings.getSecret(Consts.PROXY_USER);
-        proxyPassword = settings.getSecret(Consts.PROXY_PASSWORD);
-        nonProxyHosts = settings.getString(Consts.NONPROXY_HOSTS);
-
-        if ((proxyHost != null) && !proxyHost.equals("") && (proxyPort != null) && !proxyPort.equals("")) {
-            proxySet = true;
-
+        configureProxy();
+    }
+    
+    private void configureProxy() {
+        if (Utils.isNotEmpty(this.proxyHost) && Utils.isNotEmpty(this.proxyPort) && this.proxySet) {
             Properties properties = System.getProperties();
-            properties.put(HTTP_PROXYHOST, proxyHost);
-            properties.put(HTTP_PROXYPORT, proxyPort);
-            properties.put(HTTP_NONPROXYHOSTS, nonProxyHosts);
+            properties.put(HTTP_PROXYHOST, this.proxyHost);
+            properties.put(HTTP_PROXYPORT, this.proxyPort);
+            properties.put(HTTP_NONPROXYHOSTS, this.nonProxyHosts);
 
             // Add the client authentication to the call
             ChallengeScheme scheme = ChallengeScheme.HTTP_BASIC;
 
             // User + Password sur le proxy
-            proxyAuthentication = new ChallengeResponse(scheme, proxyUser, proxyPassword);
-        }
+            this.proxyAuthentication = new ChallengeResponse(scheme, this.proxyUser, this.proxyPassword);
+        }        
     }
 
     /**
      * Init the proxy setting
      */
     public void reset() {
-        proxySet = false;
+        this.proxySet = false;
         Properties properties = System.getProperties();
         properties.remove(HTTP_PROXYHOST);
         properties.remove(HTTP_PROXYPORT);
         properties.remove(HTTP_NONPROXYHOSTS);
-        proxyAuthentication = null;
+        this.proxyAuthentication = null;
     }
 
     /**
@@ -137,7 +144,7 @@ public final class ProxySettings {
      * @return the withProxy
      */
     public boolean isWithProxy() {
-        return proxySet;
+        return this.proxySet;
     }
 
     /**
@@ -146,7 +153,9 @@ public final class ProxySettings {
      * @param withProxy the withProxy to set
      */
     public void setWithProxy(boolean withProxy) {
-        proxySet = withProxy;
+        this.proxySet = withProxy;  
+        this.proxyAuthentication = null;
+        configureProxy();
     }
 
     /**

@@ -14,8 +14,14 @@ import org.restlet.ext.wadl.WadlApplication;
  */
 public class BaseApplication extends WadlApplication {
     
+    /**
+     * Proxy settings.
+     */
     protected ProxySettings proxySettings;
     
+    /**
+     * This constructor creates an instance of proxySettings.
+     */
     public BaseApplication() {                
         proxySettings = ProxySettings.getInstance();       
     }
