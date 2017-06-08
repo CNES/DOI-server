@@ -283,7 +283,7 @@ public class Starter {
 // Generating a self-signed certificate
 //--------------------------------------
 //keytool -keystore serverKey.jks -alias server -genkey -keyalg RSA
-//-keysize 2048 -dname "CN=simpson.org,OU=Simpson family,O=The Simpsons,C=US"
+//-keysize 2048 -dname "CN=www.cnes.fr,OU=Jean-Christophe Malapert,O=CNES,C=FR"
 //-sigalg "SHA1withRSA"
 //
 //Note that you’ll be prompted for passwords for the keystore and the key itself. Let’s
@@ -293,7 +293,7 @@ public class Starter {
 //
 // Generating a certificate request
 //----------------------------------
-//keytool -certreq -keystore serverKey.jks -alias server -file serverKey.csr
+//keytool -certreq -keystore serverKey.jks -alias server -file serverKey.crt
 //
 // Importing a trusted certificate
 //----------------------------------

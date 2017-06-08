@@ -1,0 +1,56 @@
+# Generate keystore
+keytool -keystore doiServerKey.jks -alias server -genkey -keyalg RSA -keysize 2048 -dname "CN=Jean-Christophe Malapert,OU=DNO/ISA/VIP,O=CNES,L=Toulouse,ST=Unknown,C=FR" -sigalg "SHA1withRSA"
+
+# List records in keystore (validity date for instance)
+keytool -list -v -keystore doiServerKey.jks
+
+# Extends the validity date
+keytool -selfcert -v -alias server -validity 3650 -keystore doiServerKey.jks
+
+# To be useful, the certificate needs to be exported so that it can be 
+# imported into other keystores such as those used by the Java VM or Windows.
+# To export the certificate, use keytool with the following options:
+keytool -export -v -alias server -file server.cer -keystore doiServerKey.jks
+
+# You should now have a file called 'server.cer' that contains your server's 
+# self-signed certificate. The server will present this certificate whenever 
+# an HTTPS client sends a request. There are different ways of installing the 
+# certificate on the server; in the Restlet example server code below, the 
+# certificate is loaded from the keystore when the Restlet server is started.
+
+# There are different ways to get a HTTPS client to trust your certificate. 
+# If you are using a browser, there may be an option to add it to a list of 
+# trusted certificates. In Windows XP, the certificate can be added to the 
+# 'Trusted Root Certification Authorities' via Internet Options (in IE7 or 
+# Control Panel - Internet Options). On the 'Content' tab, click 
+# 'Certificates', then go to 'Trusted Root Certification Authorities' tab, 
+# click 'Import...' and follow the steps to import your certificate file 
+# ('server.cer'). It will give warnings about not being verified, which is ok 
+# for testing, but it must be properly signed by proper Certification Authority
+# for production. Firefox 3 also has the ability to add exceptions to trust 
+# individual certificates (self-signed or issued by an unknown CA).
+
+# If you are using another Java program instead of a browser, then you need 
+# to let the Java VM know about the certificate. There are several ways to do 
+# this, but here are two:
+
+#  1. Import the certificate to the Java VM trusted certificates file, which is
+# called 'cacerts' by default and located in the lib/security directory of the 
+# Java home directory, for example 
+# C:\Program Files\Java\jre6\lib\security\cacerts
+# The keytool command to do this is:
+ keytool -import\
+ -alias serverX\
+ -file serverX.cer\
+ -keystore "C:\\Program Files\\Java\\jre6\\lib\\security\\cacerts"\
+ -storepass "changeit"
+
+#  2. Add the following Java VM arguments to your Java client command line:
+  -Djavax.net.ssl.trustStore=C:\\\\somedir\\\\serverX.jks -Djavax.net.ssl.trustStoreType=JKS\
+  -Djavax.net.ssl.trustStorePassword=password
+
+# These arguments tell the Java VM where to find your certificate. Please note 
+# that this approach should only be used in a test environment, not in 
+# production, as the password is shown in plain text.
+
+

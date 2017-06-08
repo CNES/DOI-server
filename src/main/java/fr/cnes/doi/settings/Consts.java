@@ -47,6 +47,12 @@ public class Consts {
     public static final String SMTP_AUTH_USER = "Starter.mail.send.identifier";
     public static final String SMTP_AUTH_PWD = "Starter.mail.send.secret";    
     
+    public static final String HTTPS_SECRET_KEY = "Starter.Server.HTTPS.SecretKey";
+    public static final String HTTPS_PORT = "Starter.Server.HTTPS.Port";
+    public static final String HTTPS_KEYSTORE_PATH = "Starter.Server.HTTPS.KeystorePath";
+    public static final String HTTPS_KEYSTORE_PASSWD = "Starter.Server.HTTPS.keystorePassword";
+    public static final String HTTPS_TRUST_STORE_PATH = "Starter.Server.HTTPS.TrustStorePath";
+    public static final String HTTPS_TRUST_STORE_PASSWD = "Starter.Server.HTTPS.TrustStorePassword"; 
 
     // Jetty contants
     /**

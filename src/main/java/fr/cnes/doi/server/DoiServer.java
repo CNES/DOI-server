@@ -21,15 +21,24 @@ import fr.cnes.doi.resource.MetadataResource;
 import fr.cnes.doi.resource.MetadatasResource;
 import fr.cnes.doi.settings.EmailSettings;
 import fr.cnes.doi.settings.ProxySettings;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import java.security.KeyStore;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.restlet.Application;
 import org.restlet.Component;
 import org.restlet.Context;
 import org.restlet.Server;
+import org.restlet.data.LocalReference;
 import org.restlet.data.Method;
 import org.restlet.data.Parameter;
 import org.restlet.data.Protocol;
+import org.restlet.representation.Representation;
+import org.restlet.resource.ClientResource;
 import org.restlet.routing.Filter;
 import org.restlet.security.Group;
 import org.restlet.security.MemoryRealm;
@@ -57,16 +66,17 @@ public class DoiServer extends Component {
 
     public DoiServer(final DoiSettings settings) {
         super();
-        this.settings = settings;        
+        this.settings = settings;
         startWithProxy(settings);
     }
 
     /**
      * Init Monitoring
+     *
      * @return monitoring object
      */
     private DoiMonitoring initMonitoring() {
-        LOGGER.entering(getClass().getName(),"initMonitoring");
+        LOGGER.entering(getClass().getName(), "initMonitoring");
         DoiMonitoring monitoring = new DoiMonitoring();
         monitoring.register(Method.GET, MDS_URI + DoiMdsApplication.DOI_URI, DoisResource.LIST_ALL_DOIS);
         monitoring.register(Method.POST, MDS_URI + DoiMdsApplication.DOI_URI, DoisResource.CREATE_DOI);
@@ -74,12 +84,12 @@ public class DoiServer extends Component {
         monitoring.register(Method.POST, MDS_URI + DoiMdsApplication.METADATAS_URI, MetadatasResource.CREATE_METADATA);
         monitoring.register(Method.GET, MDS_URI + DoiMdsApplication.METADATAS_URI + DoiMdsApplication.DOI_NAME_URI, MetadataResource.GET_METADATA);
         monitoring.register(Method.DELETE, MDS_URI + DoiMdsApplication.METADATAS_URI + DoiMdsApplication.DOI_NAME_URI, MetadataResource.DELETE_METADATA);
-        LOGGER.exiting(getClass().getName(),"initMonitoring");        
+        LOGGER.exiting(getClass().getName(), "initMonitoring");
         return monitoring;
     }
-    
+
     private void initLogServices() {
-        LOGGER.entering(getClass().getName(),"initLogServices");
+        LOGGER.entering(getClass().getName(), "initLogServices");
         this.setLogService(new DoiLogDataServer("fr.cnes.doi.api", true));
 
         LogService logServiceApplication = new DoiLogDataServer("fr.cnes.doi.app", true) {
@@ -107,28 +117,28 @@ public class DoiServer extends Component {
                 return new DoiSecurityLogFilter("fr.cnes.doi.security");
             }
         };
-        this.getServices().add(logServiceSecurity);        
-        LOGGER.exiting(getClass().getName(),"initLogServices");        
+        this.getServices().add(logServiceSecurity);
+        LOGGER.exiting(getClass().getName(), "initLogServices");
     }
 
     /**
      * Configures the Server
      */
-    private void configureServer() {        
-        LOGGER.entering(getClass().getName(), "init");                
+    private void configureServer() {
+        LOGGER.entering(getClass().getName(), "init");
 
         Server serverHttp = startHttpServer(settings.getInt(Consts.SERVER_HTTP_PORT, DEFAULT_HTTP_PORT));
-        Server serverHttps = startHttpsServer(443);
-                
+        Server serverHttps = startHttpsServer(8183);
+
         this.getServers().add(serverHttps);
         this.getServers().add(serverHttp);
         this.getClients().add(Protocol.HTTP);
         this.getClients().add(Protocol.HTTPS);
         this.getClients().add(Protocol.CLAP);
-                    
+
         // Add configuration parameters to Servers
         JettySettings jettyProps = new JettySettings(serverHttp, settings);
-        jettyProps.addParamsToServerContext();        
+        jettyProps.addParamsToServerContext();
         //jettyProps = new JettySettings(serverHttps, settings);
         //jettyProps.addParamsToServerContext();                
 
@@ -138,7 +148,7 @@ public class DoiServer extends Component {
         this.getDefaultHost().attach(MDS_URI, appDoiProject);
         this.getDefaultHost().attach(CITATION_URI, new DoiCrossCiteApplication());
         this.getDefaultHost().attach(STATUS_URI, new DoiStatusApplication());
-        this.getDefaultHost().attachDefault(new WebSiteApplication());        
+        this.getDefaultHost().attachDefault(new WebSiteApplication());
 
         // Set authentication
         MemoryRealm realm = new MemoryRealm();
@@ -160,13 +170,14 @@ public class DoiServer extends Component {
         realm.map(human, project2);
 
         this.getLogService().setResponseLogFormat(settings.getString(Consts.LOG_FORMAT));
-        
+
         LOGGER.exiting(getClass().getName(), "init");
     }
-    
+
     /**
      * Starts with proxy.
-     * @param settings 
+     *
+     * @param settings
      */
     private void startWithProxy(final DoiSettings settings) {
         LOGGER.entering(getClass().getName(), "startWithProxy");
@@ -174,7 +185,7 @@ public class DoiServer extends Component {
         ProxySettings.getInstance().init(settings);
         EmailSettings.getInstance().init(settings);
         configureServer();
-        LOGGER.exiting(getClass().getName(), "startWithProxy");        
+        LOGGER.exiting(getClass().getName(), "startWithProxy");
     }
 
     /**
@@ -202,27 +213,59 @@ public class DoiServer extends Component {
      */
     private Server startHttpsServer(final Integer port) {
         LOGGER.entering(getClass().getName(), "startHttpsServer", port);
+        String pathKeyStore;
+        if(settings.hasValue(Consts.HTTPS_KEYSTORE_PATH)) {
+            pathKeyStore = settings.getString(Consts.HTTPS_KEYSTORE_PATH);
+        } else {
+            pathKeyStore = extractKeyStoreToPath();
+        }
+        
+        String pathKeyTrustStore;
+        if(settings.hasValue(Consts.HTTPS_TRUST_STORE_PATH)) {
+            pathKeyTrustStore = settings.getString(Consts.HTTPS_TRUST_STORE_PATH);
+        } else {
+            pathKeyTrustStore = extractKeyStoreToPath();
+        }        
+        
         // create embedding https jetty server
         Server server = new Server(new Context(), Protocol.HTTPS, port, this);
         Series<Parameter> parameters = server.getContext().getParameters();
-        parameters.add("keystore", "jks/keystore.jks");
-        parameters.add("keyStorePath", "jks/keystore.jks");
-        parameters.add("keyStorePassword", "xxx");
-        parameters.add("keyManagerPassword", "xxx");
-        parameters.add("keyPassword", "xxx");
-        parameters.add("password", "xxx");
+        parameters.add("sslContextFactory", "org.restlet.engine.ssl.DefaultSslContextFactory");
+        // Specifies the path for the keystore used by the server
+        parameters.add("keyStorePath", pathKeyStore);
+        // Specifies the password for the keystore containing several keys
+        parameters.add("keyStorePassword", settings.getSecret(Consts.HTTPS_KEYSTORE_PASSWD));
+        // Specifies the type of the keystore
         parameters.add("keyStoreType", KeyStore.getDefaultType());
-        parameters.add("tracing", "true");
-        parameters.add("truststore", "jks/keystore.jks");
-        parameters.add("trustStorePath", "jks/keystore.jks");
-        parameters.add("trustStorePassword", "xxx");
-        parameters.add("trustPassword", "xxx");
+        // Specifies the password of the specific key used
+        parameters.add("keyPassword", settings.getSecret(Consts.HTTPS_SECRET_KEY));
+        // Specifies the path to the truststore
+        parameters.add("trustStorePath", pathKeyTrustStore);
+        // Specifies the password of the truststore
+        parameters.add("trustStorePassword", settings.getSecret(Consts.HTTPS_TRUST_STORE_PASSWD));
+        // Specifies the type of the truststore
         parameters.add("trustStoreType", KeyStore.getDefaultType());
-        parameters.add("allowRenegotiate", "true");
-        parameters.add("type", "1");
         LOGGER.exiting(getClass().getName(), "startHttpsServer", server);
         return server;
     }
 
+    private String extractKeyStoreToPath() {
+        String result;
+        Representation jks = new ClientResource(LocalReference.createClapReference("class/doiServerKey.jks")).get();
+        try {
+            Path outputDirectory = new File("jks").toPath();
+            if(Files.notExists(outputDirectory)) {
+                Files.createDirectory(outputDirectory);
+            }
+            File outputFile = new File(outputDirectory.getFileName() + File.separator + "doiServerKey.jks");
+            Files.copy(jks.getStream(), outputFile.toPath(), REPLACE_EXISTING);
+            result = outputDirectory.getFileName() + File.separator + "doiServerKey.jks";
+        } catch (IOException ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+            result = "";
+        }
+
+        return result;
+    }
 
 }
