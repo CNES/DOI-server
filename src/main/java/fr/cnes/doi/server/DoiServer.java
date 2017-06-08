@@ -118,9 +118,9 @@ public class DoiServer extends Component {
         LOGGER.entering(getClass().getName(), "init");                
 
         Server serverHttp = startHttpServer(settings.getInt(Consts.SERVER_HTTP_PORT, DEFAULT_HTTP_PORT));
-        //Server serverHttps = startHttpsServer(this, 443);
+        Server serverHttps = startHttpsServer(443);
                 
-        //this.getServers().add(serverHttps);
+        this.getServers().add(serverHttps);
         this.getServers().add(serverHttp);
         this.getClients().add(Protocol.HTTP);
         this.getClients().add(Protocol.HTTPS);

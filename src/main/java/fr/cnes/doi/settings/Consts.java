@@ -26,20 +26,13 @@ public class Consts {
     public static final String SERVER_PROXY_LOGIN = "Starter.Proxy.login";
     public static final String SERVER_PROXY_PWD = "Starter.Proxy.pwd";    
     
-    
-    public static final String PROPERTY_CONTACT_ADMIN = "CONTACT_ADMIN";
-    public static final String PROPERTY_LOG_FORMAT = "LOG_FORMAT";
-    public static final String PROPERTY_LOG_FILE = "PROPERTY_LOG_FILE";
-
     public static final String LOGSERVICE_LOGNAME = "Starter.LogService.logName";
     public static final String LOGSERVICE_ACTIVE = "Starter.LogService.active";
-    public static final String LOG_FORMAT = "Starter.Log.format";
-    
+    public static final String LOG_FORMAT = "Starter.Server.Log.format";    
     
     // Server
     public static final String SERVER_MAX_CONNECTIONS = "Starter.Server.maxConnections";
-    public static final String SERVER_CONTACT_ADMIN = "Starter.Server.contactAdmin";
-    
+    public static final String SERVER_CONTACT_ADMIN = "Starter.Server.contactAdmin";    
 
     public static final String PROXY_USED = "Starter.Proxy.used";
     public static final String PROXY_HOST = "Starter.Proxy.host";
