@@ -59,6 +59,7 @@ public class DoiServer extends Component {
     public static final String STATUS_URI = "/status";
 
     public static final String DEFAULT_HTTP_PORT = "8182";
+    public static final String DEFAULT_HTTPS_PORT = "8183";
 
     private final DoiSettings settings;
 
@@ -128,7 +129,7 @@ public class DoiServer extends Component {
         LOGGER.entering(getClass().getName(), "init");
 
         Server serverHttp = startHttpServer(settings.getInt(Consts.SERVER_HTTP_PORT, DEFAULT_HTTP_PORT));
-        Server serverHttps = startHttpsServer(8183);
+        Server serverHttps = startHttpsServer(settings.getInt(Consts.SERVER_HTTPS_PORT));
 
         this.getServers().add(serverHttps);
         this.getServers().add(serverHttp);
@@ -139,8 +140,8 @@ public class DoiServer extends Component {
         // Add configuration parameters to Servers
         JettySettings jettyProps = new JettySettings(serverHttp, settings);
         jettyProps.addParamsToServerContext();
-        //jettyProps = new JettySettings(serverHttps, settings);
-        //jettyProps.addParamsToServerContext();                
+        jettyProps = new JettySettings(serverHttps, settings);
+        jettyProps.addParamsToServerContext();                
 
         Application appDoiProject = new DoiMdsApplication();
 
@@ -214,15 +215,15 @@ public class DoiServer extends Component {
     private Server startHttpsServer(final Integer port) {
         LOGGER.entering(getClass().getName(), "startHttpsServer", port);
         String pathKeyStore;
-        if(settings.hasValue(Consts.HTTPS_KEYSTORE_PATH)) {
-            pathKeyStore = settings.getString(Consts.HTTPS_KEYSTORE_PATH);
+        if(settings.hasValue(Consts.SERVER_HTTPS_KEYSTORE_PATH)) {
+            pathKeyStore = settings.getString(Consts.SERVER_HTTPS_KEYSTORE_PATH);
         } else {
             pathKeyStore = extractKeyStoreToPath();
         }
         
         String pathKeyTrustStore;
-        if(settings.hasValue(Consts.HTTPS_TRUST_STORE_PATH)) {
-            pathKeyTrustStore = settings.getString(Consts.HTTPS_TRUST_STORE_PATH);
+        if(settings.hasValue(Consts.SERVER_HTTPS_TRUST_STORE_PATH)) {
+            pathKeyTrustStore = settings.getString(Consts.SERVER_HTTPS_TRUST_STORE_PATH);
         } else {
             pathKeyTrustStore = extractKeyStoreToPath();
         }        
@@ -234,15 +235,15 @@ public class DoiServer extends Component {
         // Specifies the path for the keystore used by the server
         parameters.add("keyStorePath", pathKeyStore);
         // Specifies the password for the keystore containing several keys
-        parameters.add("keyStorePassword", settings.getSecret(Consts.HTTPS_KEYSTORE_PASSWD));
+        parameters.add("keyStorePassword", settings.getSecret(Consts.SERVER_HTTPS_KEYSTORE_PASSWD));
         // Specifies the type of the keystore
         parameters.add("keyStoreType", KeyStore.getDefaultType());
         // Specifies the password of the specific key used
-        parameters.add("keyPassword", settings.getSecret(Consts.HTTPS_SECRET_KEY));
+        parameters.add("keyPassword", settings.getSecret(Consts.SERVER_HTTPS_SECRET_KEY));
         // Specifies the path to the truststore
         parameters.add("trustStorePath", pathKeyTrustStore);
         // Specifies the password of the truststore
-        parameters.add("trustStorePassword", settings.getSecret(Consts.HTTPS_TRUST_STORE_PASSWD));
+        parameters.add("trustStorePassword", settings.getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         // Specifies the type of the truststore
         parameters.add("trustStoreType", KeyStore.getDefaultType());
         LOGGER.exiting(getClass().getName(), "startHttpsServer", server);

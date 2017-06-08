@@ -153,7 +153,7 @@ public class EmailSettingsTest {
     @Test
     public void testGetSmtpURL() {
         System.out.println("getSmtpURL");
-        String expResult = "smtp-relay.gmail.com";
+        String expResult = "smtp://smtp-relay.gmail.com";
         String result = instance.getSmtpURL();
         assertEquals(expResult, result);
     }

@@ -1,16 +1,16 @@
 # Generate keystore
-keytool -keystore doiServerKey.jks -alias server -genkey -keyalg RSA -keysize 2048 -dname "CN=Jean-Christophe Malapert,OU=DNO/ISA/VIP,O=CNES,L=Toulouse,ST=Unknown,C=FR" -sigalg "SHA1withRSA"
+keytool -keystore doiServerKey.jks -alias doiServer -genkey -keyalg RSA -keysize 2048 -dname "CN=Jean-Christophe Malapert,OU=DNO/ISA/VIP,O=CNES,L=Toulouse,ST=Unknown,C=FR" -sigalg "SHA1withRSA"
 
 # List records in keystore (validity date for instance)
 keytool -list -v -keystore doiServerKey.jks
 
 # Extends the validity date
-keytool -selfcert -v -alias server -validity 3650 -keystore doiServerKey.jks
+keytool -selfcert -v -alias doiServer -validity 3650 -keystore doiServerKey.jks
 
 # To be useful, the certificate needs to be exported so that it can be 
 # imported into other keystores such as those used by the Java VM or Windows.
 # To export the certificate, use keytool with the following options:
-keytool -export -v -alias server -file server.cer -keystore doiServerKey.jks
+keytool -export -v -alias doiServer -file doiServer.cer -keystore doiServerKey.jks
 
 # You should now have a file called 'server.cer' that contains your server's 
 # self-signed certificate. The server will present this certificate whenever 
