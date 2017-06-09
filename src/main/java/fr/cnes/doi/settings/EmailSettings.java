@@ -126,7 +126,7 @@ public class EmailSettings {
         final Response response = client.handle(request);
         Status status = response.getStatus();
         if(status.isError()) {
-            LOGGER.severe("Cannot send the email!");  
+            LOGGER.log(Level.SEVERE, "Cannot send the email! : {0}", status.getDescription());  
             result = false;
         } else {
             result = true;

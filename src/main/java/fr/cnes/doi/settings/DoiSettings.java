@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 import org.restlet.data.LocalReference;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
+import sun.font.StrikeCache;
 
 /**
  * DOI Settings.
@@ -97,6 +98,15 @@ public class DoiSettings {
      */
     public static DoiSettings getInstance() {
         return DoiSettingsHolder.INSTANCE;
+    }
+    
+    /**
+     * Tests if the key has a value.
+     * @param key key to test
+     * @return True when the value is different or null and empty
+     */
+    public boolean hasValue(final String key) {
+        return Utils.isNotEmpty(getString(key));
     }
     
     /**

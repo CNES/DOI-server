@@ -140,7 +140,7 @@ public class DoiSettingsTest {
     @Test
     public void testGetLong_String() {
         System.out.println("getLong");
-        String key = Consts.PROXY_PORT;
+        String key = Consts.SERVER_PROXY_PORT;
         Long expResult = 8050L;
         Long result = instance.getLong(key);
         assertEquals(expResult, result);
@@ -152,7 +152,7 @@ public class DoiSettingsTest {
     @Test
     public void testGetLong_String_String() {
         System.out.println("getLong");
-        String key = Consts.PROXY_PORT;
+        String key = Consts.SERVER_PROXY_PORT;
         String defaultValue = "";
         Long expResult = 8050L;
         Long result = instance.getLong(key, defaultValue);

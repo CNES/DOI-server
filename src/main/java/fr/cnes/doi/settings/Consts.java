@@ -21,32 +21,27 @@ public class Consts {
     
     public static final String SERVER_HTTP_PORT = "Starter.Server.HTTP.Port";
     
+    public static final String SERVER_HTTPS_SECRET_KEY = "Starter.Server.HTTPS.SecretKey";
+    public static final String SERVER_HTTPS_PORT = "Starter.Server.HTTPS.Port";
+    public static final String SERVER_HTTPS_KEYSTORE_PATH = "Starter.Server.HTTPS.KeystorePath";
+    public static final String SERVER_HTTPS_KEYSTORE_PASSWD = "Starter.Server.HTTPS.keystorePassword";
+    public static final String SERVER_HTTPS_TRUST_STORE_PATH = "Starter.Server.HTTPS.TrustStorePath";
+    public static final String SERVER_HTTPS_TRUST_STORE_PASSWD = "Starter.Server.HTTPS.TrustStorePassword"; 
+    
     public static final String SERVER_PROXY_USED = "Starter.Proxy.used";
     public static final String SERVER_PROXY_HOST = "Starter.Proxy.host";
+    public static final String SERVER_PROXY_PORT = "Starter.Proxy.port";    
     public static final String SERVER_PROXY_LOGIN = "Starter.Proxy.login";
     public static final String SERVER_PROXY_PWD = "Starter.Proxy.pwd";    
-    
-    
-    public static final String PROPERTY_CONTACT_ADMIN = "CONTACT_ADMIN";
-    public static final String PROPERTY_LOG_FORMAT = "LOG_FORMAT";
-    public static final String PROPERTY_LOG_FILE = "PROPERTY_LOG_FILE";
-
+    public static final String SERVER_NONPROXY_HOSTS = "Starter.NoProxy.hosts";     
+           
     public static final String LOGSERVICE_LOGNAME = "Starter.LogService.logName";
     public static final String LOGSERVICE_ACTIVE = "Starter.LogService.active";
-    public static final String LOG_FORMAT = "Starter.Log.format";
-    
+    public static final String LOG_FORMAT = "Starter.Server.Log.format";    
     
     // Server
     public static final String SERVER_MAX_CONNECTIONS = "Starter.Server.maxConnections";
-    public static final String SERVER_CONTACT_ADMIN = "Starter.Server.contactAdmin";
-    
-
-    public static final String PROXY_USED = "Starter.Proxy.used";
-    public static final String PROXY_HOST = "Starter.Proxy.host";
-    public static final String PROXY_PORT = "Starter.Proxy.port";
-    public static final String PROXY_USER = "Starter.Proxy.login";
-    public static final String PROXY_PASSWORD = "Starter.Proxy.pwd";
-    public static final String NONPROXY_HOSTS = "Starter.NoProxy.hosts"; 
+    public static final String SERVER_CONTACT_ADMIN = "Starter.Server.contactAdmin";    
 
     public static final String SMTP_PROTOCOL = "Starter.mail.send.protocol";    
     public static final String SMTP_URL = "Starter.mail.send.server";
@@ -54,7 +49,6 @@ public class Consts {
     public static final String SMTP_AUTH_USER = "Starter.mail.send.identifier";
     public static final String SMTP_AUTH_PWD = "Starter.mail.send.secret";    
     
-
     // Jetty contants
     /**
      * Jetty : Thread pool minimum threads.

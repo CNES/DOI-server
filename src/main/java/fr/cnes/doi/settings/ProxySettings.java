@@ -99,14 +99,14 @@ public final class ProxySettings {
      */
     public void init(final DoiSettings settings) {
         this.settings = settings;
-        this.proxyHost = settings.getString(Consts.PROXY_HOST);
-        this.proxyPort = settings.getString(Consts.PROXY_PORT);
+        this.proxyHost = settings.getString(Consts.SERVER_PROXY_HOST);
+        this.proxyPort = settings.getString(Consts.SERVER_PROXY_PORT);
 
-        this.proxyUser = settings.getSecret(Consts.PROXY_USER);
-        this.proxyPassword = settings.getSecret(Consts.PROXY_PASSWORD);
-        this.nonProxyHosts = settings.getString(Consts.NONPROXY_HOSTS);
+        this.proxyUser = settings.getSecret(Consts.SERVER_PROXY_LOGIN);
+        this.proxyPassword = settings.getSecret(Consts.SERVER_PROXY_PWD);
+        this.nonProxyHosts = settings.getString(Consts.SERVER_NONPROXY_HOSTS);
         
-        this.proxySet = settings.getBoolean(Consts.PROXY_USED);
+        this.proxySet = settings.getBoolean(Consts.SERVER_PROXY_USED);
 
         configureProxy();
     }
