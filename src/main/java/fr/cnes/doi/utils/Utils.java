@@ -12,6 +12,9 @@ import java.util.Base64;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
+
+import fr.cnes.doi.logging.shell.ShellHandler;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.BadPaddingException;
@@ -23,6 +26,21 @@ public class Utils {
     public static final String CIPHER_ALGORITHM = "AES";
     public static final String KEY_ALGORITHM = "AES";
     public static final String DEFAULT_SECRET_KEY = "16BYTESSECRETKEY";
+    
+    /** Name of the logger in console without date **/
+    public static final String SHELL_LOGGER_NAME = "fr.cnes.doi.logging.shell";
+    
+    /** Name of the logger for http requests and answers **/
+    public static final String HTTP_LOGGER_NAME = "fr.cnes.doi.logging.api";
+    
+    /** Name of the logger for applicative logs **/
+    public static final String APP_LOGGER_NAME = "fr.cnes.doi.logging.app";
+    
+    /** Logger for applicative logs **/
+    private static Logger appLogger;
+    
+    /** Logger in the console to display msg info like help **/
+    private static Logger shellLogger;
 
     
     public static boolean isEmpty(final CharSequence cs) {
@@ -74,4 +92,38 @@ public class Utils {
             throw new RuntimeException(ex);
         }
     }    
+    
+    /**
+     * Gets the shell logger to log in the console without date 
+     * 
+     * @return the logger
+     */
+    public static Logger getShellLogger(){
+    	
+    	if(shellLogger == null){
+    		shellLogger = Logger.getLogger(SHELL_LOGGER_NAME);
+    		shellLogger.addHandler(new ShellHandler());
+    		shellLogger.setUseParentHandlers(false);
+    	}
+    	
+    	return shellLogger;
+    	
+    	
+    }
+    
+    /**
+     * Gets the application logger to log in the specific file for applicative messages
+     * 
+     * @return the logger
+     */
+    public static Logger getAppLogger(){
+    	
+    	if(appLogger == null){
+    		appLogger = Logger.getLogger(APP_LOGGER_NAME);
+    	}
+    	
+    	return appLogger;
+    	
+    	
+    }
 }

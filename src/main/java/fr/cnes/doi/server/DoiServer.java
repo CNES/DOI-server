@@ -12,24 +12,29 @@ import fr.cnes.doi.application.DoiMdsApplication;
 import fr.cnes.doi.application.DoiStatusApplication;
 import fr.cnes.doi.application.WebSiteApplication;
 import fr.cnes.doi.settings.DoiSettings;
-import fr.cnes.doi.logging.DoiLogDataServer;
-import fr.cnes.doi.logging.MonitoringLogFilter;
-import fr.cnes.doi.logging.DoiSecurityLogFilter;
+import fr.cnes.doi.logging.api.DoiLogDataServer;
+import fr.cnes.doi.logging.api.MonitoringLogFilter;
+import fr.cnes.doi.logging.security.DoiSecurityLogFilter;
 import fr.cnes.doi.resource.DoiResource;
 import fr.cnes.doi.resource.DoisResource;
 import fr.cnes.doi.resource.MetadataResource;
 import fr.cnes.doi.resource.MetadatasResource;
 import fr.cnes.doi.settings.EmailSettings;
 import fr.cnes.doi.settings.ProxySettings;
+import fr.cnes.doi.utils.Utils;
+
 import java.security.KeyStore;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.restlet.Application;
 import org.restlet.Component;
 import org.restlet.Context;
+import org.restlet.Restlet;
 import org.restlet.Server;
 import org.restlet.data.Method;
 import org.restlet.data.Parameter;
 import org.restlet.data.Protocol;
+import org.restlet.engine.Engine;
 import org.restlet.routing.Filter;
 import org.restlet.security.Group;
 import org.restlet.security.MemoryRealm;
@@ -59,40 +64,16 @@ public class DoiServer extends Component {
         super();
         this.settings = settings;        
         startWithProxy(settings);
+        
     }
 
-    /**
-     * Init Monitoring
-     * @return monitoring object
-     */
-    private DoiMonitoring initMonitoring() {
-        LOGGER.entering(getClass().getName(),"initMonitoring");
-        DoiMonitoring monitoring = new DoiMonitoring();
-        monitoring.register(Method.GET, MDS_URI + DoiMdsApplication.DOI_URI, DoisResource.LIST_ALL_DOIS);
-        monitoring.register(Method.POST, MDS_URI + DoiMdsApplication.DOI_URI, DoisResource.CREATE_DOI);
-        monitoring.register(Method.GET, MDS_URI + DoiMdsApplication.DOI_NAME_URI, DoiResource.GET_DOI);
-        monitoring.register(Method.POST, MDS_URI + DoiMdsApplication.METADATAS_URI, MetadatasResource.CREATE_METADATA);
-        monitoring.register(Method.GET, MDS_URI + DoiMdsApplication.METADATAS_URI + DoiMdsApplication.DOI_NAME_URI, MetadataResource.GET_METADATA);
-        monitoring.register(Method.DELETE, MDS_URI + DoiMdsApplication.METADATAS_URI + DoiMdsApplication.DOI_NAME_URI, MetadataResource.DELETE_METADATA);
-        LOGGER.exiting(getClass().getName(),"initMonitoring");        
-        return monitoring;
-    }
+
     
     private void initLogServices() {
         LOGGER.entering(getClass().getName(),"initLogServices");
-        this.setLogService(new DoiLogDataServer("fr.cnes.doi.api", true));
+        this.setLogService(new DoiLogDataServer(Utils.HTTP_LOGGER_NAME, true));
 
-        LogService logServiceApplication = new DoiLogDataServer("fr.cnes.doi.app", true) {
-            /*
-           * (non-Javadoc)
-           * 
-           * @see org.restlet.service.LogService#createInboundFilter(org.restlet.Context)
-             */
-            @Override
-            public Filter createInboundFilter(Context context) {
-                return new MonitoringLogFilter(context, initMonitoring(), this);
-            }
-        };
+        LogService logServiceApplication = new DoiLogDataServer(Utils.HTTP_LOGGER_NAME, true);
         this.getServices().add(logServiceApplication);
         //final String securityLoggerName = settings.getString("Starter.SecurityLogName");
 
@@ -104,7 +85,7 @@ public class DoiServer extends Component {
              */
             @Override
             public Filter createInboundFilter(Context context) {
-                return new DoiSecurityLogFilter("fr.cnes.doi.security");
+                return new DoiSecurityLogFilter("fr.cnes.doi.logging.security");
             }
         };
         this.getServices().add(logServiceSecurity);        
@@ -158,8 +139,6 @@ public class DoiServer extends Component {
 
         realm.map(human, project1);
         realm.map(human, project2);
-
-        this.getLogService().setResponseLogFormat(settings.getString(Consts.LOG_FORMAT));
         
         LOGGER.exiting(getClass().getName(), "init");
     }

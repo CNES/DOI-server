@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fr.cnes.doi.logging;
+package fr.cnes.doi.logging.shell;
 
 import java.util.logging.ConsoleHandler;
+import java.util.logging.Level;
 
 /**
  * Creates an handler with the Shell formatter.
@@ -16,6 +17,7 @@ public class ShellHandler extends ConsoleHandler {
     public ShellHandler() {
         super();
         this.setFormatter(new ShellFormatter());
+        this.setLevel(Level.INFO);
     }
     
     

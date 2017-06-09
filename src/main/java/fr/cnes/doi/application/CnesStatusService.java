@@ -6,6 +6,7 @@
 package fr.cnes.doi.application;
 
 import fr.cnes.doi.settings.DoiSettings;
+import fr.cnes.doi.utils.Utils;
 import fr.cnes.doi.settings.Consts;
 import java.util.Map;
 import java.util.TreeMap;
@@ -32,7 +33,7 @@ public class CnesStatusService extends StatusService {
      * Configuration file.
      */
     private final DoiSettings settings;    
-    private static final Logger LOGGER = Logger.getLogger(CnesStatusService.class.getName());    
+    private static final Logger LOGGER = Utils.getAppLogger();    
     
     /**
      * Creates a specific error page.
