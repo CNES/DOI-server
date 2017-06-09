@@ -5,7 +5,7 @@
  */
 package fr.cnes.doi.logging.api;
 
-import fr.cnes.doi.server.DoiMonitoring;
+import fr.cnes.doi.server.monitoring.DoiMonitoring;
 import fr.cnes.doi.settings.EmailSettings;
 
 import java.text.MessageFormat;
@@ -67,6 +67,9 @@ public class MonitoringLogFilter extends LogFilter {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.restlet.engine.log.LogFilter#afterHandle(org.restlet.Request, org.restlet.Response)
+	 */
 	@Override
 	protected void afterHandle(Request request, Response response) {
 		//if(logger.isLoggable(Level.INFO)) {
@@ -78,16 +81,24 @@ public class MonitoringLogFilter extends LogFilter {
 			int duration = (int) (System.currentTimeMillis() - startTime);
 			if (monitoring.isRegistered(method, path)) {
 				monitoring.addMeasurement(method, path, duration);
-				logger.log(Level.INFO, MessageFormat.format("{0}({1} {2}) - current Mean: {3} ms / current measure: {4} ms", monitoring.getDescription(method, path), method.getName(), path, monitoring.getCurrentMean(method, path), duration));
-				sendAlertIfNeeded(monitoring.getCurrentMean(method, path), duration, path, method);
+				logger.log(Level.INFO, MessageFormat.format("{0}({1} {2}) - current speed average : {3} ms / current measure: {4} ms", monitoring.getDescription(method, path), method.getName(), path, monitoring.getCurrentAverage(method, path), duration));
+				sendAlertIfNeeded(monitoring.getCurrentAverage(method, path), duration, path, method);
 			}
 
 		}
 
 	}
 
-	private void sendAlertIfNeeded(double mean, double currentDuration, final String path, final Method method) {
-		double elevation = currentDuration * 100.0 / mean;
+	/**
+	 * Send an email alert if the time to answer request it too long
+	 * 
+	 * @param average 
+	 * @param currentDuration
+	 * @param path
+	 * @param method
+	 */
+	private void sendAlertIfNeeded(double average, double currentDuration, final String path, final Method method) {
+		double elevation = currentDuration * 100.0 / average;
 		if(elevation > THRESHOLD_SPEED_PERCENT) {
 			EmailSettings email = EmailSettings.getInstance();
 			String subject = "Speed performance alert for "+path;
@@ -95,7 +106,7 @@ public class MonitoringLogFilter extends LogFilter {
 					+ " has been reduced than more 30% using the method "+method.getName()+".\n\n"
 					+ "Details:\n"
 					+ "--------\n"
-					+ " * Mean : "+mean+"\n"
+					+ " * Average : "+average+"\n"
 					+ " * current : "+currentDuration+"\n";
 			email.sendMessage(subject, msg);
 		}
