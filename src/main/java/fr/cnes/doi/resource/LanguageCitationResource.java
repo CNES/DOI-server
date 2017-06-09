@@ -5,23 +5,19 @@
  */
 package fr.cnes.doi.resource;
 
-import fr.cnes.doi.application.DoiCrossCiteApplication;
 import java.util.List;
 import org.restlet.resource.Get;
 import org.restlet.resource.ResourceException;
-import org.restlet.resource.ServerResource;
 
 /**
  * Get Language for citation.
  * @author Jean-christophe Malapert
  */
-public class LanguageCitationResource extends ServerResource {
+public class LanguageCitationResource extends BaseCitationResource {
     
-    private DoiCrossCiteApplication app;
-
     @Override
     protected void doInit() throws ResourceException {
-        this.app = (DoiCrossCiteApplication) getApplication();
+        super.doInit();        
     }                        
     
     @Get

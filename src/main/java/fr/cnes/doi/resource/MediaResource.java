@@ -24,7 +24,7 @@ import org.restlet.resource.ResourceException;
  * @author Jean-Christophe Malapert
  * https://data.datacite.org/
  */
-public class MediaResource extends BaseResource {
+public class MediaResource extends BaseMdsResource {
     
     public static final String GET_MEDIAS = "Get Medias";
 

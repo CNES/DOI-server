@@ -24,7 +24,7 @@ import org.restlet.resource.ResourceException;
  * DOI resource to retrieve a given DOI.
  * @author Jean-Christophe Malapert
  */
-public class DoiResource extends BaseResource {
+public class DoiResource extends BaseMdsResource {
     public static final String GET_DOI = "Get DOI";
     
     /**

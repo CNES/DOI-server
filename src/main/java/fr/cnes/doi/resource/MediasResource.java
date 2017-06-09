@@ -26,7 +26,7 @@ import org.restlet.util.Series;
  * Resource to handle a collection of media.
  * @author Jean-Christophe Malapert
  */
-public class MediasResource extends BaseResource {
+public class MediasResource extends BaseMdsResource {
     
     public static final String CREATE_MEDIA = "Create media";
 

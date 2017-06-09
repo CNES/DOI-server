@@ -24,7 +24,7 @@ import org.restlet.security.Role;
  * Base resource for the different resources.
  * @author Jean-Christophe Malapert
  */
-public class BaseResource extends WadlServerResource {       
+public class BaseMdsResource extends WadlServerResource {       
     
     /**
      * DOI Mds application.

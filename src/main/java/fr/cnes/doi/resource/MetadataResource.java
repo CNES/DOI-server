@@ -22,7 +22,7 @@ import org.restlet.util.Series;
  *
  * @author malapert
  */
-public class MetadataResource extends BaseResource {
+public class MetadataResource extends BaseMdsResource {
 
     public static final String GET_METADATA = "Get a Metadata";
     public static final String DELETE_METADATA = "Delete a Metadata";

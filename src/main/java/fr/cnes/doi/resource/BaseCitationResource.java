@@ -5,23 +5,24 @@
  */
 package fr.cnes.doi.resource;
 
-import java.util.List;
-import org.restlet.resource.Get;
+import fr.cnes.doi.application.DoiCrossCiteApplication;
+import org.restlet.ext.wadl.WadlServerResource;
 import org.restlet.resource.ResourceException;
 
 /**
- * Get Styles for citation.
+ *
  * @author Jean-Christophe Malapert
  */
-public class StyleCitationResource extends BaseCitationResource {
-
+public class BaseCitationResource extends WadlServerResource {
+    
+    protected DoiCrossCiteApplication app;
+    
+    /**
+     *
+     * @throws ResourceException
+     */
     @Override
     protected void doInit() throws ResourceException {
-        super.doInit();
-    }
-                           
-    @Get
-    public List<String> getStyles() {
-        return this.app.getClient().getStyles();
+        this.app = (DoiCrossCiteApplication)getApplication();        
     }    
 }

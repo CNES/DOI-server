@@ -34,7 +34,7 @@ import org.xml.sax.SAXException;
  *
  * @author Jean-Christophe Malapert
  */
-public class MetadatasResource extends BaseResource {
+public class MetadatasResource extends BaseMdsResource {
 
     public static final String CREATE_METADATA = "Create Metadata";
 

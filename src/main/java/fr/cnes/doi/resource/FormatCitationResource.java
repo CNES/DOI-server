@@ -5,25 +5,22 @@
  */
 package fr.cnes.doi.resource;
 
-import fr.cnes.doi.application.DoiCrossCiteApplication;
 import org.restlet.resource.Get;
 import org.restlet.resource.ResourceException;
-import org.restlet.resource.ServerResource;
 
 /**
  * Formats a citation.
  * @author Jean-Christophe Malapert
  */
-public class FormatCitationResource extends ServerResource {
+public class FormatCitationResource extends BaseCitationResource {
     
-    private DoiCrossCiteApplication app;
     private String doiName;
     private String style;
     private String language;
 
     @Override
     protected void doInit() throws ResourceException {
-        this.app = (DoiCrossCiteApplication) getApplication();
+        super.doInit();        
         this.doiName = getQueryValue("doi");
         this.language = getQueryValue("lang");
         this.style = getQueryValue("style");

@@ -32,7 +32,7 @@ import org.restlet.util.Series;
  * Resource to handle a collection of DOI.
  * @author Jean-Christophe Malapert
  */
-public class DoisResource extends BaseResource {
+public class DoisResource extends BaseMdsResource {
     
     public static final String LIST_ALL_DOIS = "List all DOIs";
     public static final String CREATE_DOI = "Create a DOI";

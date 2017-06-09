@@ -37,9 +37,9 @@ public class ClientCrossCiteCitation {
         client.setProxyChallengeResponse(authentication);
     }
     
-    public List<String> getStyles() {
+    private List<String> getList(final String segment) {
         try {
-            Reference ref = client.addSegment(STYLE_URI);
+            Reference ref = client.addSegment(segment);
             client.setReference(ref);
             Representation rep = client.get();
             Status status = client.getStatus();
@@ -53,26 +53,15 @@ public class ClientCrossCiteCitation {
             throw new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage());
         } finally {
             client.release();
-        }
+        }        
+    }
+    
+    public List<String> getStyles() {
+        return getList(STYLE_URI);
     }
     
     public List<String> getLanguages() {
-        try {
-            Reference ref = client.addSegment(LOCALE_URI);
-            client.setReference(ref);            
-            Representation rep = client.get();
-            Status status = client.getStatus();
-            if(status.isSuccess()) {
-                ObjectMapper mapper = new ObjectMapper();
-                return mapper.readValue(rep.getStream() , List.class);                        
-            } else {
-                throw new ResourceException(status, status.getDescription());
-            }
-        } catch (IOException ex) {
-            throw new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage());
-        } finally {
-            client.release();
-        }
+        return getList(LOCALE_URI);
     }
     
     public String getFormat(final String doiName, final String style, final String language) {
