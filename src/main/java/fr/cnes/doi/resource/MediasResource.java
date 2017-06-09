@@ -6,8 +6,7 @@
 package fr.cnes.doi.resource;
 
 import fr.cnes.doi.client.ClientException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 import org.restlet.data.Form;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
@@ -17,7 +16,6 @@ import org.restlet.ext.wadl.ParameterInfo;
 import org.restlet.ext.wadl.ParameterStyle;
 import org.restlet.ext.wadl.RepresentationInfo;
 import org.restlet.ext.wadl.RequestInfo;
-import org.restlet.ext.wadl.ResponseInfo;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Post;
@@ -59,24 +57,12 @@ public class MediasResource extends BaseResource {
         getLogger().exiting(getClass().getName(), "createMedia", result);        
         return new StringRepresentation(result);
     }    
- 
-    private ResponseInfo postSuccessFullResponse() {
-        ResponseInfo responseInfo = new ResponseInfo();        
-        final List<RepresentationInfo> repsInfo = new ArrayList<>();        
-        final RepresentationInfo repInfo = new RepresentationInfo();
-        repInfo.setReference("explainRepresentation");
-        repsInfo.add(repInfo);        
-        responseInfo.getStatuses().add(Status.SUCCESS_OK);
-        responseInfo.setDocumentation("Operation successful");
-        responseInfo.setRepresentations(repsInfo);
-        return responseInfo;
-    }
    
     @Override
     protected final void describePost(final MethodInfo info) {
         info.setName(Method.POST);
         info.setDocumentation("POST will add/update media type/urls pairs to a DOI. Standard domain restrictions check will be performed.");
-        
+                
         final RequestInfo request = new RequestInfo();
         ParameterInfo param = new ParameterInfo();
         param.setName("{mediaType}");
@@ -88,50 +74,14 @@ public class MediasResource extends BaseResource {
         param.setDocumentation("(key/value) = (mediaType/url)");
         RepresentationInfo rep = new RepresentationInfo(MediaType.APPLICATION_WWW_FORM);
         rep.getParameters().add(param);
-        request.getRepresentations().add(rep);
-                
-        param = new ParameterInfo();
-        param.setName("selectedRole");
-        param.setStyle(ParameterStyle.HEADER);        
-        param.setRequired(false);
-        param.setType("xs:string");
-        param.setDocumentation("A user can select one role when he is associated to several roles");        
-        request.getParameters().add(param);
         
-        info.setRequest(request);        
-        
-        info.getResponses().add(postSuccessFullResponse());
-        
-        ResponseInfo responseInfo = new ResponseInfo();
-        responseInfo.getStatuses().add(Status.CLIENT_ERROR_BAD_REQUEST);
-        responseInfo.setDocumentation("invalid XML, wrong prefix");
-        rep = new RepresentationInfo();
-        rep.setReference("explainRepresentation");
-        responseInfo.getRepresentations().add(rep);        
-        info.getResponses().add(responseInfo);
-        
-        responseInfo = new ResponseInfo();
-        responseInfo.getStatuses().add(Status.CLIENT_ERROR_UNAUTHORIZED);
-        responseInfo.setDocumentation("no login");
-        rep = new RepresentationInfo();
-        rep.setReference("explainRepresentation");
-        responseInfo.getRepresentations().add(rep);         
-        info.getResponses().add(responseInfo);
-        
-        responseInfo = new ResponseInfo();
-        responseInfo.getStatuses().add(Status.CLIENT_ERROR_FORBIDDEN);
-        responseInfo.setDocumentation("login problem, quota exceeded");
-        rep = new RepresentationInfo();
-        rep.setReference("explainRepresentation");
-        responseInfo.getRepresentations().add(rep);          
-        info.getResponses().add(responseInfo);                   
-        
-        responseInfo = new ResponseInfo();
-        responseInfo.getStatuses().add(Status.SERVER_ERROR_INTERNAL);
-        responseInfo.setDocumentation("server internal error, try later and if problem persists please contact us");
-        rep = new RepresentationInfo();
-        rep.setReference("explainRepresentation");
-        responseInfo.getRepresentations().add(rep);          
-        info.getResponses().add(responseInfo);             
+        addRequestDocToMethod(info, 
+                Arrays.asList(createQueryParamDoc("selectedRole", ParameterStyle.HEADER, "A user can select one role when he is associated to several roles", false, "xs:string")), 
+                rep);        
+        addResponseDocToMethod(info, createResponseDoc(Status.SUCCESS_OK, "Operation successful", "explainRepresentation"));
+        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_BAD_REQUEST, "invalid XML, wrong prefix", "explainRepresentation"));
+        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_UNAUTHORIZED, "no login", "explainRepresentation"));
+        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_FORBIDDEN, "login problem, quota exceeded", "explainRepresentation"));
+        addResponseDocToMethod(info, createResponseDoc(Status.SERVER_ERROR_INTERNAL, "server internal error, try later and if problem persists please contact us", "explainRepresentation"));           
     }     
 }
