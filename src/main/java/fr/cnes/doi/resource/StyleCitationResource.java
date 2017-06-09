@@ -22,8 +22,7 @@ public class StyleCitationResource extends ServerResource {
     protected void doInit() throws ResourceException {
         this.app = (DoiCrossCiteApplication) getApplication();
     }
-                       
-    
+                           
     @Get
     public List<String> getStyles() {
         return this.app.getClient().getStyles();

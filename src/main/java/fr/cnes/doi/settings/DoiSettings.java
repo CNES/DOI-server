@@ -20,10 +20,9 @@ import java.util.logging.Logger;
 import org.restlet.data.LocalReference;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
-import sun.font.StrikeCache;
 
 /**
- * DOI Settings.
+ * Singleton to load and use the defined variables in the config.properties.
  *
  * @author Jean-Christophe
  */

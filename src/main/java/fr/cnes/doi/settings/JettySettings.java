@@ -245,7 +245,6 @@ public class JettySettings extends JettyServerHelper {
         addParam("lowResource.maxConnections", getLowResourceMonitorMaxConnections());
         addParam("lowResource.idleTimeout", getLowResourceMonitorIdleTimeout());        
         addParam("lowResource.stopTimeout", getLowResourceMonitorStopTimeout());        
-
     }
 
     /**
@@ -263,5 +262,4 @@ public class JettySettings extends JettyServerHelper {
             this.server.getContext().getParameters().add(propName, "" + propValue);
         }
     }
-
 }

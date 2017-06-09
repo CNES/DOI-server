@@ -114,7 +114,7 @@ public class MetadatasResource extends BaseResource {
         }
 
         @Override
-        public boolean handleEvent(ValidationEvent event) {            
+        public boolean handleEvent(final ValidationEvent event) {            
             StringBuilder sb = new StringBuilder("\nEVENT");
             sb = sb.append("SEVERITY:  ").append(event.getSeverity()).append("\n");
             sb = sb.append("MESSAGE:  ").append(event.getMessage()).append("\n");
@@ -126,7 +126,7 @@ public class MetadatasResource extends BaseResource {
             sb = sb.append("    OBJECT:  ").append(event.getLocator().getObject()).append("\n");
             sb = sb.append("    NODE:  ").append(event.getLocator().getNode()).append("\n");
             sb = sb.append("    URL  ").append(event.getLocator().getURL()).append("\n");
-            this.logger.info(sb.toString());
+            this.logger.warning(sb.toString());
             return true;
         }
     }

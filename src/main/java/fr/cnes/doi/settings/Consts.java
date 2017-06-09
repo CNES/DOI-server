@@ -6,47 +6,150 @@
 package fr.cnes.doi.settings;
 
 /**
- *
- * @author malapert
+ * Consts contains all configuration variables, which are possible to use
+ * in the config.properties.
+ * @author Jean-Christophe Malapert
  */
 public class Consts {
     
+    /**
+     * Application's name.
+     */
     public static final String APP_NAME = "Starter.APP_NAME";
+    
+    /**
+     * Application's version.
+     */
     public static final String VERSION = "Starter.VERSION";
+    
+    /**
+     * Application's copyright.
+     */
     public static final String COPYRIGHT = "Starter.COPYRIGHT";
  
+    /**
+     * DOI prefix, which is given by INIST.
+     */
     public static final String INIST_DOI = "Starter.Inist.doi";        
+    
+    /**
+     * INIST login to use DATACITE's web services.
+     * The login is encrypted.
+     */
     public static final String INIST_LOGIN = "Starter.Inist.login";
+    
+    /**
+     * INIST password to use DATACITE's web services.
+     * The password is encrypted.
+     */
     public static final String INIST_PWD = "Starter.Inist.pwd";
     
+    /**
+     * HTTP port number.
+     */
     public static final String SERVER_HTTP_PORT = "Starter.Server.HTTP.Port";
     
+    /**
+     * HTTPS password for this application.
+     * The password is encrypted.
+     */
     public static final String SERVER_HTTPS_SECRET_KEY = "Starter.Server.HTTPS.SecretKey";
+    
+    /**
+     * HTTPS port number.
+     */
     public static final String SERVER_HTTPS_PORT = "Starter.Server.HTTPS.Port";
+    
+    /**
+     * HTTPS keystore path.
+     */
     public static final String SERVER_HTTPS_KEYSTORE_PATH = "Starter.Server.HTTPS.KeystorePath";
+    
+    /**
+     * HTTPS keystore password.
+     * The password is encrypted
+     */
     public static final String SERVER_HTTPS_KEYSTORE_PASSWD = "Starter.Server.HTTPS.keystorePassword";
+    
+    /**
+     * Trust store path.
+     */
     public static final String SERVER_HTTPS_TRUST_STORE_PATH = "Starter.Server.HTTPS.TrustStorePath";
+    
+    /**
+     * Trust store password.
+     * The password is encrypted
+     */
     public static final String SERVER_HTTPS_TRUST_STORE_PASSWD = "Starter.Server.HTTPS.TrustStorePassword"; 
     
+    /**
+     * Indicates whether the authentication to the proxy must be enabled.
+     */
     public static final String SERVER_PROXY_USED = "Starter.Proxy.used";
+    
+    /**
+     * Proxy host name.
+     */
     public static final String SERVER_PROXY_HOST = "Starter.Proxy.host";
+    
+    /**
+     * Proxy port number.
+     */
     public static final String SERVER_PROXY_PORT = "Starter.Proxy.port";    
+    
+    /**
+     * Proxy login.
+     * The login is encrypted
+     */
     public static final String SERVER_PROXY_LOGIN = "Starter.Proxy.login";
+    
+    /**
+     * Proxy password.
+     * The password is encrypted
+     */
     public static final String SERVER_PROXY_PWD = "Starter.Proxy.pwd";    
+    
+    /**
+     * Set of hostname on which the authentication to the proxy is disabled.
+     * //TODO To be done
+     */
     public static final String SERVER_NONPROXY_HOSTS = "Starter.NoProxy.hosts";     
            
+    /**
+     * //TODO useless ?
+     */
     public static final String LOGSERVICE_LOGNAME = "Starter.LogService.logName";
     public static final String LOGSERVICE_ACTIVE = "Starter.LogService.active";
     public static final String LOG_FORMAT = "Starter.Server.Log.format";    
     
-    // Server
+    // TODO useless ?
     public static final String SERVER_MAX_CONNECTIONS = "Starter.Server.maxConnections";
     public static final String SERVER_CONTACT_ADMIN = "Starter.Server.contactAdmin";    
 
+    /**
+     * Protocol name.
+     */
     public static final String SMTP_PROTOCOL = "Starter.mail.send.protocol";    
+    /**
+     * SMTP URL.
+     */
     public static final String SMTP_URL = "Starter.mail.send.server";
+    /**
+     * TLS.
+     * TODO : TBD
+     */
     public static final String SMTP_STARTTLS_ENABLE = "Starter.mail.send.tls";
+    
+    /**
+     * SMTP login.
+     * The login is encrypted.
+     */
     public static final String SMTP_AUTH_USER = "Starter.mail.send.identifier";
+    
+    /**
+     * SMTP password.
+     * The password is encrypted.
+     */
     public static final String SMTP_AUTH_PWD = "Starter.mail.send.secret";    
     
     // Jetty contants

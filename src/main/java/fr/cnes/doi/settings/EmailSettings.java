@@ -25,7 +25,7 @@ import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 
 /**
- * Email settings and method do send an email.
+ * Singleton to load and use Email settings.
  * @author Jean-Christophe Malapert
  */
 public class EmailSettings {
@@ -63,6 +63,10 @@ public class EmailSettings {
         return EmailSettingsHolder.INSTANCE;
     }
 
+    /**
+     * Init singleton.
+     * @param settings settings. 
+     */
     public void init(final DoiSettings settings) {
         this.smtpProtocol = settings.getString(Consts.SMTP_PROTOCOL);
         this.smtpUrl = settings.getString(Consts.SMTP_URL);
@@ -76,6 +80,10 @@ public class EmailSettings {
         this.debug = isEnabled;
     }
     
+    /**
+     * Debug
+     * @return debug
+     */
     public boolean getDebug() {
         return this.debug;
     }
@@ -136,13 +144,15 @@ public class EmailSettings {
     }       
 
     /**
-     * @return the hostName
+     * Returns the protocol URL.
+     * @return the URL
      */
     public String getSmtpURL() {
         return smtpUrl;
     }
 
     /**
+     * Returns the protocol.
      * @return the port
      */
     public String getSmtpProtocol() {
@@ -150,6 +160,7 @@ public class EmailSettings {
     }
 
     /**
+     * Returns True when TLS is enable otherwise False.
      * @return the tlsEnable
      */
     public String getTlsEnable() {
@@ -157,6 +168,7 @@ public class EmailSettings {
     }
 
     /**
+     * Returns the decrypted login.
      * @return the authUser
      */
     public String getAuthUser() {
@@ -164,6 +176,7 @@ public class EmailSettings {
     }
 
     /**
+     * Returns the decrypted password.
      * @return the authPwd
      */
     public String getAuthPwd() {
@@ -171,6 +184,7 @@ public class EmailSettings {
     }
 
     /**
+     * Returns the administrator's email.
      * @return the contactAdmin
      */
     public String getContactAdmin() {

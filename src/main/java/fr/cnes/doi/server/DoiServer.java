@@ -47,8 +47,8 @@ import fr.cnes.doi.settings.ProxySettings;
 import fr.cnes.doi.utils.Utils;
 
 /**
- *
- * @author malapert
+ * DoiServer contains the configuration of this server and the methods to start/stop it.
+ * @author Jean-Christophe Malapert
  */
 public class DoiServer extends Component {
 
@@ -63,15 +63,19 @@ public class DoiServer extends Component {
 
     private static final Logger LOGGER = Logger.getLogger(DoiServer.class.getName());
 
+    /**
+     * Creates an instance of the server with settings coming from the config.properties
+     * @param settings settings
+     */
     public DoiServer(final DoiSettings settings) {
         super();
         this.settings = settings;
-        startWithProxy(settings);
-        
+        startWithProxy(settings);       
     }
 
-
-
+    /**
+     * Init log services.
+     */
     private void initLogServices() {
         LOGGER.entering(getClass().getName(), "initLogServices");
         this.setLogService(new DoiLogDataServer(Utils.HTTP_LOGGER_NAME, true));
@@ -96,7 +100,7 @@ public class DoiServer extends Component {
     }
 
     /**
-     * Configures the Server
+     * Configures the Server in HTTP and HTTPS.
      */
     private void configureServer() {
         LOGGER.entering(getClass().getName(), "init");
@@ -109,30 +113,46 @@ public class DoiServer extends Component {
         LOGGER.exiting(getClass().getName(), "init");
     }
         
-    
+    /**
+     * Inits the HTTP server.
+     */
     private void initHttpServer() {
         Server serverHttp = startHttpServer(settings.getInt(Consts.SERVER_HTTP_PORT, DEFAULT_HTTP_PORT));
         this.getServers().add(serverHttp);
         initJettyConfiguration(serverHttp);
     }
     
+    /**
+     * Inits the HTTPS server.
+     */
     private void initHttpsServer() {
         Server serverHttps = startHttpsServer(settings.getInt(Consts.SERVER_HTTPS_PORT, DEFAULT_HTTPS_PORT));
         this.getServers().add(serverHttps);
         initJettyConfiguration(serverHttps);
     }
     
+    /**
+     * Init the Jetty configuration and applies it to the server.
+     * @param server 
+     */
     private void initJettyConfiguration(Server server) {
         JettySettings jettyProps = new JettySettings(server, settings);
         jettyProps.addParamsToServerContext();          
     }
     
+    /**
+     * Inits supported protocols.
+     * Theses protocols are used by the server to access to resources
+     */
     private void initClients(){
         this.getClients().add(Protocol.HTTP);
         this.getClients().add(Protocol.HTTPS);
         this.getClients().add(Protocol.CLAP);        
     }
     
+    /**
+     * Routes the applications.
+     */
     private void initAttachApplication() {
         Application appDoiProject = new DoiMdsApplication();
         this.getDefaultHost().attach(MDS_URI, appDoiProject);
@@ -143,6 +163,10 @@ public class DoiServer extends Component {
         initAuthenticationForMdsApp(appDoiProject);
     }
     
+    /**
+     * Init authentication for MDS project.
+     * @param appDoiProject the MDS project 
+     */
     private void initAuthenticationForMdsApp(Application appDoiProject) {
         MemoryRealm realm = new MemoryRealm();
         Role project1 = new Role(appDoiProject, "Project1");
@@ -164,7 +188,7 @@ public class DoiServer extends Component {
         realm.map(human, project2);        
 
 
-        LOGGER.exiting(getClass().getName(), "init")
+        LOGGER.exiting(getClass().getName(), "init");
     }
 
     /**
@@ -242,6 +266,10 @@ public class DoiServer extends Component {
         return server;
     }
 
+    /**
+     * Extracts keystore for JAR and copy it in a directory in order to use it.
+     * @return the path of the new location of the keystore.
+     */
     private String extractKeyStoreToPath() {
         String result;
         Representation jks = new ClientResource(LocalReference.createClapReference("class/doiServerKey.jks")).get();
