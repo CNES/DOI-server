@@ -7,16 +7,11 @@ package fr.cnes.doi.resource;
 
 import fr.cnes.doi.application.DoiMdsApplication;
 import fr.cnes.doi.client.ClientException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 import org.restlet.data.Method;
 import org.restlet.data.Status;
 import org.restlet.ext.wadl.MethodInfo;
-import org.restlet.ext.wadl.ParameterInfo;
 import org.restlet.ext.wadl.ParameterStyle;
-import org.restlet.ext.wadl.RepresentationInfo;
-import org.restlet.ext.wadl.RequestInfo;
-import org.restlet.ext.wadl.ResponseInfo;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Delete;
 import org.restlet.resource.Get;
@@ -28,201 +23,82 @@ import org.restlet.util.Series;
  * @author malapert
  */
 public class MetadataResource extends BaseResource {
-    
+
     public static final String GET_METADATA = "Get a Metadata";
     public static final String DELETE_METADATA = "Delete a Metadata";
-    
+
     private String doiName;
 
     @Override
     protected void doInit() throws ResourceException {
         super.doInit();
         setDescription("This resource handles a metadata : retrieve, delete");
-        this.doiName = getAttribute(DoiMdsApplication.DOI_TEMPLATE);       
-    }    
+        this.doiName = getAttribute(DoiMdsApplication.DOI_TEMPLATE);
+    }
 
     @Get
     public Representation getMetadata() {
         getLogger().entering(getClass().getName(), "getMetadata", this.doiName);
+        Representation rep;
         try {
             setStatus(Status.SUCCESS_OK);
-            Representation rep = this.doiApp.getClient().getMetadata(this.doiName);
-            getLogger().exiting(getClass().getName(), "getMetadata");
-            return rep;
+            rep = this.doiApp.getClient().getMetadata(this.doiName);
         } catch (ClientException ex) {
             getLogger().exiting(getClass().getName(), "getMetadata", ex.getMessage());
             throw new ResourceException(ex);
-        }        
+        }
+        getLogger().exiting(getClass().getName(), "getMetadata");        
+        return rep;
     }
-    
+
     @Delete
     public Representation deleteMetadata() {
         Representation rep;
-        try {         
+        try {
             Series headers = (Series) getRequestAttributes().get("org.restlet.http.headers");
-            String selectedRole = headers.getFirstValue("selectedRole", "");            
+            String selectedRole = headers.getFirstValue("selectedRole", "");
             getLogger().entering(getClass().getName(), "deleteMetadata", new Object[]{this.doiName, selectedRole});
             checkPermission(this.doiName, selectedRole);
             setStatus(Status.SUCCESS_OK);
-            rep = this.doiApp.getClient().deleteMetadata(this.doiName);            
+            rep = this.doiApp.getClient().deleteMetadata(this.doiName);
         } catch (ClientException ex) {
-            getLogger().exiting(getClass().getName(), "deleteMetadata", ex.getMessage());            
+            getLogger().exiting(getClass().getName(), "deleteMetadata", ex.getMessage());
             throw new ResourceException(ex);
         }
         getLogger().exiting(getClass().getName(), "deleteMetadata");
-        return rep;         
+        return rep;
     }
-    
-    private ParameterInfo templateQuery(){
-        ParameterInfo param = new ParameterInfo();
-        param.setName(DoiMdsApplication.DOI_TEMPLATE);
-        param.setStyle(ParameterStyle.TEMPLATE);
-        param.setDocumentation("DOI name");
-        param.setRequired(true);
-        param.setType("xs:string"); 
-        return param;
-    }
-        
-    
-    private ResponseInfo getSuccessfullResponse() {
-        ResponseInfo responseInfo = new ResponseInfo();        
-        final List<RepresentationInfo> repsInfo = new ArrayList<>();        
-        final RepresentationInfo repInfo = new RepresentationInfo();
-        repInfo.setReference("metadataRepresentation");
-        repsInfo.add(repInfo);        
-        responseInfo.getStatuses().add(Status.SUCCESS_OK);
-        responseInfo.setDocumentation("Operation successful");
-        responseInfo.setRepresentations(repsInfo);
-        return responseInfo;
-    }
-    
+
     @Override
     protected final void describeGet(final MethodInfo info) {
         info.setName(Method.GET);
         info.setDocumentation("Get a specific metadata");
-      
-        final RequestInfo request = new RequestInfo();
-        request.getParameters().add(templateQuery());
-        info.setRequest(request);
-        
-        info.getResponses().add(getSuccessfullResponse());
-        
-        ResponseInfo responseInfo = new ResponseInfo();
-        responseInfo.getStatuses().add(Status.CLIENT_ERROR_UNAUTHORIZED);
-        responseInfo.setDocumentation("no login");
-        RepresentationInfo rep = new RepresentationInfo();
-        rep.setReference("explainRepresentation");
-        responseInfo.getRepresentations().add(rep);
-        info.getResponses().add(responseInfo);       
-        
-        responseInfo = new ResponseInfo();
-        responseInfo.getStatuses().add(Status.CLIENT_ERROR_FORBIDDEN);
-        responseInfo.setDocumentation("login problem or dataset belongs to another party");
-        rep = new RepresentationInfo();
-        rep.setReference("explainRepresentation");
-        responseInfo.getRepresentations().add(rep);        
-        info.getResponses().add(responseInfo); 
 
-        responseInfo = new ResponseInfo();
-        responseInfo.getStatuses().add(Status.CLIENT_ERROR_NOT_FOUND);
-        responseInfo.setDocumentation("DOI does not exist in our database");
-        rep = new RepresentationInfo();
-        rep.setReference("explainRepresentation");
-        responseInfo.getRepresentations().add(rep);        
-        info.getResponses().add(responseInfo); 
-        
-        
-        responseInfo = new ResponseInfo();
-        responseInfo.getStatuses().add(Status.CLIENT_ERROR_GONE);
-        responseInfo.setDocumentation("the requested dataset was marked inactive (using DELETE method)");
-        rep = new RepresentationInfo();
-        rep.setReference("explainRepresentation");
-        responseInfo.getRepresentations().add(rep);        
-        info.getResponses().add(responseInfo);        
-        
-        responseInfo = new ResponseInfo();
-        responseInfo.getStatuses().add(Status.SERVER_ERROR_INTERNAL);
-        responseInfo.setDocumentation("server internal error, try later and if problem persists please contact us");
-        rep = new RepresentationInfo();
-        rep.setReference("explainRepresentation");
-        responseInfo.getRepresentations().add(rep);        
-        info.getResponses().add(responseInfo);
-    }     
-    
-    private ParameterInfo addQueryParameter() {
-        ParameterInfo param = new ParameterInfo();
-        param.setName(DoiMdsApplication.DOI_TEMPLATE);
-        param.setStyle(ParameterStyle.TEMPLATE);
-        param.setDocumentation("DOI name");
-        param.setRequired(true);
-        param.setType("xs:string");   
-        return param;
+        addRequestDocToMethod(info, createQueryParamDoc(DoiMdsApplication.DOI_TEMPLATE, ParameterStyle.TEMPLATE, "DOI name", true, "xs:string"));
+
+        addResponseDocToMethod(info, createResponseDoc(Status.SUCCESS_OK, "Operation successful", "metadataRepresentation"));
+        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_UNAUTHORIZED, "no login", "explainRepresentation"));
+        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_FORBIDDEN, "login problem or dataset belongs to another party", "explainRepresentation"));
+        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_NOT_FOUND, "DOI does not exist in our database", "explainRepresentation"));
+        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_GONE, "the requested dataset was marked inactive (using DELETE method)", "explainRepresentation"));
+        addResponseDocToMethod(info, createResponseDoc(Status.SERVER_ERROR_INTERNAL, "server internal error, try later and if problem persists please contact us", "explainRepresentation"));
     }
-    
-    private RepresentationInfo deleteRepresentation() {
-        final RepresentationInfo repInfo = new RepresentationInfo();
-        repInfo.setReference("metadataRepresentation");
-        return repInfo;
-    }
-    
-    private ResponseInfo deleteSuccessfullResponse() {
-        ResponseInfo responseInfo = new ResponseInfo();        
-        final List<RepresentationInfo> repsInfo = new ArrayList<>();        
-        repsInfo.add(deleteRepresentation());        
-        responseInfo.getStatuses().add(Status.SUCCESS_OK);
-        responseInfo.setDocumentation("Operation successful");
-        responseInfo.setRepresentations(repsInfo);
-        return responseInfo;
-    }
-    
+
     @Override
-     protected final void describeDelete(final MethodInfo info) {
+    protected final void describeDelete(final MethodInfo info) {
         info.setName(Method.DELETE);
         info.setDocumentation("Delete a specific metadata");
-     
-        final RequestInfo request = new RequestInfo();
-        request.getParameters().add(addQueryParameter());
-        ParameterInfo param = new ParameterInfo();
-        param.setName("selectedRole");
-        param.setStyle(ParameterStyle.HEADER);        
-        param.setRequired(false);
-        param.setType("xs:string");
-        param.setDocumentation("A user can select one role when he is associated to several roles");        
-        request.getParameters().add(param);
-        info.setRequest(request);   
-              
-        info.getResponses().add(deleteSuccessfullResponse());
-        
-        ResponseInfo responseInfo = new ResponseInfo();
-        responseInfo.getStatuses().add(Status.CLIENT_ERROR_UNAUTHORIZED);
-        responseInfo.setDocumentation("no login");
-        RepresentationInfo rep = new RepresentationInfo();
-        rep.setReference("explainRepresentation");
-        responseInfo.getRepresentations().add(rep);        
-        info.getResponses().add(responseInfo);       
-        
-        responseInfo = new ResponseInfo();
-        responseInfo.getStatuses().add(Status.CLIENT_ERROR_FORBIDDEN);
-        responseInfo.setDocumentation("login problem or dataset belongs to another party");
-        rep = new RepresentationInfo();
-        rep.setReference("explainRepresentation");
-        responseInfo.getRepresentations().add(rep);        
-        info.getResponses().add(responseInfo); 
 
-        responseInfo = new ResponseInfo();
-        responseInfo.getStatuses().add(Status.CLIENT_ERROR_NOT_FOUND);
-        responseInfo.setDocumentation("DOI does not exist in our database");
-        rep = new RepresentationInfo();
-        rep.setReference("explainRepresentation");
-        responseInfo.getRepresentations().add(rep);        
-        info.getResponses().add(responseInfo);         
-        
-        responseInfo = new ResponseInfo();
-        responseInfo.getStatuses().add(Status.SERVER_ERROR_INTERNAL);
-        responseInfo.setDocumentation("server internal error, try later and if problem persists please contact us");
-        rep = new RepresentationInfo();
-        rep.setReference("explainRepresentation");
-        responseInfo.getRepresentations().add(rep);        
-        info.getResponses().add(responseInfo);        
-     }
+        addRequestDocToMethod(info, 
+                Arrays.asList(
+                    createQueryParamDoc(DoiMdsApplication.DOI_TEMPLATE, ParameterStyle.TEMPLATE, "DOI name", true, "xs:string"),
+                    createQueryParamDoc("selectedRole", ParameterStyle.HEADER, "A user can select one role when he is associated to several roles", false, "xs:string")                                                
+                )
+        );
+        addResponseDocToMethod(info, createResponseDoc(Status.SUCCESS_OK, "Operation successful", "metadataRepresentation"));
+        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_UNAUTHORIZED, "no login", "explainRepresentation"));
+        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_FORBIDDEN, "login problem or dataset belongs to another party", "explainRepresentation"));
+        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_NOT_FOUND, "DOI does not exist in our database", "explainRepresentation"));
+        addResponseDocToMethod(info, createResponseDoc(Status.SERVER_ERROR_INTERNAL, "server internal error, try later and if problem persists please contact us", "explainRepresentation"));
+    }
 }

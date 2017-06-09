@@ -7,6 +7,7 @@ package fr.cnes.doi.resource;
 
 import fr.cnes.doi.client.ClientException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import org.restlet.data.Form;
@@ -130,77 +131,23 @@ public class DoisResource extends BaseResource {
         docInfo.setTextContent("short explanation of status code e.g. CREATED, HANDLE_ALREADY_EXISTS etc");
         repInfo.setDocumentation(docInfo);         
         return repInfo;           
-    }
-    
-    private ResponseInfo getSuccessFullResponse() {
-        ResponseInfo responseInfo = new ResponseInfo(); 
-        final List<RepresentationInfo> repsInfo = new ArrayList<>();        
-        final RepresentationInfo repInfo = successFullRepresentation();
-        repsInfo.add(repInfo);
-        responseInfo.getStatuses().add(Status.SUCCESS_OK);
-        responseInfo.setDocumentation("Operation successful");
-        responseInfo.setRepresentations(repsInfo);         
-        return responseInfo;
-    }
-    
-    private ResponseInfo getNoContentResponse() {
-        ResponseInfo responseInfo = new ResponseInfo();
-        final List<RepresentationInfo> repsInfo = new ArrayList<>();
-        repsInfo.add(noContentRepresentation());
-        responseInfo.getStatuses().add(Status.SUCCESS_NO_CONTENT);
-        responseInfo.setDocumentation("no DOIs founds");
-        responseInfo.setRepresentations(repsInfo);
-        return responseInfo;
-    }
-    
-    private ResponseInfo postNoContentResponse() {
-        ResponseInfo responseInfo = new ResponseInfo();
-        final List<RepresentationInfo> repsInfo = new ArrayList<>();        
-        repsInfo.add(explainStatusRepresentation());
-        responseInfo.getStatuses().add(Status.SUCCESS_CREATED);
-        responseInfo.setDocumentation("Operation successful");
-        responseInfo.setRepresentations(repsInfo);        
-        return responseInfo;
-    }    
-    
+    }            
     
     @Override
     protected final void describeGet(final MethodInfo info) {
         info.setName(Method.GET);        
         info.setDocumentation("Retrieves the DOI collection");       
-        info.getResponses().add(getSuccessFullResponse());
-        info.getResponses().add(getNoContentResponse());
+        addResponseDocToMethod(info, createResponseDoc(Status.SUCCESS_OK, "Operation successful", successFullRepresentation()));
+        addResponseDocToMethod(info, createResponseDoc(Status.SUCCESS_NO_CONTENT, "no DOIs founds", noContentRepresentation()));
     }    
     
     private RepresentationInfo requestRepresentation(){
         RepresentationInfo rep = new RepresentationInfo(MediaType.APPLICATION_WWW_FORM);
-        ParameterInfo param = new ParameterInfo();
-        param.setName("doi");
-        param.setStyle(ParameterStyle.PLAIN);        
-        param.setRequired(true);
-        param.setType("xs:string");
-        param.setDocumentation("DOI name");        
-        rep.getParameters().add(param);
-        
-        param = new ParameterInfo();
-        param.setName("url");
-        param.setStyle(ParameterStyle.PLAIN);        
-        param.setRequired(true);
-        param.setType("xs:string");
-        param.setDocumentation("URL of the landing page");        
-        rep.getParameters().add(param);
+        rep.getParameters().add(createQueryParamDoc("doi", ParameterStyle.PLAIN, "DOI name", true, "xs:string"));
+        rep.getParameters().add(createQueryParamDoc("url", ParameterStyle.PLAIN, "URL of the landing page", true, "xs:string"));
         return rep;
     }
-    
-    private ParameterInfo requestHeader() {
-        ParameterInfo param = new ParameterInfo();
-        param.setName("selectedRole");
-        param.setStyle(ParameterStyle.HEADER);        
-        param.setRequired(false);
-        param.setType("xs:string");
-        param.setDocumentation("A user can select one role when he is associated to several roles");        
-        return param;
-    }
+
 
     @Override
     protected final void describePost(final MethodInfo info) {
@@ -210,52 +157,19 @@ public class DoisResource extends BaseResource {
                 + "Standard domains and quota restrictions check will be performed. "
                 + "A Datacentre's doiQuotaUsed will be increased by 1. "
                 + "A new record in Datasets will be created.");       
-
-        final RequestInfo request = new RequestInfo();               
-        request.getRepresentations().add(requestRepresentation());               
-        request.getParameters().add(requestHeader());        
-        info.setRequest(request);
-        
-        info.getResponses().add(postNoContentResponse());
-        
-        ResponseInfo responseInfo = new ResponseInfo();
-        responseInfo.getStatuses().add(Status.CLIENT_ERROR_BAD_REQUEST);
-        responseInfo.setDocumentation("request body must be exactly two lines: DOI and URL; wrong domain, wrong prefix");
-        RepresentationInfo rep = new RepresentationInfo();
-        rep.setReference("explainRepresentation");
-        responseInfo.getRepresentations().add(rep);
-        info.getResponses().add(responseInfo);
-        
-        responseInfo = new ResponseInfo();
-        responseInfo.getStatuses().add(Status.CLIENT_ERROR_UNAUTHORIZED);
-        responseInfo.setDocumentation("no login");
-        rep = new RepresentationInfo();
-        rep.setReference("explainRepresentation");
-        responseInfo.getRepresentations().add(rep);        
-        info.getResponses().add(responseInfo);
-        
-        responseInfo = new ResponseInfo();
-        responseInfo.getStatuses().add(Status.CLIENT_ERROR_FORBIDDEN);
-        responseInfo.setDocumentation("login problem, quota exceeded");
-        rep = new RepresentationInfo();
-        rep.setReference("explainRepresentation");
-        responseInfo.getRepresentations().add(rep);        
-        info.getResponses().add(responseInfo);        
-        
-        responseInfo = new ResponseInfo();
-        responseInfo.getStatuses().add(Status.CLIENT_ERROR_PRECONDITION_FAILED);
-        responseInfo.setDocumentation("metadata must be uploaded first");
-        rep = new RepresentationInfo();
-        rep.setReference("explainRepresentation");
-        responseInfo.getRepresentations().add(rep);        
-        info.getResponses().add(responseInfo);         
-        
-        responseInfo = new ResponseInfo();
-        responseInfo.getStatuses().add(Status.SERVER_ERROR_INTERNAL);
-        responseInfo.setDocumentation("server internal error, try later and if problem persists please contact us");
-        rep = new RepresentationInfo();
-        rep.setReference("explainRepresentation");
-        responseInfo.getRepresentations().add(rep);        
-        info.getResponses().add(responseInfo);             
+       
+        addRequestDocToMethod(info, 
+                    Arrays.asList(
+                        createQueryParamDoc("selectedRole", ParameterStyle.HEADER, "A user can select one role when he is associated to several roles", false, "xs:string")
+                    ), 
+                    requestRepresentation());
+                
+        addResponseDocToMethod(info, createResponseDoc(Status.SUCCESS_CREATED, "Operation successful", explainStatusRepresentation()));
+        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_BAD_REQUEST, "request body must be exactly two lines: DOI and URL; wrong domain, wrong prefix", "explainRepresentation"));
+        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_UNAUTHORIZED, "no login", "explainRepresentation"));
+        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_FORBIDDEN, "login problem, quota exceeded", "explainRepresentation"));
+        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_PRECONDITION_FAILED, "metadata must be uploaded first", "explainRepresentation"));
+        addResponseDocToMethod(info, createResponseDoc(Status.SERVER_ERROR_INTERNAL, "server internal error, try later and if problem persists please contact us", "explainRepresentation"));
+             
     }     
 }

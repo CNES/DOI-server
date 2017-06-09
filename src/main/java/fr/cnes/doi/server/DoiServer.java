@@ -101,30 +101,49 @@ public class DoiServer extends Component {
     private void configureServer() {
         LOGGER.entering(getClass().getName(), "init");
 
+        initHttpServer();
+        initHttpsServer();        
+        initClients();        
+        initAttachApplication();
+        
+        LOGGER.exiting(getClass().getName(), "init");
+    }
+        
+    
+    private void initHttpServer() {
         Server serverHttp = startHttpServer(settings.getInt(Consts.SERVER_HTTP_PORT, DEFAULT_HTTP_PORT));
-        Server serverHttps = startHttpsServer(settings.getInt(Consts.SERVER_HTTPS_PORT));
-
-        this.getServers().add(serverHttps);
         this.getServers().add(serverHttp);
+        initJettyConfiguration(serverHttp);
+    }
+    
+    private void initHttpsServer() {
+        Server serverHttps = startHttpsServer(settings.getInt(Consts.SERVER_HTTPS_PORT, DEFAULT_HTTPS_PORT));
+        this.getServers().add(serverHttps);
+        initJettyConfiguration(serverHttps);
+    }
+    
+    private void initJettyConfiguration(Server server) {
+        JettySettings jettyProps = new JettySettings(server, settings);
+        jettyProps.addParamsToServerContext();          
+    }
+    
+    private void initClients(){
         this.getClients().add(Protocol.HTTP);
         this.getClients().add(Protocol.HTTPS);
-        this.getClients().add(Protocol.CLAP);
-
-        // Add configuration parameters to Servers
-        JettySettings jettyProps = new JettySettings(serverHttp, settings);
-        jettyProps.addParamsToServerContext();
-        jettyProps = new JettySettings(serverHttps, settings);
-        jettyProps.addParamsToServerContext();                
-
+        this.getClients().add(Protocol.CLAP);        
+    }
+    
+    private void initAttachApplication() {
         Application appDoiProject = new DoiMdsApplication();
-
-        // Attach the application to the this and start it
         this.getDefaultHost().attach(MDS_URI, appDoiProject);
         this.getDefaultHost().attach(CITATION_URI, new DoiCrossCiteApplication());
         this.getDefaultHost().attach(STATUS_URI, new DoiStatusApplication());
-        this.getDefaultHost().attachDefault(new WebSiteApplication());
-
+        this.getDefaultHost().attachDefault(new WebSiteApplication()); 
         // Set authentication
+        initAuthenticationForMdsApp(appDoiProject);
+    }
+    
+    private void initAuthenticationForMdsApp(Application appDoiProject) {
         MemoryRealm realm = new MemoryRealm();
         Role project1 = new Role(appDoiProject, "Project1");
         Role project2 = new Role(appDoiProject, "Project2");
@@ -141,9 +160,11 @@ public class DoiServer extends Component {
         appDoiProject.getContext().setDefaultVerifier(realm.getVerifier());
 
         realm.map(human, project1);
-        realm.map(human, project2);
 
-        LOGGER.exiting(getClass().getName(), "init");
+        realm.map(human, project2);        
+
+
+        LOGGER.exiting(getClass().getName(), "init")
     }
 
     /**
