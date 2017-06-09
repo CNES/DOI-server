@@ -3,26 +3,30 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fr.cnes.doi.server;
+package fr.cnes.doi.server.monitoring;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.restlet.data.Method;
 
 /**
- * Speed monitoring.
+ * Speed monitoring (average time to answer requests).
  * @author Jean-Christophe Malapert
  */
 public class DoiMonitoring {
     
+	/** Logger **/
     private static final Logger LOGGER = Logger.getLogger(DoiMonitoring.class.getName());
         
-    private final Map<String, List> applications = new HashMap<>();
+    /** Hash map of records to compute average time to answer requests **/
+    private final Map<String, DoiMonitoringRecord> applications = new HashMap<>();
     
+    /**
+     * Constructor
+     */
     public DoiMonitoring() {
         
     }
@@ -35,7 +39,7 @@ public class DoiMonitoring {
      */
     public void register(final Method name, final String path, final String description) {
         LOGGER.entering(getClass().getName(), "register", new Object[]{name.getName(), path, description});
-        this.applications.put(name.getName()+path, Arrays.asList(description, 0.0f, 0));
+        this.applications.put(name.getName()+path, new DoiMonitoringRecord(description, 0.0f, 0));
         LOGGER.exiting(getClass().getName(), "register");
     }
     
@@ -49,14 +53,14 @@ public class DoiMonitoring {
         LOGGER.entering(getClass().getName(), "addMeasurement", new Object[]{name.getName(), path, duration});        
         String id = name.getName()+path;
         if(this.applications.containsKey(id)) {
-            List properties = this.applications.get(name.getName()+path);
-            float currentSpeedMean = (float) properties.get(1);
-            LOGGER.log(Level.FINE, "current speed mean = {0}", currentSpeedMean);
-            int currentRecord = (int) properties.get(2);
-            float newSpeedMean = (currentSpeedMean+duration) / (currentRecord+1);
-            LOGGER.log(Level.FINE, "new speed mean = {0}", newSpeedMean);            
-            properties.set(1, newSpeedMean);
-            properties.set(2, currentRecord+1);    
+            DoiMonitoringRecord record = this.applications.get(name.getName()+path);
+            float previousSpeedAverage = (float) record.getAverage();
+            LOGGER.log(Level.FINE, "current speed average = {0}", previousSpeedAverage);
+            int previousNbAccess = (int) record.getNbAccess();
+            float newSpeedAverage = (previousSpeedAverage+duration) / (previousNbAccess+1);
+            LOGGER.log(Level.FINE, "new speed average = {0}", newSpeedAverage);            
+            record.setAverage(newSpeedAverage);
+            record.setNbAccess(previousNbAccess+1);    
         } else {
             LOGGER.warning("Unable to add the measurement : Unknown feature");
         }
@@ -75,15 +79,15 @@ public class DoiMonitoring {
     }
     
     /**
-     * Returns the mean of the measurement.
+     * Returns the average speed of the measurement.
      * @param name method name 
      * @param path path URI
-     * @return the mean speed
+     * @return the average speed
      */
-    public float getCurrentMean(final Method name, final String path) {
+    public float getCurrentAverage(final Method name, final String path) {
         String id = name.getName()+path;
         if(isRegistered(name, path)) {
-            return (float) this.applications.get(id).get(1);            
+            return this.applications.get(id).getAverage();            
         } else {
             throw new IllegalArgumentException(id + " is not registered");
         }
@@ -97,7 +101,7 @@ public class DoiMonitoring {
      */
     public String getDescription(final Method name, final String path) {
         String id = name.getName()+path;
-        return (String) this.applications.get(id).get(0);    
+        return this.applications.get(id).getDescription();    
     }
        
 }

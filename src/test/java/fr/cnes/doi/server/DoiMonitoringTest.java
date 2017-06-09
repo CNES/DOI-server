@@ -13,6 +13,8 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.restlet.data.Method;
 
+import fr.cnes.doi.server.monitoring.DoiMonitoring;
+
 /**
  *
  * @author malapert
@@ -93,7 +95,7 @@ public class DoiMonitoringTest {
         instance.register(name, path, "test");
         instance.addMeasurement(name, path, 10);
         instance.addMeasurement(name, path, 8);
-        float result = instance.getCurrentMean(name, path);
+        float result = instance.getCurrentAverage(name, path);
         assertEquals(expResult, result, 0.001);
     }
 

@@ -48,6 +48,7 @@ public class Starter {
     public static final int BITS_16 = 16;
     
     private static final Logger LOGGER = Logger.getLogger(Starter.class.getName());
+    private static final Logger SHELL_LOGGER = Utils.getShellLogger();
     private static final Logger GLOBAL_LOGGER = Logger.getGlobal();
 
     private static DoiServer doiServer;
@@ -75,7 +76,7 @@ public class Starter {
         help.append("  -v|--version                 : DOI server version\n");
         help.append("\n");
         help.append("\n");
-        LOGGER.info(help.toString());
+        SHELL_LOGGER.info(help.toString());
         GLOBAL_LOGGER.exiting(Starter.class.getName(), "displayHelp");
     }
 

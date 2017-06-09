@@ -15,6 +15,8 @@ import fr.cnes.doi.resource.MetadataResource;
 import fr.cnes.doi.resource.DoiResource;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.ProxySettings;
+import fr.cnes.doi.utils.Utils;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.logging.Logger;
@@ -63,7 +65,7 @@ public class DoiMdsApplication extends BaseApplication {
     
     private final ProxySettings proxy = ProxySettings.getInstance();
 
-    private static final Logger LOGGER = Logger.getLogger(DoiMdsApplication.class.getName());
+    private static final Logger LOGGER = Utils.getAppLogger();
     
     private final ClientMDS client;
 

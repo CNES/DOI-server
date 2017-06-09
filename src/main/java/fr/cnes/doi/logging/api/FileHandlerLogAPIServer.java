@@ -3,19 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fr.cnes.doi.logging;
+package fr.cnes.doi.logging.api;
 
 import java.io.IOException;
 import java.util.logging.FileHandler;
 
 /**
- * File Handler to log applications.
+ * FileHandler to log API.
  * @author Jean-Christophe Malapert
  */
-public class FileHandlerLogAccessApplications extends FileHandler {
+public class FileHandlerLogAPIServer extends FileHandler { 
     
-  public FileHandlerLogAccessApplications() throws IOException, SecurityException {
+  public FileHandlerLogAPIServer() throws IOException, SecurityException {
     super();
-  }    
+  }
+    
     
 }

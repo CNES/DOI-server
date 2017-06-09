@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fr.cnes.doi.logging;
+package fr.cnes.doi.logging.api;
 
 import java.util.Date;
 import java.util.logging.Formatter;
