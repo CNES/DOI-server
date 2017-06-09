@@ -7,18 +7,13 @@ package fr.cnes.doi.resource;
 
 import fr.cnes.doi.application.DoiMdsApplication;
 import fr.cnes.doi.client.ClientException;
-import java.util.ArrayList;
-import java.util.List;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
 import org.restlet.data.Status;
 import org.restlet.ext.wadl.DocumentationInfo;
 import org.restlet.ext.wadl.MethodInfo;
-import org.restlet.ext.wadl.ParameterInfo;
 import org.restlet.ext.wadl.ParameterStyle;
 import org.restlet.ext.wadl.RepresentationInfo;
-import org.restlet.ext.wadl.RequestInfo;
-import org.restlet.ext.wadl.ResponseInfo;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Get;
@@ -44,26 +39,20 @@ public class MediaResource extends BaseResource {
     @Get
     public Representation getMedias() {
         getLogger().entering(getClass().getName(), "getMedias", this.mediaName);
+        final Representation rep;
+        String medias;
         try {
             setStatus(Status.SUCCESS_OK);
-            String medias = this.doiApp.getClient().getMedia(this.mediaName);
-            getLogger().exiting(getClass().getName(), "getMedias", medias);
-            return new StringRepresentation(medias, MediaType.TEXT_URI_LIST);
+            medias = this.doiApp.getClient().getMedia(this.mediaName);
+            rep = new StringRepresentation(medias, MediaType.TEXT_URI_LIST);
         } catch (ClientException ex) {
             getLogger().exiting(getClass().getName(), "getMedias", ex.getMessage());            
             throw new ResourceException(ex.getStatus(), ex.getMessage());
         }
+        getLogger().exiting(getClass().getName(), "getMedias", medias);        
+        return rep;
     } 
-    
-    private ParameterInfo addQueryParameter() {
-        ParameterInfo param = new ParameterInfo();
-        param.setName(DoiMdsApplication.DOI_TEMPLATE);
-        param.setStyle(ParameterStyle.TEMPLATE);
-        param.setDocumentation("DOI name");
-        param.setRequired(true);
-        param.setType("xs:string"); 
-        return param;        
-    }
+   
     
     private RepresentationInfo mediaRepresentation() {
         final RepresentationInfo repInfo = new RepresentationInfo();
@@ -73,60 +62,19 @@ public class MediaResource extends BaseResource {
         docInfo.setTextContent("This request returns a key-value list of media types/urls for a given DOI name");
         repInfo.setDocumentation(docInfo);
         return repInfo;
-    }
-    
-    private ResponseInfo getSuccessfullResponse() {
-        ResponseInfo responseInfo = new ResponseInfo();        
-        final List<RepresentationInfo> repsInfo = new ArrayList<>();        
-        repsInfo.add(mediaRepresentation());        
-        responseInfo.getStatuses().add(Status.SUCCESS_OK);
-        responseInfo.setDocumentation("Operation successful");
-        responseInfo.setRepresentations(repsInfo);          
-        return responseInfo;
-    }
+    }    
 
     @Override
     protected final void describeGet(final MethodInfo info) {
         info.setName(Method.GET);
         info.setDocumentation("Get a specific media for a given DOI");
-       
-        final RequestInfo request = new RequestInfo();
-        request.getParameters().add(addQueryParameter());
-        info.setRequest(request);
-      
-        info.getResponses().add(getSuccessfullResponse());
-                
-        ResponseInfo responseInfo = new ResponseInfo();
-        responseInfo.getStatuses().add(Status.CLIENT_ERROR_UNAUTHORIZED);
-        RepresentationInfo rep = new RepresentationInfo();
-        rep.setReference("explainRepresentation");
-        responseInfo.getRepresentations().add(rep);
-        responseInfo.setDocumentation("no login");
-        info.getResponses().add(responseInfo);       
-        
-        responseInfo = new ResponseInfo();
-        responseInfo.getStatuses().add(Status.CLIENT_ERROR_FORBIDDEN);
-        rep = new RepresentationInfo();
-        rep.setReference("explainRepresentation");
-        responseInfo.getRepresentations().add(rep);        
-        responseInfo.setDocumentation("login problem or dataset belongs to another party");
-        info.getResponses().add(responseInfo); 
 
-        responseInfo = new ResponseInfo();
-        responseInfo.getStatuses().add(Status.CLIENT_ERROR_NOT_FOUND);
-        rep = new RepresentationInfo();
-        rep.setReference("explainRepresentation");
-        responseInfo.getRepresentations().add(rep);          
-        responseInfo.setDocumentation("DOI does not exist in our database");
-        info.getResponses().add(responseInfo); 
-        
-        responseInfo = new ResponseInfo();
-        responseInfo.getStatuses().add(Status.SERVER_ERROR_INTERNAL);
-        rep = new RepresentationInfo();
-        rep.setReference("explainRepresentation");
-        responseInfo.getRepresentations().add(rep);          
-        responseInfo.setDocumentation("server internal error, try later and if problem persists please contact us");
-        info.getResponses().add(responseInfo);
+        addRequestDocToMethod(info, createQueryParamDoc(DoiMdsApplication.DOI_TEMPLATE, ParameterStyle.TEMPLATE, "DOI name", true, "xs:string"));
+        addResponseDocToMethod(info, createResponseDoc(Status.SUCCESS_OK, "Operation successful", mediaRepresentation()));
+        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_UNAUTHORIZED, "no login", "explainRepresentation"));
+        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_FORBIDDEN, "login problem or dataset belongs to another party", "explainRepresentation"));
+        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_NOT_FOUND, "DOI does not exist in our database", "explainRepresentation"));
+        addResponseDocToMethod(info, createResponseDoc(Status.SERVER_ERROR_INTERNAL, "server internal error, try later and if problem persists please contact us", "explainRepresentation"));
     }     
       
 }
