@@ -20,6 +20,10 @@ public class StyleCitationResource extends BaseCitationResource {
         super.doInit();
     }
                            
+    /**
+     * Returns the list of possible styles.
+     * @return the list of possible styles
+     */
     @Get
     public List<String> getStyles() {
         return this.app.getClient().getStyles();

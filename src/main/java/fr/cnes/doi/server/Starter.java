@@ -18,8 +18,6 @@ import org.restlet.data.LocalReference;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 import gnu.getopt.LongOpt;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -163,6 +161,10 @@ public class Starter {
         GLOBAL_LOGGER.exiting(Starter.class.getName(), "displayVersion");
     }
 
+    /**
+     * Main Starter
+     * @param argv arguments
+     */
     public static void main(String[] argv) {
         final DoiSettings settings = DoiSettings.getInstance();
         final String progName = "java -jar " + settings.getString(Consts.APP_NAME) + "-" + settings.getString(Consts.VERSION) + ".jar";
@@ -246,7 +248,7 @@ public class Starter {
                         contentFile = Utils.encrypt(contentFile, settings.getSecretKey());
                         LOGGER.info(contentFile);
                     } catch (Exception ex) {
-                        LOGGER.info("Error: " + ex.toString());
+                        LOGGER.log(Level.INFO, "Error: {0}", ex.toString());
                     }
                     break; 
                 //    
@@ -259,7 +261,7 @@ public class Starter {
                         content = Utils.decrypt(content, settings.getSecretKey());
                         LOGGER.info(content);
                     } catch(Exception ex) {
-                        LOGGER.info("Error: " + ex.toString());
+                        LOGGER.log(Level.INFO, "Error: {0}", ex.toString());
                     }    
                     break;                    
                 case '?':

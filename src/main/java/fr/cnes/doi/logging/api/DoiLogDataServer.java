@@ -32,7 +32,7 @@ import fr.cnes.doi.utils.Utils;
  */
 public class DoiLogDataServer extends LogService {
 
-	private Logger logger = Engine.getLogger(Utils.HTTP_LOGGER_NAME);
+	//private Logger logger = Engine.getLogger(Utils.HTTP_LOGGER_NAME);
     
     /**
      * Constructs a new logger.
@@ -41,12 +41,12 @@ public class DoiLogDataServer extends LogService {
      */
     public DoiLogDataServer(final String logName, final boolean isEnabled) {
         super(isEnabled);
-        this.setResponseLogFormat(DoiSettings.getInstance().getString(Consts.LOG_FORMAT));
+        //this.setResponseLogFormat(DoiSettings.getInstance().getString(Consts.LOG_FORMAT));
         try {
             this.setLoggerName(logName);
             
             if ((logName != null) && !logName.equals("")) {
-            	logger = Engine.getLogger(logName);
+            	Engine.getLogger(logName);
             }
         } catch (SecurityException ex) {
             throw new ResourceException(Status.SERVER_ERROR_INTERNAL, ex);

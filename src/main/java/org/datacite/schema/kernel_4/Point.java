@@ -39,12 +39,20 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class Point {
 
+    /**
+     *
+     */
     protected float pointLongitude;
+
+    /**
+     *
+     */
     protected float pointLatitude;
 
     /**
      * Gets the value of the pointLongitude property.
      * 
+     * @return 
      */
     public float getPointLongitude() {
         return pointLongitude;
@@ -53,6 +61,7 @@ public class Point {
     /**
      * Sets the value of the pointLongitude property.
      * 
+     * @param value
      */
     public void setPointLongitude(float value) {
         this.pointLongitude = value;
@@ -61,6 +70,7 @@ public class Point {
     /**
      * Gets the value of the pointLatitude property.
      * 
+     * @return 
      */
     public float getPointLatitude() {
         return pointLatitude;
@@ -69,6 +79,7 @@ public class Point {
     /**
      * Sets the value of the pointLatitude property.
      * 
+     * @param value
      */
     public void setPointLatitude(float value) {
         this.pointLatitude = value;

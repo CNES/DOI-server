@@ -39,22 +39,57 @@ import javax.xml.bind.annotation.XmlType;
 @XmlEnum
 public enum DateType {
 
+    /**
+     *
+     */
     @XmlEnumValue("Accepted")
     ACCEPTED("Accepted"),
+
+    /**
+     *
+     */
     @XmlEnumValue("Available")
     AVAILABLE("Available"),
+
+    /**
+     *
+     */
     @XmlEnumValue("Collected")
     COLLECTED("Collected"),
+
+    /**
+     *
+     */
     @XmlEnumValue("Copyrighted")
     COPYRIGHTED("Copyrighted"),
+
+    /**
+     *
+     */
     @XmlEnumValue("Created")
     CREATED("Created"),
+
+    /**
+     *
+     */
     @XmlEnumValue("Issued")
     ISSUED("Issued"),
+
+    /**
+     *
+     */
     @XmlEnumValue("Submitted")
     SUBMITTED("Submitted"),
+
+    /**
+     *
+     */
     @XmlEnumValue("Updated")
     UPDATED("Updated"),
+
+    /**
+     *
+     */
     @XmlEnumValue("Valid")
     VALID("Valid");
     private final String value;
@@ -63,10 +98,19 @@ public enum DateType {
         value = v;
     }
 
+    /**
+     *
+     * @return
+     */
     public String value() {
         return value;
     }
 
+    /**
+     *
+     * @param v
+     * @return
+     */
     public static DateType fromValue(String v) {
         for (DateType c: DateType.values()) {
             if (c.value.equals(v)) {

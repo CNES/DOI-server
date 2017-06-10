@@ -47,26 +47,56 @@ import org.restlet.service.CorsService;
  *
  * @author Jean-Christophe Malapert
  */
-public class DoiMdsApplication extends BaseApplication {   
-       
-    public static final String PROJECT_TEMPLATE = "projectName";
+public class DoiMdsApplication extends BaseApplication {
+
+    /**
+     * Template Query for DOI.
+     */
     public static final String DOI_TEMPLATE = "doiName";
 
-    public static final String PROJECTS_URI = "/projects";
-    public static final String PROJECT_NAME_URI = "/{" + PROJECT_TEMPLATE + "}";
+    /**
+     * URI to handle the collection of DOIs.
+     */
     public static final String DOI_URI = "/dois";
+
+    /**
+     * URI to handle a DOI.
+     */
     public static final String DOI_NAME_URI = "/{" + DOI_TEMPLATE + "}";
+
+    /**
+     * URI to handle metadata.
+     */
     public static final String METADATAS_URI = "/metadata";
+
+    /**
+     * URI to handle media.
+     */
     public static final String MEDIA_URI = "/media";
 
+    /**
+     * Schema.
+     */
     private final SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
+    /**
+     * Instance of configuration settings.
+     */
     private final DoiSettings config = DoiSettings.getInstance();
-    
+
+    /**
+     * Instance of proxy settings.
+     */
     private final ProxySettings proxy = ProxySettings.getInstance();
 
+    /**
+     * Application logger.
+     */
     private static final Logger LOGGER = Utils.getAppLogger();
-    
+
+    /**
+     * Client to query Mds Datacite.
+     */
     private final ClientMDS client;
 
     /**
@@ -90,14 +120,10 @@ public class DoiMdsApplication extends BaseApplication {
         setStatusService(new CnesStatusService());
         getServices().add(createCoreService());
         client = new ClientMDS(ClientMDS.Context.DEV, getLoginMds(), getPwdMds());
-        if(DoiSettings.getInstance().getBoolean(Consts.SERVER_PROXY_USED)) {
+        if (DoiSettings.getInstance().getBoolean(Consts.SERVER_PROXY_USED)) {
             client.setProxyAuthentication(proxy.getProxyAuthentication());
         }
-        
-        
         LOGGER.exiting(DoiMdsApplication.class.getName(), "Constructor");
-        
-        //TODO : on doit passer le proxy et ensuite se logger à l'INIST.
     }
 
     private CorsService createCoreService() {
@@ -109,6 +135,10 @@ public class DoiMdsApplication extends BaseApplication {
         return corsService;
     }
 
+    /**
+     * Assigns routes for Mds application securizes the access.
+     * @return Router
+     */
     @Override
     public Restlet createInboundRoot() {
         LOGGER.entering(DoiMdsApplication.class.getName(), "createInboundRoot");
@@ -227,7 +257,7 @@ public class DoiMdsApplication extends BaseApplication {
     }
 
     /**
-     * Returns the login for DataCite.
+     * Returns the decrypted login for DataCite.
      *
      * @return the DataCite's login
      */
@@ -238,7 +268,7 @@ public class DoiMdsApplication extends BaseApplication {
     }
 
     /**
-     * Returns the pwd for DataCite.
+     * Returns the decrypted password for DataCite.
      *
      * @return the DataCite's pwd
      */
@@ -258,15 +288,22 @@ public class DoiMdsApplication extends BaseApplication {
         LOGGER.exiting(DoiMdsApplication.class.getName(), "getDataCentrePrefix", this.config.getString(Consts.INIST_DOI));
         return this.config.getString(Consts.INIST_DOI);
     }
-    
+
     /**
      * Returns the client.
+     *
      * @return the client
      */
     public ClientMDS getClient() {
         return this.client;
     }
-        
+
+    /**
+     * Method to describe application in the WADL.
+     * @param request Request
+     * @param response Response
+     * @return the application description for WADL
+     */
     @Override
     public final ApplicationInfo getApplicationInfo(final Request request, final Response response) {
         final ApplicationInfo result = super.getApplicationInfo(request, response);
@@ -284,6 +321,11 @@ public class DoiMdsApplication extends BaseApplication {
         return result;
     }
 
+    /**
+     * Creates HTML representation of the WADL.
+     * @param applicationInfo Application description
+     * @return the HTML representation of the WADL
+     */
     @Override
     protected Representation createHtmlRepresentation(ApplicationInfo applicationInfo) {
         WadlCnesRepresentation wadl = new WadlCnesRepresentation(applicationInfo);

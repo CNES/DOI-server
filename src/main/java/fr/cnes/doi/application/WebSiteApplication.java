@@ -16,6 +16,10 @@ import org.restlet.routing.Router;
  */
 public class WebSiteApplication extends BaseApplication {
 
+    /**
+     * Assigns a route to make online the website.
+     * @return Router
+     */
     @Override
     public Restlet createInboundRoot() {
         Router router = new Router(getContext());
@@ -23,7 +27,5 @@ public class WebSiteApplication extends BaseApplication {
         router.attach("/resources/", directory);        
         return router;
     }
-    
-    
-    
+            
 }

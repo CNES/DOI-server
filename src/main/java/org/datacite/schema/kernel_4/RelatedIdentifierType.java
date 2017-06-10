@@ -48,27 +48,98 @@ import javax.xml.bind.annotation.XmlType;
 @XmlEnum
 public enum RelatedIdentifierType {
 
+    /**
+     *
+     */
     ARK("ARK"),
+
+    /**
+     *
+     */
     @XmlEnumValue("arXiv")
     AR_XIV("arXiv"),
+
+    /**
+     *
+     */
     @XmlEnumValue("bibcode")
     BIBCODE("bibcode"),
+
+    /**
+     *
+     */
     DOI("DOI"),
+
+    /**
+     *
+     */
     @XmlEnumValue("EAN13")
     EAN_13("EAN13"),
+
+    /**
+     *
+     */
     EISSN("EISSN"),
+
+    /**
+     *
+     */
     @XmlEnumValue("Handle")
     HANDLE("Handle"),
+
+    /**
+     *
+     */
     IGSN("IGSN"),
+
+    /**
+     *
+     */
     ISBN("ISBN"),
+
+    /**
+     *
+     */
     ISSN("ISSN"),
+
+    /**
+     *
+     */
     ISTC("ISTC"),
+
+    /**
+     *
+     */
     LISSN("LISSN"),
+
+    /**
+     *
+     */
     LSID("LSID"),
+
+    /**
+     *
+     */
     PMID("PMID"),
+
+    /**
+     *
+     */
     PURL("PURL"),
+
+    /**
+     *
+     */
     UPC("UPC"),
+
+    /**
+     *
+     */
     URL("URL"),
+
+    /**
+     *
+     */
     URN("URN");
     private final String value;
 
@@ -76,10 +147,19 @@ public enum RelatedIdentifierType {
         value = v;
     }
 
+    /**
+     *
+     * @return
+     */
     public String value() {
         return value;
     }
 
+    /**
+     *
+     * @param v
+     * @return
+     */
     public static RelatedIdentifierType fromValue(String v) {
         for (RelatedIdentifierType c: RelatedIdentifierType.values()) {
             if (c.value.equals(v)) {

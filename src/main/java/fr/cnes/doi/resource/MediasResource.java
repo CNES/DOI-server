@@ -28,8 +28,15 @@ import org.restlet.util.Series;
  */
 public class MediasResource extends BaseMdsResource {
     
+    /**
+     *
+     */
     public static final String CREATE_MEDIA = "Create media";
 
+    /**
+     *
+     * @throws ResourceException
+     */
     @Override
     protected void doInit() throws ResourceException {
         super.doInit();
@@ -58,6 +65,10 @@ public class MediasResource extends BaseMdsResource {
         return new StringRepresentation(result);
     }    
    
+    /**
+     *
+     * @param info
+     */
     @Override
     protected final void describePost(final MethodInfo info) {
         info.setName(Method.POST);

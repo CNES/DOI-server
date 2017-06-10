@@ -38,6 +38,10 @@ public class MetadatasResource extends BaseMdsResource {
 
     public static final String CREATE_METADATA = "Create Metadata";
 
+    /**
+     * Init.
+     * @throws ResourceException
+     */
     @Override
     protected void doInit() throws ResourceException {
         super.doInit();
@@ -85,6 +89,10 @@ public class MetadatasResource extends BaseMdsResource {
         return result;
     }
 
+    /**
+     * Describes the POST method.
+     * @param info WADL Representation in XML
+     */
     @Override
     protected final void describePost(final MethodInfo info) {
         info.setName(Method.POST);

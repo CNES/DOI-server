@@ -10,15 +10,18 @@ import org.restlet.ext.wadl.WadlServerResource;
 import org.restlet.resource.ResourceException;
 
 /**
- *
+ * Base resource for CrossCite application.
  * @author Jean-Christophe Malapert
  */
 public class BaseCitationResource extends WadlServerResource {
     
+    /**
+     *
+     */
     protected DoiCrossCiteApplication app;
     
     /**
-     *
+     * Init
      * @throws ResourceException
      */
     @Override

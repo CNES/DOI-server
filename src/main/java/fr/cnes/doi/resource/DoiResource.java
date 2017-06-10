@@ -25,6 +25,10 @@ import org.restlet.resource.ResourceException;
  * @author Jean-Christophe Malapert
  */
 public class DoiResource extends BaseMdsResource {
+
+    /**
+     *
+     */
     public static final String GET_DOI = "Get DOI";
     
     /**
@@ -32,6 +36,10 @@ public class DoiResource extends BaseMdsResource {
      */
     private String doiName;        
 
+    /**
+     *
+     * @throws ResourceException
+     */
     @Override
     protected void doInit() throws ResourceException {
         super.doInit();
@@ -71,6 +79,10 @@ public class DoiResource extends BaseMdsResource {
         return repInfo;
     }   
     
+    /**
+     *
+     * @param info
+     */
     @Override
     protected final void describeGet(final MethodInfo info) {
         info.setName(Method.GET);

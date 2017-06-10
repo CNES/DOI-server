@@ -34,10 +34,20 @@ import org.restlet.util.Series;
  */
 public class DoisResource extends BaseMdsResource {
     
+    /**
+     *
+     */
     public static final String LIST_ALL_DOIS = "List all DOIs";
+
+    /**
+     *
+     */
     public static final String CREATE_DOI = "Create a DOI";
               
-
+    /**
+     *
+     * @throws ResourceException
+     */
     @Override
     protected void doInit() throws ResourceException {       
         super.doInit();
@@ -133,6 +143,10 @@ public class DoisResource extends BaseMdsResource {
         return repInfo;           
     }            
     
+    /**
+     *
+     * @param info
+     */
     @Override
     protected final void describeGet(final MethodInfo info) {
         info.setName(Method.GET);        
@@ -148,7 +162,10 @@ public class DoisResource extends BaseMdsResource {
         return rep;
     }
 
-
+    /**
+     *
+     * @param info
+     */
     @Override
     protected final void describePost(final MethodInfo info) {
         info.setName(Method.POST);

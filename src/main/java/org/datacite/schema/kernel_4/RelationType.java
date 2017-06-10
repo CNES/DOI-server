@@ -55,54 +55,153 @@ import javax.xml.bind.annotation.XmlType;
 @XmlEnum
 public enum RelationType {
 
+    /**
+     *
+     */
     @XmlEnumValue("IsCitedBy")
     IS_CITED_BY("IsCitedBy"),
+
+    /**
+     *
+     */
     @XmlEnumValue("Cites")
     CITES("Cites"),
+
+    /**
+     *
+     */
     @XmlEnumValue("IsSupplementTo")
     IS_SUPPLEMENT_TO("IsSupplementTo"),
+
+    /**
+     *
+     */
     @XmlEnumValue("IsSupplementedBy")
     IS_SUPPLEMENTED_BY("IsSupplementedBy"),
+
+    /**
+     *
+     */
     @XmlEnumValue("IsContinuedBy")
     IS_CONTINUED_BY("IsContinuedBy"),
+
+    /**
+     *
+     */
     @XmlEnumValue("Continues")
     CONTINUES("Continues"),
+
+    /**
+     *
+     */
     @XmlEnumValue("IsNewVersionOf")
     IS_NEW_VERSION_OF("IsNewVersionOf"),
+
+    /**
+     *
+     */
     @XmlEnumValue("IsPreviousVersionOf")
     IS_PREVIOUS_VERSION_OF("IsPreviousVersionOf"),
+
+    /**
+     *
+     */
     @XmlEnumValue("IsPartOf")
     IS_PART_OF("IsPartOf"),
+
+    /**
+     *
+     */
     @XmlEnumValue("HasPart")
     HAS_PART("HasPart"),
+
+    /**
+     *
+     */
     @XmlEnumValue("IsReferencedBy")
     IS_REFERENCED_BY("IsReferencedBy"),
+
+    /**
+     *
+     */
     @XmlEnumValue("References")
     REFERENCES("References"),
+
+    /**
+     *
+     */
     @XmlEnumValue("IsDocumentedBy")
     IS_DOCUMENTED_BY("IsDocumentedBy"),
+
+    /**
+     *
+     */
     @XmlEnumValue("Documents")
     DOCUMENTS("Documents"),
+
+    /**
+     *
+     */
     @XmlEnumValue("IsCompiledBy")
     IS_COMPILED_BY("IsCompiledBy"),
+
+    /**
+     *
+     */
     @XmlEnumValue("Compiles")
     COMPILES("Compiles"),
+
+    /**
+     *
+     */
     @XmlEnumValue("IsVariantFormOf")
     IS_VARIANT_FORM_OF("IsVariantFormOf"),
+
+    /**
+     *
+     */
     @XmlEnumValue("IsOriginalFormOf")
     IS_ORIGINAL_FORM_OF("IsOriginalFormOf"),
+
+    /**
+     *
+     */
     @XmlEnumValue("IsIdenticalTo")
     IS_IDENTICAL_TO("IsIdenticalTo"),
+
+    /**
+     *
+     */
     @XmlEnumValue("HasMetadata")
     HAS_METADATA("HasMetadata"),
+
+    /**
+     *
+     */
     @XmlEnumValue("IsMetadataFor")
     IS_METADATA_FOR("IsMetadataFor"),
+
+    /**
+     *
+     */
     @XmlEnumValue("Reviews")
     REVIEWS("Reviews"),
+
+    /**
+     *
+     */
     @XmlEnumValue("IsReviewedBy")
     IS_REVIEWED_BY("IsReviewedBy"),
+
+    /**
+     *
+     */
     @XmlEnumValue("IsDerivedFrom")
     IS_DERIVED_FROM("IsDerivedFrom"),
+
+    /**
+     *
+     */
     @XmlEnumValue("IsSourceOf")
     IS_SOURCE_OF("IsSourceOf");
     private final String value;
@@ -111,10 +210,19 @@ public enum RelationType {
         value = v;
     }
 
+    /**
+     *
+     * @return
+     */
     public String value() {
         return value;
     }
 
+    /**
+     *
+     * @param v
+     * @return
+     */
     public static RelationType fromValue(String v) {
         for (RelationType c: RelationType.values()) {
             if (c.value.equals(v)) {

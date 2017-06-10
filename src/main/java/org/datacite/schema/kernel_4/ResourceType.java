@@ -44,32 +44,87 @@ import javax.xml.bind.annotation.XmlType;
 @XmlEnum
 public enum ResourceType {
 
+    /**
+     *
+     */
     @XmlEnumValue("Audiovisual")
     AUDIOVISUAL("Audiovisual"),
+
+    /**
+     *
+     */
     @XmlEnumValue("Collection")
     COLLECTION("Collection"),
+
+    /**
+     *
+     */
     @XmlEnumValue("Dataset")
     DATASET("Dataset"),
+
+    /**
+     *
+     */
     @XmlEnumValue("Event")
     EVENT("Event"),
+
+    /**
+     *
+     */
     @XmlEnumValue("Image")
     IMAGE("Image"),
+
+    /**
+     *
+     */
     @XmlEnumValue("InteractiveResource")
     INTERACTIVE_RESOURCE("InteractiveResource"),
+
+    /**
+     *
+     */
     @XmlEnumValue("Model")
     MODEL("Model"),
+
+    /**
+     *
+     */
     @XmlEnumValue("PhysicalObject")
     PHYSICAL_OBJECT("PhysicalObject"),
+
+    /**
+     *
+     */
     @XmlEnumValue("Service")
     SERVICE("Service"),
+
+    /**
+     *
+     */
     @XmlEnumValue("Software")
     SOFTWARE("Software"),
+
+    /**
+     *
+     */
     @XmlEnumValue("Sound")
     SOUND("Sound"),
+
+    /**
+     *
+     */
     @XmlEnumValue("Text")
     TEXT("Text"),
+
+    /**
+     *
+     */
     @XmlEnumValue("Workflow")
     WORKFLOW("Workflow"),
+
+    /**
+     *
+     */
     @XmlEnumValue("Other")
     OTHER("Other");
     private final String value;
@@ -78,10 +133,19 @@ public enum ResourceType {
         value = v;
     }
 
+    /**
+     *
+     * @return
+     */
     public String value() {
         return value;
     }
 
+    /**
+     *
+     * @param v
+     * @return
+     */
     public static ResourceType fromValue(String v) {
         for (ResourceType c: ResourceType.values()) {
             if (c.value.equals(v)) {

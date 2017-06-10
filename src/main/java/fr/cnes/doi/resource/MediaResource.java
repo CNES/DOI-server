@@ -26,16 +26,27 @@ import org.restlet.resource.ResourceException;
  */
 public class MediaResource extends BaseMdsResource {
     
+    /**
+     *
+     */
     public static final String GET_MEDIAS = "Get Medias";
 
     private String mediaName;
 
+    /**
+     *
+     * @throws ResourceException
+     */
     @Override
     protected void doInit() throws ResourceException {   
         super.doInit();
         this.mediaName = getAttribute(DoiMdsApplication.DOI_TEMPLATE);
     }
 
+    /**
+     *
+     * @return
+     */
     @Get
     public Representation getMedias() {
         getLogger().entering(getClass().getName(), "getMedias", this.mediaName);
@@ -64,6 +75,10 @@ public class MediaResource extends BaseMdsResource {
         return repInfo;
     }    
 
+    /**
+     *
+     * @param info
+     */
     @Override
     protected final void describeGet(final MethodInfo info) {
         info.setName(Method.GET);

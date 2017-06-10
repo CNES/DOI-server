@@ -420,33 +420,108 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 @XmlRootElement(name = "resource")
 public class Resource {
 
+    /**
+     *
+     */
     @XmlElement(required = true)
     protected Resource.Identifier identifier;
+
+    /**
+     *
+     */
     @XmlElement(required = true)
     protected Resource.Creators creators;
+
+    /**
+     *
+     */
     @XmlElement(required = true)
     protected Resource.Titles titles;
+
+    /**
+     *
+     */
     @XmlElement(required = true)
     protected String publisher;
+
+    /**
+     *
+     */
     @XmlElement(required = true)
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     protected String publicationYear;
+
+    /**
+     *
+     */
     @XmlElement(required = true)
     protected Resource.ResourceType resourceType;
+
+    /**
+     *
+     */
     protected Resource.Subjects subjects;
+
+    /**
+     *
+     */
     protected Resource.Contributors contributors;
+
+    /**
+     *
+     */
     protected Resource.Dates dates;
+
+    /**
+     *
+     */
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     @XmlSchemaType(name = "language")
     protected String language;
+
+    /**
+     *
+     */
     protected Resource.AlternateIdentifiers alternateIdentifiers;
+
+    /**
+     *
+     */
     protected Resource.RelatedIdentifiers relatedIdentifiers;
+
+    /**
+     *
+     */
     protected Resource.Sizes sizes;
+
+    /**
+     *
+     */
     protected Resource.Formats formats;
+
+    /**
+     *
+     */
     protected String version;
+
+    /**
+     *
+     */
     protected Resource.RightsList rightsList;
+
+    /**
+     *
+     */
     protected Resource.Descriptions descriptions;
+
+    /**
+     *
+     */
     protected Resource.GeoLocations geoLocations;
+
+    /**
+     *
+     */
     protected Resource.FundingReferences fundingReferences;
 
     /**
@@ -939,6 +1014,9 @@ public class Resource {
     })
     public static class AlternateIdentifiers {
 
+        /**
+         *
+         */
         protected List<Resource.AlternateIdentifiers.AlternateIdentifier> alternateIdentifier;
 
         /**
@@ -962,6 +1040,7 @@ public class Resource {
          * {@link Resource.AlternateIdentifiers.AlternateIdentifier }
          * 
          * 
+         * @return 
          */
         public List<Resource.AlternateIdentifiers.AlternateIdentifier> getAlternateIdentifier() {
             if (alternateIdentifier == null) {
@@ -994,8 +1073,15 @@ public class Resource {
         })
         public static class AlternateIdentifier {
 
+            /**
+             *
+             */
             @XmlValue
             protected String value;
+
+            /**
+             *
+             */
             @XmlAttribute(name = "alternateIdentifierType", required = true)
             @XmlSchemaType(name = "anySimpleType")
             protected String alternateIdentifierType;
@@ -1108,6 +1194,9 @@ public class Resource {
     })
     public static class Contributors {
 
+        /**
+         *
+         */
         protected List<Resource.Contributors.Contributor> contributor;
 
         /**
@@ -1131,6 +1220,7 @@ public class Resource {
          * {@link Resource.Contributors.Contributor }
          * 
          * 
+         * @return 
          */
         public List<Resource.Contributors.Contributor> getContributor() {
             if (contributor == null) {
@@ -1189,12 +1279,35 @@ public class Resource {
         })
         public static class Contributor {
 
+            /**
+             *
+             */
             @XmlElement(required = true)
             protected String contributorName;
+
+            /**
+             *
+             */
             protected Object givenName;
+
+            /**
+             *
+             */
             protected Object familyName;
+
+            /**
+             *
+             */
             protected List<Resource.Contributors.Contributor.NameIdentifier> nameIdentifier;
+
+            /**
+             *
+             */
             protected List<Object> affiliation;
+
+            /**
+             *
+             */
             @XmlAttribute(name = "contributorType", required = true)
             protected ContributorType contributorType;
 
@@ -1291,6 +1404,7 @@ public class Resource {
              * {@link Resource.Contributors.Contributor.NameIdentifier }
              * 
              * 
+             * @return 
              */
             public List<Resource.Contributors.Contributor.NameIdentifier> getNameIdentifier() {
                 if (nameIdentifier == null) {
@@ -1320,6 +1434,7 @@ public class Resource {
              * {@link Object }
              * 
              * 
+             * @return 
              */
             public List<Object> getAffiliation() {
                 if (affiliation == null) {
@@ -1377,11 +1492,22 @@ public class Resource {
             })
             public static class NameIdentifier {
 
+                /**
+                 *
+                 */
                 @XmlValue
                 protected String value;
+
+                /**
+                 *
+                 */
                 @XmlAttribute(name = "nameIdentifierScheme", required = true)
                 @XmlSchemaType(name = "anySimpleType")
                 protected String nameIdentifierScheme;
+
+                /**
+                 *
+                 */
                 @XmlAttribute(name = "schemeURI")
                 @XmlSchemaType(name = "anyURI")
                 protected String schemeURI;
@@ -1518,6 +1644,9 @@ public class Resource {
     })
     public static class Creators {
 
+        /**
+         *
+         */
         @XmlElement(required = true)
         protected List<Resource.Creators.Creator> creator;
 
@@ -1542,6 +1671,7 @@ public class Resource {
          * {@link Resource.Creators.Creator }
          * 
          * 
+         * @return 
          */
         public List<Resource.Creators.Creator> getCreator() {
             if (creator == null) {
@@ -1598,11 +1728,30 @@ public class Resource {
         })
         public static class Creator {
 
+            /**
+             *
+             */
             @XmlElement(required = true)
             protected String creatorName;
+
+            /**
+             *
+             */
             protected Object givenName;
+
+            /**
+             *
+             */
             protected Object familyName;
+
+            /**
+             *
+             */
             protected List<Resource.Creators.Creator.NameIdentifier> nameIdentifier;
+
+            /**
+             *
+             */
             protected List<Object> affiliation;
 
             /**
@@ -1698,6 +1847,7 @@ public class Resource {
              * {@link Resource.Creators.Creator.NameIdentifier }
              * 
              * 
+             * @return 
              */
             public List<Resource.Creators.Creator.NameIdentifier> getNameIdentifier() {
                 if (nameIdentifier == null) {
@@ -1727,6 +1877,7 @@ public class Resource {
              * {@link Object }
              * 
              * 
+             * @return 
              */
             public List<Object> getAffiliation() {
                 if (affiliation == null) {
@@ -1760,11 +1911,22 @@ public class Resource {
             })
             public static class NameIdentifier {
 
+                /**
+                 *
+                 */
                 @XmlValue
                 protected String value;
+
+                /**
+                 *
+                 */
                 @XmlAttribute(name = "nameIdentifierScheme", required = true)
                 @XmlSchemaType(name = "anySimpleType")
                 protected String nameIdentifierScheme;
+
+                /**
+                 *
+                 */
                 @XmlAttribute(name = "schemeURI")
                 @XmlSchemaType(name = "anyURI")
                 protected String schemeURI;
@@ -1881,6 +2043,9 @@ public class Resource {
     })
     public static class Dates {
 
+        /**
+         *
+         */
         protected List<Resource.Dates.Date> date;
 
         /**
@@ -1904,6 +2069,7 @@ public class Resource {
          * {@link Resource.Dates.Date }
          * 
          * 
+         * @return 
          */
         public List<Resource.Dates.Date> getDate() {
             if (date == null) {
@@ -1936,8 +2102,15 @@ public class Resource {
         })
         public static class Date {
 
+            /**
+             *
+             */
             @XmlValue
             protected String value;
+
+            /**
+             *
+             */
             @XmlAttribute(name = "dateType", required = true)
             protected DateType dateType;
 
@@ -2037,6 +2210,9 @@ public class Resource {
     })
     public static class Descriptions {
 
+        /**
+         *
+         */
         protected List<Resource.Descriptions.Description> description;
 
         /**
@@ -2060,6 +2236,7 @@ public class Resource {
          * {@link Resource.Descriptions.Description }
          * 
          * 
+         * @return 
          */
         public List<Resource.Descriptions.Description> getDescription() {
             if (description == null) {
@@ -2102,11 +2279,22 @@ public class Resource {
         })
         public static class Description {
 
+            /**
+             *
+             */
             @XmlElementRef(name = "br", namespace = "http://datacite.org/schema/kernel-4", type = JAXBElement.class, required = false)
             @XmlMixed
             protected List<Serializable> content;
+
+            /**
+             *
+             */
             @XmlAttribute(name = "descriptionType", required = true)
             protected DescriptionType descriptionType;
+
+            /**
+             *
+             */
             @XmlAttribute(name = "lang", namespace = "http://www.w3.org/XML/1998/namespace")
             protected String lang;
 
@@ -2132,6 +2320,7 @@ public class Resource {
              * {@link String }
              * 
              * 
+             * @return 
              */
             public List<Serializable> getContent() {
                 if (content == null) {
@@ -2218,6 +2407,9 @@ public class Resource {
     })
     public static class Formats {
 
+        /**
+         *
+         */
         protected List<String> format;
 
         /**
@@ -2241,6 +2433,7 @@ public class Resource {
          * {@link String }
          * 
          * 
+         * @return 
          */
         public List<String> getFormat() {
             if (format == null) {
@@ -2316,6 +2509,9 @@ public class Resource {
     })
     public static class FundingReferences {
 
+        /**
+         *
+         */
         protected List<Resource.FundingReferences.FundingReference> fundingReference;
 
         /**
@@ -2339,6 +2535,7 @@ public class Resource {
          * {@link Resource.FundingReferences.FundingReference }
          * 
          * 
+         * @return 
          */
         public List<Resource.FundingReferences.FundingReference> getFundingReference() {
             if (fundingReference == null) {
@@ -2402,10 +2599,25 @@ public class Resource {
         })
         public static class FundingReference {
 
+            /**
+             *
+             */
             @XmlElement(required = true)
             protected String funderName;
+
+            /**
+             *
+             */
             protected Resource.FundingReferences.FundingReference.FunderIdentifier funderIdentifier;
+
+            /**
+             *
+             */
             protected Resource.FundingReferences.FundingReference.AwardNumber awardNumber;
+
+            /**
+             *
+             */
             protected String awardTitle;
 
             /**
@@ -2528,8 +2740,15 @@ public class Resource {
             })
             public static class AwardNumber {
 
+                /**
+                 *
+                 */
                 @XmlValue
                 protected String value;
+
+                /**
+                 *
+                 */
                 @XmlAttribute(name = "awardURI")
                 @XmlSchemaType(name = "anyURI")
                 protected String awardURI;
@@ -2608,8 +2827,15 @@ public class Resource {
             })
             public static class FunderIdentifier {
 
+                /**
+                 *
+                 */
                 @XmlValue
                 protected String value;
+
+                /**
+                 *
+                 */
                 @XmlAttribute(name = "funderIdentifierType", required = true)
                 protected FunderIdentifierType funderIdentifierType;
 
@@ -2716,6 +2942,9 @@ public class Resource {
     })
     public static class GeoLocations {
 
+        /**
+         *
+         */
         protected List<Resource.GeoLocations.GeoLocation> geoLocation;
 
         /**
@@ -2739,6 +2968,7 @@ public class Resource {
          * {@link Resource.GeoLocations.GeoLocation }
          * 
          * 
+         * @return 
          */
         public List<Resource.GeoLocations.GeoLocation> getGeoLocation() {
             if (geoLocation == null) {
@@ -2786,9 +3016,24 @@ public class Resource {
         })
         public static class GeoLocation {
 
+            /**
+             *
+             */
             protected Object geoLocationPlace;
+
+            /**
+             *
+             */
             protected Point geoLocationPoint;
+
+            /**
+             *
+             */
             protected Box geoLocationBox;
+
+            /**
+             *
+             */
             protected Resource.GeoLocations.GeoLocation.GeoLocationPolygon geoLocationPolygon;
 
             /**
@@ -2913,6 +3158,9 @@ public class Resource {
             })
             public static class GeoLocationPolygon {
 
+                /**
+                 *
+                 */
                 @XmlElement(required = true)
                 protected List<Point> polygonPoint;
 
@@ -2937,6 +3185,7 @@ public class Resource {
                  * {@link Point }
                  * 
                  * 
+                 * @return 
                  */
                 public List<Point> getPolygonPoint() {
                     if (polygonPoint == null) {
@@ -2975,6 +3224,9 @@ public class Resource {
     })
     public static class Identifier {
 
+        /**
+         *
+         */
         @XmlValue
         @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
         protected String value;
@@ -3050,6 +3302,9 @@ public class Resource {
     })
     public static class RelatedIdentifiers {
 
+        /**
+         *
+         */
         protected List<Resource.RelatedIdentifiers.RelatedIdentifier> relatedIdentifier;
 
         /**
@@ -3073,6 +3328,7 @@ public class Resource {
          * {@link Resource.RelatedIdentifiers.RelatedIdentifier }
          * 
          * 
+         * @return 
          */
         public List<Resource.RelatedIdentifiers.RelatedIdentifier> getRelatedIdentifier() {
             if (relatedIdentifier == null) {
@@ -3109,18 +3365,41 @@ public class Resource {
         })
         public static class RelatedIdentifier {
 
+            /**
+             *
+             */
             @XmlValue
             protected String value;
+
+            /**
+             *
+             */
             @XmlAttribute(name = "relatedIdentifierType", required = true)
             protected RelatedIdentifierType relatedIdentifierType;
+
+            /**
+             *
+             */
             @XmlAttribute(name = "relationType", required = true)
             protected RelationType relationType;
+
+            /**
+             *
+             */
             @XmlAttribute(name = "relatedMetadataScheme")
             @XmlSchemaType(name = "anySimpleType")
             protected String relatedMetadataScheme;
+
+            /**
+             *
+             */
             @XmlAttribute(name = "schemeURI")
             @XmlSchemaType(name = "anyURI")
             protected String schemeURI;
+
+            /**
+             *
+             */
             @XmlAttribute(name = "schemeType")
             @XmlSchemaType(name = "anySimpleType")
             protected String schemeType;
@@ -3297,8 +3576,15 @@ public class Resource {
     })
     public static class ResourceType {
 
+        /**
+         *
+         */
         @XmlValue
         protected String value;
+
+        /**
+         *
+         */
         @XmlAttribute(name = "resourceTypeGeneral", required = true)
         protected org.datacite.schema.kernel_4.ResourceType resourceTypeGeneral;
 
@@ -3386,6 +3672,9 @@ public class Resource {
     })
     public static class RightsList {
 
+        /**
+         *
+         */
         protected List<Resource.RightsList.Rights> rights;
 
         /**
@@ -3409,6 +3698,7 @@ public class Resource {
          * {@link Resource.RightsList.Rights }
          * 
          * 
+         * @return 
          */
         public List<Resource.RightsList.Rights> getRights() {
             if (rights == null) {
@@ -3441,8 +3731,15 @@ public class Resource {
         })
         public static class Rights {
 
+            /**
+             *
+             */
             @XmlValue
             protected String value;
+
+            /**
+             *
+             */
             @XmlAttribute(name = "rightsURI")
             @XmlSchemaType(name = "anyURI")
             protected String rightsURI;
@@ -3525,6 +3822,9 @@ public class Resource {
     })
     public static class Sizes {
 
+        /**
+         *
+         */
         protected List<String> size;
 
         /**
@@ -3548,6 +3848,7 @@ public class Resource {
          * {@link String }
          * 
          * 
+         * @return 
          */
         public List<String> getSize() {
             if (size == null) {
@@ -3595,6 +3896,9 @@ public class Resource {
     })
     public static class Subjects {
 
+        /**
+         *
+         */
         protected List<Resource.Subjects.Subject> subject;
 
         /**
@@ -3618,6 +3922,7 @@ public class Resource {
          * {@link Resource.Subjects.Subject }
          * 
          * 
+         * @return 
          */
         public List<Resource.Subjects.Subject> getSubject() {
             if (subject == null) {
@@ -3653,17 +3958,36 @@ public class Resource {
         })
         public static class Subject {
 
+            /**
+             *
+             */
             @XmlValue
             protected String value;
+
+            /**
+             *
+             */
             @XmlAttribute(name = "subjectScheme")
             @XmlSchemaType(name = "anySimpleType")
             protected String subjectScheme;
+
+            /**
+             *
+             */
             @XmlAttribute(name = "schemeURI")
             @XmlSchemaType(name = "anyURI")
             protected String schemeURI;
+
+            /**
+             *
+             */
             @XmlAttribute(name = "valueURI")
             @XmlSchemaType(name = "anyURI")
             protected String valueURI;
+
+            /**
+             *
+             */
             @XmlAttribute(name = "lang", namespace = "http://www.w3.org/XML/1998/namespace")
             protected String lang;
 
@@ -3826,6 +4150,9 @@ public class Resource {
     })
     public static class Titles {
 
+        /**
+         *
+         */
         @XmlElement(required = true)
         protected List<Resource.Titles.Title> title;
 
@@ -3850,6 +4177,7 @@ public class Resource {
          * {@link Resource.Titles.Title }
          * 
          * 
+         * @return 
          */
         public List<Resource.Titles.Title> getTitle() {
             if (title == null) {
@@ -3883,10 +4211,21 @@ public class Resource {
         })
         public static class Title {
 
+            /**
+             *
+             */
             @XmlValue
             protected String value;
+
+            /**
+             *
+             */
             @XmlAttribute(name = "titleType")
             protected TitleType titleType;
+
+            /**
+             *
+             */
             @XmlAttribute(name = "lang", namespace = "http://www.w3.org/XML/1998/namespace")
             protected String lang;
 

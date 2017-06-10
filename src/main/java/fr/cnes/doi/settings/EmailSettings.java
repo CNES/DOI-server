@@ -76,6 +76,10 @@ public class EmailSettings {
         this.contactAdmin = settings.getString(Consts.SERVER_CONTACT_ADMIN);
     }
     
+    /**
+     * Sets debug.
+     * @param isEnabled
+     */
     public void setDebug(boolean isEnabled) {
         this.debug = isEnabled;
     }

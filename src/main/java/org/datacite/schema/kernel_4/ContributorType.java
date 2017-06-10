@@ -51,46 +51,129 @@ import javax.xml.bind.annotation.XmlType;
 @XmlEnum
 public enum ContributorType {
 
+    /**
+     *
+     */
     @XmlEnumValue("ContactPerson")
     CONTACT_PERSON("ContactPerson"),
+
+    /**
+     *
+     */
     @XmlEnumValue("DataCollector")
     DATA_COLLECTOR("DataCollector"),
+
+    /**
+     *
+     */
     @XmlEnumValue("DataCurator")
     DATA_CURATOR("DataCurator"),
+
+    /**
+     *
+     */
     @XmlEnumValue("DataManager")
     DATA_MANAGER("DataManager"),
+
+    /**
+     *
+     */
     @XmlEnumValue("Distributor")
     DISTRIBUTOR("Distributor"),
+
+    /**
+     *
+     */
     @XmlEnumValue("Editor")
     EDITOR("Editor"),
+
+    /**
+     *
+     */
     @XmlEnumValue("HostingInstitution")
     HOSTING_INSTITUTION("HostingInstitution"),
+
+    /**
+     *
+     */
     @XmlEnumValue("Other")
     OTHER("Other"),
+
+    /**
+     *
+     */
     @XmlEnumValue("Producer")
     PRODUCER("Producer"),
+
+    /**
+     *
+     */
     @XmlEnumValue("ProjectLeader")
     PROJECT_LEADER("ProjectLeader"),
+
+    /**
+     *
+     */
     @XmlEnumValue("ProjectManager")
     PROJECT_MANAGER("ProjectManager"),
+
+    /**
+     *
+     */
     @XmlEnumValue("ProjectMember")
     PROJECT_MEMBER("ProjectMember"),
+
+    /**
+     *
+     */
     @XmlEnumValue("RegistrationAgency")
     REGISTRATION_AGENCY("RegistrationAgency"),
+
+    /**
+     *
+     */
     @XmlEnumValue("RegistrationAuthority")
     REGISTRATION_AUTHORITY("RegistrationAuthority"),
+
+    /**
+     *
+     */
     @XmlEnumValue("RelatedPerson")
     RELATED_PERSON("RelatedPerson"),
+
+    /**
+     *
+     */
     @XmlEnumValue("ResearchGroup")
     RESEARCH_GROUP("ResearchGroup"),
+
+    /**
+     *
+     */
     @XmlEnumValue("RightsHolder")
     RIGHTS_HOLDER("RightsHolder"),
+
+    /**
+     *
+     */
     @XmlEnumValue("Researcher")
     RESEARCHER("Researcher"),
+
+    /**
+     *
+     */
     @XmlEnumValue("Sponsor")
     SPONSOR("Sponsor"),
+
+    /**
+     *
+     */
     @XmlEnumValue("Supervisor")
     SUPERVISOR("Supervisor"),
+
+    /**
+     *
+     */
     @XmlEnumValue("WorkPackageLeader")
     WORK_PACKAGE_LEADER("WorkPackageLeader");
     private final String value;
@@ -99,10 +182,19 @@ public enum ContributorType {
         value = v;
     }
 
+    /**
+     *
+     * @return
+     */
     public String value() {
         return value;
     }
 
+    /**
+     *
+     * @param v
+     * @return
+     */
     public static ContributorType fromValue(String v) {
         for (ContributorType c: ContributorType.values()) {
             if (c.value.equals(v)) {

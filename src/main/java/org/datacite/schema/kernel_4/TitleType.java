@@ -34,12 +34,27 @@ import javax.xml.bind.annotation.XmlType;
 @XmlEnum
 public enum TitleType {
 
+    /**
+     *
+     */
     @XmlEnumValue("AlternativeTitle")
     ALTERNATIVE_TITLE("AlternativeTitle"),
+
+    /**
+     *
+     */
     @XmlEnumValue("Subtitle")
     SUBTITLE("Subtitle"),
+
+    /**
+     *
+     */
     @XmlEnumValue("TranslatedTitle")
     TRANSLATED_TITLE("TranslatedTitle"),
+
+    /**
+     *
+     */
     @XmlEnumValue("Other")
     OTHER("Other");
     private final String value;
@@ -48,10 +63,19 @@ public enum TitleType {
         value = v;
     }
 
+    /**
+     *
+     * @return
+     */
     public String value() {
         return value;
     }
 
+    /**
+     *
+     * @param v
+     * @return
+     */
     public static TitleType fromValue(String v) {
         for (TitleType c: TitleType.values()) {
             if (c.value.equals(v)) {

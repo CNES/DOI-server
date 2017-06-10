@@ -9,7 +9,6 @@ import fr.cnes.doi.client.ClientCrossCiteCitation;
 import fr.cnes.doi.resource.FormatCitationResource;
 import fr.cnes.doi.resource.LanguageCitationResource;
 import fr.cnes.doi.resource.StyleCitationResource;
-import fr.cnes.doi.settings.ProxySettings;
 import org.restlet.Restlet;
 import org.restlet.routing.Router;
 
@@ -32,7 +31,10 @@ public class DoiCrossCiteApplication extends BaseApplication {
         }
     }
     
-    
+    /**
+     * Assigns routes.
+     * @return router
+     */
     @Override
     public Restlet createInboundRoot() {
         Router router = new Router(getContext());

@@ -36,16 +36,39 @@ import javax.xml.bind.annotation.XmlType;
 @XmlEnum
 public enum DescriptionType {
 
+    /**
+     *
+     */
     @XmlEnumValue("Abstract")
     ABSTRACT("Abstract"),
+
+    /**
+     *
+     */
     @XmlEnumValue("Methods")
     METHODS("Methods"),
+
+    /**
+     *
+     */
     @XmlEnumValue("SeriesInformation")
     SERIES_INFORMATION("SeriesInformation"),
+
+    /**
+     *
+     */
     @XmlEnumValue("TableOfContents")
     TABLE_OF_CONTENTS("TableOfContents"),
+
+    /**
+     *
+     */
     @XmlEnumValue("TechnicalInfo")
     TECHNICAL_INFO("TechnicalInfo"),
+
+    /**
+     *
+     */
     @XmlEnumValue("Other")
     OTHER("Other");
     private final String value;
@@ -54,10 +77,19 @@ public enum DescriptionType {
         value = v;
     }
 
+    /**
+     *
+     * @return
+     */
     public String value() {
         return value;
     }
 
+    /**
+     *
+     * @param v
+     * @return
+     */
     public static DescriptionType fromValue(String v) {
         for (DescriptionType c: DescriptionType.values()) {
             if (c.value.equals(v)) {

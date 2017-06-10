@@ -20,6 +20,10 @@ public class LanguageCitationResource extends BaseCitationResource {
         super.doInit();        
     }                        
     
+    /**
+     *
+     * @return
+     */
     @Get
     public List<String> getLanguages() {
         return this.app.getClient().getLanguages();

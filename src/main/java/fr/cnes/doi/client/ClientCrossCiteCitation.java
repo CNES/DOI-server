@@ -22,21 +22,48 @@ import org.restlet.resource.ResourceException;
  */
 public class ClientCrossCiteCitation {
     
+    /**
+     * Service end point.
+     */
     public static final String CROSS_CITE_URL = "http://citation.crosscite.org";
+    /**
+     * Resource to get styles.
+     */
     public static final String STYLE_URI = "/styles";
+    /**
+     * Resource to get locales.
+     */
     public static final String LOCALE_URI = "/locales";        
+    /**
+     * Resource to get format.
+     */
     public static final String FORMAT_URI = "/format";
     
+    /**
+     * HTTP Client to request CrossCite.
+     */
     private final ClientResource client = new ClientResource(CROSS_CITE_URL);
     
+    /**
+     * Empty constructor.
+     */
     public ClientCrossCiteCitation() {
         
     }
     
+    /**
+     * Sets Proxy authentication.
+     * @param authentication authentication
+     */
     public void setProxyAuthentication(final ChallengeResponse authentication) {
         client.setProxyChallengeResponse(authentication);
     }
     
+    /**
+     * Returns the response as a list of String of an URI.
+     * @param segment resource name
+     * @return the response
+     */
     private List<String> getList(final String segment) {
         try {
             Reference ref = client.addSegment(segment);
@@ -56,14 +83,29 @@ public class ClientCrossCiteCitation {
         }        
     }
     
+    /**
+     * Returns styles
+     * @return list of possible styles
+     */
     public List<String> getStyles() {
         return getList(STYLE_URI);
     }
     
+    /**
+     * Returns languages
+     * @return List of possible languages
+     */
     public List<String> getLanguages() {
         return getList(LOCALE_URI);
     }
     
+    /**
+     * Returns the citation of a DOI based on the selected style and language.
+     * @param doiName DOI name
+     * @param style Selected style to format the citation
+     * @param language Selected language to format the citation
+     * @return The formatted citation
+     */
     public String getFormat(final String doiName, final String style, final String language) {
         String result;
         try {
@@ -86,6 +128,5 @@ public class ClientCrossCiteCitation {
         } finally {
             client.release();
         }
-    }
-    
+    }    
 }

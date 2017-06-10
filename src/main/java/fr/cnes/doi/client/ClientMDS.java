@@ -51,24 +51,74 @@ import org.restlet.resource.ClientResource;
  */
 public class ClientMDS {
 
+    /**
+     *
+     */
     public static final String DATA_CITE_URL = "https://mds.datacite.org";
+
+    /**
+     *
+     */
     public static final String DATA_CITE_TEST_URL = "https://mds.test.datacite.org";
+
+    /**
+     *
+     */
     public static final String DOI_RESOURCE = "doi";
+
+    /**
+     *
+     */
     public static final String METADATA_RESOURCE = "metadata";
+
+    /**
+     *
+     */
     public static final String MEDIA_RESOURCE = "media";
+
+    /**
+     *
+     */
     public static final Parameter TEST_MODE = new Parameter("testMode", "true");
+
+    /**
+     *
+     */
     public static final String TEST_DOI_PREFIX = "10.5072";
 
+    /**
+     *
+     */
     public static final String POST_DOI = "doi";
+
+    /**
+     *
+     */
     public static final String POST_URL = "url";
     
     /**
      * Options for each context
      */
     public enum Context {
+
+        /**
+         *
+         */
         DEV(true, true, DATA_CITE_TEST_URL, Level.ALL),
+
+        /**
+         *
+         */
         POST_DEV(false, true, DATA_CITE_TEST_URL, Level.ALL),        
+
+        /**
+         *
+         */
         PRE_PROD(false, true, DATA_CITE_URL, Level.FINE),
+
+        /**
+         *
+         */
         PROD(false, false, DATA_CITE_URL, Level.INFO);
 
         /**
@@ -131,6 +181,10 @@ public class ClientMDS {
             return this.levelLog;
         }
         
+        /**
+         *
+         * @return
+         */
         public String getDataCiteUrl() {
             return this.dataCiteUrl;
         }
@@ -404,7 +458,7 @@ public class ClientMDS {
             client.release();
         }
         return result;
-    }
+    }        
 
     /**
      * Will mint new DOI if specified DOI doesn't exist.
@@ -456,6 +510,26 @@ public class ClientMDS {
                 this.client.release();
         }
     }
+    
+    /**
+     * Parses the XML representation that implements the DATACITE schema.
+     * @param rep XML representation
+     * @return the Resource object
+     * @throws ClientException Will throw when a problem happens during the parsing
+     */
+    private Resource parseDataciteResource(final Representation rep) throws ClientException {
+        final Resource resource;
+        try {
+            final String result = getText(rep, Status.SUCCESS_OK);
+            JAXBContext ctx = JAXBContext.newInstance(new Class[]{org.datacite.schema.kernel_4.Resource.class});
+            Unmarshaller um = ctx.createUnmarshaller();
+            JAXBElement<Resource> jaxbResource = (JAXBElement<Resource>) um.unmarshal(new ByteArrayInputStream(result.getBytes()));
+            resource = jaxbResource.getValue();
+        } catch (JAXBException ex) {
+            throw new ClientException(ex);
+        }    
+        return resource;
+    }
 
     /**
      * This request returns the most recent version of metadata associated with
@@ -479,26 +553,22 @@ public class ClientMDS {
      * @throws ClientException Will throw an exception when status !=
      * 2xx
      */
-    public Resource getMetadataAsObject(final String doiName) throws ClientException {
-        Resource resource;
-        Representation rep = getMetadata(doiName);
-        try {
-            String result = getText(rep, Status.SUCCESS_OK);
-            JAXBContext ctx = JAXBContext.newInstance(new Class[]{org.datacite.schema.kernel_4.Resource.class});
-            Unmarshaller um = ctx.createUnmarshaller();
-            JAXBElement<Resource> jaxbResource = (JAXBElement<Resource>) um.unmarshal(new ByteArrayInputStream(result.getBytes()));
-            resource = jaxbResource.getValue();
-        } catch (JAXBException ex) {
-            throw new ClientException(ex);
-        } 
-        return resource;
+    public Resource getMetadataAsObject(final String doiName) throws ClientException {        
+        final Representation rep = getMetadata(doiName);
+        return parseDataciteResource(rep);
     }
     
-     public Representation getMetadata(final String doiName) throws ClientException {
+    /**
+     *
+     * @param doiName
+     * @return
+     * @throws ClientException
+     */
+    public Representation getMetadata(final String doiName) throws ClientException {
         Reference url = createReferenceWithDOI(METADATA_RESOURCE, doiName);
         Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "GET {0}", url.toString());
         this.client.setReference(url);
-        this.client.getLogger().info("GET "+url);
+        this.client.getLogger().log(Level.INFO, "GET {0}", url);
         Representation rep = this.client.get(MediaType.APPLICATION_XML);
         Status status = this.client.getStatus();
         client.release();
@@ -586,19 +656,15 @@ public class ClientMDS {
      */
     public Resource deleteMetadataDoiAsObject(final String doiName) throws ClientException {
         Representation rep = this.getMetadata(doiName);
-        Resource resource;
-        try {
-            String result = getText(rep, Status.SUCCESS_OK);
-            JAXBContext ctx = JAXBContext.newInstance(new Class[]{org.datacite.schema.kernel_4.Resource.class});
-            Unmarshaller um = ctx.createUnmarshaller();
-            JAXBElement<Resource> jaxbResource = (JAXBElement<Resource>) um.unmarshal(new ByteArrayInputStream(result.getBytes()));
-            resource = jaxbResource.getValue();
-        } catch (JAXBException ex) {
-            throw new ClientException(ex);
-        } 
-        return resource;
+        return parseDataciteResource(rep);
     }
     
+    /**
+     *
+     * @param doiName
+     * @return
+     * @throws ClientException
+     */
     public Representation deleteMetadata(final String doiName) throws ClientException {
         Reference url = createReferenceWithDOI(METADATA_RESOURCE, doiName);
         Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "DELETE {0}", url.toString());

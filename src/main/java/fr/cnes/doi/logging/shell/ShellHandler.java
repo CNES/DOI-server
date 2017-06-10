@@ -14,6 +14,9 @@ import java.util.logging.Level;
  */
 public class ShellHandler extends ConsoleHandler {
     
+    /**
+     *
+     */
     public ShellHandler() {
         super();
         this.setFormatter(new ShellFormatter());

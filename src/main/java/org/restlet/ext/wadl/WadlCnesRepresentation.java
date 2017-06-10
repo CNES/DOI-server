@@ -22,10 +22,18 @@ import org.restlet.representation.InputRepresentation;
  */
 public class WadlCnesRepresentation extends WadlRepresentation {
     
-    public WadlCnesRepresentation(ApplicationInfo application) {
+    /**
+     * Constructs a new Wadl representation based on a new XSLT.
+     * @param application application
+     */
+    public WadlCnesRepresentation(final ApplicationInfo application) {
         super(application);
     }
     
+    /**
+     * Returns the HTML representation of the WADL
+     * @return HTML representation of the WADL
+     */
     @Override
     public Representation getHtmlRepresentation() {
         Representation representation = null;

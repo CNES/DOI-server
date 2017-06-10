@@ -26,6 +26,10 @@ public class FormatCitationResource extends BaseCitationResource {
         this.style = getQueryValue("style");
     }
 
+    /**
+     *
+     * @return
+     */
     @Get
     public String getFormat() {
         getLogger().entering(getClass().getName(), "getFormat",new Object[]{this.doiName, this.language, this.style});

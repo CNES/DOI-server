@@ -52,11 +52,29 @@ import fr.cnes.doi.utils.Utils;
  */
 public class DoiServer extends Component {
 
+    /**
+     * URI of the MDS application.
+     */
     public static final String MDS_URI = "/mds";
+    
+    /**
+     * URI of the citation application.
+     */
     public static final String CITATION_URI = "/citation";
+    
+    /**
+     * URI of the status application.
+     */
     public static final String STATUS_URI = "/status";
 
+    /**
+     * Default HTTP port.
+     */
     public static final String DEFAULT_HTTP_PORT = "8182";
+    
+    /**
+     * Default HTTPS port.
+     */
     public static final String DEFAULT_HTTPS_PORT = "8183";
 
     private final DoiSettings settings;
@@ -78,11 +96,10 @@ public class DoiServer extends Component {
      */
     private void initLogServices() {
         LOGGER.entering(getClass().getName(), "initLogServices");
-        this.setLogService(new DoiLogDataServer(Utils.HTTP_LOGGER_NAME, true));
+        this.getLogService().setLoggerName(Utils.HTTP_LOGGER_NAME);
 
-        LogService logServiceApplication = new DoiLogDataServer(Utils.HTTP_LOGGER_NAME, true);
+        LogService logServiceApplication = new DoiLogDataServer(Utils.APP_LOGGER_NAME, true);
         this.getServices().add(logServiceApplication);
-        //final String securityLoggerName = settings.getString("Starter.SecurityLogName");
 
         Service logServiceSecurity = new LogService(true) {
             /*
@@ -148,6 +165,8 @@ public class DoiServer extends Component {
         this.getClients().add(Protocol.HTTP);
         this.getClients().add(Protocol.HTTPS);
         this.getClients().add(Protocol.CLAP);        
+        this.getClients().add(Protocol.FILE);        
+        
     }
     
     /**

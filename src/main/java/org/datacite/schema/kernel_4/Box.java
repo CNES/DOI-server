@@ -41,14 +41,30 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class Box {
 
+    /**
+     *
+     */
     protected float westBoundLongitude;
+
+    /**
+     *
+     */
     protected float eastBoundLongitude;
+
+    /**
+     *
+     */
     protected float southBoundLatitude;
+
+    /**
+     *
+     */
     protected float northBoundLatitude;
 
     /**
      * Gets the value of the westBoundLongitude property.
      * 
+     * @return 
      */
     public float getWestBoundLongitude() {
         return westBoundLongitude;
@@ -57,6 +73,7 @@ public class Box {
     /**
      * Sets the value of the westBoundLongitude property.
      * 
+     * @param value
      */
     public void setWestBoundLongitude(float value) {
         this.westBoundLongitude = value;
@@ -65,6 +82,7 @@ public class Box {
     /**
      * Gets the value of the eastBoundLongitude property.
      * 
+     * @return 
      */
     public float getEastBoundLongitude() {
         return eastBoundLongitude;
@@ -73,6 +91,7 @@ public class Box {
     /**
      * Sets the value of the eastBoundLongitude property.
      * 
+     * @param value
      */
     public void setEastBoundLongitude(float value) {
         this.eastBoundLongitude = value;
@@ -81,6 +100,7 @@ public class Box {
     /**
      * Gets the value of the southBoundLatitude property.
      * 
+     * @return 
      */
     public float getSouthBoundLatitude() {
         return southBoundLatitude;
@@ -89,6 +109,7 @@ public class Box {
     /**
      * Sets the value of the southBoundLatitude property.
      * 
+     * @param value
      */
     public void setSouthBoundLatitude(float value) {
         this.southBoundLatitude = value;
@@ -97,6 +118,7 @@ public class Box {
     /**
      * Gets the value of the northBoundLatitude property.
      * 
+     * @return 
      */
     public float getNorthBoundLatitude() {
         return northBoundLatitude;
@@ -105,6 +127,7 @@ public class Box {
     /**
      * Sets the value of the northBoundLatitude property.
      * 
+     * @param value
      */
     public void setNorthBoundLatitude(float value) {
         this.northBoundLatitude = value;

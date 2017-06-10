@@ -34,10 +34,25 @@ import javax.xml.bind.annotation.XmlType;
 @XmlEnum
 public enum FunderIdentifierType {
 
+    /**
+     *
+     */
     ISNI("ISNI"),
+
+    /**
+     *
+     */
     GRID("GRID"),
+
+    /**
+     *
+     */
     @XmlEnumValue("Crossref Funder ID")
     CROSSREF_FUNDER_ID("Crossref Funder ID"),
+
+    /**
+     *
+     */
     @XmlEnumValue("Other")
     OTHER("Other");
     private final String value;
@@ -46,10 +61,19 @@ public enum FunderIdentifierType {
         value = v;
     }
 
+    /**
+     *
+     * @return
+     */
     public String value() {
         return value;
     }
 
+    /**
+     *
+     * @param v
+     * @return
+     */
     public static FunderIdentifierType fromValue(String v) {
         for (FunderIdentifierType c: FunderIdentifierType.values()) {
             if (c.value.equals(v)) {

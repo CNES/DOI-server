@@ -20,6 +20,10 @@ import org.restlet.routing.Router;
  */
 public class DoiStatusApplication extends BaseApplication {
 
+    /**
+     * Assigns a route to monitor the datacite services.
+     * @return router
+     */
     @Override
     public Restlet createInboundRoot() {
         Router router = new Router(getContext());
