@@ -77,7 +77,6 @@ public class EmailSettings {
     }
     
     /**
-     * Sets debug.
      * @param isEnabled
      */
     public void setDebug(boolean isEnabled) {

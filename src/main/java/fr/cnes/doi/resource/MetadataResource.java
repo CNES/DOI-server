@@ -24,11 +24,22 @@ import org.restlet.util.Series;
  */
 public class MetadataResource extends BaseMdsResource {
 
+    /**
+     *
+     */
     public static final String GET_METADATA = "Get a Metadata";
+
+    /**
+     *
+     */
     public static final String DELETE_METADATA = "Delete a Metadata";
 
     private String doiName;
 
+    /**
+     *
+     * @throws ResourceException
+     */
     @Override
     protected void doInit() throws ResourceException {
         super.doInit();
@@ -36,6 +47,10 @@ public class MetadataResource extends BaseMdsResource {
         this.doiName = getAttribute(DoiMdsApplication.DOI_TEMPLATE);
     }
 
+    /**
+     *
+     * @return
+     */
     @Get
     public Representation getMetadata() {
         getLogger().entering(getClass().getName(), "getMetadata", this.doiName);
@@ -51,6 +66,10 @@ public class MetadataResource extends BaseMdsResource {
         return rep;
     }
 
+    /**
+     *
+     * @return
+     */
     @Delete
     public Representation deleteMetadata() {
         Representation rep;
@@ -69,6 +88,10 @@ public class MetadataResource extends BaseMdsResource {
         return rep;
     }
 
+    /**
+     *
+     * @param info
+     */
     @Override
     protected final void describeGet(final MethodInfo info) {
         info.setName(Method.GET);
@@ -84,6 +107,10 @@ public class MetadataResource extends BaseMdsResource {
         addResponseDocToMethod(info, createResponseDoc(Status.SERVER_ERROR_INTERNAL, "server internal error, try later and if problem persists please contact us", "explainRepresentation"));
     }
 
+    /**
+     *
+     * @param info
+     */
     @Override
     protected final void describeDelete(final MethodInfo info) {
         info.setName(Method.DELETE);

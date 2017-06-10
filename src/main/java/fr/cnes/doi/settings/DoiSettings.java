@@ -29,7 +29,6 @@ import org.restlet.resource.ClientResource;
 public class DoiSettings {
 
     /**
-     * Default configuration properties
      */
     public static final String CONFIG_PROPERTIES = "config.properties";
 

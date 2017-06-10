@@ -16,7 +16,12 @@ import org.restlet.engine.log.AccessLogFileHandler;
  */
 public class FileHandlerLogAPIServer extends AccessLogFileHandler { 
     
-  public FileHandlerLogAPIServer() throws IOException, SecurityException {
+    /**
+     *
+     * @throws IOException
+     * @throws SecurityException
+     */
+    public FileHandlerLogAPIServer() throws IOException, SecurityException {
     super();
     this.setLevel(Level.INFO);    
   }

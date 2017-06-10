@@ -17,6 +17,10 @@ import org.restlet.engine.Engine;
 import org.restlet.routing.Filter;
 import org.restlet.security.Role;
 
+/**
+ *
+ * @author malapert
+ */
 public class DoiSecurityLogFilter extends Filter {
   /**
    * The name of the logger to use
@@ -39,6 +43,13 @@ public class DoiSecurityLogFilter extends Filter {
    * 
    * @see org.restlet.routing.Filter#afterHandle(org.restlet.Request, org.restlet.Response)
    */
+
+    /**
+     *
+     * @param request
+     * @param response
+     */
+
   @Override
   protected void afterHandle(Request request, Response response) {
     super.afterHandle(request, response);

@@ -21,8 +21,7 @@ public class StyleCitationResource extends BaseCitationResource {
     }
                            
     /**
-     * Returns the list of possible styles.
-     * @return the list of possible styles
+     * @return
      */
     @Get
     public List<String> getStyles() {

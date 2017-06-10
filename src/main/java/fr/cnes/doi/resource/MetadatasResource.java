@@ -36,10 +36,12 @@ import org.xml.sax.SAXException;
  */
 public class MetadatasResource extends BaseMdsResource {
 
+    /**
+     *
+     */
     public static final String CREATE_METADATA = "Create Metadata";
 
     /**
-     * Init.
      * @throws ResourceException
      */
     @Override
@@ -90,8 +92,7 @@ public class MetadatasResource extends BaseMdsResource {
     }
 
     /**
-     * Describes the POST method.
-     * @param info WADL Representation in XML
+     * @param info
      */
     @Override
     protected final void describePost(final MethodInfo info) {

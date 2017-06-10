@@ -119,11 +119,27 @@ public class Consts {
      * //TODO useless ?
      */
     public static final String LOGSERVICE_LOGNAME = "Starter.LogService.logName";
+
+    /**
+     *
+     */
     public static final String LOGSERVICE_ACTIVE = "Starter.LogService.active";
+
+    /**
+     *
+     */
     public static final String LOG_FORMAT = "Starter.Server.Log.format";    
     
     // TODO useless ?
+
+    /**
+     *
+     */
     public static final String SERVER_MAX_CONNECTIONS = "Starter.Server.maxConnections";
+
+    /**
+     *
+     */
     public static final String SERVER_CONTACT_ADMIN = "Starter.Server.contactAdmin";    
 
     /**

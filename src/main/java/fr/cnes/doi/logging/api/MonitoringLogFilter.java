@@ -73,6 +73,13 @@ public class MonitoringLogFilter extends LogFilter {
     /* (non-Javadoc)
 	 * @see org.restlet.engine.log.LogFilter#afterHandle(org.restlet.Request, org.restlet.Response)
      */
+
+    /**
+     *
+     * @param request
+     * @param response
+     */
+
     @Override
     protected void afterHandle(Request request, Response response) {
         if (this.appLogger.isLoggable(Level.INFO) && response.getStatus().isSuccess()) {

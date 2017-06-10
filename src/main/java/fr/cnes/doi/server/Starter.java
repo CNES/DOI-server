@@ -43,6 +43,8 @@ public class Starter {
         }
     }
     
+    /**
+     */
     public static final int BITS_16 = 16;
     
     private static final Logger LOGGER = Logger.getLogger(Starter.class.getName());
@@ -162,8 +164,7 @@ public class Starter {
     }
 
     /**
-     * Main Starter
-     * @param argv arguments
+     * @param argv
      */
     public static void main(String[] argv) {
         final DoiSettings settings = DoiSettings.getInstance();

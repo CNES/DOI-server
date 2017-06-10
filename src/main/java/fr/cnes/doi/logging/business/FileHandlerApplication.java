@@ -14,7 +14,12 @@ import java.util.logging.FileHandler;
  */
 public class FileHandlerApplication extends FileHandler {
     
-  public FileHandlerApplication() throws IOException, SecurityException {
+    /**
+     *
+     * @throws IOException
+     * @throws SecurityException
+     */
+    public FileHandlerApplication() throws IOException, SecurityException {
     super();
   }    
     

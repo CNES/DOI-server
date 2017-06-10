@@ -58,6 +58,13 @@ public class DoiLogDataServer extends LogService {
    * 
    * @see org.restlet.service.LogService#createInboundFilter(org.restlet.Context)
      */
+
+    /**
+     *
+     * @param context
+     * @return
+     */
+
     @Override
     public Filter createInboundFilter(Context context) {
         return new MonitoringLogFilter(context, initMonitoring(), this);
