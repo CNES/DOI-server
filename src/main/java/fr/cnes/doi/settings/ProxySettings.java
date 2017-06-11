@@ -64,10 +64,7 @@ public final class ProxySettings {
     /**
      * Proxy configuration enable / disable
      */
-    private boolean proxySet = false;
-    
-    private DoiSettings settings;
-
+    private boolean proxySet = false;    
     
     /**
      * Private constructor
@@ -98,7 +95,6 @@ public final class ProxySettings {
      * @param settings
      */
     public void init(final DoiSettings settings) {
-        this.settings = settings;
         this.proxyHost = settings.getString(Consts.SERVER_PROXY_HOST);
         this.proxyPort = settings.getString(Consts.SERVER_PROXY_PORT);
 

@@ -27,52 +27,33 @@ import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 
 /**
- * 1/ server
- * https://mds.datacite.org/static/apidoc
- * http://www.inist.fr/?Attribution-de-DOI
- * /projects/{projectName}/stats <-- check -->
- * /citation/{doiName}
- * /stats
- * /status
- * authentificaiton via IHM par cookie
- * 
- * 2/ clients
- * client DOI
- * 
- * 3/ IHM
- * 
- * 4/ exigences
- *  - Notification
- *  - IHM
- *  - securité / authentification
- *  - API des services
- *
- * @author malapert
+ * Client to query Metadata store service at Datacite. 
+ * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
  */
 public class ClientMDS {
 
     /**
-     *
+     * Metadata store service endpoint.
      */
     public static final String DATA_CITE_URL = "https://mds.datacite.org";
 
     /**
-     *
+     * Metadata store test service endpoint.
      */
     public static final String DATA_CITE_TEST_URL = "https://mds.test.datacite.org";
 
     /**
-     *
+     * DOI resource.
      */
     public static final String DOI_RESOURCE = "doi";
 
     /**
-     *
+     * Metadata resource.
      */
     public static final String METADATA_RESOURCE = "metadata";
 
     /**
-     *
+     * Media resource.
      */
     public static final String MEDIA_RESOURCE = "media";
 
@@ -82,17 +63,17 @@ public class ClientMDS {
     public static final Parameter TEST_MODE = new Parameter("testMode", "true");
 
     /**
-     *
+     * Test DOI prefix.
      */
     public static final String TEST_DOI_PREFIX = "10.5072";
 
     /**
-     *
+     * DOI query parameter.
      */
     public static final String POST_DOI = "doi";
 
     /**
-     *
+     * URL query parameter.
      */
     public static final String POST_URL = "url";
     
@@ -102,22 +83,22 @@ public class ClientMDS {
     public enum Context {
 
         /**
-         *
+         * Development context.
          */
         DEV(true, true, DATA_CITE_TEST_URL, Level.ALL),
 
         /**
-         *
+         * Post development context.
          */
         POST_DEV(false, true, DATA_CITE_TEST_URL, Level.ALL),        
 
         /**
-         *
+         * Pre production context.
          */
         PRE_PROD(false, true, DATA_CITE_URL, Level.FINE),
 
         /**
-         *
+         * Production context.
          */
         PROD(false, false, DATA_CITE_URL, Level.INFO);
 
@@ -146,7 +127,7 @@ public class ClientMDS {
         private Level levelLog;
         
         /**
-         * DataCite URL
+         * DataCite URL.
          */
         private final String dataCiteUrl;
 
@@ -182,8 +163,8 @@ public class ClientMDS {
         }
         
         /**
-         *
-         * @return
+         * Returns the service end point.
+         * @return the service end point
          */
         public String getDataCiteUrl() {
             return this.dataCiteUrl;
@@ -281,10 +262,9 @@ public class ClientMDS {
      * Sets Proxy authentication.
      * @param authentication authentication
      */
-    public void setProxyAuthentication(final ChallengeResponse authentication) {
-       this.client.getLogger().finest("Proxy Authentication :\n"
-               + "- login:"+authentication.getIdentifier()+"\n"
-               + "- pwd:"+authentication.getSecret()+"\n");
+    public void setProxyAuthentication(final ChallengeResponse authentication) {        
+       this.client.getLogger().log(Level.FINEST,"Proxy Authentication :\n"
+               + "- login:{0}"+"\n"+"- pwd:{1}\n", new Object[]{authentication.getIdentifier(), authentication.getSecret()});
        this.client.setProxyChallengeResponse(authentication);
     }    
 
@@ -309,7 +289,7 @@ public class ClientMDS {
         split[0] = TEST_DOI_PREFIX;
         String testingPrefix = String.join("/", split);
         String message = String.format("DOI %s has been renamed as %s for testing", doiName, testingPrefix);
-        this.client.getLogger().log(Level.FINE, message);
+        this.client.getLogger().log(Level.INFO, message);
         return testingPrefix;
     }
 
@@ -320,6 +300,11 @@ public class ClientMDS {
         this.client.setReference(this.context.getDataCiteUrl());
     }
 
+    /**
+     * Create reference
+     * @param segment segment to add to the end point
+     * @return new URL
+     */
     private Reference createReference(final String segment) {
         this.initReference();
         Reference url = this.client.addSegment(segment);
@@ -329,6 +314,12 @@ public class ClientMDS {
         return url;
     }
 
+    /**
+     * Creates the URL to query.
+     * @param segment segment to add to the end point service
+     * @param doiName doi name
+     * @return the URL to query
+     */
     private Reference createReferenceWithDOI(final String segment, final String doiName) {
         String requestDOI = this.context.hasDoiTestPrefix() ? useTestPrefix(doiName) : doiName;
         Reference ref = createReference(segment);
@@ -347,7 +338,7 @@ public class ClientMDS {
      * @return the text of the response
      * @throws ClientException
      */
-    private String getText(final Representation rep, Status status) throws ClientException {
+    private String getText(final Representation rep, final Status status) throws ClientException {
         String result;
         try {
             result = rep.getText();
@@ -360,6 +351,10 @@ public class ClientMDS {
         return result;
     }
 
+    /**
+     * Checks the input parameters and specially the validity of the DOI name. 
+     * @param form query form
+     */
     private void checkInputForm(final Form form) {
         Map<String, String> map = form.getValuesMap();
         if (map.containsKey(POST_DOI) && map.containsKey(POST_URL)) {
@@ -559,9 +554,9 @@ public class ClientMDS {
     }
     
     /**
-     *
-     * @param doiName
-     * @return
+     * Returns the metadata based on its DOI name.
+     * @param doiName DOI name
+     * @return the metadata as XML
      * @throws ClientException
      */
     public Representation getMetadata(final String doiName) throws ClientException {
@@ -660,9 +655,9 @@ public class ClientMDS {
     }
     
     /**
-     *
-     * @param doiName
-     * @return
+     * Deletes the metadata.
+     * @param doiName DOI name
+     * @return the deleted metadata
      * @throws ClientException
      */
     public Representation deleteMetadata(final String doiName) throws ClientException {

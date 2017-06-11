@@ -43,7 +43,11 @@ import org.restlet.security.User;
 import org.restlet.service.CorsService;
 
 /**
- * Provides an application for handling Data Object Identifier at CNES
+ * Provides an application for handling Data Object Identifier at CNES.
+ * A Digital Object Identifier (DOI) is an alphanumeric string assigned to 
+ * uniquely identify an object. It is tied to a metadata description of the 
+ * object as well as to a digital location, such as a URL, where all the 
+ * details about the object are accessible.
  *
  * @author Jean-Christophe Malapert
  */
@@ -105,7 +109,6 @@ public class DoiMdsApplication extends BaseApplication {
     public DoiMdsApplication() {
         super();
         LOGGER.entering(DoiMdsApplication.class.getName(), "Constructor");
-        LOGGER.finer("test1");
 
         setName("Digital Object Identifier server application");
         setDescription("Provides an application for handling Data Object Identifier at CNES<br/>"
@@ -128,9 +131,11 @@ public class DoiMdsApplication extends BaseApplication {
 
     private CorsService createCoreService() {
         LOGGER.entering(DoiMdsApplication.class.getName(), "createCoreService");
+        
         CorsService corsService = new CorsService();
         corsService.setAllowedOrigins(new HashSet(Arrays.asList("*")));
         corsService.setAllowedCredentials(true);
+        
         LOGGER.exiting(DoiMdsApplication.class.getName(), "createCoreService", corsService);
         return corsService;
     }

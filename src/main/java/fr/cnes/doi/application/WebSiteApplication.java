@@ -12,7 +12,7 @@ import org.restlet.routing.Router;
 
 /**
  * Application to expose the web site.
- * @author Jean-Christophe
+ * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
  */
 public class WebSiteApplication extends BaseApplication {
 

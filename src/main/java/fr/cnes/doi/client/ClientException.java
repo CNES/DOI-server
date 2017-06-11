@@ -16,10 +16,12 @@ import org.restlet.engine.Engine;
  */
 public class ClientException extends Exception {
 
+    private static final long serialVersionUID = 8075806467746913021L;
+
     /**
      * Response status.
      */
-    private final Status status;
+    protected final transient Status status;
 
     /**
      * Constructs a new exception with the specified cause and a detail message 

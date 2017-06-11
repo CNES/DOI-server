@@ -260,7 +260,7 @@ public class DoiSettings {
             is.close();
             os.flush();
             os.close();
-        } catch (Exception ex) {
+        } catch (IOException ex) {
         } 
     }
 
@@ -271,9 +271,10 @@ public class DoiSettings {
      */
     public void setPropertiesFile(final String path) throws FileNotFoundException, IOException {
         Properties properties = new Properties();
-        FileInputStream is = new FileInputStream(new File(path));
-        properties.load(is);
-        fillConcurrentMap(properties);
+        try (FileInputStream is = new FileInputStream(new File(path))) {
+            properties.load(is);
+            fillConcurrentMap(properties);
+        }
     }
     
     /**

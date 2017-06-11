@@ -6,9 +6,7 @@
 package fr.cnes.doi.resource;
 
 import fr.cnes.doi.client.ClientException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.logging.Level;
 import org.restlet.data.Form;
 import org.restlet.data.MediaType;
@@ -16,11 +14,8 @@ import org.restlet.data.Method;
 import org.restlet.data.Status;
 import org.restlet.ext.wadl.DocumentationInfo;
 import org.restlet.ext.wadl.MethodInfo;
-import org.restlet.ext.wadl.ParameterInfo;
 import org.restlet.ext.wadl.ParameterStyle;
 import org.restlet.ext.wadl.RepresentationInfo;
-import org.restlet.ext.wadl.RequestInfo;
-import org.restlet.ext.wadl.ResponseInfo;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Get;

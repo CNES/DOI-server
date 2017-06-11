@@ -9,8 +9,8 @@ import fr.cnes.doi.settings.ProxySettings;
 import org.restlet.ext.wadl.WadlApplication;
 
 /**
- * Base application.
- * @author Jean-Christophe Malapert
+ * Creates a base application by retrieving the proxy settings.
+ * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
  */
 public class BaseApplication extends WadlApplication {
     

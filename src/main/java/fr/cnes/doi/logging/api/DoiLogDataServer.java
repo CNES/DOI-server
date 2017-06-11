@@ -5,7 +5,6 @@
  */
 package fr.cnes.doi.logging.api;
 
-import java.util.logging.Logger;
 
 import org.restlet.Context;
 import org.restlet.data.Method;
@@ -22,9 +21,6 @@ import fr.cnes.doi.resource.MetadataResource;
 import fr.cnes.doi.resource.MetadatasResource;
 import fr.cnes.doi.server.DoiServer;
 import fr.cnes.doi.server.monitoring.DoiMonitoring;
-import fr.cnes.doi.settings.Consts;
-import fr.cnes.doi.settings.DoiSettings;
-import fr.cnes.doi.utils.Utils;
 
 /**
  * Creates a default logger called "fr.cnes.doi" when no logName is given.

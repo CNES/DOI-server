@@ -15,7 +15,6 @@ import org.restlet.ext.wadl.MethodInfo;
 import org.restlet.ext.wadl.ParameterInfo;
 import org.restlet.ext.wadl.ParameterStyle;
 import org.restlet.ext.wadl.RepresentationInfo;
-import org.restlet.ext.wadl.RequestInfo;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Post;
@@ -73,9 +72,7 @@ public class MediasResource extends BaseMdsResource {
     protected final void describePost(final MethodInfo info) {
         info.setName(Method.POST);
         info.setDocumentation("POST will add/update media type/urls pairs to a DOI. Standard domain restrictions check will be performed.");
-                
-        final RequestInfo request = new RequestInfo();
-        ParameterInfo param = new ParameterInfo();
+                        ParameterInfo param = new ParameterInfo();
         param.setName("{mediaType}");
         param.setStyle(ParameterStyle.PLAIN);        
         param.setRequired(false);

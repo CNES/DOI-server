@@ -31,21 +31,16 @@ import org.restlet.service.LogService;
  */
 public class MonitoringLogFilter extends LogFilter {
 
-    private static final Date startDateMonitoring = new Date();
+    private static final Date START_DATE_MONITORING = new Date();
 
     private static final float THRESHOLD_SPEED_PERCENT = 130;
 
-    /**
-     * The API logger to log to
-     */
-    private Logger logger;
-
-    private final Logger appLogger = Utils.getAppLogger();
+    private static final Logger APP_LOGGER = Utils.getAppLogger();
 
     /**
      * The monitoring object
      */
-    private DoiMonitoring monitoring;
+    private final DoiMonitoring monitoring;
 
     /**
      * Constructs a filter that filters applications to monitor
@@ -60,12 +55,12 @@ public class MonitoringLogFilter extends LogFilter {
 
         if (logService != null) {
             if (logService.getLoggerName() != null) {
-                this.logger = Engine.getLogger(logService.getLoggerName());
+                Engine.getLogger(logService.getLoggerName());
             } else if ((context != null) && (context.getLogger().getParent() != null)) {
-                this.logger = Engine.getLogger(context.getLogger().getParent().getName() + "."
+                Engine.getLogger(context.getLogger().getParent().getName() + "."
                         + LogUtils.getBestClassName(logService.getClass()));
             } else {
-                this.logger = Engine.getLogger(LogUtils.getBestClassName(logService.getClass()));
+                Engine.getLogger(LogUtils.getBestClassName(logService.getClass()));
             }
         }
     }
@@ -82,14 +77,14 @@ public class MonitoringLogFilter extends LogFilter {
 
     @Override
     protected void afterHandle(Request request, Response response) {
-        if (this.appLogger.isLoggable(Level.INFO) && response.getStatus().isSuccess()) {
+        if (APP_LOGGER.isLoggable(Level.INFO) && response.getStatus().isSuccess()) {
             String path = request.getResourceRef().getPath();
             Method method = request.getMethod();
             long startTime = (Long) request.getAttributes().get("org.restlet.startTime");
             int duration = (int) (System.currentTimeMillis() - startTime);
             if (monitoring.isRegistered(method, path)) {
                 monitoring.addMeasurement(method, path, duration);
-                this.appLogger.log(Level.INFO, MessageFormat.format("{0}({1} {2}) - current speed average : {3} ms / current measure: {4} ms", monitoring.getDescription(method, path), method.getName(), path, monitoring.getCurrentAverage(method, path), duration));
+                APP_LOGGER.log(Level.INFO, MessageFormat.format("{0}({1} {2}) - current speed average : {3} ms / current measure: {4} ms", monitoring.getDescription(method, path), method.getName(), path, monitoring.getCurrentAverage(method, path), duration));
                 sendAlertIfNeeded(monitoring.getCurrentAverage(method, path), duration, path, method);
             }
 

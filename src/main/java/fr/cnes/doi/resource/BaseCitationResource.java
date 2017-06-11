@@ -16,12 +16,12 @@ import org.restlet.resource.ResourceException;
 public class BaseCitationResource extends WadlServerResource {
     
     /**
-     *
+     * Cross cite application.
      */
     protected DoiCrossCiteApplication app;
     
     /**
-     * Init
+     * Init.
      * @throws ResourceException
      */
     @Override

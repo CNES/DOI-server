@@ -6,25 +6,29 @@
 package fr.cnes.doi.logging.api;
 
 import java.io.IOException;
-import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import org.restlet.engine.log.AccessLogFileHandler;
 
 /**
  * FileHandler to log request and responses.
+ *
  * @author Jean-Christophe Malapert
  */
-public class FileHandlerLogAPIServer extends AccessLogFileHandler { 
-    
+public final class FileHandlerLogAPIServer extends AccessLogFileHandler {
+
     /**
-     *
+     * File handler for API.
      * @throws IOException
      * @throws SecurityException
      */
     public FileHandlerLogAPIServer() throws IOException, SecurityException {
-    super();
-    this.setLevel(Level.INFO);    
-  }
+        super();
+        this.setLevel(Level.INFO);
+    }
     
-    
+    @Override
+    public final synchronized void setLevel(final Level level) {
+        super.setLevel(level);
+    }
+
 }

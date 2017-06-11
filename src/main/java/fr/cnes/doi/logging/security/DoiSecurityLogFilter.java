@@ -25,7 +25,7 @@ public class DoiSecurityLogFilter extends Filter {
   /**
    * The name of the logger to use
    */
-  private String loggerName;
+  private final String loggerName;
 
   /**
    * Instantiates a new sitools log filter.
