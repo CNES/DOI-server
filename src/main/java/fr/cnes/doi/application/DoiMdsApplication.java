@@ -7,12 +7,12 @@ package fr.cnes.doi.application;
 
 import fr.cnes.doi.client.ClientMDS;
 import fr.cnes.doi.settings.DoiSettings;
-import fr.cnes.doi.resource.DoisResource;
-import fr.cnes.doi.resource.MediasResource;
-import fr.cnes.doi.resource.MediaResource;
-import fr.cnes.doi.resource.MetadatasResource;
-import fr.cnes.doi.resource.MetadataResource;
-import fr.cnes.doi.resource.DoiResource;
+import fr.cnes.doi.resource.mds.DoisResource;
+import fr.cnes.doi.resource.mds.MediasResource;
+import fr.cnes.doi.resource.mds.MediaResource;
+import fr.cnes.doi.resource.mds.MetadatasResource;
+import fr.cnes.doi.resource.mds.MetadataResource;
+import fr.cnes.doi.resource.mds.DoiResource;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.ProxySettings;
 import fr.cnes.doi.utils.Utils;

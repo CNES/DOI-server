@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fr.cnes.doi.resource;
+package fr.cnes.doi.resource.mds;
 
 import fr.cnes.doi.application.DoiMdsApplication;
 import fr.cnes.doi.client.ClientException;
@@ -21,20 +21,14 @@ import org.restlet.resource.ResourceException;
 
 /** 
  * Resource to handle to Media.
- * @author Jean-Christophe Malapert
- * https://data.datacite.org/
+ * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
  */
-public class MediaResource extends BaseMdsResource {
-    
-    /**
-     *
-     */
-    public static final String GET_MEDIAS = "Get Medias";
+public class MediaResource extends BaseMdsResource {    
 
     private String mediaName;
 
     /**
-     *
+     * Init by getting the media name.
      * @throws ResourceException
      */
     @Override
@@ -44,12 +38,23 @@ public class MediaResource extends BaseMdsResource {
     }
 
     /**
-     *
-     * @return
+     * Returns the media related to a DOI.
+     * This request returns list of pairs of media type and URLs associated with
+     * a given DOI. The difference status:
+     * <ul>
+     * <li>200 OK - operation successful</li>
+     * <li>401 Unauthorized - no login</li>
+     * <li>403 login problem or dataset belongs to another party</li>
+     * <li>404 Not Found - No media attached to the DOI or DOI does not exist in our database</li>
+     * <li>500 Internal Server Error - server internal error, try later and if problem persists please contact us</li>
+     * </ul>
+     * @return the media related to a DOI
+     * @throws ResourceException Will be thrown when an error happens          
      */
     @Get
     public Representation getMedias() {
         getLogger().entering(getClass().getName(), "getMedias", this.mediaName);
+        
         final Representation rep;
         String medias;
         try {
@@ -60,11 +65,15 @@ public class MediaResource extends BaseMdsResource {
             getLogger().exiting(getClass().getName(), "getMedias", ex.getMessage());            
             throw new ResourceException(ex.getStatus(), ex.getMessage());
         }
+        
         getLogger().exiting(getClass().getName(), "getMedias", medias);        
         return rep;
     } 
    
-    
+    /**
+     * Media representation.
+     * @return Wadl description for a Media representation
+     */
     private RepresentationInfo mediaRepresentation() {
         final RepresentationInfo repInfo = new RepresentationInfo();
         repInfo.setMediaType(MediaType.TEXT_PLAIN);        
@@ -76,8 +85,8 @@ public class MediaResource extends BaseMdsResource {
     }    
 
     /**
-     *
-     * @param info
+     * Describes the GET method.
+     * @param info Wadl description for a GET method
      */
     @Override
     protected final void describeGet(final MethodInfo info) {

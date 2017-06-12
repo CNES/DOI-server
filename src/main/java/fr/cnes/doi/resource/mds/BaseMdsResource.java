@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fr.cnes.doi.resource;
+package fr.cnes.doi.resource.mds;
 
 import fr.cnes.doi.application.DoiMdsApplication;
 import java.util.List;
@@ -22,7 +22,7 @@ import org.restlet.security.Role;
 
 /**
  * Base resource for the different resources.
- * @author Jean-Christophe Malapert
+ * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
  */
 public class BaseMdsResource extends WadlServerResource {       
     

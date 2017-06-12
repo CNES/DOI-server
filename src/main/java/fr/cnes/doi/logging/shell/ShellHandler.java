@@ -11,7 +11,7 @@ import java.util.logging.Level;
 
 /**
  * Creates an handler with the Shell formatter.
- * @author Jean-Christophe Malapert
+ * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
  */
 public final class ShellHandler extends ConsoleHandler {
     

@@ -10,12 +10,12 @@ import java.util.logging.FileHandler;
 
 /**
  * File Handler to log business information.
- * @author Jean-Christophe Malapert
+ * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
  */
 public class FileHandlerApplication extends FileHandler {
     
     /**
-     *
+     * File handler for applications.
      * @throws IOException
      * @throws SecurityException
      */

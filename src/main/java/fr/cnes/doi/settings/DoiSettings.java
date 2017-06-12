@@ -24,11 +24,12 @@ import org.restlet.resource.ClientResource;
 /**
  * Singleton to load and use the defined variables in the config.properties.
  *
- * @author Jean-Christophe
+ * @author Jean-Christophe <jean-christophe.malapert@cnes.fr>
  */
 public class DoiSettings {
 
     /**
+     * Configuration files in JAR.
      */
     public static final String CONFIG_PROPERTIES = "config.properties";
 

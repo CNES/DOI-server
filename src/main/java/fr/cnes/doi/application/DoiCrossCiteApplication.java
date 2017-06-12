@@ -6,9 +6,9 @@
 package fr.cnes.doi.application;
 
 import fr.cnes.doi.client.ClientCrossCiteCitation;
-import fr.cnes.doi.resource.FormatCitationResource;
-import fr.cnes.doi.resource.LanguageCitationResource;
-import fr.cnes.doi.resource.StyleCitationResource;
+import fr.cnes.doi.resource.citation.FormatCitationResource;
+import fr.cnes.doi.resource.citation.LanguageCitationResource;
+import fr.cnes.doi.resource.citation.StyleCitationResource;
 import fr.cnes.doi.utils.Utils;
 import java.util.logging.Logger;
 import org.restlet.Restlet;

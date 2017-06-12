@@ -8,7 +8,7 @@ package fr.cnes.doi.settings;
 /**
  * Consts contains all configuration variables, which are possible to use
  * in the config.properties.
- * @author Jean-Christophe Malapert
+ * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
  */
 public class Consts {
     

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fr.cnes.doi.resource;
+package fr.cnes.doi.resource.mds;
 
 import fr.cnes.doi.application.DoiMdsApplication;
 import fr.cnes.doi.client.ClientException;
@@ -22,14 +22,11 @@ import org.restlet.resource.ResourceException;
 
 /**
  * DOI resource to retrieve a given DOI.
- * @author Jean-Christophe Malapert
+ * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
  */
 public class DoiResource extends BaseMdsResource {
 
-    /**
-     *
-     */
-    public static final String GET_DOI = "Get DOI";
+    public static final String GET_DOI = "Get DOI";    
     
     /**
      * DOI template.
@@ -37,7 +34,7 @@ public class DoiResource extends BaseMdsResource {
     private String doiName;        
 
     /**
-     *
+     * Init by getting the DOI name.
      * @throws ResourceException
      */
     @Override
@@ -49,10 +46,21 @@ public class DoiResource extends BaseMdsResource {
     
     /**
      * Returns a DOI.
-     * @return 
+     * This request returns an URL associated with a given DOI. The different status:
+     * <ul>
+     * <li>200 OK - operation successful</li>
+     * <li>204 No Content - DOI is known to MDS, but is not minted (or not resolvable e.g. due to handle's latency)</li>
+     * <li>401 Unauthorized - no login</li>
+     * <li>403 - login problem or dataset belongs to another party</li>
+     * <li>404 Not Found - DOI does not exist in our database</li>
+     * <li>500 Internal Server Error - server internal error, try later and if problem persists please contact us</li>
+     * </ul>
+     * @return an URL or no content (DOI is known to MDS, but is not minted 
+     * (or not resolvable e.g. due to handle's latency))
+     * @throws ResourceException Will be thrown when an error happens
      */
     @Get
-    public Representation getDoi() {
+    public Representation getDoi() throws ResourceException {
         getLogger().entering(getClass().getName(), "getDoi", this.doiName);
         try {
             String doi = this.doiApp.getClient().getDoi(this.doiName);
@@ -69,6 +77,10 @@ public class DoiResource extends BaseMdsResource {
         }
     }    
     
+    /**
+     * DOI representation
+     * @return Wadl representation for a DOI
+     */
     private RepresentationInfo doiRepresentation() {
         final RepresentationInfo repInfo = new RepresentationInfo();
         repInfo.setMediaType(MediaType.TEXT_PLAIN);        
@@ -80,8 +92,8 @@ public class DoiResource extends BaseMdsResource {
     }   
     
     /**
-     *
-     * @param info
+     * Describes the Get Method.
+     * @param info Wadl description
      */
     @Override
     protected final void describeGet(final MethodInfo info) {

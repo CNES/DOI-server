@@ -2,9 +2,11 @@ package fr.cnes.doi.server.monitoring;
 
 /**
  * Monitoring record containing:
- * - Description of the record
- * - Average
- * - Nb total of recorded values (to compute the average)
+ * <ul>
+ * <li>Description of the record</li>
+ * <li>Average</li>
+ * <li>Nb total of recorded values (to compute the average)</li>
+ * </ul>
  * 
  * @author Claire
  *

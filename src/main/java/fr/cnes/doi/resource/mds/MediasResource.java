@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fr.cnes.doi.resource;
+package fr.cnes.doi.resource.mds;
 
 import fr.cnes.doi.client.ClientException;
 import java.util.Arrays;
@@ -23,17 +23,12 @@ import org.restlet.util.Series;
 
 /**
  * Resource to handle a collection of media.
- * @author Jean-Christophe Malapert
+ * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
  */
-public class MediasResource extends BaseMdsResource {
-    
-    /**
-     *
-     */
-    public static final String CREATE_MEDIA = "Create media";
+public class MediasResource extends BaseMdsResource {    
 
     /**
-     *
+     * Init.
      * @throws ResourceException
      */
     @Override
@@ -42,12 +37,24 @@ public class MediasResource extends BaseMdsResource {
     }   
     
     /**
-     * TODO check doi name
-     * @param mediaForm 
-     * @return  
+     * Creates a media related to an URL for a given DOI.
+     * Will add/update media type/urls pairs to a DOI. Standard domain 
+     * restrictions check will be performed. The different status:
+     * <ul>
+     * <li>200 OK - operation successful</li>
+     * <li>400 Bad Request - one or more of the specified mime-types or urls are
+     * invalid (e.g. non supported mime-type, not allowed url domain, etc.)</li>
+     * <li>401 Unauthorized - no login</li>
+     * <li>403 Forbidden - login problem</li>
+     * <li>500 Internal Server Error - server internal error, try later and if 
+     * problem persists please contact us</li>
+     * </ul>
+     * @param mediaForm Form
+     * @return a media related to an URL for a given DOI 
+     * @throws ResourceException Will be thrown when an error happens               
      */
     @Post
-    public Representation createMedia(final Form mediaForm) {
+    public Representation createMedia(final Form mediaForm) throws ResourceException{
         getLogger().entering(getClass().getName(), "createMedia", mediaForm.getMatrixString());
         final String result;
         try {         
@@ -65,8 +72,8 @@ public class MediasResource extends BaseMdsResource {
     }    
    
     /**
-     *
-     * @param info
+     * Describes POST method.
+     * @param info Wadl description for describing POST method
      */
     @Override
     protected final void describePost(final MethodInfo info) {

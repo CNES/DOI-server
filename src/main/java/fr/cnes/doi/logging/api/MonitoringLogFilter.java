@@ -27,7 +27,7 @@ import org.restlet.service.LogService;
 /**
  * Filter to monitor the applications speed performance.
  *
- * @author Jean-Christophe Malapert
+ * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
  */
 public class MonitoringLogFilter extends LogFilter {
 
@@ -49,7 +49,7 @@ public class MonitoringLogFilter extends LogFilter {
      * @param doiMonitoring
      * @param logService the {@link LogService}
      */
-    public MonitoringLogFilter(Context context, DoiMonitoring doiMonitoring, LogService logService) {
+    public MonitoringLogFilter(final Context context, final DoiMonitoring doiMonitoring, final LogService logService) {
         super(context, logService);
         this.monitoring = doiMonitoring;
 

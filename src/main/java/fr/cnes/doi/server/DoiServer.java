@@ -48,30 +48,38 @@ import fr.cnes.doi.utils.Utils;
 
 /**
  * DoiServer contains the configuration of this server and the methods to start/stop it.
- * @author Jean-Christophe Malapert
+ * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
  */
 public class DoiServer extends Component {
 
     /**
+     * URI of the Meta Data Store application.
      */
     public static final String MDS_URI = "/mds";
     
     /**
+     * URI of the Citation application.
      */
     public static final String CITATION_URI = "/citation";
     
     /**
+     * URI of the Datacite status.
      */
     public static final String STATUS_URI = "/status";
 
     /**
+     * Default port HTTP server.
      */
     public static final String DEFAULT_HTTP_PORT = "8182";
     
     /**
+     * Default port for HTTPS server.
      */
     public static final String DEFAULT_HTTPS_PORT = "8183";
 
+    /**
+     * Configuration.
+     */
     private final DoiSettings settings;
 
     private static final Logger LOGGER = Logger.getLogger(DoiServer.class.getName());

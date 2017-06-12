@@ -25,7 +25,7 @@ import java.nio.file.Paths;
 /**
  * DOI server
  *
- * @author Jean-Christophe Malapert
+ * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
  */
 public class Starter {
 

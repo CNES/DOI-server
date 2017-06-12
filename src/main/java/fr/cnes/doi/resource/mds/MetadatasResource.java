@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fr.cnes.doi.resource;
+package fr.cnes.doi.resource.mds;
 
 import fr.cnes.doi.client.ClientException;
 import java.io.IOException;
@@ -30,18 +30,16 @@ import org.restlet.util.Series;
 import org.xml.sax.SAXException;
 
 /**
- * Resourece to handle a collection of metadata.
+ * Resource to handle a collection of metadata.
  *
- * @author Jean-Christophe Malapert
+ * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
  */
 public class MetadatasResource extends BaseMdsResource {
 
-    /**
-     *
-     */
     public static final String CREATE_METADATA = "Create Metadata";
-
+    
     /**
+     * Init.
      * @throws ResourceException
      */
     @Override
@@ -51,13 +49,23 @@ public class MetadatasResource extends BaseMdsResource {
     }
 
     /**
-     * https://search.datacite.org/help.html
-     *
-     * @param entity TODO update DOI name
-     * @return
+     * Create Metadata for a given DOI.
+     * The DOI name is given in the metadata entity.
+     * This request stores new version of metadata. The different status:
+     * <ul>
+     * <li>201 Created - operation successful</li>
+     * <li>400 Bad Request - invalid XML, wrong prefix</li>
+     * <li>401 Unauthorized - no login</li>
+     * <li>403 Forbidden - login problem, quota exceeded</li>
+     * <li>500 Internal Server Error - server internal error, try later and if 
+     * problem persists please contact us</li>
+     * </ul>
+     * @param entity Metadata representation
+     * @return short explanation of status code e.g. CREATED, HANDLE_ALREADY_EXISTS etc
+     * @throws ResourceException Will be thrown when an error happens                         
      */
     @Post
-    public String createMetadata(final Representation entity) {
+    public String createMetadata(final Representation entity) throws ResourceException {
         getLogger().entering(getClass().getName(), "createMetadata");
         String result;
         try {
@@ -92,7 +100,8 @@ public class MetadatasResource extends BaseMdsResource {
     }
 
     /**
-     * @param info
+     * Describes a POST method.
+     * @param info Wadl description for POST method
      */
     @Override
     protected final void describePost(final MethodInfo info) {
@@ -114,6 +123,9 @@ public class MetadatasResource extends BaseMdsResource {
         addResponseDocToMethod(info, createResponseDoc(Status.SERVER_ERROR_INTERNAL, "server internal error, try later and if problem persists please contact us", "explainRepresentation"));
     }
 
+    /**
+     * Metadata Validation.
+     */
     private static class MyValidationEventHandler implements ValidationEventHandler {
         
         private final Logger logger;

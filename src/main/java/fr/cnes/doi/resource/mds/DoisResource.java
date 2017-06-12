@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fr.cnes.doi.resource;
+package fr.cnes.doi.resource.mds;
 
 import fr.cnes.doi.client.ClientException;
 import java.util.Arrays;
@@ -25,22 +25,16 @@ import org.restlet.util.Series;
 
 /**
  * Resource to handle a collection of DOI.
- * @author Jean-Christophe Malapert
+ * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
  */
 public class DoisResource extends BaseMdsResource {
     
-    /**
-     *
-     */
     public static final String LIST_ALL_DOIS = "List all DOIs";
 
-    /**
-     *
-     */
     public static final String CREATE_DOI = "Create a DOI";
               
-    /**
-     *
+    /**     
+     * Init.
      * @throws ResourceException
      */
     @Override
@@ -51,10 +45,17 @@ public class DoisResource extends BaseMdsResource {
     
     /**
      * Returns the collection of DOI.
+     * This request returns a list of all DOIs for the requesting datacentre. 
+     * There is no guaranteed order. The different status:
+     * <ul>
+     * <li>200 OK - operation successful</li>
+     * <li>204 No Content - no DOIs founds</li>
+     * </ul>
      * @return the list of DOI 
+     * @throws ResourceException Will be thrown when an error happens     
      */
     @Get
-    public Representation getDois() {
+    public Representation getDois() throws ResourceException {
         getLogger().entering(getClass().getName(), "getDois");
         try {
             setStatus(Status.SUCCESS_OK);
@@ -84,12 +85,26 @@ public class DoisResource extends BaseMdsResource {
      * <b>Note 1</b> : the landing page should be accessible from www
      * <b>Note 2</b> : Metadata must be uploaded first
      * 
+     * <p>
+     * Will mint new DOI if specified DOI doesn't exist. This method will 
+     * attempt to update URL if you specify existing DOI. Standard domains and 
+     * quota restrictions check will be performed. A Datacentre's doiQuotaUsed 
+     * will be increased by 1. A new record in Datasets will be created.
+     * The different status:
+     * <ul>
+     * <li>201 Created - operation successful</li>
+     * <li>400 Bad Request - request body must be exactly two lines: DOI and URL; wrong domain, wrong prefix</li>
+     * <li>401 Unauthorized - no login</li>
+     * <li>403 Forbidden - login problem, quota exceeded</li>
+     * <li>412 Precondition failed - metadata must be uploaded first</li>
+     * <li>500 Internal Server Error - server internal error, try later and if problem persists please contact us</li>
+     * </ul>
      * @param doiForm doi and url
      * @return short explanation of status code e.g. CREATED, HANDLE_ALREADY_EXISTS etc
-     * TODO Check this method (The form or two lines as input)
+     * @throws ResourceException Will be thrown when an error happens     
      */    
     @Post("form")   
-    public String createDoi(final Form doiForm) {         
+    public String createDoi(final Form doiForm) throws ResourceException {         
         getLogger().entering(getClass().getName(), "createDoi", doiForm.getMatrixString());        
         String result;        
         Series headers = (Series) getRequestAttributes().get("org.restlet.http.headers");
@@ -106,7 +121,11 @@ public class DoisResource extends BaseMdsResource {
         getLogger().exiting(getClass().getName(), "createDoi", result);
         return result;
     }
-        
+       
+    /**
+     * Retuns the sucessfull representation.
+     * @return the Wadl Representation
+     */
     private RepresentationInfo successFullRepresentation() {
         final RepresentationInfo repInfo = new RepresentationInfo();
         repInfo.setMediaType(MediaType.TEXT_URI_LIST);
@@ -117,6 +136,10 @@ public class DoisResource extends BaseMdsResource {
         return repInfo;
     }
     
+    /**
+     * Returns the no content representation.
+     * @return the Wadl description
+     */
     private RepresentationInfo noContentRepresentation() {
         final RepresentationInfo repInfo = new RepresentationInfo();
         repInfo.setMediaType(MediaType.TEXT_PLAIN);
@@ -127,6 +150,10 @@ public class DoisResource extends BaseMdsResource {
         return repInfo;        
     }
     
+    /**
+     * Returns the exit status representation.
+     * @return the exit status representation
+     */
     private RepresentationInfo explainStatusRepresentation() {
         final RepresentationInfo repInfo = new RepresentationInfo();
         repInfo.setIdentifier("explainRepresentation");
@@ -139,8 +166,8 @@ public class DoisResource extends BaseMdsResource {
     }            
     
     /**
-     *
-     * @param info
+     * Describes the GET method.
+     * @param info Wadl description
      */
     @Override
     protected final void describeGet(final MethodInfo info) {
@@ -150,6 +177,10 @@ public class DoisResource extends BaseMdsResource {
         addResponseDocToMethod(info, createResponseDoc(Status.SUCCESS_NO_CONTENT, "no DOIs founds", noContentRepresentation()));
     }    
     
+    /**
+     * Request representation. 
+     * @return representation
+     */
     private RepresentationInfo requestRepresentation(){
         RepresentationInfo rep = new RepresentationInfo(MediaType.APPLICATION_WWW_FORM);
         rep.getParameters().add(createQueryParamDoc("doi", ParameterStyle.PLAIN, "DOI name", true, "xs:string"));
@@ -158,8 +189,8 @@ public class DoisResource extends BaseMdsResource {
     }
 
     /**
-     *
-     * @param info
+     * Describes the POST method.
+     * @param info Wadl description
      */
     @Override
     protected final void describePost(final MethodInfo info) {

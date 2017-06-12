@@ -15,16 +15,16 @@ import org.restlet.routing.Filter;
 import org.restlet.service.LogService;
 
 import fr.cnes.doi.application.DoiMdsApplication;
-import fr.cnes.doi.resource.DoiResource;
-import fr.cnes.doi.resource.DoisResource;
-import fr.cnes.doi.resource.MetadataResource;
-import fr.cnes.doi.resource.MetadatasResource;
+import fr.cnes.doi.resource.mds.DoiResource;
+import fr.cnes.doi.resource.mds.DoisResource;
+import fr.cnes.doi.resource.mds.MetadataResource;
+import fr.cnes.doi.resource.mds.MetadatasResource;
 import fr.cnes.doi.server.DoiServer;
 import fr.cnes.doi.server.monitoring.DoiMonitoring;
 
 /**
- * Creates a default logger called "fr.cnes.doi" when no logName is given.
- * @author Jean-Christophe Malapert
+ * Creates a default logger.
+ * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
  */
 public class DoiLogDataServer extends LogService {
 

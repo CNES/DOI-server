@@ -10,7 +10,7 @@ import java.util.logging.LogRecord;
 
 /**
  * Formats the string without the date.
- * @author Jean-Christophe Malapert
+ * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
  */
 public final class ShellFormatter extends Formatter {
 

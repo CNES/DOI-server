@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fr.cnes.doi.resource;
+package fr.cnes.doi.resource.mds;
 
 import fr.cnes.doi.application.DoiMdsApplication;
 import fr.cnes.doi.client.ClientException;
@@ -19,25 +19,19 @@ import org.restlet.resource.ResourceException;
 import org.restlet.util.Series;
 
 /**
- *
- * @author malapert
+ * Resources to handle a metadata.
+ * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
  */
 public class MetadataResource extends BaseMdsResource {
 
-    /**
-     *
-     */
     public static final String GET_METADATA = "Get a Metadata";
 
-    /**
-     *
-     */
-    public static final String DELETE_METADATA = "Delete a Metadata";
+    public static final String DELETE_METADATA = "Delete a Metadata";    
 
     private String doiName;
 
     /**
-     *
+     * Init by getting a DOI.
      * @throws ResourceException
      */
     @Override
@@ -48,12 +42,14 @@ public class MetadataResource extends BaseMdsResource {
     }
 
     /**
-     *
-     * @return
+     * Retuns the metadata for a given DOI.
+     * @return the metadata for a given DOI
+     * @throws ResourceException Will be thrown when an error happens                    
      */
     @Get
-    public Representation getMetadata() {
+    public Representation getMetadata() throws ResourceException {
         getLogger().entering(getClass().getName(), "getMetadata", this.doiName);
+        
         Representation rep;
         try {
             setStatus(Status.SUCCESS_OK);
@@ -62,16 +58,18 @@ public class MetadataResource extends BaseMdsResource {
             getLogger().exiting(getClass().getName(), "getMetadata", ex.getMessage());
             throw new ResourceException(ex);
         }
+        
         getLogger().exiting(getClass().getName(), "getMetadata");        
         return rep;
     }
 
     /**
-     *
-     * @return
+     * Deletes a representation for a given DOI.
+     * @return the deleted representation
+     * @throws ResourceException Will be thrown when an error happens                         
      */
     @Delete
-    public Representation deleteMetadata() {
+    public Representation deleteMetadata() throws ResourceException {        
         Representation rep;
         try {
             Series headers = (Series) getRequestAttributes().get("org.restlet.http.headers");
@@ -89,8 +87,8 @@ public class MetadataResource extends BaseMdsResource {
     }
 
     /**
-     *
-     * @param info
+     * Describes the GET method.
+     * @param info Wadl description for GET method
      */
     @Override
     protected final void describeGet(final MethodInfo info) {
@@ -108,8 +106,8 @@ public class MetadataResource extends BaseMdsResource {
     }
 
     /**
-     *
-     * @param info
+     * Describes the DELETE method.
+     * @param info Wadl description for DELETE method
      */
     @Override
     protected final void describeDelete(final MethodInfo info) {
