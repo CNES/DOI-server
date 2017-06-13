@@ -21,7 +21,7 @@ import org.restlet.resource.ResourceException;
 
 /** 
  * Resource to handle to Media.
- * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class MediaResource extends BaseMdsResource {    
 

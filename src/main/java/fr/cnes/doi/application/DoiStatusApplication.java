@@ -16,7 +16,7 @@ import org.restlet.routing.Router;
 /**
  * Monitors status datacite page.
  *
- * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class DoiStatusApplication extends BaseApplication {
 

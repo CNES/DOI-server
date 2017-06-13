@@ -19,24 +19,24 @@ import javax.xml.bind.annotation.XmlType;
  * <p>The following schema fragment specifies the expected content contained within this class.
  * <p>
  * <pre>
- * &lt;simpleType name="resourceType">
- *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
- *     &lt;enumeration value="Audiovisual"/>
- *     &lt;enumeration value="Collection"/>
- *     &lt;enumeration value="Dataset"/>
- *     &lt;enumeration value="Event"/>
- *     &lt;enumeration value="Image"/>
- *     &lt;enumeration value="InteractiveResource"/>
- *     &lt;enumeration value="Model"/>
- *     &lt;enumeration value="PhysicalObject"/>
- *     &lt;enumeration value="Service"/>
- *     &lt;enumeration value="Software"/>
- *     &lt;enumeration value="Sound"/>
- *     &lt;enumeration value="Text"/>
- *     &lt;enumeration value="Workflow"/>
- *     &lt;enumeration value="Other"/>
- *   &lt;/restriction>
- * &lt;/simpleType>
+ * &lt;simpleType name="resourceType"&gt;
+ *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"&gt;
+ *     &lt;enumeration value="Audiovisual"/&gt;
+ *     &lt;enumeration value="Collection"/&gt;
+ *     &lt;enumeration value="Dataset"/&gt;
+ *     &lt;enumeration value="Event"/&gt;
+ *     &lt;enumeration value="Image"/&gt;
+ *     &lt;enumeration value="InteractiveResource"/&gt;
+ *     &lt;enumeration value="Model"/&gt;
+ *     &lt;enumeration value="PhysicalObject"/&gt;
+ *     &lt;enumeration value="Service"/&gt;
+ *     &lt;enumeration value="Software"/&gt;
+ *     &lt;enumeration value="Sound"/&gt;
+ *     &lt;enumeration value="Text"/&gt;
+ *     &lt;enumeration value="Workflow"/&gt;
+ *     &lt;enumeration value="Other"/&gt;
+ *   &lt;/restriction&gt;
+ * &lt;/simpleType&gt;
  * </pre>
  * 
  */

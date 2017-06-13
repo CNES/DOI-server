@@ -32,7 +32,7 @@ import org.xml.sax.SAXException;
 /**
  * Resource to handle a collection of metadata.
  *
- * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class MetadatasResource extends BaseMdsResource {
 

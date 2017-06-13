@@ -27,7 +27,7 @@ import org.restlet.service.LogService;
 /**
  * Filter to monitor the applications speed performance.
  *
- * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class MonitoringLogFilter extends LogFilter {
 

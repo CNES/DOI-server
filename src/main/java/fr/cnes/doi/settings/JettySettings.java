@@ -358,8 +358,6 @@ public class JettySettings extends JettyServerHelper {
 
     /**
      * Add a parameter to a Jetty server.
-     *
-     * @param serverHTTP the service to add the parameters to
      * @param propName the name of the property to add
      * @param propValue the value to set
      */

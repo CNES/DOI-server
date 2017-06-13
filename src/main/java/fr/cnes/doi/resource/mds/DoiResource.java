@@ -22,7 +22,7 @@ import org.restlet.resource.ResourceException;
 
 /**
  * DOI resource to retrieve a given DOI.
- * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class DoiResource extends BaseMdsResource {
 

@@ -19,19 +19,19 @@ import javax.xml.bind.annotation.XmlType;
  * <p>The following schema fragment specifies the expected content contained within this class.
  * <p>
  * <pre>
- * &lt;simpleType name="dateType">
- *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
- *     &lt;enumeration value="Accepted"/>
- *     &lt;enumeration value="Available"/>
- *     &lt;enumeration value="Collected"/>
- *     &lt;enumeration value="Copyrighted"/>
- *     &lt;enumeration value="Created"/>
- *     &lt;enumeration value="Issued"/>
- *     &lt;enumeration value="Submitted"/>
- *     &lt;enumeration value="Updated"/>
- *     &lt;enumeration value="Valid"/>
- *   &lt;/restriction>
- * &lt;/simpleType>
+ * &lt;simpleType name="dateType"&gt;
+ *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"&gt;
+ *     &lt;enumeration value="Accepted"/&gt;
+ *     &lt;enumeration value="Available"/&gt;
+ *     &lt;enumeration value="Collected"/&gt;
+ *     &lt;enumeration value="Copyrighted"/&gt;
+ *     &lt;enumeration value="Created"/&gt;
+ *     &lt;enumeration value="Issued"/&gt;
+ *     &lt;enumeration value="Submitted"/&gt;
+ *     &lt;enumeration value="Updated"/&gt;
+ *     &lt;enumeration value="Valid"/&gt;
+ *   &lt;/restriction&gt;
+ * &lt;/simpleType&gt;
  * </pre>
  * 
  */

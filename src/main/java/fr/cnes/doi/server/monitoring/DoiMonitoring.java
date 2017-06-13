@@ -15,7 +15,7 @@ import org.restlet.data.Method;
 /**
  * Speed monitoring (average time to answer requests).
  *
- * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class DoiMonitoring {
 
@@ -25,12 +25,12 @@ public class DoiMonitoring {
     private static final Logger LOGGER = Logger.getLogger(DoiMonitoring.class.getName());
 
     /**
-     * Hash map of records to compute average time to answer requests 
+     * Hash map of records to compute average time to answer requests. 
      */
     private final Map<String, DoiMonitoringRecord> applications = new HashMap<>();
 
     /**
-     * Constructor
+     * Constructor.
      */
     public DoiMonitoring() {
 

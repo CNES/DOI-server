@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>DOI Server Architecture</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+    A Digital Object Identifier or DOI is a persistent identifier, represented
+    by an alphanumeric string assigned to uniquely identify an objects It is 
+    tied to a metadata description of the object as well as to a digital 
+    location, such as a URL, where all the details about the object are 
+    accessible.<br/>
+    <img src="doc-files/doi.png" alt="DOI model"/>
+    
+    <p>       
+    DOIs are in use mainly to identify academic, professional, and government 
+    information, such as journal articles, research reports and data sets, and 
+    official publications.
+    
+    <p>       
+    A DOI aims to be "resolvable". This is achieved by binding the 
+    DOI to metadata about the object, such as a URL, indicating where the object 
+    can be found. Thus, by being actionable and interoperable, a DOI differs 
+    from identifiers such as ISBNs and ISRCs which aim only to uniquely identify
+    their referents.
+    
+    <p>
+    The DOI for a document remains fixed over the lifetime of the document, 
+    whereas its location and other metadata may change. 
+    Referring to an online document by its DOI provides more stable linking than 
+    simply using its URL, because if its URL changes, the publisher only needs 
+    to update the metadata for the DOI to link to the new URL.        
+    
+    <p>
+    This document provides the description of the DOI server. it aims is to provide
+    a common service to an organization so that each project of this organization
+    can manage its own DOI according to their own access rights. The access
+    rights are defined by the DOI server whereas the real creation of a DOI is
+    handled between the DOI server and the DataCite API by a unique login/password.
+    Moreover, the DOI server guarantees an unique identifer in the whole organization
+    at condition that the project guarantees an unique identifier in its own project.
+    <br/> 
+    <img src="doc-files/architecture.png"/>
+    </body>
+</html>

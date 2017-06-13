@@ -8,12 +8,18 @@ package fr.cnes.doi.client;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.settings.SettingsSuite;
+import fr.cnes.doi.utils.Utils;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import org.datacite.schema.kernel_4.Resource;
 import org.datacite.schema.kernel_4.Resource.Creators;
 import org.datacite.schema.kernel_4.Resource.Creators.Creator;
@@ -27,10 +33,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.restlet.data.ChallengeResponse;
-import org.restlet.data.Form;
-import org.restlet.engine.Engine;
-import org.restlet.representation.Representation;
 
 /**
  *
@@ -38,13 +40,17 @@ import org.restlet.representation.Representation;
  */
 public class ClientMDSTest {
     
-    private InputStream inputStream = SettingsSuite.class.getResourceAsStream("/resources/doi.properties");
+    private InputStream inputStream = ClientMDSTest.class.getResourceAsStream("/config.properties");
     private DoiSettings settings;
     
     public ClientMDSTest() {
+        String secretKey = System.getProperty("private.key");  
+        String result = new BufferedReader(new InputStreamReader(inputStream)).lines().collect(Collectors.joining("\n"));
+        result = Utils.decrypt(result, secretKey); 
+        InputStream stream = new ByteArrayInputStream(result.getBytes(StandardCharsets.UTF_8));
         settings = DoiSettings.getInstance();  
         try {
-            settings.setPropertiesFile("/tmp/doi.properties");
+            settings.setPropertiesFile(stream);
         } catch (IOException ex) {
             Logger.getLogger(ClientMDSTest.class.getName()).log(Level.SEVERE, null, ex);
         }  

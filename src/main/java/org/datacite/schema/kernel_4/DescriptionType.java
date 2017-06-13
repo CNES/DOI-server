@@ -19,16 +19,16 @@ import javax.xml.bind.annotation.XmlType;
  * <p>The following schema fragment specifies the expected content contained within this class.
  * <p>
  * <pre>
- * &lt;simpleType name="descriptionType">
- *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
- *     &lt;enumeration value="Abstract"/>
- *     &lt;enumeration value="Methods"/>
- *     &lt;enumeration value="SeriesInformation"/>
- *     &lt;enumeration value="TableOfContents"/>
- *     &lt;enumeration value="TechnicalInfo"/>
- *     &lt;enumeration value="Other"/>
- *   &lt;/restriction>
- * &lt;/simpleType>
+ * &lt;simpleType name="descriptionType"&gt;
+ *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"&gt;
+ *     &lt;enumeration value="Abstract"/&gt;
+ *     &lt;enumeration value="Methods"/&gt;
+ *     &lt;enumeration value="SeriesInformation"/&gt;
+ *     &lt;enumeration value="TableOfContents"/&gt;
+ *     &lt;enumeration value="TechnicalInfo"/&gt;
+ *     &lt;enumeration value="Other"/&gt;
+ *   &lt;/restriction&gt;
+ * &lt;/simpleType&gt;
  * </pre>
  * 
  */

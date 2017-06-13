@@ -28,7 +28,7 @@ import org.restlet.resource.ClientResource;
 
 /**
  * Client to query Metadata store service at Datacite. 
- * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class ClientMDS {
 
@@ -155,8 +155,8 @@ public class ClientMDS {
         }
 
         /**
-         * Returns the level log.
-         * @return 
+         * Returns the log level.
+         * @return the log level
          */
         public Level getLevelLog() {
             return this.levelLog;
@@ -381,7 +381,7 @@ public class ClientMDS {
      * <li>+ (plus)</li>
      * <li>: (colon)</li>
      * <li>/ (slash)</li>
-     *
+     *</ul>
      * @param test DOI name to test
      */
     private void checkIfAllCharsAreValid(String test) {
@@ -480,8 +480,6 @@ public class ClientMDS {
      * @return short explanation of status code e.g. CREATED,
      * HANDLE_ALREADY_EXISTS etc
      * @throws ClientException Will throw an exception when status!=2xx
-     * @throws IllegalArgumentException Will throw this exception when DOI and
-     * URL are not provided in the form
      */
     public String createDoi(final Form form) throws ClientException {
         try {            
@@ -555,9 +553,18 @@ public class ClientMDS {
     
     /**
      * Returns the metadata based on its DOI name.
+     * The different responses are the followings : 
+     * <ul>
+     * <li>200 OK - operation successful</li>
+     * <li>401 Unauthorized - no login</li>
+     * <li>403 Forbidden - login problem or dataset belongs to another party</li>
+     * <li>404 Not Found - DOI does not exist in our database</li>
+     * <li>410 Gone - the requested dataset was marked inactive (using DELETE method)</li>
+     * <li>500 Internal Server Error - server internal error, try later and if problem persists please contact us</li>
+     * </ul>
      * @param doiName DOI name
      * @return the metadata as XML
-     * @throws ClientException
+     * @throws ClientException Will throw when a problem happens with datacite
      */
     public Representation getMetadata(final String doiName) throws ClientException {
         Reference url = createReferenceWithDOI(METADATA_RESOURCE, doiName);
@@ -590,8 +597,7 @@ public class ClientMDS {
      * @param entity A valid XML
      * @return short explanation of status code e.g. CREATED,
      * HANDLE_ALREADY_EXISTS etc
-     * @throws ClientException
-     * @throws IllegalArgumentException
+     * @throws ClientException Will throw an error when a problem happens with DataCite
      */
     public String createMetadata(final Representation entity) throws ClientException {
         String result = null;
@@ -609,10 +615,19 @@ public class ClientMDS {
     }
     
     /**
-     * TODO converterService pour sérialisation
-     * @param entity
-     * @return
-     * @throws ClientException 
+     * Creates metadata.
+     * The different status:
+     * <ul>
+     * <li>201 Created - operation successful</li>
+     * <li>400 Bad Request - invalid XML, wrong prefix</li>
+     * <li>401 Unauthorized - no login</li>
+     * <li>403 Forbidden - login problem, quota exceeded</li>
+     * <li>500 Internal Server Error - server internal error, try later and if
+     * problem persists please contact us</li>
+     * </ul>     
+     * @param entity Metadata
+     * @return short explanation of status code e.g. CREATED, HANDLE_ALREADY_EXISTS etc
+     * @throws ClientException Will throw an exception for status != 2xx
      */
     public String createMetadata(final Resource entity) throws ClientException {
         String result = null;
@@ -647,7 +662,7 @@ public class ClientMDS {
      *
      * @param doiName DOI name
      * @return XML representing a dataset
-     * @throws ClientException
+     * @throws ClientException Will throw an exception for status != 2xx
      */
     public Resource deleteMetadataDoiAsObject(final String doiName) throws ClientException {
         Representation rep = this.getMetadata(doiName);
@@ -655,10 +670,22 @@ public class ClientMDS {
     }
     
     /**
-     * Deletes the metadata.
+     * This request marks a dataset as 'inactive'.
+     *
+     * To activate it again, POST new metadata or set the isActive-flag in the
+     * user interface. The different status:
+     * <ul>
+     * <li>200 OK - operation successful: dataset deactivated</li>
+     * <li>401 Unauthorized - no login</li>
+     * <li>403 Forbidden - login problem or dataset belongs to another
+     * party</li>
+     * <li>404 Not Found - DOI does not exist in our database</li>
+     * <li>500 Internal Server Error - server internal error, try later and if
+     * problem persists please contact us</li>
+     * </ul>
      * @param doiName DOI name
      * @return the deleted metadata
-     * @throws ClientException
+     * @throws ClientException throw an error when a problem happens with DataCite
      */
     public Representation deleteMetadata(final String doiName) throws ClientException {
         Reference url = createReferenceWithDOI(METADATA_RESOURCE, doiName);
@@ -727,7 +754,7 @@ public class ClientMDS {
      * {mime-type} and {url} have to be replaced by your mime type and URL,
      * UFT-8 encoded.
      * @return short explanation of status code
-     * @throws ClientException
+     * @throws ClientException Will throw an exception for status != 2xx
      */
     public String createMedia(final Form form) throws ClientException {
         String result;

@@ -12,7 +12,7 @@ import org.restlet.engine.log.AccessLogFileHandler;
 /**
  * FileHandler to log request and responses.
  *
- * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public final class FileHandlerLogAPIServer extends AccessLogFileHandler {
 

@@ -25,7 +25,7 @@ import java.nio.file.Paths;
 /**
  * DOI server
  *
- * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class Starter {
 
@@ -164,9 +164,10 @@ public class Starter {
     }
 
     /**
-     * @param argv
+     * Main.
+     * @param argv command line arguments
      */
-    public static void main(String[] argv) {
+    public static void main(final String[] argv) {
         final DoiSettings settings = DoiSettings.getInstance();
         final String progName = "java -jar " + settings.getString(Consts.APP_NAME) + "-" + settings.getString(Consts.VERSION) + ".jar";
 

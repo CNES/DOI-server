@@ -5,10 +5,7 @@
  */
 package fr.cnes.doi.settings;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -22,7 +19,7 @@ import static org.junit.Assert.*;
  */
 public class JettySettingsTest {
     
-    private InputStream inputStream = SettingsSuite.class.getResourceAsStream("/config.properties");
+    private InputStream inputStream = JettySettingsTest.class.getResourceAsStream("/config.properties");
     private DoiSettings doiSettings = DoiSettings.getInstance();  
     private JettySettings instance;
     

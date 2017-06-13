@@ -24,7 +24,7 @@ import fr.cnes.doi.server.monitoring.DoiMonitoring;
 
 /**
  * Creates a default logger.
- * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class DoiLogDataServer extends LogService {
 

@@ -28,7 +28,7 @@ import static org.junit.Assert.*;
  */
 public class DoiSettingsTest {
                
-    private InputStream inputStream = SettingsSuite.class.getResourceAsStream("/config.properties");
+    private InputStream inputStream = DoiSettingsTest.class.getResourceAsStream("/config.properties");
     private DoiSettings instance;
     
     public DoiSettingsTest() {

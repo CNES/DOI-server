@@ -43,13 +43,14 @@ import org.restlet.security.User;
 import org.restlet.service.CorsService;
 
 /**
- * Provides an application for handling Data Object Identifier at CNES.
+ * Provides an application for handling Data Object Identifier within an organization.
  * A Digital Object Identifier (DOI) is an alphanumeric string assigned to 
  * uniquely identify an object. It is tied to a metadata description of the 
  * object as well as to a digital location, such as a URL, where all the 
  * details about the object are accessible.
  *
- * @author Jean-Christophe Malapert
+ * @author Jean-Christophe Malapert (jean-Christophe Malapert@cnes.fr)
+ * @see <a href="http://www.doi.org/hb.html">DOI Handbook</a> 
  */
 public class DoiMdsApplication extends BaseApplication {
 

@@ -20,7 +20,7 @@ import org.restlet.util.Series;
 
 /**
  * Resources to handle a metadata.
- * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class MetadataResource extends BaseMdsResource {
 

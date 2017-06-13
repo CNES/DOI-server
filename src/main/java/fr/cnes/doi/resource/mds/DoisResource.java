@@ -25,7 +25,7 @@ import org.restlet.util.Series;
 
 /**
  * Resource to handle a collection of DOI.
- * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class DoisResource extends BaseMdsResource {
     
@@ -73,7 +73,7 @@ public class DoisResource extends BaseMdsResource {
      * Creates a new DOI based on the doi and url parameters
      * 
      * The DOI name is built following this syntax:  
-     * <i>CNES_prefix></i>/<i>project_provided_the_DOI_server</i>/project_suffix.
+     * <i>CNES_prefix</i>/<i>project_provided_the_DOI_server</i>/project_suffix.
      * 
      * <p>
      * The client provides :

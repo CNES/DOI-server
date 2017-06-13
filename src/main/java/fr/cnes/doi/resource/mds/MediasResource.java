@@ -23,7 +23,7 @@ import org.restlet.util.Series;
 
 /**
  * Resource to handle a collection of media.
- * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class MediasResource extends BaseMdsResource {    
 

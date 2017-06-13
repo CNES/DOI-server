@@ -48,7 +48,7 @@ import fr.cnes.doi.utils.Utils;
 
 /**
  * DoiServer contains the configuration of this server and the methods to start/stop it.
- * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class DoiServer extends Component {
 
@@ -214,8 +214,7 @@ public class DoiServer extends Component {
     }
 
     /**
-     * Starts with proxy.
-     *
+     * Starts with proxy.    
      * @param settings
      */
     private void startWithProxy(final DoiSettings settings) {
@@ -229,11 +228,8 @@ public class DoiServer extends Component {
 
     /**
      * Creates a HTTP server
-     *
-     * @param this this
      * @param port HTTP port
      * @return the HTTP server
-     * @throws Exception
      */
     private Server startHttpServer(final Integer port) {
         LOGGER.entering(getClass().getName(), "startHttpServer", port);
@@ -244,11 +240,8 @@ public class DoiServer extends Component {
 
     /**
      * Creates a HTTPS server
-     *
-     * @param this this
      * @param port HTTPS port
      * @return the HTTPS server
-     * @throws Exception
      */
     private Server startHttpsServer(final Integer port) {
         LOGGER.entering(getClass().getName(), "startHttpsServer", port);

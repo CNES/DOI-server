@@ -24,7 +24,7 @@ import org.restlet.service.StatusService;
 
 /**
  * Provides a specific error page, which is sent in the HTTP response.
- * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class CnesStatusService extends StatusService {
     
