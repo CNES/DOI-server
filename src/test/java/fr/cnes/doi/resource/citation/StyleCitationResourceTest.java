@@ -6,6 +6,7 @@
 package fr.cnes.doi.resource.citation;
 
 import fr.cnes.doi.server.DoiServer;
+import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.utils.Utils;
 import java.io.BufferedReader;
@@ -24,8 +25,12 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.restlet.representation.Representation;
+import org.restlet.Client;
+import org.restlet.Context;
+import org.restlet.data.Parameter;
+import org.restlet.data.Protocol;
 import org.restlet.resource.ClientResource;
+import org.restlet.util.Series;
 
 /**
  *
@@ -35,15 +40,21 @@ public class StyleCitationResourceTest {
     
     private static InputStream inputStream = StyleCitationResourceTest.class.getResourceAsStream("/config.properties");
     private static DoiServer doiServer;    
+    private Client cl;
+    private static DoiSettings instance;
     
     public StyleCitationResourceTest() throws InterruptedException, Exception {
-      
+        cl = new Client(new Context(), Protocol.HTTPS);
+        Series<Parameter> parameters = cl.getContext().getParameters();
+        parameters.add("truststorePath", "jks/doiServerKey.jks");
+        parameters.add("truststorePassword", instance.getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
+        parameters.add("truststoreType", "JKS");       
     }
     
     @BeforeClass
     public static void setUpClass()  {
         try {
-            DoiSettings instance = DoiSettings.getInstance();
+            instance = DoiSettings.getInstance();
             String result = new BufferedReader(new InputStreamReader(inputStream)).lines().collect(Collectors.joining("\n"));
             String secretKey = System.getProperty("private.key");
             result = Utils.decrypt(result, secretKey);
@@ -84,7 +95,8 @@ public class StyleCitationResourceTest {
         String result = "";       
         try {
             doiServer.start();
-            ClientResource client = new ClientResource("http://localhost:8182/citation/style");
+            ClientResource client = new ClientResource("https://localhost:8183/citation/style");
+            client.setNext(cl);
             List<String> rep = client.get(List.class);
             result = rep.get(0);
         } catch (Exception ex) {

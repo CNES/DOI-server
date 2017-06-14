@@ -82,6 +82,8 @@ public class FormatCitationResource extends BaseCitationResource {
                 createQueryParamDoc("style", ParameterStyle.QUERY, "style", true, "xs:string")                                
         ));
         addResponseDocToMethod(info, createResponseDoc(Status.SUCCESS_OK, "Operation successful", listRepresentation("Format representation", MediaType.TEXT_PLAIN, "The formatted citation")));        
+        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_NOT_FOUND, "DOI not found", listRepresentation("Error representation", MediaType.TEXT_HTML, "Error")));        
+        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_BAD_REQUEST, "Wrong input parameters", listRepresentation("Error representation", MediaType.TEXT_HTML, "Error")));                        
     }     
     
 }

@@ -12,6 +12,9 @@ import fr.cnes.doi.resource.citation.StyleCitationResource;
 import fr.cnes.doi.utils.Utils;
 import java.util.logging.Logger;
 import org.restlet.Restlet;
+import org.restlet.ext.wadl.ApplicationInfo;
+import org.restlet.ext.wadl.WadlCnesRepresentation;
+import org.restlet.representation.Representation;
 import org.restlet.routing.Router;
 
 /**
@@ -131,5 +134,16 @@ public class DoiCrossCiteApplication extends BaseApplication {
     public ClientCrossCiteCitation getClient() {
         return this.client;
     }
+    
+    /**
+     * Creates HTML representation of the WADL.
+     * @param applicationInfo Application description
+     * @return the HTML representation of the WADL
+     */
+    @Override
+    protected Representation createHtmlRepresentation(ApplicationInfo applicationInfo) {
+        WadlCnesRepresentation wadl = new WadlCnesRepresentation(applicationInfo);
+        return wadl.getHtmlRepresentation();
+    }    
     
 }
