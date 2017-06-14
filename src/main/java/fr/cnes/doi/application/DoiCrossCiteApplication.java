@@ -36,6 +36,7 @@ import org.restlet.routing.Router;
  * The FAIR Guiding Principles provide a guideline for the those that want to
  * enhance reuse of their data (Wilkinson 2016).
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
+ * @see "http://citation.crosscite.org/"
  */
 public class DoiCrossCiteApplication extends BaseApplication {
     
@@ -64,7 +65,8 @@ public class DoiCrossCiteApplication extends BaseApplication {
     
     /**
      * Constructs the application by setting the proxy authentication
-     * to the ClientCrossCiteCitation proxy when the configuration is set.
+     * to the {@link fr.cnes.doi.client.ClientCrossCiteCitation ClientCrossCiteCitation} 
+     * proxy when the configuration is set.
      */
     public DoiCrossCiteApplication() {
         super();  

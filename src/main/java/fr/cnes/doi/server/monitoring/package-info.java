@@ -4,6 +4,6 @@
  * and open the template in the editor.
  */
 /**
- * Provides classes to monitor the speed of Meta Data Store resources.
+ * Provides classes to monitor the speed of {@link fr.cnes.doi.application.DoiMdsApplication Meta Data Store application}.
  */
 package fr.cnes.doi.server.monitoring;

@@ -51,6 +51,7 @@ import org.restlet.service.CorsService;
  *
  * @author Jean-Christophe Malapert (jean-Christophe Malapert@cnes.fr)
  * @see <a href="http://www.doi.org/hb.html">DOI Handbook</a> 
+ * @see "https://mds.datacite.org/static/apidoc"
  */
 public class DoiMdsApplication extends BaseApplication {
 

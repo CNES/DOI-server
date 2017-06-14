@@ -4,6 +4,6 @@
  * and open the template in the editor.
  */
 /**
- * Provides classes for Meta Data Store application.
+ * Provides classes for Meta Data Store application. 
  */
 package fr.cnes.doi.resource.mds;

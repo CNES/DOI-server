@@ -29,6 +29,7 @@ import org.restlet.resource.ClientResource;
 /**
  * Client to query Metadata store service at Datacite. 
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
+ * @see "https://datacite.readme.io/v1.0/docs/api"
  */
 public class ClientMDS {
 

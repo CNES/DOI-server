@@ -12,7 +12,7 @@ import org.restlet.engine.Engine;
 
 /**
  * Exception for Client
- * @author Jean-Christophe Malapert
+ * @author Jean-Christophe Malapert (Jean-Christophe.malapert@cnes.fr)
  */
 public class ClientException extends Exception {
 

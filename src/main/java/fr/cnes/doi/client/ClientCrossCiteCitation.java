@@ -17,8 +17,9 @@ import org.restlet.resource.ResourceException;
 
 
 /**
- *
- * @author malapert
+ * Client to query the citation service.
+ * @author Jean-Christophe Malapert (Jean-Christophe.malapert@cnes.fr)
+ * @see "https://datacite.readme.io/v1.0/docs/api"
  */
 public class ClientCrossCiteCitation {
     
@@ -26,14 +27,17 @@ public class ClientCrossCiteCitation {
      * Service end point.
      */
     public static final String CROSS_CITE_URL = "http://citation.crosscite.org";
+    
     /**
      * Resource to get styles.
      */
     public static final String STYLE_URI = "/styles";
+    
     /**
      * Resource to get locales.
      */
-    public static final String LOCALE_URI = "/locales";        
+    public static final String LOCALE_URI = "/locales";  
+    
     /**
      * Resource to get format.
      */

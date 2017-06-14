@@ -19,6 +19,11 @@ import org.restlet.routing.Router;
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class DoiStatusApplication extends BaseApplication {
+    
+    /**
+     * Status page for DataCite.
+     */
+    private static final String TARGET_URL = "http://status.datacite.org";
 
     /**
      * Assigns a route to monitor the datacite services.
@@ -27,8 +32,7 @@ public class DoiStatusApplication extends BaseApplication {
     @Override
     public Restlet createInboundRoot() {
         Router router = new Router(getContext());
-        String target = "http://status.datacite.org";
-        Redirector redirector = new Redirector(getContext(), target, Redirector.MODE_SERVER_OUTBOUND);
+        Redirector redirector = new Redirector(getContext(), TARGET_URL, Redirector.MODE_SERVER_OUTBOUND);
         router.attachDefault(redirector);
 
         Filter authentication = new Filter() {

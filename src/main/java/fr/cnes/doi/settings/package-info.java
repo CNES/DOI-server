@@ -7,10 +7,10 @@
  * Provides settings for the server.
  * The settings are :
  * <ul>
- * <li>Configuration settings</li>
- * <li>Proxy settings</li>
- * <li>Email settings</li>
- * <li>Jetty settings</li>
+ * <li>{@link fr.cnes.doi.settings.DoiSettings Configuration} settings</li>
+ * <li>{@link fr.cnes.doi.settings.ProxySettings Proxy} settings</li>
+ * <li>{@link fr.cnes.doi.settings.EmailSettings Email} settings</li>
+ * <li>{@link fr.cnes.doi.settings.JettySettings Jetty} settings</li>
  * </ul>
  * 
  */

@@ -10,12 +10,12 @@
  * <p>
  * The applications contains:
  * <ul>
- * <li>a Meta Data Store application that is responsible to handle (create/update/
- * delete) DOI.</li>
- * <li>A Cross Cite application that is responsible to get citation from 
+ * <li>a  {@link fr.cnes.doi.application.DoiMdsApplication Meta Data Store application} that is responsible to handle (create/update/
+ * delete) DOIs.</li>
+ * <li>A {@link fr.cnes.doi.application.DoiCrossCiteApplication Cross Cite application} that is responsible to get citation from 
  * registered DOI</li>
- * <li>A monitoring application that is responsible to give the status of DataCite</li>
- * <li>A web application that provides web resources</li> 
+ * <li>A {@link fr.cnes.doi.application.DoiStatusApplication monitoring application} that is responsible to give the status of DataCite</li>
+ * <li>A {@link fr.cnes.doi.application.WebSiteApplication web application} that provides web resources</li> 
  * </ul>
  */
 package fr.cnes.doi.application;
