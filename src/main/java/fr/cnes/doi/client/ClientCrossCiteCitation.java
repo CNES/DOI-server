@@ -56,6 +56,13 @@ public class ClientCrossCiteCitation {
     }
     
     /**
+     * Init the endpoint.
+     */
+    protected void init() {
+        this.client.setReference(new Reference(CROSS_CITE_URL));
+    }
+    
+    /**
      * Sets Proxy authentication.
      * @param authentication authentication
      */
@@ -92,6 +99,7 @@ public class ClientCrossCiteCitation {
      * @return list of possible styles
      */
     public List<String> getStyles() {
+        init();
         return getList(STYLE_URI);
     }
     
@@ -100,6 +108,7 @@ public class ClientCrossCiteCitation {
      * @return List of possible languages
      */
     public List<String> getLanguages() {
+        init();
         return getList(LOCALE_URI);
     }
     
@@ -111,6 +120,7 @@ public class ClientCrossCiteCitation {
      * @return The formatted citation
      */
     public String getFormat(final String doiName, final String style, final String language) {
+        init();
         String result;
         try {
             Reference ref = client.addSegment(FORMAT_URI);

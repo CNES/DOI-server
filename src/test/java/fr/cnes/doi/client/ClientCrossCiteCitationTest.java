@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fr.cnes.doi.datacite;
+package fr.cnes.doi.client;
 
-import fr.cnes.doi.client.ClientCrossCiteCitation;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

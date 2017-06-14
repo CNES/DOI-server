@@ -6,6 +6,7 @@
 package fr.cnes.doi.resource.citation;
 
 import java.util.List;
+import org.restlet.data.MediaType;
 import org.restlet.data.Method;
 import org.restlet.data.Status;
 import org.restlet.ext.wadl.MethodInfo;
@@ -28,13 +29,22 @@ public class LanguageCitationResource extends BaseCitationResource {
     }                        
     
     /**
-     * Returns the languages to format the citation.
+     * Returns the languages as JSON to format the citation.
      * @return the languages
      */
-    @Get
-    public List<String> getLanguages() {
+    @Get("json")
+    public List<String> getLanguagesToJSON() {
         return this.app.getClient().getLanguages();
     }
+    
+    /**
+     * Returns the languages as XML to format the citation.
+     * @return the languages
+     */    
+    @Get("xml")
+    public List<String> getLanguagesToXML() {
+        return this.app.getClient().getLanguages();
+    }    
     
     /**
      * Describes the Get Method.
@@ -44,7 +54,8 @@ public class LanguageCitationResource extends BaseCitationResource {
     protected final void describeGet(final MethodInfo info) {
         info.setName(Method.GET);
         info.setDocumentation("Retrieves the supported languages"); 
-        addResponseDocToMethod(info, createResponseDoc(Status.SUCCESS_OK, "Operation successful", listRepresentation("Language representation", "A list of possible language, one per row")));        
+        addResponseDocToMethod(info, createResponseDoc(Status.SUCCESS_OK, "Operation successful", listRepresentation("Language representation", MediaType.TEXT_XML, "A List of String representing the possible languages")));        
+        addResponseDocToMethod(info, createResponseDoc(Status.SUCCESS_OK, "Operation successful", listRepresentation("Language representation", MediaType.APPLICATION_JSON, "A JSON array representing the possible languages")));                
         addResponseDocToMethod(info, createResponseDoc(Status.SERVER_ERROR_INTERNAL, "server internal error, try later and if problem persists please contact us"));
     }     
 }

@@ -10,7 +10,6 @@ import fr.cnes.doi.resource.BaseResource;
 import org.restlet.data.MediaType;
 import org.restlet.ext.wadl.DocumentationInfo;
 import org.restlet.ext.wadl.RepresentationInfo;
-import org.restlet.ext.wadl.WadlServerResource;
 import org.restlet.resource.ResourceException;
 
 /**
@@ -36,12 +35,13 @@ public class BaseCitationResource extends BaseResource {
     /**
      * List representation.
      * @param title Title of the representation
+     * @param media Media type of the response
      * @param content Explanation of the representation
      * @return the Wadl representation of this representation
      */
-    protected RepresentationInfo listRepresentation(final String title, final String content) {
+    protected RepresentationInfo listRepresentation(final String title, final MediaType media, final String content) {
         final RepresentationInfo repInfo = new RepresentationInfo();
-        repInfo.setMediaType(MediaType.TEXT_PLAIN);        
+        repInfo.setMediaType(media);        
         final DocumentationInfo docInfo = new DocumentationInfo();
         docInfo.setTitle(title);
         docInfo.setTextContent(content);

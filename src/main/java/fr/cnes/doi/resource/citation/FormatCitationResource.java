@@ -5,9 +5,12 @@
  */
 package fr.cnes.doi.resource.citation;
 
+import java.util.Arrays;
+import org.restlet.data.MediaType;
 import org.restlet.data.Method;
 import org.restlet.data.Status;
 import org.restlet.ext.wadl.MethodInfo;
+import org.restlet.ext.wadl.ParameterStyle;
 import org.restlet.resource.Get;
 import org.restlet.resource.ResourceException;
 
@@ -73,7 +76,12 @@ public class FormatCitationResource extends BaseCitationResource {
     protected final void describeGet(final MethodInfo info) {
         info.setName(Method.GET);
         info.setDocumentation("Select Formatting Style"); 
-        addResponseDocToMethod(info, createResponseDoc(Status.SUCCESS_OK, "Operation successful", listRepresentation("Format representation", "The formatted citation")));        
+        addRequestDocToMethod(info, Arrays.asList(
+                createQueryParamDoc("doi", ParameterStyle.QUERY, "doiName", true, "xs:string"),
+                createQueryParamDoc("lang", ParameterStyle.QUERY, "language", true, "xs:string"),
+                createQueryParamDoc("style", ParameterStyle.QUERY, "style", true, "xs:string")                                
+        ));
+        addResponseDocToMethod(info, createResponseDoc(Status.SUCCESS_OK, "Operation successful", listRepresentation("Format representation", MediaType.TEXT_PLAIN, "The formatted citation")));        
     }     
     
 }
