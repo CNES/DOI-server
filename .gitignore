@@ -9,4 +9,5 @@ store/
 nbproject/
 nbactions.xml
 *.log
+*.log.lck
 jks/

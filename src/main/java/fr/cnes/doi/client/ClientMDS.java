@@ -337,17 +337,17 @@ public class ClientMDS {
      * @param rep Response of the server
      * @param status Status of the response
      * @return the text of the response
-     * @throws ClientException
+     * @throws ClientMdsException An exception is thrown for a status!=2xx
      */
-    private String getText(final Representation rep, final Status status) throws ClientException {
+    private String getText(final Representation rep, final Status status) throws ClientMdsException {
         String result;
         try {
             result = rep.getText();
         } catch (IOException ex) {
-            throw new ClientException(ex);
+            throw new ClientMdsException(Status.SERVER_ERROR_INTERNAL, ex);
         }
         if (!status.isSuccess()) {
-            throw new ClientException(status, result);
+            throw new ClientMdsException(status, result);
         }
         return result;
     }
@@ -409,9 +409,9 @@ public class ClientMDS {
      * @param doiName DOI name
      * @return an URL or no content (DOI is known to MDS, but is not minted (or
      * not resolvable e.g. due to handle's latency))
-     * @throws ClientException An exception is thrown for a status!=2xx
+     * @throws ClientMdsException An exception is thrown for a status!=2xx
      */
-    public String getDoi(final String doiName) throws ClientException {
+    public String getDoi(final String doiName) throws ClientMdsException {
         String result = null;
         Reference url = createReferenceWithDOI(DOI_RESOURCE, doiName);
         this.client.getLogger().log(Level.INFO, "GET {0}", url.toString());
@@ -438,9 +438,9 @@ public class ClientMDS {
      * </ul>
      *
      * @return a list of all DOI or no content when no DOIs founds
-     * @throws ClientException An exception is thrown for a status!=2xx
+     * @throws ClientMdsException An exception is thrown for a status!=2xx
      */
-    public String getDoiCollection() throws ClientException {
+    public String getDoiCollection() throws ClientMdsException {
         String result = null;
         Reference url = createReference(DOI_RESOURCE);
         this.client.getLogger().log(Level.INFO, "GET {0}", url.toString());
@@ -480,9 +480,9 @@ public class ClientMDS {
      * @param form A form with the following attributes doi and url
      * @return short explanation of status code e.g. CREATED,
      * HANDLE_ALREADY_EXISTS etc
-     * @throws ClientException Will throw an exception when status!=2xx
+     * @throws ClientMdsException Will throw an exception when status!=2xx
      */
-    public String createDoi(final Form form) throws ClientException {
+    public String createDoi(final Form form) throws ClientMdsException {
         try {            
             String result;
             this.checkInputForm(form);
@@ -499,7 +499,7 @@ public class ClientMDS {
             result = getText(rep, responseStatus);            
             return result;
         }   catch (UnsupportedEncodingException ex) {
-            throw new ClientException(ex);
+            throw new ClientMdsException(Status.SERVER_ERROR_INTERNAL, ex);
         } finally {
                 this.client.release();
         }
@@ -509,9 +509,9 @@ public class ClientMDS {
      * Parses the XML representation that implements the DATACITE schema.
      * @param rep XML representation
      * @return the Resource object
-     * @throws ClientException Will throw when a problem happens during the parsing
+     * @throws ClientMdsException Will throw when a problem happens during the parsing
      */
-    private Resource parseDataciteResource(final Representation rep) throws ClientException {
+    private Resource parseDataciteResource(final Representation rep) throws ClientMdsException {
         final Resource resource;
         try {
             final String result = getText(rep, Status.SUCCESS_OK);
@@ -520,7 +520,7 @@ public class ClientMDS {
             JAXBElement<Resource> jaxbResource = (JAXBElement<Resource>) um.unmarshal(new ByteArrayInputStream(result.getBytes()));
             resource = jaxbResource.getValue();
         } catch (JAXBException ex) {
-            throw new ClientException(ex);
+            throw new ClientMdsException(Status.SERVER_ERROR_INTERNAL, ex);
         }    
         return resource;
     }
@@ -544,10 +544,9 @@ public class ClientMDS {
      *
      * @param doiName DOI name
      * @return XML representing a dataset
-     * @throws ClientException Will throw an exception when status !=
-     * 2xx
+     * @throws ClientMdsException Will throw an exception when status != 2xx
      */
-    public Resource getMetadataAsObject(final String doiName) throws ClientException {        
+    public Resource getMetadataAsObject(final String doiName) throws ClientMdsException {        
         final Representation rep = getMetadata(doiName);
         return parseDataciteResource(rep);
     }
@@ -565,9 +564,9 @@ public class ClientMDS {
      * </ul>
      * @param doiName DOI name
      * @return the metadata as XML
-     * @throws ClientException Will throw when a problem happens with datacite
+     * @throws ClientMdsException Will throw when a problem happens with datacite
      */
-    public Representation getMetadata(final String doiName) throws ClientException {
+    public Representation getMetadata(final String doiName) throws ClientMdsException {
         Reference url = createReferenceWithDOI(METADATA_RESOURCE, doiName);
         Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "GET {0}", url.toString());
         this.client.setReference(url);
@@ -578,7 +577,7 @@ public class ClientMDS {
         if(status.isSuccess()) {
             return rep;
         } else {
-            throw new ClientException(status, status.getDescription());
+            throw new ClientMdsException(status, status.getDescription());
         }        
      }
 
@@ -598,9 +597,9 @@ public class ClientMDS {
      * @param entity A valid XML
      * @return short explanation of status code e.g. CREATED,
      * HANDLE_ALREADY_EXISTS etc
-     * @throws ClientException Will throw an error when a problem happens with DataCite
+     * @throws ClientMdsException Will throw an error when a problem happens with DataCite
      */
-    public String createMetadata(final Representation entity) throws ClientException {
+    public String createMetadata(final Representation entity) throws ClientMdsException {
         String result = null;
         Reference url = createReference(METADATA_RESOURCE);
         Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "POST {0}", url.toString());
@@ -628,9 +627,9 @@ public class ClientMDS {
      * </ul>     
      * @param entity Metadata
      * @return short explanation of status code e.g. CREATED, HANDLE_ALREADY_EXISTS etc
-     * @throws ClientException Will throw an exception for status != 2xx
+     * @throws ClientMdsException Will throw an exception for status != 2xx
      */
-    public String createMetadata(final Resource entity) throws ClientException {
+    public String createMetadata(final Resource entity) throws ClientMdsException {
         String result = null;
         Reference url = createReference(METADATA_RESOURCE);
         Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "POST {0}", url.toString());
@@ -663,9 +662,9 @@ public class ClientMDS {
      *
      * @param doiName DOI name
      * @return XML representing a dataset
-     * @throws ClientException Will throw an exception for status != 2xx
+     * @throws ClientMdsException Will throw an exception for status != 2xx
      */
-    public Resource deleteMetadataDoiAsObject(final String doiName) throws ClientException {
+    public Resource deleteMetadataDoiAsObject(final String doiName) throws ClientMdsException {
         Representation rep = this.getMetadata(doiName);
         return parseDataciteResource(rep);
     }
@@ -686,9 +685,9 @@ public class ClientMDS {
      * </ul>
      * @param doiName DOI name
      * @return the deleted metadata
-     * @throws ClientException throw an error when a problem happens with DataCite
+     * @throws ClientMdsException throw an error when a problem happens with DataCite
      */
-    public Representation deleteMetadata(final String doiName) throws ClientException {
+    public Representation deleteMetadata(final String doiName) throws ClientMdsException {
         Reference url = createReferenceWithDOI(METADATA_RESOURCE, doiName);
         Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "DELETE {0}", url.toString());
         this.client.setReference(url);
@@ -698,7 +697,7 @@ public class ClientMDS {
         if(status.isSuccess()) {
             return response;
         } else {
-            throw new ClientException(status, status.getDescription());
+            throw new ClientMdsException(status, status.getDescription());
         }
     }
 
@@ -719,9 +718,9 @@ public class ClientMDS {
      *
      * @param doiName DOI name
      * @return list of pairs of media type and URLs
-     * @throws ClientException Will throw an exception for status != 2xx
+     * @throws ClientMdsException Will throw an exception for status != 2xx
      */
-    public String getMedia(final String doiName) throws ClientException {
+    public String getMedia(final String doiName) throws ClientMdsException {
         String result;
         Reference url = createReferenceWithDOI(MEDIA_RESOURCE, doiName);
         Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "GET {0}", url.toString());
@@ -755,9 +754,9 @@ public class ClientMDS {
      * {mime-type} and {url} have to be replaced by your mime type and URL,
      * UFT-8 encoded.
      * @return short explanation of status code
-     * @throws ClientException Will throw an exception for status != 2xx
+     * @throws ClientMdsException Will throw an exception for status != 2xx
      */
-    public String createMedia(final Form form) throws ClientException {
+    public String createMedia(final Form form) throws ClientMdsException {
         String result;
         Reference url = createReference(METADATA_RESOURCE);
         Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "POST {0}", url.toString());

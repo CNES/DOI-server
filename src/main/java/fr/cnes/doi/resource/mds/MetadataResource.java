@@ -6,7 +6,7 @@
 package fr.cnes.doi.resource.mds;
 
 import fr.cnes.doi.application.DoiMdsApplication;
-import fr.cnes.doi.client.ClientException;
+import fr.cnes.doi.client.ClientMdsException;
 import java.util.Arrays;
 import org.restlet.data.Method;
 import org.restlet.data.Status;
@@ -54,9 +54,9 @@ public class MetadataResource extends BaseMdsResource {
         try {
             setStatus(Status.SUCCESS_OK);
             rep = this.doiApp.getClient().getMetadata(this.doiName);
-        } catch (ClientException ex) {
-            getLogger().exiting(getClass().getName(), "getMetadata", ex.getMessage());
-            throw new ResourceException(ex);
+        } catch (ClientMdsException ex) {
+            getLogger().exiting(getClass().getName(), "getMetadata", ex.getDetailMessage());
+            throw new ResourceException(ex.getStatus(), ex.getDetailMessage());
         }
         
         getLogger().exiting(getClass().getName(), "getMetadata");        
@@ -78,9 +78,9 @@ public class MetadataResource extends BaseMdsResource {
             checkPermission(this.doiName, selectedRole);
             setStatus(Status.SUCCESS_OK);
             rep = this.doiApp.getClient().deleteMetadata(this.doiName);
-        } catch (ClientException ex) {
-            getLogger().exiting(getClass().getName(), "deleteMetadata", ex.getMessage());
-            throw new ResourceException(ex);
+        } catch (ClientMdsException ex) {
+            getLogger().exiting(getClass().getName(), "deleteMetadata", ex.getDetailMessage());
+            throw new ResourceException(ex.getStatus(), ex.getDetailMessage());
         }
         getLogger().exiting(getClass().getName(), "deleteMetadata");
         return rep;

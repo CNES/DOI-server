@@ -5,7 +5,7 @@
  */
 package fr.cnes.doi.resource.mds;
 
-import fr.cnes.doi.client.ClientException;
+import fr.cnes.doi.client.ClientMdsException;
 import java.util.Arrays;
 import java.util.logging.Level;
 import org.restlet.data.Form;
@@ -62,10 +62,10 @@ public class DoisResource extends BaseMdsResource {
             String dois = this.doiApp.getClient().getDoiCollection();
             getLogger().exiting(getClass().getName(), "getDois", dois);
             return new StringRepresentation(dois, MediaType.TEXT_URI_LIST);
-        } catch (ClientException ex) {
+        } catch (ClientMdsException ex) {
             getLogger().log(Level.WARNING, ex.getMessage(), ex);
-            getLogger().exiting(getClass().getName(), "getDois", ex.getMessage());
-            throw new ResourceException(ex.getStatus(), ex.getMessage());
+            getLogger().exiting(getClass().getName(), "getDois", ex.getDetailMessage());
+            throw new ResourceException(ex.getStatus(), ex.getDetailMessage());
         }        
     } 
     
@@ -113,10 +113,10 @@ public class DoisResource extends BaseMdsResource {
         try {
             setStatus(Status.SUCCESS_CREATED);
             result = this.doiApp.getClient().createDoi(doiForm);            
-        } catch (ClientException ex) {         
+        } catch (ClientMdsException ex) {         
             getLogger().log(Level.WARNING, ex.getMessage(), ex);
             getLogger().exiting(getClass().getName(), "createDoi", ex.getMessage());            
-            throw new ResourceException(ex.getStatus(), ex.getMessage());
+            throw new ResourceException(ex.getStatus(), ex.getDetailMessage());
         }
         getLogger().exiting(getClass().getName(), "createDoi", result);
         return result;

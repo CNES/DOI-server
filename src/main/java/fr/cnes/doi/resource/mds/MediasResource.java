@@ -5,7 +5,7 @@
  */
 package fr.cnes.doi.resource.mds;
 
-import fr.cnes.doi.client.ClientException;
+import fr.cnes.doi.client.ClientMdsException;
 import java.util.Arrays;
 import org.restlet.data.Form;
 import org.restlet.data.MediaType;
@@ -63,9 +63,9 @@ public class MediasResource extends BaseMdsResource {
             String selectedRole = headers.getFirstValue("selectedRole", "");            
             checkPermission(mediaForm.getFirstValue("doi"), selectedRole);            
             result = this.doiApp.getClient().createMedia(mediaForm);
-        } catch (ClientException ex) {
-            getLogger().exiting(getClass().getName(), "createMedia", ex.getMessage());                    
-            throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST);
+        } catch (ClientMdsException ex) {
+            getLogger().exiting(getClass().getName(), "createMedia", ex.getDetailMessage());                    
+            throw new ResourceException(ex.getStatus(), ex.getDetailMessage());
         }
         getLogger().exiting(getClass().getName(), "createMedia", result);        
         return new StringRepresentation(result);

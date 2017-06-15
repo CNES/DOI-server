@@ -5,7 +5,10 @@
  */
 package fr.cnes.doi.resource.citation;
 
+import fr.cnes.doi.client.ClientCrossCiteException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
 import org.restlet.data.Status;
@@ -41,7 +44,11 @@ public class StyleCitationResource extends BaseCitationResource {
      */
     @Get("json")
     public List<String> getStylesToJSON() {
-        return this.app.getClient().getStyles();
+        try {
+            return this.app.getClient().getStyles();
+        } catch (ClientCrossCiteException ex) {
+            throw new ResourceException(ex.getStatus(), ex.getDetailMessage());
+        }
     } 
     
     /**
@@ -50,7 +57,11 @@ public class StyleCitationResource extends BaseCitationResource {
      */
     @Get("xml")
     public List<String> getStylesToXML() {
-        return this.app.getClient().getStyles();
+        try {
+            return this.app.getClient().getStyles();
+        } catch (ClientCrossCiteException ex) {
+            throw new ResourceException(ex.getStatus(), ex.getDetailMessage());
+        }
     }  
           
     

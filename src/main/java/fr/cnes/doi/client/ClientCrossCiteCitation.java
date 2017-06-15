@@ -75,7 +75,7 @@ public class ClientCrossCiteCitation {
      * @param segment resource name
      * @return the response
      */
-    private List<String> getList(final String segment) {
+    private List<String> getList(final String segment) throws ClientCrossCiteException {
         try {
             Reference ref = client.addSegment(segment);
             client.setReference(ref);
@@ -85,10 +85,10 @@ public class ClientCrossCiteCitation {
                 ObjectMapper mapper = new ObjectMapper();
                 return mapper.readValue(rep.getStream() , List.class);             
             } else {
-                throw new ResourceException(status, status.getDescription());
+                throw new ClientCrossCiteException(status, status.getDescription());
             }
-        } catch (IOException ex) {
-            throw new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage());
+        } catch (IOException | ResourceException ex) {
+            throw new ClientCrossCiteException(Status.SERVER_ERROR_INTERNAL, ex.getMessage());
         } finally {
             client.release();
         }        
@@ -97,8 +97,10 @@ public class ClientCrossCiteCitation {
     /**
      * Returns styles
      * @return list of possible styles
+     * @throws fr.cnes.doi.client.ClientCrossCiteException Will thrown an Exception 
+     * when a problem happens during the request to Cross Cite
      */
-    public List<String> getStyles() {
+    public List<String> getStyles() throws ClientCrossCiteException {
         init();
         return getList(STYLE_URI);
     }
@@ -106,8 +108,10 @@ public class ClientCrossCiteCitation {
     /**
      * Returns languages
      * @return List of possible languages
+     * @throws fr.cnes.doi.client.ClientCrossCiteException Will thrown an Exception 
+     * when a problem happens during the request to Cross Cite     
      */
-    public List<String> getLanguages() {
+    public List<String> getLanguages() throws ClientCrossCiteException {
         init();
         return getList(LOCALE_URI);
     }
@@ -118,8 +122,10 @@ public class ClientCrossCiteCitation {
      * @param style Selected style to format the citation
      * @param language Selected language to format the citation
      * @return The formatted citation
+     * @throws fr.cnes.doi.client.ClientCrossCiteException Will thrown an Exception 
+     * when a problem happens during the request to Cross Cite
      */
-    public String getFormat(final String doiName, final String style, final String language) {
+    public String getFormat(final String doiName, final String style, final String language) throws ClientCrossCiteException {
         init();
         String result;
         try {
@@ -134,11 +140,13 @@ public class ClientCrossCiteCitation {
                 result = rep.getText();
             } else {
                 client.release();
-                throw new ResourceException(status, status.getDescription());
+                throw new ClientCrossCiteException(status, status.getDescription());
             }
             return result;
         } catch (IOException ex) {
-            throw new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage());
+            throw new ClientCrossCiteException(Status.SERVER_ERROR_INTERNAL, ex.getMessage());            
+        } catch (ResourceException ex) {
+            throw new ClientCrossCiteException(ex.getStatus(), ex.getMessage());
         } finally {
             client.release();
         }

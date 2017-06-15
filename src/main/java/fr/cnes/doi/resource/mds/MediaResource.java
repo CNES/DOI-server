@@ -6,7 +6,7 @@
 package fr.cnes.doi.resource.mds;
 
 import fr.cnes.doi.application.DoiMdsApplication;
-import fr.cnes.doi.client.ClientException;
+import fr.cnes.doi.client.ClientMdsException;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
 import org.restlet.data.Status;
@@ -61,9 +61,9 @@ public class MediaResource extends BaseMdsResource {
             setStatus(Status.SUCCESS_OK);
             medias = this.doiApp.getClient().getMedia(this.mediaName);
             rep = new StringRepresentation(medias, MediaType.TEXT_URI_LIST);
-        } catch (ClientException ex) {
-            getLogger().exiting(getClass().getName(), "getMedias", ex.getMessage());            
-            throw new ResourceException(ex.getStatus(), ex.getMessage());
+        } catch (ClientMdsException ex) {
+            getLogger().exiting(getClass().getName(), "getMedias", ex.getDetailMessage());            
+            throw new ResourceException(ex.getStatus(), ex.getDetailMessage());
         }
         
         getLogger().exiting(getClass().getName(), "getMedias", medias);        

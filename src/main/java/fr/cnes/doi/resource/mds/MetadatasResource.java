@@ -5,7 +5,7 @@
  */
 package fr.cnes.doi.resource.mds;
 
-import fr.cnes.doi.client.ClientException;
+import fr.cnes.doi.client.ClientMdsException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
@@ -85,9 +85,9 @@ public class MetadatasResource extends BaseMdsResource {
             //resource.getCreators().getCreator().add(creator);
             resource.setPublisher("Centre National d'Etudes Spatiales (CNES)");
             result = this.doiApp.getClient().createMetadata(resource);
-        } catch (ClientException ex) {
-            getLogger().exiting(getClass().getName(), "createMetadata", ex.getMessage());
-            throw new ResourceException(ex.getStatus(), ex.getMessage());
+        } catch (ClientMdsException ex) {
+            getLogger().exiting(getClass().getName(), "createMetadata", ex.getDetailMessage());
+            throw new ResourceException(ex.getStatus(), ex.getDetailMessage());
         } catch (JAXBException | IOException ex) {
             getLogger().exiting(getClass().getName(), "createMetadata", ex.getMessage());
             throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "invalid XML");

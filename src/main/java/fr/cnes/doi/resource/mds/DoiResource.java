@@ -6,7 +6,7 @@
 package fr.cnes.doi.resource.mds;
 
 import fr.cnes.doi.application.DoiMdsApplication;
-import fr.cnes.doi.client.ClientException;
+import fr.cnes.doi.client.ClientMdsException;
 import java.util.Arrays;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
@@ -71,9 +71,9 @@ public class DoiResource extends BaseMdsResource {
             }
             getLogger().exiting(getClass().getName(), "getDoi", doi);
             return new StringRepresentation(doi, MediaType.TEXT_PLAIN);          
-        } catch (ClientException ex) {
-            getLogger().exiting(getClass().getName(), "getDoi", ex.getMessage());
-            throw new ResourceException(ex);
+        } catch (ClientMdsException ex) {
+            getLogger().exiting(getClass().getName(), "getDoi", ex.getDetailMessage());
+            throw new ResourceException(ex.getStatus(), ex.getDetailMessage());
         }
     }    
     

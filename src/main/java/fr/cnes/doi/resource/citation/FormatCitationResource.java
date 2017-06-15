@@ -5,6 +5,7 @@
  */
 package fr.cnes.doi.resource.citation;
 
+import fr.cnes.doi.client.ClientCrossCiteException;
 import java.util.Arrays;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
@@ -60,12 +61,16 @@ public class FormatCitationResource extends BaseCitationResource {
      */
     @Get
     public String getFormat() {
-        getLogger().entering(getClass().getName(), "getFormat",new Object[]{this.doiName, this.language, this.style});
-        
-        final String result = this.app.getClient().getFormat(this.doiName, this.style, this.language);
-        
-        getLogger().exiting(getClass().getName(), "getFormats", result);
-        return result;
+        try {
+            getLogger().entering(getClass().getName(), "getFormat",new Object[]{this.doiName, this.language, this.style});
+            
+            final String result = this.app.getClient().getFormat(this.doiName, this.style, this.language);
+            
+            getLogger().exiting(getClass().getName(), "getFormats", result);
+            return result;
+        } catch (ClientCrossCiteException ex) {
+            throw new ResourceException(ex.getStatus(), ex.getDetailMessage());
+        }
     }
            
     /**

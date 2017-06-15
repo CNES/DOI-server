@@ -12,7 +12,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.restlet.data.Status;
-import org.restlet.resource.ResourceException;
 
 /**
  *
@@ -47,7 +46,12 @@ public class ClientCrossCiteCitationTest {
         System.out.println("getStyles");
         ClientCrossCiteCitation instance = new ClientCrossCiteCitation();
         String expResult = "academy-of-management-review";
-        String result = instance.getStyles().get(0);
+        String result;
+        try {
+            result = instance.getStyles().get(0);
+        } catch (ClientCrossCiteException ex) {
+            result = "";
+        }
         assertEquals(expResult, result);
     }
 
@@ -59,7 +63,12 @@ public class ClientCrossCiteCitationTest {
         System.out.println("getLanguages");
         ClientCrossCiteCitation instance = new ClientCrossCiteCitation();
         String expResult = "af-ZA";
-        String result = instance.getLanguages().get(0);
+        String result;
+        try {
+            result = instance.getLanguages().get(0);
+        } catch (ClientCrossCiteException ex) {
+            result = "";
+        }
         assertEquals(expResult, result);
     }
 
@@ -74,8 +83,12 @@ public class ClientCrossCiteCitationTest {
         String language = "af-ZA";
         ClientCrossCiteCitation instance = new ClientCrossCiteCitation();
         String expResult = "Garza, K., Goble, C., Brooke, J., & Jay, C. 2015. Framing the community data system interface. Proceedings of the 2015 British HCI Conference on - British HCI ’15. ACM Press. https://doi.org/10.1145/2783446.2783605.\n";
-        String result = instance.getFormat(doiName, style, language);
-        System.out.println(result);
+        String result;
+        try {
+            result = instance.getFormat(doiName, style, language);
+        } catch (ClientCrossCiteException ex) {
+            result = "";
+        }
         assertEquals(expResult, result);
     }
     
@@ -90,7 +103,7 @@ public class ClientCrossCiteCitationTest {
         String result;
         try {
             result = instance.getFormat(doiName, style, language);
-        } catch(ResourceException ex){
+        } catch (ClientCrossCiteException ex) {
             assertEquals(expResult, ex.getStatus());
         }
                 
@@ -107,8 +120,8 @@ public class ClientCrossCiteCitationTest {
         String result;
         try {
             result = instance.getFormat(doiName, style, language);
-        } catch(ResourceException ex){
-            assertEquals(expResult, ex.getStatus());
+        } catch (ClientCrossCiteException ex) {
+            assertEquals(expResult, ex.getStatus());            
         }
                 
     }    
