@@ -242,26 +242,24 @@ public class Starter {
                     break;                
                 //    
                 case 'y':
-                    GLOBAL_LOGGER.fine("y option is selected");
                     arg = g.getOptarg();
                     try {
                         byte[] encodedFile = Files.readAllBytes(Paths.get(arg));
                         String contentFile = new String(encodedFile, Charset.forName("UTF-8"));
                         contentFile = Utils.encrypt(contentFile, settings.getSecretKey());
-                        LOGGER.info(contentFile);
+                        SHELL_LOGGER.info(contentFile);
                     } catch (Exception ex) {
                         LOGGER.log(Level.INFO, "Error: {0}", ex.toString());
                     }
                     break; 
                 //    
                 case 'z':
-                    GLOBAL_LOGGER.fine("z option is selected");
                     arg = g.getOptarg();
                     try {
                         byte[] encoded = Files.readAllBytes(Paths.get(arg));
                         String content = new String(encoded, Charset.forName("UTF-8"));
                         content = Utils.decrypt(content, settings.getSecretKey());
-                        LOGGER.info(content);
+                        SHELL_LOGGER.info(content);
                     } catch(Exception ex) {
                         LOGGER.log(Level.INFO, "Error: {0}", ex.toString());
                     }    

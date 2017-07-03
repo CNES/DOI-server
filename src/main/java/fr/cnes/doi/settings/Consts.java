@@ -26,6 +26,11 @@ public class Consts {
      * Application's copyright.
      */
     public static final String COPYRIGHT = "Starter.COPYRIGHT";
+    
+    /**
+     * Context (DEV, POST_DEV, PRE_PROD, PROD) of the use.
+     */
+    public static final String CONTEXT_MODE = "Starter.CONTEXT_MODE";
  
     /**
      * DOI prefix, which is given by INIST.

@@ -124,7 +124,8 @@ public class DoiMdsApplication extends BaseApplication {
         setAuthor("Jean-Christophe Malapert (DNO/ISA/VIP)");
         setStatusService(new CnesStatusService());
         getServices().add(createCoreService());
-        client = new ClientMDS(ClientMDS.Context.DEV, getLoginMds(), getPwdMds());
+        String contextUse = DoiSettings.getInstance().getString(Consts.CONTEXT_MODE);        
+        client = new ClientMDS(ClientMDS.Context.valueOf(contextUse), getLoginMds(), getPwdMds());
         if (DoiSettings.getInstance().getBoolean(Consts.SERVER_PROXY_USED)) {
             client.setProxyAuthentication(proxy.getProxyAuthentication());
         }
