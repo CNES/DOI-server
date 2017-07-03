@@ -15,6 +15,7 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import org.datacite.schema.kernel_4.Resource;
+import org.datacite.schema.kernel_4.Resource.Identifier;
 import org.restlet.data.ChallengeResponse;
 import org.restlet.data.ChallengeScheme;
 import org.restlet.data.Form;
@@ -280,10 +281,10 @@ public class ClientMDS {
     }
 
     /**
-     * Renames the current DOI prefix by the testing DOI prefix
+     * Renames the current DOI prefix by the DOI test prefix.
      *
-     * @param doiName
-     * @return the renamed prefix
+     * @param doiName real DOI name
+     * @return the renamed DOI with the test prefix
      */
     private String useTestPrefix(final String doiName) {
         String[] split = doiName.split("/");
@@ -302,7 +303,8 @@ public class ClientMDS {
     }
 
     /**
-     * Create reference
+     * Create reference.
+     * The parameter ?testMode=true is added in DEV context
      * @param segment segment to add to the end point
      * @return new URL
      */
@@ -322,7 +324,7 @@ public class ClientMDS {
      * @return the URL to query
      */
     private Reference createReferenceWithDOI(final String segment, final String doiName) {
-        String requestDOI = this.context.hasDoiTestPrefix() ? useTestPrefix(doiName) : doiName;
+        String requestDOI = getDoiAccorgindToContext(doiName);
         Reference ref = createReference(segment);
         String[] split = requestDOI.split("/");
         for (String segmentUri : split) {
@@ -330,6 +332,61 @@ public class ClientMDS {
         }
         return ref;
     }
+    
+    /**
+     * Returns the right DOI according to the context (DEV, POST_DEV, ...).
+     * When the context has a DOI test prefix, the real DOI prefix is replaced
+     * by the DOI test prefix.
+     * @param doiName DOI name
+     * @return the right DOI
+     */
+    private String getDoiAccorgindToContext(final String doiName) {
+        return this.context.hasDoiTestPrefix() ? useTestPrefix(doiName) : doiName;
+    }
+    
+    /**
+     * DataCite recommends that only the following characters are used within a
+     * DOI name:
+     * <ul>
+     * <li>0-9</li>
+     * <li>a-z</li>
+     * <li>A-Z</li>
+     * <li>- (dash)</li>
+     * <li>. (dot)</li>
+     * <li>_ (underscore)</li>
+     * <li>+ (plus)</li>
+     * <li>: (colon)</li>
+     * <li>/ (slash)</li>
+     *</ul>
+     * @param test DOI name to test
+     * @throws IllegalArgumentException An exception is thrown when at least one 
+     * character is not part of 0-9a-zA-Z\\-._+:/ of a DOI name
+     */
+    private void checkIfAllCharsAreValid(String test) {
+        if (!test.matches("^[0-9a-zA-Z\\-._+:/\\s]+$")) {
+            throw new IllegalArgumentException("Only these characters are allowed 0-9a-zA-Z\\-._+:/ in a DOI name");
+        }
+    }
+
+    /**
+     * Checks the input parameters and specially the validity of the DOI name. 
+     * The real prefix is replaced by the test prefix in DEV, POST_DEV and PRE_PROD
+     * context.
+     * The DOI prefix may replace according to the {@link ClientMDS#context}.     
+     * @param form query form
+     * @throws IllegalArgumentException An exception is thrown when doi and url 
+     * are not provided or when one character at least in the DOI name is not valid     
+     */
+    private void checkInputForm(final Form form) {
+        Map<String, String> map = form.getValuesMap();
+        if (map.containsKey(POST_DOI) && map.containsKey(POST_URL)) {
+            final String doiName = form.getFirstValue(POST_DOI);
+            checkIfAllCharsAreValid(doiName);
+            form.set(POST_DOI, getDoiAccorgindToContext(doiName));
+        } else {
+            throw new IllegalArgumentException(POST_DOI+" and "+POST_URL+" parameters are required");
+        }
+    }    
 
     /**
      * Returns the text of a response.
@@ -353,45 +410,6 @@ public class ClientMDS {
     }
 
     /**
-     * Checks the input parameters and specially the validity of the DOI name. 
-     * @param form query form
-     */
-    private void checkInputForm(final Form form) {
-        Map<String, String> map = form.getValuesMap();
-        if (map.containsKey(POST_DOI) && map.containsKey(POST_URL)) {
-            final String doiName = form.getFirstValue(POST_DOI);
-            checkIfAllCharsAreValid(doiName);
-            if (this.context.hasDoiTestPrefix()) {
-                form.set(POST_DOI, useTestPrefix(doiName));
-            }
-        } else {
-            throw new IllegalArgumentException(POST_DOI+" and "+POST_URL+" parameters are required");
-        }
-    }
-
-    /**
-     * DataCite recommends that only the following characters are used within a
-     * DOI name:
-     * <ul>
-     * <li>0-9</li>
-     * <li>a-z</li>
-     * <li>A-Z</li>
-     * <li>- (dash)</li>
-     * <li>. (dot)</li>
-     * <li>_ (underscore)</li>
-     * <li>+ (plus)</li>
-     * <li>: (colon)</li>
-     * <li>/ (slash)</li>
-     *</ul>
-     * @param test DOI name to test
-     */
-    private void checkIfAllCharsAreValid(String test) {
-        if (!test.matches("^[0-9a-zA-Z\\-._+:/\\s]+$")) {
-            throw new IllegalArgumentException("Only these characters are allowed 0-9a-zA-Z\\-._+:/ in a DOI name");
-        }
-    }
-
-    /**
      * This request returns an URL associated with a given DOI.
      *
      * The different status:
@@ -405,7 +423,7 @@ public class ClientMDS {
      * <li>500 Internal Server Error - server internal error, try later and if
      * problem persists please contact us</li>
      * </ul>
-     *
+     * The DOI prefix may replace according to the {@link ClientMDS#context}.     
      * @param doiName DOI name
      * @return an URL or no content (DOI is known to MDS, but is not minted (or
      * not resolvable e.g. due to handle's latency))
@@ -476,7 +494,7 @@ public class ClientMDS {
      * <li>500 Internal Server Error - server internal error, try later and if
      * problem persists please contact us</li>
      * </ul>
-     *
+     * The DOI prefix may replace according to the {@link ClientMDS#context}.     
      * @param form A form with the following attributes doi and url
      * @return short explanation of status code e.g. CREATED,
      * HANDLE_ALREADY_EXISTS etc
@@ -541,7 +559,7 @@ public class ClientMDS {
      * <li>500 Internal Server Error - server internal error, try later and if
      * problem persists please contact us</li>
      * </ul>
-     *
+     * The DOI prefix may replace according to the {@link ClientMDS#context}.     
      * @param doiName DOI name
      * @return XML representing a dataset
      * @throws ClientMdsException Will throw an exception when status != 2xx
@@ -562,6 +580,7 @@ public class ClientMDS {
      * <li>410 Gone - the requested dataset was marked inactive (using DELETE method)</li>
      * <li>500 Internal Server Error - server internal error, try later and if problem persists please contact us</li>
      * </ul>
+     * The DOI prefix may replace according to the {@link ClientMDS#context}.     
      * @param doiName DOI name
      * @return the metadata as XML
      * @throws ClientMdsException Will throw when a problem happens with datacite
@@ -593,25 +612,15 @@ public class ClientMDS {
      * <li>500 Internal Server Error - server internal error, try later and if
      * problem persists please contact us</li>
      * </ul>
-     *
+     * The DOI prefix may replace according to the {@link ClientMDS#context}.     
      * @param entity A valid XML
      * @return short explanation of status code e.g. CREATED,
      * HANDLE_ALREADY_EXISTS etc
      * @throws ClientMdsException Will throw an error when a problem happens with DataCite
      */
     public String createMetadata(final Representation entity) throws ClientMdsException {
-        String result = null;
-        Reference url = createReference(METADATA_RESOURCE);
-        Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "POST {0}", url.toString());
-        this.client.setReference(url);
-        Representation response = this.client.post(entity);
-        Status responseStatus = this.client.getStatus();
-        try {
-            result = getText(response, responseStatus);
-        } finally {
-            this.client.release();
-        }
-        return result;
+        Resource resource = parseDataciteResource(entity);
+        return this.createMetadata(resource);
     }
     
     /**
@@ -625,12 +634,15 @@ public class ClientMDS {
      * <li>500 Internal Server Error - server internal error, try later and if
      * problem persists please contact us</li>
      * </ul>     
+     * The DOI prefix may replace according to the {@link ClientMDS#context}.     
      * @param entity Metadata
      * @return short explanation of status code e.g. CREATED, HANDLE_ALREADY_EXISTS etc
      * @throws ClientMdsException Will throw an exception for status != 2xx
      */
     public String createMetadata(final Resource entity) throws ClientMdsException {
         String result = null;
+        Identifier id = entity.getIdentifier();
+        id.setValue(getDoiAccorgindToContext(id.getValue()));
         Reference url = createReference(METADATA_RESOURCE);
         Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "POST {0}", url.toString());
         this.client.setReference(url);
@@ -659,18 +671,18 @@ public class ClientMDS {
      * <li>500 Internal Server Error - server internal error, try later and if
      * problem persists please contact us</li>
      * </ul>
-     *
+     * The DOI prefix may replace according to the {@link ClientMDS#context}.     
      * @param doiName DOI name
      * @return XML representing a dataset
      * @throws ClientMdsException Will throw an exception for status != 2xx
      */
     public Resource deleteMetadataDoiAsObject(final String doiName) throws ClientMdsException {
-        Representation rep = this.getMetadata(doiName);
+        Representation rep = this.deleteMetadata(doiName);
         return parseDataciteResource(rep);
     }
     
     /**
-     * This request marks a dataset as 'inactive'.
+     * This request marks a dataset as 'inactive'.          
      *
      * To activate it again, POST new metadata or set the isActive-flag in the
      * user interface. The different status:
@@ -683,6 +695,7 @@ public class ClientMDS {
      * <li>500 Internal Server Error - server internal error, try later and if
      * problem persists please contact us</li>
      * </ul>
+     * The DOI prefix may replace according to the {@link ClientMDS#context}.     
      * @param doiName DOI name
      * @return the deleted metadata
      * @throws ClientMdsException throw an error when a problem happens with DataCite
@@ -715,7 +728,7 @@ public class ClientMDS {
      * <li>500 Internal Server Error - server internal error, try later and if
      * problem persists please contact us</li>
      * </ul>
-     *
+     * The DOI prefix may replace according to the {@link ClientMDS#context}.     
      * @param doiName DOI name
      * @return list of pairs of media type and URLs
      * @throws ClientMdsException Will throw an exception for status != 2xx
@@ -749,7 +762,7 @@ public class ClientMDS {
      * <li>500 Internal Server Error - server internal error, try later and if
      * problem persists please contact us</li>
      * </ul>
-     *
+     * The DOI prefix may replace according to the {@link ClientMDS#context}.     
      * @param doiName DOI identifier
      * @param form Multiple lines in the following format{mime-type}={url} where
      * {mime-type} and {url} have to be replaced by your mime type and URL,

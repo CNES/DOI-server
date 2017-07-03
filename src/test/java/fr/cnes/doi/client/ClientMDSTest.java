@@ -183,8 +183,8 @@ public class ClientMDSTest {
     /**
      * Test of createMetadata method, of class ClientMDS.
      */
-    @Test
-    public void testCreateMetadata_Resource() throws Exception {
+//    @Test
+//    public void testCreateMetadata_Resource() throws Exception {
 //        System.out.println("createMetadata");
 //        Resource entity = new Resource();
 //        Identifier identifier = new Identifier();
@@ -218,7 +218,7 @@ public class ClientMDSTest {
 //        fos.flush();
 //        fos.close();
 //        assertEquals(expResult, result);
-    }
+//    }
 
 //    /**
 //     * Test of deleteMetadataDoiAsObject method, of class ClientMDS.
