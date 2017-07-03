@@ -49,6 +49,7 @@ public class MetadataResource extends BaseMdsResource {
     @Get
     public Representation getMetadata() throws ResourceException {
         getLogger().entering(getClass().getName(), "getMetadata", this.doiName);
+        //TODO : replace DOI name when PRE_PROD
         
         Representation rep;
         try {
@@ -69,7 +70,9 @@ public class MetadataResource extends BaseMdsResource {
      * @throws ResourceException Will be thrown when an error happens                         
      */
     @Delete
-    public Representation deleteMetadata() throws ResourceException {        
+    public Representation deleteMetadata() throws ResourceException { 
+        //TODO : replace DOI name when PRE_PROD
+        
         Representation rep;
         try {
             Series headers = (Series) getRequestAttributes().get("org.restlet.http.headers");

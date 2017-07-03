@@ -8,7 +8,6 @@ package fr.cnes.doi.application;
 import fr.cnes.doi.client.ClientMDS;
 import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.resource.mds.DoisResource;
-import fr.cnes.doi.resource.mds.MediasResource;
 import fr.cnes.doi.resource.mds.MediaResource;
 import fr.cnes.doi.resource.mds.MetadatasResource;
 import fr.cnes.doi.resource.mds.MetadataResource;
@@ -179,7 +178,6 @@ public class DoiMdsApplication extends BaseApplication {
         router.attach(DOI_URI + DOI_NAME_URI, DoiResource.class);
         router.attach(METADATAS_URI, MetadatasResource.class);
         router.attach(METADATAS_URI + DOI_NAME_URI, MetadataResource.class);
-        router.attach(MEDIA_URI, MediasResource.class);
         router.attach(MEDIA_URI + DOI_NAME_URI, MediaResource.class);
 
         LOGGER.exiting(DoiMdsApplication.class.getName(), "createRouter", router);

@@ -485,7 +485,7 @@ public class ClientMDS {
     public String createDoi(final Form form) throws ClientMdsException {
         try {            
             String result;
-            this.checkInputForm(form);
+            this.checkInputForm(form);            
             Reference url = createReference(DOI_RESOURCE);
             url = url.addQueryParameter(this.getTestMode());
             Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "POST {0}", url.toString());
@@ -750,15 +750,16 @@ public class ClientMDS {
      * problem persists please contact us</li>
      * </ul>
      *
+     * @param doiName DOI identifier
      * @param form Multiple lines in the following format{mime-type}={url} where
      * {mime-type} and {url} have to be replaced by your mime type and URL,
      * UFT-8 encoded.
      * @return short explanation of status code
      * @throws ClientMdsException Will throw an exception for status != 2xx
      */
-    public String createMedia(final Form form) throws ClientMdsException {
+    public String createMedia(final String doiName, final Form form) throws ClientMdsException {
         String result;
-        Reference url = createReference(METADATA_RESOURCE);
+        Reference url = createReferenceWithDOI(METADATA_RESOURCE, doiName);
         Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "POST {0}", url.toString());
         this.client.setReference(url);
         Representation response = this.client.post(form);

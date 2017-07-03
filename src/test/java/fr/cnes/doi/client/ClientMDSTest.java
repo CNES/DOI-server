@@ -28,10 +28,10 @@ import org.datacite.schema.kernel_4.Resource.Titles.Title;
 import org.datacite.schema.kernel_4.ResourceType;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -188,7 +188,7 @@ public class ClientMDSTest {
 //        System.out.println("createMetadata");
 //        Resource entity = new Resource();
 //        Identifier identifier = new Identifier();
-//        identifier.setValue("10.2440/test");
+//        identifier.setValue("10.24400/test");
 //        entity.setIdentifier(identifier);
 //        
 //        Creator creator = new Creator();
@@ -210,7 +210,7 @@ public class ClientMDSTest {
 //        resType.setResourceTypeGeneral(ResourceType.SOFTWARE);
 //        entity.setResourceType(resType);
 //        
-//        ClientMDS instance = new ClientMDS(ClientMDS.Context.DEV, settings.getSecret(Consts.INIST_LOGIN), settings.getSecret(Consts.INIST_PWD));
+//        ClientMDS instance = new ClientMDS(ClientMDS.Context.PRE_PROD, settings.getSecret(Consts.INIST_LOGIN), settings.getSecret(Consts.INIST_PWD));
 //        String expResult = "";
 //        String result = instance.createMetadata(entity);
 //        FileOutputStream fos = new FileOutputStream(new File("/tmp/test.jc"));

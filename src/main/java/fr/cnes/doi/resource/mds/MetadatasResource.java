@@ -66,6 +66,8 @@ public class MetadatasResource extends BaseMdsResource {
      */
     @Post
     public String createMetadata(final Representation entity) throws ResourceException {
+        
+        //TODO : replace DOI name when PRE_PROD
         getLogger().entering(getClass().getName(), "createMetadata");
         String result;
         try {
