@@ -5,6 +5,7 @@
  */
 package fr.cnes.doi.application;
 
+import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.settings.ProxySettings;
 import org.restlet.ext.wadl.WadlApplication;
 
@@ -23,7 +24,8 @@ public class BaseApplication extends WadlApplication {
      * This constructor creates an instance of proxySettings.
      */
     public BaseApplication() {                
-        proxySettings = ProxySettings.getInstance();       
+        this.proxySettings = ProxySettings.getInstance();
+        this.proxySettings.init(DoiSettings.getInstance());
     }
     
 }
