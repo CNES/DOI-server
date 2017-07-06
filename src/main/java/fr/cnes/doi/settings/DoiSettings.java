@@ -200,7 +200,7 @@ public class DoiSettings {
         if(getString(key) == null) {
             throw new IllegalArgumentException("Key not found");
         } else {
-            return Boolean.getBoolean(getString(key));   
+            return Boolean.parseBoolean(getString(key));   
         }        
     }
 

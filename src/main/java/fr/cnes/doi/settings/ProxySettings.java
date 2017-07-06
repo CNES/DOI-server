@@ -5,8 +5,12 @@
  */
 package fr.cnes.doi.settings;
 
+import fr.cnes.doi.server.Starter;
 import fr.cnes.doi.utils.Utils;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.restlet.data.ChallengeResponse;
 import org.restlet.data.ChallengeScheme;
 
@@ -15,6 +19,11 @@ import org.restlet.data.ChallengeScheme;
  * @author Jean-Christophe Malapert
  */
 public final class ProxySettings {
+	
+    /**
+     * Application logger.
+     */
+    private static final Logger LOGGER = Logger.getLogger(ProxySettings.class.getName()); 
     
     /**
      * Proxy configuration - host system property
@@ -108,18 +117,24 @@ public final class ProxySettings {
     }
     
     private void configureProxy() {
-        if (Utils.isNotEmpty(this.proxyHost) && Utils.isNotEmpty(this.proxyPort) && this.proxySet) {
-            Properties properties = System.getProperties();
-            properties.put(HTTP_PROXYHOST, this.proxyHost);
-            properties.put(HTTP_PROXYPORT, this.proxyPort);
-            properties.put(HTTP_NONPROXYHOSTS, this.nonProxyHosts);
+    	if(this.proxySet){
+    		if (Utils.isNotEmpty(this.proxyHost) && Utils.isNotEmpty(this.proxyPort)) {
+                Properties properties = System.getProperties();
+                properties.put(HTTP_PROXYHOST, this.proxyHost);
+                properties.put(HTTP_PROXYPORT, this.proxyPort);
+                properties.put(HTTP_NONPROXYHOSTS, this.nonProxyHosts);
 
-            // Add the client authentication to the call
-            ChallengeScheme scheme = ChallengeScheme.HTTP_BASIC;
+                // Add the client authentication to the call
+                ChallengeScheme scheme = ChallengeScheme.HTTP_BASIC;
 
-            // User + Password sur le proxy
-            this.proxyAuthentication = new ChallengeResponse(scheme, this.proxyUser, this.proxyPassword);
-        }        
+                // User + Password sur le proxy
+                this.proxyAuthentication = new ChallengeResponse(scheme, this.proxyUser, this.proxyPassword);
+            }else {
+            	//TODO Log an error but should throw an exception
+            	LOGGER.log(Level.SEVERE, "Proxy is enabled but the host or the port are missing");
+            }
+    	}
+        
     }
 
     /**

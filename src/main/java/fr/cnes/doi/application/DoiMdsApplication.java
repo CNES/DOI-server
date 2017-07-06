@@ -89,10 +89,6 @@ public class DoiMdsApplication extends BaseApplication {
      */
     private final DoiSettings config = DoiSettings.getInstance();
 
-    /**
-     * Instance of proxy settings.
-     */
-    private final ProxySettings proxy = ProxySettings.getInstance();
 
     /**
      * Application logger.
@@ -125,9 +121,12 @@ public class DoiMdsApplication extends BaseApplication {
         getServices().add(createCoreService());
         String contextUse = DoiSettings.getInstance().getString(Consts.CONTEXT_MODE);        
         client = new ClientMDS(ClientMDS.Context.valueOf(contextUse), getLoginMds(), getPwdMds());
-        if (DoiSettings.getInstance().getBoolean(Consts.SERVER_PROXY_USED)) {
-            client.setProxyAuthentication(proxy.getProxyAuthentication());
-        }
+        if(this.proxySettings.isWithProxy()) {
+            LOGGER.fine("Setting the proxy authentication");
+            client.setProxyAuthentication(this.proxySettings.getProxyAuthentication());
+        } else {
+            LOGGER.fine("No proxy authentication to set");
+        }  
         LOGGER.exiting(DoiMdsApplication.class.getName(), "Constructor");
     }
 
