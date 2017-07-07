@@ -61,12 +61,12 @@ public class ClientProxyTest {
         HttpMethod method = new GetMethod("http://www.google.fr");//https://kodejava.org
 
         HostConfiguration config = client.getHostConfiguration();
-        config.setProxy("proxy-HTTP2.cnes.fr", 8050);
+        config.setProxy("proxy-HTTP2.cnes.fr", 8050);        
 
         String username = "guest";
         String password = "s3cr3t";
         Credentials credentials = new UsernamePasswordCredentials(username, password);
-        AuthScope authScope = new AuthScope("proxy-HTTP2.cnes.fr", 8050);
+        AuthScope authScope = new AuthScope("proxy-HTTP2.cnes.fr", 8050, AuthScope.ANY_REALM, "http");
 
         client.getState().setProxyCredentials(authScope, credentials);
 
