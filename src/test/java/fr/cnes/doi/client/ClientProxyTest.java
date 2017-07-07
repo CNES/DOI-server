@@ -18,9 +18,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.restlet.Client;
 import org.restlet.Context;
+import org.restlet.data.ChallengeScheme;
+import org.restlet.data.Header;
 import org.restlet.data.Protocol;
 import org.restlet.ext.httpclient.HttpClientHelper;
 import org.restlet.resource.ClientResource;
+import org.restlet.util.Series;
 
 
 
@@ -63,13 +66,18 @@ public class ClientProxyTest {
 
         Client proxy = new Client(new Context(), Protocol.HTTP);
         proxy.getContext().getParameters().add("proxyHost", "proxy-HTTP2.cnes.fr");
-        proxy.getContext().getParameters().add("proxyPort", "8050");
+        proxy.getContext().getParameters().add("proxyPort", "8050");      
+        Series<Header> headers = (Series) proxy.getContext().getAttributes().get("org.restlet.http.headers");       
         byte[] credentials = Base64.encodeBase64(("" + ":" + "").getBytes(StandardCharsets.UTF_8));
-        proxy.getContext().getParameters().add("Authorization", new String(credentials, StandardCharsets.UTF_8));
+        headers.set("Authorization", new String(credentials, StandardCharsets.UTF_8));
+        
         ClientResource client = new ClientResource("http://www.google.fr");
+        client.setProxyChallengeResponse(ChallengeScheme.HTTP_BASIC, "", "");
         client.setNext(proxy);
+        proxy.start();       
         System.out.println(client.get().getText());
-        //HttpClientHelper c = new HttpClientHelper(proxy);
+        HttpClientHelper c = new HttpClientHelper(proxy);
+        
         //System.out.println("host="+c.getProxyHost());
         //HttpClient client = c.getHttpClient();
         
