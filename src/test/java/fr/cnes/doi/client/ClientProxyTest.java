@@ -7,6 +7,15 @@ package fr.cnes.doi.client;
 
 import java.io.IOException;
 import java.util.Properties;
+import org.apache.http.HttpResponse;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -17,6 +26,7 @@ import org.restlet.Context;
 import org.restlet.data.ChallengeResponse;
 import org.restlet.data.ChallengeScheme;
 import org.restlet.data.Protocol;
+import org.restlet.ext.httpclient.HttpClientHelper;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 
@@ -48,25 +58,23 @@ public class ClientProxyTest {
     }
 
     @Test
-    public void testProxy() throws IOException {
-        //Properties properties = System.getProperties();
-        //properties.put("http.proxyHost", "proxy-HTTP2.cnes.fr");
-        //properties.put("http.proxyPort", "8050");
-        Client proxy = new Client(new Context(), Protocol.HTTP);
-        proxy.getContext().getParameters().add("proxyHost", "proxy-HTTP2.cnes.fr");
-        proxy.getContext().getParameters().add("proxyPort", "8050");        
+    public void testProxy() throws IOException, Exception {
 
-        // Add the client authentication to the call
-        ChallengeScheme scheme = ChallengeScheme.HTTP_BASIC;        
+//        HttpClientBuilder builder = HttpClientBuilder.create();
+//        HttpHost proxy = new HttpHost("proxy-HTTP2.cnes.fr", 8050, "http");
+//        builder.setProxy(proxy);
+//        HttpClient client = builder.build();
+//        HttpUriRequest httpRequest = new HttpGet("http://www.google.com");
+//        HttpResponse response = client.execute(httpRequest);        
+        CredentialsProvider credsProvider = new BasicCredentialsProvider();
+        credsProvider.setCredentials(
+                new AuthScope("proxy-HTTP2.cnes.fr", 8050),
+                new UsernamePasswordCredentials("my_username", "my_password"));
+        HttpClient client = HttpClientBuilder.create().setDefaultCredentialsProvider(credsProvider).build();
+        HttpResponse response = client.execute(new HttpGet("http://www.google.com"));
 
-        // User + Password sur le proxy
-        ChallengeResponse proxyAuthentication = new ChallengeResponse(scheme, "TODO", "TODO");
-        ClientResource client = new ClientResource("http://google.com");
-        client.setNext(proxy);
-        client.setProxyChallengeResponse(proxyAuthentication);
-        //client.setProtocol(Protocol.HTTP);
-        Representation rep = client.get();
-        System.out.println(rep.getText());
+        response.getEntity().writeTo(System.out);
+
     }
 
 }
