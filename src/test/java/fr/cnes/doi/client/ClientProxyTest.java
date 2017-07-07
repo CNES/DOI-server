@@ -12,6 +12,8 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.restlet.Client;
+import org.restlet.Context;
 import org.restlet.data.ChallengeResponse;
 import org.restlet.data.ChallengeScheme;
 import org.restlet.data.Protocol;
@@ -47,9 +49,12 @@ public class ClientProxyTest {
 
     @Test
     public void testProxy() throws IOException {
-        Properties properties = System.getProperties();
-        properties.put("http.proxyHost", "proxy-HTTP2.cnes.fr");
-        properties.put("http.proxyPort", "8050");
+        //Properties properties = System.getProperties();
+        //properties.put("http.proxyHost", "proxy-HTTP2.cnes.fr");
+        //properties.put("http.proxyPort", "8050");
+        Client proxy = new Client(new Context(), Protocol.HTTP);
+        proxy.getContext().getParameters().add("proxyHost", "proxy-HTTP2.cnes.fr");
+        proxy.getContext().getParameters().add("proxyPort", "8050");        
 
         // Add the client authentication to the call
         ChallengeScheme scheme = ChallengeScheme.HTTP_BASIC;        
@@ -57,8 +62,9 @@ public class ClientProxyTest {
         // User + Password sur le proxy
         ChallengeResponse proxyAuthentication = new ChallengeResponse(scheme, "TODO", "TODO");
         ClientResource client = new ClientResource("http://google.com");
+        client.setNext(proxy);
         client.setProxyChallengeResponse(proxyAuthentication);
-        client.setProtocol(Protocol.HTTP);
+        //client.setProtocol(Protocol.HTTP);
         Representation rep = client.get();
         System.out.println(rep.getText());
     }
