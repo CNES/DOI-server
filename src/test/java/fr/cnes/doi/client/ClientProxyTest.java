@@ -13,14 +13,15 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import org.apache.commons.httpclient.Credentials;
-import org.apache.commons.httpclient.HostConfiguration;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.UsernamePasswordCredentials;
-import org.apache.commons.httpclient.auth.AuthScope;
-import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpResponse;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.params.ConnRoutePNames;
+import org.apache.http.impl.client.DefaultHttpClient;
+
 /**
  *
  * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
@@ -57,31 +58,39 @@ public class ClientProxyTest {
 //        HttpClient client = builder.build();
 //        HttpUriRequest httpRequest = new HttpGet("http://www.google.com");
 //        HttpResponse response = client.execute(httpRequest);        
-        HttpClient client = new HttpClient();
-        HttpMethod method = new GetMethod("http://www.google.fr");//https://kodejava.org
+       DefaultHttpClient httpclient = new DefaultHttpClient();
 
-        HostConfiguration config = client.getHostConfiguration();
-        config.setProxy("proxy-HTTP2.cnes.fr", 8050);        
+        httpclient.getCredentialsProvider().setCredentials(
+                new AuthScope("proxy-HTTP2.cnes.fr", 8050), 
+                new UsernamePasswordCredentials("username", "password"));
 
-        String username = "guest";
-        String password = "s3cr3t";
-        Credentials credentials = new UsernamePasswordCredentials(username, password);
-        AuthScope authScope = new AuthScope("proxy-HTTP2.cnes.fr", 8050, AuthScope.ANY_REALM, "http");
+        HttpHost targetHost = new HttpHost("www.google.fr", 80, "http"); 
+        HttpHost proxy = new HttpHost("proxy-HTTP2.cnes.fr", 8050); 
 
-        client.getState().setProxyCredentials(authScope, credentials);
+        httpclient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
 
-        try {
-            client.executeMethod(method);
+        HttpGet httpget = new HttpGet("/");
+        
+        System.out.println("executing request: " + httpget.getRequestLine());
+        System.out.println("via proxy: " + proxy);
+        System.out.println("to target: " + targetHost);
+        
+        HttpResponse response = httpclient.execute(targetHost, httpget);
+        HttpEntity entity = response.getEntity();
 
-            if (method.getStatusCode() == HttpStatus.SC_OK) {
-                String response = method.getResponseBodyAsString();
-                System.out.println("Response = " + response);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            method.releaseConnection();
+        System.out.println("----------------------------------------");
+        System.out.println(response.getStatusLine());
+        if (entity != null) {
+            System.out.println("Response content length: " + entity.getContentLength());
         }
+        if (entity != null) {
+            entity.consumeContent();
+        }
+        
+        // When HttpClient instance is no longer needed, 
+        // shut down the connection manager to ensure
+        // immediate deallocation of all system resources
+        httpclient.getConnectionManager().shutdown();      
 
     }
 
