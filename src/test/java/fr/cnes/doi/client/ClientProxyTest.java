@@ -6,30 +6,21 @@
 package fr.cnes.doi.client;
 
 import java.io.IOException;
-import java.util.Properties;
-import org.apache.http.HttpResponse;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.HttpClientBuilder;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.restlet.Client;
-import org.restlet.Context;
-import org.restlet.data.ChallengeResponse;
-import org.restlet.data.ChallengeScheme;
-import org.restlet.data.Protocol;
-import org.restlet.ext.httpclient.HttpClientHelper;
-import org.restlet.representation.Representation;
-import org.restlet.resource.ClientResource;
 
+import org.apache.commons.httpclient.Credentials;
+import org.apache.commons.httpclient.HostConfiguration;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.UsernamePasswordCredentials;
+import org.apache.commons.httpclient.auth.AuthScope;
+import org.apache.commons.httpclient.methods.GetMethod;
 /**
  *
  * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
@@ -66,14 +57,31 @@ public class ClientProxyTest {
 //        HttpClient client = builder.build();
 //        HttpUriRequest httpRequest = new HttpGet("http://www.google.com");
 //        HttpResponse response = client.execute(httpRequest);        
-        CredentialsProvider credsProvider = new BasicCredentialsProvider();
-        credsProvider.setCredentials(
-                new AuthScope("proxy-HTTP2.cnes.fr", 8050),
-                new UsernamePasswordCredentials("my_username", "my_password"));
-        HttpClient client = HttpClientBuilder.create().setDefaultCredentialsProvider(credsProvider).build();
-        HttpResponse response = client.execute(new HttpGet("http://www.google.com"));
+        HttpClient client = new HttpClient();
+        HttpMethod method = new GetMethod("http://www.google.fr");//https://kodejava.org
 
-        response.getEntity().writeTo(System.out);
+        HostConfiguration config = client.getHostConfiguration();
+        config.setProxy("proxy-HTTP2.cnes.fr", 8050);
+
+        String username = "guest";
+        String password = "s3cr3t";
+        Credentials credentials = new UsernamePasswordCredentials(username, password);
+        AuthScope authScope = new AuthScope("proxy-HTTP2.cnes.fr", 8050);
+
+        client.getState().setProxyCredentials(authScope, credentials);
+
+        try {
+            client.executeMethod(method);
+
+            if (method.getStatusCode() == HttpStatus.SC_OK) {
+                String response = method.getResponseBodyAsString();
+                System.out.println("Response = " + response);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            method.releaseConnection();
+        }
 
     }
 
