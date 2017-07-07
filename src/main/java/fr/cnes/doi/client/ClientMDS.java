@@ -270,9 +270,6 @@ public class ClientMDS {
        this.client.getLogger().log(Level.FINEST,"Proxy Authentication :\n"
                + "- login:{0}"+"\n"+"- pwd:{1}\n", new Object[]{authentication.getIdentifier(), String.valueOf(authentication.getSecret())});
        this.client.setProxyChallengeResponse(authentication);
-       this.client.getContext().getParameters().add("proxyHost", ProxySettings.getInstance().getProxyHost());
-       this.client.getContext().getParameters().add("proxyPort", ProxySettings.getInstance().getProxyPort());
-
     }    
 
     /**
