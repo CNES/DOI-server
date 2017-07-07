@@ -6,27 +6,23 @@
 package fr.cnes.doi.client;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.http.client.HttpClient;
 
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.restlet.Client;
+import org.restlet.Context;
+import org.restlet.data.Protocol;
+import org.restlet.ext.httpclient.HttpClientHelper;
+import org.restlet.resource.ClientResource;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpResponse;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.config.AuthSchemes;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.conn.params.ConnRoutePNames;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.HttpContext;
+
 
 /**
  *
@@ -63,44 +59,33 @@ public class ClientProxyTest {
 //        builder.setProxy(proxy);
 //        HttpClient client = builder.build();
 //        HttpUriRequest httpRequest = new HttpGet("http://www.google.com");
-//        HttpResponse response = client.execute(httpRequest);        
+//        HttpResponse response = client.execute(httpRequest);     
 
-DefaultHttpClient httpclient = new DefaultHttpClient();
-        HttpContext localContext = new BasicHttpContext();
- 
-        httpclient.getCredentialsProvider().setCredentials(
-                new AuthScope("proxy-HTTP2.cnes.fr", 8050),
-                new UsernamePasswordCredentials("", ""));
- 
-        HttpHost targetHost = new HttpHost("www.google.fr", 80, "http");
-        HttpHost proxy = new HttpHost("proxy-HTTP2.cnes.fr", 8050);
- 
-        httpclient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
-  
-        System.out.println("via proxy: " + proxy);
-        System.out.println("to target: " + targetHost);
- 
-        RequestConfig config = RequestConfig.custom()
-        .setTargetPreferredAuthSchemes(Arrays.asList(AuthSchemes.BASIC, AuthSchemes.NTLM))
-        .build();
-        HttpGet target = new HttpGet("http://www.google.fr");
-        target.setConfig(config);
-        HttpResponse response = httpclient.execute(target);
-        HttpEntity entity = response.getEntity();
- 
-        System.out.println("----------------------------------------");
-        System.out.println(response.getStatusLine());
-        if (entity != null) {
-            System.out.println("Response content length: " + entity.getContentLength());
-        }
-       if (entity != null) {
-            entity.consumeContent();
-        }
- 
-        // When HttpClient instance is no longer needed,
-        // shut down the connection manager to ensure
-        // immediate deallocation of all system resources
-        httpclient.getConnectionManager().shutdown();   
+        Client proxy = new Client(new Context(), Protocol.HTTP);
+        proxy.getContext().getParameters().add("proxyHost", "proxy-HTTP2.cnes.fr");
+        proxy.getContext().getParameters().add("proxyPort", "8050");
+        byte[] credentials = Base64.encodeBase64(("" + ":" + "").getBytes(StandardCharsets.UTF_8));
+        proxy.getContext().getParameters().add("Authorization", new String(credentials, StandardCharsets.UTF_8));
+        ClientResource client = new ClientResource("http://www.google.fr");
+        client.setNext(proxy);
+        System.out.println(client.get().getText());
+        //HttpClientHelper c = new HttpClientHelper(proxy);
+        //System.out.println("host="+c.getProxyHost());
+        //HttpClient client = c.getHttpClient();
+        
+
+//        // Add the client authentication to the call
+//        ChallengeScheme scheme = ChallengeScheme.HTTP_BASIC;
+//
+//        // User + Password sur le proxy
+//        ChallengeResponse proxyAuthentication = new ChallengeResponse(scheme, "TODO", "TODO");
+//        ClientResource client = new ClientResource("http://google.com");
+//        client.setNext(proxy);
+//        client.setProxyChallengeResponse(proxyAuthentication);
+//        client.setProtocol(Protocol.HTTP);
+//        //client.setProtocol(Protocol.HTTP);
+//        Representation rep = client.get();
+//        System.out.println(rep.getText());
 
     }
 
