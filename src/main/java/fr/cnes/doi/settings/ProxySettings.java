@@ -112,42 +112,8 @@ public final class ProxySettings {
         this.nonProxyHosts = settings.getString(Consts.SERVER_NONPROXY_HOSTS);
         
         this.proxySet = settings.getBoolean(Consts.SERVER_PROXY_USED);
-
-        configureProxy();
-    }
-    
-    private void configureProxy() {
-    	if(this.proxySet){
-    		if (Utils.isNotEmpty(this.proxyHost) && Utils.isNotEmpty(this.proxyPort)) {
-                Properties properties = System.getProperties();
-                properties.put(HTTP_PROXYHOST, this.proxyHost);
-                properties.put(HTTP_PROXYPORT, this.proxyPort);
-                properties.put(HTTP_NONPROXYHOSTS, this.nonProxyHosts);
-
-                // Add the client authentication to the call
-                ChallengeScheme scheme = ChallengeScheme.HTTP_BASIC;
-
-                // User + Password sur le proxy
-                this.proxyAuthentication = new ChallengeResponse(scheme, this.proxyUser, this.proxyPassword);
-            }else {
-            	//TODO Log an error but should throw an exception
-            	LOGGER.log(Level.SEVERE, "Proxy is enabled but the host or the port are missing");
-            }
-    	}
-        
-    }
-
-    /**
-     * Init the proxy setting
-     */
-    public void reset() {
-        this.proxySet = false;
-        Properties properties = System.getProperties();
-        properties.remove(HTTP_PROXYHOST);
-        properties.remove(HTTP_PROXYPORT);
-        properties.remove(HTTP_NONPROXYHOSTS);
-        this.proxyAuthentication = null;
-    }
+    }    
+            
 
     /**
      * Gets the withProxy value
@@ -156,17 +122,6 @@ public final class ProxySettings {
      */
     public boolean isWithProxy() {
         return this.proxySet;
-    }
-
-    /**
-     * Sets the value of withProxy
-     *
-     * @param withProxy the withProxy to set
-     */
-    public void setWithProxy(boolean withProxy) {
-        this.proxySet = withProxy;  
-        this.proxyAuthentication = null;
-        configureProxy();
     }
 
     /**

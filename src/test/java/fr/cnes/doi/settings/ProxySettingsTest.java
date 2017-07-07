@@ -74,17 +74,6 @@ public class ProxySettingsTest {
     }
 
     /**
-     * Test of setWithProxy method, of class ProxySettings.
-     */
-    @Test
-    public void testSetWithProxy() {
-        System.out.println("setWithProxy");
-        boolean withProxy = false;
-        instance.setWithProxy(withProxy);
-        assertFalse(instance.isWithProxy());
-    }
-
-    /**
      * Test of getProxyHost method, of class ProxySettings.
      */
     @Test

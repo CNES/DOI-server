@@ -123,7 +123,7 @@ public class DoiMdsApplication extends BaseApplication {
         client = new ClientMDS(ClientMDS.Context.valueOf(contextUse), getLoginMds(), getPwdMds());
         if(this.proxySettings.isWithProxy()) {
             LOGGER.fine("Setting the proxy authentication");
-            client.setProxyAuthentication(this.proxySettings.getProxyAuthentication());
+            client.setProxyAuthentication(this.proxySettings.getProxyHost(), this.proxySettings.getProxyPort(), this.proxySettings.getProxyUser(), this.proxySettings.getProxyPassword());
         } else {
             LOGGER.fine("No proxy authentication to set");
         }  

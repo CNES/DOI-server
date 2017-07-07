@@ -16,7 +16,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import org.datacite.schema.kernel_4.Resource;
 import org.datacite.schema.kernel_4.Resource.Identifier;
-import org.restlet.data.ChallengeResponse;
 import org.restlet.data.ChallengeScheme;
 import org.restlet.data.Form;
 import org.restlet.data.MediaType;
@@ -25,16 +24,14 @@ import org.restlet.data.Reference;
 import org.restlet.data.Status;
 import org.restlet.engine.Engine;
 import org.restlet.representation.Representation;
-import org.restlet.resource.ClientResource;
 
-import fr.cnes.doi.settings.ProxySettings;
 
 /**
  * Client to query Metadata store service at Datacite. 
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  * @see "https://datacite.readme.io/v1.0/docs/api"
  */
-public class ClientMDS {
+public class ClientMDS extends BaseClient {
 
     /**
      * Metadata store service endpoint.
@@ -193,7 +190,6 @@ public class ClientMDS {
               
     }
 
-    private final ClientResource client = new ClientResource(DATA_CITE_URL);
     private final Parameter testMode;
     private final Context context;
 
@@ -225,6 +221,7 @@ public class ClientMDS {
      * @param context Context using
      */
     public ClientMDS(final Context context) {
+        super(DATA_CITE_URL);
         this.context = context;
         this.testMode = this.context.hasTestMode() ? TEST_MODE : null;
         this.client.getLogger().setUseParentHandlers(true);        
@@ -260,17 +257,7 @@ public class ClientMDS {
         this(context);
         this.client.getLogger().log(Level.FINEST, "Authentication with HTTP_BASIC : {0}/{1}", new Object[]{login, pwd});
         this.client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, login, pwd);
-    }
-    
-    /**
-     * Sets Proxy authentication.
-     * @param authentication authentication
-     */
-    public void setProxyAuthentication(final ChallengeResponse authentication) {        
-       this.client.getLogger().log(Level.FINEST,"Proxy Authentication :\n"
-               + "- login:{0}"+"\n"+"- pwd:{1}\n", new Object[]{authentication.getIdentifier(), String.valueOf(authentication.getSecret())});
-       this.client.setProxyChallengeResponse(authentication);
-    }    
+    }        
 
     /**
      * Returns the {@link TEST_MODE} or an empty parameter according to

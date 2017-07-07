@@ -8,11 +8,9 @@ package fr.cnes.doi.client;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.List;
-import org.restlet.data.ChallengeResponse;
 import org.restlet.data.Reference;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
-import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
 
 
@@ -21,7 +19,7 @@ import org.restlet.resource.ResourceException;
  * @author Jean-Christophe Malapert (Jean-Christophe.malapert@cnes.fr)
  * @see "https://datacite.readme.io/v1.0/docs/api"
  */
-public class ClientCrossCiteCitation {
+public class ClientCrossCiteCitation extends BaseClient {
     
     /**
      * Service end point.
@@ -43,16 +41,12 @@ public class ClientCrossCiteCitation {
      */
     public static final String FORMAT_URI = "/format";
     
-    /**
-     * HTTP Client to request CrossCite.
-     */
-    private final ClientResource client = new ClientResource(CROSS_CITE_URL);
     
     /**
      * Empty constructor.
      */
     public ClientCrossCiteCitation() {
-        
+        super(CROSS_CITE_URL);
     }
     
     /**
@@ -60,14 +54,6 @@ public class ClientCrossCiteCitation {
      */
     protected void init() {
         this.client.setReference(new Reference(CROSS_CITE_URL));
-    }
-    
-    /**
-     * Sets Proxy authentication.
-     * @param authentication authentication
-     */
-    public void setProxyAuthentication(final ChallengeResponse authentication) {
-        client.setProxyChallengeResponse(authentication);
     }
     
     /**
