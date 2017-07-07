@@ -25,7 +25,6 @@ public class BaseApplication extends WadlApplication {
      */
     public BaseApplication() {                
         this.proxySettings = ProxySettings.getInstance();
-        this.proxySettings.init(DoiSettings.getInstance());
     }
     
 }

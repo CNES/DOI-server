@@ -266,7 +266,7 @@ public class ClientMDS {
      */
     public void setProxyAuthentication(final ChallengeResponse authentication) {        
        this.client.getLogger().log(Level.FINEST,"Proxy Authentication :\n"
-               + "- login:{0}"+"\n"+"- pwd:{1}\n", new Object[]{authentication.getIdentifier(), authentication.getSecret()});
+               + "- login:{0}"+"\n"+"- pwd:{1}\n", new Object[]{authentication.getIdentifier(), String.valueOf(authentication.getSecret())});
        this.client.setProxyChallengeResponse(authentication);
     }    
 
