@@ -6,48 +6,57 @@
 package fr.cnes.doi.client;
 
 import java.util.Arrays;
+
 import org.restlet.Client;
 import org.restlet.Context;
 import org.restlet.data.ChallengeScheme;
 import org.restlet.data.Protocol;
 import org.restlet.engine.Engine;
-import org.restlet.ext.jetty.HttpClientHelper;
+import org.restlet.ext.httpclient.HttpClientHelper;
 import org.restlet.resource.ClientResource;
 
 /**
  * Base client
+ * 
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr(
  */
 public class BaseClient {
-    
-    /**
-     * Client, which executes request;
-     */
-    protected final ClientResource client;
-    
-    /**
-     * Constructor.
-     * @param uri URI of the client's end point
-     */
-    public BaseClient(final String uri) {
-        Engine.getInstance().getRegisteredClients().clear();
-        Engine.getInstance().getRegisteredClients().add(new HttpClientHelper(null)); 
-        this.client = new ClientResource(uri);
-    }
-    
-    /**
-     * Sets proxy authentication for HTTP and HTTP connection.
-     * @param host Proxy hostname
-     * @param port proxy port
-     * @param login proxy login
-     * @param pwd proxy password  
-     */
-    public void setProxyAuthentication(final String host, final String port, final String login, final String pwd) {
-        Client proxy = new Client(new Context(), Arrays.asList(Protocol.HTTP, Protocol.HTTPS));
-        proxy.getContext().getParameters().add("proxyHost",host);
-        proxy.getContext().getParameters().add("proxyPort",port);
-        this.client.setProxyChallengeResponse(ChallengeScheme.HTTP_BASIC, login, pwd);
-        this.client.setNext(proxy);        
-    }                      
-        
+
+	/**
+	 * Client, which executes request;
+	 */
+	protected final ClientResource client;
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param uri
+	 *            URI of the client's end point
+	 */
+	public BaseClient(final String uri) {
+		Engine.getInstance().getRegisteredClients().clear();
+		Engine.getInstance().getRegisteredClients().add(new HttpClientHelper(null));
+		this.client = new ClientResource(uri);
+	}
+
+	/**
+	 * Sets proxy authentication for HTTP and HTTP connection.
+	 * 
+	 * @param host
+	 *            Proxy hostname
+	 * @param port
+	 *            proxy port
+	 * @param login
+	 *            proxy login
+	 * @param pwd
+	 *            proxy password
+	 */
+	public void setProxyAuthentication(final String host, final String port, final String login, final String pwd) {
+		Client proxy = new Client(new Context(), Arrays.asList(Protocol.HTTP, Protocol.HTTPS));
+		proxy.getContext().getParameters().add("proxyHost", host);
+		proxy.getContext().getParameters().add("proxyPort", port);
+		this.client.setProxyChallengeResponse(ChallengeScheme.HTTP_BASIC, login, pwd);
+		this.client.setNext(proxy);
+	}
+
 }
