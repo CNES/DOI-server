@@ -15,6 +15,8 @@ import org.restlet.engine.Engine;
 import org.restlet.ext.httpclient.HttpClientHelper;
 import org.restlet.resource.ClientResource;
 
+import fr.cnes.doi.settings.ProxySettings;
+
 /**
  * Base client
  * 
@@ -37,6 +39,18 @@ public class BaseClient {
 		Engine.getInstance().getRegisteredClients().clear();
 		Engine.getInstance().getRegisteredClients().add(new HttpClientHelper(null));
 		this.client = new ClientResource(uri);
+		configureProxyIfNeeded();
+	}
+
+	/**
+	 * Configure the proxy parameters is needed (Starter.Proxy.used = true)
+	 */
+	public void configureProxyIfNeeded() {
+		if (ProxySettings.getInstance().isWithProxy()) {
+			setProxyAuthentication(ProxySettings.getInstance().getProxyHost(),
+					ProxySettings.getInstance().getProxyPort(), ProxySettings.getInstance().getProxyUser(),
+					ProxySettings.getInstance().getProxyPassword());
+		}
 	}
 
 	/**

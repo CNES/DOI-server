@@ -23,12 +23,12 @@ import fr.cnes.doi.InitSettingsForTest;
  */
 public class EmailSettingsTest {
 
-	private static EmailSettings instance = EmailSettings.getInstance();
+	private static EmailSettings instance;
 
 	@BeforeClass
 	public static void setUpClass() {
 		InitSettingsForTest.init();
-		instance.init(DoiSettings.getInstance());
+		instance = EmailSettings.getInstance();
 	}
 
 	@AfterClass

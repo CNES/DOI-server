@@ -24,7 +24,7 @@ import fr.cnes.doi.InitSettingsForTest;
  */
 public class ProxySettingsTest {
 
-	private static ProxySettings instance = ProxySettings.getInstance();
+	private static ProxySettings instance;
 
 	/**
 	 * Init the configuration file
@@ -32,7 +32,7 @@ public class ProxySettingsTest {
 	@BeforeClass
 	public static void setUpClass() {
 		InitSettingsForTest.init();
-		instance.init(DoiSettings.getInstance());
+		instance = ProxySettings.getInstance();
 	}
 
 	@AfterClass
