@@ -6,7 +6,8 @@
 package fr.cnes.doi.resource.mds;
 
 import fr.cnes.doi.application.DoiMdsApplication;
-import fr.cnes.doi.client.ClientMdsException;
+import fr.cnes.doi.exception.ClientMdsException;
+
 import java.util.Arrays;
 import org.restlet.data.Method;
 import org.restlet.data.Status;

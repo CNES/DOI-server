@@ -5,7 +5,6 @@
  */
 package fr.cnes.doi.resource.mds;
 
-import fr.cnes.doi.client.ClientMdsException;
 import java.util.Arrays;
 import java.util.logging.Level;
 import org.restlet.data.Form;
@@ -22,6 +21,8 @@ import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
 import org.restlet.util.Series;
+
+import fr.cnes.doi.exception.ClientMdsException;
 
 /**
  * Resource to handle a collection of DOI.

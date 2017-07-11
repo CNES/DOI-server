@@ -25,6 +25,8 @@ import org.restlet.data.Status;
 import org.restlet.engine.Engine;
 import org.restlet.representation.Representation;
 
+import fr.cnes.doi.exception.ClientMdsException;
+
 
 /**
  * Client to query Metadata store service at Datacite. 

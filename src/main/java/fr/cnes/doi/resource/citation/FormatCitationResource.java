@@ -5,7 +5,6 @@
  */
 package fr.cnes.doi.resource.citation;
 
-import fr.cnes.doi.client.ClientCrossCiteException;
 import java.util.Arrays;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
@@ -14,6 +13,8 @@ import org.restlet.ext.wadl.MethodInfo;
 import org.restlet.ext.wadl.ParameterStyle;
 import org.restlet.resource.Get;
 import org.restlet.resource.ResourceException;
+
+import fr.cnes.doi.exception.ClientCrossCiteException;
 
 /**
  * Formats a citation.

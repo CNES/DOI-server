@@ -6,6 +6,9 @@
 package fr.cnes.doi.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import fr.cnes.doi.exception.ClientCrossCiteException;
+
 import java.io.IOException;
 import java.util.List;
 import org.restlet.data.Reference;
@@ -83,7 +86,7 @@ public class ClientCrossCiteCitation extends BaseClient {
     /**
      * Returns styles
      * @return list of possible styles
-     * @throws fr.cnes.doi.client.ClientCrossCiteException Will thrown an Exception 
+     * @throws fr.cnes.doi.exception.ClientCrossCiteException Will thrown an Exception 
      * when a problem happens during the request to Cross Cite
      */
     public List<String> getStyles() throws ClientCrossCiteException {
@@ -94,7 +97,7 @@ public class ClientCrossCiteCitation extends BaseClient {
     /**
      * Returns languages
      * @return List of possible languages
-     * @throws fr.cnes.doi.client.ClientCrossCiteException Will thrown an Exception 
+     * @throws fr.cnes.doi.exception.ClientCrossCiteException Will thrown an Exception 
      * when a problem happens during the request to Cross Cite     
      */
     public List<String> getLanguages() throws ClientCrossCiteException {
@@ -108,7 +111,7 @@ public class ClientCrossCiteCitation extends BaseClient {
      * @param style Selected style to format the citation
      * @param language Selected language to format the citation
      * @return The formatted citation
-     * @throws fr.cnes.doi.client.ClientCrossCiteException Will thrown an Exception 
+     * @throws fr.cnes.doi.exception.ClientCrossCiteException Will thrown an Exception 
      * when a problem happens during the request to Cross Cite
      */
     public String getFormat(final String doiName, final String style, final String language) throws ClientCrossCiteException {

@@ -5,7 +5,6 @@
  */
 package fr.cnes.doi.resource.citation;
 
-import fr.cnes.doi.client.ClientCrossCiteException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,6 +14,8 @@ import org.restlet.data.Status;
 import org.restlet.ext.wadl.MethodInfo;
 import org.restlet.resource.Get;
 import org.restlet.resource.ResourceException;
+
+import fr.cnes.doi.exception.ClientCrossCiteException;
 
 /**
  * The supported styles for citation.

@@ -5,7 +5,6 @@
  */
 package fr.cnes.doi.resource.mds;
 
-import fr.cnes.doi.client.ClientMdsException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
@@ -28,6 +27,8 @@ import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
 import org.restlet.util.Series;
 import org.xml.sax.SAXException;
+
+import fr.cnes.doi.exception.ClientMdsException;
 
 /**
  * Resource to handle a collection of metadata.
