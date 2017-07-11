@@ -50,6 +50,8 @@ public class InitSettingsForTest {
 				String useProxy = System.getProperty("proxy.use");
 				if (useProxy != null) {
 					result = result.replace("Starter.Proxy.used = false", "Starter.Proxy.used=" + useProxy);
+				} else {
+					LOGGER.log(Level.INFO, "The key proxy.use is not set, default param applied");
 				}
 				InputStream stream = new ByteArrayInputStream(result.getBytes(StandardCharsets.UTF_8));
 				DoiSettings.getInstance().setPropertiesFile(stream);

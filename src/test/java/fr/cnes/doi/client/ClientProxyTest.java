@@ -16,7 +16,7 @@ import org.restlet.Context;
 import org.restlet.data.ChallengeScheme;
 import org.restlet.data.Protocol;
 import org.restlet.engine.Engine;
-import org.restlet.ext.httpclient.HttpClientHelper;
+import org.restlet.ext.jetty.HttpClientHelper;
 import org.restlet.resource.ClientResource;
 
 import fr.cnes.doi.InitSettingsForTest;
@@ -29,10 +29,6 @@ import fr.cnes.doi.settings.DoiSettings;
  */
 public class ClientProxyTest {
 
-	public ClientProxyTest() {
-
-	}
-
 	/**
 	 * Init the settings
 	 */
@@ -41,14 +37,23 @@ public class ClientProxyTest {
 		InitSettingsForTest.init();
 	}
 
+	/**
+	 * Executed after the test class
+	 */
 	@AfterClass
 	public static void tearDownClass() {
 	}
 
+	/**
+	 * Executed before each test
+	 */
 	@Before
 	public void setUp() {
 	}
 
+	/**
+	 * Executed after each test
+	 */
 	@After
 	public void tearDown() {
 	}
@@ -81,6 +86,7 @@ public class ClientProxyTest {
 
 			System.out.println(client.get().getText());
 		} else {
+			System.out.println("Proxy not enabled, no test");
 			Assert.assertTrue("No test executed", true);
 		}
 
