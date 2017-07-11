@@ -122,4 +122,26 @@ public class ClientProxyTest {
 
 	}
 
+	/**
+	 * Test the connection through the proxy with BaseClient and crossCite URL.
+	 * Works only if the test is executed behind a proxy
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testBaseClientCrossCite() throws Exception {
+		BaseClient baseClient = new BaseClient("http://citation.crosscite.org/styles");
+		if (DoiSettings.getInstance().getBoolean(Consts.SERVER_PROXY_USED)) {
+			baseClient.setProxyAuthentication(DoiSettings.getInstance().getString(Consts.SERVER_PROXY_HOST),
+					DoiSettings.getInstance().getString(Consts.SERVER_PROXY_PORT),
+					DoiSettings.getInstance().getSecret(Consts.SERVER_PROXY_LOGIN),
+					DoiSettings.getInstance().getSecret(Consts.SERVER_PROXY_PWD));
+		}
+
+		Representation rep = baseClient.client.get();
+		Status status = baseClient.client.getStatus();
+		Assert.assertTrue("Test si la requete est OK", status.isSuccess());
+
+	}
+
 }
