@@ -5,28 +5,23 @@
  */
 package fr.cnes.doi.client;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.http.client.HttpClient;
-
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.restlet.Client;
 import org.restlet.Context;
 import org.restlet.data.ChallengeScheme;
-import org.restlet.data.Header;
 import org.restlet.data.Protocol;
 import org.restlet.engine.Engine;
 import org.restlet.ext.httpclient.HttpClientHelper;
 import org.restlet.resource.ClientResource;
-import org.restlet.util.Series;
 
-
+import fr.cnes.doi.InitSettingsForTest;
+import fr.cnes.doi.settings.Consts;
+import fr.cnes.doi.settings.DoiSettings;
 
 /**
  *
@@ -34,70 +29,61 @@ import org.restlet.util.Series;
  */
 public class ClientProxyTest {
 
-    public ClientProxyTest() {
+	public ClientProxyTest() {
 
-    }
+	}
 
-    @BeforeClass
-    public static void setUpClass() {
+	/**
+	 * Init the settings
+	 */
+	@BeforeClass
+	public static void setUpClass() {
+		InitSettingsForTest.init();
+	}
 
-    }
+	@AfterClass
+	public static void tearDownClass() {
+	}
 
-    @AfterClass
-    public static void tearDownClass() {
-    }
+	@Before
+	public void setUp() {
+	}
 
-    @Before
-    public void setUp() {
-    }
+	@After
+	public void tearDown() {
+	}
 
-    @After
-    public void tearDown() {
-    }
+	/**
+	 * Test the connection through the proxy. Works only if the test is executed
+	 * behind a proxy
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testProxy() throws Exception {
 
-    @Test
-    public void testProxy() throws IOException, Exception {
+		// Execute only if proxy is enabled
+		if (DoiSettings.getInstance().getBoolean(Consts.SERVER_PROXY_USED)) {
+			Engine.getInstance().getRegisteredClients().clear();
+			Engine.getInstance().getRegisteredClients().add(new HttpClientHelper(null));
 
-//        HttpClientBuilder builder = HttpClientBuilder.create();
-//        HttpHost proxy = new HttpHost("proxy-HTTP2.cnes.fr", 8050, "http");
-//        builder.setProxy(proxy);
-//        HttpClient client = builder.build();
-//        HttpUriRequest httpRequest = new HttpGet("http://www.google.com");
-//        HttpResponse response = client.execute(httpRequest);     
-Engine.getInstance().getRegisteredClients().clear();
-Engine.getInstance().getRegisteredClients().add(new HttpClientHelper(null));
+			Client proxy = new Client(new Context(), Protocol.HTTP);
+			proxy.getContext().getParameters().add("proxyHost",
+					DoiSettings.getInstance().getString(Consts.SERVER_PROXY_HOST));
+			proxy.getContext().getParameters().add("proxyPort",
+					DoiSettings.getInstance().getString(Consts.SERVER_PROXY_PORT));
 
-        Client proxy = new Client(new Context(), Protocol.HTTP);
-        proxy.getContext().getParameters().add("proxyHost", "proxy-HTTP2.cnes.fr");
-        proxy.getContext().getParameters().add("proxyPort", "8050");      
-        Series<Header> headers = (Series) proxy.getContext().getAttributes().get("org.restlet.http.headers");       
-        byte[] credentials = Base64.encodeBase64(("" + ":" + "").getBytes(StandardCharsets.UTF_8));
-        headers.set("Authorization", new String(credentials, StandardCharsets.UTF_8));
-        
-        ClientResource client = new ClientResource("http://www.google.fr");
-        client.setProxyChallengeResponse(ChallengeScheme.HTTP_BASIC, "", "");       
-        client.setNext(proxy);
-        proxy.start();       
-        System.out.println(client.get().getText());
-        HttpClientHelper c = new HttpClientHelper(proxy);
-        
-        //System.out.println("host="+c.getProxyHost());
-        //HttpClient client = c.getHttpClient();
-        
+			ClientResource client = new ClientResource("http://www.google.fr");
+			client.setProxyChallengeResponse(ChallengeScheme.HTTP_BASIC,
+					DoiSettings.getInstance().getSecret(Consts.SERVER_PROXY_LOGIN),
+					DoiSettings.getInstance().getSecret(Consts.SERVER_PROXY_PWD));
+			client.setNext(proxy);
 
-//        // Add the client authentication to the call
-//        ChallengeScheme scheme = ChallengeScheme.HTTP_BASIC;
-//
-//        // User + Password sur le proxy
-//        ChallengeResponse proxyAuthentication = new ChallengeResponse(scheme, "TODO", "TODO");
-//        ClientResource client = new ClientResource("http://google.com");
-//        client.setNext(proxy);
-//        client.setProxyChallengeResponse(proxyAuthentication);
-//        client.setProtocol(Protocol.HTTP);
-//        //client.setProtocol(Protocol.HTTP);
-//        Representation rep = client.get();
-//        System.out.println(rep.getText());
+			System.out.println(client.get().getText());
+		} else {
+			Assert.assertTrue("No test executed", true);
+		}
 
-    }
+	}
 
 }
