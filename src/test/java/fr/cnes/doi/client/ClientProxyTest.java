@@ -15,8 +15,10 @@ import org.restlet.Client;
 import org.restlet.Context;
 import org.restlet.data.ChallengeScheme;
 import org.restlet.data.Protocol;
+import org.restlet.data.Status;
 import org.restlet.engine.Engine;
 import org.restlet.ext.httpclient.HttpClientHelper;
+import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 
 import fr.cnes.doi.InitSettingsForTest;
@@ -84,11 +86,39 @@ public class ClientProxyTest {
 					DoiSettings.getInstance().getSecret(Consts.SERVER_PROXY_PWD));
 			client.setNext(proxy);
 
-			System.out.println(client.get().getText());
+			Representation rep = client.get();
+			Status status = client.getStatus();
+			Assert.assertTrue("Test si la requete est OK", status.isSuccess());
+
+			System.out.println(rep.getText());
 		} else {
 			System.out.println("Proxy not enabled, no test");
 			Assert.assertTrue("No test executed", true);
 		}
+
+	}
+
+	/**
+	 * Test the connection through the proxy with BaseClient. Works only if the
+	 * test is executed behind a proxy
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testBaseClient() throws Exception {
+		BaseClient baseClient = new BaseClient("http://www.google.fr");
+		if (DoiSettings.getInstance().getBoolean(Consts.SERVER_PROXY_USED)) {
+			baseClient.setProxyAuthentication(DoiSettings.getInstance().getString(Consts.SERVER_PROXY_HOST),
+					DoiSettings.getInstance().getString(Consts.SERVER_PROXY_PORT),
+					DoiSettings.getInstance().getSecret(Consts.SERVER_PROXY_LOGIN),
+					DoiSettings.getInstance().getSecret(Consts.SERVER_PROXY_PWD));
+		}
+
+		Representation rep = baseClient.client.get();
+		Status status = baseClient.client.getStatus();
+		Assert.assertTrue("Test si la requete est OK", status.isSuccess());
+
+		System.out.println(rep.getText());
 
 	}
 
