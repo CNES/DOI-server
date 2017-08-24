@@ -1,5 +1,5 @@
 # Generate keystore
-keytool -keystore doiServerKey.jks -alias doiServer -genkey -keyalg RSA -keysize 2048 -dname "CN=Jean-Christophe Malapert,OU=DNO/ISA/VIP,O=CNES,L=Toulouse,ST=Unknown,C=FR" -sigalg "SHA1withRSA"
+keytool -keystore doiServerKey.jks -alias doiServer -genkey -keyalg RSA -keysize 2048 -dname "CN=localhost,OU=DNO/ISA/VIP,O=CNES,L=Toulouse,ST=Unknown,C=FR" -sigalg "SHA1withRSA"
 
 # List records in keystore (validity date for instance)
 keytool -list -v -keystore doiServerKey.jks
