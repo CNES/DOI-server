@@ -131,7 +131,14 @@
             <groupId>org.restlet.jse</groupId>
             <artifactId>org.restlet.ext.httpclient</artifactId>
             <version>${restlet-version}</version>
-        </dependency>        
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/commons-httpclient/commons-httpclient -->
+        <dependency>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>3.1</version>
+        </dependency>
+                        
         <dependency>
             <groupId>org.restlet.jse</groupId>
             <artifactId>org.restlet.ext.freemarker</artifactId>
