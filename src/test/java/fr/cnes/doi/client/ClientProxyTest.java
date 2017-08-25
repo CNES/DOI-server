@@ -161,8 +161,10 @@ public class ClientProxyTest {
                     new UsernamePasswordCredentials(DoiSettings.getInstance().getSecret(Consts.SERVER_PROXY_LOGIN), DoiSettings.getInstance().getSecret(Consts.SERVER_PROXY_PWD)));
         }
         
-        GetMethod request = new GetMethod("https://www.google.com");
-        Assert.assertEquals("Test si la requete est OK", 200, request.getStatusCode());
+        GetMethod method = new GetMethod("https://www.google.com");
+        int statusCode = httpclient.executeMethod(method);
+        
+        Assert.assertEquals("Test si la requete est OK", 200, statusCode);
 
     }
 
