@@ -171,14 +171,14 @@ public class ClientProxyTest {
         
         int status = 0;
         try {
-            HttpHost target = new HttpHost("www.google.fr", 443, "https");
+            //HttpHost target = new HttpHost("www.google.fr", 443, "https");
             HttpHost proxy = new HttpHost(DoiSettings.getInstance().getString(Consts.SERVER_PROXY_HOST), Integer.valueOf(DoiSettings.getInstance().getString(Consts.SERVER_PROXY_PORT)), "http");            
             RequestConfig config = RequestConfig.custom().setProxy(proxy).build();
-            HttpGet request = new HttpGet("/");
+            HttpGet request = new HttpGet("https://www.google.fr");
             request.setConfig(config);
             
-            System.out.println("Executing request " + request.getRequestLine()+" to "+ target +" via "+proxy);
-            CloseableHttpResponse response = httpclient.execute(target, request);
+            System.out.println("Executing request " + request.getRequestLine()+" to "+ request.getURI() +" via "+proxy);
+            CloseableHttpResponse response = httpclient.execute(request);
             status = response.getStatusLine().getStatusCode();
             try {
                 System.out.println("--------");
