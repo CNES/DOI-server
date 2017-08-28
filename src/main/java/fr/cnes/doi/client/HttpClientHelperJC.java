@@ -1,29 +1,30 @@
 /**
  * Copyright 2005-2014 Restlet
- * 
+ *
  * The contents of this file are subject to the terms of one of the following
  * open source licenses: Apache 2.0 or or EPL 1.0 (the "Licenses"). You can
  * select the license that you prefer but you may not use this file except in
  * compliance with one of these Licenses.
- * 
+ *
  * You can obtain a copy of the Apache 2.0 license at
  * http://www.opensource.org/licenses/apache-2.0
- * 
+ *
  * You can obtain a copy of the EPL 1.0 license at
  * http://www.opensource.org/licenses/eclipse-1.0
- * 
+ *
  * See the Licenses for the specific language governing permissions and
  * limitations under the Licenses.
- * 
+ *
  * Alternatively, you can obtain a royalty free commercial license with less
  * limitations, transferable or non-transferable, directly at
  * http://restlet.com/products/restlet-framework
- * 
+ *
  * Restlet is a registered trademark of Restlet S.A.S.
  */
-
 package fr.cnes.doi.client;
 
+import fr.cnes.doi.settings.Consts;
+import fr.cnes.doi.settings.DoiSettings;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -31,6 +32,8 @@ import java.util.logging.Level;
 import javax.net.ssl.SSLContext;
 
 import org.apache.http.HttpHost;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.params.HttpClientParams;
@@ -175,29 +178,31 @@ import org.restlet.engine.util.ReferenceUtils;
  * </table>
  * For the default SSL parameters see the Javadocs of the
  * {@link DefaultSslContextFactory} class.
- * 
+ *
  * @see <a href= "http://hc.apache.org/httpcomponents-client/tutorial/html/"
- *      >Apache HTTP Client tutorial</a>
+ * >Apache HTTP Client tutorial</a>
  * @see <a
  *      href="http://download.oracle.com/javase/1.5.0/docs/guide/net/index.html">Networking
- *      Features</a>
+ * Features</a>
  * @author Jerome Louvel
  * @deprecated Will be removed to favor lower-level network extensions allowing
- *             more control at the Restlet API level.
+ * more control at the Restlet API level.
  */
 @Deprecated
 public class HttpClientHelperJC extends
         org.restlet.engine.adapter.HttpClientHelper {
+
     private volatile DefaultHttpClient httpClient;
 
-    /** the idle connection reaper. */
+    /**
+     * the idle connection reaper.
+     */
     private volatile HttpIdleConnectionReaper idleConnectionReaper;
 
     /**
      * Constructor.
-     * 
-     * @param client
-     *            The client to help.
+     *
+     * @param client The client to help.
      */
     public HttpClientHelperJC(Client client) {
         super(client);
@@ -208,9 +213,8 @@ public class HttpClientHelperJC extends
 
     /**
      * Configures the HTTP client. By default, it try to set the retry handler.
-     * 
-     * @param httpClient
-     *            The HTTP client to configure.
+     *
+     * @param httpClient The HTTP client to configure.
      */
     protected void configure(DefaultHttpClient httpClient) {
         if (getRetryHandler() != null) {
@@ -234,9 +238,8 @@ public class HttpClientHelperJC extends
     /**
      * Configures the various parameters of the connection manager and the HTTP
      * client.
-     * 
-     * @param params
-     *            The parameter list to update.
+     *
+     * @param params The parameter list to update.
      */
     protected void configure(HttpParams params) {
         ConnManagerParams.setMaxTotalConnections(params,
@@ -263,9 +266,8 @@ public class HttpClientHelperJC extends
     /**
      * Configures the scheme registry. By default, it registers the HTTP and the
      * HTTPS schemes.
-     * 
-     * @param schemeRegistry
-     *            The scheme registry to configure.
+     *
+     * @param schemeRegistry The scheme registry to configure.
      */
     protected void configure(SchemeRegistry schemeRegistry) {
         schemeRegistry.register(new Scheme("http", PlainSocketFactory
@@ -304,9 +306,8 @@ public class HttpClientHelperJC extends
 
     /**
      * Creates a low-level HTTP client call from a high-level uniform call.
-     * 
-     * @param request
-     *            The high-level request.
+     *
+     * @param request The high-level request.
      * @return A low-level HTTP client call.
      */
     @Override
@@ -316,7 +317,7 @@ public class HttpClientHelperJC extends
         try {
             result = new HttpMethodCall(this, request.getMethod().toString(),
                     ReferenceUtils.update(request.getResourceRef(), request)
-                            .toString(), request.isEntityAvailable());
+                    .toString(), request.isEntityAvailable());
         } catch (IOException ioe) {
             getLogger().log(Level.WARNING,
                     "Unable to create the HTTP client call", ioe);
@@ -328,11 +329,9 @@ public class HttpClientHelperJC extends
     /**
      * Creates the connection manager. By default, it creates a thread safe
      * connection manager.
-     * 
-     * @param params
-     *            The configuration parameters.
-     * @param schemeRegistry
-     *            The scheme registry to use.
+     *
+     * @param params The configuration parameters.
+     * @param schemeRegistry The scheme registry to use.
      * @return The created connection manager.
      */
     protected ClientConnectionManager createClientConnectionManager(
@@ -345,7 +344,7 @@ public class HttpClientHelperJC extends
      * Client default behavior. The given class name must implement
      * org.apache.http.conn.ssl.X509HostnameVerifier and have default no-arg
      * constructor.
-     * 
+     *
      * @return The class name of the hostname verifier.
      */
     public String getHostnameVerifier() {
@@ -354,7 +353,7 @@ public class HttpClientHelperJC extends
 
     /**
      * Returns the wrapped Apache HTTP Client.
-     * 
+     *
      * @return The wrapped Apache HTTP Client.
      */
     public HttpClient getHttpClient() {
@@ -364,9 +363,9 @@ public class HttpClientHelperJC extends
     /**
      * Time in milliseconds between two checks for idle and expired connections.
      * The check happens only if this property is set to a value greater than 0.
-     * 
+     *
      * @return A value indicating the idle connection check interval or 0 if a
-     *         value has not been provided
+     * value has not been provided
      * @see #getIdleTimeout()
      */
     public long getIdleCheckInterval() {
@@ -377,9 +376,9 @@ public class HttpClientHelperJC extends
     /**
      * Returns the time in ms beyond which idle connections are eligible for
      * reaping. The default value is 60000 ms.
-     * 
+     *
      * @return The time in millis beyond which idle connections are eligible for
-     *         reaping.
+     * reaping.
      * @see #getIdleCheckInterval()
      */
     public long getIdleTimeout() {
@@ -390,9 +389,9 @@ public class HttpClientHelperJC extends
     /**
      * Returns the maximum number of connections that will be created for any
      * particular host.
-     * 
+     *
      * @return The maximum number of connections that will be created for any
-     *         particular host.
+     * particular host.
      */
     public int getMaxConnectionsPerHost() {
         return Integer.parseInt(getHelpedParameters().getFirstValue(
@@ -401,7 +400,7 @@ public class HttpClientHelperJC extends
 
     /**
      * Returns the maximum number of active connections.
-     * 
+     *
      * @return The maximum number of active connections.
      */
     public int getMaxTotalConnections() {
@@ -411,7 +410,7 @@ public class HttpClientHelperJC extends
 
     /**
      * Returns the host name of the HTTP proxy, if specified.
-     * 
+     *
      * @return the host name of the HTTP proxy, if specified.
      */
     public String getProxyHost() {
@@ -421,7 +420,7 @@ public class HttpClientHelperJC extends
 
     /**
      * Returns the port of the HTTP proxy, if specified, 3128 otherwise.
-     * 
+     *
      * @return the port of the HTTP proxy.
      */
     public int getProxyPort() {
@@ -434,7 +433,7 @@ public class HttpClientHelperJC extends
      * default behavior. The given class name must implement the
      * org.apache.commons.httpclient.HttpMethodRetryHandler interface and have a
      * default constructor.
-     * 
+     *
      * @return The class name of the retry handler.
      */
     public String getRetryHandler() {
@@ -443,7 +442,7 @@ public class HttpClientHelperJC extends
 
     /**
      * Returns the connection timeout. Defaults to 15000.
-     * 
+     *
      * @return The connection timeout.
      */
     public int getSocketConnectTimeoutMs() {
@@ -460,7 +459,7 @@ public class HttpClientHelperJC extends
     /**
      * Returns the socket timeout value. A timeout of zero is interpreted as an
      * infinite timeout. Defaults to 60000.
-     * 
+     *
      * @return The read timeout value.
      */
     public int getSocketTimeout() {
@@ -471,9 +470,9 @@ public class HttpClientHelperJC extends
     /**
      * Returns the minimum idle time, in milliseconds, for connections to be
      * closed when stopping the connector.
-     * 
+     *
      * @return The minimum idle time, in milliseconds, for connections to be
-     *         closed when stopping the connector.
+     * closed when stopping the connector.
      */
     public int getStopIdleTimeout() {
         return Integer.parseInt(getHelpedParameters().getFirstValue(
@@ -482,7 +481,7 @@ public class HttpClientHelperJC extends
 
     /**
      * Indicates if the protocol will use Nagle's algorithm
-     * 
+     *
      * @return True to enable TCP_NODELAY, false to disable.
      * @see java.net.Socket#setTcpNoDelay(boolean)
      */
@@ -493,7 +492,7 @@ public class HttpClientHelperJC extends
 
     /**
      * Indicates if the protocol will automatically follow redirects.
-     * 
+     *
      * @return True if the protocol will automatically follow redirects.
      */
     public boolean isFollowRedirects() {
@@ -503,9 +502,8 @@ public class HttpClientHelperJC extends
 
     /**
      * Sets the idle connections reaper.
-     * 
-     * @param connectionReaper
-     *            The idle connections reaper.
+     *
+     * @param connectionReaper The idle connections reaper.
      */
     public void setIdleConnectionReaper(
             HttpIdleConnectionReaper connectionReaper) {
@@ -531,6 +529,10 @@ public class HttpClientHelperJC extends
         // Create and configure the HTTP client
         this.httpClient = new DefaultHttpClient(connectionManager, params);
         configure(this.httpClient);
+        this.httpClient.getCredentialsProvider().setCredentials(
+                new AuthScope(DoiSettings.getInstance().getString(Consts.SERVER_PROXY_HOST), Integer.valueOf(DoiSettings.getInstance().getString(Consts.SERVER_PROXY_PORT))),
+                new UsernamePasswordCredentials(DoiSettings.getInstance().getSecret(Consts.SERVER_PROXY_LOGIN), DoiSettings.getInstance().getSecret(Consts.SERVER_PROXY_PWD))
+        );
 
         if (this.idleConnectionReaper != null) {
             // If a previous reaper is present, stop it

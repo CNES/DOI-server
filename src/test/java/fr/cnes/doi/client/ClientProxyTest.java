@@ -147,8 +147,7 @@ public class ClientProxyTest {
      *
      * @throws Exception
      */
-    @Test
-    @Ignore
+    @Test    
     public void testBaseClientCrossCite() throws Exception {
         BaseClient baseClient = new BaseClient("https://citation.crosscite.org/styles");
         if (DoiSettings.getInstance().getBoolean(Consts.SERVER_PROXY_USED)) {
@@ -171,6 +170,7 @@ public class ClientProxyTest {
     }    
 
     @Test
+    @Ignore
     public void testProxyWhithHttp() throws IOException {
         HttpHost proxy = new HttpHost(DoiSettings.getInstance().getString(Consts.SERVER_PROXY_HOST), Integer.valueOf(DoiSettings.getInstance().getString(Consts.SERVER_PROXY_PORT)), "http");
 
@@ -184,12 +184,12 @@ public class ClientProxyTest {
             httpclient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY,
                     proxy);
 
-            HttpHost target = new HttpHost("https://google.fr");
-            HttpGet req = new HttpGet("/");
+            //HttpHost target = new HttpHost("https://google.fr");
+            HttpGet req = new HttpGet("https://www.google.fr");
 
-            System.out.println("executing request to " + target + " via "
+            System.out.println("executing request to " + req + " via "
                     + proxy);
-            HttpResponse rsp = httpclient.execute(target, req);
+            HttpResponse rsp = httpclient.execute(req);
             HttpEntity entity = rsp.getEntity();
 
             System.out.println("----------------------------------------");
