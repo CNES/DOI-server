@@ -23,13 +23,18 @@ import org.restlet.resource.ClientResource;
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
+import java.io.IOException;
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
+import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -166,6 +171,46 @@ public class ClientProxyTest {
     }    
 
     @Test
+    public void testProxyWhithHttp() throws IOException {
+        HttpHost proxy = new HttpHost("proxy.server.com", 80, "http");
+
+        DefaultHttpClient httpclient = new DefaultHttpClient();
+        try {
+
+            httpclient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY,
+                    proxy);
+
+            HttpHost target = new HttpHost("https://google.fr");
+            HttpGet req = new HttpGet("/");
+
+            System.out.println("executing request to " + target + " via "
+                    + proxy);
+            HttpResponse rsp = httpclient.execute(target, req);
+            HttpEntity entity = rsp.getEntity();
+
+            System.out.println("----------------------------------------");
+            System.out.println(rsp.getStatusLine());
+            Header[] headers = rsp.getAllHeaders();
+            for (int i = 0; i < headers.length; i++) {
+                System.out.println(headers[i]);
+            }
+            System.out.println("----------------------------------------");
+
+            if (entity != null) {
+                System.out.println(EntityUtils.toString(entity));
+            }
+
+        } finally {
+            // When HttpClient instance is no longer needed,
+            // shut down the connection manager to ensure
+            // immediate deallocation of all system resources
+            httpclient.getConnectionManager().shutdown();
+        }
+            
+    }
+    
+    @Test
+    @Ignore
     public void testHttpClient() throws Exception {
         CredentialsProvider credsProvider = new BasicCredentialsProvider();
         credsProvider.setCredentials(
