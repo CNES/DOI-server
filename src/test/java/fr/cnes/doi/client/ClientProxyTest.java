@@ -172,9 +172,13 @@ public class ClientProxyTest {
 
     @Test
     public void testProxyWhithHttp() throws IOException {
-        HttpHost proxy = new HttpHost("proxy.server.com", 80, "http");
+        HttpHost proxy = new HttpHost(DoiSettings.getInstance().getString(Consts.SERVER_PROXY_HOST), Integer.valueOf(DoiSettings.getInstance().getString(Consts.SERVER_PROXY_PORT)), "http");
 
         DefaultHttpClient httpclient = new DefaultHttpClient();
+        httpclient.getCredentialsProvider().setCredentials(
+            new AuthScope(DoiSettings.getInstance().getString(Consts.SERVER_PROXY_HOST), Integer.valueOf(DoiSettings.getInstance().getString(Consts.SERVER_PROXY_PORT))),
+            new UsernamePasswordCredentials(DoiSettings.getInstance().getSecret(Consts.SERVER_PROXY_LOGIN), DoiSettings.getInstance().getSecret(Consts.SERVER_PROXY_PWD))
+        );
         try {
 
             httpclient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY,
