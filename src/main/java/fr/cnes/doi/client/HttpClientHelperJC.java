@@ -64,8 +64,6 @@ public class HttpClientHelperJC extends org.restlet.engine.adapter.HttpClientHel
      */
     private volatile HttpIdleConnectionReaper idleConnectionReaper;
 
-    private volatile CredentialsProvider credsProvider = new BasicCredentialsProvider();
-
     public HttpClientHelperJC(Client client) {
         super(client);
         this.httpClient = null;
