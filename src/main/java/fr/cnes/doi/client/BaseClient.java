@@ -67,7 +67,7 @@ public class BaseClient {
 	public void setProxyAuthentication(final String host, final String port, final String login, final String pwd) {
 		Client proxy = new Client(new Context(), Arrays.asList(Protocol.HTTP, Protocol.HTTPS));
 		proxy.getContext().getParameters().add("proxyHost", host);
-		proxy.getContext().getParameters().add("proxyPort", port);
+		proxy.getContext().getParameters().add("proxyPort", port);               
 		this.client.setProxyChallengeResponse(ChallengeScheme.HTTP_BASIC, login, pwd);
 		this.client.setNext(proxy);
 	}

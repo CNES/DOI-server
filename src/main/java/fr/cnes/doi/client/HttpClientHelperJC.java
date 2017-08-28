@@ -5,6 +5,8 @@
  */
 package fr.cnes.doi.client;
 
+import fr.cnes.doi.settings.Consts;
+import fr.cnes.doi.settings.DoiSettings;
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.net.UnknownHostException;
@@ -19,6 +21,9 @@ import javax.net.ssl.SSLException;
 import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
@@ -33,6 +38,7 @@ import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.conn.ssl.TrustStrategy;
+import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.restlet.Client;
 import org.restlet.Request;
 import org.restlet.engine.adapter.ClientCall;
@@ -52,9 +58,13 @@ import org.restlet.engine.util.ReferenceUtils;
 public class HttpClientHelperJC extends org.restlet.engine.adapter.HttpClientHelper {
 
     private volatile CloseableHttpClient httpClient;
-    
-    /** the idle connection reaper. */
-    private volatile HttpIdleConnectionReaper idleConnectionReaper;    
+
+    /**
+     * the idle connection reaper.
+     */
+    private volatile HttpIdleConnectionReaper idleConnectionReaper;
+
+    private volatile CredentialsProvider credsProvider = new BasicCredentialsProvider();
 
     public HttpClientHelperJC(Client client) {
         super(client);
@@ -75,11 +85,10 @@ public class HttpClientHelperJC extends org.restlet.engine.adapter.HttpClientHel
     @Override
     public ClientCall create(Request request) {
         ClientCall result = null;
-
         try {
             result = new HttpMethodCall(this, request.getMethod().toString(),
                     ReferenceUtils.update(request.getResourceRef(), request)
-                            .toString(), request.isEntityAvailable());
+                    .toString(), request.isEntityAvailable());
         } catch (IOException ex) {
             getLogger().log(Level.WARNING,
                     "Unable to create the HTTP client call", ex);
@@ -96,10 +105,10 @@ public class HttpClientHelperJC extends org.restlet.engine.adapter.HttpClientHel
         if (httpProxyHost != null) {
             HttpHost proxy = new HttpHost(httpProxyHost, getProxyPort());
             rcb = rcb.setProxy(proxy);
-        }        
+        }
         return rcb.build();
-    }    
-    
+    }
+
     protected SocketConfig createSocketParams() {
         SocketConfig.Builder scb = SocketConfig.custom();
         scb = scb.setSoKeepAlive(true);
@@ -108,7 +117,6 @@ public class HttpClientHelperJC extends org.restlet.engine.adapter.HttpClientHel
         return scb.build();
         ////setConnectionTimeout
     }
-    
 
     /**
      * Returns the host name of the HTTP proxy, if specified.
@@ -195,7 +203,7 @@ public class HttpClientHelperJC extends org.restlet.engine.adapter.HttpClientHel
      *
      * @param httpClient The HTTP client to configure.
      */
-    protected void configure( HttpClientBuilder httpClient) {
+    protected void configure(HttpClientBuilder httpClient) {
         HttpRequestRetryHandler myRetryHandler = new HttpRequestRetryHandler() {
 
             @Override
@@ -252,132 +260,134 @@ public class HttpClientHelperJC extends org.restlet.engine.adapter.HttpClientHel
 //                .build();
 //        httpClient.setDefaultCookieSpecRegistry(cookieSpecRegistry);
     }
-    
+
     /**
      * Returns the maximum number of active connections.
-     * 
+     *
      * @return The maximum number of active connections.
      */
     public int getMaxTotalConnections() {
         return Integer.parseInt(getHelpedParameters().getFirstValue(
                 "maxTotalConnections", "20"));
-    }   
-    
+    }
+
     /**
      * Returns the maximum number of connections that will be created for any
      * particular host.
-     * 
+     *
      * @return The maximum number of connections that will be created for any
-     *         particular host.
+     * particular host.
      */
     public int getMaxConnectionsPerHost() {
         return Integer.parseInt(getHelpedParameters().getFirstValue(
                 "maxConnectionsPerHost", "10"));
-    }    
-    
+    }
+
     /**
      * Returns the class name of the hostname verifier to use instead of HTTP
      * Client default behavior. The given class name must implement
      * org.apache.http.conn.ssl.X509HostnameVerifier and have default no-arg
      * constructor.
-     * 
+     *
      * @return The class name of the hostname verifier.
      */
     public String getHostnameVerifier() {
         return getHelpedParameters().getFirstValue("hostnameVerifier", null);
-    }    
+    }
 
-        /**
+    /**
      * Configures the scheme registry. By default, it registers the HTTP and the
      * HTTPS schemes.
-     * 
-     * @return schemeRegistry
-     *            The scheme registry to configure.
+     *
+     * @return schemeRegistry The scheme registry to configure.
      */
-    protected Registry<ConnectionSocketFactory>  createSchemeRegistry() {
+    protected Registry<ConnectionSocketFactory> createSchemeRegistry() {
         Registry<ConnectionSocketFactory> registry;
-        try {         
+        try {
             ConnectionSocketFactory sslConnectionFactory = new SSLSocketFactory(new TrustStrategy() {
                 @Override
                 public boolean isTrusted(X509Certificate[] chain, String authType) throws CertificateException {
                     return true;
                 }
-            }, new AllowAllHostnameVerifier());        
+            }, new AllowAllHostnameVerifier());
             registry = RegistryBuilder.<ConnectionSocketFactory>create()
                     .register("https", sslConnectionFactory)
                     .register("http", PlainConnectionSocketFactory.getSocketFactory())
-                    .build();        
-        
-        } catch(NoSuchAlgorithmException | KeyManagementException | KeyStoreException | UnrecoverableKeyException ex) {
+                    .build();
+
+        } catch (NoSuchAlgorithmException | KeyManagementException | KeyStoreException | UnrecoverableKeyException ex) {
             throw new RuntimeException(ex);
         }
-   
+
         return registry;
     }
-    
+
     /**
      * Creates the connection manager. By default, it creates a thread safe
      * connection manager.
-     * 
-     * @param schemeRegistry
-     *            The scheme registry to use.
+     *
+     * @param schemeRegistry The scheme registry to use.
      * @return The created connection manager.
      */
     protected HttpClientConnectionManager createClientConnectionManager(Registry<ConnectionSocketFactory> schemeRegistry) {
         return new PoolingHttpClientConnectionManager(schemeRegistry);
-    }    
-    
+    }
+
     /**
      * Sets the idle connections reaper.
-     * 
-     * @param connectionReaper
-     *            The idle connections reaper.
+     *
+     * @param connectionReaper The idle connections reaper.
      */
     public void setIdleConnectionReaper(
             HttpIdleConnectionReaper connectionReaper) {
         this.idleConnectionReaper = connectionReaper;
-    }    
-    
+    }
+
     /**
      * Time in milliseconds between two checks for idle and expired connections.
      * The check happens only if this property is set to a value greater than 0.
-     * 
+     *
      * @return A value indicating the idle connection check interval or 0 if a
-     *         value has not been provided
+     * value has not been provided
      * @see #getIdleTimeout()
      */
     public long getIdleCheckInterval() {
         return Long.parseLong(getHelpedParameters().getFirstValue(
                 "idleCheckInterval", "0"));
-    }  
-    
+    }
+
     /**
      * Returns the time in ms beyond which idle connections are eligible for
      * reaping. The default value is 60000 ms.
-     * 
+     *
      * @return The time in millis beyond which idle connections are eligible for
-     *         reaping.
+     * reaping.
      * @see #getIdleCheckInterval()
      */
     public long getIdleTimeout() {
         return Long.parseLong(getHelpedParameters().getFirstValue(
                 "idleTimeout", "60000"));
-    }    
-    
-    
+    }
+
     @Override
     public void start() throws Exception {
         super.start();
-        RequestConfig rqc = createHttpRequestParams();        
+        CredentialsProvider credsProvider = new BasicCredentialsProvider();
+        credsProvider.setCredentials(
+                new AuthScope(DoiSettings.getInstance().getString(Consts.SERVER_PROXY_HOST), Integer.valueOf(DoiSettings.getInstance().getString(Consts.SERVER_PROXY_PORT))),
+                new UsernamePasswordCredentials(DoiSettings.getInstance().getSecret(Consts.SERVER_PROXY_LOGIN), DoiSettings.getInstance().getSecret(Consts.SERVER_PROXY_PWD))
+        );        
+        RequestConfig rqc = createHttpRequestParams();
         SocketConfig sc = createSocketParams();
-        Registry<ConnectionSocketFactory>  registry = createSchemeRegistry();
-        HttpClientConnectionManager connectionManager = createClientConnectionManager(registry);                
+        Registry<ConnectionSocketFactory> registry = createSchemeRegistry();
+        HttpClientConnectionManager connectionManager = createClientConnectionManager(registry);
         this.httpClient = HttpClients.custom()
                 .setMaxConnTotal(getMaxTotalConnections())
                 .setMaxConnPerRoute(getMaxConnectionsPerHost())
                 .setDefaultRequestConfig(rqc)
-                .setDefaultSocketConfig(sc)      
+                .setDefaultSocketConfig(sc)
                 .setConnectionManager(connectionManager)
+                .setDefaultCredentialsProvider(credsProvider)
                 .build();
         if (this.idleConnectionReaper != null) {
             // If a previous reaper is present, stop it
@@ -386,15 +396,15 @@ public class HttpClientHelperJC extends org.restlet.engine.adapter.HttpClientHel
 
         this.idleConnectionReaper = new HttpIdleConnectionReaper(httpClient,
                 getIdleCheckInterval(), getIdleTimeout());
-        
-        getLogger().info("Starting the Apache HTTP client");        
+
+        getLogger().info("Starting the Apache HTTP client");
     }
 
     @Override
     public void stop() throws Exception {
         if (this.idleConnectionReaper != null) {
             this.idleConnectionReaper.stop();
-        }        
+        }
         if (getHttpClient() != null) {
             getHttpClient().close();
             getLogger().info("Stopping the HTTP client");

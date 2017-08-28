@@ -145,7 +145,7 @@ public class ClientProxyTest {
     @Test
     @Ignore
     public void testBaseClientCrossCite() throws Exception {
-        BaseClient baseClient = new BaseClient("http://citation.crosscite.org/styles");
+        BaseClient baseClient = new BaseClient("https://citation.crosscite.org/styles");
         if (DoiSettings.getInstance().getBoolean(Consts.SERVER_PROXY_USED)) {
             baseClient.setProxyAuthentication(DoiSettings.getInstance().getString(Consts.SERVER_PROXY_HOST),
                     DoiSettings.getInstance().getString(Consts.SERVER_PROXY_PORT),
