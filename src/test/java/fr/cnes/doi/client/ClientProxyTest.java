@@ -157,7 +157,7 @@ public class ClientProxyTest {
                     DoiSettings.getInstance().getSecret(Consts.SERVER_PROXY_PWD));
         }
 
-        Representation rep = baseClient.client.get();
+        Representation rep = baseClient.client.get();       
         Status status = baseClient.client.getStatus();
         Assert.assertTrue("Test si la requete est OK", status.isSuccess());
 

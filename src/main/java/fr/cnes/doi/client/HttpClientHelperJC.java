@@ -258,6 +258,8 @@ public class HttpClientHelperJC extends
 
         String httpProxyHost = getProxyHost();
         if (httpProxyHost != null) {
+            System.out.println("host="+httpProxyHost);
+            System.out.println("prt="+getProxyPort());
             HttpHost proxy = new HttpHost(httpProxyHost, getProxyPort());
             params.setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
         }
@@ -528,11 +530,12 @@ public class HttpClientHelperJC extends
 
         // Create and configure the HTTP client
         this.httpClient = new DefaultHttpClient(connectionManager, params);
-        configure(this.httpClient);
         this.httpClient.getCredentialsProvider().setCredentials(
                 new AuthScope(DoiSettings.getInstance().getString(Consts.SERVER_PROXY_HOST), Integer.valueOf(DoiSettings.getInstance().getString(Consts.SERVER_PROXY_PORT))),
                 new UsernamePasswordCredentials(DoiSettings.getInstance().getSecret(Consts.SERVER_PROXY_LOGIN), DoiSettings.getInstance().getSecret(Consts.SERVER_PROXY_PWD))
         );
+        configure(this.httpClient);
+        
 
         if (this.idleConnectionReaper != null) {
             // If a previous reaper is present, stop it

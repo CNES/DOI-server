@@ -36,7 +36,7 @@ public class BaseClient {
 	 */
 	public BaseClient(final String uri) {
 		Engine.getInstance().getRegisteredClients().clear();
-		Engine.getInstance().getRegisteredClients().add(new HttpClientHelperJC(null));
+		Engine.getInstance().getRegisteredClients().add(new HttpClientHelperPatch(null));
 		this.client = new ClientResource(uri);
 		configureProxyIfNeeded();
 	}
@@ -68,7 +68,7 @@ public class BaseClient {
 		Client proxy = new Client(new Context(), Arrays.asList(Protocol.HTTP, Protocol.HTTPS));
 		proxy.getContext().getParameters().add("proxyHost", host);
 		proxy.getContext().getParameters().add("proxyPort", port);               
-		this.client.setProxyChallengeResponse(ChallengeScheme.HTTP_BASIC, login, pwd);
+		//this.client.setProxyChallengeResponse(ChallengeScheme.HTTP_BASIC, login, pwd);
 		this.client.setNext(proxy);
 	}
 
