@@ -23,6 +23,7 @@ import org.restlet.resource.ClientResource;
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
+import fr.cnes.doi.utils.HttpClientHelperPatch;
 import java.io.IOException;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -30,15 +31,9 @@ import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.params.ConnRoutePNames;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.junit.Ignore;
 
@@ -90,7 +85,7 @@ public class ClientProxyTest {
         // Execute only if proxy is enabled
         if (DoiSettings.getInstance().getBoolean(Consts.SERVER_PROXY_USED)) {
             Engine.getInstance().getRegisteredClients().clear();
-            Engine.getInstance().getRegisteredClients().add(new HttpClientHelperJC(null));
+            Engine.getInstance().getRegisteredClients().add(new HttpClientHelperPatch(null));
 
             Client proxy = new Client(new Context(), Protocol.HTTP);
             proxy.getContext().getParameters().add("proxyHost",
@@ -184,7 +179,6 @@ public class ClientProxyTest {
             httpclient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY,
                     proxy);
 
-            //HttpHost target = new HttpHost("https://google.fr");
             HttpGet req = new HttpGet("https://www.google.fr");
 
             System.out.println("executing request to " + req + " via "
@@ -211,55 +205,5 @@ public class ClientProxyTest {
             httpclient.getConnectionManager().shutdown();
         }
             
-    }
-    
-    @Test
-    @Ignore
-    public void testHttpClient() throws Exception {
-        CredentialsProvider credsProvider = new BasicCredentialsProvider();
-        credsProvider.setCredentials(
-                new AuthScope(DoiSettings.getInstance().getString(Consts.SERVER_PROXY_HOST), Integer.valueOf(DoiSettings.getInstance().getString(Consts.SERVER_PROXY_PORT))),
-                new UsernamePasswordCredentials(DoiSettings.getInstance().getSecret(Consts.SERVER_PROXY_LOGIN), DoiSettings.getInstance().getSecret(Consts.SERVER_PROXY_PWD))
-        );
-        CloseableHttpClient httpclient = HttpClients.custom().setDefaultCredentialsProvider(credsProvider).build();
-        
-        
-        int status = 0;
-        try {
-            //HttpHost target = new HttpHost("www.google.fr", 443, "https");
-            HttpHost proxy = new HttpHost(DoiSettings.getInstance().getString(Consts.SERVER_PROXY_HOST), Integer.valueOf(DoiSettings.getInstance().getString(Consts.SERVER_PROXY_PORT)), "http");            
-           
-            RequestConfig config = RequestConfig.custom().setProxy(proxy).build();
-            HttpGet request = new HttpGet("https://www.google.fr");
-            request.setConfig(config);                        
-            
-            System.out.println("Executing request " + request.getRequestLine()+" to "+ request.getURI() +" via "+proxy);
-            CloseableHttpResponse response = httpclient.execute(request);
-            status = response.getStatusLine().getStatusCode();
-            try {
-                System.out.println("--------");
-                System.out.println(response.getStatusLine());
-                System.out.println(EntityUtils.toString(response.getEntity()));
-            } finally {
-                response.close();
-            }
-            
-        } finally {
-            httpclient.close();
-        }
-        Assert.assertEquals("Test si la requete est OK", 200, status);
-//        HttpClient httpclient = new HttpClient();
-//        if (DoiSettings.getInstance().getBoolean(Consts.SERVER_PROXY_USED)) {
-//            httpclient.getHostConfiguration().setProxy(DoiSettings.getInstance().getString(Consts.SERVER_PROXY_HOST), Integer.valueOf(DoiSettings.getInstance().getString(Consts.SERVER_PROXY_PORT)));
-//            httpclient.getState().setProxyCredentials("my-proxy-realm", DoiSettings.getInstance().getString(Consts.SERVER_PROXY_HOST),
-//                    new UsernamePasswordCredentials(DoiSettings.getInstance().getSecret(Consts.SERVER_PROXY_LOGIN), DoiSettings.getInstance().getSecret(Consts.SERVER_PROXY_PWD)));
-//        }
-//        
-//        GetMethod method = new GetMethod("https://www.google.com");
-//        int statusCode = httpclient.executeMethod(method);
-//        
-//        Assert.assertEquals("Test si la requete est OK", 200, statusCode);
-
-    }
-
+    }    
 }
