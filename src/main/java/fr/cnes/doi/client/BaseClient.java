@@ -12,7 +12,6 @@ import org.restlet.Context;
 import org.restlet.data.ChallengeScheme;
 import org.restlet.data.Protocol;
 import org.restlet.engine.Engine;
-import org.restlet.ext.httpclient.HttpClientHelper;
 import org.restlet.resource.ClientResource;
 
 import fr.cnes.doi.settings.ProxySettings;
@@ -37,7 +36,7 @@ public class BaseClient {
 	 */
 	public BaseClient(final String uri) {
 		Engine.getInstance().getRegisteredClients().clear();
-		Engine.getInstance().getRegisteredClients().add(new HttpClientHelper(null));
+		Engine.getInstance().getRegisteredClients().add(new HttpClientHelperJC(null));
 		this.client = new ClientResource(uri);
 		configureProxyIfNeeded();
 	}

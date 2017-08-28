@@ -17,7 +17,6 @@ import org.restlet.data.ChallengeScheme;
 import org.restlet.data.Protocol;
 import org.restlet.data.Status;
 import org.restlet.engine.Engine;
-import org.restlet.ext.httpclient.HttpClientHelper;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 
@@ -33,6 +32,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.junit.Ignore;
@@ -85,7 +85,7 @@ public class ClientProxyTest {
         // Execute only if proxy is enabled
         if (DoiSettings.getInstance().getBoolean(Consts.SERVER_PROXY_USED)) {
             Engine.getInstance().getRegisteredClients().clear();
-            Engine.getInstance().getRegisteredClients().add(new HttpClientHelper(null));
+            Engine.getInstance().getRegisteredClients().add(new HttpClientHelperJC(null));
 
             Client proxy = new Client(new Context(), Protocol.HTTP);
             proxy.getContext().getParameters().add("proxyHost",
@@ -158,6 +158,12 @@ public class ClientProxyTest {
         Assert.assertTrue("Test si la requete est OK", status.isSuccess());
 
     }
+    
+    @Test
+    public void testDefaultHttpClient() throws Exception {
+        DefaultHttpClient httpClient = new DefaultHttpClient();
+       
+    }    
 
     @Test
     public void testHttpClient() throws Exception {
@@ -173,9 +179,10 @@ public class ClientProxyTest {
         try {
             //HttpHost target = new HttpHost("www.google.fr", 443, "https");
             HttpHost proxy = new HttpHost(DoiSettings.getInstance().getString(Consts.SERVER_PROXY_HOST), Integer.valueOf(DoiSettings.getInstance().getString(Consts.SERVER_PROXY_PORT)), "http");            
+           
             RequestConfig config = RequestConfig.custom().setProxy(proxy).build();
             HttpGet request = new HttpGet("https://www.google.fr");
-            request.setConfig(config);
+            request.setConfig(config);                        
             
             System.out.println("Executing request " + request.getRequestLine()+" to "+ request.getURI() +" via "+proxy);
             CloseableHttpResponse response = httpclient.execute(request);

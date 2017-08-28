@@ -127,17 +127,17 @@
             <artifactId>org.restlet.ext.wadl</artifactId>
             <version>${restlet-version}</version>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>org.restlet.jse</groupId>
             <artifactId>org.restlet.ext.httpclient</artifactId>
             <version>${restlet-version}</version>
-        </dependency>
+        </dependency>-->
         <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>4.3.4</version>
-            <scope>test</scope>
+            <!--<scope>test</scope>-->
             <type>jar</type>
         </dependency>
 
