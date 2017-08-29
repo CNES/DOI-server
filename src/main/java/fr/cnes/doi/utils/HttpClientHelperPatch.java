@@ -5,29 +5,23 @@
  */
 package fr.cnes.doi.utils;
 
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.params.CookiePolicy;
 import org.apache.http.client.params.HttpClientParams;
-import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.params.ConnManagerParams;
 import org.apache.http.conn.params.ConnPerRouteBean;
 import org.apache.http.conn.params.ConnRoutePNames;
-import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.cookie.CookieSpecRegistry;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.restlet.Client;
 import org.restlet.engine.Engine;
 import org.restlet.ext.httpclient.HttpClientHelper;
-import org.restlet.ext.httpclient.internal.HttpIdleConnectionReaper;
 import org.restlet.ext.httpclient.internal.IgnoreCookieSpecFactory;
 
 /**
@@ -37,15 +31,13 @@ import org.restlet.ext.httpclient.internal.IgnoreCookieSpecFactory;
  */
 public class HttpClientHelperPatch extends HttpClientHelper {
     
-    /** the idle connection reaper. */
-    private volatile HttpIdleConnectionReaper idleConnectionReaper;
+    private String host;
+    private int port;
+    private String login;
+    private String pwd;
     
     public HttpClientHelperPatch(Client client) {
         super(client);
-        HttpClient clientHttp = this.getHttpClient();
-        if(clientHttp == null) {
-            clientHttp = new DefaultHttpClient();
-        }
     }
     
     @Override
@@ -92,54 +84,77 @@ public class HttpClientHelperPatch extends HttpClientHelper {
         CookieSpecRegistry csr = new CookieSpecRegistry();
         csr.register(CookiePolicy.IGNORE_COOKIES, new IgnoreCookieSpecFactory());        
         ((DefaultHttpClient)this.getHttpClient()).setCookieSpecs(csr);
-    }  
-          
-    public void setProxyAuthentication(final String host, final String port, final String login, final String pwd) {
-        ((DefaultHttpClient)this.getHttpClient()).getCredentialsProvider().setCredentials(
-                new AuthScope(host, Integer.valueOf(port)),
-                new UsernamePasswordCredentials(login, pwd)
-        );         
-    }    
+    }   
+    
+    public void setProxyAuthentication(final String host, final String port, final String login, final String pwd) {        
+        setHost(host);
+        setPort(Integer.valueOf(port));
+        setLogin(login);
+        setPwd(pwd);         
+    }   
     
     @Override
     public void start() throws Exception {
-        // Define configuration parameters
-        HttpParams params = new BasicHttpParams();
-        configure(params);
-
-        // Set-up the scheme registry
-        SchemeRegistry schemeRegistry = new SchemeRegistry();
-        configure(schemeRegistry);
-
-        // Create the connection manager
-        ClientConnectionManager connectionManager = createClientConnectionManager(
-                params, schemeRegistry);
-
-        // Create and configure the HTTP client
-        configure((DefaultHttpClient) this.getHttpClient());
-
-        if (this.idleConnectionReaper != null) {
-            // If a previous reaper is present, stop it
-            this.idleConnectionReaper.stop();
-        }
-
-        this.idleConnectionReaper = new HttpIdleConnectionReaper(getHttpClient(),
-                getIdleCheckInterval(), getIdleTimeout());
-
-        getLogger().info("Starting the Apache HTTP client");
+        super.start();
+        ((DefaultHttpClient)this.getHttpClient()).getCredentialsProvider().setCredentials(
+                new AuthScope(getHost(), getPort()),
+                new UsernamePasswordCredentials(getLogin(), getPwd())
+        );        
     }    
-    
-    @Override
-    public void stop() throws Exception {
-        if (this.idleConnectionReaper != null) {
-            this.idleConnectionReaper.stop();
-        }
-        if (getHttpClient() != null) {
-            getHttpClient().getConnectionManager().closeExpiredConnections();
-            getHttpClient().getConnectionManager().closeIdleConnections(
-                    getStopIdleTimeout(), TimeUnit.MILLISECONDS);
-            getHttpClient().getConnectionManager().shutdown();
-            getLogger().info("Stopping the HTTP client");
-        }
-    }    
+
+    /**
+     * @return the host
+     */
+    private String getHost() {
+        return host;
+    }
+
+    /**
+     * @param host the host to set
+     */
+    private void setHost(String host) {
+        this.host = host;
+    }
+
+    /**
+     * @return the port
+     */
+    private int getPort() {
+        return port;
+    }
+
+    /**
+     * @param port the port to set
+     */
+    private void setPort(int port) {
+        this.port = port;
+    }
+
+    /**
+     * @return the login
+     */
+    private String getLogin() {
+        return login;
+    }
+
+    /**
+     * @param login the login to set
+     */
+    private void setLogin(String login) {
+        this.login = login;
+    }
+
+    /**
+     * @return the pwd
+     */
+    private String getPwd() {
+        return pwd;
+    }
+
+    /**
+     * @param pwd the pwd to set
+     */
+    private void setPwd(String pwd) {
+        this.pwd = pwd;
+    }
 }
