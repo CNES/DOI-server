@@ -69,8 +69,6 @@ public class BaseClient {
 		Client proxy = new Client(new Context(), Arrays.asList(Protocol.HTTP, Protocol.HTTPS));
 		proxy.getContext().getParameters().add("proxyHost", host);
 		proxy.getContext().getParameters().add("proxyPort", port);    
-                HttpClientHelperPatch clientHttpHelper = (HttpClientHelperPatch) Engine.getInstance().getRegisteredClients().get(0);
-                clientHttpHelper.setProxyAuthentication(host, port, login, pwd);
 		this.client.setNext(proxy);
 	}
 

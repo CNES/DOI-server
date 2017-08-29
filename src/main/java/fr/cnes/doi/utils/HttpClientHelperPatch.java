@@ -5,6 +5,8 @@
  */
 package fr.cnes.doi.utils;
 
+import fr.cnes.doi.settings.Consts;
+import fr.cnes.doi.settings.DoiSettings;
 import java.util.logging.Level;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
@@ -53,7 +55,9 @@ public class HttpClientHelperPatch extends HttpClientHelper {
         // when requesting a URL starting by http:// through a proxy
         //HttpClientParams.setAuthenticating(params, false);
         HttpClientParams.setRedirecting(params, isFollowRedirects());        
-        HttpClientParams.setCookiePolicy(params, CookiePolicy.IGNORE_COOKIES);
+        // Comment the following parameter. If uncomment, the application will crash
+        // when requesting a URL starting by http:// through a proxy        
+        //HttpClientParams.setCookiePolicy(params, CookiePolicy.IGNORE_COOKIES);
         HttpConnectionParams.setTcpNoDelay(params, getTcpNoDelay());
         HttpConnectionParams.setConnectionTimeout(params,
                 getSocketConnectTimeoutMs());
@@ -80,81 +84,19 @@ public class HttpClientHelperPatch extends HttpClientHelper {
                                 e);
             }
         }
-
-        CookieSpecRegistry csr = new CookieSpecRegistry();
-        csr.register(CookiePolicy.IGNORE_COOKIES, new IgnoreCookieSpecFactory());        
-        ((DefaultHttpClient)this.getHttpClient()).setCookieSpecs(csr);
-    }   
-    
-    public void setProxyAuthentication(final String host, final String port, final String login, final String pwd) {        
-        setHost(host);
-        setPort(Integer.valueOf(port));
-        setLogin(login);
-        setPwd(pwd);         
-    }   
+        // Comment the following parameters. If uncomment, the application will crash
+        // when requesting a URL starting by http:// through a proxy
+        //CookieSpecRegistry csr = new CookieSpecRegistry();
+        //csr.register(CookiePolicy.IGNORE_COOKIES, new IgnoreCookieSpecFactory());        
+        //((DefaultHttpClient)this.getHttpClient()).setCookieSpecs(csr);
+    }     
     
     @Override
     public void start() throws Exception {
         super.start();
         ((DefaultHttpClient)this.getHttpClient()).getCredentialsProvider().setCredentials(
-                new AuthScope(getHost(), getPort()),
-                new UsernamePasswordCredentials(getLogin(), getPwd())
+                new AuthScope(DoiSettings.getInstance().getString(Consts.SERVER_PROXY_HOST), Integer.valueOf(DoiSettings.getInstance().getString(Consts.SERVER_PROXY_PORT))),
+                new UsernamePasswordCredentials(DoiSettings.getInstance().getSecret(Consts.SERVER_PROXY_LOGIN), DoiSettings.getInstance().getSecret(Consts.SERVER_PROXY_PWD))
         );        
     }    
-
-    /**
-     * @return the host
-     */
-    private String getHost() {
-        return host;
-    }
-
-    /**
-     * @param host the host to set
-     */
-    private void setHost(String host) {
-        this.host = host;
-    }
-
-    /**
-     * @return the port
-     */
-    private int getPort() {
-        return port;
-    }
-
-    /**
-     * @param port the port to set
-     */
-    private void setPort(int port) {
-        this.port = port;
-    }
-
-    /**
-     * @return the login
-     */
-    private String getLogin() {
-        return login;
-    }
-
-    /**
-     * @param login the login to set
-     */
-    private void setLogin(String login) {
-        this.login = login;
-    }
-
-    /**
-     * @return the pwd
-     */
-    private String getPwd() {
-        return pwd;
-    }
-
-    /**
-     * @param pwd the pwd to set
-     */
-    private void setPwd(String pwd) {
-        this.pwd = pwd;
-    }
 }
