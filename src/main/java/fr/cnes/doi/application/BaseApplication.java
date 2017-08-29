@@ -5,7 +5,6 @@
  */
 package fr.cnes.doi.application;
 
-import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.settings.ProxySettings;
 import org.restlet.ext.wadl.WadlApplication;
 
