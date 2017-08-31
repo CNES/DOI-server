@@ -76,6 +76,8 @@ public class DoiCrossCiteApplication extends BaseApplication {
      * Application logger.
      */
     private static final Logger LOGGER = Utils.getAppLogger();
+    
+    public static final String NAME = "Cross Cite Application";    
 
     /**
      * Client to query CrossCite.
@@ -118,7 +120,7 @@ public class DoiCrossCiteApplication extends BaseApplication {
                 + "Principles provide a guideline for the those that want to "
                 + "enhance reuse of their data (Wilkinson 2016).");
         setDescription(description.toString());
-        setName("Cross Cite Application");
+        setName(NAME);
         setOwner("Centre National d'Etudes Spatiales (CNES)");
 
         LOGGER.exiting(DoiCrossCiteApplication.class.getName(), "Constructor");

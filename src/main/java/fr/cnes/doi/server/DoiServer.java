@@ -37,6 +37,7 @@ import fr.cnes.doi.application.DoiCrossCiteApplication;
 import fr.cnes.doi.application.DoiMdsApplication;
 import fr.cnes.doi.application.DoiStatusApplication;
 import fr.cnes.doi.application.AdminApplication;
+import fr.cnes.doi.db.ProjectSuffixDB;
 import fr.cnes.doi.logging.api.DoiLogDataServer;
 import fr.cnes.doi.logging.security.DoiSecurityLogFilter;
 import fr.cnes.doi.security.RoleAuthorizer;
@@ -222,6 +223,7 @@ public class DoiServer extends Component {
         // Set authentication
         RoleAuthorizer.getInstance().createReamFor(appDoiProject);
         RoleAuthorizer.getInstance().createReamFor(appAdmin);
+        
     }
 
     
