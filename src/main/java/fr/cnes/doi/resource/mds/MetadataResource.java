@@ -7,6 +7,7 @@ package fr.cnes.doi.resource.mds;
 
 import fr.cnes.doi.application.DoiMdsApplication;
 import fr.cnes.doi.exception.ClientMdsException;
+import fr.cnes.doi.utils.Requirement;
 
 import java.util.Arrays;
 import org.restlet.data.Method;
@@ -47,6 +48,10 @@ public class MetadataResource extends BaseMdsResource {
      * @return the metadata for a given DOI
      * @throws ResourceException Will be thrown when an error happens                    
      */
+    @Requirement(
+            reqId = "DOI_SRV_060",
+            reqName = "Récupération des métadonnées"
+    )     
     @Get
     public Representation getMetadata() throws ResourceException {
         getLogger().entering(getClass().getName(), "getMetadata", this.doiName);
@@ -70,6 +75,10 @@ public class MetadataResource extends BaseMdsResource {
      * @return the deleted representation
      * @throws ResourceException Will be thrown when an error happens                         
      */
+    @Requirement(
+            reqId = "DOI_SRV_050",
+            reqName = "Désactivation d'un DOI"
+    )     
     @Delete
     public Representation deleteMetadata() throws ResourceException { 
         //TODO : replace DOI name when PRE_PROD
@@ -94,6 +103,10 @@ public class MetadataResource extends BaseMdsResource {
      * Describes the GET method.
      * @param info Wadl description for GET method
      */
+    @Requirement(
+            reqId = "DOI_DOC_010",
+            reqName = "Documentation des interfaces"
+    )      
     @Override
     protected final void describeGet(final MethodInfo info) {
         info.setName(Method.GET);
@@ -113,6 +126,10 @@ public class MetadataResource extends BaseMdsResource {
      * Describes the DELETE method.
      * @param info Wadl description for DELETE method
      */
+    @Requirement(
+            reqId = "DOI_DOC_010",
+            reqName = "Documentation des interfaces"
+    )      
     @Override
     protected final void describeDelete(final MethodInfo info) {
         info.setName(Method.DELETE);

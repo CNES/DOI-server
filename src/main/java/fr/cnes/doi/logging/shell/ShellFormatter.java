@@ -5,13 +5,19 @@
  */
 package fr.cnes.doi.logging.shell;
 
+import fr.cnes.doi.utils.Requirement;
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
 /**
  * Formats the string without the date.
+ *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
+@Requirement(
+        reqId = "DOI_ARCHI_040",
+        reqName = "Logs"
+)
 public final class ShellFormatter extends Formatter {
 
     @Override

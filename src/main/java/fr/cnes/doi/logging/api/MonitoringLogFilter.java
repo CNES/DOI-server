@@ -7,6 +7,7 @@ package fr.cnes.doi.logging.api;
 
 import fr.cnes.doi.server.monitoring.DoiMonitoring;
 import fr.cnes.doi.settings.EmailSettings;
+import fr.cnes.doi.utils.Requirement;
 import fr.cnes.doi.utils.Utils;
 
 import java.text.MessageFormat;
@@ -29,6 +30,14 @@ import org.restlet.service.LogService;
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
+@Requirement(
+        reqId = "DOI_SRV_130",
+        reqName = "Monitoring des temps de réponse"
+)
+@Requirement(
+        reqId = "DOI_ARCHI_040",
+        reqName = "Logs"
+)
 public class MonitoringLogFilter extends LogFilter {
 
     private static final Date START_DATE_MONITORING = new Date();
@@ -68,13 +77,11 @@ public class MonitoringLogFilter extends LogFilter {
     /* (non-Javadoc)
 	 * @see org.restlet.engine.log.LogFilter#afterHandle(org.restlet.Request, org.restlet.Response)
      */
-
     /**
      *
      * @param request
      * @param response
      */
-
     @Override
     protected void afterHandle(Request request, Response response) {
         if (APP_LOGGER.isLoggable(Level.INFO) && response.getStatus().isSuccess()) {

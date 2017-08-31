@@ -5,16 +5,22 @@
  */
 package fr.cnes.doi.logging.shell;
 
+import fr.cnes.doi.utils.Requirement;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Formatter;
 import java.util.logging.Level;
 
 /**
  * Creates an handler with the Shell formatter.
+ *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
+@Requirement(
+        reqId = "DOI_ARCHI_040",
+        reqName = "Logs"
+)
 public final class ShellHandler extends ConsoleHandler {
-    
+
     /**
      * Handler that represents a output shell
      */
@@ -26,17 +32,12 @@ public final class ShellHandler extends ConsoleHandler {
 
     @Override
     public final synchronized void setFormatter(Formatter newFormatter) throws SecurityException {
-        super.setFormatter(newFormatter); 
+        super.setFormatter(newFormatter);
     }
 
     @Override
     public final synchronized void setLevel(Level newLevel) throws SecurityException {
-        super.setLevel(newLevel); 
+        super.setLevel(newLevel);
     }
-    
-    
-    
-    
-    
-    
+
 }

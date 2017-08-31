@@ -5,6 +5,7 @@
  */
 package fr.cnes.doi.resource;
 
+import fr.cnes.doi.utils.Requirement;
 import java.util.List;
 import org.restlet.data.MediaType;
 import org.restlet.data.Status;
@@ -19,61 +20,71 @@ import org.restlet.resource.ResourceException;
 
 /**
  * Base resource.
+ *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
+@Requirement(
+        reqId = "DOI_DOC_010",
+        reqName = "Documentation des interfaces"
+)
 public class BaseResource extends WadlServerResource {
 
     @Override
     protected void doInit() throws ResourceException {
-        super.doInit(); 
+        super.doInit();        
     }
-    
+
     /**
      * Adds Wadl description of the request to a method.
+     *
      * @param info method description
      * @param param Request parameters
      */
     protected void addRequestDocToMethod(final MethodInfo info, final ParameterInfo param) {
         final RequestInfo request = new RequestInfo();
         request.getParameters().add(param);
-        info.setRequest(request);        
+        info.setRequest(request);
     }
-    
+
     /**
      * Adds Wadl description of the request to the method.
+     *
      * @param info Method description
      * @param params Request parameters
      */
     protected void addRequestDocToMethod(final MethodInfo info, final List<ParameterInfo> params) {
         final RequestInfo request = new RequestInfo();
-        for(ParameterInfo param:params) {
-            request.getParameters().add(param);            
-        }        
-        info.setRequest(request);        
-    }    
-    
+        for (ParameterInfo param : params) {
+            request.getParameters().add(param);
+        }
+        info.setRequest(request);
+    }
+
     /**
      * Adds Wadl description of the request to the method.
+     *
      * @param info Method description
      * @param params Request parameters
      * @param rep Representation entity of the request
      */
     protected void addRequestDocToMethod(final MethodInfo info, final List<ParameterInfo> params, RepresentationInfo rep) {
         addRequestDocToMethod(info, params);
-        info.getRequest().getRepresentations().add(rep);       
-    }     
-    
+        info.getRequest().getRepresentations().add(rep);
+    }
+
     /**
      * Adds Wadl description of the response to a method.
+     *
      * @param info Method description
      * @param response Response description
      */
     protected void addResponseDocToMethod(final MethodInfo info, final ResponseInfo response) {
-        info.getResponses().add(response);        
+        info.getResponses().add(response);
     }
-    
+
     /**
      * Creates a textual explanation of the response for a given status.
+     *
      * @param status HTTP Status
      * @param doc textual explanation
      * @return Response Wadl description
@@ -81,40 +92,43 @@ public class BaseResource extends WadlServerResource {
     protected ResponseInfo createResponseDoc(final Status status, final String doc) {
         ResponseInfo responseInfo = new ResponseInfo();
         responseInfo.getStatuses().add(status);
-        responseInfo.setDocumentation(doc);       
+        responseInfo.setDocumentation(doc);
         return responseInfo;
     }
-    
+
     /**
-     * Creates a textual explanation of the response for a given status.     
+     * Creates a textual explanation of the response for a given status.
+     *
      * @param status HTTP status
      * @param doc textual explanation
      * @param refRepresentation reference to the representation of the response
      * @return the response Wadl description
      */
-    protected ResponseInfo createResponseDoc(final Status status, final String doc, final String refRepresentation) {    
+    protected ResponseInfo createResponseDoc(final Status status, final String doc, final String refRepresentation) {
         ResponseInfo response = createResponseDoc(status, doc);
-        RepresentationInfo rep = new RepresentationInfo();  
+        RepresentationInfo rep = new RepresentationInfo();
         rep.setReference(refRepresentation);
-        response.getRepresentations().add(rep);         
+        response.getRepresentations().add(rep);
         return response;
     }
-    
+
     /**
-     * Creates a textual explanation of the response for a given status.         
+     * Creates a textual explanation of the response for a given status.
+     *
      * @param status HTTP status
      * @param doc textual description
      * @param representation Representation of the response
      * @return the response Wadl description
      */
-    protected ResponseInfo createResponseDoc(final Status status, final String doc, final RepresentationInfo representation) {    
+    protected ResponseInfo createResponseDoc(final Status status, final String doc, final RepresentationInfo representation) {
         ResponseInfo response = createResponseDoc(status, doc);
         response.getRepresentations().add(representation);
         return response;
-    }    
-    
+    }
+
     /**
      * Creates a query parameter.
+     *
      * @param name query parameter name
      * @param style Style (header, template, ...)
      * @param doc textual description
@@ -128,12 +142,13 @@ public class BaseResource extends WadlServerResource {
         param.setStyle(style);
         param.setDocumentation(doc);
         param.setRequired(isRequired);
-        param.setType(datatype);   
+        param.setType(datatype);
         return param;
-    }  
-    
+    }
+
     /**
      * Creates query representation.
+     *
      * @param identifier representation identifier
      * @param mediaType media type
      * @param doc textual description
@@ -148,5 +163,5 @@ public class BaseResource extends WadlServerResource {
         rep.setXmlElement(xmlElement);
         return rep;
     }
-        
+
 }

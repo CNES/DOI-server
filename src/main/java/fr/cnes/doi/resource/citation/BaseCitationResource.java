@@ -7,6 +7,7 @@ package fr.cnes.doi.resource.citation;
 
 import fr.cnes.doi.application.DoiCrossCiteApplication;
 import fr.cnes.doi.resource.BaseResource;
+import fr.cnes.doi.utils.Requirement;
 import org.restlet.data.MediaType;
 import org.restlet.ext.wadl.DocumentationInfo;
 import org.restlet.ext.wadl.RepresentationInfo;
@@ -16,6 +17,10 @@ import org.restlet.resource.ResourceException;
  * Base resource for CrossCite application.
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
+@Requirement(
+        reqId = "DOI_DOC_010",
+        reqName = "Documentation des interfaces"
+)
 public class BaseCitationResource extends BaseResource {
     
     /**

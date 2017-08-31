@@ -4,21 +4,23 @@
 // Any modifications to this file will be lost upon recompilation of the source schema. 
 // Generated on: 2017.06.06 at 03:43:03 PM CEST 
 //
-
-
 package org.datacite.schema.kernel_4;
 
+import fr.cnes.doi.utils.Requirement;
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for relatedIdentifierType.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
  * <p>
- * <pre>
+ * Java class for relatedIdentifierType.
+ *
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
+ * <p>
+ * <
+ * pre>
  * &lt;simpleType name="relatedIdentifierType"&gt;
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"&gt;
  *     &lt;enumeration value="ARK"/&gt;
@@ -42,8 +44,20 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/restriction&gt;
  * &lt;/simpleType&gt;
  * </pre>
- * 
+ *
  */
+@Requirement(
+        reqId = "DOI_SRV_010",
+        reqName = "Création de métadonnées"
+)
+@Requirement(
+        reqId = "DOI_SRV_040",
+        reqName = "Mise à jour des métadonnées d'un DOI"
+)
+@Requirement(
+        reqId = "DOI_ARCHI_050",
+        reqName = "Vérification du schéma de métadonnées"
+)
 @XmlType(name = "relatedIdentifierType")
 @XmlEnum
 public enum RelatedIdentifierType {
@@ -52,91 +66,74 @@ public enum RelatedIdentifierType {
      *
      */
     ARK("ARK"),
-
     /**
      *
      */
     @XmlEnumValue("arXiv")
     AR_XIV("arXiv"),
-
     /**
      *
      */
     @XmlEnumValue("bibcode")
     BIBCODE("bibcode"),
-
     /**
      *
      */
     DOI("DOI"),
-
     /**
      *
      */
     @XmlEnumValue("EAN13")
     EAN_13("EAN13"),
-
     /**
      *
      */
     EISSN("EISSN"),
-
     /**
      *
      */
     @XmlEnumValue("Handle")
     HANDLE("Handle"),
-
     /**
      *
      */
     IGSN("IGSN"),
-
     /**
      *
      */
     ISBN("ISBN"),
-
     /**
      *
      */
     ISSN("ISSN"),
-
     /**
      *
      */
     ISTC("ISTC"),
-
     /**
      *
      */
     LISSN("LISSN"),
-
     /**
      *
      */
     LSID("LSID"),
-
     /**
      *
      */
     PMID("PMID"),
-
     /**
      *
      */
     PURL("PURL"),
-
     /**
      *
      */
     UPC("UPC"),
-
     /**
      *
      */
     URL("URL"),
-
     /**
      *
      */
@@ -161,7 +158,7 @@ public enum RelatedIdentifierType {
      * @return
      */
     public static RelatedIdentifierType fromValue(String v) {
-        for (RelatedIdentifierType c: RelatedIdentifierType.values()) {
+        for (RelatedIdentifierType c : RelatedIdentifierType.values()) {
             if (c.value.equals(v)) {
                 return c;
             }

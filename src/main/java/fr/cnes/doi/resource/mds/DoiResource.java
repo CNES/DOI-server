@@ -7,6 +7,7 @@ package fr.cnes.doi.resource.mds;
 
 import fr.cnes.doi.application.DoiMdsApplication;
 import fr.cnes.doi.exception.ClientMdsException;
+import fr.cnes.doi.utils.Requirement;
 
 import java.util.Arrays;
 import org.restlet.data.MediaType;
@@ -60,6 +61,10 @@ public class DoiResource extends BaseMdsResource {
      * (or not resolvable e.g. due to handle's latency))
      * @throws ResourceException Will be thrown when an error happens
      */
+    @Requirement(
+            reqId = "DOI_SRV_070",
+            reqName = "Récupération de l'URL"
+    )     
     @Get
     public Representation getDoi() throws ResourceException {
         getLogger().entering(getClass().getName(), "getDoi", this.doiName);
@@ -96,6 +101,10 @@ public class DoiResource extends BaseMdsResource {
      * Describes the Get Method.
      * @param info Wadl description
      */
+    @Requirement(
+            reqId = "DOI_DOC_010",
+            reqName = "Documentation des interfaces"
+    )      
     @Override
     protected final void describeGet(final MethodInfo info) {
         info.setName(Method.GET);

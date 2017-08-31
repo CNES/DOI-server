@@ -15,6 +15,7 @@ import org.restlet.resource.Get;
 import org.restlet.resource.ResourceException;
 
 import fr.cnes.doi.exception.ClientCrossCiteException;
+import fr.cnes.doi.utils.Requirement;
 
 /**
  * Formats a citation.
@@ -60,6 +61,10 @@ public class FormatCitationResource extends BaseCitationResource {
      * Returns the formatted citation.
      * @return the formatted citation
      */
+    @Requirement(
+            reqId = "DOI_SRV_120",
+            reqName = "Formatage d'une citation"
+    )     
     @Get
     public String getFormat() {
         try {
@@ -78,6 +83,10 @@ public class FormatCitationResource extends BaseCitationResource {
      * Describes the Get Method.
      * @param info Wadl description
      */
+    @Requirement(
+            reqId = "DOI_DOC_010",
+            reqName = "Documentation des interfaces"
+    )      
     @Override
     protected final void describeGet(final MethodInfo info) {
         info.setName(Method.GET);

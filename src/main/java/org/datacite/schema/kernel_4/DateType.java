@@ -4,21 +4,23 @@
 // Any modifications to this file will be lost upon recompilation of the source schema. 
 // Generated on: 2017.06.06 at 03:43:03 PM CEST 
 //
-
-
 package org.datacite.schema.kernel_4;
 
+import fr.cnes.doi.utils.Requirement;
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for dateType.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
  * <p>
- * <pre>
+ * Java class for dateType.
+ *
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
+ * <p>
+ * <
+ * pre>
  * &lt;simpleType name="dateType"&gt;
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"&gt;
  *     &lt;enumeration value="Accepted"/&gt;
@@ -33,8 +35,20 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/restriction&gt;
  * &lt;/simpleType&gt;
  * </pre>
- * 
+ *
  */
+@Requirement(
+        reqId = "DOI_SRV_010",
+        reqName = "Création de métadonnées"
+)
+@Requirement(
+        reqId = "DOI_SRV_040",
+        reqName = "Mise à jour des métadonnées d'un DOI"
+)
+@Requirement(
+        reqId = "DOI_ARCHI_050",
+        reqName = "Vérification du schéma de métadonnées"
+)
 @XmlType(name = "dateType")
 @XmlEnum
 public enum DateType {
@@ -44,49 +58,41 @@ public enum DateType {
      */
     @XmlEnumValue("Accepted")
     ACCEPTED("Accepted"),
-
     /**
      *
      */
     @XmlEnumValue("Available")
     AVAILABLE("Available"),
-
     /**
      *
      */
     @XmlEnumValue("Collected")
     COLLECTED("Collected"),
-
     /**
      *
      */
     @XmlEnumValue("Copyrighted")
     COPYRIGHTED("Copyrighted"),
-
     /**
      *
      */
     @XmlEnumValue("Created")
     CREATED("Created"),
-
     /**
      *
      */
     @XmlEnumValue("Issued")
     ISSUED("Issued"),
-
     /**
      *
      */
     @XmlEnumValue("Submitted")
     SUBMITTED("Submitted"),
-
     /**
      *
      */
     @XmlEnumValue("Updated")
     UPDATED("Updated"),
-
     /**
      *
      */
@@ -112,7 +118,7 @@ public enum DateType {
      * @return
      */
     public static DateType fromValue(String v) {
-        for (DateType c: DateType.values()) {
+        for (DateType c : DateType.values()) {
             if (c.value.equals(v)) {
                 return c;
             }

@@ -5,6 +5,7 @@
  */
 package org.restlet.ext.wadl;
 
+import fr.cnes.doi.utils.Requirement;
 import java.io.IOException;
 import java.net.URL;
 import java.util.logging.Level;
@@ -20,6 +21,10 @@ import org.restlet.representation.InputRepresentation;
  * Generates a WADL based on a patch of the Restlet XSLT.
  * @author Jean-Christoph Malapert
  */
+@Requirement(
+        reqId = "DOI_DOC_010",
+        reqName = "Documentation des interfaces"
+)
 public class WadlCnesRepresentation extends WadlRepresentation {
     
     /**

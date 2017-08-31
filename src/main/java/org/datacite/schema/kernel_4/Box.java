@@ -4,20 +4,21 @@
 // Any modifications to this file will be lost upon recompilation of the source schema. 
 // Generated on: 2017.06.06 at 03:43:03 PM CEST 
 //
-
-
 package org.datacite.schema.kernel_4;
 
+import fr.cnes.doi.utils.Requirement;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for box complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ * <p>
+ * Java class for box complex type.
+ *
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
+ *
  * <pre>
  * &lt;complexType name="box"&gt;
  *   &lt;complexContent&gt;
@@ -32,13 +33,23 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
  * </pre>
- * 
- * 
+ *
+ *
  */
+@Requirement(
+        reqId = "DOI_SRV_010",
+        reqName = "Création de métadonnées"
+)
+@Requirement(
+        reqId = "DOI_SRV_040",
+        reqName = "Mise à jour des métadonnées d'un DOI"
+)
+@Requirement(
+        reqId = "DOI_ARCHI_050",
+        reqName = "Vérification du schéma de métadonnées"
+)
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "box", propOrder = {
-
-})
+@XmlType(name = "box", propOrder = {})
 public class Box {
 
     /**
@@ -63,8 +74,8 @@ public class Box {
 
     /**
      * Gets the value of the westBoundLongitude property.
-     * 
-     * @return 
+     *
+     * @return
      */
     public float getWestBoundLongitude() {
         return westBoundLongitude;
@@ -72,7 +83,7 @@ public class Box {
 
     /**
      * Sets the value of the westBoundLongitude property.
-     * 
+     *
      * @param value
      */
     public void setWestBoundLongitude(float value) {
@@ -81,8 +92,8 @@ public class Box {
 
     /**
      * Gets the value of the eastBoundLongitude property.
-     * 
-     * @return 
+     *
+     * @return
      */
     public float getEastBoundLongitude() {
         return eastBoundLongitude;
@@ -90,7 +101,7 @@ public class Box {
 
     /**
      * Sets the value of the eastBoundLongitude property.
-     * 
+     *
      * @param value
      */
     public void setEastBoundLongitude(float value) {
@@ -99,8 +110,8 @@ public class Box {
 
     /**
      * Gets the value of the southBoundLatitude property.
-     * 
-     * @return 
+     *
+     * @return
      */
     public float getSouthBoundLatitude() {
         return southBoundLatitude;
@@ -108,7 +119,7 @@ public class Box {
 
     /**
      * Sets the value of the southBoundLatitude property.
-     * 
+     *
      * @param value
      */
     public void setSouthBoundLatitude(float value) {
@@ -117,8 +128,8 @@ public class Box {
 
     /**
      * Gets the value of the northBoundLatitude property.
-     * 
-     * @return 
+     *
+     * @return
      */
     public float getNorthBoundLatitude() {
         return northBoundLatitude;
@@ -126,7 +137,7 @@ public class Box {
 
     /**
      * Sets the value of the northBoundLatitude property.
-     * 
+     *
      * @param value
      */
     public void setNorthBoundLatitude(float value) {

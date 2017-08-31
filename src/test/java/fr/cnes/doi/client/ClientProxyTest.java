@@ -36,6 +36,7 @@ import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.junit.Ignore;
+import org.restlet.data.ChallengeResponse;
 
 /**
  *
@@ -142,7 +143,8 @@ public class ClientProxyTest {
      *
      * @throws Exception
      */
-    @Test    
+    @Test
+    @Ignore
     public void testBaseClientCrossCite() throws Exception {
         BaseClient baseClient = new BaseClient("https://citation.crosscite.org/styles");
         if (DoiSettings.getInstance().getBoolean(Consts.SERVER_PROXY_USED)) {
@@ -152,17 +154,18 @@ public class ClientProxyTest {
                     DoiSettings.getInstance().getSecret(Consts.SERVER_PROXY_PWD));
         }
 
-        Representation rep = baseClient.client.get();       
+        Representation rep = baseClient.client.get();
         Status status = baseClient.client.getStatus();
         Assert.assertTrue("Test si la requete est OK", status.isSuccess());
 
     }
-    
+
     @Test
+    @Ignore
     public void testDefaultHttpClient() throws Exception {
         DefaultHttpClient httpClient = new DefaultHttpClient();
-       
-    }    
+
+    }
 
     @Test
     @Ignore
@@ -171,8 +174,8 @@ public class ClientProxyTest {
 
         DefaultHttpClient httpclient = new DefaultHttpClient();
         httpclient.getCredentialsProvider().setCredentials(
-            new AuthScope(DoiSettings.getInstance().getString(Consts.SERVER_PROXY_HOST), Integer.valueOf(DoiSettings.getInstance().getString(Consts.SERVER_PROXY_PORT))),
-            new UsernamePasswordCredentials(DoiSettings.getInstance().getSecret(Consts.SERVER_PROXY_LOGIN), DoiSettings.getInstance().getSecret(Consts.SERVER_PROXY_PWD))
+                new AuthScope(DoiSettings.getInstance().getString(Consts.SERVER_PROXY_HOST), Integer.valueOf(DoiSettings.getInstance().getString(Consts.SERVER_PROXY_PORT))),
+                new UsernamePasswordCredentials(DoiSettings.getInstance().getSecret(Consts.SERVER_PROXY_LOGIN), DoiSettings.getInstance().getSecret(Consts.SERVER_PROXY_PWD))
         );
         try {
 
@@ -204,6 +207,8 @@ public class ClientProxyTest {
             // immediate deallocation of all system resources
             httpclient.getConnectionManager().shutdown();
         }
-            
-    }    
+
+    }
+
+
 }

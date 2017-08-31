@@ -4,20 +4,21 @@
 // Any modifications to this file will be lost upon recompilation of the source schema. 
 // Generated on: 2017.06.06 at 03:43:03 PM CEST 
 //
-
-
 package org.datacite.schema.kernel_4;
 
+import fr.cnes.doi.utils.Requirement;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for point complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ * <p>
+ * Java class for point complex type.
+ *
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
+ *
  * <pre>
  * &lt;complexType name="point"&gt;
  *   &lt;complexContent&gt;
@@ -30,13 +31,23 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
  * </pre>
- * 
- * 
+ *
+ *
  */
+@Requirement(
+        reqId = "DOI_SRV_010",
+        reqName = "Création de métadonnées"
+)
+@Requirement(
+        reqId = "DOI_SRV_040",
+        reqName = "Mise à jour des métadonnées d'un DOI"
+)
+@Requirement(
+        reqId = "DOI_ARCHI_050",
+        reqName = "Vérification du schéma de métadonnées"
+)
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "point", propOrder = {
-
-})
+@XmlType(name = "point", propOrder = {})
 public class Point {
 
     /**
@@ -51,8 +62,8 @@ public class Point {
 
     /**
      * Gets the value of the pointLongitude property.
-     * 
-     * @return 
+     *
+     * @return
      */
     public float getPointLongitude() {
         return pointLongitude;
@@ -60,7 +71,7 @@ public class Point {
 
     /**
      * Sets the value of the pointLongitude property.
-     * 
+     *
      * @param value
      */
     public void setPointLongitude(float value) {
@@ -69,8 +80,8 @@ public class Point {
 
     /**
      * Gets the value of the pointLatitude property.
-     * 
-     * @return 
+     *
+     * @return
      */
     public float getPointLatitude() {
         return pointLatitude;
@@ -78,7 +89,7 @@ public class Point {
 
     /**
      * Sets the value of the pointLatitude property.
-     * 
+     *
      * @param value
      */
     public void setPointLatitude(float value) {

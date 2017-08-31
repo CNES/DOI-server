@@ -7,6 +7,7 @@ package fr.cnes.doi.resource.mds;
 
 import fr.cnes.doi.application.DoiMdsApplication;
 import fr.cnes.doi.exception.ClientMdsException;
+import fr.cnes.doi.utils.Requirement;
 
 import java.util.Arrays;
 import org.restlet.data.Form;
@@ -57,6 +58,10 @@ public class MediaResource extends BaseMdsResource {
      * @return the media related to a DOI
      * @throws ResourceException Will be thrown when an error happens          
      */
+    @Requirement(
+            reqId = "DOI_SRV_090",
+            reqName = "Création des médias"
+    )     
     @Get
     public Representation getMedias() {
         getLogger().entering(getClass().getName(), "getMedias", this.mediaName);
@@ -93,6 +98,10 @@ public class MediaResource extends BaseMdsResource {
      * @return a media related to an URL for a given DOI 
      * @throws ResourceException Will be thrown when an error happens               
      */
+    @Requirement(
+            reqId = "DOI_SRV_080",
+            reqName = "Création d'un média"
+    )     
     @Post
     public Representation createMedia(final Form mediaForm) throws ResourceException{
         getLogger().entering(getClass().getName(), "createMedia", new Object[]{this.mediaName, mediaForm.getMatrixString()});
@@ -129,6 +138,10 @@ public class MediaResource extends BaseMdsResource {
      * Describes the GET method.
      * @param info Wadl description for a GET method
      */
+    @Requirement(
+            reqId = "DOI_DOC_010",
+            reqName = "Documentation des interfaces"
+    )      
     @Override
     protected final void describeGet(final MethodInfo info) {
         info.setName(Method.GET);
@@ -146,6 +159,10 @@ public class MediaResource extends BaseMdsResource {
      * Describes POST method.
      * @param info Wadl description for describing POST method
      */
+    @Requirement(
+            reqId = "DOI_DOC_010",
+            reqName = "Documentation des interfaces"
+    )      
     @Override
     protected final void describePost(final MethodInfo info) {
         info.setName(Method.POST);

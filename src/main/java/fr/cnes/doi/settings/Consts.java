@@ -278,6 +278,10 @@ public class Consts {
 	/**
 	 * Path of the cache file to store projects/id association
 	 */
-	public static final String PROJECT_CONF_PATH = "UniqueProjectName.cache.file";
+	public static final String PROJECT_CONF_PATH = "Starter.UniqueProjectName.cache.file";
+        /**
+         * key for token signature encoded with the algorithm HS256 in base64
+         */        
+        public static final String TOKEN_KEY = "Starter.Token.key";
 
 }

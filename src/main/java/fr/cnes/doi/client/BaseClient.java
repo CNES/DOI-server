@@ -10,7 +10,6 @@ import java.util.Arrays;
 
 import org.restlet.Client;
 import org.restlet.Context;
-import org.restlet.data.ChallengeScheme;
 import org.restlet.data.Protocol;
 import org.restlet.engine.Engine;
 import org.restlet.resource.ClientResource;
@@ -36,7 +35,7 @@ public class BaseClient {
 	 *            URI of the client's end point
 	 */
 	public BaseClient(final String uri) {
-		Engine.getInstance().getRegisteredClients().clear();
+		//Engine.getInstance().getRegisteredClients().clear();
 		Engine.getInstance().getRegisteredClients().add(new HttpClientHelperPatch(null));
 		this.client = new ClientResource(uri);
 		configureProxyIfNeeded();

@@ -4,21 +4,23 @@
 // Any modifications to this file will be lost upon recompilation of the source schema. 
 // Generated on: 2017.06.06 at 03:43:03 PM CEST 
 //
-
-
 package org.datacite.schema.kernel_4;
 
+import fr.cnes.doi.utils.Requirement;
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for funderIdentifierType.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
  * <p>
- * <pre>
+ * Java class for funderIdentifierType.
+ *
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
+ * <p>
+ * <
+ * pre>
  * &lt;simpleType name="funderIdentifierType"&gt;
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"&gt;
  *     &lt;enumeration value="ISNI"/&gt;
@@ -28,8 +30,20 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/restriction&gt;
  * &lt;/simpleType&gt;
  * </pre>
- * 
+ *
  */
+@Requirement(
+        reqId = "DOI_SRV_010",
+        reqName = "Création de métadonnées"
+)
+@Requirement(
+        reqId = "DOI_SRV_040",
+        reqName = "Mise à jour des métadonnées d'un DOI"
+)
+@Requirement(
+        reqId = "DOI_ARCHI_050",
+        reqName = "Vérification du schéma de métadonnées"
+)
 @XmlType(name = "funderIdentifierType")
 @XmlEnum
 public enum FunderIdentifierType {
@@ -38,18 +52,15 @@ public enum FunderIdentifierType {
      *
      */
     ISNI("ISNI"),
-
     /**
      *
      */
     GRID("GRID"),
-
     /**
      *
      */
     @XmlEnumValue("Crossref Funder ID")
     CROSSREF_FUNDER_ID("Crossref Funder ID"),
-
     /**
      *
      */
@@ -75,7 +86,7 @@ public enum FunderIdentifierType {
      * @return
      */
     public static FunderIdentifierType fromValue(String v) {
-        for (FunderIdentifierType c: FunderIdentifierType.values()) {
+        for (FunderIdentifierType c : FunderIdentifierType.values()) {
             if (c.value.equals(v)) {
                 return c;
             }

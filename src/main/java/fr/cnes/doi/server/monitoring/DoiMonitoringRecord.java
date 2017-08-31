@@ -1,5 +1,7 @@
 package fr.cnes.doi.server.monitoring;
 
+import fr.cnes.doi.utils.Requirement;
+
 /**
  * Monitoring record containing:
  * <ul>
@@ -11,6 +13,10 @@ package fr.cnes.doi.server.monitoring;
  * @author Claire
  *
  */
+@Requirement(
+        reqId = "DOI_SRV_130",
+        reqName = "Monitoring des temps de réponse"
+)
 public class DoiMonitoringRecord {
 	
 	/** Description (name) of the service to record **/

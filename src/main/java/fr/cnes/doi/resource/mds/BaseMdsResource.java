@@ -7,6 +7,7 @@ package fr.cnes.doi.resource.mds;
 
 import fr.cnes.doi.application.DoiMdsApplication;
 import fr.cnes.doi.resource.BaseResource;
+import fr.cnes.doi.utils.Requirement;
 import java.util.List;
 import java.util.logging.Level;
 import org.restlet.data.Status;
@@ -61,6 +62,10 @@ public class BaseMdsResource extends BaseResource {
      * @param selectedRole selected role
      * @return the project name associated to the user
      */
+    @Requirement(
+            reqId = "DOI_AUTH_050",
+            reqName = "Vérification du projet"            
+    )     
     private String getRoleName(String selectedRole) {
         getLogger().entering(getClass().getName(), "getRoleName",selectedRole);
         final String roleName;
@@ -94,6 +99,10 @@ public class BaseMdsResource extends BaseResource {
      * @param doiName DOI name
      * @param selectedRole Selected role
      */
+    @Requirement(
+            reqId = "DOI_AUTH_050",
+            reqName = "Vérification du projet"
+    )     
     protected void checkPermission(final String doiName, final String selectedRole) {
         getLogger().entering(getClass().getName(), "checkPermission", new Object[]{doiName, selectedRole});
         String projectName = getRoleName(selectedRole);

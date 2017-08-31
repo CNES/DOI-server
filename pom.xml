@@ -14,7 +14,7 @@
         <timestamp>${maven.build.timestamp}</timestamp>
         <maven.build.timestamp.format>dd-MM-yyyy HH:mm</maven.build.timestamp.format>
         <restlet-version>2.3.10</restlet-version>
-        <!--<maven.test.skip>true</maven.test.skip>-->
+        <maven.test.skip>true</maven.test.skip>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
@@ -132,17 +132,11 @@
             <artifactId>org.restlet.ext.httpclient</artifactId>
             <version>${restlet-version}</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
-        <!--<dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.3.4</version>
-            <scope>test</scope>
-            <type>jar</type>
-        </dependency>
-       -->
-
-                        
+        <dependency>
+            <groupId>org.restlet.jse</groupId>
+            <artifactId>org.restlet.ext.oauth</artifactId>
+            <version>${restlet-version}</version>
+        </dependency>                        
         <dependency>
             <groupId>org.restlet.jse</groupId>
             <artifactId>org.restlet.ext.freemarker</artifactId>
@@ -159,6 +153,11 @@
             <version>${restlet-version}</version>
         </dependency>
         <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.7.0</version>
+        </dependency>        
+        <dependency>
             <groupId>gnu.getopt</groupId>
             <artifactId>java-getopt</artifactId>
             <version>1.0.13</version>
@@ -167,7 +166,7 @@
             <groupId>xalan</groupId>
             <artifactId>xalan</artifactId>
             <version>2.7.1</version>
-        </dependency>
+        </dependency>      
     </dependencies>
     <groupId>fr.cnes.doi</groupId>
     <description>A Digital Object Identifier (DOI) is an alphanumeric string assigned to uniquely identify an object. It is tied to a metadata description of the object as well as to a digital location, such as a URL, where all the details about the object are accessible.

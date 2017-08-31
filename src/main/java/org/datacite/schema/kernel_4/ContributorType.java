@@ -4,21 +4,23 @@
 // Any modifications to this file will be lost upon recompilation of the source schema. 
 // Generated on: 2017.06.06 at 03:43:03 PM CEST 
 //
-
-
 package org.datacite.schema.kernel_4;
 
+import fr.cnes.doi.utils.Requirement;
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for contributorType.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
  * <p>
- * <pre>
+ * Java class for contributorType.
+ *
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
+ * <p>
+ * <
+ * pre>
  * &lt;simpleType name="contributorType"&gt;
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"&gt;
  *     &lt;enumeration value="ContactPerson"/&gt;
@@ -45,8 +47,20 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/restriction&gt;
  * &lt;/simpleType&gt;
  * </pre>
- * 
+ *
  */
+@Requirement(
+        reqId = "DOI_SRV_010",
+        reqName = "Création de métadonnées"
+)
+@Requirement(
+        reqId = "DOI_SRV_040",
+        reqName = "Mise à jour des métadonnées d'un DOI"
+)
+@Requirement(
+        reqId = "DOI_ARCHI_050",
+        reqName = "Vérification du schéma de métadonnées"
+)
 @XmlType(name = "contributorType")
 @XmlEnum
 public enum ContributorType {
@@ -56,121 +70,101 @@ public enum ContributorType {
      */
     @XmlEnumValue("ContactPerson")
     CONTACT_PERSON("ContactPerson"),
-
     /**
      *
      */
     @XmlEnumValue("DataCollector")
     DATA_COLLECTOR("DataCollector"),
-
     /**
      *
      */
     @XmlEnumValue("DataCurator")
     DATA_CURATOR("DataCurator"),
-
     /**
      *
      */
     @XmlEnumValue("DataManager")
     DATA_MANAGER("DataManager"),
-
     /**
      *
      */
     @XmlEnumValue("Distributor")
     DISTRIBUTOR("Distributor"),
-
     /**
      *
      */
     @XmlEnumValue("Editor")
     EDITOR("Editor"),
-
     /**
      *
      */
     @XmlEnumValue("HostingInstitution")
     HOSTING_INSTITUTION("HostingInstitution"),
-
     /**
      *
      */
     @XmlEnumValue("Other")
     OTHER("Other"),
-
     /**
      *
      */
     @XmlEnumValue("Producer")
     PRODUCER("Producer"),
-
     /**
      *
      */
     @XmlEnumValue("ProjectLeader")
     PROJECT_LEADER("ProjectLeader"),
-
     /**
      *
      */
     @XmlEnumValue("ProjectManager")
     PROJECT_MANAGER("ProjectManager"),
-
     /**
      *
      */
     @XmlEnumValue("ProjectMember")
     PROJECT_MEMBER("ProjectMember"),
-
     /**
      *
      */
     @XmlEnumValue("RegistrationAgency")
     REGISTRATION_AGENCY("RegistrationAgency"),
-
     /**
      *
      */
     @XmlEnumValue("RegistrationAuthority")
     REGISTRATION_AUTHORITY("RegistrationAuthority"),
-
     /**
      *
      */
     @XmlEnumValue("RelatedPerson")
     RELATED_PERSON("RelatedPerson"),
-
     /**
      *
      */
     @XmlEnumValue("ResearchGroup")
     RESEARCH_GROUP("ResearchGroup"),
-
     /**
      *
      */
     @XmlEnumValue("RightsHolder")
     RIGHTS_HOLDER("RightsHolder"),
-
     /**
      *
      */
     @XmlEnumValue("Researcher")
     RESEARCHER("Researcher"),
-
     /**
      *
      */
     @XmlEnumValue("Sponsor")
     SPONSOR("Sponsor"),
-
     /**
      *
      */
     @XmlEnumValue("Supervisor")
     SUPERVISOR("Supervisor"),
-
     /**
      *
      */
@@ -196,7 +190,7 @@ public enum ContributorType {
      * @return
      */
     public static ContributorType fromValue(String v) {
-        for (ContributorType c: ContributorType.values()) {
+        for (ContributorType c : ContributorType.values()) {
             if (c.value.equals(v)) {
                 return c;
             }

@@ -6,6 +6,7 @@
 package fr.cnes.doi.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.cnes.doi.utils.Requirement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,10 @@ import org.restlet.representation.Representation;
  *
  * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
  */
+@Requirement(
+        reqId = "DOI_DISPO_020",
+        reqName = "Vérification des landing pages"
+)
 public class ClientSearchDataCite extends BaseClient {
     
     private static final String BASE_URI = "https://search.datacite.org/api?";    

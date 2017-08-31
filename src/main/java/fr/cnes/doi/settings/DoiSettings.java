@@ -5,6 +5,8 @@
  */
 package fr.cnes.doi.settings;
 
+import fr.cnes.doi.exception.DoiRuntimeException;
+import fr.cnes.doi.server.Starter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -22,6 +24,8 @@ import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 
 import fr.cnes.doi.utils.Utils;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
 /**
  * Singleton to load and use the defined variables in the config.properties.
@@ -37,6 +41,7 @@ public class DoiSettings {
 
 	private final ConcurrentHashMap<String, String> map = new ConcurrentHashMap<>();
 	private String secretKey = Utils.DEFAULT_SECRET_KEY;
+        private String pathApp;
 
 	/**
 	 * private constructor
@@ -51,7 +56,21 @@ public class DoiSettings {
 	private void init() {
 		Properties properties = loadConfigurationFile(CONFIG_PROPERTIES);
 		fillConcurrentMap(properties);
+                computePathOfTheApplication();
 	}
+        
+        private void computePathOfTheApplication() {
+            try {
+                String path = Starter.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+                String decodedPath = URLDecoder.decode(path, "UTF-8");
+                int posLastSlash = decodedPath.lastIndexOf("/");
+                decodedPath = decodedPath.substring(0, posLastSlash);
+                this.pathApp = decodedPath;
+            } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger(DoiSettings.class.getName()).log(Level.SEVERE, null, ex);
+                throw new DoiRuntimeException(ex);
+            }            
+        }
 
 	/**
 	 * Load configuration file.
@@ -315,4 +334,12 @@ public class DoiSettings {
 		properties.load(is);
 		fillConcurrentMap(properties);
 	}
+        
+        /**
+         * Returns the path of the application on the file system.
+         * @return the path of the application on the file system
+         */
+        public String getPathApp() {
+            return this.pathApp;
+        }
 }

@@ -17,9 +17,9 @@ import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.conn.params.ConnManagerParams;
 import org.apache.http.conn.params.ConnPerRouteBean;
 import org.apache.http.conn.params.ConnRoutePNames;
-import org.apache.http.cookie.CookieSpecRegistry;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.cookie.CookieSpecRegistry;
 import org.apache.http.params.HttpParams;
 import org.restlet.Client;
 import org.restlet.engine.Engine;
@@ -32,11 +32,6 @@ import org.restlet.ext.httpclient.internal.IgnoreCookieSpecFactory;
  * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
  */
 public class HttpClientHelperPatch extends HttpClientHelper {
-    
-    private String host;
-    private int port;
-    private String login;
-    private String pwd;
     
     public HttpClientHelperPatch(Client client) {
         super(client);
@@ -55,9 +50,8 @@ public class HttpClientHelperPatch extends HttpClientHelper {
         // when requesting a URL starting by http:// through a proxy
         //HttpClientParams.setAuthenticating(params, false);
         HttpClientParams.setRedirecting(params, isFollowRedirects());        
-        // Comment the following parameter. If uncomment, the application will crash
-        // when requesting a URL starting by http:// through a proxy        
-        //HttpClientParams.setCookiePolicy(params, CookiePolicy.IGNORE_COOKIES);
+      
+        HttpClientParams.setCookiePolicy(params, CookiePolicy.IGNORE_COOKIES);
         HttpConnectionParams.setTcpNoDelay(params, getTcpNoDelay());
         HttpConnectionParams.setConnectionTimeout(params,
                 getSocketConnectTimeoutMs());
@@ -84,11 +78,9 @@ public class HttpClientHelperPatch extends HttpClientHelper {
                                 e);
             }
         }
-        // Comment the following parameters. If uncomment, the application will crash
-        // when requesting a URL starting by http:// through a proxy
-        //CookieSpecRegistry csr = new CookieSpecRegistry();
-        //csr.register(CookiePolicy.IGNORE_COOKIES, new IgnoreCookieSpecFactory());        
-        //((DefaultHttpClient)this.getHttpClient()).setCookieSpecs(csr);
+        CookieSpecRegistry csr = new CookieSpecRegistry();
+        csr.register(CookiePolicy.IGNORE_COOKIES, new IgnoreCookieSpecFactory());        
+        ((DefaultHttpClient)this.getHttpClient()).setCookieSpecs(csr);
     }     
     
     @Override

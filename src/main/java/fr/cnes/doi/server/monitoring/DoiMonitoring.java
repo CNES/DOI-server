@@ -5,6 +5,7 @@
  */
 package fr.cnes.doi.server.monitoring;
 
+import fr.cnes.doi.utils.Requirement;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -17,15 +18,19 @@ import org.restlet.data.Method;
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
+@Requirement(
+        reqId = "DOI_SRV_130",
+        reqName = "Monitoring des temps de réponse"
+)
 public class DoiMonitoring {
 
     /**
-     * Logger 
+     * Logger
      */
     private static final Logger LOGGER = Logger.getLogger(DoiMonitoring.class.getName());
 
     /**
-     * Hash map of records to compute average time to answer requests. 
+     * Hash map of records to compute average time to answer requests.
      */
     private final Map<String, DoiMonitoringRecord> applications = new HashMap<>();
 

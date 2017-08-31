@@ -51,6 +51,7 @@ public class CheckLandingPage implements Runnable {
                 }
             }
             email.sendMessage(subject, msg);     
+            Logger.getLogger(CheckLandingPage.class.getName()).log(Level.INFO, msg);
         } catch (Exception ex) {
             email.sendMessage("Unrecoverable errors when checking landing pages", ex.toString());     
             Logger.getLogger(CheckLandingPage.class.getName()).log(Level.SEVERE, null, ex);

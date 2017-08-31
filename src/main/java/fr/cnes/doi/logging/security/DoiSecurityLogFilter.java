@@ -5,6 +5,7 @@
  */
 package fr.cnes.doi.logging.security;
 
+import fr.cnes.doi.utils.Requirement;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,61 +22,63 @@ import org.restlet.security.Role;
  *
  * @author malapert
  */
+@Requirement(
+        reqId = "DOI_ARCHI_040",
+        reqName = "Logs"
+)
 public class DoiSecurityLogFilter extends Filter {
-  /**
-   * The name of the logger to use
-   */
-  private final String loggerName;
 
-  /**
-   * Instantiates a new sitools log filter.
-   * 
-   * @param loggerName
-   *          the name of the logger to use
-   */
-  public DoiSecurityLogFilter(String loggerName) {
-    super();
-    this.loggerName = loggerName;
-  }
+    /**
+     * The name of the logger to use
+     */
+    private final String loggerName;
 
-  /*
+    /**
+     * Instantiates a new sitools log filter.
+     *
+     * @param loggerName the name of the logger to use
+     */
+    public DoiSecurityLogFilter(String loggerName) {
+        super();
+        this.loggerName = loggerName;
+    }
+
+    /*
    * (non-Javadoc)
    * 
    * @see org.restlet.routing.Filter#afterHandle(org.restlet.Request, org.restlet.Response)
-   */
-
+     */
     /**
      *
      * @param request
      * @param response
      */
+    @Override
+    protected void afterHandle(Request request, Response response) {
+        super.afterHandle(request, response);
+        Object logRecordObj = response.getAttributes().get("LOG_RECORD");
+        if (logRecordObj != null) {
 
-  @Override
-  protected void afterHandle(Request request, Response response) {
-    super.afterHandle(request, response);
-    Object logRecordObj = response.getAttributes().get("LOG_RECORD");
-    if (logRecordObj != null) {
+            ClientInfo clientInfo = request.getClientInfo();
+            String user = null;
+            String profile = null;
+            if (clientInfo != null && clientInfo.getUser() != null) {
+                user = clientInfo.getUser().getIdentifier();
+                profile = "";
+                List<Role> roles = clientInfo.getRoles();
+                Set<String> rolesStr = new HashSet<>();
+                for (Role role : roles) {
+                    rolesStr.add(role.getName());
+                }
+                //profile += Joiner.on(",").join(rolesStr);
+                profile += "," + rolesStr;
+            }
 
-      ClientInfo clientInfo = request.getClientInfo();
-      String user = null;
-      String profile = null;
-      if (clientInfo != null && clientInfo.getUser() != null) {
-        user = clientInfo.getUser().getIdentifier();
-        profile = "";
-        List<Role> roles = clientInfo.getRoles();
-        Set<String> rolesStr = new HashSet<>();
-        for (Role role : roles) {            
-            rolesStr.add(role.getName());          
+            LogRecord logRecord = (LogRecord) logRecordObj;
+            logRecord.setMessage("User: " + user + "\tProfile: " + profile + "\t" + logRecord.getMessage());
+            Logger logger = Engine.getLogger(loggerName);
+            logger.log(logRecord);
+
         }
-        //profile += Joiner.on(",").join(rolesStr);
-        profile += ","+rolesStr;
-      }
-
-      LogRecord logRecord = (LogRecord) logRecordObj;
-      logRecord.setMessage("User: " + user + "\tProfile: " + profile + "\t" + logRecord.getMessage());
-      Logger logger = Engine.getLogger(loggerName);
-      logger.log(logRecord);
-
     }
-  }
 }

@@ -8,6 +8,7 @@ package fr.cnes.doi.client;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fr.cnes.doi.exception.ClientCrossCiteException;
+import fr.cnes.doi.utils.Requirement;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,51 +17,51 @@ import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ResourceException;
 
-
 /**
  * Client to query the citation service.
+ *
  * @author Jean-Christophe Malapert (Jean-Christophe.malapert@cnes.fr)
  * @see "https://datacite.readme.io/v1.0/docs/api"
  */
 public class ClientCrossCiteCitation extends BaseClient {
-    
+
     /**
      * Service end point.
      */
     public static final String CROSS_CITE_URL = "http://citation.crosscite.org";
-    
+
     /**
      * Resource to get styles.
      */
     public static final String STYLE_URI = "/styles";
-    
+
     /**
      * Resource to get locales.
      */
-    public static final String LOCALE_URI = "/locales";  
-    
+    public static final String LOCALE_URI = "/locales";
+
     /**
      * Resource to get format.
      */
     public static final String FORMAT_URI = "/format";
-    
-    
+
     /**
      * Empty constructor.
      */
     public ClientCrossCiteCitation() {
         super(CROSS_CITE_URL);
     }
-    
+
     /**
      * Init the endpoint.
      */
     protected void init() {
         this.client.setReference(new Reference(CROSS_CITE_URL));
     }
-    
+
     /**
      * Returns the response as a list of String of an URI.
+     *
      * @param segment resource name
      * @return the response
      */
@@ -70,9 +71,9 @@ public class ClientCrossCiteCitation extends BaseClient {
             client.setReference(ref);
             Representation rep = client.get();
             Status status = client.getStatus();
-            if(status.isSuccess()) {                
+            if (status.isSuccess()) {
                 ObjectMapper mapper = new ObjectMapper();
-                return mapper.readValue(rep.getStream() , List.class);             
+                return mapper.readValue(rep.getStream(), List.class);
             } else {
                 throw new ClientCrossCiteException(status, status.getDescription());
             }
@@ -80,40 +81,59 @@ public class ClientCrossCiteCitation extends BaseClient {
             throw new ClientCrossCiteException(Status.SERVER_ERROR_INTERNAL, ex.getMessage());
         } finally {
             client.release();
-        }        
+        }
     }
-    
+
     /**
      * Returns styles
+     *
      * @return list of possible styles
-     * @throws fr.cnes.doi.exception.ClientCrossCiteException Will thrown an Exception 
-     * when a problem happens during the request to Cross Cite
+     * @throws fr.cnes.doi.exception.ClientCrossCiteException Will thrown an
+     * Exception when a problem happens during the request to Cross Cite
      */
+    @Requirement(
+            reqId = "DOI_SRV_100",
+            reqName = "Listing des styles"
+    )
     public List<String> getStyles() throws ClientCrossCiteException {
         init();
         return getList(STYLE_URI);
     }
-    
+
     /**
      * Returns languages
+     *
      * @return List of possible languages
-     * @throws fr.cnes.doi.exception.ClientCrossCiteException Will thrown an Exception 
-     * when a problem happens during the request to Cross Cite     
+     * @throws fr.cnes.doi.exception.ClientCrossCiteException Will thrown an
+     * Exception when a problem happens during the request to Cross Cite
      */
+    @Requirement(
+            reqId = "DOI_SRV_110",
+            reqName = "Listing des langues"
+    )
     public List<String> getLanguages() throws ClientCrossCiteException {
         init();
         return getList(LOCALE_URI);
     }
-    
+
     /**
      * Returns the citation of a DOI based on the selected style and language.
+     *
      * @param doiName DOI name
      * @param style Selected style to format the citation
      * @param language Selected language to format the citation
      * @return The formatted citation
-     * @throws fr.cnes.doi.exception.ClientCrossCiteException Will thrown an Exception 
-     * when a problem happens during the request to Cross Cite
+     * @throws fr.cnes.doi.exception.ClientCrossCiteException Will thrown an
+     * Exception when a problem happens during the request to Cross Cite
      */
+    @Requirement(
+            reqId = "DOI_SRV_120",
+            reqName = "Formatage d'une citation"
+    )
+    @Requirement(
+            reqId = "DOI_ARCHI_030",
+            reqName = "Interface avec CrossCite Citation"
+    )
     public String getFormat(final String doiName, final String style, final String language) throws ClientCrossCiteException {
         init();
         String result;
@@ -133,11 +153,11 @@ public class ClientCrossCiteCitation extends BaseClient {
             }
             return result;
         } catch (IOException ex) {
-            throw new ClientCrossCiteException(Status.SERVER_ERROR_INTERNAL, ex.getMessage());            
+            throw new ClientCrossCiteException(Status.SERVER_ERROR_INTERNAL, ex.getMessage());
         } catch (ResourceException ex) {
             throw new ClientCrossCiteException(ex.getStatus(), ex.getMessage());
         } finally {
             client.release();
         }
-    }    
+    }
 }

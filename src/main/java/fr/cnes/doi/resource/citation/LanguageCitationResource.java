@@ -6,8 +6,6 @@
 package fr.cnes.doi.resource.citation;
 
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
 import org.restlet.data.Status;
@@ -16,6 +14,7 @@ import org.restlet.resource.Get;
 import org.restlet.resource.ResourceException;
 
 import fr.cnes.doi.exception.ClientCrossCiteException;
+import fr.cnes.doi.utils.Requirement;
 
 /**
  * The supported languages for citation.
@@ -36,6 +35,10 @@ public class LanguageCitationResource extends BaseCitationResource {
      * Returns the languages as JSON to format the citation.
      * @return the languages
      */
+    @Requirement(
+            reqId = "DOI_SRV_110",
+            reqName = "Listing des langues"
+    )     
     @Get("json")
     public List<String> getLanguagesToJSON() {
         try {
@@ -49,6 +52,10 @@ public class LanguageCitationResource extends BaseCitationResource {
      * Returns the languages as XML to format the citation.
      * @return the languages
      */    
+    @Requirement(
+            reqId = "DOI_SRV_110",
+            reqName = "Listing des langues"
+    )     
     @Get("xml")
     public List<String> getLanguagesToXML() {
         try {
@@ -62,6 +69,10 @@ public class LanguageCitationResource extends BaseCitationResource {
      * Describes the Get Method.
      * @param info Wadl description
      */
+    @Requirement(
+            reqId = "DOI_DOC_010",
+            reqName = "Documentation des interfaces"
+    )      
     @Override
     protected final void describeGet(final MethodInfo info) {
         info.setName(Method.GET);

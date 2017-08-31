@@ -4,21 +4,23 @@
 // Any modifications to this file will be lost upon recompilation of the source schema. 
 // Generated on: 2017.06.06 at 03:43:03 PM CEST 
 //
-
-
 package org.datacite.schema.kernel_4;
 
+import fr.cnes.doi.utils.Requirement;
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for titleType.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
  * <p>
- * <pre>
+ * Java class for titleType.
+ *
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
+ * <p>
+ * <
+ * pre>
  * &lt;simpleType name="titleType"&gt;
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"&gt;
  *     &lt;enumeration value="AlternativeTitle"/&gt;
@@ -28,8 +30,20 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/restriction&gt;
  * &lt;/simpleType&gt;
  * </pre>
- * 
+ *
  */
+@Requirement(
+        reqId = "DOI_SRV_010",
+        reqName = "Création de métadonnées"
+)
+@Requirement(
+        reqId = "DOI_SRV_040",
+        reqName = "Mise à jour des métadonnées d'un DOI"
+)
+@Requirement(
+        reqId = "DOI_ARCHI_050",
+        reqName = "Vérification du schéma de métadonnées"
+)
 @XmlType(name = "titleType")
 @XmlEnum
 public enum TitleType {
@@ -39,19 +53,16 @@ public enum TitleType {
      */
     @XmlEnumValue("AlternativeTitle")
     ALTERNATIVE_TITLE("AlternativeTitle"),
-
     /**
      *
      */
     @XmlEnumValue("Subtitle")
     SUBTITLE("Subtitle"),
-
     /**
      *
      */
     @XmlEnumValue("TranslatedTitle")
     TRANSLATED_TITLE("TranslatedTitle"),
-
     /**
      *
      */
@@ -77,7 +88,7 @@ public enum TitleType {
      * @return
      */
     public static TitleType fromValue(String v) {
-        for (TitleType c: TitleType.values()) {
+        for (TitleType c : TitleType.values()) {
             if (c.value.equals(v)) {
                 return c;
             }
