@@ -68,6 +68,8 @@ public class DoiResource extends BaseMdsResource {
     @Get
     public Representation getDoi() throws ResourceException {
         getLogger().entering(getClass().getName(), "getDoi", this.doiName);
+        
+        checkInputs();        
         try {
             String doi = this.doiApp.getClient().getDoi(this.doiName);
             if(doi != null && !doi.isEmpty()) {
@@ -82,6 +84,16 @@ public class DoiResource extends BaseMdsResource {
             throw new ResourceException(ex.getStatus(), ex.getDetailMessage());
         }
     }    
+    
+    /**
+     * Checks input parameters.
+     * @throws ResourceException if DoiMdsApplication.DOI_TEMPLATE is not set
+     */
+    private void checkInputs() {
+        if(this.doiName == null || this.doiName.isEmpty()) {
+            throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, DoiMdsApplication.DOI_TEMPLATE + " value is not set.");
+        }
+    }
     
     /**
      * DOI representation

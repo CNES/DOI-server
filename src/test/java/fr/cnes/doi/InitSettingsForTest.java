@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import fr.cnes.doi.client.ClientMDSTest;
+import fr.cnes.doi.security.UtilsCryptography;
 import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.utils.Utils;
 
@@ -45,7 +46,7 @@ public class InitSettingsForTest {
 			if (secretKey != null) {
 				String result = new BufferedReader(new InputStreamReader(inputStream)).lines()
 						.collect(Collectors.joining("\n"));
-				result = Utils.decrypt(result, secretKey);
+				result = UtilsCryptography.decrypt(result, secretKey);
 				// Replace the value to use the proxy by the system property
 				String useProxy = System.getProperty("proxy.use");
 				if (useProxy != null) {

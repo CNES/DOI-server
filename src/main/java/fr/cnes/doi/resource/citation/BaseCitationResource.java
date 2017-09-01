@@ -24,6 +24,21 @@ import org.restlet.resource.ResourceException;
 public class BaseCitationResource extends BaseResource {
     
     /**
+     * Parameter providing the digital object identifier.
+     */
+    public static final String DOI_PARAMETER = "doi";
+    
+    /**
+     * Language parameter to format the citation.
+     */
+    public static final String LANG_PARAMETER = "lang";
+    
+    /**
+     * Style parameter to format the citation.
+     */
+    public static final String STYLE_PARAMETER = "style";
+    
+    /**
      * Cross cite application.
      */
     protected DoiCrossCiteApplication app;

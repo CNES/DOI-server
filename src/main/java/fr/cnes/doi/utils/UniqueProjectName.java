@@ -19,7 +19,7 @@ import java.util.Map;
  */
 @Requirement(
         reqId = "DOI_AUTH_010",
-        reqName = "Creéation d'un suffixe projet",
+        reqName = "Création d'un suffixe projet",
         comment = "La taille de 6 digits est libre à ce niveau. Il est imposé à un autre endroit"
 )
 public class UniqueProjectName {

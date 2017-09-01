@@ -7,6 +7,7 @@ package fr.cnes.doi.resource;
 
 import fr.cnes.doi.utils.Requirement;
 import java.util.List;
+import org.restlet.data.Form;
 import org.restlet.data.MediaType;
 import org.restlet.data.Status;
 import org.restlet.ext.wadl.MethodInfo;
@@ -32,6 +33,27 @@ public class BaseResource extends WadlServerResource {
     @Override
     protected void doInit() throws ResourceException {
         super.doInit();        
+    }
+    
+    public boolean isValueExist(final Form form, final String parameterName) {
+        boolean result;
+        
+        if(isObjectNotExist(form)) {
+            result = false;
+        } else result = form.getFirstValue(parameterName) != null;
+        return result;
+    }
+    
+    public boolean isValueNotExist(final Form form, final String parameterName) {
+        return !isValueExist(form, parameterName);
+    }
+    
+    public boolean isObjectExist(final Object obj) {
+        return obj != null;
+    }
+    
+    public boolean isObjectNotExist(final Object obj) {
+        return !isObjectExist(obj);
     }
 
     /**

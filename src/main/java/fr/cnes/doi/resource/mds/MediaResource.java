@@ -7,9 +7,11 @@ package fr.cnes.doi.resource.mds;
 
 import fr.cnes.doi.application.DoiMdsApplication;
 import fr.cnes.doi.exception.ClientMdsException;
+import static fr.cnes.doi.security.UtilsHeader.SELECTED_ROLE_PARAMETER;
 import fr.cnes.doi.utils.Requirement;
 
 import java.util.Arrays;
+import java.util.logging.Level;
 import org.restlet.data.Form;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
@@ -105,20 +107,42 @@ public class MediaResource extends BaseMdsResource {
     @Post
     public Representation createMedia(final Form mediaForm) throws ResourceException{
         getLogger().entering(getClass().getName(), "createMedia", new Object[]{this.mediaName, mediaForm.getMatrixString()});
+        
+        checkInputs(mediaForm);
         final String result;
         try {         
             setStatus(Status.SUCCESS_OK);
             Series headers = (Series) getRequestAttributes().get("org.restlet.http.headers");
-            String selectedRole = headers.getFirstValue("selectedRole", "");            
-            checkPermission(mediaForm.getFirstValue("doi"), selectedRole);            
+            String selectedRole = headers.getFirstValue(SELECTED_ROLE_PARAMETER, "");            
+            checkPermission(mediaForm.getFirstValue(DOI_PARAMETER), selectedRole);            
             result = this.doiApp.getClient().createMedia(this.mediaName, mediaForm);
         } catch (ClientMdsException ex) {
             getLogger().exiting(getClass().getName(), "createMedia", ex.getDetailMessage());                    
             throw new ResourceException(ex.getStatus(), ex.getDetailMessage());
         }
+        
         getLogger().exiting(getClass().getName(), "createMedia", result);        
         return new StringRepresentation(result);
-    }     
+    }  
+    
+    
+    /**
+     * Checks input parameters
+     * @param mediaForm the parameters
+     * @ResourceException if DOI_PARAMETER is not set
+     */
+    private void checkInputs(final Form mediaForm) {
+        StringBuilder errorMsg = new StringBuilder();
+        if (isValueNotExist(mediaForm, DOI_PARAMETER)) {
+            getLogger().log(Level.FINE, "{0} value is not set", DOI_PARAMETER);
+            errorMsg = errorMsg.append(DOI_PARAMETER).append(" value is not set.");
+        }    
+        if(errorMsg.length() == 0) {        
+            getLogger().fine("The form is valid");                    
+        } else {
+            throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, errorMsg.toString());            
+        }        
+    }      
    
     /**
      * Media representation.
@@ -179,7 +203,7 @@ public class MediaResource extends BaseMdsResource {
         rep.getParameters().add(param);
         
         addRequestDocToMethod(info, 
-                Arrays.asList(createQueryParamDoc("selectedRole", ParameterStyle.HEADER, "A user can select one role when he is associated to several roles", false, "xs:string")), 
+                Arrays.asList(createQueryParamDoc(SELECTED_ROLE_PARAMETER, ParameterStyle.HEADER, "A user can select one role when he is associated to several roles", false, "xs:string")), 
                 rep);        
         addResponseDocToMethod(info, createResponseDoc(Status.SUCCESS_OK, "Operation successful", "explainRepresentation"));
         addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_BAD_REQUEST, "invalid XML, wrong prefix", "explainRepresentation"));

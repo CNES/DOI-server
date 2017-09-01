@@ -6,6 +6,7 @@
 package fr.cnes.doi.settings;
 
 import fr.cnes.doi.exception.DoiRuntimeException;
+import fr.cnes.doi.security.UtilsCryptography;
 import fr.cnes.doi.server.Starter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -40,7 +41,7 @@ public class DoiSettings {
 	public static final String CONFIG_PROPERTIES = "config.properties";
 
 	private final ConcurrentHashMap<String, String> map = new ConcurrentHashMap<>();
-	private String secretKey = Utils.DEFAULT_SECRET_KEY;
+	private String secretKey = UtilsCryptography.DEFAULT_SECRET_KEY;
         private String pathApp;
 
 	/**
@@ -193,7 +194,7 @@ public class DoiSettings {
 		if (Utils.isEmpty(value)) {
 			result = value;
 		} else {
-			result = Utils.decrypt(value, getSecretKey());
+			result = UtilsCryptography.decrypt(value, getSecretKey());
 		}
 		return result;
 	}

@@ -9,6 +9,7 @@ import fr.cnes.doi.resource.BaseResource;
 import fr.cnes.doi.utils.UniqueProjectName;
 import java.util.Map;
 import org.restlet.data.Form;
+import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Get;
@@ -21,7 +22,11 @@ import org.restlet.resource.ResourceException;
  */
 public class SuffixProjectsResource extends BaseResource {
     
-    public static final String PROJECT_NAME_INPUT_FORM = "projectName";
+    /**
+     * Parameter for the project name.
+     * This parameter is send to create an identifier for the project.
+     */
+    public static final String PROJECT_NAME_PARAMETER = "projectName";
     public static final int NB_DIGITS = 6;
 
     @Override
@@ -41,8 +46,26 @@ public class SuffixProjectsResource extends BaseResource {
     
     @Post
     public Representation createProject(final Form mediaForm) {
-        String projectName = mediaForm.getFirstValue(PROJECT_NAME_INPUT_FORM);
+        getLogger().entering(SuffixProjectsResource.class.getName(), "createProject", mediaForm);
+        
+        checkInputs(mediaForm);
+        String projectName = mediaForm.getFirstValue(PROJECT_NAME_PARAMETER);        
         int digits = UniqueProjectName.getInstance().getShortName(projectName, NB_DIGITS);
+        
+        getLogger().exiting(SuffixProjectsResource.class.getName(), "createProject",digits);        
         return new StringRepresentation(String.valueOf(digits));
+    }
+    
+    /**
+     * Checks input parameters
+     * @param mediaForm the parameters
+     * @ResourceException if PROJECT_NAME_PARAMETER is not set
+     */
+    private void checkInputs(final Form mediaForm) {
+        if (isValueNotExist(mediaForm, PROJECT_NAME_PARAMETER)) {
+            getLogger().fine(PROJECT_NAME_PARAMETER+ " value is not set");
+            throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, PROJECT_NAME_PARAMETER+" parameter must be set");
+        } 
+        getLogger().fine("The form is valid");        
     }
 }

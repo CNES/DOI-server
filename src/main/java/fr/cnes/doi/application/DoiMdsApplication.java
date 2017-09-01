@@ -5,9 +5,6 @@
  */
 package fr.cnes.doi.application;
 
-import java.util.Arrays;
-import org.restlet.security.Role;
-import java.util.HashSet;
 import java.util.logging.Logger;
 
 import javax.xml.XMLConstants;
@@ -28,7 +25,6 @@ import org.restlet.representation.Representation;
 import org.restlet.routing.Router;
 import org.restlet.security.ChallengeAuthenticator;
 import org.restlet.security.MethodAuthorizer;
-import org.restlet.service.CorsService;
 
 import fr.cnes.doi.client.ClientMDS;
 import fr.cnes.doi.resource.mds.DoiResource;
@@ -43,7 +39,6 @@ import fr.cnes.doi.security.TokenBasedVerifier;
 import fr.cnes.doi.db.TokenDB;
 import fr.cnes.doi.security.TokenSecurity;
 import fr.cnes.doi.utils.Utils;
-import org.restlet.security.RoleAuthorizer;
 
 /**
  * Provides an application for handling Data Object Identifier within an
@@ -166,24 +161,13 @@ public class DoiMdsApplication extends BaseApplication {
         setOwner("Centre National d'Etudes Spatiales (CNES)");
         setAuthor("Jean-Christophe Malapert (DNO/ISA/VIP)");
         setStatusService(new CnesStatusService());
-        getServices().add(createCoreService());
+        getServices().add(this.createCoreService(DEFAULT_CORS_ORIGIN, DEFAULT_CORS_CREDENTIALS));        
         String contextUse = DoiSettings.getInstance().getString(Consts.CONTEXT_MODE);
         client = new ClientMDS(ClientMDS.Context.valueOf(contextUse), getLoginMds(), getPwdMds());
         
         this.tokenDB = TokenSecurity.getInstance().getTokenDB();
 
         LOGGER.exiting(DoiMdsApplication.class.getName(), "Constructor");
-    }
-
-    private CorsService createCoreService() {
-        LOGGER.entering(DoiMdsApplication.class.getName(), "createCoreService");
-
-        CorsService corsService = new CorsService();
-        corsService.setAllowedOrigins(new HashSet(Arrays.asList("*")));
-        corsService.setAllowedCredentials(true);
-
-        LOGGER.exiting(DoiMdsApplication.class.getName(), "createCoreService", corsService);
-        return corsService;
     }
 
     /**
@@ -199,20 +183,21 @@ public class DoiMdsApplication extends BaseApplication {
     public Restlet createInboundRoot() {
         LOGGER.entering(DoiMdsApplication.class.getName(), "createInboundRoot");
 
-        // ChallengeAuthenticator
+        // Defines the strategy of authentication (authentication is not required)
+        //   - authentication with login/pwd
         ChallengeAuthenticator ca = createAuthenticator();
         ca.setOptional(true);
         
+        //   - authentication with token
         ChallengeAuthenticator ct = createTokenAuthenticator();
         ct.setOptional(true);
+        
+        //  create a pipeline of authentication
         ca.setNext(ct);
 
-        // MethodAuthorizer
+        // Set specific authroization on method after checking authentication
         MethodAuthorizer ma = createMethodAuthorizer();
         ct.setNext(ma);
-        
-        //RoleAuthorizer role = createRoleAuthorizer();
-        //ma.setNext(role);
 
         // Router
         ma.setNext(createRouter());
@@ -267,42 +252,7 @@ public class DoiMdsApplication extends BaseApplication {
 
         LOGGER.exiting(DoiMdsApplication.class.getName(), "createMethodAuthorizer", methodAuth);
         return methodAuth;
-    }
-    
-    private RoleAuthorizer createRoleAuthorizer() {
-        LOGGER.entering(DoiMdsApplication.class.getName(), "createRoleAuthorizer");
-        this.getRoles().add(Role.get(this, "project1"));
-                
-        
-        
-        RoleAuthorizer roleAuth = new RoleAuthorizer();
-        roleAuth.setAuthorizedRoles(this.getRoles());
-      
-        
-        return roleAuth;
-    }
-
-    /**
-     * Creates the authenticator. Creates the user, role and mapping user/role.
-     *
-     * @return Authenticator based on a challenge scheme
-     */
-    @Requirement(
-            reqId = "DOI_AUTH_040",
-            reqName = "Association des projets"
-    )
-    private ChallengeAuthenticator createAuthenticator() {
-        LOGGER.entering(DoiMdsApplication.class.getName(), "createAuthenticator");
-
-        ChallengeAuthenticator guard = new ChallengeAuthenticator(getContext(), ChallengeScheme.HTTP_BASIC, "realm");
-        
-        guard.setVerifier(this.getContext().getDefaultVerifier());
-        guard.setEnroler(this.getContext().getDefaultEnroler());        
-        
-        LOGGER.exiting(DoiMdsApplication.class.getName(), "createAuthenticator", guard);
-
-        return guard;
-    }
+    }    
     
     private ChallengeAuthenticator createTokenAuthenticator() {
         ChallengeAuthenticator guard = new ChallengeAuthenticator(
@@ -312,13 +262,6 @@ public class DoiMdsApplication extends BaseApplication {
         return guard;
     }
 
-    // private RoleAuthorizer createRoleAuthorizer() {
-    // //Authorize owners and forbid users on roleAuth's children
-    // RoleAuthorizer roleAuth = new RoleAuthorizer();
-    // roleAuth.getAuthorizedRoles().add(Role.get(this, ROLE_OWNER));
-    // roleAuth.getForbiddenRoles().add(Role.get(this, ROLE_USER));
-    // return roleAuth;
-    // }
     /**
      * Returns the object to valid the datacite schema.
      *

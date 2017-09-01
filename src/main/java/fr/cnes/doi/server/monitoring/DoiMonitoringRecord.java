@@ -9,7 +9,7 @@ import fr.cnes.doi.utils.Requirement;
  * <li>Average</li>
  * <li>Nb total of recorded values (to compute the average)</li>
  * </ul>
- * 
+ *
  * @author Claire
  *
  */
@@ -18,80 +18,88 @@ import fr.cnes.doi.utils.Requirement;
         reqName = "Monitoring des temps de réponse"
 )
 public class DoiMonitoringRecord {
-	
-	/** Description (name) of the service to record **/
-	private String description;
-	
-	/** Current average time to access this service **/
-	private float average = 0.0f;
-	
-	/** Nb of values to compute the average **/
-	private int nbAccess = 0;
-	
-	
 
-	/**
-	 * Constructor.
-	 * 
-	 * @param description Service description
-	 * @param average Average speed of the request
-	 * @param nbAccess Number of access
-	 */
-	public DoiMonitoringRecord(final String description, float average, int nbAccess) {
-		super();
-		this.description = description;
-		this.average = average;
-		this.nbAccess = nbAccess;
-	}
+    /**
+     * Description (name) of the service to record *
+     */
+    private String description;
 
-	/**
-         * Returns the service description.
-	 * @return the description
-	 */
-	public String getDescription() {
-		return description;
-	}
+    /**
+     * Current average time to access this service *
+     */
+    private float average = 0.0f;
 
-	/**
-         * Sets the service description.
-	 * @param description the description to set
-	 */
-	public void setDescription(final String description) {
-		this.description = description;
-	}
+    /**
+     * Nb of values to compute the average *
+     */
+    private int nbAccess = 0;
 
-	/**
-         * Returns the average speed of the request.
-	 * @return the average
-	 */
-	public float getAverage() {
-		return average;
-	}
+    /**
+     * Constructor.
+     *
+     * @param description Service description
+     * @param average Average speed of the request
+     * @param nbAccess Number of access
+     */
+    public DoiMonitoringRecord(final String description, float average, int nbAccess) {
+        super();
+        this.description = description;
+        this.average = average;
+        this.nbAccess = nbAccess;
+    }
 
-	/**
-         * Sets the average speed of the request.
-	 * @param average the average to set
-	 */
-	public void setAverage(float average) {
-		this.average = average;
-	}
+    /**
+     * Returns the service description.
+     *
+     * @return the description
+     */
+    public String getDescription() {
+        return description;
+    }
 
-	/**
-         * Returns the number of access.
-	 * @return the nbAccess
-	 */
-	public int getNbAccess() {
-		return nbAccess;
-	}
+    /**
+     * Sets the service description.
+     *
+     * @param description the description to set
+     */
+    public void setDescription(final String description) {
+        this.description = description;
+    }
 
-	/**
-         * Sets the number of access.
-	 * @param nbAccess the nbAccess to set
-	 */
-	public void setNbAccess(int nbAccess) {
-		this.nbAccess = nbAccess;
-	}
-	
-	
+    /**
+     * Returns the average speed of the request.
+     *
+     * @return the average
+     */
+    public float getAverage() {
+        return average;
+    }
+
+    /**
+     * Sets the average speed of the request.
+     *
+     * @param average the average to set
+     */
+    public void setAverage(float average) {
+        this.average = average;
+    }
+
+    /**
+     * Returns the number of access.
+     *
+     * @return the nbAccess
+     */
+    public int getNbAccess() {
+        return nbAccess;
+    }
+
+    /**
+     * Sets the number of access.
+     *
+     * @param nbAccess the nbAccess to set
+     */
+    public void setNbAccess(int nbAccess) {
+        this.nbAccess = nbAccess;
+    }
 
 }

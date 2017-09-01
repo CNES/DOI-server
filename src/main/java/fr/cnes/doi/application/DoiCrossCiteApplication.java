@@ -76,8 +76,8 @@ public class DoiCrossCiteApplication extends BaseApplication {
      * Application logger.
      */
     private static final Logger LOGGER = Utils.getAppLogger();
-    
-    public static final String NAME = "Cross Cite Application";    
+
+    public static final String NAME = "Cross Cite Application";
 
     /**
      * Client to query CrossCite.
@@ -85,13 +85,13 @@ public class DoiCrossCiteApplication extends BaseApplication {
     private final ClientCrossCiteCitation client = new ClientCrossCiteCitation();
 
     /**
-     * Constructs the application by setting the proxy authentication to the      {@link fr.cnes.doi.client.ClientCrossCiteCitation
+     * Constructs the application by setting the proxy authentication to the null     {@link fr.cnes.doi.client.ClientCrossCiteCitation
 	 * ClientCrossCiteCitation} proxy when the configuration is set.
      */
     @Requirement(
             reqId = "DOI_DOC_010",
             reqName = "Documentation des interfaces"
-    )      
+    )
     public DoiCrossCiteApplication() {
         super();
         LOGGER.entering(DoiCrossCiteApplication.class.getName(), "Constructor");
@@ -122,6 +122,7 @@ public class DoiCrossCiteApplication extends BaseApplication {
         setDescription(description.toString());
         setName(NAME);
         setOwner("Centre National d'Etudes Spatiales (CNES)");
+        getServices().add(this.createCoreService(DEFAULT_CORS_ORIGIN, DEFAULT_CORS_CREDENTIALS));
 
         LOGGER.exiting(DoiCrossCiteApplication.class.getName(), "Constructor");
     }
@@ -133,10 +134,14 @@ public class DoiCrossCiteApplication extends BaseApplication {
      */
     @Override
     public Restlet createInboundRoot() {
+        LOGGER.entering(DoiCrossCiteApplication.class.getName(), "createInboundRoot");
+
         Router router = new Router(getContext());
         router.attach(STYLES_URI, StyleCitationResource.class);
         router.attach(LANGUAGE_URI, LanguageCitationResource.class);
         router.attach(FORMAT_URI, FormatCitationResource.class);
+        
+        LOGGER.exiting(DoiCrossCiteApplication.class.getName(), "createInboundRoot");        
         return router;
     }
 

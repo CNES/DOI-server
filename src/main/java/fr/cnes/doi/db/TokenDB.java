@@ -15,6 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -164,7 +165,8 @@ public class TokenDB {
         boolean isExpirated = true;
         String dateStr = (String) this.db.get(jwt).get("expirationDate");
         try {
-            Date expDate = DateFormat.getDateInstance().parse(dateStr);
+            DateFormat dateFormat = new SimpleDateFormat(TokenSecurity.DATE_FORMAT);
+            Date expDate = dateFormat.parse(dateStr);
             isExpirated = new Date().after(expDate);
         } catch (ParseException ex) {
             Logger.getLogger(TokenDB.class.getName()).log(Level.SEVERE, null, ex);

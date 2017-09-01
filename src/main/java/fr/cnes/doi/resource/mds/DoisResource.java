@@ -23,6 +23,7 @@ import org.restlet.resource.ResourceException;
 import org.restlet.util.Series;
 
 import fr.cnes.doi.exception.ClientMdsException;
+import static fr.cnes.doi.security.UtilsHeader.SELECTED_ROLE_PARAMETER;
 import fr.cnes.doi.utils.Requirement;
 
 /**
@@ -34,7 +35,7 @@ public class DoisResource extends BaseMdsResource {
 
     public static final String LIST_ALL_DOIS = "List all DOIs";
 
-    public static final String CREATE_DOI = "Create a DOI";
+    public static final String CREATE_DOI = "Create a DOI";    
 
     /**
      * Init.
@@ -121,12 +122,15 @@ public class DoisResource extends BaseMdsResource {
             reqName = "Mise à jour de l'URL d'un DOI"
     )     
     @Post("form")
-    public String createDoi(final Form doiForm) throws ResourceException {
-        getLogger().entering(getClass().getName(), "createDoi", doiForm.getMatrixString());
+    public String createDoi(final Form doiForm) throws ResourceException {        
+        getLogger().entering(getClass().getName(), "createDoi");                
+        
+        checkInputs(doiForm);
+        getLogger().finest(doiForm.getMatrixString());                
         String result;
         Series headers = (Series) getRequestAttributes().get("org.restlet.http.headers");
-        String selectedRole = headers.getFirstValue("selectedRole", "");
-        checkPermission(doiForm.getFirstValue("doi"), selectedRole);
+        String selectedRole = headers.getFirstValue(SELECTED_ROLE_PARAMETER, "");
+        checkPermission(doiForm.getFirstValue(DOI_PARAMETER), selectedRole);
         try {
             setStatus(Status.SUCCESS_CREATED);
             result = this.doiApp.getClient().createDoi(doiForm);
@@ -135,9 +139,32 @@ public class DoisResource extends BaseMdsResource {
             getLogger().exiting(getClass().getName(), "createDoi", ex.getMessage());
             throw new ResourceException(ex.getStatus(), ex.getDetailMessage());
         }
+        
         getLogger().exiting(getClass().getName(), "createDoi", result);
         return result;
     }
+    
+    /**
+     * Checks input parameters
+     * @param mediaForm the parameters
+     * @ResourceException if DOI_PARAMETER and URL_PARAMETER are not set
+     */
+    private void checkInputs(final Form mediaForm) {
+        StringBuilder errorMsg = new StringBuilder();
+        if (isValueNotExist(mediaForm, DOI_PARAMETER)) {
+            getLogger().log(Level.FINE, "{0} value is not set", DOI_PARAMETER);
+            errorMsg = errorMsg.append(DOI_PARAMETER).append(" value is not set.");
+        } 
+        if (isValueNotExist(mediaForm, URL_PARAMETER)) {
+            getLogger().log(Level.FINE, "{0} value is not set", URL_PARAMETER);
+            errorMsg = errorMsg.append(URL_PARAMETER).append(" value is not set.");            
+        }    
+        if(errorMsg.length() == 0) {        
+            getLogger().fine("The form is valid");                    
+        } else {
+            throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, errorMsg.toString());            
+        }        
+    }      
 
     /**
      * Retuns the sucessfull representation.
@@ -234,7 +261,7 @@ public class DoisResource extends BaseMdsResource {
 
         addRequestDocToMethod(info,
                 Arrays.asList(
-                        createQueryParamDoc("selectedRole", ParameterStyle.HEADER, "A user can select one role when he is associated to several roles", false, "xs:string")
+                        createQueryParamDoc(SELECTED_ROLE_PARAMETER, ParameterStyle.HEADER, "A user can select one role when he is associated to several roles", false, "xs:string")
                 ),
                 requestRepresentation());
 

@@ -5,6 +5,7 @@
  */
 package fr.cnes.doi.utils;
 
+import fr.cnes.doi.security.UtilsCryptography;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -57,7 +58,7 @@ public class UtilsTest {
         System.out.println("decrypt");
         String encryptedInput = "6YTGxcaZ3b/qFbzECfnvjw==";
         String expResult = "Hello World !";
-        String result = Utils.decrypt(encryptedInput);
+        String result = UtilsCryptography.decrypt(encryptedInput);
         assertEquals(expResult, result);
     }
 
@@ -69,7 +70,7 @@ public class UtilsTest {
         System.out.println("encrypt");
         String str = "Hello World !";
         String expResult = "6YTGxcaZ3b/qFbzECfnvjw==";
-        String result = Utils.encrypt(str);
+        String result = UtilsCryptography.encrypt(str);
         assertEquals(expResult, result);
     }
     

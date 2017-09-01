@@ -29,8 +29,8 @@ import org.restlet.util.Series;
 import org.xml.sax.SAXException;
 
 import fr.cnes.doi.exception.ClientMdsException;
+import static fr.cnes.doi.security.UtilsHeader.SELECTED_ROLE_PARAMETER;
 import fr.cnes.doi.utils.Requirement;
-import java.net.MalformedURLException;
 
 /**
  * Resource to handle a collection of metadata.
@@ -93,6 +93,8 @@ public class MetadatasResource extends BaseMdsResource {
 
         //TODO : replace DOI name when PRE_PROD
         getLogger().entering(getClass().getName(), "createMetadata");
+        
+        checkInputs(entity);
         String result;
         try {
             setStatus(Status.SUCCESS_CREATED);
@@ -115,6 +117,17 @@ public class MetadatasResource extends BaseMdsResource {
         }
         getLogger().exiting(getClass().getName(), "createMetadata", result);
         return result;
+    }
+    
+    /**
+     * Checks inputs
+     * @param obj object to check
+     * @throws ResourceException if entity is null
+     */
+    private void checkInputs(final Object obj) {
+        if(isObjectNotExist(obj)) {
+            throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "Entity cannot be null");
+        }        
     }
     
     /**
@@ -141,7 +154,7 @@ public class MetadatasResource extends BaseMdsResource {
      */
     private String extractSelectedRoleFromRequestIfExists() {
             Series headers = (Series) getRequestAttributes().get("org.restlet.http.headers");
-            return headers.getFirstValue("selectedRole", "");        
+            return headers.getFirstValue(SELECTED_ROLE_PARAMETER, "");        
     }
 
     /**

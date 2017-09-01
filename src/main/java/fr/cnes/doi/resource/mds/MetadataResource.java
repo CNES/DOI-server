@@ -7,6 +7,7 @@ package fr.cnes.doi.resource.mds;
 
 import fr.cnes.doi.application.DoiMdsApplication;
 import fr.cnes.doi.exception.ClientMdsException;
+import static fr.cnes.doi.security.UtilsHeader.SELECTED_ROLE_PARAMETER;
 import fr.cnes.doi.utils.Requirement;
 
 import java.util.Arrays;
@@ -82,11 +83,12 @@ public class MetadataResource extends BaseMdsResource {
     @Delete
     public Representation deleteMetadata() throws ResourceException { 
         //TODO : replace DOI name when PRE_PROD
+        getLogger().entering(getClass().getName(), "deleteMetadata");
         
         Representation rep;
         try {
             Series headers = (Series) getRequestAttributes().get("org.restlet.http.headers");
-            String selectedRole = headers.getFirstValue("selectedRole", "");
+            String selectedRole = headers.getFirstValue(SELECTED_ROLE_PARAMETER, "");
             getLogger().entering(getClass().getName(), "deleteMetadata", new Object[]{this.doiName, selectedRole});
             checkPermission(this.doiName, selectedRole);
             setStatus(Status.SUCCESS_OK);
@@ -95,6 +97,7 @@ public class MetadataResource extends BaseMdsResource {
             getLogger().exiting(getClass().getName(), "deleteMetadata", ex.getDetailMessage());
             throw new ResourceException(ex.getStatus(), ex.getDetailMessage());
         }
+        
         getLogger().exiting(getClass().getName(), "deleteMetadata");
         return rep;
     }

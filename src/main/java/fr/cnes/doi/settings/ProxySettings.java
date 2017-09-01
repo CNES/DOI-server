@@ -8,6 +8,7 @@ package fr.cnes.doi.settings;
 import java.util.logging.Logger;
 
 import org.restlet.data.ChallengeResponse;
+import org.restlet.data.ChallengeScheme;
 
 /**
  * Sets the proxy parameter based on DoiSettings.
@@ -20,21 +21,6 @@ public final class ProxySettings {
 	 * Application logger.
 	 */
 	private static final Logger LOGGER = Logger.getLogger(ProxySettings.class.getName());
-
-	/**
-	 * Proxy configuration - host system property
-	 */
-	private static final String HTTP_PROXYHOST = "http.proxyHost";
-
-	/**
-	 * Proxy configuration - port system property
-	 */
-	private static final String HTTP_PROXYPORT = "http.proxyPort";
-
-	/**
-	 * non proxy hosts
-	 */
-	private static final String HTTP_NONPROXYHOSTS = "http.nonProxyHosts";
 
 	/**
 	 * Proxy configuration - host
@@ -109,6 +95,7 @@ public final class ProxySettings {
 		this.nonProxyHosts = settings.getString(Consts.SERVER_NONPROXY_HOSTS);
 
 		this.proxySet = settings.getBoolean(Consts.SERVER_PROXY_USED);
+                this.proxyAuthentication = new ChallengeResponse(ChallengeScheme.HTTP_BASIC, this.proxyUser, this.proxyPassword);
 	}
 
 	/**

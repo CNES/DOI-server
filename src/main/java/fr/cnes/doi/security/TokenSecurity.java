@@ -53,6 +53,8 @@ public class TokenSecurity {
      */
     public static final String DEFAULT_TOKEN_KEY = "Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=";    
     
+    public static final String DATE_FORMAT = "E MMM dd HH:mm:ss z yyyy";
+    
     private final String tokenKey;
     
     private TokenDB tokenDB;
@@ -132,7 +134,7 @@ public class TokenSecurity {
      * @return JWT token
      * @throws fr.cnes.doi.exception.TokenSecurityException if the projectID is not first registered
      */
-    public String generate(final String userID, final int projectID, final TokenSecurity.TimeUnit timeUnit, final int amount) throws TokenSecurityException {
+    public String generate(final String userID, final int projectID, final TokenSecurity.TimeUnit timeUnit, final int amount) throws TokenSecurityException {       
         Map<String, Integer> projects = UniqueProjectName.getInstance().getProjects();
         Set<String> projectNameColl = Utils.getKeysByValue(projects, projectID);
         if(projectNameColl.isEmpty()) {
