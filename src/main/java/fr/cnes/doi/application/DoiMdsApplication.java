@@ -5,8 +5,6 @@
  */
 package fr.cnes.doi.application;
 
-import java.util.logging.Logger;
-
 import javax.xml.XMLConstants;
 import javax.xml.validation.SchemaFactory;
 
@@ -20,32 +18,29 @@ import org.restlet.ext.wadl.ApplicationInfo;
 import org.restlet.ext.wadl.DocumentationInfo;
 import org.restlet.ext.wadl.GrammarsInfo;
 import org.restlet.ext.wadl.IncludeInfo;
-import org.restlet.ext.wadl.WadlCnesRepresentation;
-import org.restlet.representation.Representation;
-import org.restlet.routing.Router;
 import org.restlet.security.ChallengeAuthenticator;
 import org.restlet.security.MethodAuthorizer;
+import org.restlet.routing.Router;
 
 import fr.cnes.doi.client.ClientMDS;
+import fr.cnes.doi.db.TokenDB;
 import fr.cnes.doi.resource.mds.DoiResource;
 import fr.cnes.doi.resource.mds.DoisResource;
 import fr.cnes.doi.resource.mds.MediaResource;
 import fr.cnes.doi.resource.mds.MetadataResource;
 import fr.cnes.doi.resource.mds.MetadatasResource;
 import fr.cnes.doi.settings.Consts;
-import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.utils.Requirement;
 import fr.cnes.doi.security.TokenBasedVerifier;
-import fr.cnes.doi.db.TokenDB;
 import fr.cnes.doi.security.TokenSecurity;
-import fr.cnes.doi.utils.Utils;
 
 /**
- * Provides an application for handling Data Object Identifier within an
- * organization. A Digital Object Identifier (DOI) is an alphanumeric string
- * assigned to uniquely identify an object. It is tied to a metadata description
- * of the object as well as to a digital location, such as a URL, where all the
- * details about the object are accessible.
+ * Provides an applicatdbor hTokenDBimport fr.cnes.doi.security.TokenSecurity;
+ * import org.restlet.routing.Router; ng Data Object Identifier within an
+ * organization. A Digital Object Identifier (DOI) is an alphanumely identify an
+ * object. It is tied to a metadata description of the object as well as to a
+ * digital location, such as a URL, where all the details about the object are
+ * accessible.
  *
  * @author Jean-Christophe Malapert (jean-Christophe Malapert@cnes.fr)
  * @see <a href="http://www.doi.org/hb.html">DOI Handbook</a>
@@ -120,22 +115,15 @@ public class DoiMdsApplication extends BaseApplication {
     private final SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
     /**
-     * Instance of configuration settings.
+     * Application name
      */
-    private final DoiSettings config = DoiSettings.getInstance();
-
-    /**
-     * Application logger.
-     */
-    private static final Logger LOGGER = Utils.getAppLogger();
-    
-    public static final String NAME = "Metadata Store Application";        
+    public static final String NAME = "Metadata Store Application";
 
     /**
      * Client to query Mds Datacite.
      */
     private final ClientMDS client;
-    
+
     /**
      * Token DB that contains the set of generated token.
      */
@@ -150,7 +138,7 @@ public class DoiMdsApplication extends BaseApplication {
     )
     public DoiMdsApplication() {
         super();
-        LOGGER.entering(DoiMdsApplication.class.getName(), "Constructor");
+        getLogger().entering(DoiMdsApplication.class.getName(), "Constructor");
 
         setName(NAME);
         setDescription("Provides an application for handling Data Object Identifier at CNES<br/>"
@@ -158,21 +146,26 @@ public class DoiMdsApplication extends BaseApplication {
                 + "<li>metadata : Registration of the associated metadata</li>"
                 + "<li>media : Possbility to obtain metadata in various formats and/or get automatic, direct access to an object rather than via the \"landing page\"</li>"
                 + "</ul>");
-        setOwner("Centre National d'Etudes Spatiales (CNES)");
-        setAuthor("Jean-Christophe Malapert (DNO/ISA/VIP)");
-        setStatusService(new CnesStatusService());
-        getServices().add(this.createCoreService(DEFAULT_CORS_ORIGIN, DEFAULT_CORS_CREDENTIALS));        
-        String contextUse = DoiSettings.getInstance().getString(Consts.CONTEXT_MODE);
+        String contextUse = this.config.getString(Consts.CONTEXT_MODE);
         client = new ClientMDS(ClientMDS.Context.valueOf(contextUse), getLoginMds(), getPwdMds());
-        
+
         this.tokenDB = TokenSecurity.getInstance().getTokenDB();
 
-        LOGGER.exiting(DoiMdsApplication.class.getName(), "Constructor");
+        getLogger().exiting(DoiMdsApplication.class.getName(), "Constructor");
     }
 
     /**
-     * Assigns routes for Mds application securizes the access.
+     * Creates a router for the DoiMdsApplication.
      *
+     * This router routes the resources for the Mds application, which are
+     * protected by a two authentication mechanisms (optional mechanisms) and an
+     * authorization by method.
+     *
+     * @see DoiMdsApplication#createRouter the router that contains the the Mds
+     * resources
+     * @see DoiMdsApplication#createAuthenticator the authentication mechanism by login/password
+     * @see DoiMdsApplication#createTokenAuthenticator the authentication mechanism by token
+     * @see DoiMdsApplication#createMethodAuthorizer the authorization mechanism
      * @return Router
      */
     @Requirement(
@@ -181,17 +174,17 @@ public class DoiMdsApplication extends BaseApplication {
     )
     @Override
     public Restlet createInboundRoot() {
-        LOGGER.entering(DoiMdsApplication.class.getName(), "createInboundRoot");
+        getLogger().entering(DoiMdsApplication.class.getName(), "createInboundRoot");
 
         // Defines the strategy of authentication (authentication is not required)
         //   - authentication with login/pwd
         ChallengeAuthenticator ca = createAuthenticator();
         ca.setOptional(true);
-        
+
         //   - authentication with token
         ChallengeAuthenticator ct = createTokenAuthenticator();
         ct.setOptional(true);
-        
+
         //  create a pipeline of authentication
         ca.setNext(ct);
 
@@ -202,17 +195,27 @@ public class DoiMdsApplication extends BaseApplication {
         // Router
         ma.setNext(createRouter());
 
-        LOGGER.exiting(DoiMdsApplication.class.getName(), "createInboundRoot", ca);
+        getLogger().exiting(DoiMdsApplication.class.getName(), "createInboundRoot", ca);
         return ca;
     }
 
     /**
-     * Creates the router.
+     * Creates the router. The router routes the following resources:
+     * <ul>
+     * <li>{@link DoiMdsApplication#DOI_URI} to handle a DOI and its landing
+     * page</li>
+     * <li>{@link DoiMdsApplication#METADATAS_URI} to handle DOI metadata</li>
+     * <li>{@link DoiMdsApplication#MEDIA_URI} to handle media related to a DOI
+     * </ul>
      *
+     * @see DoiResource
+     * @see MetadatasResource
+     * @see MetadataResource
+     * @see MediaResource
      * @return the router
      */
     private Router createRouter() {
-        LOGGER.entering(DoiMdsApplication.class.getName(), "createRouter");
+        getLogger().entering(DoiMdsApplication.class.getName(), "createRouter");
 
         Router router = new Router(getContext());
         router.attach(DOI_URI, DoisResource.class);
@@ -221,7 +224,7 @@ public class DoiMdsApplication extends BaseApplication {
         router.attach(METADATAS_URI + DOI_NAME_URI, MetadataResource.class);
         router.attach(MEDIA_URI + DOI_NAME_URI, MediaResource.class);
 
-        LOGGER.exiting(DoiMdsApplication.class.getName(), "createRouter", router);
+        getLogger().exiting(DoiMdsApplication.class.getName(), "createRouter", router);
 
         return router;
     }
@@ -241,7 +244,7 @@ public class DoiMdsApplication extends BaseApplication {
             reqName = "Vérification du projet"
     )
     private MethodAuthorizer createMethodAuthorizer() {
-        LOGGER.entering(DoiMdsApplication.class.getName(), "createMethodAuthorizer");
+        getLogger().entering(DoiMdsApplication.class.getName(), "createMethodAuthorizer");
 
         MethodAuthorizer methodAuth = new MethodAuthorizer();
         methodAuth.getAnonymousMethods().add(Method.GET);
@@ -250,26 +253,35 @@ public class DoiMdsApplication extends BaseApplication {
         methodAuth.getAuthenticatedMethods().add(Method.PUT);
         methodAuth.getAuthenticatedMethods().add(Method.DELETE);
 
-        LOGGER.exiting(DoiMdsApplication.class.getName(), "createMethodAuthorizer", methodAuth);
+        getLogger().exiting(DoiMdsApplication.class.getName(), "createMethodAuthorizer", methodAuth);
         return methodAuth;
-    }    
-    
+    }
+
+    /**
+     * Creates an authentication by token.
+     *
+     * @return the object that contains the business to check
+     * @see TokenBasedVerifier the token verification
+     */
     private ChallengeAuthenticator createTokenAuthenticator() {
+        getLogger().entering(DoiMdsApplication.class.getName(), "createTokenAuthenticator");
+
         ChallengeAuthenticator guard = new ChallengeAuthenticator(
                 getContext(), ChallengeScheme.HTTP_OAUTH_BEARER, "testRealm");
         TokenBasedVerifier verifier = new TokenBasedVerifier(getTokenDB());
-        guard.setVerifier(verifier);   
+        guard.setVerifier(verifier);
+
+        getLogger().exiting(DoiMdsApplication.class.getName(), "createTokenAuthenticator", guard);
+
         return guard;
     }
 
     /**
      * Returns the object to valid the datacite schema.
      *
-     * @return
+     * @return the schema factory
      */
     public SchemaFactory getSchemaFactory() {
-        LOGGER.entering(DoiMdsApplication.class.getName(), "getSchemaFactory");
-        LOGGER.exiting(DoiMdsApplication.class.getName(), "getSchemaFactory", this.schemaFactory);
         return this.schemaFactory;
     }
 
@@ -279,8 +291,6 @@ public class DoiMdsApplication extends BaseApplication {
      * @return the DataCite's login
      */
     private String getLoginMds() {
-        LOGGER.entering(DoiMdsApplication.class.getName(), "getLoginMds");
-        LOGGER.exiting(DoiMdsApplication.class.getName(), "getLoginMds", this.config.getSecret(Consts.INIST_LOGIN));
         return this.config.getSecret(Consts.INIST_LOGIN);
     }
 
@@ -290,8 +300,6 @@ public class DoiMdsApplication extends BaseApplication {
      * @return the DataCite's pwd
      */
     private String getPwdMds() {
-        LOGGER.entering(DoiMdsApplication.class.getName(), "getPwdMds");
-        LOGGER.exiting(DoiMdsApplication.class.getName(), "getPwdMds", this.config.getSecret(Consts.INIST_PWD));
         return this.config.getSecret(Consts.INIST_PWD);
     }
 
@@ -301,9 +309,6 @@ public class DoiMdsApplication extends BaseApplication {
      * @return the DOI prefix
      */
     public String getDataCentrePrefix() {
-        LOGGER.entering(DoiMdsApplication.class.getName(), "getDataCentrePrefix");
-        LOGGER.exiting(DoiMdsApplication.class.getName(), "getDataCentrePrefix",
-                this.config.getString(Consts.INIST_DOI));
         return this.config.getString(Consts.INIST_DOI);
     }
 
@@ -315,7 +320,12 @@ public class DoiMdsApplication extends BaseApplication {
     public ClientMDS getClient() {
         return this.client;
     }
-    
+
+    /**
+     * Returns the token database.
+     *
+     * @return the token database
+     */
     public TokenDB getTokenDB() {
         return this.tokenDB;
     }
@@ -348,22 +358,4 @@ public class DoiMdsApplication extends BaseApplication {
         result.setGrammars(grammar);
         return result;
     }
-
-    /**
-     * Creates HTML representation of the WADL.
-     *
-     * @param applicationInfo Application description
-     * @return the HTML representation of the WADL
-     */
-    @Requirement(
-            reqId = "DOI_DOC_010",
-            reqName = "Documentation des interfaces"
-    )
-    @Override
-    protected Representation createHtmlRepresentation(ApplicationInfo applicationInfo) {
-        WadlCnesRepresentation wadl = new WadlCnesRepresentation(applicationInfo);
-        return wadl.getHtmlRepresentation();
-    }
-        
-
 }

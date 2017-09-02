@@ -221,8 +221,8 @@ public class DoiServer extends Component {
         this.getDefaultHost().attach(STATUS_URI, new DoiStatusApplication());
         this.getDefaultHost().attachDefault(appAdmin);
         // Set authentication
-        RoleAuthorizer.getInstance().createReamFor(appDoiProject);
-        RoleAuthorizer.getInstance().createReamFor(appAdmin);
+        RoleAuthorizer.getInstance().createRealmFor(appDoiProject);
+        RoleAuthorizer.getInstance().createRealmFor(appAdmin);
 
     }
 

@@ -7,7 +7,7 @@ package fr.cnes.doi.utils;
 
 /**
  * Annotation to allow the use @requirement more than one
- * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public @interface Requirements {
     Requirement[] value();

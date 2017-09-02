@@ -22,7 +22,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 /**
  * Utility class to encrypt/decrypt
- * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class UtilsCryptography {
     

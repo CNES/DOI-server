@@ -8,6 +8,8 @@ package fr.cnes.doi.security;
 import fr.cnes.doi.application.AdminApplication;
 import fr.cnes.doi.application.DoiMdsApplication;
 import fr.cnes.doi.db.ProjectSuffixDB;
+import fr.cnes.doi.exception.DoiRuntimeException;
+import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.utils.UniqueProjectName;
 import fr.cnes.doi.utils.Utils;
 import java.text.MessageFormat;
@@ -27,11 +29,13 @@ import org.restlet.security.User;
 
 /**
  *
- * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class RoleAuthorizer implements Observer {
 
     public static String ROLE_ADMIN = "admin";
+    public static String GROUP_USERS = "Users";
+    public static String GROUP_ADMIN = "Administrator";
 
     /**
      * Logger.
@@ -59,7 +63,7 @@ public class RoleAuthorizer implements Observer {
         return RoleAuthorizerHolder.INSTANCE;
     }
 
-    private static final MemoryRealm realm = new MemoryRealm();
+    private static final MemoryRealm REALM = new MemoryRealm();
 
     private RoleAuthorizer() {
         initUsersGroups();
@@ -67,76 +71,79 @@ public class RoleAuthorizer implements Observer {
 
     private void initUsersGroups() {
         LOGGER.entering(this.getClass().getName(), "initUsersGroups");
+        
+        UserGroupMngtPlugin userPlugin = PluginFactory.getUserManagement();
+        
         // Add users
-        User admin = new User("admin", "admin");
-        User jcm = new User("malapert", "pwd", "Jean-Christophe", "Malapert", "jcmalapert@gmail.com");
-        User cc = new User("caillet", "pppp", "Claire", "Caillet", "claire.caillet@cnes.fr");
-        User test1 = new User("test1", "test1");
-        User test2 = new User("test2", "test2");
-        RoleAuthorizer.realm.getUsers().add(admin);
-        RoleAuthorizer.realm.getUsers().add(jcm);
-        RoleAuthorizer.realm.getUsers().add(cc);
-        RoleAuthorizer.realm.getUsers().add(test1);
-        RoleAuthorizer.realm.getUsers().add(test2);
-
+        userPlugin.addUsersToRealm(RoleAuthorizer.REALM.getUsers());
+        
         // Add Groups                         
-        Group users = new Group("Users", "Users");
-        users.getMemberUsers().add(jcm);
-        users.getMemberUsers().add(cc);
-        users.getMemberUsers().add(test1);
-        users.getMemberUsers().add(test2);
-        RoleAuthorizer.realm.getRootGroups().add(users);
+        Group users = new Group(GROUP_USERS, "Users");
+        userPlugin.addUsersToUserGroup(users.getMemberUsers());
+        RoleAuthorizer.REALM.getRootGroups().add(users);
 
-        Group administrators = new Group("Administrator", "Administrators");
-        administrators.getMemberUsers().add(jcm);
-        administrators.getMemberUsers().add(admin);
-        RoleAuthorizer.realm.getRootGroups().add(administrators);
+        Group administrators = new Group(GROUP_ADMIN, "Administrators");
+        userPlugin.addUsersToAdminGroup(administrators.getMemberUsers());
+        RoleAuthorizer.REALM.getRootGroups().add(administrators);
 
         LOGGER.exiting(this.getClass().getName(), "initUsersGroups");
     }
 
     private void initForMds(Application app) {
-        LOGGER.entering(this.getClass().getName(), "initForMds", new Object[]{realm, app.getName()});
+        LOGGER.entering(this.getClass().getName(), "initForMds", new Object[]{REALM, app.getName()});
 
         initForAdmin(app);
 
         Map<String, Integer> projects = UniqueProjectName.getInstance().getProjects();
         for (String project : projects.keySet()) {
             Integer projectID = projects.get(project);
-            for (Group group : RoleAuthorizer.realm.getRootGroups()) {
-                RoleAuthorizer.realm.map(group, Role.get(app, String.valueOf(projectID)));
+            for (Group group : RoleAuthorizer.REALM.getRootGroups()) {
+                RoleAuthorizer.REALM.map(group, Role.get(app, String.valueOf(projectID)));
             }
         }
 
-        app.getContext().setDefaultEnroler(RoleAuthorizer.realm.getEnroler());
-        app.getContext().setDefaultVerifier(RoleAuthorizer.realm.getVerifier());
+        app.getContext().setDefaultEnroler(RoleAuthorizer.REALM.getEnroler());
+        app.getContext().setDefaultVerifier(RoleAuthorizer.REALM.getVerifier());
 
         LOGGER.exiting(this.getClass().getName(), "initForMds");
     }
 
-    private void initForAdmin(Application app) {
-        LOGGER.entering(this.getClass().getName(), "initForAdmin", new Object[]{realm, app.getName()});
-
-        List<Group> groups = RoleAuthorizer.realm.getRootGroups();
-        Group admin = null;
+    private Group findGroupByName(final String name) {
+        List<Group> groups = RoleAuthorizer.REALM.getRootGroups();
+        Group searchedGroup = null;
         for (Group group : groups) {
-            if ("Administrator".equals(group.getName())) {
-                admin = group;
+            LOGGER.fine(String.format("group name : %s", group.getName()));
+            if (group.getName().equals(name)) {
+                searchedGroup = group;
+                LOGGER.fine("group found");
                 break;
             }
         }
-        if (admin == null) {
-            throw new RuntimeException("Please, create a group Administrator");
+        if (searchedGroup == null) {
+            LOGGER.fine("group not found");
+            throw new RuntimeException(String.format("Please, create a group %s", name));
         }
+        return searchedGroup;
+    }
 
-        RoleAuthorizer.realm.map(admin, Role.get(app, ROLE_ADMIN));
-        app.getContext().setDefaultEnroler(RoleAuthorizer.realm.getEnroler());
-        app.getContext().setDefaultVerifier(RoleAuthorizer.realm.getVerifier());
+    private void initForAdmin(Application app) {
+        LOGGER.entering(this.getClass().getName(), "initForAdmin", new Object[]{REALM, app.getName()});
+
+        Group admin = findGroupByName(GROUP_ADMIN);
+
+        RoleAuthorizer.REALM.map(admin, Role.get(app, ROLE_ADMIN));
+        app.getContext().setDefaultEnroler(RoleAuthorizer.REALM.getEnroler());
+        app.getContext().setDefaultVerifier(RoleAuthorizer.REALM.getVerifier());
 
         LOGGER.exiting(this.getClass().getName(), "initForAdmin");
     }
 
-    public boolean createReamFor(Application app) {
+    /**
+     * Init Realm for application.
+     * @param app application
+     * @return True when the realm is initialized otherwise False
+     */
+    public boolean createRealmFor(Application app) {
         LOGGER.entering(this.getClass().getName(), "createReamFor", app.getName());
 
         boolean isCreated;
@@ -144,12 +151,15 @@ public class RoleAuthorizer implements Observer {
             case DoiMdsApplication.NAME:
                 initForMds(app);
                 isCreated = true;
+                LOGGER.fine("Init for MDS ... done");
                 break;
             case AdminApplication.NAME:
                 initForAdmin(app);
                 isCreated = true;
+                LOGGER.fine("Init for admin ... done");
                 break;
             default:
+                LOGGER.log(Level.WARNING, "No Realm is initialized for this application {0}", app.getName());
                 isCreated = false;
                 break;
         }
@@ -159,51 +169,79 @@ public class RoleAuthorizer implements Observer {
         return isCreated;
     }
 
+    /**
+     * Adds/removes the <i>users</i> group to the new role name related to the
+     * application MDS
+     *
+     * @param o observable
+     * @param obj message
+     */
     @Override
-    public void update(Observable o, Object arg) {
-        LOGGER.entering(this.getClass().getName(), "update", new Object[]{o, arg});
+    public void update(Observable o, Object obj) {
+        LOGGER.entering(this.getClass().getName(), "update", new Object[]{o, obj});
+
+        String[] message = (String[]) obj;
 
         if (o instanceof ProjectSuffixDB) {
             LOGGER.fine("Observable is a ProjectSuffixDB type");
 
-            List<Group> groups = RoleAuthorizer.realm.getRootGroups();
-            Group admin = null;
-            for (Group group : groups) {
-                if ("Administrator".equals(group.getName())) {
-                    admin = group;
+            // Loads the admin group - admin group is defined by default
+            Group adminGroup = findGroupByName(GROUP_ADMIN);
+
+            // Loads the application MDS related to admin group
+            Application mds = loadApplicationBy(adminGroup, DoiMdsApplication.NAME);
+
+            // Loads the user group
+            Group usersGroup = findGroupByName(GROUP_USERS);
+
+            String operation = message[0];
+            String roleName = message[1];
+            switch (operation) {
+                case ProjectSuffixDB.ADD_RECORD:
+                    RoleAuthorizer.REALM.map(usersGroup, Role.get(mds, roleName));
+                    LOGGER.log(Level.FINE, "Adds the {0} group to the new {1} related to the {2}", new Object[]{usersGroup.getName(), roleName, mds.getName()});
                     break;
-                }
-            }
-            
-            // find the role for which the group is attached.
-            Set<Role> roles = RoleAuthorizer.realm.findRoles(admin);
-            Iterator<Role> roleIter = roles.iterator();
-            Application mds = null;
-            while(roleIter.hasNext()) {
-                Role role = roleIter.next();
-                Application app = role.getApplication();
-                if(app.getName().equals(DoiMdsApplication.NAME)) {
-                    mds = app;
-                }
-            }
-            if(mds == null) {
-                throw new RuntimeException("MdsApplication not found");
-            }
-                        
-            Group users = null;
-            for (Group group : groups) {
-                LOGGER.fine(String.format("group name : %s", group.getName()));                
-                if ("Users".equals(group.getName())) {
-                    users = group;
-                    LOGGER.fine("Users found");
+                case ProjectSuffixDB.DELETE_RECORD:
+                    RoleAuthorizer.REALM.unmap(usersGroup, mds, roleName);
+                    LOGGER.log(Level.FINE, "Remove the {0} group to the {1} related to the {2}", new Object[]{usersGroup.getName(), roleName, mds.getName()});
                     break;
-                }
+                default:
+                    break;
             }
 
-            RoleAuthorizer.realm.map(users, Role.get(mds, String.valueOf(arg)));
-            LOGGER.log(Level.FINE, "Links user with role {0} for app {1}", new Object[]{arg, mds.getName()});
+            LOGGER.log(Level.FINE, "Links user with role {0} for app {1}", new Object[]{roleName, mds.getName()});
         }
+
+        LOGGER.exiting(this.getClass().getName(), "update");
     }
 
-    //TODO : Synchronizer par une notification RoleAuthorize et ajout de nouveaux projets dans la DB project
+    /**
+     * Loads the application related to a group with a name
+     *
+     * @param group group linked to an application
+     * @param appName application name
+     * @return the application
+     */
+    private Application loadApplicationBy(final Group group, final String appName) {
+        LOGGER.entering(this.getClass().getName(), "loadApplicationBy", new Object[]{group.getName(), appName});
+
+        Set<Role> roles = RoleAuthorizer.REALM.findRoles(group);
+        Iterator<Role> roleIter = roles.iterator();
+        Application searchedApp = null;
+        while (roleIter.hasNext()) {
+            Role role = roleIter.next();
+            Application app = role.getApplication();
+            if (app.getName().equals(appName)) {
+                searchedApp = app;
+            }
+        }
+        if (searchedApp == null) {
+            throw new DoiRuntimeException("Application " + appName + " not found");
+        }
+
+        LOGGER.exiting(this.getClass().getName(), "loadApplicationBy", searchedApp);
+
+        return searchedApp;
+    }
+
 }

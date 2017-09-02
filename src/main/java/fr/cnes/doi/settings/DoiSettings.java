@@ -6,6 +6,7 @@
 package fr.cnes.doi.settings;
 
 import fr.cnes.doi.exception.DoiRuntimeException;
+import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.security.UtilsCryptography;
 import fr.cnes.doi.server.Starter;
 import java.io.File;
@@ -58,6 +59,7 @@ public class DoiSettings {
 		Properties properties = loadConfigurationFile(CONFIG_PROPERTIES);
 		fillConcurrentMap(properties);
                 computePathOfTheApplication();
+                PluginFactory.init(this.map);
 	}
         
         private void computePathOfTheApplication() {
@@ -342,5 +344,5 @@ public class DoiSettings {
          */
         public String getPathApp() {
             return this.pathApp;
-        }
+        }        
 }

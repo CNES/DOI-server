@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
@@ -20,7 +21,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class ProjectSuffixDB extends Observable{
 
@@ -28,6 +29,10 @@ public class ProjectSuffixDB extends Observable{
      * Default file if the path is not defined in the configuration file
      */
     private static final String DEFAULT_CACHE_FILE = "data/projects.conf";
+    
+    public static final String ADD_RECORD = "ADD";
+    
+    public static final String DELETE_RECORD = "DELETE";
 
     /**
      * logger.
@@ -137,7 +142,7 @@ public class ProjectSuffixDB extends Observable{
             this.idProjMap.put(projectID, projectName);            
             isAdded = true;
             setChanged();
-            notifyObservers(String.valueOf(projectID));
+            notifyObservers(new String[]{ADD_RECORD, String.valueOf(projectID)});
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE,
                     "The id " + projectID + " of the project " + projectName + "cannot be saved in the file", e);

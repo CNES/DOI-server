@@ -8,15 +8,15 @@ package fr.cnes.doi.client;
 import fr.cnes.doi.utils.Requirement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ResourceException;
+//TODO : vérifier si on ne peut pas utiliser MDS à la place pour récupérer la landing page
+
 
 /**
  *
- * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 @Requirement(
         reqId = "DOI_DISPO_020",
@@ -46,7 +46,7 @@ public class ClientLandingPage extends BaseClient {
                 }
             } catch (ResourceException ex) {
                 this.errors.add(doi);
-                Logger.getLogger(ClientLandingPage.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.fine(ex.getMessage());
             }
         }
     }

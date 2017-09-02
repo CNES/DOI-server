@@ -3,29 +3,28 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
-//TODO
-// Créer singleton pour DB token
-// Extraire la bd de UniqueFileName et le mettre dans un package DB avec DB token
-// Vérifier les authentification et authorisations
 package fr.cnes.doi.application;
 
-import fr.cnes.doi.settings.ProxySettings;
-import fr.cnes.doi.utils.Requirement;
-import fr.cnes.doi.utils.Utils;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import fr.cnes.doi.settings.DoiSettings;
 import org.restlet.data.ChallengeScheme;
 import org.restlet.ext.wadl.WadlApplication;
 import org.restlet.security.ChallengeAuthenticator;
 import org.restlet.service.CorsService;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.logging.Level;
+
+import fr.cnes.doi.settings.ProxySettings;
+import fr.cnes.doi.utils.Requirement;
+import org.restlet.ext.wadl.ApplicationInfo;
+import org.restlet.ext.wadl.WadlCnesRepresentation;
+import org.restlet.representation.Representation;
 
 /**
  * Creates a base application by retrieving the proxy settings.
+ *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 @Requirement(
@@ -33,52 +32,70 @@ import org.restlet.service.CorsService;
         reqName = "Documentation des interfaces"
 )
 public class BaseApplication extends WadlApplication {
-    
+
     /**
      * Default value of 'Access-Control-Allow-Origin' header.
      */
     public static final Set DEFAULT_CORS_ORIGIN = new HashSet(Arrays.asList("*"));
-    
+
     /**
      * If true, adds 'Access-Control-Allow-Credentials' header.
      */
-    public static final boolean DEFAULT_CORS_CREDENTIALS = true;        
-    
+    public static final boolean DEFAULT_CORS_CREDENTIALS = true;
+
     /**
-     * Logger.
+     * Instance of configuration settings.
      */
-    public static final Logger LOGGER = Utils.getAppLogger();
+    protected final DoiSettings config;  
     
     /**
      * Proxy settings.
      */
-    protected ProxySettings proxySettings;
-    
+    protected final ProxySettings proxySettings;    
+
     /**
-     * This constructor creates an instance of proxySettings.
+     * This constructor creates an instance of proxySettings. By creating the
+     * instance, the constructor creates :
+     * <ul>
+     * <li>the CORS service using the default value
+     * {@link BaseApplication#DEFAULT_CORS_ORIGIN} and
+     * {@link BaseApplication#DEFAULT_CORS_CREDENTIALS}</li>
+     * <li>the custom status page</li>
+     * </ul>
+     *
+     * @see
+     * <a href="https://en.wikipedia.org/wiki/Cross-origin_resource_sharing">CORS</a>
+     * @see BaseApplication#createCoreService
      */
-    public BaseApplication() {                
+    public BaseApplication() {
+        this.config = DoiSettings.getInstance(); 
         this.proxySettings = ProxySettings.getInstance();
+        getServices().add(this.createCoreService(DEFAULT_CORS_ORIGIN, DEFAULT_CORS_CREDENTIALS));
+        setStatusService(new CnesStatusService());
+        setOwner("Centre National d'Etudes Spatiales (CNES)");
+        setAuthor("Jean-Christophe Malapert (DNO/ISA/VIP)");
     }
-    
+
     /**
-     * Defines CORS service.
+     * Defines the CORS service.
+     *
      * @param corsOrigin IP that can access to the service
      * @param corsCredentials credentials allowed
      * @return CORS service
      */
-    protected final CorsService createCoreService(final Set corsOrigin, final boolean corsCredentials) {        
-        LOGGER.entering(BaseApplication.class.getName(), "createCoreService");
+    protected final CorsService createCoreService(final Set corsOrigin, final boolean corsCredentials) {
+        getLogger().entering(BaseApplication.class.getName(), "createCoreService");
 
         CorsService corsService = new CorsService();
-        LOGGER.log(Level.INFO, "Allows all origins {0}", corsOrigin);        
+        getLogger().log(Level.INFO, "Allows all origins {0}", corsOrigin);
         corsService.setAllowedOrigins(corsOrigin);
-        LOGGER.log(Level.INFO, "Allows Credientials {0}", corsCredentials);
+        getLogger().log(Level.INFO, "Allows Credientials {0}", corsCredentials);
         corsService.setAllowedCredentials(corsCredentials);
 
-        LOGGER.exiting(BaseApplication.class.getName(), "createCoreService", corsService);
+        getLogger().exiting(BaseApplication.class.getName(), "createCoreService", corsService);
+
         return corsService;
-    } 
+    }
 
     /**
      * Creates the authenticator. Creates the user, role and mapping user/role.
@@ -90,16 +107,32 @@ public class BaseApplication extends WadlApplication {
             reqName = "Association des projets"
     )
     protected ChallengeAuthenticator createAuthenticator() {
-        LOGGER.entering(DoiMdsApplication.class.getName(), "createAuthenticator");
+        getLogger().entering(DoiMdsApplication.class.getName(), "createAuthenticator");
 
         ChallengeAuthenticator guard = new ChallengeAuthenticator(getContext(), ChallengeScheme.HTTP_BASIC, "realm");
-        
+
         guard.setVerifier(this.getContext().getDefaultVerifier());
-        guard.setEnroler(this.getContext().getDefaultEnroler());        
-        
-        LOGGER.exiting(DoiMdsApplication.class.getName(), "createAuthenticator", guard);
+        guard.setEnroler(this.getContext().getDefaultEnroler());
+
+        getLogger().exiting(DoiMdsApplication.class.getName(), "createAuthenticator", guard);
 
         return guard;
-    }    
+    }
     
+    /**
+     * Creates HTML representation of the WADL.
+     *
+     * @param applicationInfo Application description
+     * @return the HTML representation of the WADL
+     */
+    @Requirement(
+            reqId = "DOI_DOC_010",
+            reqName = "Documentation des interfaces"
+    )
+    @Override
+    protected Representation createHtmlRepresentation(ApplicationInfo applicationInfo) {
+        WadlCnesRepresentation wadl = new WadlCnesRepresentation(applicationInfo);
+        return wadl.getHtmlRepresentation();
+    }    
+
 }

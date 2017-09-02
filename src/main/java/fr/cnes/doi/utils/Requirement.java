@@ -9,7 +9,7 @@ import java.lang.annotation.Repeatable;
 
 /**
  * Annotation to map requirements with code
- * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 @Repeatable(Requirements.class)
 public @interface Requirement {

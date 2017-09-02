@@ -31,6 +31,11 @@ import fr.cnes.doi.settings.EmailSettings;
 import fr.cnes.doi.utils.Utils;
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
+import java.io.File;
+import java.lang.reflect.Method;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLClassLoader;
 
 /**
  * DOI server
@@ -118,6 +123,7 @@ public class Starter {
             GLOBAL_LOGGER.finer(e.getMessage());
         }
     }
+   
 
     /**
      * Starts the server
@@ -127,6 +133,7 @@ public class Starter {
     private static void startServer(final DoiServer server) {
         GLOBAL_LOGGER.entering(Starter.class.getName(), "startServer");
         try {
+            fr.cnes.doi.plugin.Utils.addPath(DoiSettings.getInstance().getPathApp()+File.separatorChar+"plugins");
             GLOBAL_LOGGER.info("Starting server ...");
             server.start();
             GLOBAL_LOGGER.info("Server started");
@@ -225,7 +232,7 @@ public class Starter {
                 case 'k':
                     GLOBAL_LOGGER.fine("k option is selected");
                     System.out.println(TokenSecurity.createKeySignatureHS256());
-                    break;                    
+                    break;
                 //
                 case 'e':
                     GLOBAL_LOGGER.fine("e option is selected");

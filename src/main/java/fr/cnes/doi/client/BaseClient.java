@@ -15,6 +15,8 @@ import org.restlet.engine.Engine;
 import org.restlet.resource.ClientResource;
 
 import fr.cnes.doi.settings.ProxySettings;
+import fr.cnes.doi.utils.Utils;
+import java.util.logging.Logger;
 
 /**
  * Base client
@@ -27,6 +29,8 @@ public class BaseClient {
 	 * Client, which executes request;
 	 */
 	protected final ClientResource client;
+        
+        protected Logger LOGGER = Utils.getAppLogger();
 
 	/**
 	 * Constructor.
@@ -44,7 +48,7 @@ public class BaseClient {
 	/**
 	 * Configure the proxy parameters is needed (Starter.Proxy.used = true)
 	 */
-	public void configureProxyIfNeeded() {
+	private void configureProxyIfNeeded() {
 		if (ProxySettings.getInstance().isWithProxy()) {
 			setProxyAuthentication(ProxySettings.getInstance().getProxyHost(),
 					ProxySettings.getInstance().getProxyPort(), ProxySettings.getInstance().getProxyUser(),
@@ -70,5 +74,6 @@ public class BaseClient {
 		proxy.getContext().getParameters().add("proxyPort", port);    
 		this.client.setNext(proxy);
 	}
+        //TODO check io on ne peut pas utiliser the challenge authentication depuis que j'ai corrigé des problèmes
 
 }

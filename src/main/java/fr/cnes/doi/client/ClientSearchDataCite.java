@@ -15,7 +15,7 @@ import org.restlet.representation.Representation;
 
 /**
  *
- * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 @Requirement(
         reqId = "DOI_DISPO_020",

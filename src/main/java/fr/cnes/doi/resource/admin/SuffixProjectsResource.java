@@ -18,7 +18,7 @@ import org.restlet.resource.ResourceException;
 
 /**
  *
- * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class SuffixProjectsResource extends BaseResource {
     

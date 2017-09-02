@@ -29,7 +29,7 @@ import org.restlet.ext.httpclient.internal.IgnoreCookieSpecFactory;
 /**
  * Patch of the HttpClientHelper.
  * HttpClientHelper makes a bridge between Restlet and HttpClient from Apache
- * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class HttpClientHelperPatch extends HttpClientHelper {
     

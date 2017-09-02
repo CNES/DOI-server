@@ -12,7 +12,7 @@ import org.restlet.engine.Engine;
 
 /**
  *
- * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class TokenSecurityException extends Exception {
 

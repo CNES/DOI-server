@@ -5,15 +5,19 @@
  */
 package fr.cnes.doi.security;
 
+import java.util.List;
+import org.restlet.security.User;
+
 /**
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-public class UtilsHeader {
+public interface UserGroupMngtPlugin {
     
-    /**
-     * The parameter to select the role of the operator when he is implied in different groups.
-     */
-    public static final String SELECTED_ROLE_PARAMETER = "selectedRole";    
+    public void addUsersToRealm(final List<User> realmUsers);
+    
+    public void addUsersToUserGroup(final List<User> usersGroup);
+    
+    public void addUsersToAdminGroup(final List<User> adminGroup);
     
 }

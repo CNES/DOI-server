@@ -29,7 +29,7 @@ import org.restlet.data.Status;
 
 /**
  *
- * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class TokenSecurity {
 

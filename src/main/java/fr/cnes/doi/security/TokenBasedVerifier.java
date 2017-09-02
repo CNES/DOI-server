@@ -16,7 +16,7 @@ import org.restlet.security.Verifier;
 
 /**
  *
- * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class TokenBasedVerifier implements Verifier {        
 

@@ -5,12 +5,7 @@
  */
 package fr.cnes.doi.application;
 
-import java.util.logging.Logger;
-
 import org.restlet.Restlet;
-import org.restlet.ext.wadl.ApplicationInfo;
-import org.restlet.ext.wadl.WadlCnesRepresentation;
-import org.restlet.representation.Representation;
 import org.restlet.routing.Router;
 
 import fr.cnes.doi.client.ClientCrossCiteCitation;
@@ -18,7 +13,6 @@ import fr.cnes.doi.resource.citation.FormatCitationResource;
 import fr.cnes.doi.resource.citation.LanguageCitationResource;
 import fr.cnes.doi.resource.citation.StyleCitationResource;
 import fr.cnes.doi.utils.Requirement;
-import fr.cnes.doi.utils.Utils;
 
 /**
  * Provides an application to get citation from a registered DOI. Books and
@@ -71,12 +65,9 @@ public class DoiCrossCiteApplication extends BaseApplication {
      * Retrieves the citation.
      */
     public static final String FORMAT_URI = "/format";
-
     /**
-     * Application logger.
+     * Application name.
      */
-    private static final Logger LOGGER = Utils.getAppLogger();
-
     public static final String NAME = "Cross Cite Application";
 
     /**
@@ -85,7 +76,8 @@ public class DoiCrossCiteApplication extends BaseApplication {
     private final ClientCrossCiteCitation client = new ClientCrossCiteCitation();
 
     /**
-     * Constructs the application by setting the proxy authentication to the null     {@link fr.cnes.doi.client.ClientCrossCiteCitation
+     * Constructs the application by setting the proxy authentication to the
+     * null null     {@link fr.cnes.doi.client.ClientCrossCiteCitation
 	 * ClientCrossCiteCitation} proxy when the configuration is set.
      */
     @Requirement(
@@ -94,9 +86,9 @@ public class DoiCrossCiteApplication extends BaseApplication {
     )
     public DoiCrossCiteApplication() {
         super();
-        LOGGER.entering(DoiCrossCiteApplication.class.getName(), "Constructor");
+        getLogger().entering(DoiCrossCiteApplication.class.getName(), "Constructor");
 
-        setAuthor("Jean-Christophe Malapert");
+        setName(NAME);
         StringBuilder description = new StringBuilder();
         description.append("Books and journal articles have long benefited from "
                 + "an infrastructure that makes them easy to cite, a key element"
@@ -120,28 +112,32 @@ public class DoiCrossCiteApplication extends BaseApplication {
                 + "Principles provide a guideline for the those that want to "
                 + "enhance reuse of their data (Wilkinson 2016).");
         setDescription(description.toString());
-        setName(NAME);
-        setOwner("Centre National d'Etudes Spatiales (CNES)");
-        getServices().add(this.createCoreService(DEFAULT_CORS_ORIGIN, DEFAULT_CORS_CREDENTIALS));
 
-        LOGGER.exiting(DoiCrossCiteApplication.class.getName(), "Constructor");
+        getLogger().exiting(DoiCrossCiteApplication.class.getName(), "Constructor");
     }
 
     /**
-     * Assigns routes.
-     *
+     * Creates router the DOICrossCiteApplication. This routes routes the following
+     * resources:
+     * <ul>
+     * <li>{@link DoiCrossCiteApplication#STYLES_URI} to access to the different styles
+     * for a citation</li>
+     * <li>{@link DoiCrossCiteApplication#LANGUAGE_URI} to access to the different
+     * languages for a citation</li>
+     * <li>{@link DoiCrossCiteApplication#FORMAT_URI} to access to the formatted citation</li>
+     * </ul>
      * @return router
      */
     @Override
     public Restlet createInboundRoot() {
-        LOGGER.entering(DoiCrossCiteApplication.class.getName(), "createInboundRoot");
+        getLogger().entering(DoiCrossCiteApplication.class.getName(), "createInboundRoot");
 
         Router router = new Router(getContext());
         router.attach(STYLES_URI, StyleCitationResource.class);
         router.attach(LANGUAGE_URI, LanguageCitationResource.class);
         router.attach(FORMAT_URI, FormatCitationResource.class);
-        
-        LOGGER.exiting(DoiCrossCiteApplication.class.getName(), "createInboundRoot");        
+
+        getLogger().exiting(DoiCrossCiteApplication.class.getName(), "createInboundRoot");
         return router;
     }
 
@@ -152,22 +148,6 @@ public class DoiCrossCiteApplication extends BaseApplication {
      */
     public ClientCrossCiteCitation getClient() {
         return this.client;
-    }
-
-    /**
-     * Creates HTML representation of the WADL.
-     *
-     * @param applicationInfo Application description
-     * @return the HTML representation of the WADL
-     */
-    @Requirement(
-            reqId = "DOI_DOC_010",
-            reqName = "Documentation des interfaces"
-    )
-    @Override
-    protected Representation createHtmlRepresentation(ApplicationInfo applicationInfo) {
-        WadlCnesRepresentation wadl = new WadlCnesRepresentation(applicationInfo);
-        return wadl.getHtmlRepresentation();
     }
 
 }

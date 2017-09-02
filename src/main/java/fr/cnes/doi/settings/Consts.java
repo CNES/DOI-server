@@ -282,5 +282,10 @@ public class Consts {
      * key for token signature encoded with the algorithm HS256 in base64
      */
     public static final String TOKEN_KEY = "Starter.Token.key";
+    
+    /**
+     * Plugin to load the list of users and to fill group with users
+     */
+    public static final String PLUGIN_USER_GROUP_MGT = "Starter.Plugin.UserGroupMgt";
 
 }
