@@ -5,7 +5,7 @@
  */
 package fr.cnes.doi.logging.api;
 
-import fr.cnes.doi.server.monitoring.DoiMonitoring;
+import fr.cnes.doi.services.DoiMonitoring;
 import fr.cnes.doi.settings.EmailSettings;
 import fr.cnes.doi.utils.Requirement;
 import fr.cnes.doi.utils.Utils;

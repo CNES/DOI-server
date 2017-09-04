@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fr.cnes.doi.server.monitoring;
+package fr.cnes.doi.services;
 
 import fr.cnes.doi.utils.Requirement;
 import java.util.HashMap;
@@ -67,10 +67,10 @@ public class DoiMonitoring {
         if (this.applications.containsKey(id)) {
             DoiMonitoringRecord record = this.applications.get(name.getName() + path);
             float previousSpeedAverage = (float) record.getAverage();
-            LOGGER.log(Level.FINE, "current speed average = {0}", previousSpeedAverage);
+            LOGGER.log(Level.CONFIG, "current speed average = {0}", previousSpeedAverage);
             int previousNbAccess = (int) record.getNbAccess();
             float newSpeedAverage = (previousSpeedAverage + duration) / (previousNbAccess + 1);
-            LOGGER.log(Level.FINE, "new speed average = {0}", newSpeedAverage);
+            LOGGER.log(Level.CONFIG, "new speed average = {0}", newSpeedAverage);
             record.setAverage(newSpeedAverage);
             record.setNbAccess(previousNbAccess + 1);
         } else {
@@ -88,7 +88,9 @@ public class DoiMonitoring {
      */
     public boolean isRegistered(final Method name, final String path) {
         String id = name.getName() + path;
-        return this.applications.containsKey(id);
+        boolean isRegistered = this.applications.containsKey(id);
+        LOGGER.log(Level.FINER, "{0} {1} is registered : {2}", new Object[]{name, path, isRegistered});       
+        return isRegistered;
     }
 
     /**
@@ -98,12 +100,16 @@ public class DoiMonitoring {
      * @param path path URI
      * @return the average speed
      */
-    public float getCurrentAverage(final Method name, final String path) {
+    public float getCurrentAverage(final Method name, final String path) {        
         String id = name.getName() + path;
         if (isRegistered(name, path)) {
-            return this.applications.get(id).getAverage();
+            float average = this.applications.get(id).getAverage();
+            LOGGER.finer(String.format("getCurrentAverage for %s %s : %s", name, path, average));
+            return average;
         } else {
-            throw new IllegalArgumentException(id + " is not registered");
+            IllegalArgumentException ex = new IllegalArgumentException(id + " is not registered");
+            LOGGER.throwing(this.getClass().getName(), "getCurrentAverage", ex);
+            throw ex;
         }
     }
 
@@ -114,9 +120,11 @@ public class DoiMonitoring {
      * @param path path URI
      * @return the description
      */
-    public String getDescription(final Method name, final String path) {
+    public String getDescription(final Method name, final String path) {        
         String id = name.getName() + path;
-        return this.applications.get(id).getDescription();
+        String description = this.applications.get(id).getDescription();
+        LOGGER.log(Level.FINER, "getDescription : {0}", description);
+        return description;
     }
 
 }

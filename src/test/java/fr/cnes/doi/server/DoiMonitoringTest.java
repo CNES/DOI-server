@@ -13,7 +13,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.restlet.data.Method;
 
-import fr.cnes.doi.server.monitoring.DoiMonitoring;
+import fr.cnes.doi.services.DoiMonitoring;
 
 /**
  *

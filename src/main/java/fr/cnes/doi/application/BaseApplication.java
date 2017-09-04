@@ -5,6 +5,7 @@
  */
 package fr.cnes.doi.application;
 
+import fr.cnes.doi.services.CnesStatusService;
 import fr.cnes.doi.settings.DoiSettings;
 import org.restlet.data.ChallengeScheme;
 import org.restlet.ext.wadl.WadlApplication;

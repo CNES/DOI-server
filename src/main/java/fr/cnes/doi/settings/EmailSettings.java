@@ -30,10 +30,13 @@ import org.restlet.resource.ClientResource;
  *
  * @author Jean-Christophe Malapert
  */
-public class EmailSettings {
+public final class EmailSettings {
 
     private static final boolean DEFAULT_DEBUG = false;
 
+    /**
+     * Logger.
+     */
     private static final Logger LOGGER = Logger.getLogger(EmailSettings.class.getName());
 
     private String smtpUrl;
@@ -72,6 +75,7 @@ public class EmailSettings {
      * Init singleton.
      */
     public void init() {
+        LOGGER.entering(this.getClass().getName(), "init");
         DoiSettings settings = DoiSettings.getInstance();
         this.smtpProtocol = settings.getString(Consts.SMTP_PROTOCOL);
         this.smtpUrl = settings.getString(Consts.SMTP_URL);
@@ -79,12 +83,15 @@ public class EmailSettings {
         this.authPwd = settings.getSecret(Consts.SMTP_AUTH_PWD);
         this.tlsEnable = settings.getString(Consts.SMTP_STARTTLS_ENABLE);
         this.contactAdmin = settings.getString(Consts.SERVER_CONTACT_ADMIN);
+        LOGGER.info("Email settings have been loaded");        
+        LOGGER.exiting(this.getClass().getName(), "init");        
     }
 
     /**
      * @param isEnabled
      */
     public void setDebug(boolean isEnabled) {
+        LOGGER.log(Level.CONFIG, "setDebug to {0}", isEnabled);
         this.debug = isEnabled;
     }
 
@@ -94,6 +101,7 @@ public class EmailSettings {
      * @return debug
      */
     public boolean getDebug() {
+        LOGGER.log(Level.CONFIG, "getDebug : {0}", this.debug);
         return this.debug;
     }
 
@@ -105,17 +113,20 @@ public class EmailSettings {
      * @return True when the message is sent
      */
     public boolean sendMessage(final String subject, final String msg) {
+        LOGGER.entering(this.getClass().getName(), "sendMessage", new Object[]{subject, msg});
         boolean result;
         try {
             final Request request = new Request(Method.POST, getSmtpURL());
+            LOGGER.finer("Sets the login/passwd for the SMTP server");
             request.setChallengeResponse(
                     new ChallengeResponse(ChallengeScheme.SMTP_PLAIN, getAuthUser(), getAuthPwd()));
             result = sendMail(Protocol.valueOf(getSmtpProtocol()), request, Boolean.getBoolean(getTlsEnable()), subject,
                     msg);
         } catch (Exception ex) {
-            LOGGER.log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, String.format("Cannot send the message with the subject %s : %s", subject, msg), ex);
             result = false;
         }
+        LOGGER.exiting(this.getClass().getName(), "sendMessage", result);        
         return result;
     }
 
@@ -132,6 +143,7 @@ public class EmailSettings {
     private boolean sendMail(final Protocol protocol, final Request request, boolean startTls, final String subject,
             final String msg) throws Exception {
         boolean result;
+        LOGGER.entering(this.getClass().getName(), "sendMail", new Object[]{protocol.getName(), startTls, subject, msg});
         final Client client = new Client(protocol);
         Context context = new Context();
         client.setContext(context);
@@ -155,6 +167,7 @@ public class EmailSettings {
             result = true;
         }
         client.stop();
+        LOGGER.exiting(this.getClass().getName(), "sendMail", result);
         return result;
     }
 
@@ -164,6 +177,7 @@ public class EmailSettings {
      * @return the URL
      */
     public String getSmtpURL() {
+        LOGGER.log(Level.CONFIG, "getSmtpUrl : {0}", this.smtpUrl);
         return smtpUrl;
     }
 
@@ -173,6 +187,7 @@ public class EmailSettings {
      * @return the port
      */
     public String getSmtpProtocol() {
+        LOGGER.log(Level.CONFIG, "getSmtpProtocol : {0}", this.smtpProtocol);        
         return smtpProtocol;
     }
 
@@ -182,6 +197,7 @@ public class EmailSettings {
      * @return the tlsEnable
      */
     public String getTlsEnable() {
+        LOGGER.log(Level.CONFIG, "getTlsEnable : {0}", this.tlsEnable);        
         return tlsEnable;
     }
 
@@ -191,6 +207,7 @@ public class EmailSettings {
      * @return the authUser
      */
     public String getAuthUser() {
+        LOGGER.log(Level.CONFIG, "getAuthUser : {0}", this.authUser);                
         return authUser;
     }
 
@@ -200,6 +217,7 @@ public class EmailSettings {
      * @return the authPwd
      */
     public String getAuthPwd() {
+        LOGGER.log(Level.CONFIG, "getAuthPwd : {0}", this.authPwd);                        
         return authPwd;
     }
 
@@ -209,6 +227,7 @@ public class EmailSettings {
      * @return the contactAdmin
      */
     public String getContactAdmin() {
+        LOGGER.log(Level.CONFIG, "getContactAdmin : {0}", this.contactAdmin);                                
         return contactAdmin;
     }
 

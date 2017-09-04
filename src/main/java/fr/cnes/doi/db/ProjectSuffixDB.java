@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
@@ -66,8 +65,7 @@ public class ProjectSuffixDB extends Observable{
      * does not exist a new file will be created. The file contains the mapping
      * between the project name and the identifiers
      *
-     * @param projectConf
-     *
+     * @param projectConf The file that contains the database     
      */
     public final void init(String projectConf) {
         this.projectConf = projectConf;

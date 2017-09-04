@@ -4,6 +4,8 @@
 // Any modifications to this file will be lost upon recompilation of the source schema. 
 // Generated on: 2017.06.06 at 03:43:03 PM CEST 
 //
-
+/**
+ * Provides the classes to parse/write DataCite metadata.
+ */
 @javax.xml.bind.annotation.XmlSchema(namespace = "http://datacite.org/schema/kernel-4", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package org.datacite.schema.kernel_4;

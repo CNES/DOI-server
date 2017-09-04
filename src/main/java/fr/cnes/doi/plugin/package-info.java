@@ -4,6 +4,6 @@
  * and open the template in the editor.
  */
 /**
- * Provides classes to monitor the speed of {@link fr.cnes.doi.application.DoiMdsApplication Meta Data Store application}.
+ * Provides classes to loads a plugin in the classpath.
  */
-package fr.cnes.doi.server.monitoring;
+package fr.cnes.doi.plugin;

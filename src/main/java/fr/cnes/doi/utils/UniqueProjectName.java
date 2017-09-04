@@ -58,15 +58,18 @@ public class UniqueProjectName {
      * Constructor
      */
     private UniqueProjectName() {
+        LOGGER.entering(this.getClass().getName(), "Constructor");
         String path = DoiSettings.getInstance().getString(Consts.PROJECT_CONF_PATH);
         if (path == null) {
             this.projectDB = new ProjectSuffixDB();
         } else {
             this.projectDB = new ProjectSuffixDB(path);
         }
+        LOGGER.exiting(this.getClass().getName(), "Constructor");        
     }
     
     public Map<String, Integer> getProjects() {
+        LOGGER.log(Level.CONFIG, "getProjects : {0}", this.projectDB.getProjects());
         return this.projectDB.getProjects();
     }    
 
@@ -78,9 +81,11 @@ public class UniqueProjectName {
      * @return the Id
      */
     private int generateId(int maxNumber) {
+        LOGGER.entering(this.getClass().getName(), "generateId", maxNumber);
         final Random rand = new Random();
-
-        return rand.nextInt(maxNumber);
+        int id = rand.nextInt(maxNumber);
+        LOGGER.exiting(this.getClass().getName(), "generateId", id);        
+        return id;
     }
 
     /**
@@ -93,11 +98,12 @@ public class UniqueProjectName {
      * @return the input that is converted to the base
      */
     private int convert(final long input, final String projectName, int maxNumber) {
+        LOGGER.entering(this.getClass().getName(), "convert", new Object[]{input, projectName, maxNumber});
         int result = 0;
         do {
             result = (int) (input ^ (projectName.hashCode() % maxNumber));
         } while (!isIdUnique(result, projectName));
-
+        LOGGER.entering(this.getClass().getName(), "convert", result);
         return result;
     }
 
@@ -110,22 +116,23 @@ public class UniqueProjectName {
      * @return the unique string
      */
     public int getShortName(final String project, int length) {
-
+        LOGGER.entering(this.getClass().getName(), "getShortName", new Object[]{project, length});
         int id = 0;
         if (length > 9) {
-            throw new DoiRuntimeException("The short name cannot be built because the length requested is too big");
+            DoiRuntimeException doiEx = new DoiRuntimeException("The short name cannot be build because the length requested is too big");
+            LOGGER.throwing(this.getClass().getName(), "getShortName", doiEx);            
+            throw doiEx;
         } else if (this.projectDB.isExistProjectName(project)) {
             // Si le projet a déjà un identifiant on ne le recalcule pas
             id = this.projectDB.getIDFrom(project);
-            LOGGER.log(Level.INFO, "The project {0} already has an id : {1}", new Object[]{project, id});
+            LOGGER.log(Level.FINE, "The project {0} has already an id : {1}", new Object[]{project, id});
         } else {
             int maxNumber = (int) Math.pow(10.0, length);
-
             long idRandom = generateId(maxNumber);
-
             id = convert(idRandom, project, maxNumber);
+            LOGGER.log(Level.FINE, "The project {0} has an id : {1}", new Object[]{project, id});
         }
-
+        LOGGER.exiting(this.getClass().getName(), "getShortName", id);
         return id;
     }
         
@@ -138,14 +145,15 @@ public class UniqueProjectName {
      * @return true if the Id is OK, false otherwise
      */
     private synchronized boolean isIdUnique(int idToCheck, String projectName) {
-
-        boolean result = true;
+        LOGGER.entering(this.getClass().getName(), "isIdUnique", new Object[]{idToCheck, projectName});
+        boolean result;
         if (this.projectDB.isExistID(idToCheck)) {
             result = false;
         } else {
             this.projectDB.addProjectSuffix(idToCheck, projectName);
+            result = true;
         }
-
+        LOGGER.exiting(this.getClass().getName(), "isIdUnique", result);
         return result;
     }
 

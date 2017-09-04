@@ -7,13 +7,8 @@ package fr.cnes.doi.utils;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.Locale;
+import javax.xml.bind.JAXBException;
 import org.restlet.data.ChallengeResponse;
 import org.restlet.data.ChallengeScheme;
 import org.restlet.data.Form;
@@ -26,7 +21,7 @@ import org.restlet.resource.ClientResource;
  */
 public class TestTOken {
 
-    public static void main(final String[] argv) throws IOException, ClassNotFoundException, SQLException, ParseException {   
+    public static void main(final String[] argv) throws IOException, ClassNotFoundException, SQLException, ParseException, JAXBException {   
 
         ClientResource client = new ClientResource("http://localhost:8182/admin/suffixProject");
         Form form = new Form();
@@ -64,6 +59,7 @@ public class TestTOken {
         clientResource.setChallengeResponse(cr);
 
         clientResource.post(null);
+
     }
 
 }

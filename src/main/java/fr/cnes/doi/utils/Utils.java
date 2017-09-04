@@ -96,8 +96,8 @@ public class Utils {
 
     /**
      * Returns the keys related to a value within a map.
-     * @param <T>
-     * @param <E>
+     * @param <T> the type of the key
+     * @param <E> the type of the value
      * @param map map
      * @param value value to search
      * @return the keys related to a value

@@ -3,8 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fr.cnes.doi.db;
-
 /**
  * Provides access to the DOI database.
  *
@@ -24,3 +22,4 @@ package fr.cnes.doi.db;
  * <h2>Token database</h2>
  * The token database stores the created token in order to verify them when there are used by the user.
  */
+package fr.cnes.doi.db;

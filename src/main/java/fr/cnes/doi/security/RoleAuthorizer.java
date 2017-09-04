@@ -72,7 +72,7 @@ public class RoleAuthorizer implements Observer {
     private void initUsersGroups() {
         LOGGER.entering(this.getClass().getName(), "initUsersGroups");
         
-        UserGroupMngtPlugin userPlugin = PluginFactory.getUserManagement();
+        UserGroupMngtHelper userPlugin = PluginFactory.getUserManagement();
         
         // Add users
         userPlugin.addUsersToRealm(RoleAuthorizer.REALM.getUsers());

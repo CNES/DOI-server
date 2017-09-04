@@ -5,6 +5,8 @@
  */
 package fr.cnes.doi.settings;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.restlet.Server;
 import org.restlet.data.Parameter;
 import org.restlet.ext.jetty.JettyServerHelper;
@@ -15,10 +17,15 @@ import org.restlet.ext.jetty.JettyServerHelper;
  *
  * @author Jean-Christophe Malapert
  */
-public class JettySettings extends JettyServerHelper {
+public final class JettySettings extends JettyServerHelper {
 
     private final DoiSettings settings;
     private final Server server;
+    
+    /**
+     * Logger.
+     */
+    private static final Logger LOGGER = Logger.getLogger(JettySettings.class.getName());    
 
     /**
      * Constructs settings for Jetty.
@@ -28,8 +35,10 @@ public class JettySettings extends JettyServerHelper {
      */
     public JettySettings(final Server server, final DoiSettings settings) {
         super(server);
+        LOGGER.entering(this.getClass().getName(), "Constructor");
         this.server = server;
         this.settings = settings;
+        LOGGER.exiting(this.getClass().getName(), "Constructor");        
     }
 
     /**
@@ -42,12 +51,14 @@ public class JettySettings extends JettyServerHelper {
      */
     @Override
     public int getHttpRequestHeaderSize() {
+        LOGGER.entering(this.getClass().getName(), "getHttpRequestHeaderSize");        
         int result;
         try {
             result = settings.getInt(Consts.JETTY_REQUEST_HEADER_SIZE);
         } catch (Exception e) {
             result = super.getHttpRequestHeaderSize();
         }
+        LOGGER.exiting(this.getClass().getName(), "getHttpRequestHeaderSize", result);                
         return result;
     }
 
@@ -60,12 +71,14 @@ public class JettySettings extends JettyServerHelper {
      */
     @Override
     public int getHttpResponseHeaderSize() {
+        LOGGER.entering(this.getClass().getName(), "getHttpResponseHeaderSize");                
         int result;
         try {
             result = settings.getInt(Consts.JETTY_RESPONSE_HEADER_SIZE);
         } catch (Exception e) {
             result = super.getHttpResponseHeaderSize();
         }
+        LOGGER.exiting(this.getClass().getName(), "getHttpResponseHeaderSize", result);                        
         return result;
     }
 
@@ -76,11 +89,15 @@ public class JettySettings extends JettyServerHelper {
      */
     @Override
     public int getThreadPoolMinThreads() {
+        LOGGER.entering(this.getClass().getName(), "getThreadPoolMinThreads");                        
+        int result;
         try {
-            return settings.getInt(Consts.JETTY_MIN_THREADS);
+            result =  settings.getInt(Consts.JETTY_MIN_THREADS);
         } catch (Exception e) {
-            return super.getThreadPoolMinThreads();
+            result = super.getThreadPoolMinThreads();
         }
+        LOGGER.exiting(this.getClass().getName(), "getThreadPoolMinThreads", result);                                
+        return result;
     }
 
     /**
@@ -90,11 +107,15 @@ public class JettySettings extends JettyServerHelper {
      */
     @Override
     public int getThreadPoolMaxThreads() {
+        LOGGER.entering(this.getClass().getName(), "getThreadPoolMaxThreads");   
+        int result;
         try {
-            return settings.getInt(Consts.JETTY_MAX_THREADS);
+            result = settings.getInt(Consts.JETTY_MAX_THREADS);
         } catch (Exception e) {
-            return super.getThreadPoolMaxThreads();
+            result = super.getThreadPoolMaxThreads();
         }
+        LOGGER.exiting(this.getClass().getName(), "getThreadPoolMaxThreads", result);           
+        return result;
     }
 
     /**
@@ -104,11 +125,15 @@ public class JettySettings extends JettyServerHelper {
      */
     @Override
     public int getThreadPoolThreadsPriority() {
+        LOGGER.entering(this.getClass().getName(), "getThreadPoolThreadsPriority");           
+        int result;
         try {
-            return settings.getInt(Consts.JETTY_THREADS_PRIORITY);
+            result = settings.getInt(Consts.JETTY_THREADS_PRIORITY);
         } catch (Exception e) {
-            return super.getThreadPoolThreadsPriority();
+            result = super.getThreadPoolThreadsPriority();
         }
+        LOGGER.exiting(this.getClass().getName(), "getThreadPoolThreadsPriority", result);                   
+        return result;
     }
 
     /**
@@ -119,11 +144,15 @@ public class JettySettings extends JettyServerHelper {
      */
     @Override
     public int getThreadPoolIdleTimeout() {
+        LOGGER.entering(this.getClass().getName(), "getThreadPoolIdleTimeout"); 
+        int result;
         try {
-            return settings.getInt(Consts.JETTY_THREAD_MAX_IDLE_TIME_MS);
+            result = settings.getInt(Consts.JETTY_THREAD_MAX_IDLE_TIME_MS);
         } catch (Exception e) {
-            return super.getThreadPoolIdleTimeout();
+            result = super.getThreadPoolIdleTimeout();
         }
+        LOGGER.exiting(this.getClass().getName(), "getThreadPoolIdleTimeout", result);         
+        return result;
     }
 
     /**
@@ -134,11 +163,15 @@ public class JettySettings extends JettyServerHelper {
      */
     @Override
     public long getThreadPoolStopTimeout() {
+        LOGGER.entering(this.getClass().getName(), "getThreadPoolStopTimeout");         
+        long result;
         try {
-            return settings.getLong(Consts.JETTY_THREAD_STOP_TIME_MS);
+            result = settings.getLong(Consts.JETTY_THREAD_STOP_TIME_MS);
         } catch (Exception e) {
-            return super.getThreadPoolStopTimeout();
+            result = super.getThreadPoolStopTimeout();
         }
+        LOGGER.exiting(this.getClass().getName(), "getThreadPoolStopTimeout", result);                 
+        return result;
     }
 
     /**
@@ -149,11 +182,15 @@ public class JettySettings extends JettyServerHelper {
      */
     @Override
     public int getConnectorAcceptors() {
+        LOGGER.entering(this.getClass().getName(), "getConnectorAcceptors");   
+        int result;
         try {
-            return settings.getInt(Consts.JETTY_ACCEPTOR_THREADS);
+            result = settings.getInt(Consts.JETTY_ACCEPTOR_THREADS);
         } catch (Exception e) {
-            return super.getConnectorAcceptors();
+            result = super.getConnectorAcceptors();
         }
+        LOGGER.exiting(this.getClass().getName(), "getConnectorAcceptors", result);           
+        return result;
     }
 
     /**
@@ -164,11 +201,15 @@ public class JettySettings extends JettyServerHelper {
      */
     @Override
     public int getConnectorSelectors() {
+        LOGGER.entering(this.getClass().getName(), "getConnectorSelectors");        
+        int result;
         try {
-            return settings.getInt(Consts.JETTY_SELECTOR_THREADS);
+            result = settings.getInt(Consts.JETTY_SELECTOR_THREADS);
         } catch (Exception e) {
-            return super.getConnectorSelectors();
+            result = super.getConnectorSelectors();
         }
+        LOGGER.exiting(this.getClass().getName(), "getConnectorSelectors", result);                   
+        return result;
     }
 
     /**
@@ -179,11 +220,15 @@ public class JettySettings extends JettyServerHelper {
      */
     @Override
     public int getLowResourceMonitorIdleTimeout() {
+        LOGGER.entering(this.getClass().getName(), "getLowResourceMonitorIdleTimeout");                   
+        int result;
         try {
-            return settings.getInt(Consts.JETTY_LOW_RESOURCES_MAX_IDLE_TIME_MS);
+            result = settings.getInt(Consts.JETTY_LOW_RESOURCES_MAX_IDLE_TIME_MS);
         } catch (Exception e) {
-            return super.getLowResourceMonitorIdleTimeout();
+            result = super.getLowResourceMonitorIdleTimeout();
         }
+        LOGGER.exiting(this.getClass().getName(), "getLowResourceMonitorIdleTimeout", result);                           
+        return result;
     }
 
     /**
@@ -194,11 +239,15 @@ public class JettySettings extends JettyServerHelper {
      */
     @Override
     public int getLowResourceMonitorPeriod() {
+        LOGGER.entering(this.getClass().getName(), "getLowResourceMonitorPeriod");                           
+        int result;
         try {
-            return settings.getInt(Consts.JETTY_LOW_RESOURCES_PERIOD);
+            result = settings.getInt(Consts.JETTY_LOW_RESOURCES_PERIOD);
         } catch (Exception e) {
-            return super.getLowResourceMonitorPeriod();
+            result = super.getLowResourceMonitorPeriod();
         }
+        LOGGER.exiting(this.getClass().getName(), "getLowResourceMonitorPeriod", result);                                   
+        return result;
     }
 
     /**
@@ -209,11 +258,15 @@ public class JettySettings extends JettyServerHelper {
      */
     @Override
     public long getLowResourceMonitorMaxMemory() {
+        LOGGER.entering(this.getClass().getName(), "getLowResourceMonitorMaxMemory");                                   
+        long result;
         try {
-            return settings.getLong(Consts.JETTY_LOW_RESOURCES_MAX_MEMORY);
+            result = settings.getLong(Consts.JETTY_LOW_RESOURCES_MAX_MEMORY);
         } catch (Exception e) {
-            return super.getLowResourceMonitorMaxMemory();
+            result = super.getLowResourceMonitorMaxMemory();
         }
+        LOGGER.exiting(this.getClass().getName(), "getLowResourceMonitorMaxMemory", result);                                   
+        return result;
     }
 
     /**
@@ -224,11 +277,15 @@ public class JettySettings extends JettyServerHelper {
      */
     @Override
     public int getLowResourceMonitorMaxConnections() {
+        LOGGER.entering(this.getClass().getName(), "getLowResourceMonitorMaxConnections");                                           
+        int result;
         try {
-            return settings.getInt(Consts.JETTY_LOW_RESOURCES_MAX_MEMORY);
+            result = settings.getInt(Consts.JETTY_LOW_RESOURCES_MAX_MEMORY);
         } catch (Exception e) {
-            return super.getLowResourceMonitorMaxConnections();
+            result = super.getLowResourceMonitorMaxConnections();
         }
+        LOGGER.exiting(this.getClass().getName(), "getLowResourceMonitorMaxConnections", result);                                                   
+        return result;
     }
 
     /**
@@ -239,11 +296,15 @@ public class JettySettings extends JettyServerHelper {
      */
     @Override
     public boolean getLowResourceMonitorThreads() {
+        LOGGER.entering(this.getClass().getName(), "getLowResourceMonitorThreads");                                                   
+        boolean result;
         try {
-            return settings.getBoolean(Consts.JETTY_LOW_RESOURCES_THREADS);
+            result = settings.getBoolean(Consts.JETTY_LOW_RESOURCES_THREADS);
         } catch (Exception e) {
-            return super.getLowResourceMonitorThreads();
+            result =  super.getLowResourceMonitorThreads();
         }
+        LOGGER.exiting(this.getClass().getName(), "getLowResourceMonitorThreads", result);                                                   
+        return result;
     }
 
     /**
@@ -253,11 +314,15 @@ public class JettySettings extends JettyServerHelper {
      */
     @Override
     public int getConnectorAcceptQueueSize() {
+        LOGGER.entering(this.getClass().getName(), "getConnectorAcceptQueueSize");                                                   
+        int result;
         try {
-            return settings.getInt(Consts.JETTY_ACCEPT_QUEUE_SIZE);
+            result = settings.getInt(Consts.JETTY_ACCEPT_QUEUE_SIZE);
         } catch (Exception e) {
-            return super.getConnectorAcceptQueueSize();
+            result = super.getConnectorAcceptQueueSize();
         }
+        LOGGER.exiting(this.getClass().getName(), "getConnectorAcceptQueueSize");                                                           
+        return result;
     }
 
     /**
@@ -268,11 +333,15 @@ public class JettySettings extends JettyServerHelper {
      */
     @Override
     public int getConnectorSoLingerTime() {
+        LOGGER.entering(this.getClass().getName(), "getConnectorSoLingerTime");                                                           
+        int result;
         try {
-            return settings.getInt(Consts.JETTY_SO_LINGER_TIME);
+            result = settings.getInt(Consts.JETTY_SO_LINGER_TIME);
         } catch (Exception e) {
-            return super.getConnectorSoLingerTime();
+            result = super.getConnectorSoLingerTime();
         }
+        LOGGER.exiting(this.getClass().getName(), "getConnectorSoLingerTime", result);                                                           
+        return result;
     }
 
     /**
@@ -285,11 +354,15 @@ public class JettySettings extends JettyServerHelper {
      */
     @Override
     public int getConnectorIdleTimeout() {
+        LOGGER.entering(this.getClass().getName(), "getConnectorIdleTimeout");  
+        int result;
         try {
-            return settings.getInt(Consts.JETTY_IO_MAX_IDLE_TIME_MS);
+            result = settings.getInt(Consts.JETTY_IO_MAX_IDLE_TIME_MS);
         } catch (Exception e) {
-            return super.getConnectorIdleTimeout();
+            result = super.getConnectorIdleTimeout();
         }
+        LOGGER.exiting(this.getClass().getName(), "getConnectorIdleTimeout", result);                                                                   
+        return result;
     }
 
     /**
@@ -302,11 +375,15 @@ public class JettySettings extends JettyServerHelper {
      */
     @Override
     public int getHttpOutputBufferSize() {
+        LOGGER.entering(this.getClass().getName(), "getHttpOutputBufferSize");                                                                           
+        int result;
         try {
-            return settings.getInt(Consts.JETTY_RESPONSE_BUFFER_SIZE);
+            result = settings.getInt(Consts.JETTY_RESPONSE_BUFFER_SIZE);
         } catch (Exception e) {
-            return super.getHttpOutputBufferSize();
+            result = super.getHttpOutputBufferSize();
         }
+        LOGGER.exiting(this.getClass().getName(), "getHttpOutputBufferSize", result);                                                                                   
+        return result;
     }
 
     /**
@@ -316,11 +393,15 @@ public class JettySettings extends JettyServerHelper {
      */
     @Override
     public int getHttpHeaderCacheSize() {
+        LOGGER.entering(this.getClass().getName(), "getHttpHeaderCacheSize");
+        int result;
         try {
-            return settings.getInt(Consts.JETTY_REQUEST_BUFFER_SIZE);
+            result = settings.getInt(Consts.JETTY_REQUEST_BUFFER_SIZE);
         } catch (Exception e) {
-            return super.getHttpHeaderCacheSize();
+            result = super.getHttpHeaderCacheSize();
         }
+        LOGGER.exiting(this.getClass().getName(), "getHttpHeaderCacheSize", result);        
+        return result;
     }
 
     /**
@@ -331,11 +412,15 @@ public class JettySettings extends JettyServerHelper {
      */
     @Override
     public int getConnectorStopTimeout() {
+        LOGGER.entering(this.getClass().getName(), "getConnectorStopTimeout");   
+        int result;
         try {
-            return settings.getInt(Consts.JETTY_GRACEFUL_SHUTDOWN);
+            result = settings.getInt(Consts.JETTY_GRACEFUL_SHUTDOWN);
         } catch (Exception e) {
-            return super.getConnectorStopTimeout();
+            result = super.getConnectorStopTimeout();
         }
+        LOGGER.exiting(this.getClass().getName(), "getConnectorStopTimeout", result);                
+        return result;
     }
 
     /**
@@ -346,11 +431,15 @@ public class JettySettings extends JettyServerHelper {
      */
     @Override
     public long getLowResourceMonitorStopTimeout() {
+        LOGGER.entering(this.getClass().getName(), "getLowResourceMonitorStopTimeout"); 
+        long result;
         try {
-            return settings.getLong(Consts.JETTY_GRACEFUL_SHUTDOWN);
+            result = settings.getLong(Consts.JETTY_GRACEFUL_SHUTDOWN);
         } catch (Exception e) {
-            return super.getLowResourceMonitorStopTimeout();
+            result = super.getLowResourceMonitorStopTimeout();
         }
+        LOGGER.entering(this.getClass().getName(), "getLowResourceMonitorStopTimeout", result);                        
+        return result;
     }
 
     /**
@@ -358,6 +447,7 @@ public class JettySettings extends JettyServerHelper {
      *
      */
     public void addParamsToServerContext() {
+        LOGGER.entering(this.getClass().getName(), "addParamsToServerContext");
         addParam("threadPool.minThreads", getThreadPoolMinThreads());
         addParam("threadPool.maxThreads", getThreadPoolMaxThreads());
         addParam("threadPool.threadsPriority", getThreadPoolThreadsPriority());
@@ -379,6 +469,7 @@ public class JettySettings extends JettyServerHelper {
         addParam("lowResource.maxConnections", getLowResourceMonitorMaxConnections());
         addParam("lowResource.idleTimeout", getLowResourceMonitorIdleTimeout());
         addParam("lowResource.stopTimeout", getLowResourceMonitorStopTimeout());
+        LOGGER.entering(this.getClass().getName(), "addParamsToServerContext");        
     }
 
     /**
@@ -391,8 +482,10 @@ public class JettySettings extends JettyServerHelper {
         Parameter param = this.server.getContext().getParameters().getFirst(propName);
         if (param != null) {
             param.setValue("" + propValue);
+            LOGGER.log(Level.CONFIG, "add to an existant param {0} : {1}", new Object[]{propName, propValue});            
         } else {
             this.server.getContext().getParameters().add(propName, "" + propValue);
+            LOGGER.log(Level.CONFIG, "add to a new param {0} : {1}", new Object[]{propName, propValue});                        
         }
     }
 }

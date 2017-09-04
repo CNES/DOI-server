@@ -32,10 +32,6 @@ import fr.cnes.doi.utils.Utils;
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 import java.io.File;
-import java.lang.reflect.Method;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLClassLoader;
 
 /**
  * DOI server
@@ -80,6 +76,7 @@ public class Starter {
         help.append("\n\n");
         help.append("with :\n");
         help.append("  --secret <key>               : The 16 bits secret key to crypt/decrypt\n");
+        help.append("  --key-sign-secret <key>      : The key to sign the token\n");
         help.append("                                 If not provided, a default one is used\n\n");
         help.append("  -s                           : Starts the server\n");
         help.append("with OPTIONS:\n");
@@ -123,7 +120,6 @@ public class Starter {
             GLOBAL_LOGGER.finer(e.getMessage());
         }
     }
-   
 
     /**
      * Starts the server
@@ -133,7 +129,7 @@ public class Starter {
     private static void startServer(final DoiServer server) {
         GLOBAL_LOGGER.entering(Starter.class.getName(), "startServer");
         try {
-            fr.cnes.doi.plugin.Utils.addPath(DoiSettings.getInstance().getPathApp()+File.separatorChar+"plugins");
+            fr.cnes.doi.plugin.Utils.addPath(DoiSettings.getInstance().getPathApp() + File.separatorChar + "plugins");
             GLOBAL_LOGGER.info("Starting server ...");
             server.start();
             GLOBAL_LOGGER.info("Server started");
@@ -197,13 +193,14 @@ public class Starter {
         String arg;
 
         StringBuffer sb = new StringBuffer();
-        LongOpt[] longopts = new LongOpt[6];
+        LongOpt[] longopts = new LongOpt[7];
         longopts[0] = new LongOpt("help", LongOpt.NO_ARGUMENT, null, 'h');
         longopts[1] = new LongOpt("version", LongOpt.NO_ARGUMENT, null, 'v');
         longopts[2] = new LongOpt("secret", LongOpt.REQUIRED_ARGUMENT, sb, 0);
         longopts[3] = new LongOpt("decryptProperties", LongOpt.REQUIRED_ARGUMENT, null, 'z');
         longopts[4] = new LongOpt("cryptProperties", LongOpt.REQUIRED_ARGUMENT, null, 'y');
         longopts[5] = new LongOpt("key-sign", LongOpt.NO_ARGUMENT, null, 'k');
+        longopts[6] = new LongOpt("key-sign-secret", LongOpt.REQUIRED_ARGUMENT, sb, 1);
 
         //
         Getopt g = new Getopt(progName, argv, "hvdske:c:f:y:z:", longopts);
@@ -217,6 +214,11 @@ public class Starter {
                     } else {
                         settings.setSecretKey(secretKey);
                     }
+                    break;
+                //    
+                case 1:
+                    String secretSignToken = g.getOptarg();
+                    TokenSecurity.getInstance().setTokenKey(secretSignToken);
                     break;
                 //
                 case 'h':
@@ -299,11 +301,24 @@ public class Starter {
                         if (inputStream != null) {
                             try {
                                 inputStream.close();
-                                inputReader.close();
-                                reader.close();
 
                             } catch (IOException e) {
                                 LOGGER.log(Level.INFO, "Error closing inputstream: {0}", e.toString());
+                            }
+
+                        }
+                        if (inputReader != null) {
+                            try {
+                                inputReader.close();
+                            } catch (IOException ex) {
+                                LOGGER.log(Level.INFO, "Error closing inputReader: {0}", ex.toString());
+                            }
+                        }
+                        if (reader != null) {
+                            try {
+                                reader.close();
+                            } catch (IOException ex) {
+                                LOGGER.log(Level.INFO, "Error closing reader: {0}", ex.toString());
                             }
 
                         }

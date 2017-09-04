@@ -21,7 +21,7 @@ import java.util.logging.Level;
 
 import fr.cnes.doi.resource.admin.SuffixProjectsResource;
 import fr.cnes.doi.resource.admin.TokenResource;
-import fr.cnes.doi.server.monitoring.LandingPageMonitoring;
+import fr.cnes.doi.services.LandingPageMonitoring;
 import fr.cnes.doi.utils.Requirement;
 import fr.cnes.doi.db.TokenDB;
 import fr.cnes.doi.security.TokenSecurity;

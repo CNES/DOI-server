@@ -19,7 +19,7 @@ import fr.cnes.doi.resource.mds.DoisResource;
 import fr.cnes.doi.resource.mds.MetadataResource;
 import fr.cnes.doi.resource.mds.MetadatasResource;
 import fr.cnes.doi.server.DoiServer;
-import fr.cnes.doi.server.monitoring.DoiMonitoring;
+import fr.cnes.doi.services.DoiMonitoring;
 import fr.cnes.doi.utils.Requirement;
 
 /**
@@ -54,16 +54,6 @@ public class DoiLogDataServer extends LogService {
         }
     }
 
-    /*
-   * (non-Javadoc)
-   * 
-   * @see org.restlet.service.LogService#createInboundFilter(org.restlet.Context)
-     */
-    /**
-     *
-     * @param context
-     * @return
-     */
     @Override
     public Filter createInboundFilter(Context context) {
         return new MonitoringLogFilter(context, initMonitoring(), this);

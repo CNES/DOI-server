@@ -12,7 +12,7 @@ import org.restlet.security.User;
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-public interface UserGroupMngtPlugin {
+public interface UserGroupMngtHelper {
     
     public void addUsersToRealm(final List<User> realmUsers);
     

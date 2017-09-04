@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fr.cnes.doi.application;
+package fr.cnes.doi.services;
 
 import org.restlet.Application;
 import org.restlet.Request;

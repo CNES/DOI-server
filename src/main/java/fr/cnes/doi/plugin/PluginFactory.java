@@ -9,7 +9,7 @@ import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.settings.Consts;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import fr.cnes.doi.security.UserGroupMngtPlugin;
+import fr.cnes.doi.security.UserGroupMngtHelper;
 
 /**
  *
@@ -30,9 +30,9 @@ public final class PluginFactory {
      * Return the concrete implementation of the user management interface.
      * @return the plugin
      */
-    public static UserGroupMngtPlugin getUserManagement() {
+    public static UserGroupMngtHelper getUserManagement() {
         String implClassName = PLUGINS_IMPL.get(Consts.PLUGIN_USER_GROUP_MGT);
-        UserGroupMngtPlugin result = (UserGroupMngtPlugin) buildObject(implClassName);
+        UserGroupMngtHelper result = (UserGroupMngtHelper) buildObject(implClassName);
         return result;
     }
 

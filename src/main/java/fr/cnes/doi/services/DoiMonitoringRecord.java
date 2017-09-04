@@ -1,4 +1,4 @@
-package fr.cnes.doi.server.monitoring;
+package fr.cnes.doi.services;
 
 import fr.cnes.doi.utils.Requirement;
 

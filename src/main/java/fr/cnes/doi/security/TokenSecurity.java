@@ -55,7 +55,7 @@ public class TokenSecurity {
     
     public static final String DATE_FORMAT = "E MMM dd HH:mm:ss z yyyy";
     
-    private final String tokenKey;
+    private String tokenKey;
     
     private TokenDB tokenDB;
 
@@ -84,7 +84,7 @@ public class TokenSecurity {
      * Creates a key for token signature encoded with the algorithm HS256
      *
      * @return key encoded in Base64
-     * @see https://fr.wikipedia.org/wiki/Base64
+     * @see <a href="https://fr.wikipedia.org/wiki/Base64">Base64</a> 
      */
     public static String createKeySignatureHS256() {
         Key key = MacProvider.generateKey(SignatureAlgorithm.HS256);
@@ -168,6 +168,14 @@ public class TokenSecurity {
      */
     public String getTokenKey() {
         return this.tokenKey;
+    }
+    
+    /**
+     * Sets a custom token key.
+     * @param tokenKey token key
+     */
+    public void setTokenKey(final String tokenKey) {
+        this.tokenKey = tokenKey;
     }
     
     /**
