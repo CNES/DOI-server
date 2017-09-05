@@ -40,7 +40,7 @@ import fr.cnes.doi.utils.Requirement;
 public class MetadatasResource extends BaseMdsResource {
 
     public static final String CREATE_METADATA = "Create Metadata";
-    
+
     public static final String SCHEMA_DATACITE = "https://schema.datacite.org/meta/kernel-4.0/metadata.xsd";
 
     /**
@@ -79,26 +79,26 @@ public class MetadatasResource extends BaseMdsResource {
     @Requirement(
             reqId = "DOI_SRV_040",
             reqName = "Mise à jour des métadonnées d'un DOI"
-    )    
+    )
     @Requirement(
             reqId = "DOI_ARCHI_050",
             reqName = "Vérification du schéma de métadonnées"
-    )    
+    )
     @Requirement(
             reqId = "DOI_AUTH_050",
             reqName = "Vérification du projet"
-    )     
-    @Post    
+    )
+    @Post
     public String createMetadata(final Representation entity) throws ResourceException {
 
         //TODO : replace DOI name when PRE_PROD
         getLogger().entering(getClass().getName(), "createMetadata");
-        
+
         checkInputs(entity);
         String result;
         try {
             setStatus(Status.SUCCESS_CREATED);
-            org.datacite.schema.kernel_4.Resource resource = createDataCiteResourceObject(entity);            
+            org.datacite.schema.kernel_4.Resource resource = createDataCiteResourceObject(entity);
             String selectedRole = extractSelectedRoleFromRequestIfExists();
             checkPermission(resource.getIdentifier().getValue(), selectedRole);
             resource.setPublisher("Centre National d'Etudes Spatiales (CNES)");
@@ -118,43 +118,48 @@ public class MetadatasResource extends BaseMdsResource {
         getLogger().exiting(getClass().getName(), "createMetadata", result);
         return result;
     }
-    
+
     /**
      * Checks inputs
+     *
      * @param obj object to check
      * @throws ResourceException if entity is null
      */
     private void checkInputs(final Object obj) {
-        if(isObjectNotExist(obj)) {
+        if (isObjectNotExist(obj)) {
             throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "Entity cannot be null");
-        }        
+        }
     }
-    
+
     /**
      * Creates the metadata object from its representation.
+     *
      * @param entity metadata representation
      * @return the metadata object
-     * @throws JAXBException if an error was encountered while creating the JAXBContex
+     * @throws JAXBException if an error was encountered while creating the
+     * JAXBContex
      * @throws SAXException If a SAX error occurs during parsing.
      * @throws IOException If a problem happens when retrieving the entity
      */
     private org.datacite.schema.kernel_4.Resource createDataCiteResourceObject(final Representation entity) throws JAXBException, SAXException, IOException {
-            JAXBContext ctx = JAXBContext.newInstance(new Class[]{org.datacite.schema.kernel_4.Resource.class});
-            Unmarshaller um = ctx.createUnmarshaller();
-            Schema schema = this.doiApp.getSchemaFactory().newSchema(new URL(SCHEMA_DATACITE));
-            um.setSchema(schema);
-            um.setEventHandler(new MyValidationEventHandler(getLogger()));
-            JAXBElement<Resource> jaxbResource = (JAXBElement<Resource>) um.unmarshal(entity.getStream());
-            return jaxbResource.getValue();                    
+        JAXBContext ctx = JAXBContext.newInstance(new Class[]{org.datacite.schema.kernel_4.Resource.class});
+        Unmarshaller um = ctx.createUnmarshaller();
+        Schema schema = this.doiApp.getSchemaFactory().newSchema(new URL(SCHEMA_DATACITE));
+        um.setSchema(schema);
+        um.setEventHandler(new MyValidationEventHandler(getLogger()));
+        JAXBElement<Resource> jaxbResource = (JAXBElement<Resource>) um.unmarshal(entity.getStream());
+        return jaxbResource.getValue();
     }
-    
+
     /**
      * Extract <i>selectedRole</i> from HTTP header.
-     * @return the selected role or an empty string when there is no selected role
+     *
+     * @return the selected role or an empty string when there is no selected
+     * role
      */
     private String extractSelectedRoleFromRequestIfExists() {
-            Series headers = (Series) getRequestAttributes().get("org.restlet.http.headers");
-            return headers.getFirstValue(SELECTED_ROLE_PARAMETER, "");        
+        Series headers = (Series) getRequestAttributes().get("org.restlet.http.headers");
+        return headers.getFirstValue(SELECTED_ROLE_PARAMETER, "");
     }
 
     /**
@@ -165,7 +170,7 @@ public class MetadatasResource extends BaseMdsResource {
     @Requirement(
             reqId = "DOI_DOC_010",
             reqName = "Documentation des interfaces"
-    )      
+    )
     @Override
     protected final void describePost(final MethodInfo info) {
         info.setName(Method.POST);
@@ -185,7 +190,7 @@ public class MetadatasResource extends BaseMdsResource {
         addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_FORBIDDEN, "login problem, quota exceeded", "explainRepresentation"));
         addResponseDocToMethod(info, createResponseDoc(Status.SERVER_ERROR_INTERNAL, "server internal error, try later and if problem persists please contact us", "explainRepresentation"));
         addResponseDocToMethod(info, createResponseDoc(Status.CONNECTOR_ERROR_COMMUNICATION, "Network problem", "explainRepresentation"));
-        
+
     }
 
     /**
@@ -194,7 +199,7 @@ public class MetadatasResource extends BaseMdsResource {
     @Requirement(
             reqId = "DOI_ARCHI_050",
             reqName = "Vérification du schéma de métadonnées"
-    )      
+    )
     private static class MyValidationEventHandler implements ValidationEventHandler {
 
         private final Logger logger;

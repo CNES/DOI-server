@@ -50,32 +50,57 @@ import javax.xml.bind.annotation.XmlType;
 public enum DescriptionType {
 
     /**
-     *
+     * A brief description of the resource and the context in which the resource 
+     * was created.
+     * Recommended for discovery. Use "<br>" to indicate a line break for improved
+     * rendering of multiple paragraphs, but otherwise no html markup.
+     * <p>
+     * Example: http://data.datacite.org/10.1594/PANGAEA.771774
      */
     @XmlEnumValue("Abstract")
     ABSTRACT("Abstract"),
     /**
-     *
+     * The methodology employed for the study or research.
+     * Recommended for discovery. 
+     * <p>
+     * For example, see section "Sampling, Processing and Quality Control Methods"
+     * in the following dataset record: https://knb.ecoinformatics.org/#view/doi:10.5063/F1DZ067F
      */
     @XmlEnumValue("Methods")
     METHODS("Methods"),
     /**
-     *
+     * Information about a repeating series, such as volume, issue, number.
+     * For use with grey literature. If providing an ISSN, use property 12 
+     * (RelatedIdentifier), relatedIdentifierType=ISSN. For dataset series, use
+     * property 12 (RelatedIdentifier) and describe the relationships with 
+     * isPartOf or HasPart.
+     * <p>
+     * Example: http://data.datacite.org/10.4229/23RDEUPVSEC2008‐5CO.8.3
      */
     @XmlEnumValue("SeriesInformation")
     SERIES_INFORMATION("SeriesInformation"),
     /**
-     *
+     * A listing of the Table of Contents.
+     * Use "<br>" to indicate a line break for improved rendering of multiple 
+     * paragraphs, but otherwise no html markup.
+     * <p>
+     * Example: http://data.datacite.org/10.5678/LCRS/FOR816.CIT.1031     
      */
     @XmlEnumValue("TableOfContents")
     TABLE_OF_CONTENTS("TableOfContents"),
     /**
-     *
+     * Detailed information that may be associated with design, implementation,
+     * operation, use, and/or maintenance of a process or system.
+     * For software description, this may include a readme.txt, and necessary 
+     * environmental information such as hardware, operational software, 
+     * applications/programs, and versions. For other uses, this can include 
+     * specific and detailed information as necessary and appropriate.
      */
     @XmlEnumValue("TechnicalInfo")
     TECHNICAL_INFO("TechnicalInfo"),
     /**
-     *
+     * Other description information that does not fit into an existing category.
+     * Use for any other description type.
      */
     @XmlEnumValue("Other")
     OTHER("Other");

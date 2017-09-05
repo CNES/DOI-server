@@ -58,72 +58,116 @@ import javax.xml.bind.annotation.XmlType;
 public enum ResourceType {
 
     /**
-     *
+     * A series of visual representations imparting an impression of motion when shown
+     * in succession. May or may not include sound.
+     * May be used for films, video, etc,
+     * <p>
+     * Ex: http://data.datacite.org/10.7916/D8610XCB
+     * 
      */
     @XmlEnumValue("Audiovisual")
     AUDIOVISUAL("Audiovisual"),
     /**
-     *
+     * An aggregation of resources of various types, or a list of resources that 
+     * form part of a publication. If a collection exists of a single type, use 
+     * the single type to describe it.
+     * <p>
+     * A collection of samples, or various files making up a report. 
+     * Ex: http://data.datacite.org/10.5284/1001038
+     * 
      */
     @XmlEnumValue("Collection")
     COLLECTION("Collection"),
     /**
-     *
+     * Data encoded in a defined structure.
+     * <p>
+     * Data file or files, Ex:http://data.datacite.org/10.4231/D39Z90B9T
      */
     @XmlEnumValue("Dataset")
     DATASET("Dataset"),
     /**
-     *
+     * A non‐persistent, time‐based occurrence.
+     * <p>
+     * Descriptive information and/or content that is the basis for discovery of
+     * the purpose, location, duration, and responsible agents associated with 
+     * an event such as a webcast or convention. Ex: http://data.datacite.org/10.7269/P3RN35SZ
      */
     @XmlEnumValue("Event")
     EVENT("Event"),
     /**
-     *
+     * A visual representation other than text.
+     * <p>
+     * Digitised or born digital images, drawings or photographs. Ex:http://data.datacite.org/10.6083/M4QN65C5
      */
     @XmlEnumValue("Image")
     IMAGE("Image"),
     /**
-     *
+     * A resource requiring interaction from the user to be understood, executed,
+     * or experienced.
+     * <p>
+     * Training modules, files that require use of a viewer (e.g., Flash), or
+     * query/response portals. Ex: http://data.datacite.org/10.7269/P3TB14TR
      */
     @XmlEnumValue("InteractiveResource")
     INTERACTIVE_RESOURCE("InteractiveResource"),
     /**
-     *
+     * An abstract, conceptual, graphical, mathematical or visualization model
+     * that represents empirical objects, phenomena, or physical processes.
+     * <p>
+     * Modelled descriptions of, for example, different aspects of languages or 
+     * a molecular biology reaction chain. Ex: http://data.datacite.org/10.5285/4D866CD2‐C907‐4CE2‐B070‐084CA9779DC2     
      */
     @XmlEnumValue("Model")
     MODEL("Model"),
     /**
-     *
+     * An inanimate, three‐dimensional object or substance.
+     * <p>
+     * Artifacts, specimens.Ex: http://data.datacite.org/10.7299/X78052RB
      */
     @XmlEnumValue("PhysicalObject")
     PHYSICAL_OBJECT("PhysicalObject"),
     /**
-     *
+     * A system that provides one or more functions of value to the end‐user.
+     * <p>
+     * Data management service, authentication service, or photocopying service.
      */
     @XmlEnumValue("Service")
     SERVICE("Service"),
     /**
-     *
+     * A computer program in source code (text) or compiled form.
+     * <p>
+     * Software supporting research. Ex: http://data.datacite.org/10.7938/M1057CV9
      */
     @XmlEnumValue("Software")
     SOFTWARE("Software"),
     /**
-     *
+     * A resource primarily intended to be heard.
+     * <p>
+     * Audio recording. Ex: http://data.datacite.org/10.7282/T3J67F05
      */
     @XmlEnumValue("Sound")
     SOUND("Sound"),
     /**
-     *
+     * A resource consisting primarily of words for reading.
+     * <p>
+     * Grey literature, lab notes, accompanying materials.
+     * Ex: http://data.datacite.org/10.5682/9786065914018
      */
     @XmlEnumValue("Text")
     TEXT("Text"),
     /**
-     *
+     * A structured series of steps which can be executed to produce a final outcome,
+     * allowing users a means to specify and enact their work in a more reproducible
+     * manner.
+     * <p>
+     * Computational workflows involving sequential operations made on data by 
+     * wrapped software and may be specified in a format belonging to a workflow 
+     * management system, such as Taverna (http://www.taverna.org.uk/).
      */
     @XmlEnumValue("Workflow")
     WORKFLOW("Workflow"),
     /**
-     *
+     * If selected, supply a value for ResourceType.
      */
     @XmlEnumValue("Other")
     OTHER("Other");
