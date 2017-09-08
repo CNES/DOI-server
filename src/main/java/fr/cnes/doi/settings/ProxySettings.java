@@ -5,6 +5,7 @@
  */
 package fr.cnes.doi.settings;
 
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 import org.restlet.data.ChallengeResponse;
@@ -159,7 +160,7 @@ public final class ProxySettings {
      * @return the proxyAuthentication
      */
     public ChallengeResponse getProxyAuthentication() {
-        LOGGER.config(String.format("getProxyAuthentication : %s", this.proxyAuthentication));                
+        LOGGER.config(String.format("getProxyAuthentication - login:"+this.proxyAuthentication.getIdentifier()+" pwd:"+Arrays.toString(this.proxyAuthentication.getSecret())));                
         return proxyAuthentication;
     }
 
