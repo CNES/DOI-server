@@ -68,11 +68,11 @@ public class AdminApplication extends BaseApplication {
      * URI to access to the resources of the status page.
      */
     public static final String RESOURCE_URI = "/resources";
-    
+
     /**
      * Status page.
      */
-    public static final String STATUS_URI = "/status";    
+    public static final String STATUS_URI = "/status";
 
     /**
      * URI to create a project suffix.
@@ -93,11 +93,11 @@ public class AdminApplication extends BaseApplication {
      * URI to handle to get information from a token.
      */
     public static final String TOKEN_NAME_URI = "/{" + TOKEN_TEMPLATE + "}";
-    
+
     /**
      * Status page for DataCite.
      */
-    private static final String TARGET_URL = "http://status.datacite.org";    
+    private static final String TARGET_URL = "http://status.datacite.org";
 
     /**
      * Token database.
@@ -179,10 +179,10 @@ public class AdminApplication extends BaseApplication {
         Router adminRouter = createAdminRouter();
 
         // Defines the admin router as private
-        AllowerIP blocker = new AllowerIP(getContext());        
+        AllowerIP blocker = new AllowerIP(getContext());
         authorizer.setNext(blocker);
         blocker.setNext(adminRouter);
-        
+
         Router router = new Router(getContext());
         router.attachDefault(webSiteRouter);
         router.attach(ADMIN_URI, ca);
@@ -244,19 +244,20 @@ public class AdminApplication extends BaseApplication {
         Directory directory = new Directory(getContext(), LocalReference.createClapReference("class/website"));
         directory.setDeeplyAccessible(true);
         router.attach(RESOURCE_URI, directory);
-        
+
         Redirector redirector = new Redirector(getContext(), TARGET_URL, Redirector.MODE_SERVER_OUTBOUND);
-        router.attach(STATUS_URI, redirector);
 
         Filter authentication = new Filter() {
             @Override
             protected int doHandle(Request request, Response response) {
-                request.setChallengeResponse(ProxySettings.getInstance().getProxyAuthentication());
-                this.setNext(this.getContext().getClientDispatcher());
+                if (ProxySettings.getInstance().isWithProxy()) {
+                    request.setChallengeResponse(ProxySettings.getInstance().getProxyAuthentication());
+                }
                 return super.doHandle(request, response);
-            }            
+            }
         };
-        authentication.setNext(router);        
+        authentication.setNext(redirector);
+        router.attach(STATUS_URI, authentication);
 
         String pathApp = this.config.getPathApp();
         File file = new File(pathApp + File.separator + JS_DIR);
