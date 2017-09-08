@@ -14,7 +14,6 @@
  * delete) DOIs.</li>
  * <li>A {@link fr.cnes.doi.application.DoiCrossCiteApplication Cross Cite application} that is responsible to get citation from 
  * a registered DOI</li>
- * <li>A {@link fr.cnes.doi.application.DoiStatusApplication monitoring application} that is responsible to give the status of DataCite</li>
  * <li>A {@link fr.cnes.doi.application.AdminApplication web application} that provides resources for the administration of the tool</li> 
  * </ul>
  * 

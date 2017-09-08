@@ -31,7 +31,6 @@ import org.restlet.util.Series;
 
 import fr.cnes.doi.application.DoiCrossCiteApplication;
 import fr.cnes.doi.application.DoiMdsApplication;
-import fr.cnes.doi.application.DoiStatusApplication;
 import fr.cnes.doi.application.AdminApplication;
 import fr.cnes.doi.logging.api.DoiLogDataServer;
 import fr.cnes.doi.logging.security.DoiSecurityLogFilter;
@@ -212,7 +211,6 @@ public class DoiServer extends Component {
         Application appAdmin = new AdminApplication();
         this.getDefaultHost().attach(MDS_URI, appDoiProject);
         this.getDefaultHost().attach(CITATION_URI, new DoiCrossCiteApplication());
-        this.getDefaultHost().attach(STATUS_URI, new DoiStatusApplication());
         this.getDefaultHost().attachDefault(appAdmin);
         // Set authentication
         RoleAuthorizer.getInstance().createRealmFor(appDoiProject);
