@@ -21,13 +21,13 @@ import org.restlet.security.Verifier;
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-public class TokenBasedVerifier implements Verifier {        
+public class TokenBasedVerifier implements Verifier {
 
     private final TokenDB tokenDB;
     /**
      * Logger.
      */
-    public static final Logger LOGGER = Utils.getAppLogger();    
+    public static final Logger LOGGER = Utils.getAppLogger();
 
     public TokenBasedVerifier(final TokenDB tokenDB) {
         this.tokenDB = tokenDB;
@@ -37,25 +37,54 @@ public class TokenBasedVerifier implements Verifier {
     public int verify(Request request, Response response) {
         int result;
         ChallengeResponse cr = request.getChallengeResponse();
+        if (cr == null) {
+            result = Verifier.RESULT_MISSING;
+        } else {
+            result = processAuthentication(request, cr);
+        }
+
+        return result;
+    }
+
+    /**
+     * Process Authentication.     
+     * @param request request
+     * @param cr authentication object
+     * @return the authentication status
+     */
+    private int processAuthentication(Request request, ChallengeResponse cr) {
+        int result;
         String token = cr.getRawValue();
         if (token == null) {
-            result =  Verifier.RESULT_MISSING;
+            result = Verifier.RESULT_MISSING;
         } else if (this.tokenDB.isExist(token)) {
-            if (this.tokenDB.isExpirated(token)) {
-                LOGGER.log(Level.INFO, "token {0} is expirated", token);
-                result = Verifier.RESULT_INVALID;
-            } else {
-                result = Verifier.RESULT_VALID;                
-                Jws<Claims> tokenInfo = TokenSecurity.getInstance().getTokenInformation(token);
-                Claims body = tokenInfo.getBody();
-                String userID = body.getSubject();
-                Integer projectID = (Integer) body.get(TokenSecurity.PROJECT_ID);                
-                LOGGER.log(Level.INFO, "token {0} is valid, {1} for {2} are authenticated", new Object[]{token, userID, projectID});                
-                request.getClientInfo().setUser(new User(userID));
-                request.getHeaders().set(UtilsHeader.SELECTED_ROLE_PARAMETER, String.valueOf(projectID));                
-            }
+            result = processToken(request, token);            
         } else {
             result = Verifier.RESULT_INVALID;
+        }
+        return result;
+    }
+
+    /**
+     * Process token.
+     * @param request request
+     * @param token token
+     * @return 
+     */
+    private int processToken(Request request, String token) {
+        int result;
+        if (this.tokenDB.isExpirated(token)) {
+            LOGGER.log(Level.INFO, "token {0} is expirated", token);
+            result = Verifier.RESULT_INVALID;
+        } else {
+            result = Verifier.RESULT_VALID;
+            Jws<Claims> tokenInfo = TokenSecurity.getInstance().getTokenInformation(token);
+            Claims body = tokenInfo.getBody();
+            String userID = body.getSubject();
+            Integer projectID = (Integer) body.get(TokenSecurity.PROJECT_ID);
+            LOGGER.log(Level.INFO, "token {0} is valid, {1} for {2} are authenticated", new Object[]{token, userID, projectID});
+            request.getClientInfo().setUser(new User(userID));
+            request.getHeaders().set(UtilsHeader.SELECTED_ROLE_PARAMETER, String.valueOf(projectID));
         }
         return result;
     }
