@@ -55,15 +55,13 @@ public class MetadataResource extends BaseMdsResource {
     )     
     @Get
     public Representation getMetadata() throws ResourceException {
-        getLogger().entering(getClass().getName(), "getMetadata", this.doiName);
-        //TODO : replace DOI name when PRE_PROD
-        
+        getLogger().entering(getClass().getName(), "getMetadata", this.doiName);        
         Representation rep;
         try {
             setStatus(Status.SUCCESS_OK);
             rep = this.doiApp.getClient().getMetadata(this.doiName);
         } catch (ClientMdsException ex) {
-            getLogger().exiting(getClass().getName(), "getMetadata", ex.getDetailMessage());
+            getLogger().throwing(getClass().getName(), "getMetadata", ex);
             throw new ResourceException(ex.getStatus(), ex.getDetailMessage());
         }
         
@@ -82,7 +80,6 @@ public class MetadataResource extends BaseMdsResource {
     )     
     @Delete
     public Representation deleteMetadata() throws ResourceException { 
-        //TODO : replace DOI name when PRE_PROD
         getLogger().entering(getClass().getName(), "deleteMetadata");
         
         Representation rep;
@@ -94,7 +91,7 @@ public class MetadataResource extends BaseMdsResource {
             setStatus(Status.SUCCESS_OK);
             rep = this.doiApp.getClient().deleteMetadata(this.doiName);
         } catch (ClientMdsException ex) {
-            getLogger().exiting(getClass().getName(), "deleteMetadata", ex.getDetailMessage());
+            getLogger().throwing(getClass().getName(), "deleteMetadata", ex);
             throw new ResourceException(ex.getStatus(), ex.getDetailMessage());
         }
         

@@ -80,26 +80,30 @@ public class BaseMdsResource extends BaseResource {
         getLogger().entering(getClass().getName(), "getRoleName",selectedRole);
         final String roleName;
         if(hasSelectedRole(selectedRole)) {
-            getLogger().log(Level.FINE, "Role selected : {0}", selectedRole);
+            getLogger().log(Level.FINEST, "Role selected : {0}", selectedRole);
             if(isInRole(selectedRole)) {                
-                getLogger().log(Level.FINE, "User is in Role {0}", selectedRole);
+                getLogger().log(Level.FINEST, "User is in Role {0}", selectedRole);
                 roleName = selectedRole;
             } else {
-                getLogger().log(Level.FINE, "User is not in Role {0}", selectedRole);                
+                getLogger().log(Level.FINEST, "User is not in Role {0}", selectedRole);                
                 getLogger().log(Level.WARNING, "DOIServer : The role {0} is not allowed to use this feature", selectedRole);
                 getLogger().exiting(getClass().getName(), "getRoleName");
-                throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED,"DOIServer : The role "+selectedRole+" is not allowed to use this feature");                                
+                ResourceException ex = new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED,"DOIServer : The role "+selectedRole+" is not allowed to use this feature");                                
+                getLogger().throwing(this.getClass().getName(), "getRoleName", ex);                
+                throw ex;
             }
         } else {
             List<Role> roles = getClientInfo().getRoles();
             if(hasSingleRole(roles)) {
                 Role role = roles.get(0);
                 roleName = role.getName();                
-                getLogger().log(Level.FINE, "User has a single Role {0}", role);                
+                getLogger().log(Level.FINEST, "User has a single Role {0}", role);                
             } else {
                 getLogger().log(Level.WARNING, "DOIServer : Cannot know which role must be applied");
                 getLogger().exiting(getClass().getName(), "getRoleName");                
-                throw new ResourceException(Status.CLIENT_ERROR_CONFLICT, "DOIServer : Cannot know which role must be applied");                
+                ResourceException ex = new ResourceException(Status.CLIENT_ERROR_CONFLICT, "DOIServer : Cannot know which role must be applied");                
+                getLogger().throwing(this.getClass().getName(), "getRoleName", ex);
+                throw ex;
             }            
         }
         getLogger().exiting(getClass().getName(), "getRoleName", roleName);
@@ -124,7 +128,9 @@ public class BaseMdsResource extends BaseResource {
         if(!doiName.startsWith(prefixCNES+"/"+projectName+"/")) {
             getLogger().log(Level.WARNING, "You are not allowed to use this method : {0} with {1}", new Object[]{doiName, selectedRole});
             getLogger().exiting(getClass().getName(), "checkPermission");
-            throw new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, "You are not allowed to use this method");
+            ResourceException ex =  new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, "You are not allowed to use this method");
+            getLogger().throwing(this.getClass().getName(), "checkPermission", ex);            
+            throw ex;
         }
         getLogger().exiting(getClass().getName(), "checkPermission");        
     } 

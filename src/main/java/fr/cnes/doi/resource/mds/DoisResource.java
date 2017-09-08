@@ -69,8 +69,7 @@ public class DoisResource extends BaseMdsResource {
             getLogger().exiting(getClass().getName(), "getDois", dois);
             return new StringRepresentation(dois, MediaType.TEXT_URI_LIST);
         } catch (ClientMdsException ex) {
-            getLogger().log(Level.WARNING, ex.getMessage(), ex);
-            getLogger().exiting(getClass().getName(), "getDois", ex.getDetailMessage());
+            getLogger().throwing(getClass().getName(), "getDois", ex);
             throw new ResourceException(ex.getStatus(), ex.getDetailMessage());
         }
     }
@@ -135,8 +134,7 @@ public class DoisResource extends BaseMdsResource {
             setStatus(Status.SUCCESS_CREATED);
             result = this.doiApp.getClient().createDoi(doiForm);
         } catch (ClientMdsException ex) {
-            getLogger().log(Level.WARNING, ex.getMessage(), ex);
-            getLogger().exiting(getClass().getName(), "createDoi", ex.getMessage());
+            getLogger().throwing(getClass().getName(), "createDoi", ex);
             throw new ResourceException(ex.getStatus(), ex.getDetailMessage());
         }
         
@@ -162,7 +160,9 @@ public class DoisResource extends BaseMdsResource {
         if(errorMsg.length() == 0) {        
             getLogger().fine("The form is valid");                    
         } else {
-            throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, errorMsg.toString());            
+            ResourceException ex = new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, errorMsg.toString());            
+            getLogger().throwing(this.getClass().getName(), "checkInputs", ex);
+            throw ex;
         }        
     }      
 

@@ -75,7 +75,7 @@ public class MediaResource extends BaseMdsResource {
             medias = this.doiApp.getClient().getMedia(this.mediaName);
             rep = new StringRepresentation(medias, MediaType.TEXT_URI_LIST);
         } catch (ClientMdsException ex) {
-            getLogger().exiting(getClass().getName(), "getMedias", ex.getDetailMessage());            
+            getLogger().throwing(getClass().getName(), "getMedias", ex);            
             throw new ResourceException(ex.getStatus(), ex.getDetailMessage());
         }
         
@@ -117,7 +117,7 @@ public class MediaResource extends BaseMdsResource {
             checkPermission(mediaForm.getFirstValue(DOI_PARAMETER), selectedRole);            
             result = this.doiApp.getClient().createMedia(this.mediaName, mediaForm);
         } catch (ClientMdsException ex) {
-            getLogger().exiting(getClass().getName(), "createMedia", ex.getDetailMessage());                    
+            getLogger().throwing(getClass().getName(), "createMedia", ex);                    
             throw new ResourceException(ex.getStatus(), ex.getDetailMessage());
         }
         
@@ -132,6 +132,7 @@ public class MediaResource extends BaseMdsResource {
      * @ResourceException if DOI_PARAMETER is not set
      */
     private void checkInputs(final Form mediaForm) {
+        getLogger().entering(this.getClass().getName(), "checkInputs", mediaForm);
         StringBuilder errorMsg = new StringBuilder();
         if (isValueNotExist(mediaForm, DOI_PARAMETER)) {
             getLogger().log(Level.FINE, "{0} value is not set", DOI_PARAMETER);
@@ -140,8 +141,11 @@ public class MediaResource extends BaseMdsResource {
         if(errorMsg.length() == 0) {        
             getLogger().fine("The form is valid");                    
         } else {
-            throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, errorMsg.toString());            
-        }        
+            ResourceException ex =  new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, errorMsg.toString());            
+            getLogger().throwing(this.getClass().getName(), "checkInputs", ex);
+            throw ex;
+        }      
+        getLogger().exiting(this.getClass().getName(), "checkInputs");        
     }      
    
     /**

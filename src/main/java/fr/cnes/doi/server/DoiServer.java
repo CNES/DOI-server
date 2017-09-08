@@ -25,10 +25,6 @@ import org.restlet.data.Protocol;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 import org.restlet.routing.Filter;
-import org.restlet.security.Group;
-import org.restlet.security.MemoryRealm;
-import org.restlet.security.Role;
-import org.restlet.security.User;
 import org.restlet.service.LogService;
 import org.restlet.service.Service;
 import org.restlet.util.Series;
@@ -37,7 +33,6 @@ import fr.cnes.doi.application.DoiCrossCiteApplication;
 import fr.cnes.doi.application.DoiMdsApplication;
 import fr.cnes.doi.application.DoiStatusApplication;
 import fr.cnes.doi.application.AdminApplication;
-import fr.cnes.doi.db.ProjectSuffixDB;
 import fr.cnes.doi.logging.api.DoiLogDataServer;
 import fr.cnes.doi.logging.security.DoiSecurityLogFilter;
 import fr.cnes.doi.security.RoleAuthorizer;
@@ -48,7 +43,6 @@ import fr.cnes.doi.settings.JettySettings;
 import fr.cnes.doi.settings.ProxySettings;
 import fr.cnes.doi.utils.Requirement;
 import fr.cnes.doi.utils.Utils;
-import org.restlet.engine.security.RoleMapping;
 
 /**
  * DoiServer contains the configuration of this server and the methods to

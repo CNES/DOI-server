@@ -24,6 +24,7 @@ import fr.cnes.doi.resource.admin.TokenResource;
 import fr.cnes.doi.services.LandingPageMonitoring;
 import fr.cnes.doi.utils.Requirement;
 import fr.cnes.doi.db.TokenDB;
+import fr.cnes.doi.security.AllowerIP;
 import fr.cnes.doi.security.TokenSecurity;
 
 /**
@@ -161,8 +162,10 @@ public class AdminApplication extends BaseApplication {
         Router adminRouter = createAdminRouter();
 
         // Defines the admin router as private
-        authorizer.setNext(adminRouter);
-
+        AllowerIP blocker = new AllowerIP(getContext());        
+        authorizer.setNext(blocker);
+        blocker.setNext(adminRouter);
+        
         Router router = new Router(getContext());
         router.attachDefault(webSiteRouter);
         router.attach(ADMIN_URI, ca);

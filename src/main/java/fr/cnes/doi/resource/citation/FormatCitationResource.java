@@ -85,6 +85,7 @@ public class FormatCitationResource extends BaseCitationResource {
     )     
     @Get
     public String getFormat() {
+        getLogger().entering(this.getClass().getName(), "getFormats");        
         try {
             getLogger().entering(getClass().getName(), "getFormat",new Object[]{this.doiName, this.language, this.style});
             
@@ -94,6 +95,7 @@ public class FormatCitationResource extends BaseCitationResource {
             getLogger().exiting(getClass().getName(), "getFormats", result);
             return result;
         } catch (ClientCrossCiteException ex) {
+            getLogger().throwing(this.getClass().getName(), "getFormat", ex);
             throw new ResourceException(ex.getStatus(), ex.getDetailMessage());
         }
     }
@@ -103,6 +105,7 @@ public class FormatCitationResource extends BaseCitationResource {
      * @ResourceException if DOI_PARAMETER and LANG_PARAMETER and STYLE_PARAMETER are not set
      */
     private void checkInputs() {
+        getLogger().entering(this.getClass().getName(), "checkInputs");
         StringBuilder errorMsg = new StringBuilder();
         if (this.doiName == null || this.doiName.isEmpty()) {
             getLogger().log(Level.FINE, "{0} value is not set", DOI_PARAMETER);
@@ -119,8 +122,12 @@ public class FormatCitationResource extends BaseCitationResource {
         if(errorMsg.length() == 0) {        
             getLogger().fine("The parameters are valid");                    
         } else {
-            throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, errorMsg.toString());            
+            getLogger().warning(errorMsg.toString());
+            ResourceException ex = new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, errorMsg.toString());            
+            getLogger().throwing(this.getClass().getName(), "checkInputs", ex);
+            throw ex;
         }        
+        getLogger().exiting(this.getClass().getName(), "checkInputs");        
     }      
     
     

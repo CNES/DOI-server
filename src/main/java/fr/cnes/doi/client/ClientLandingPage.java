@@ -11,11 +11,11 @@ import java.util.List;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ResourceException;
-//TODO : vérifier si on ne peut pas utiliser MDS à la place pour récupérer la landing page
+//TODO : Utiliser getDoi de Mds à la place
 
 
 /**
- *
+ * Checks the status of the landing page.
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 @Requirement(
@@ -32,6 +32,7 @@ public class ClientLandingPage extends BaseClient {
         checkDoi(dois);
     }
 
+    //TODO : check with Head before. If not implemented, check with get
     private void checkDoi(List<String> dois) {
         this.client.setFollowingRedirects(true);
         this.client.setLoggable(true);

@@ -17,7 +17,8 @@ import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
 
 /**
- *
+ * Provides a unique identifier to the project. 
+ * This identifier is used as part of the DOI name.
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class SuffixProjectsResource extends BaseResource {

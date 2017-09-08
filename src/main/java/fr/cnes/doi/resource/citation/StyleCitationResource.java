@@ -48,9 +48,13 @@ public class StyleCitationResource extends BaseCitationResource {
     )     
     @Get("json")
     public List<String> getStylesToJSON() {
+        getLogger().entering(this.getClass().getName(), "getStylesToJSON");
         try {
-            return this.app.getClient().getStyles();
+            List<String> result = this.app.getClient().getStyles();
+            getLogger().exiting(this.getClass().getName(), "getStylesToJSON", result);
+            return result;
         } catch (ClientCrossCiteException ex) {
+            getLogger().throwing(this.getClass().getName(), "getStylesToJSON", ex);
             throw new ResourceException(ex.getStatus(), ex.getDetailMessage());
         }
     } 
@@ -66,8 +70,11 @@ public class StyleCitationResource extends BaseCitationResource {
     @Get("xml")
     public List<String> getStylesToXML() {
         try {
-            return this.app.getClient().getStyles();
+            List<String> result = this.app.getClient().getStyles();
+            getLogger().exiting(this.getClass().getName(), "getStylesToXML", result);
+            return result;
         } catch (ClientCrossCiteException ex) {
+            getLogger().throwing(this.getClass().getName(), "getStylesToXML", ex);            
             throw new ResourceException(ex.getStatus(), ex.getDetailMessage());
         }
     }  

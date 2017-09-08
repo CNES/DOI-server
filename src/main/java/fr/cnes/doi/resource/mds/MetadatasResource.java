@@ -31,6 +31,8 @@ import org.xml.sax.SAXException;
 import fr.cnes.doi.exception.ClientMdsException;
 import static fr.cnes.doi.security.UtilsHeader.SELECTED_ROLE_PARAMETER;
 import fr.cnes.doi.utils.Requirement;
+import java.util.logging.Level;
+import javax.xml.bind.ValidationException;
 
 /**
  * Resource to handle a collection of metadata.
@@ -90,8 +92,6 @@ public class MetadatasResource extends BaseMdsResource {
     )
     @Post
     public String createMetadata(final Representation entity) throws ResourceException {
-
-        //TODO : replace DOI name when PRE_PROD
         getLogger().entering(getClass().getName(), "createMetadata");
 
         checkInputs(entity);
@@ -104,15 +104,19 @@ public class MetadatasResource extends BaseMdsResource {
             resource.setPublisher("Centre National d'Etudes Spatiales (CNES)");
             result = this.doiApp.getClient().createMetadata(resource);
         } catch (ClientMdsException ex) {
-            getLogger().exiting(getClass().getName(), "createMetadata", ex.getDetailMessage());
+            getLogger().throwing(getClass().getName(), "createMetadata", ex);
             throw new ResourceException(ex.getStatus(), ex.getDetailMessage(), ex);
-        } catch (JAXBException ex) {
-            getLogger().exiting(getClass().getName(), "createMetadata", ex.getMessage());
+        } catch (ValidationException ex) {
+            getLogger().throwing(getClass().getName(), "createMetadata", ex);
+            throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "invalid XML", ex);            
+        } catch (JAXBException ex) {            
+            getLogger().throwing(getClass().getName(), "createMetadata", ex);
             throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "invalid XML", ex);
         } catch (SAXException ex) {
-            getLogger().exiting(getClass().getName(), "createMetadata", ex.getMessage());
+            getLogger().throwing(getClass().getName(), "createMetadata", ex);
             throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "DataCite schema not available", ex);
         } catch (IOException ex) {
+            getLogger().throwing(getClass().getName(), "createMetadata", ex);            
             throw new ResourceException(Status.CONNECTOR_ERROR_COMMUNICATION, "Network problem", ex);
         }
         getLogger().exiting(getClass().getName(), "createMetadata", result);
@@ -123,12 +127,16 @@ public class MetadatasResource extends BaseMdsResource {
      * Checks inputs
      *
      * @param obj object to check
-     * @throws ResourceException if entity is null
+     * @throws ResourceException - if entity is null
      */
     private void checkInputs(final Object obj) {
+        getLogger().entering(this.getClass().getName(), "checkInputs");
         if (isObjectNotExist(obj)) {
-            throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "Entity cannot be null");
+            ResourceException ex = new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "Entity cannot be null");
+            getLogger().throwing(this.getClass().getName(), "checkInputs", ex);
+            throw ex;
         }
+        getLogger().exiting(this.getClass().getName(), "checkInputs");        
     }
 
     /**
@@ -136,19 +144,25 @@ public class MetadatasResource extends BaseMdsResource {
      *
      * @param entity metadata representation
      * @return the metadata object
-     * @throws JAXBException if an error was encountered while creating the
+     * @throws JAXBException - if an error was encountered while creating the
      * JAXBContex
-     * @throws SAXException If a SAX error occurs during parsing.
-     * @throws IOException If a problem happens when retrieving the entity
+     * @throws SAXException - if a SAX error occurs during parsing.
+     * @throws IOException - if a problem happens when retrieving the entity
+     * @throws ValidationException - if metadata is not valid against the schema
      */
-    private org.datacite.schema.kernel_4.Resource createDataCiteResourceObject(final Representation entity) throws JAXBException, SAXException, IOException {
+    private org.datacite.schema.kernel_4.Resource createDataCiteResourceObject(final Representation entity) throws JAXBException, SAXException, ValidationException, IOException {
         JAXBContext ctx = JAXBContext.newInstance(new Class[]{org.datacite.schema.kernel_4.Resource.class});
         Unmarshaller um = ctx.createUnmarshaller();
         Schema schema = this.doiApp.getSchemaFactory().newSchema(new URL(SCHEMA_DATACITE));
         um.setSchema(schema);
-        um.setEventHandler(new MyValidationEventHandler(getLogger()));
+        MyValidationEventHandler validationHandler = new MyValidationEventHandler(getLogger());
+        um.setEventHandler(validationHandler);
         JAXBElement<Resource> jaxbResource = (JAXBElement<Resource>) um.unmarshal(entity.getStream());
-        return jaxbResource.getValue();
+        if(validationHandler.isValid()) {
+            return jaxbResource.getValue();    
+        } else {
+            throw new ValidationException(validationHandler.getErrorMsg());
+        }        
     }
 
     /**
@@ -159,7 +173,9 @@ public class MetadatasResource extends BaseMdsResource {
      */
     private String extractSelectedRoleFromRequestIfExists() {
         Series headers = (Series) getRequestAttributes().get("org.restlet.http.headers");
-        return headers.getFirstValue(SELECTED_ROLE_PARAMETER, "");
+        String selectedRole = headers.getFirstValue(SELECTED_ROLE_PARAMETER, "");
+        getLogger().log(Level.INFO, "Selected role : {0}", selectedRole);
+        return selectedRole;
     }
 
     /**
@@ -203,6 +219,8 @@ public class MetadatasResource extends BaseMdsResource {
     private static class MyValidationEventHandler implements ValidationEventHandler {
 
         private final Logger logger;
+        private boolean hasError = false;
+        private String errorMsg = null;
 
         public MyValidationEventHandler(final Logger logger) {
             this.logger = logger;
@@ -221,8 +239,35 @@ public class MetadatasResource extends BaseMdsResource {
             sb = sb.append("    OBJECT:  ").append(event.getLocator().getObject()).append("\n");
             sb = sb.append("    NODE:  ").append(event.getLocator().getNode()).append("\n");
             sb = sb.append("    URL  ").append(event.getLocator().getURL()).append("\n");
-            this.logger.warning(sb.toString());
+            this.errorMsg = sb.toString();
+            this.logger.warning(this.errorMsg);
+            this.hasError = true;
             return true;
         }
+
+        /**
+         * Returns true when metadata is valid against the schema otherwise false.
+         * @return true when metadata is valid against the schema otherwise false
+         */
+        public boolean isValid() {
+            return !this.isNotValid();
+        }
+
+        /**
+         * Returns true when metadata is not valid against the schema otherwise false.
+         * @return true when metadata is not valid against the schema otherwise false
+         */
+        public boolean isNotValid() {
+            return this.hasError;
+        }
+        
+        /**
+         * Returns the errorMsg or null when no error message.
+         * @return the errorMsg or null when no error message
+         */
+        public String getErrorMsg() {
+            return this.errorMsg;
+        }
     }
+
 }

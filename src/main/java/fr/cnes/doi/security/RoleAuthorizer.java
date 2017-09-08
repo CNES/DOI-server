@@ -12,7 +12,6 @@ import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.utils.UniqueProjectName;
 import fr.cnes.doi.utils.Utils;
-import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +24,6 @@ import org.restlet.Application;
 import org.restlet.security.Group;
 import org.restlet.security.MemoryRealm;
 import org.restlet.security.Role;
-import org.restlet.security.User;
 
 /**
  *
@@ -75,14 +73,16 @@ public class RoleAuthorizer implements Observer {
         UserGroupMngtHelper userPlugin = PluginFactory.getUserManagement();
         
         // Add users
+        LOGGER.info("Add users to REALM");
         userPlugin.addUsersToRealm(RoleAuthorizer.REALM.getUsers());
         
-        // Add Groups                         
+        // Add Groups       
         Group users = new Group(GROUP_USERS, "Users");
         userPlugin.addUsersToUserGroup(users.getMemberUsers());
         RoleAuthorizer.REALM.getRootGroups().add(users);
 
         Group administrators = new Group(GROUP_ADMIN, "Administrators");
+        LOGGER.info("Add users to Administrators group");        
         userPlugin.addUsersToAdminGroup(administrators.getMemberUsers());
         RoleAuthorizer.REALM.getRootGroups().add(administrators);
 
@@ -98,6 +98,7 @@ public class RoleAuthorizer implements Observer {
         for (String project : projects.keySet()) {
             Integer projectID = projects.get(project);
             for (Group group : RoleAuthorizer.REALM.getRootGroups()) {
+                LOGGER.log(Level.INFO, "Add group {0} to role {1}", new Object[]{group, projectID});
                 RoleAuthorizer.REALM.map(group, Role.get(app, String.valueOf(projectID)));
             }
         }
@@ -109,20 +110,24 @@ public class RoleAuthorizer implements Observer {
     }
 
     private Group findGroupByName(final String name) {
+        LOGGER.entering(this.getClass().getName(), "findGroupByName", name);
         List<Group> groups = RoleAuthorizer.REALM.getRootGroups();
         Group searchedGroup = null;
         for (Group group : groups) {
-            LOGGER.fine(String.format("group name : %s", group.getName()));
+            LOGGER.finest(String.format("group name : %s", group.getName()));
             if (group.getName().equals(name)) {
                 searchedGroup = group;
-                LOGGER.fine("group found");
+                LOGGER.finest("group found");
                 break;
             }
         }
         if (searchedGroup == null) {
-            LOGGER.fine("group not found");
-            throw new RuntimeException(String.format("Please, create a group %s", name));
+            LOGGER.info(String.format("Please, create a group %s", name));
+            DoiRuntimeException runtimeEx = new DoiRuntimeException(String.format("Please, create a group %s", name));
+            LOGGER.throwing(GROUP_USERS, name, runtimeEx);
+            throw runtimeEx;
         }
+        LOGGER.exiting(this.getClass().getName(), "findGroupByName", searchedGroup);        
         return searchedGroup;
     }
 
@@ -151,12 +156,12 @@ public class RoleAuthorizer implements Observer {
             case DoiMdsApplication.NAME:
                 initForMds(app);
                 isCreated = true;
-                LOGGER.fine("Init for MDS ... done");
+                LOGGER.info("Init for MDS ... done");
                 break;
             case AdminApplication.NAME:
                 initForAdmin(app);
                 isCreated = true;
-                LOGGER.fine("Init for admin ... done");
+                LOGGER.info("Init for admin ... done");
                 break;
             default:
                 LOGGER.log(Level.WARNING, "No Realm is initialized for this application {0}", app.getName());
@@ -183,7 +188,7 @@ public class RoleAuthorizer implements Observer {
         String[] message = (String[]) obj;
 
         if (o instanceof ProjectSuffixDB) {
-            LOGGER.fine("Observable is a ProjectSuffixDB type");
+            LOGGER.finest("Observable is a ProjectSuffixDB type");
 
             // Loads the admin group - admin group is defined by default
             Group adminGroup = findGroupByName(GROUP_ADMIN);
@@ -199,17 +204,19 @@ public class RoleAuthorizer implements Observer {
             switch (operation) {
                 case ProjectSuffixDB.ADD_RECORD:
                     RoleAuthorizer.REALM.map(usersGroup, Role.get(mds, roleName));
-                    LOGGER.log(Level.FINE, "Adds the {0} group to the new {1} related to the {2}", new Object[]{usersGroup.getName(), roleName, mds.getName()});
+                    LOGGER.log(Level.INFO, "Adds the {0} group to the new {1} related to the {2}", new Object[]{usersGroup.getName(), roleName, mds.getName()});
                     break;
                 case ProjectSuffixDB.DELETE_RECORD:
                     RoleAuthorizer.REALM.unmap(usersGroup, mds, roleName);
-                    LOGGER.log(Level.FINE, "Remove the {0} group to the {1} related to the {2}", new Object[]{usersGroup.getName(), roleName, mds.getName()});
+                    LOGGER.log(Level.INFO, "Remove the {0} group to the {1} related to the {2}", new Object[]{usersGroup.getName(), roleName, mds.getName()});
                     break;
                 default:
+                    LOGGER.log(Level.WARNING, "operation {0} was not expected", operation);
                     break;
             }
 
-            LOGGER.log(Level.FINE, "Links user with role {0} for app {1}", new Object[]{roleName, mds.getName()});
+            LOGGER.log(Level.FINEST, "Links user with role {0} for app {1}", new Object[]{roleName, mds.getName()});
+            
         }
 
         LOGGER.exiting(this.getClass().getName(), "update");
@@ -236,7 +243,9 @@ public class RoleAuthorizer implements Observer {
             }
         }
         if (searchedApp == null) {
-            throw new DoiRuntimeException("Application " + appName + " not found");
+            DoiRuntimeException doiRuntimeEx =  new DoiRuntimeException("Application " + appName + " not found");
+            LOGGER.throwing(this.getClass().getName(), "loadApplicationBy", doiRuntimeEx);
+            throw doiRuntimeEx;
         }
 
         LOGGER.exiting(this.getClass().getName(), "loadApplicationBy", searchedApp);

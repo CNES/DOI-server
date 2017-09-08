@@ -6,8 +6,11 @@
 package fr.cnes.doi.security;
 
 import fr.cnes.doi.db.TokenDB;
+import fr.cnes.doi.utils.Utils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.data.ChallengeResponse;
@@ -21,6 +24,10 @@ import org.restlet.security.Verifier;
 public class TokenBasedVerifier implements Verifier {        
 
     private final TokenDB tokenDB;
+    /**
+     * Logger.
+     */
+    public static final Logger LOGGER = Utils.getAppLogger();    
 
     public TokenBasedVerifier(final TokenDB tokenDB) {
         this.tokenDB = tokenDB;
@@ -35,6 +42,7 @@ public class TokenBasedVerifier implements Verifier {
             result =  Verifier.RESULT_MISSING;
         } else if (this.tokenDB.isExist(token)) {
             if (this.tokenDB.isExpirated(token)) {
+                LOGGER.log(Level.INFO, "token {0} is expirated", token);
                 result = Verifier.RESULT_INVALID;
             } else {
                 result = Verifier.RESULT_VALID;                
@@ -42,6 +50,7 @@ public class TokenBasedVerifier implements Verifier {
                 Claims body = tokenInfo.getBody();
                 String userID = body.getSubject();
                 Integer projectID = (Integer) body.get(TokenSecurity.PROJECT_ID);                
+                LOGGER.log(Level.INFO, "token {0} is valid, {1} for {2} are authenticated", new Object[]{token, userID, projectID});                
                 request.getClientInfo().setUser(new User(userID));
                 request.getHeaders().set(UtilsHeader.SELECTED_ROLE_PARAMETER, String.valueOf(projectID));                
             }

@@ -80,7 +80,7 @@ public class DoiResource extends BaseMdsResource {
             getLogger().exiting(getClass().getName(), "getDoi", doi);
             return new StringRepresentation(doi, MediaType.TEXT_PLAIN);          
         } catch (ClientMdsException ex) {
-            getLogger().exiting(getClass().getName(), "getDoi", ex.getDetailMessage());
+            getLogger().throwing(getClass().getName(), "getDoi", ex);
             throw new ResourceException(ex.getStatus(), ex.getDetailMessage());
         }
     }    
@@ -91,7 +91,9 @@ public class DoiResource extends BaseMdsResource {
      */
     private void checkInputs() {
         if(this.doiName == null || this.doiName.isEmpty()) {
-            throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, DoiMdsApplication.DOI_TEMPLATE + " value is not set.");
+            ResourceException ex = new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, DoiMdsApplication.DOI_TEMPLATE + " value is not set.");
+            getLogger().throwing(this.getClass().getName(), "checkInputs", ex);
+            throw ex;
         }
     }
     

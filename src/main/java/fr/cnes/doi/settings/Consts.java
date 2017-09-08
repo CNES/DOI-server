@@ -287,5 +287,10 @@ public class Consts {
      * Plugin to load the list of users and to fill group with users
      */
     public static final String PLUGIN_USER_GROUP_MGT = "Starter.Plugin.UserGroupMgt";
+    
+    /**
+     * Allowed IPs for the administration application.
+     */
+    public static final String ADMIN_IP_ALLOWER = "Starter.admin.IP.allower";
 
 }
