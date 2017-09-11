@@ -43,6 +43,11 @@ public class AdminApplication extends BaseApplication {
      * Default directory where the web site is located.
      */
     private static final String JS_DIR = "js";
+    
+    /**
+     * Location of the resources for the status page in the classpath.
+     */
+    private static final String STATUS_PAGE_CLASSPATH = "class/website";
 
     /**
      * The period between successive executions.
@@ -240,10 +245,41 @@ public class AdminApplication extends BaseApplication {
         getLogger().entering(AdminApplication.class.getName(), "createWebSiteRouter");
 
         Router router = new Router(getContext());
+        addStatusPage(router);
+        addServicesStatus(router);
+        addRouteForWebSite(router);
 
-        Directory directory = new Directory(getContext(), LocalReference.createClapReference("class/website"));
+        getLogger().exiting(AdminApplication.class.getName(), "createWebSiteRouter", router);
+
+        return router;
+    }
+
+    /**
+     * Adds route {@value #RESOURCE_URI} to the status page.
+     * 
+     * The resources of the status page are located in the classpath {@value #STATUS_PAGE_CLASSPATH}.
+     *
+     * @param router router
+     */
+    private void addStatusPage(final Router router) {
+        getLogger().entering(AdminApplication.class.getName(), "addStatusPage");
+        
+        Directory directory = new Directory(getContext(), LocalReference.createClapReference(STATUS_PAGE_CLASSPATH));
         directory.setDeeplyAccessible(true);
         router.attach(RESOURCE_URI, directory);
+        
+        getLogger().exiting(AdminApplication.class.getName(), "addStatusPage");
+        
+    }
+
+    /**
+     * Adds route {@value #STATUS_URI} to the services describing the DataCite
+     * status.
+     *
+     * @param router router
+     */
+    private void addServicesStatus(final Router router) {
+        getLogger().entering(AdminApplication.class.getName(), "addServicesStatus");
 
         Redirector redirector = new Redirector(getContext(), TARGET_URL, Redirector.MODE_SERVER_OUTBOUND);
 
@@ -251,13 +287,25 @@ public class AdminApplication extends BaseApplication {
             @Override
             protected int doHandle(Request request, Response response) {
                 if (ProxySettings.getInstance().isWithProxy()) {
-                    request.setChallengeResponse(ProxySettings.getInstance().getProxyAuthentication());
+                    request.setProxyChallengeResponse(ProxySettings.getInstance().getProxyAuthentication());
                 }
                 return super.doHandle(request, response);
             }
         };
         authentication.setNext(redirector);
         router.attach(STATUS_URI, authentication);
+        
+        getLogger().exiting(AdminApplication.class.getName(), "addServicesStatus");        
+    }
+
+    /**
+     * Adds default route to the website when it exists. The website must be
+     * located in the {@value #JS_DIR} directory.
+     *
+     * @param router router
+     */
+    private void addRouteForWebSite(final Router router) {
+        getLogger().entering(AdminApplication.class.getName(), "addRouteForWebSite");
 
         String pathApp = this.config.getPathApp();
         File file = new File(pathApp + File.separator + JS_DIR);
@@ -272,9 +320,7 @@ public class AdminApplication extends BaseApplication {
             getLogger().info("The website for DOI server is not installed");
         }
 
-        getLogger().exiting(AdminApplication.class.getName(), "createWebSiteRouter", router);
-
-        return router;
+        getLogger().exiting(AdminApplication.class.getName(), "addRouteForWebSite");
     }
 
     /**

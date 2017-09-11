@@ -10,8 +10,9 @@ import java.util.List;
 import org.restlet.security.User;
 
 /**
- *
- * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
+ * Default implementation of the authentication plugin.
+ * This implementation defines users/groups/roles.
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class BasicUserGroupMngtImpl implements UserGroupMngtPluginHelper {
 

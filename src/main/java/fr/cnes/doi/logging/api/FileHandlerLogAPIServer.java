@@ -24,8 +24,8 @@ public final class FileHandlerLogAPIServer extends AccessLogFileHandler {
     /**
      * File handler for API.
      *
-     * @throws IOException
-     * @throws SecurityException
+     * @throws IOException - Exception
+     * @throws SecurityException - Exception
      */
     public FileHandlerLogAPIServer() throws IOException, SecurityException {
         super();
