@@ -5,12 +5,12 @@
  */
 package fr.cnes.doi.plugin;
 
-import fr.cnes.doi.security.UserGroupMngtHelper;
+import fr.cnes.doi.db.ProjectSuffixDBHelper;
 
 /**
- * Plugin to define users and groups of the system.
+ *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-public interface UserGroupMngtPluginHelper extends PluginMetadata, UserGroupMngtHelper {
+public abstract class ProjectSuffixPluginHelper extends ProjectSuffixDBHelper implements PluginMetadata {
     
 }

@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fr.cnes.doi.db;
+package fr.cnes.doi.plugin.impl;
 
+import fr.cnes.doi.plugin.TokenDBPluginHelper;
 import fr.cnes.doi.security.TokenSecurity;
 import fr.cnes.doi.settings.DoiSettings;
 import io.jsonwebtoken.Claims;
@@ -24,10 +25,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Default implementation of the token database.
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-public class TokenDB {
+public class DefaultTokenImpl extends TokenDBPluginHelper {
+
+    private final String NAME = this.getClass().getName();
+    private static final String DESCRIPTION = "Provides a pre-defined list of users and groups";
+    private static final String VERSION = "1.0.0";
+    private static final String OWNER = "CNES";
+    private static final String AUTHOR = "Jean-Christophe Malapert";
+    private static final String LICENSE = "LGPLV3";
 
     /**
      * Default file if the path is not defined in the configuration file
@@ -37,30 +45,21 @@ public class TokenDB {
     /**
      * logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(TokenDB.class.getName());
-    
+    private static final Logger LOGGER = Logger.getLogger(DefaultTokenImpl.class.getName());
+
     private String tokenConf;
-    
-    private Map<String, Map<String,Object>> db = new ConcurrentHashMap<>();
-    
-    public TokenDB(String tokenConf) {
-        init(tokenConf);
-    }
-    
-    public TokenDB() {
-        this(DoiSettings.getInstance().getPathApp()+File.separatorChar+DEFAULT_CACHE_FILE);
+
+    private Map<String, Map<String, Object>> db = new ConcurrentHashMap<>();
+
+    public DefaultTokenImpl() {
+
     }
 
-    /**
-     * Init the configuration with the configuration file. If the given file
-     * does not exist a new file will be created. The file contains the mapping
-     * between the project name and the identifiers
-     *
-     * @param projectConf
-     *
-     */
-    private void init(String tokenConf) {
-        this.tokenConf = tokenConf;
+    @Override
+    public void init(Object configuration) {        
+        this.tokenConf = (configuration == null) 
+                ? DoiSettings.getInstance().getPathApp()+File.separatorChar+DEFAULT_CACHE_FILE
+                : String.valueOf(configuration);
         File tokenConfFile = new File(tokenConf);
         try {
             // If the file exists, load it
@@ -69,7 +68,7 @@ public class TokenDB {
             } else {
                 createProjectConf(tokenConfFile);
             }
-            
+
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Cannot access the cache file for retrieving Token ", e);
         }
@@ -83,7 +82,7 @@ public class TokenDB {
      */
     private void loadProjectConf(File projConfFile) throws IOException {
         LOGGER.log(Level.FINEST, "Cache file exists : {0}", projConfFile.getAbsolutePath());
-        
+
         List<String> lines = Files.readAllLines(projConfFile.toPath());
         // Si le fichier contient autre chose que la ligne d'entete
         if (lines.size() > 1) {
@@ -99,7 +98,8 @@ public class TokenDB {
                     } else {
                         this.db.put(split[0], new ConcurrentHashMap<String, Object>() {
                             private static final long serialVersionUID = 3109256773218160485L;
-                            {                                
+
+                            {
                                 put("projectSuffix", split[1]);
                                 put("expirationDate", split[2]);
                             }
@@ -124,8 +124,9 @@ public class TokenDB {
         Files.createFile(tokenConfFile.toPath());
         Files.write(tokenConfFile.toPath(), "#Token;Project suffix;Expiration date\n".getBytes(), StandardOpenOption.APPEND);
     }
-    
-    public synchronized boolean addToken(String jwt) {
+
+    @Override
+    public boolean addToken(String jwt) {
         LOGGER.log(Level.FINEST, "Entering in addToken : {0}", jwt);
 
         boolean isAdded = false;
@@ -137,30 +138,34 @@ public class TokenDB {
 
             // should be fine, the JWT representation does not contain ;
             String line = jwt + ";" + projectSuffix + ";" + expirationDate + "\n";
-            LOGGER.log(Level.FINEST, "token inserted : {0}", line);            
+            LOGGER.log(Level.FINEST, "token inserted : {0}", line);
             Files.write(new File(this.tokenConf).toPath(), line.getBytes(), StandardOpenOption.APPEND);
             this.db.put(jwt, new ConcurrentHashMap<String, Object>() {
-                            private static final long serialVersionUID = 3109256773218160485L;
-                            {                                
-                                put("projectSuffix", projectSuffix);
-                                put("expirationDate", expirationDate);
-                            }
-                        });
+                private static final long serialVersionUID = 3109256773218160485L;
+
+                {
+                    put("projectSuffix", projectSuffix);
+                    put("expirationDate", expirationDate);
+                }
+            });
             isAdded = true;
         } catch (IOException | RuntimeException e) {
             LOGGER.log(Level.SEVERE, "The token " + jwt + "cannot be saved in the file", e);
         }
         return isAdded;
     }
-    
+
+    @Override
     public void deleteToken(String jwt) {
         throw new RuntimeException("Not implemented");
     }
-    
+
+    @Override
     public boolean isExist(String jwt) {
         return this.db.containsKey(jwt);
     }
-    
+
+    @Override
     public boolean isExpirated(String jwt) {
         boolean isExpirated = true;
         String dateStr = (String) this.db.get(jwt).get("expirationDate");
@@ -169,9 +174,39 @@ public class TokenDB {
             Date expDate = dateFormat.parse(dateStr);
             isExpirated = new Date().after(expDate);
         } catch (ParseException ex) {
-            Logger.getLogger(TokenDB.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
         return isExpirated;
     }
-    
+
+    @Override
+    public String getName() {
+        return NAME;
+    }
+
+    @Override
+    public String getDescription() {
+        return DESCRIPTION;
+    }
+
+    @Override
+    public String getVersion() {
+        return VERSION;
+    }
+
+    @Override
+    public String getAuthor() {
+        return AUTHOR;
+    }
+
+    @Override
+    public String getOwner() {
+        return OWNER;
+    }
+
+    @Override
+    public String getLicense() {
+        return LICENSE;
+    }
+
 }

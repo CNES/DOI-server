@@ -5,11 +5,12 @@
  */
 package fr.cnes.doi.plugin;
 
+import fr.cnes.doi.db.ProjectSuffixDBHelper;
 import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.settings.Consts;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import fr.cnes.doi.security.UserGroupMngtHelper;
+import fr.cnes.doi.db.UserRoleDBHelper;
 
 /**
  *
@@ -23,17 +24,41 @@ public final class PluginFactory {
      */
     public static void init(Map<String, String> settings) {        
         String userRealPlugin = settings.get(Consts.PLUGIN_USER_GROUP_MGT);
+        String projectSuffixPlugin = settings.get(Consts.PLUGIN_PROJECT_SUFFIX);        
+        String tokenPlugin = settings.get(Consts.PLUGIN_TOKEN);        
         PLUGINS_IMPL.put(Consts.PLUGIN_USER_GROUP_MGT, userRealPlugin);
+        PLUGINS_IMPL.put(Consts.PLUGIN_PROJECT_SUFFIX, projectSuffixPlugin);
+        PLUGINS_IMPL.put(Consts.PLUGIN_TOKEN, tokenPlugin);        
     }
      
     /**
-     * Return the concrete implementation of the user management interface.
+     * Returns the concrete implementation of the user management interface.
      * @return the plugin
      */
-    public static UserGroupMngtHelper getUserManagement() {
+    public static UserRoleDBHelper getUserManagement() {
         String implClassName = PLUGINS_IMPL.get(Consts.PLUGIN_USER_GROUP_MGT);
-        UserGroupMngtHelper result = (UserGroupMngtHelper) buildObject(implClassName);
+        UserRoleDBHelper result = (UserRoleDBHelper) buildObject(implClassName);
         return result;
+    }
+    
+    /**
+     * Returns the concrete implementation of the suffix project db.
+     * @return the plugin
+     */
+    public static ProjectSuffixDBHelper getProjectSuffix() {
+        String implClassName = PLUGINS_IMPL.get(Consts.PLUGIN_PROJECT_SUFFIX);
+        ProjectSuffixDBHelper result = (ProjectSuffixDBHelper) buildObject(implClassName);
+        return result;
+    }
+    
+    /**
+     * Returns the concrete implementation of the token db.
+     * @return the plugin
+     */
+    public static TokenDBPluginHelper getToken() {
+        String implClassName = PLUGINS_IMPL.get(Consts.PLUGIN_TOKEN);
+        TokenDBPluginHelper result = (TokenDBPluginHelper) buildObject(implClassName);
+        return result;        
     }
 
     /**

@@ -289,6 +289,16 @@ public class Consts {
     public static final String PLUGIN_USER_GROUP_MGT = "Starter.Plugin.UserGroupMgt";
     
     /**
+     * Plugin to load the project suffix database.
+     */
+    public static final String PLUGIN_PROJECT_SUFFIX = "Starter.Plugin.ProjectSuffix";    
+    
+    /**
+     * Plugin to load the token database.
+     */
+    public static final String PLUGIN_TOKEN = "Starter.Plugin.Token";    
+    
+    /**
      * Allowed IPs for the administration application.
      */
     public static final String ADMIN_IP_ALLOWER = "Starter.admin.IP.allower";

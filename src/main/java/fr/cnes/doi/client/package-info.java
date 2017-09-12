@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 /**
- * Provides classes to request external interfaces.
+ * Provides classes to request external web services.
  * This package contains mainly :
  * <ul>
  * <li>a {@link fr.cnes.doi.client.ClientCrossCiteCitation client} to request CrossCite

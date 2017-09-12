@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fr.cnes.doi.db;
+package fr.cnes.doi.plugin.impl;
 
+import fr.cnes.doi.plugin.ProjectSuffixPluginHelper;
 import fr.cnes.doi.security.RoleAuthorizer;
 import fr.cnes.doi.settings.DoiSettings;
 import java.io.File;
@@ -13,38 +14,32 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.Map;
-import java.util.Observable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Default implementation of the project suffix database.
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-public class ProjectSuffixDB extends Observable{
+public class DefaultProjectSuffixImpl extends ProjectSuffixPluginHelper {
 
     /**
      * Default file if the path is not defined in the configuration file
      */
     private static final String DEFAULT_CACHE_FILE = "data/projects.conf";
-    
-    public static final String ADD_RECORD = "ADD";
-    
-    public static final String DELETE_RECORD = "DELETE";
 
     /**
      * logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(ProjectSuffixDB.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(DefaultProjectSuffixImpl.class.getName());
 
-    public ProjectSuffixDB(String projectConf) {
-        init(projectConf);
-    }
-
-    public ProjectSuffixDB() {
-        this(DoiSettings.getInstance().getPathApp()+File.separatorChar+DEFAULT_CACHE_FILE);
-    }
+    private final String NAME = this.getClass().getName();
+    private static final String DESCRIPTION = "Provides a pre-defined list of users and groups";
+    private static final String VERSION = "1.0.0";
+    private static final String OWNER = "CNES";
+    private static final String AUTHOR = "Jean-Christophe Malapert";
+    private static final String LICENSE = "LGPLV3";
 
     /**
      * Configuration of the projects identifiers
@@ -60,15 +55,24 @@ public class ProjectSuffixDB extends Observable{
      */
     private final Map<String, Integer> projIdMap = new ConcurrentHashMap<>();
 
+    public DefaultProjectSuffixImpl() {
+
+    }           
+
     /**
      * Init the configuration with the configuration file. If the given file
      * does not exist a new file will be created. The file contains the mapping
      * between the project name and the identifiers
      *
-     * @param projectConf The file that contains the database     
+     * @param configuration The file that contains the database
      */
-    public final void init(String projectConf) {
-        this.projectConf = projectConf;
+    @Override
+    public void init(Object configuration) {
+        if(configuration == null) {
+            this.projectConf = DoiSettings.getInstance().getPathApp()+File.separatorChar+DEFAULT_CACHE_FILE;
+        } else {
+            this.projectConf = String.valueOf(configuration);   
+        }        
         File projConfFile = new File(projectConf);
         try {
             // If the file exists, load it
@@ -81,7 +85,7 @@ public class ProjectSuffixDB extends Observable{
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Cannot access the cache file for the mapping projects/id " + projectConf, e);
         }
-        
+
     }
 
     /**
@@ -131,13 +135,14 @@ public class ProjectSuffixDB extends Observable{
         Files.write(projConfFile.toPath(), "Project Name;Id\n".getBytes(), StandardOpenOption.APPEND);
     }
 
+    @Override
     public synchronized boolean addProjectSuffix(int projectID, String projectName) {
-        boolean isAdded = false;                
+        boolean isAdded = false;
         try {
             String line = projectName + ";" + projectID + "\n";
             Files.write(new File(this.projectConf).toPath(), line.getBytes(), StandardOpenOption.APPEND);
-            this.projIdMap.put(projectName, projectID);            
-            this.idProjMap.put(projectID, projectName);            
+            this.projIdMap.put(projectName, projectID);
+            this.idProjMap.put(projectID, projectName);
             isAdded = true;
             setChanged();
             notifyObservers(new String[]{ADD_RECORD, String.valueOf(projectID)});
@@ -148,30 +153,66 @@ public class ProjectSuffixDB extends Observable{
         return isAdded;
     }
 
-    public void deleteProject(String project) {
+    @Override
+    public synchronized void deleteProject(int projectID) {
         throw new RuntimeException("Not implemented");
+        //setChanged();
+        //notifyObservers(new String[]{DELETE_RECORD, String.valueOf(projectID)});    
     }
 
+    @Override
     public boolean isExistID(int projectID) {
         return this.idProjMap.containsKey(projectID);
     }
 
+    @Override
     public boolean isExistProjectName(String projectName) {
         return this.projIdMap.containsKey(projectName);
     }
 
+    @Override
     public String getProjectFrom(int projectID) {
         return this.idProjMap.get(projectID);
     }
 
+    @Override
     public int getIDFrom(String projectName) {
         return this.projIdMap.get(projectName);
     }
 
+    @Override
     public Map<String, Integer> getProjects() {
         return this.projIdMap;
     }
-    
-    
+
+    @Override
+    public String getName() {
+        return NAME;
+    }
+
+    @Override
+    public String getDescription() {
+        return DESCRIPTION;
+    }
+
+    @Override
+    public String getVersion() {
+        return VERSION;
+    }
+
+    @Override
+    public String getAuthor() {
+        return AUTHOR;
+    }
+
+    @Override
+    public String getOwner() {
+        return OWNER;
+    }
+
+    @Override
+    public String getLicense() {
+        return LICENSE;
+    }
 
 }

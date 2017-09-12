@@ -5,9 +5,10 @@
  */
 package fr.cnes.doi.security;
 
-import fr.cnes.doi.db.TokenDB;
+import fr.cnes.doi.db.TokenDBHelper;
 import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.exception.TokenSecurityException;
+import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.utils.UniqueProjectName;
@@ -58,7 +59,7 @@ public class TokenSecurity {
 
     private String tokenKey;
 
-    private TokenDB tokenDB;
+    private TokenDBHelper tokenDB;
 
     /**
      * Class to handle the instance
@@ -95,7 +96,7 @@ public class TokenSecurity {
     private TokenSecurity() {
         String token = DoiSettings.getInstance().getString(Consts.TOKEN_KEY);
         this.tokenKey = (token == null) ? DEFAULT_TOKEN_KEY : token;
-        this.tokenDB = new TokenDB();
+        this.tokenDB = PluginFactory.getToken();
     }
 
     public enum TimeUnit {
@@ -202,7 +203,7 @@ public class TokenSecurity {
         }
     }
 
-    public TokenDB getTokenDB() {
+    public TokenDBHelper getTokenDB() {
         return this.tokenDB;
     }
 

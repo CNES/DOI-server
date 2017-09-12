@@ -3,12 +3,13 @@
  */
 package fr.cnes.doi.utils;
 
-import fr.cnes.doi.db.ProjectSuffixDB;
+import fr.cnes.doi.db.ProjectSuffixDBHelper;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import fr.cnes.doi.exception.DoiRuntimeException;
+import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import java.util.Map;
@@ -52,19 +53,16 @@ public class UniqueProjectName {
         return UniqueProjectNameHolder.INSTANCE;
     }
     
-    private final ProjectSuffixDB projectDB;
+    private final ProjectSuffixDBHelper projectDB;
 
     /**
      * Constructor
      */
     private UniqueProjectName() {
         LOGGER.entering(this.getClass().getName(), "Constructor");
-        String path = DoiSettings.getInstance().getString(Consts.PROJECT_CONF_PATH);
-        if (path == null) {
-            this.projectDB = new ProjectSuffixDB();
-        } else {
-            this.projectDB = new ProjectSuffixDB(path);
-        }
+        String path = DoiSettings.getInstance().getString(Consts.PROJECT_CONF_PATH); 
+        this.projectDB = PluginFactory.getProjectSuffix();        
+        this.projectDB.init(path);        
         LOGGER.exiting(this.getClass().getName(), "Constructor");        
     }
     

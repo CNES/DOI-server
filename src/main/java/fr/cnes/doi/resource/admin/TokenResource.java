@@ -8,7 +8,7 @@ package fr.cnes.doi.resource.admin;
 import fr.cnes.doi.application.AdminApplication;
 import static fr.cnes.doi.application.AdminApplication.TOKEN_TEMPLATE;
 import fr.cnes.doi.resource.BaseResource;
-import fr.cnes.doi.db.TokenDB;
+import fr.cnes.doi.db.TokenDBHelper;
 import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.exception.TokenSecurityException;
 import fr.cnes.doi.security.TokenSecurity;
@@ -17,8 +17,14 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import java.util.logging.Level;
 import org.restlet.data.Form;
+import org.restlet.data.MediaType;
+import org.restlet.data.Method;
 import org.restlet.data.Status;
 import org.restlet.ext.json.JsonRepresentation;
+import org.restlet.ext.wadl.DocumentationInfo;
+import org.restlet.ext.wadl.MethodInfo;
+import org.restlet.ext.wadl.ParameterStyle;
+import org.restlet.ext.wadl.RepresentationInfo;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
 import org.restlet.resource.Post;
@@ -59,11 +65,12 @@ public class TokenResource extends BaseResource {
     /**
      * The token database.
      */
-    private TokenDB tokenDB;
+    private TokenDBHelper tokenDB;
 
     @Override
     protected void doInit() throws ResourceException {
         super.doInit();
+        setDescription("This resource handles the token");        
         this.tokenParam = getAttribute(TOKEN_TEMPLATE);
         this.tokenDB = ((AdminApplication) this.getApplication()).getTokenDB();
     }
@@ -140,5 +147,39 @@ public class TokenResource extends BaseResource {
             throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, ex);
         }
     }
+    
+    /**
+     * projects representation
+     * @return Wadl representation for projects
+     */
+    private RepresentationInfo jsonRepresentation() {
+        final RepresentationInfo repInfo = new RepresentationInfo();
+        repInfo.setMediaType(MediaType.APPLICATION_JSON);        
+        final DocumentationInfo docInfo = new DocumentationInfo();
+        docInfo.setTitle("Json Representation");
+        docInfo.setTextContent("The representation contains informations about the token.");
+        repInfo.setDocumentation(docInfo);        
+        return repInfo;
+    }     
+
+    @Override
+    protected void describeGet(MethodInfo info) {
+        info.setName(Method.GET);
+        info.setDocumentation("Get information about a specific token");
+        addRequestDocToMethod(info, createQueryParamDoc(TOKEN_TEMPLATE, ParameterStyle.TEMPLATE, "token", true, "xs:string"));                
+        addResponseDocToMethod(info, createResponseDoc(Status.SUCCESS_OK, "Operation successful", jsonRepresentation()));
+        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_BAD_REQUEST, "Wrong token"));
+    }   
+
+    @Override
+    protected void describePost(MethodInfo info) {
+        info.setName(Method.POST);
+        info.setDocumentation("Creates a token");
+        addRequestDocToMethod(info, createQueryParamDoc(IDENTIFIER_PARAMETER, ParameterStyle.MATRIX, "User ID of the operator that creates the token", true, "xs:string"));                
+        addRequestDocToMethod(info, createQueryParamDoc(PROJECT_ID_PARAMETER, ParameterStyle.MATRIX, "Token for a specific project", true, "xs:string"));                        
+        addRequestDocToMethod(info, createQueryParamDoc(UNIT_OF_TIME_PARAMETER, ParameterStyle.MATRIX, "Unit of time used to define the expiration time of the token", false, "xs:int"));                        
+        addResponseDocToMethod(info, createResponseDoc(Status.SUCCESS_OK, "Operation successful", stringRepresentation()));
+        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_BAD_REQUEST, "Submitted values are not valid"));        
+    }        
 
 }

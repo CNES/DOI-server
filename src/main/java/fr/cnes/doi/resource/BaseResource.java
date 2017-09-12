@@ -10,6 +10,7 @@ import java.util.List;
 import org.restlet.data.Form;
 import org.restlet.data.MediaType;
 import org.restlet.data.Status;
+import org.restlet.ext.wadl.DocumentationInfo;
 import org.restlet.ext.wadl.MethodInfo;
 import org.restlet.ext.wadl.ParameterInfo;
 import org.restlet.ext.wadl.ParameterStyle;
@@ -185,5 +186,19 @@ public class BaseResource extends WadlServerResource {
         rep.setXmlElement(xmlElement);
         return rep;
     }
+    
+    /**
+     * projects representation
+     * @return Wadl representation for projects
+     */
+    protected RepresentationInfo stringRepresentation() {
+        final RepresentationInfo repInfo = new RepresentationInfo();
+        repInfo.setMediaType(MediaType.TEXT_PLAIN);        
+        final DocumentationInfo docInfo = new DocumentationInfo();
+        docInfo.setTitle("String Representation");
+        docInfo.setTextContent("The representation contains a simple string.");
+        repInfo.setDocumentation(docInfo);        
+        return repInfo;
+    }     
 
 }

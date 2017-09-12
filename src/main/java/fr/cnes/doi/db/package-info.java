@@ -4,13 +4,14 @@
  * and open the template in the editor.
  */
 /**
- * Provides access to the DOI database.
+ * Provides interfaces to request external databases.
  *
  * <p>
- * Two databases are needed :
+ * Three databases are needed :
  * <ul>
- * <li>One to access to the {@link fr.cnes.doi.db.ProjectSuffixDB project database}</li>
- * <li>Another one to access to the {@link fr.cnes.doi.db.TokenDB token database}</li>
+ * <li>One to access to the {@link fr.cnes.doi.db.ProjectSuffixDBHelper project database}</li>
+ * <li>Another one to access to the {@link fr.cnes.doi.db.TokenDBHelper token database}</li>
+ * <li>The last one to access to the {@link fr.cnes.doi.db.UserRoleDBHelper user/role database}</li>
  * </ul>
  * 
  * <h2>Project database</h2>
@@ -23,5 +24,8 @@
  * 
  * <h2>Token database</h2>
  * The token database stores the created token in order to verify them when there are used by the user.
+ * 
+ * <h2>User/role database</h2>
+ * The user/role database stores the users and the association role/user
  */
 package fr.cnes.doi.db;

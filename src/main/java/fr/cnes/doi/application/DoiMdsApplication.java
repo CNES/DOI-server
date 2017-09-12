@@ -23,7 +23,7 @@ import org.restlet.security.MethodAuthorizer;
 import org.restlet.routing.Router;
 
 import fr.cnes.doi.client.ClientMDS;
-import fr.cnes.doi.db.TokenDB;
+import fr.cnes.doi.db.TokenDBHelper;
 import fr.cnes.doi.resource.mds.DoiResource;
 import fr.cnes.doi.resource.mds.DoisResource;
 import fr.cnes.doi.resource.mds.MediaResource;
@@ -127,7 +127,7 @@ public class DoiMdsApplication extends BaseApplication {
     /**
      * Token DB that contains the set of generated token.
      */
-    private final TokenDB tokenDB;
+    private final TokenDBHelper tokenDB;
 
     /**
      * Creates the Digital Object Identifier server application.
@@ -326,7 +326,7 @@ public class DoiMdsApplication extends BaseApplication {
      *
      * @return the token database
      */
-    public TokenDB getTokenDB() {
+    public TokenDBHelper getTokenDB() {
         return this.tokenDB;
     }
 

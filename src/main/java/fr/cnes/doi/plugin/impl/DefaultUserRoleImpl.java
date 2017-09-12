@@ -3,9 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fr.cnes.doi.plugin;
+package fr.cnes.doi.plugin.impl;
 
+import fr.cnes.doi.plugin.UserRolePluginHelper;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.restlet.security.User;
 
@@ -14,7 +16,7 @@ import org.restlet.security.User;
  * This implementation defines users/groups/roles.
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-public class BasicUserGroupMngtImpl implements UserGroupMngtPluginHelper {
+public class DefaultUserRoleImpl extends UserRolePluginHelper {
 
     private final List<User> users = new ArrayList<>();
     private final String NAME = this.getClass().getName();
@@ -24,7 +26,12 @@ public class BasicUserGroupMngtImpl implements UserGroupMngtPluginHelper {
     private final String AUTHOR = "Jean-Christophe Malapert";
     private final String LICENSE = "LGPLV3";
 
-    public BasicUserGroupMngtImpl() {
+    public DefaultUserRoleImpl() {
+
+    }
+    
+    @Override
+    public void init(Object configuration) {
         User admin = new User("admin", "admin");
         User jcm = new User("malapert", "pwd", "Jean-Christophe", "Malapert", "jcmalapert@gmail.com");
         User cc = new User("caillet", "pppp", "Claire", "Caillet", "claire.caillet@cnes.fr");
@@ -34,21 +41,19 @@ public class BasicUserGroupMngtImpl implements UserGroupMngtPluginHelper {
         users.add(jcm);
         users.add(cc);
         users.add(test1);
-        users.add(test2);
+        users.add(test2);        
+    }
+    
+
+    @Override
+    public List<User> getUsers() {
+        return users;
     }
 
     @Override
-    public void addUsersToRealm(final List<User> realmUsers) {
-        realmUsers.addAll(users);
-    }
-
-    @Override
-    public void addUsersToUserGroup(final List<User> usersGroup) {
-        usersGroup.add(users.get(1));
-        usersGroup.add(users.get(2));
-        usersGroup.add(users.get(3));
-        usersGroup.add(users.get(4));
-    }
+    public List<User> getUsersFromRole(final String roleName){
+        return Arrays.asList(users.get(1), users.get(2), users.get(3), users.get(4));
+    }   
 
     @Override
     public void addUsersToAdminGroup(final List<User> adminGroup) {

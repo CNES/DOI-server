@@ -23,7 +23,7 @@ import fr.cnes.doi.resource.admin.SuffixProjectsResource;
 import fr.cnes.doi.resource.admin.TokenResource;
 import fr.cnes.doi.services.LandingPageMonitoring;
 import fr.cnes.doi.utils.Requirement;
-import fr.cnes.doi.db.TokenDB;
+import fr.cnes.doi.db.TokenDBHelper;
 import fr.cnes.doi.security.AllowerIP;
 import fr.cnes.doi.security.TokenSecurity;
 import fr.cnes.doi.settings.ProxySettings;
@@ -107,7 +107,7 @@ public class AdminApplication extends BaseApplication {
     /**
      * Token database.
      */
-    private final TokenDB tokenDB;
+    private final TokenDBHelper tokenDB;
 
     /**
      * Constructor.
@@ -346,7 +346,7 @@ public class AdminApplication extends BaseApplication {
      *
      * @return the token database
      */
-    public TokenDB getTokenDB() {
+    public TokenDBHelper getTokenDB() {
         return this.tokenDB;
     }
 

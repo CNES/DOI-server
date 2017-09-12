@@ -5,7 +5,7 @@
  */
 package fr.cnes.doi.security;
 
-import fr.cnes.doi.db.TokenDB;
+import fr.cnes.doi.db.TokenDBHelper;
 import fr.cnes.doi.utils.Utils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -23,13 +23,13 @@ import org.restlet.security.Verifier;
  */
 public class TokenBasedVerifier implements Verifier {
 
-    private final TokenDB tokenDB;
+    private final TokenDBHelper tokenDB;
     /**
      * Logger.
      */
     public static final Logger LOGGER = Utils.getAppLogger();
 
-    public TokenBasedVerifier(final TokenDB tokenDB) {
+    public TokenBasedVerifier(final TokenDBHelper tokenDB) {
         this.tokenDB = tokenDB;
     }
 

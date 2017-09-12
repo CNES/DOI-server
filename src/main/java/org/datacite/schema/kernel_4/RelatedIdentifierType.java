@@ -91,7 +91,7 @@ public enum RelatedIdentifierType {
     /**
      * Astrophysics Data System bibliographic codes; a standardized 19 character
      * identifier according to the syntax yyyyjjjjjvvvvmppppa. 
-     * See http://info‐uri.info/registry/OAIHandler?verb=GetRecord&metadataPrefix=reg&identifier=info:bibcode/
+     * {@code http://info‐uri.info/registry/OAIHandler?verb=GetRecord&metadataPrefix=reg&identifier=info:bibcode/}
      * <pre>
      * {@code 
      * <relatedIdentifier relatedIdentifierType="bibcode" relationType="IsCitedBy">
@@ -277,10 +277,13 @@ public enum RelatedIdentifierType {
     URL("URL"),
     /**
      * Uniform Resource Name; is a unique and persistent identifier of an 
-     * electronic document. The syntax is: urn:< NID>:<NSS>
+     * electronic document. 
+     * {@code 
+     * The syntax is: urn:< NID>:<NSS>
      * The leading urn: sequence is case‐insensitive, <br>
      * <NID> is the namespace identifier,<br>
      * <NSS> is the namespace‐specific string.
+     * }
      * <pre>
      * {@code 
      * <relatedIdentifier relatedIdentifierType="URN" relationType="IsSupplementTo">

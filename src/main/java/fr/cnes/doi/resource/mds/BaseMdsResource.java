@@ -52,6 +52,15 @@ public class BaseMdsResource extends BaseResource {
     private boolean hasSingleRole(List<Role> roles) {
         return roles.size() == 1;
     }
+
+    /**
+     * Tests if the user has no role.
+     * @param roles roles
+     * @return True when the user has no role otherwise False
+     */    
+    private boolean hasNoRole(List<Role> roles) {
+        return roles.isEmpty();
+    }    
     
     /**
      * Tests if the user has selected a role.
@@ -94,13 +103,16 @@ public class BaseMdsResource extends BaseResource {
             }
         } else {
             List<Role> roles = getClientInfo().getRoles();
-            if(hasSingleRole(roles)) {
+            if(hasNoRole(roles)) {
+                ResourceException ex = new ResourceException(Status.CLIENT_ERROR_FORBIDDEN, "DOIServer : No role");                
+                getLogger().throwing(this.getClass().getName(), "getRoleName", ex);                
+                throw ex;
+            } else if(hasSingleRole(roles)) {
                 Role role = roles.get(0);
                 roleName = role.getName();                
                 getLogger().log(Level.FINEST, "User has a single Role {0}", role);                
             } else {
                 getLogger().log(Level.WARNING, "DOIServer : Cannot know which role must be applied");
-                getLogger().exiting(getClass().getName(), "getRoleName");                
                 ResourceException ex = new ResourceException(Status.CLIENT_ERROR_CONFLICT, "DOIServer : Cannot know which role must be applied");                
                 getLogger().throwing(this.getClass().getName(), "getRoleName", ex);
                 throw ex;
