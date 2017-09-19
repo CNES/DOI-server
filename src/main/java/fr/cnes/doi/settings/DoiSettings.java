@@ -50,6 +50,11 @@ public final class DoiSettings {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(DoiSettings.class.getName());
+    
+    /**
+     * Test DOI.
+     */
+    private static final String INIST_TEST_DOI = "10.5072";
 
     /**
      * Settings loaded in memory.
@@ -82,7 +87,6 @@ public final class DoiSettings {
         fillConcurrentMap(properties);
         computePathOfTheApplication();
         PluginFactory.init(this.map);
-        LOGGER.info("Settings have been loaded");
         LOGGER.exiting(this.getClass().getName(), "init");        
     }
 
@@ -125,6 +129,45 @@ public final class DoiSettings {
         }
         LOGGER.exiting(this.getClass().getName(), "loadConfigurationFile", properties);
         return properties;
+    }
+    
+    /**
+     * Validates the configuration file.
+     */
+    public void validConfigurationFile() {
+        StringBuilder validation = new StringBuilder();
+        if(isNotExist(this.map, Consts.INIST_DOI)) {
+            validation = validation.append("Sets ").append(Consts.INIST_DOI).append("\n");
+        }
+        if(isNotExist(this.map, Consts.INIST_LOGIN)) {
+            validation = validation.append("Sets ").append(Consts.INIST_LOGIN).append("\n");
+        }
+        if(isNotExist(this.map, Consts.INIST_PWD)) {
+            validation = validation.append("Sets ").append(Consts.INIST_PWD).append("\n");
+        }    
+        if(isNotExist(this.map, Consts.SERVER_PROXY_USED)) {
+            validation = validation.append("Sets ").append(Consts.SERVER_PROXY_USED).append("\n");
+        }
+        if(isNotExist(this.map, Consts.PLUGIN_PROJECT_SUFFIX)){
+            validation = validation.append("Sets ").append(Consts.PLUGIN_PROJECT_SUFFIX).append("\n");
+        }
+        if(isNotExist(this.map, Consts.PLUGIN_TOKEN)){
+            validation = validation.append("Sets ").append(Consts.PLUGIN_TOKEN).append("\n");
+        } 
+        if(isNotExist(this.map, Consts.PLUGIN_USER_GROUP_MGT)){
+            validation = validation.append("Sets ").append(Consts.PLUGIN_USER_GROUP_MGT).append("\n");
+        }         
+        if(validation.length()!=0) {
+            throw new DoiRuntimeException(validation.toString());
+        }
+    }
+    
+    private boolean isExist( ConcurrentHashMap<String,String> properties, String keyword) {
+        return properties.containsKey(keyword) && !properties.get(keyword).isEmpty();
+    }
+    
+    private boolean isNotExist( ConcurrentHashMap<String,String> properties, String keyword) {
+        return !isExist(properties, keyword);
     }
 
     /**
@@ -210,7 +253,14 @@ public final class DoiSettings {
      * @return the value of the key
      */
     public String getString(final String key) {
-        return this.getString(key, null);
+        String value;
+        if(Consts.INIST_DOI.equals(key)) {
+            String context = this.getString(Consts.CONTEXT_MODE, "DEV");
+            value = context.equals("PRE_PROD") ? INIST_TEST_DOI : this.getString(Consts.INIST_DOI, null);
+        } else {
+            value = this.getString(key, null);
+        }
+        return value;
     }
 
     /**

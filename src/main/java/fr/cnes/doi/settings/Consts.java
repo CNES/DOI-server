@@ -36,7 +36,7 @@ public class Consts {
     /**
      * DOI prefix, which is given by INIST.
      */
-    public static final String INIST_DOI = "Starter.Inist.doi";
+    public static final String INIST_DOI = "Starter.Inist.doi";    
 
     /**
      * INIST login to use DATACITE's web services. The login is encrypted.

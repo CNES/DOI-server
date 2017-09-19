@@ -157,6 +157,7 @@ public class Starter {
      */
     private static void launchServer(final DoiSettings settings) {
         GLOBAL_LOGGER.entering(Starter.class.getName(), "launchServer");
+        settings.validConfigurationFile();
         doiServer = new DoiServer(settings);
         final Thread server = new Thread() {
             @Override
