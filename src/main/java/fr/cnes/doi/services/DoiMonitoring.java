@@ -5,7 +5,6 @@
  */
 package fr.cnes.doi.services;
 
-import fr.cnes.doi.utils.Requirement;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -18,10 +17,6 @@ import org.restlet.data.Method;
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-@Requirement(
-        reqId = "DOI_SRV_130",
-        reqName = "Monitoring des temps de réponse"
-)
 public class DoiMonitoring {
 
     /**

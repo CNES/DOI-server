@@ -26,6 +26,7 @@ import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 
 import fr.cnes.doi.utils.Utils;
+import fr.cnes.doi.utils.spec.Requirement;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
@@ -34,6 +35,10 @@ import java.net.URLDecoder;
  *
  * @author Jean-Christophe (jean-christophe.malapert@cnes.fr)
  */
+@Requirement(
+        reqId = Requirement.DOI_CONFIG_010,
+        reqName = Requirement.DOI_CONFIG_010_NAME
+)
 public final class DoiSettings {
 
     /**

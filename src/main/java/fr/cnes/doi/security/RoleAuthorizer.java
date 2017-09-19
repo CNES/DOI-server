@@ -9,13 +9,11 @@ import fr.cnes.doi.db.UserRoleDBHelper;
 import fr.cnes.doi.application.AdminApplication;
 import fr.cnes.doi.application.DoiMdsApplication;
 import fr.cnes.doi.db.ProjectSuffixDBHelper;
-import static fr.cnes.doi.db.UserRoleDBHelper.ADD_USER_NOTIFICATION;
-import static fr.cnes.doi.db.UserRoleDBHelper.REMOVE_USER_NOTIFICATION;
 import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.utils.UniqueProjectName;
 import fr.cnes.doi.utils.Utils;
-import java.util.ArrayList;
+import fr.cnes.doi.utils.spec.Requirement;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -31,9 +29,13 @@ import org.restlet.security.Role;
 import org.restlet.security.User;
 
 /**
- *
+ * Security class for authentication by REALM.
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
+@Requirement(
+        reqId = Requirement.DOI_AUTH_010,
+        reqName = Requirement.DOI_AUTH_010_NAME
+)
 public class RoleAuthorizer implements Observer {
 
     public static String ROLE_ADMIN = "admin";
@@ -85,7 +87,7 @@ public class RoleAuthorizer implements Observer {
         // Add Groups       
         Group administrators = new Group(GROUP_ADMIN, "Administrators");
         LOGGER.info("Add users to Administrators group");
-        userRolePlugin.addUsersToAdminGroup(administrators.getMemberUsers());
+        userRolePlugin.setUsersToAdminGroup(administrators.getMemberUsers());
         RoleAuthorizer.REALM.getRootGroups().add(administrators);
 
         LOGGER.exiting(this.getClass().getName(), "initUsersGroups");
@@ -97,6 +99,7 @@ public class RoleAuthorizer implements Observer {
         initForAdmin(app);
 
         Map<String, Integer> projects = UniqueProjectName.getInstance().getProjects();
+        LOGGER.log(Level.INFO, "{0} projects have already been registered", projects.size());
         for (String project : projects.keySet()) {
             Integer projectID = projects.get(project);
             Role role = new Role(app, String.valueOf(projectID));
@@ -186,6 +189,14 @@ public class RoleAuthorizer implements Observer {
      * @param o observable
      * @param obj message
      */
+    @Requirement(
+            reqId = Requirement.DOI_SRV_130,
+            reqName = Requirement.DOI_SRV_130_NAME
+    )
+    @Requirement(
+            reqId = Requirement.DOI_INTER_030,
+            reqName = Requirement.DOI_INTER_030_NAME
+    )    
     @Override
     public void update(Observable o, Object obj) {
         LOGGER.entering(this.getClass().getName(), "update", new Object[]{o, obj});

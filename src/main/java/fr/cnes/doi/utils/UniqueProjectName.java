@@ -12,6 +12,7 @@ import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
+import fr.cnes.doi.utils.spec.Requirement;
 import java.util.Map;
 
 /**
@@ -19,13 +20,10 @@ import java.util.Map;
  *
  */
 @Requirement(
-        reqId = "DOI_AUTH_010",
-        reqName = "Création d'un suffixe projet",
-        comment = "La taille de 6 digits est libre à ce niveau. Il est imposé à un autre endroit"
+        reqId = Requirement.DOI_INTER_030,
+        reqName = Requirement.DOI_INTER_030_NAME
 )
 public class UniqueProjectName {
-
-
 
     /**
      * logger.
@@ -76,7 +74,7 @@ public class UniqueProjectName {
      *
      * @param maxNumber Number max to generate
      *
-     * @return the Id
+     * @return the IdRequirement.DOI_AUTH_010
      */
     private int generateId(int maxNumber) {
         LOGGER.entering(this.getClass().getName(), "generateId", maxNumber);
@@ -92,7 +90,6 @@ public class UniqueProjectName {
      * @param input Identifier to convert
      * @param projectName the project name to convert
      * @param maxNumber Number max to generate
-     * @param length length of the short name to generate
      * @return the input that is converted to the base
      */
     private int convert(final long input, final String projectName, int maxNumber) {

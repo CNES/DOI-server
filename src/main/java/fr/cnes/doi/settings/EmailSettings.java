@@ -5,6 +5,7 @@
  */
 package fr.cnes.doi.settings;
 
+import fr.cnes.doi.utils.spec.Requirement;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
@@ -30,6 +31,10 @@ import org.restlet.resource.ClientResource;
  *
  * @author Jean-Christophe Malapert
  */
+@Requirement(
+        reqId = Requirement.DOI_CONFIG_010,
+        reqName = Requirement.DOI_CONFIG_010_NAME
+)
 public final class EmailSettings {
 
     private static final boolean DEFAULT_DEBUG = false;
@@ -139,6 +144,7 @@ public final class EmailSettings {
      * @param subject Email's subject
      * @param msg Email's message
      * @return True when the message is sent
+     * @throws Exception - if an error happens when stopping the request
      */
     private boolean sendMail(final Protocol protocol, final Request request, boolean startTls, final String subject,
             final String msg) throws Exception {

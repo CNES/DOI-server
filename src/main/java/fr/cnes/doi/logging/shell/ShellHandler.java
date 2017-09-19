@@ -5,7 +5,6 @@
  */
 package fr.cnes.doi.logging.shell;
 
-import fr.cnes.doi.utils.Requirement;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Formatter;
 import java.util.logging.Level;
@@ -15,10 +14,6 @@ import java.util.logging.Level;
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-@Requirement(
-        reqId = "DOI_ARCHI_040",
-        reqName = "Logs"
-)
 public final class ShellHandler extends ConsoleHandler {
 
     /**

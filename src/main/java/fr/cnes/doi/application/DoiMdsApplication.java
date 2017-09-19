@@ -30,82 +30,102 @@ import fr.cnes.doi.resource.mds.MediaResource;
 import fr.cnes.doi.resource.mds.MetadataResource;
 import fr.cnes.doi.resource.mds.MetadatasResource;
 import fr.cnes.doi.settings.Consts;
-import fr.cnes.doi.utils.Requirement;
 import fr.cnes.doi.security.TokenBasedVerifier;
 import fr.cnes.doi.security.TokenSecurity;
+import fr.cnes.doi.utils.spec.Requirement;
 
 /**
- * Provides an applicatdbor hTokenDBimport fr.cnes.doi.security.TokenSecurity;
- * import org.restlet.routing.Router; ng Data Object Identifier within an
- * organization. A Digital Object Identifier (DOI) is an alphanumely identify an
- * object. It is tied to a metadata description of the object as well as to a
- * digital location, such as a URL, where all the details about the object are
- * accessible.
+ * Provides an application to handle Data Object Identifier within an
+ * organization. A Digital Object Identifier (DOI) is a persistent identifier or
+ * handle used to uniquely identify objects, standardized by the International
+ * Organization. A DOI aims to be "resolvable", usually to some form of access
+ * to the information object to which the DOI refers. This is achieved by
+ * binding the DOI to metadata about the object, such as a URL, where all the
+ * details about the object are accessible. Everytime a URL changes, the
+ * publisher has to update the metadata for the DOI to link to the new URL. It
+ * is the publisher's responsibility to update the DOI database. If he fails to
+ * do so, the DOI resolves to a dead link leaving the DOI useless.
+ * <p>
+ * Two methods of authentication are defined in this application and both is
+ * optional:
+ * <ul>
+ * <li>{@link #createAuthenticator authenticator} by login/password</li>
+ * <li>{@link #createTokenAuthenticator authenticator} by
+ * {@link fr.cnes.doi.resource.admin.TokenResource token}
+ * </ul>
+ * Only the GET can be anonymous whereas POST, PUT, DELETE
+ * {@link #createMethodAuthorizer methods need to be authenticated}.
+ *
  *
  * @author Jean-Christophe Malapert (jean-Christophe Malapert@cnes.fr)
+ * @see #createInboundRoot the resources related to this application
  * @see <a href="http://www.doi.org/hb.html">DOI Handbook</a>
- * @see "https://mds.datacite.org/static/apidoc"
+ * @see <a href="https://mds.datacite.org/static/apidoc">API Documentation</a>
  */
 @Requirement(
-        reqId = "DOI_SRV_010",
-        reqName = "Création de métadonnées"
+        reqId = Requirement.DOI_SRV_010,
+        reqName = Requirement.DOI_SRV_010_NAME
 )
 @Requirement(
-        reqId = "DOI_SRV_020",
-        reqName = "Enregistrement d'un DOI"
+        reqId = Requirement.DOI_SRV_020,
+        reqName = Requirement.DOI_SRV_020_NAME
 )
 @Requirement(
-        reqId = "DOI_SRV_030",
-        reqName = "Mise à jour de l'URL d'un DOI"
+        reqId = Requirement.DOI_SRV_030,
+        reqName = Requirement.DOI_SRV_030_NAME
 )
 @Requirement(
-        reqId = "DOI_SRV_040",
-        reqName = "Mise à jour des métadonnées d'un DOI"
+        reqId = Requirement.DOI_SRV_040,
+        reqName = Requirement.DOI_SRV_040_NAME
 )
 @Requirement(
-        reqId = "DOI_SRV_050",
-        reqName = "Désactivation d'un DOI"
+        reqId = Requirement.DOI_SRV_050,
+        reqName = Requirement.DOI_SRV_050_NAME
 )
 @Requirement(
-        reqId = "DOI_SRV_060",
-        reqName = "Récupération des métadonnées"
+        reqId = Requirement.DOI_SRV_060,
+        reqName = Requirement.DOI_SRV_060_NAME
 )
 @Requirement(
-        reqId = "DOI_SRV_070",
-        reqName = "Récupération de l'URL"
+        reqId = Requirement.DOI_SRV_070,
+        reqName = Requirement.DOI_SRV_070_NAME
 )
 @Requirement(
-        reqId = "DOI_SRV_080",
-        reqName = "Création d'un média"
+        reqId = Requirement.DOI_SRV_080,
+        reqName = Requirement.DOI_SRV_080_NAME
 )
 @Requirement(
-        reqId = "DOI_SRV_090",
-        reqName = "Récupération des médias"
+        reqId = Requirement.DOI_SRV_090,
+        reqName = Requirement.DOI_SRV_090_NAME
+)
+@Requirement(
+        reqId = Requirement.DOI_MONIT_020,
+        reqName = Requirement.DOI_MONIT_020_NAME
 )
 public class DoiMdsApplication extends BaseApplication {
 
     /**
-     * Template Query for DOI.
+     * Template Query for DOI : {@value #DOI_TEMPLATE}.
      */
     public static final String DOI_TEMPLATE = "doiName";
 
     /**
-     * URI to handle the collection of DOIs.
+     * URI to handle the collection of DOIs : {@value #DOI_URI}.
      */
     public static final String DOI_URI = "/dois";
 
     /**
-     * URI to handle a DOI.
+     * URI to handle a DOI : {@value #DOI_NAME_URI}.
      */
     public static final String DOI_NAME_URI = "/{" + DOI_TEMPLATE + "}";
 
     /**
-     * URI to handle metadata.
+     * URI to handle metadata : {@value #METADATAS_URI}.
      */
     public static final String METADATAS_URI = "/metadata";
 
     /**
-     * URI to handle media.
+     * URI to handle media : {@value #MEDIA_URI}.
      */
     public static final String MEDIA_URI = "/media";
 
@@ -115,7 +135,7 @@ public class DoiMdsApplication extends BaseApplication {
     private final SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
     /**
-     * Application name
+     * Application name : {@value #NAME}
      */
     public static final String NAME = "Metadata Store Application";
 
@@ -132,10 +152,6 @@ public class DoiMdsApplication extends BaseApplication {
     /**
      * Creates the Digital Object Identifier server application.
      */
-    @Requirement(
-            reqId = "DOI_DOC_010",
-            reqName = "Documentation des interfaces"
-    )
     public DoiMdsApplication() {
         super();
         getLogger().entering(DoiMdsApplication.class.getName(), "Constructor");
@@ -157,21 +173,20 @@ public class DoiMdsApplication extends BaseApplication {
     /**
      * Creates a router for the DoiMdsApplication.
      *
-     * This router routes the resources for the Mds application, which are
-     * protected by a two authentication mechanisms (optional mechanisms) and an
+     * This router routes the resources for the Mds application, which is
+     * protected by two authentication mechanisms (optional mechanisms) and an
      * authorization by method.
      *
-     * @see DoiMdsApplication#createRouter the router that contains the the Mds
+     * @see DoiMdsApplication#createRouter the router that contains the Mds
      * resources
-     * @see DoiMdsApplication#createAuthenticator the authentication mechanism by login/password
-     * @see DoiMdsApplication#createTokenAuthenticator the authentication mechanism by token
-     * @see DoiMdsApplication#createMethodAuthorizer the authorization mechanism
+     * @see DoiMdsApplication#createAuthenticator the authentication mechanism
+     * by login/password
+     * @see DoiMdsApplication#createTokenAuthenticator the authentication
+     * mechanism by token
+     * @see DoiMdsApplication#createMethodAuthorizer the method authorization
+     * mechanism
      * @return Router
      */
-    @Requirement(
-            reqId = "DOI_AUTH_050",
-            reqName = "Vérification du projet"
-    )
     @Override
     public Restlet createInboundRoot() {
         getLogger().entering(DoiMdsApplication.class.getName(), "createInboundRoot");
@@ -202,18 +217,24 @@ public class DoiMdsApplication extends BaseApplication {
     /**
      * Creates the router. The router routes the following resources:
      * <ul>
-     * <li>{@link DoiMdsApplication#DOI_URI} to handle a DOI and its landing
-     * page</li>
-     * <li>{@link DoiMdsApplication#METADATAS_URI} to handle DOI metadata</li>
-     * <li>{@link DoiMdsApplication#MEDIA_URI} to handle media related to a DOI
+     * <li>{@link DoiMdsApplication#DOI_URI} to create/update a DOI and its
+     * landing page</li>
+     * <li>{@link DoiMdsApplication#DOI_URI} {@link DoiMdsApplication#DOI_NAME_URI}
+     * to get the URL of the landing page related to a given DOI</li>
+     * <li>{@link DoiMdsApplication#METADATAS_URI} to create/update DOI
+     * metadata</li>
+     * <li>{@link DoiMdsApplication#METADATAS_URI} {@link DoiMdsApplication#DOI_NAME_URI}
+     * to get DOI's metadata or delete a given DOI</li>
+     * <li>{@link DoiMdsApplication#MEDIA_URI} {@link DoiMdsApplication#DOI_NAME_URI}
+     * to handle media related to a DOI
      * </ul>
      *
-     * @see DoiResource
-     * @see MetadatasResource
-     * @see MetadataResource
-     * @see MediaResource
+     * @see DoiResource Handles a DOI and its landing page
+     * @see MetadatasResource Handles DOI metadata
+     * @see MetadataResource Handles DOI metadata
+     * @see MediaResource Handles media related to a DOI
      * @return the router
-     */
+     */    
     private Router createRouter() {
         getLogger().entering(DoiMdsApplication.class.getName(), "createRouter");
 
@@ -235,14 +256,6 @@ public class DoiMdsApplication extends BaseApplication {
      *
      * @return Authorizer based on authorized methods
      */
-    @Requirement(
-            reqId = "DOI_AUTH_030",
-            reqName = "Authentification par login/mot de passe"
-    )
-    @Requirement(
-            reqId = "DOI_AUTH_050",
-            reqName = "Vérification du projet"
-    )
     private MethodAuthorizer createMethodAuthorizer() {
         getLogger().entering(DoiMdsApplication.class.getName(), "createMethodAuthorizer");
 
@@ -263,6 +276,10 @@ public class DoiMdsApplication extends BaseApplication {
      * @return the object that contains the business to check
      * @see TokenBasedVerifier the token verification
      */
+    @Requirement(
+            reqId = Requirement.DOI_AUTH_020,
+            reqName = Requirement.DOI_AUTH_020_NAME
+    )
     private ChallengeAuthenticator createTokenAuthenticator() {
         getLogger().entering(DoiMdsApplication.class.getName(), "createTokenAuthenticator");
 
@@ -337,10 +354,6 @@ public class DoiMdsApplication extends BaseApplication {
      * @param response Response
      * @return the application description for WADL
      */
-    @Requirement(
-            reqId = "DOI_DOC_010",
-            reqName = "Documentation des interfaces"
-    )
     @Override
     public final ApplicationInfo getApplicationInfo(final Request request, final Response response) {
         final ApplicationInfo result = super.getApplicationInfo(request, response);

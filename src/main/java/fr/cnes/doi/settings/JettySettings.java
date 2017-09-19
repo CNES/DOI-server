@@ -5,6 +5,7 @@
  */
 package fr.cnes.doi.settings;
 
+import fr.cnes.doi.utils.spec.Requirement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.restlet.Server;
@@ -17,6 +18,10 @@ import org.restlet.ext.jetty.JettyServerHelper;
  *
  * @author Jean-Christophe Malapert
  */
+@Requirement(
+        reqId = Requirement.DOI_CONFIG_010,
+        reqName = Requirement.DOI_CONFIG_010_NAME
+)
 public final class JettySettings extends JettyServerHelper {
 
     private final DoiSettings settings;
@@ -30,8 +35,8 @@ public final class JettySettings extends JettyServerHelper {
     /**
      * Constructs settings for Jetty.
      *
-     * @param server
-     * @param settings
+     * @param server Jetty server
+     * @param settings DOI settings
      */
     public JettySettings(final Server server, final DoiSettings settings) {
         super(server);

@@ -13,6 +13,7 @@ import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.exception.TokenSecurityException;
 import fr.cnes.doi.security.TokenSecurity;
 import fr.cnes.doi.security.TokenSecurity.TimeUnit;
+import fr.cnes.doi.utils.spec.Requirement;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import java.util.logging.Level;
@@ -35,6 +36,10 @@ import org.restlet.resource.ResourceException;
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
+@Requirement(
+        reqId = Requirement.DOI_INTER_040,
+        reqName = Requirement.DOI_INTER_040_NAME
+)
 public class TokenResource extends BaseResource {
 
     /**
@@ -74,7 +79,11 @@ public class TokenResource extends BaseResource {
         this.tokenParam = getAttribute(TOKEN_TEMPLATE);
         this.tokenDB = ((AdminApplication) this.getApplication()).getTokenDB();
     }
-
+   
+    @Requirement(
+            reqId = Requirement.DOI_SRV_150,
+            reqName = Requirement.DOI_SRV_150_NAME
+    )     
     @Post
     public String createToken(Form info) {
         getLogger().entering(TokenResource.class.getName(), "createToken", info);
@@ -112,10 +121,10 @@ public class TokenResource extends BaseResource {
      * Checks input parameters
      *
      * @param mediaForm the parameters
-     * @ResourceException if PROJECT_ID_PARAMETER and IDENTIFIER_PARAMETER are
+     * @throws ResourceException - if PROJECT_ID_PARAMETER and IDENTIFIER_PARAMETER are
      * not set
-     */
-    private void checkInputs(final Form mediaForm) {
+     */  
+    private void checkInputs(final Form mediaForm) throws ResourceException {
         getLogger().entering(this.getClass().getName(), "checkInputs", mediaForm);
         StringBuilder errorMsg = new StringBuilder();
         if (isValueNotExist(mediaForm, IDENTIFIER_PARAMETER)) {
@@ -134,7 +143,11 @@ public class TokenResource extends BaseResource {
             throw ex;
         }
     }
-
+   
+    @Requirement(
+            reqId = Requirement.DOI_SRV_160,
+            reqName = Requirement.DOI_SRV_160_NAME
+    )     
     @Get
     public Representation getTokenInformation() {
         getLogger().entering(this.getClass().getName(), "getTokenInformation");
@@ -152,6 +165,10 @@ public class TokenResource extends BaseResource {
      * projects representation
      * @return Wadl representation for projects
      */
+    @Requirement(
+            reqId = Requirement.DOI_DOC_010,
+            reqName = Requirement.DOI_DOC_010_NAME
+    )      
     private RepresentationInfo jsonRepresentation() {
         final RepresentationInfo repInfo = new RepresentationInfo();
         repInfo.setMediaType(MediaType.APPLICATION_JSON);        
@@ -162,6 +179,10 @@ public class TokenResource extends BaseResource {
         return repInfo;
     }     
 
+    @Requirement(
+            reqId = Requirement.DOI_DOC_010,
+            reqName = Requirement.DOI_DOC_010_NAME
+    )      
     @Override
     protected void describeGet(MethodInfo info) {
         info.setName(Method.GET);
@@ -171,6 +192,10 @@ public class TokenResource extends BaseResource {
         addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_BAD_REQUEST, "Wrong token"));
     }   
 
+    @Requirement(
+            reqId = Requirement.DOI_DOC_010,
+            reqName = Requirement.DOI_DOC_010_NAME
+    )      
     @Override
     protected void describePost(MethodInfo info) {
         info.setName(Method.POST);

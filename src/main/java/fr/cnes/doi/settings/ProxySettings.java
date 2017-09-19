@@ -5,6 +5,7 @@
  */
 package fr.cnes.doi.settings;
 
+import fr.cnes.doi.utils.spec.Requirement;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
@@ -16,6 +17,10 @@ import org.restlet.data.ChallengeScheme;
  *
  * @author Jean-Christophe Malapert
  */
+@Requirement(
+        reqId = Requirement.DOI_CONFIG_010,
+        reqName = Requirement.DOI_CONFIG_010_NAME
+)
 public final class ProxySettings {
 
     /**

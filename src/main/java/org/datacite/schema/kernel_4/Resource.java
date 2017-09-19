@@ -6,7 +6,7 @@
 //
 package org.datacite.schema.kernel_4;
 
-import fr.cnes.doi.utils.Requirement;
+import fr.cnes.doi.utils.spec.Requirement;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

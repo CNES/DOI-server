@@ -5,7 +5,8 @@
  */
 package fr.cnes.doi.logging.security;
 
-import fr.cnes.doi.utils.Requirement;
+import fr.cnes.doi.utils.spec.CoverageAnnotation;
+import fr.cnes.doi.utils.spec.Requirement;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,8 +24,10 @@ import org.restlet.security.Role;
  * @author malapert
  */
 @Requirement(
-        reqId = "DOI_ARCHI_040",
-        reqName = "Logs"
+        reqId = Requirement.DOI_ARCHI_020,
+        reqName = Requirement.DOI_ARCHI_020_NAME,
+        coverage = CoverageAnnotation.PARTIAL,
+        comment = "Log4J n'est pas utilisé"        
 )
 public class DoiSecurityLogFilter extends Filter {
 

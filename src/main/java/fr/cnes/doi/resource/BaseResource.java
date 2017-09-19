@@ -5,7 +5,7 @@
  */
 package fr.cnes.doi.resource;
 
-import fr.cnes.doi.utils.Requirement;
+import fr.cnes.doi.utils.spec.Requirement;
 import java.util.List;
 import org.restlet.data.Form;
 import org.restlet.data.MediaType;
@@ -26,33 +26,35 @@ import org.restlet.resource.ResourceException;
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 @Requirement(
-        reqId = "DOI_DOC_010",
-        reqName = "Documentation des interfaces"
+        reqId = Requirement.DOI_DOC_010,
+        reqName = Requirement.DOI_DOC_010_NAME
 )
 public class BaseResource extends WadlServerResource {
 
     @Override
     protected void doInit() throws ResourceException {
-        super.doInit();        
+        super.doInit();
     }
-    
+
     public boolean isValueExist(final Form form, final String parameterName) {
         boolean result;
-        
-        if(isObjectNotExist(form)) {
+
+        if (isObjectNotExist(form)) {
             result = false;
-        } else result = form.getFirstValue(parameterName) != null;
+        } else {
+            result = form.getFirstValue(parameterName) != null;
+        }
         return result;
     }
-    
+
     public boolean isValueNotExist(final Form form, final String parameterName) {
         return !isValueExist(form, parameterName);
     }
-    
+
     public boolean isObjectExist(final Object obj) {
         return obj != null;
     }
-    
+
     public boolean isObjectNotExist(final Object obj) {
         return !isObjectExist(obj);
     }
@@ -176,7 +178,7 @@ public class BaseResource extends WadlServerResource {
      * @param mediaType media type
      * @param doc textual description
      * @param xmlElement XML element of the schema
-     * @return
+     * @return Wadl element for the representation
      */
     protected RepresentationInfo createQueryRepresentationDoc(final String identifier, final MediaType mediaType, final String doc, final String xmlElement) {
         RepresentationInfo rep = new RepresentationInfo();
@@ -186,19 +188,20 @@ public class BaseResource extends WadlServerResource {
         rep.setXmlElement(xmlElement);
         return rep;
     }
-    
+
     /**
      * projects representation
+     *
      * @return Wadl representation for projects
      */
     protected RepresentationInfo stringRepresentation() {
         final RepresentationInfo repInfo = new RepresentationInfo();
-        repInfo.setMediaType(MediaType.TEXT_PLAIN);        
+        repInfo.setMediaType(MediaType.TEXT_PLAIN);
         final DocumentationInfo docInfo = new DocumentationInfo();
         docInfo.setTitle("String Representation");
         docInfo.setTextContent("The representation contains a simple string.");
-        repInfo.setDocumentation(docInfo);        
+        repInfo.setDocumentation(docInfo);
         return repInfo;
-    }     
+    }
 
 }

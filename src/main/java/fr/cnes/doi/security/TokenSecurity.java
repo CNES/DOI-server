@@ -13,6 +13,7 @@ import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.utils.UniqueProjectName;
 import fr.cnes.doi.utils.Utils;
+import fr.cnes.doi.utils.spec.Requirement;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -30,9 +31,13 @@ import java.util.logging.Logger;
 import org.restlet.data.Status;
 
 /**
- *
+ * Security class for token generation.
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
+@Requirement(
+        reqId = Requirement.DOI_AUTH_020,
+        reqName = Requirement.DOI_AUTH_020_NAME
+)
 public class TokenSecurity {
 
     /**

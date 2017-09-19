@@ -8,7 +8,7 @@ package fr.cnes.doi.client;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fr.cnes.doi.exception.ClientCrossCiteException;
-import fr.cnes.doi.utils.Requirement;
+import fr.cnes.doi.utils.spec.Requirement;
 
 import java.io.IOException;
 import java.util.List;
@@ -21,8 +21,11 @@ import org.restlet.resource.ResourceException;
  * Client to query the citation service.
  *
  * @author Jean-Christophe Malapert (Jean-Christophe.malapert@cnes.fr)
- * @see "https://datacite.readme.io/v1.0/docs/api"
  */
+@Requirement(
+        reqId = Requirement.DOI_INTER_020,
+        reqName = Requirement.DOI_INTER_020_NAME
+)
 public class ClientCrossCiteCitation extends BaseClient {
 
     /**
@@ -91,10 +94,6 @@ public class ClientCrossCiteCitation extends BaseClient {
      * @throws fr.cnes.doi.exception.ClientCrossCiteException Will thrown an
      * Exception when a problem happens during the request to Cross Cite
      */
-    @Requirement(
-            reqId = "DOI_SRV_100",
-            reqName = "Listing des styles"
-    )
     public List<String> getStyles() throws ClientCrossCiteException {
         init();
         return getList(STYLE_URI);
@@ -107,10 +106,6 @@ public class ClientCrossCiteCitation extends BaseClient {
      * @throws fr.cnes.doi.exception.ClientCrossCiteException Will thrown an
      * Exception when a problem happens during the request to Cross Cite
      */
-    @Requirement(
-            reqId = "DOI_SRV_110",
-            reqName = "Listing des langues"
-    )
     public List<String> getLanguages() throws ClientCrossCiteException {
         init();
         return getList(LOCALE_URI);
@@ -126,14 +121,6 @@ public class ClientCrossCiteCitation extends BaseClient {
      * @throws fr.cnes.doi.exception.ClientCrossCiteException Will thrown an
      * Exception when a problem happens during the request to Cross Cite
      */
-    @Requirement(
-            reqId = "DOI_SRV_120",
-            reqName = "Formatage d'une citation"
-    )
-    @Requirement(
-            reqId = "DOI_ARCHI_030",
-            reqName = "Interface avec CrossCite Citation"
-    )
     public String getFormat(final String doiName, final String style, final String language) throws ClientCrossCiteException {
         init();
         String result;

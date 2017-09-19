@@ -5,6 +5,7 @@
  */
 package fr.cnes.doi.resource.citation;
 
+import fr.cnes.doi.application.BaseApplication;
 import java.util.List;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
@@ -14,7 +15,7 @@ import org.restlet.resource.Get;
 import org.restlet.resource.ResourceException;
 
 import fr.cnes.doi.exception.ClientCrossCiteException;
-import fr.cnes.doi.utils.Requirement;
+import fr.cnes.doi.utils.spec.Requirement;
 
 /**
  * The supported styles for citation.
@@ -24,7 +25,7 @@ public class StyleCitationResource extends BaseCitationResource {
 
     /**
      * Init.
-     * @throws ResourceException 
+     * @throws ResourceException - if a problem happens
      */
     @Override
     protected void doInit() throws ResourceException {
@@ -41,11 +42,15 @@ public class StyleCitationResource extends BaseCitationResource {
     /**
      * Returns the styles as JSON array for a citation.
      * @return the possibles styles for a citation
-     */
+     */  
     @Requirement(
-            reqId = "DOI_SRV_100",
-            reqName = "Listing des styles"
-    )     
+            reqId = Requirement.DOI_SRV_100,
+            reqName = Requirement.DOI_SRV_100_NAME
+    )   
+    @Requirement(
+            reqId = Requirement.DOI_MONIT_020,
+            reqName = Requirement.DOI_MONIT_020_NAME
+    )      
     @Get("json")
     public List<String> getStylesToJSON() {
         getLogger().entering(this.getClass().getName(), "getStylesToJSON");
@@ -55,6 +60,7 @@ public class StyleCitationResource extends BaseCitationResource {
             return result;
         } catch (ClientCrossCiteException ex) {
             getLogger().throwing(this.getClass().getName(), "getStylesToJSON", ex);
+            ((BaseApplication)getApplication()).sendAlertWhenDataCiteFailed(ex);                        
             throw new ResourceException(ex.getStatus(), ex.getDetailMessage());
         }
     } 
@@ -64,9 +70,13 @@ public class StyleCitationResource extends BaseCitationResource {
      * @return the possibles styles for a citation
      */
     @Requirement(
-            reqId = "DOI_SRV_100",
-            reqName = "Listing des styles"
+            reqId = Requirement.DOI_SRV_100,
+            reqName = Requirement.DOI_SRV_100_NAME
     )     
+    @Requirement(
+            reqId = Requirement.DOI_MONIT_020,
+            reqName = Requirement.DOI_MONIT_020_NAME
+    )      
     @Get("xml")
     public List<String> getStylesToXML() {
         try {
@@ -79,14 +89,13 @@ public class StyleCitationResource extends BaseCitationResource {
         }
     }  
           
-    
     /**
      * Describes the Get Method.
      * @param info Wadl description
-     */
+     */     
     @Requirement(
-            reqId = "DOI_DOC_010",
-            reqName = "Documentation des interfaces"
+            reqId = Requirement.DOI_DOC_010,
+            reqName = Requirement.DOI_DOC_010_NAME
     )      
     @Override
     protected final void describeGet(final MethodInfo info) {

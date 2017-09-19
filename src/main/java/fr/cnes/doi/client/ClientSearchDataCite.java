@@ -8,7 +8,7 @@ package fr.cnes.doi.client;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
-import fr.cnes.doi.utils.Requirement;
+import fr.cnes.doi.utils.spec.Requirement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -20,8 +20,8 @@ import org.restlet.representation.Representation;
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 @Requirement(
-        reqId = "DOI_DISPO_020",
-        reqName = "Vérification des landing pages"
+        reqId = Requirement.DOI_INTER_010,
+        reqName = Requirement.DOI_INTER_010_NAME
 )
 public class ClientSearchDataCite extends BaseClient {
     

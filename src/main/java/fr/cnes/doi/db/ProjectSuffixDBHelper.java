@@ -5,6 +5,7 @@
  */
 package fr.cnes.doi.db;
 
+import fr.cnes.doi.utils.spec.Requirement;
 import java.util.Map;
 import java.util.Observable;
 
@@ -12,6 +13,10 @@ import java.util.Observable;
  * Interface for handling the project suffix database.
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
+@Requirement(
+        reqId = Requirement.DOI_INTER_030,
+        reqName = Requirement.DOI_INTER_030_NAME
+)
 public abstract class ProjectSuffixDBHelper extends Observable {
     
     public static final String ADD_RECORD = "ADD";

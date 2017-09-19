@@ -6,7 +6,7 @@
 //
 package org.datacite.schema.kernel_4;
 
-import fr.cnes.doi.utils.Requirement;
+import fr.cnes.doi.utils.spec.Requirement;
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
@@ -49,8 +49,8 @@ import javax.xml.bind.annotation.XmlType;
  *
  */
 @Requirement(
-        reqId = "DOI_SRV_010",
-        reqName = "Création de métadonnées"
+        reqId = Requirement.DOI_SRV_010,
+        reqName = Requirement.DOI_SRV_010_NAME
 )
 @Requirement(
         reqId = "DOI_SRV_040",

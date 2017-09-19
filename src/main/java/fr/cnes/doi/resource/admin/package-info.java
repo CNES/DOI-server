@@ -4,6 +4,6 @@
  * and open the template in the editor.
  */
 /**
- * Provides classes for the AdminApplication.
+ * Provides resources for the AdminApplication.
  */
 package fr.cnes.doi.resource.admin;

@@ -302,5 +302,10 @@ public class Consts {
      * Allowed IPs for the administration application.
      */
     public static final String ADMIN_IP_ALLOWER = "Starter.admin.IP.allower";
+    
+    /**
+     * Level for which an alert must be send.
+     */
+    public static final String THRESHOLD_SPEED_PERCENT = "Starter.Monitoring.Threshold_speed";
 
 }

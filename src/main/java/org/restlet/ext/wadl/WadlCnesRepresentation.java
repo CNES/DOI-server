@@ -5,7 +5,7 @@
  */
 package org.restlet.ext.wadl;
 
-import fr.cnes.doi.utils.Requirement;
+import fr.cnes.doi.utils.spec.Requirement;
 import java.io.IOException;
 import java.net.URL;
 import java.util.logging.Level;
@@ -19,24 +19,27 @@ import org.restlet.representation.InputRepresentation;
 
 /**
  * Generates a WADL based on a patch of the Restlet XSLT.
+ *
  * @author Jean-Christoph Malapert
  */
 @Requirement(
-        reqId = "DOI_DOC_010",
-        reqName = "Documentation des interfaces"
+        reqId = Requirement.DOI_DOC_010,
+        reqName = Requirement.DOI_DOC_010_NAME
 )
 public class WadlCnesRepresentation extends WadlRepresentation {
-    
+
     /**
      * Constructs a new Wadl representation based on a new XSLT.
+     *
      * @param application application
      */
     public WadlCnesRepresentation(final ApplicationInfo application) {
         super(application);
     }
-    
+
     /**
      * Returns the HTML representation of the WADL
+     *
      * @return HTML representation of the WADL
      */
     @Override
@@ -64,6 +67,6 @@ public class WadlCnesRepresentation extends WadlRepresentation {
         }
 
         return representation;
-    }    
-    
+    }
+
 }

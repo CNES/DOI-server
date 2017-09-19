@@ -22,11 +22,12 @@ import java.util.logging.Level;
 import fr.cnes.doi.resource.admin.SuffixProjectsResource;
 import fr.cnes.doi.resource.admin.TokenResource;
 import fr.cnes.doi.services.LandingPageMonitoring;
-import fr.cnes.doi.utils.Requirement;
 import fr.cnes.doi.db.TokenDBHelper;
 import fr.cnes.doi.security.AllowerIP;
 import fr.cnes.doi.security.TokenSecurity;
 import fr.cnes.doi.settings.ProxySettings;
+import fr.cnes.doi.utils.spec.CoverageAnnotation;
+import fr.cnes.doi.utils.spec.Requirement;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.routing.Filter;
@@ -37,13 +38,38 @@ import org.restlet.routing.Redirector;
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
+@Requirement(
+        reqId = Requirement.DOI_SRV_130,
+        reqName = Requirement.DOI_SRV_130_NAME
+)
+@Requirement(
+        reqId = Requirement.DOI_SRV_140,
+        reqName = Requirement.DOI_SRV_140_NAME
+)
+@Requirement(
+        reqId = Requirement.DOI_SRV_150,
+        reqName = Requirement.DOI_SRV_150_NAME
+)
+@Requirement(
+        reqId = Requirement.DOI_SRV_160,
+        reqName = Requirement.DOI_SRV_160_NAME
+)
+@Requirement(
+        reqId = Requirement.DOI_SRV_170,
+        reqName = Requirement.DOI_SRV_170_NAME,
+        coverage = CoverageAnnotation.NONE
+)
+@Requirement(
+        reqId = Requirement.DOI_DISPO_020,
+        reqName = Requirement.DOI_DISPO_020_NAME
+)
 public class AdminApplication extends BaseApplication {
 
     /**
      * Default directory where the web site is located.
      */
     private static final String JS_DIR = "js";
-    
+
     /**
      * Location of the resources for the status page in the classpath.
      */
@@ -131,8 +157,8 @@ public class AdminApplication extends BaseApplication {
      * @return A task
      */
     @Requirement(
-            reqId = "DOI_DISPO_020",
-            reqName = "Vérification des landing pages"
+            reqId = Requirement.DOI_DISPO_020,
+            reqName = Requirement.DOI_DISPO_020_NAME
     )
     private TaskService createTaskService() {
         getLogger().entering(AdminApplication.class.getName(), "createTaskService");
@@ -234,13 +260,8 @@ public class AdminApplication extends BaseApplication {
      * </ul>
      * The website is located to {@link AdminApplication#JS_DIR} directory when
      * it is distributed by the DOI server.
+     * @return The router for the public web site
      */
-    @Requirement(
-            reqId = "DOI_IHM-*",
-            reqName = "IHM web - IHM de création d'un DOI - génération de métadonnées - IHM par service REST"
-            + "IHM admin",
-            comment = "TO DO here in /resources"
-    )
     private Router createWebSiteRouter() {
         getLogger().entering(AdminApplication.class.getName(), "createWebSiteRouter");
 
@@ -256,20 +277,21 @@ public class AdminApplication extends BaseApplication {
 
     /**
      * Adds route {@value #RESOURCE_URI} to the status page.
-     * 
-     * The resources of the status page are located in the classpath {@value #STATUS_PAGE_CLASSPATH}.
+     *
+     * The resources of the status page are located in the classpath
+     * {@value #STATUS_PAGE_CLASSPATH}.
      *
      * @param router router
      */
     private void addStatusPage(final Router router) {
         getLogger().entering(AdminApplication.class.getName(), "addStatusPage");
-        
+
         Directory directory = new Directory(getContext(), LocalReference.createClapReference(STATUS_PAGE_CLASSPATH));
         directory.setDeeplyAccessible(true);
         router.attach(RESOURCE_URI, directory);
-        
+
         getLogger().exiting(AdminApplication.class.getName(), "addStatusPage");
-        
+
     }
 
     /**
@@ -294,8 +316,8 @@ public class AdminApplication extends BaseApplication {
         };
         authentication.setNext(redirector);
         router.attach(STATUS_URI, authentication);
-        
-        getLogger().exiting(AdminApplication.class.getName(), "addServicesStatus");        
+
+        getLogger().exiting(AdminApplication.class.getName(), "addServicesStatus");
     }
 
     /**
@@ -345,9 +367,9 @@ public class AdminApplication extends BaseApplication {
      * Returns the token database.
      *
      * @return the token database
-     */
+     */    
     public TokenDBHelper getTokenDB() {
         return this.tokenDB;
-    }
+    }   
 
 }

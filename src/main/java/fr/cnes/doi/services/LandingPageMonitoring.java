@@ -8,17 +8,24 @@ package fr.cnes.doi.services;
 import fr.cnes.doi.client.ClientLandingPage;
 import fr.cnes.doi.client.ClientSearchDataCite;
 import fr.cnes.doi.settings.EmailSettings;
+import fr.cnes.doi.utils.spec.Requirement;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Provides a check on the availability of each landing page for a specific publisher
+ * Provides a check on the availability of each published landing page 
+ * publisher
+ *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
+@Requirement(
+        reqId = Requirement.DOI_DISPO_020,
+        reqName = Requirement.DOI_DISPO_020_NAME
+)
 public class LandingPageMonitoring implements Runnable {
-    
-    private static final Logger LOGGER = Logger.getLogger(LandingPageMonitoring.class.getName());   
+
+    private static final Logger LOGGER = Logger.getLogger(LandingPageMonitoring.class.getName());
 
     /**
      * Constructor.

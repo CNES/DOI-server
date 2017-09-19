@@ -5,10 +5,14 @@
  */
 package fr.cnes.doi.resource.mds;
 
+import fr.cnes.doi.application.BaseApplication;
 import fr.cnes.doi.application.DoiMdsApplication;
+import fr.cnes.doi.client.ClientMDS;
 import fr.cnes.doi.exception.ClientMdsException;
 import static fr.cnes.doi.security.UtilsHeader.SELECTED_ROLE_PARAMETER;
-import fr.cnes.doi.utils.Requirement;
+import fr.cnes.doi.settings.Consts;
+import fr.cnes.doi.settings.DoiSettings;
+import fr.cnes.doi.utils.spec.Requirement;
 
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -35,10 +39,11 @@ import org.restlet.util.Series;
 public class MediaResource extends BaseMdsResource {    
 
     private String mediaName;
+        
 
     /**
      * Init by getting the media name.
-     * @throws ResourceException
+     * @throws ResourceException - if a problem happens
      */
     @Override
     protected void doInit() throws ResourceException {   
@@ -49,21 +54,21 @@ public class MediaResource extends BaseMdsResource {
     /**
      * Returns the media related to a DOI.
      * This request returns list of pairs of media type and URLs associated with
-     * a given DOI. The difference status:
-     * <ul>
-     * <li>200 OK - operation successful</li>
-     * <li>401 Unauthorized - no login</li>
-     * <li>403 login problem or dataset belongs to another party</li>
-     * <li>404 Not Found - No media attached to the DOI or DOI does not exist in our database</li>
-     * <li>500 Internal Server Error - server internal error, try later and if problem persists please contact us</li>
-     * </ul>
+     * a given DOI when 200 status is returned (operation successful). 
      * @return the media related to a DOI
-     * @throws ResourceException Will be thrown when an error happens          
-     */
+     * @throws ResourceException - if an error happens <ul>
+     * <li>404 Not Found - No media attached to the DOI or DOI does not exist in our database</li>
+     * <li>500 Internal Server Error - Error when requesting DataCite</li>
+     * </ul>
+     */  
     @Requirement(
-            reqId = "DOI_SRV_090",
-            reqName = "Création des médias"
-    )     
+            reqId = Requirement.DOI_SRV_090,
+            reqName = Requirement.DOI_SRV_090_NAME
+    ) 
+    @Requirement(
+            reqId = Requirement.DOI_MONIT_020,
+            reqName = Requirement.DOI_MONIT_020_NAME
+    )      
     @Get
     public Representation getMedias() {
         getLogger().entering(getClass().getName(), "getMedias", this.mediaName);
@@ -75,8 +80,13 @@ public class MediaResource extends BaseMdsResource {
             medias = this.doiApp.getClient().getMedia(this.mediaName);
             rep = new StringRepresentation(medias, MediaType.TEXT_URI_LIST);
         } catch (ClientMdsException ex) {
-            getLogger().throwing(getClass().getName(), "getMedias", ex);            
-            throw new ResourceException(ex.getStatus(), ex.getDetailMessage());
+            getLogger().throwing(getClass().getName(), "getMedias", ex);    
+            if(ex.getStatus().getCode() == 404) {
+                throw new ResourceException(ex.getStatus(), ex.getDetailMessage());                
+            } else {
+                ((BaseApplication)getApplication()).sendAlertWhenDataCiteFailed(ex);
+                throw new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getDetailMessage());
+            }
         }
         
         getLogger().exiting(getClass().getName(), "getMedias", medias);        
@@ -86,39 +96,60 @@ public class MediaResource extends BaseMdsResource {
     /**
      * Creates a media related to an URL for a given DOI.
      * Will add/update media type/urls pairs to a DOI. Standard domain 
-     * restrictions check will be performed. The different status:
-     * <ul>
-     * <li>200 OK - operation successful</li>
-     * <li>400 Bad Request - one or more of the specified mime-types or urls are
+     * restrictions check will be performed. 200 status is returned when the 
+     * operation is successful.
+     * @param mediaForm Form
+     * @return short explanation of status code 
+     * @throws ResourceException - if an error happens :<ul>
+     * <li>400 Bad Request - {@value fr.cnes.doi.resource.mds.BaseMdsResource#DOI_PARAMETER} not provided or one or more of the specified mime-types or urls are
      * invalid (e.g. non supported mime-type, not allowed url domain, etc.)</li>
-     * <li>401 Unauthorized - no login</li>
-     * <li>403 Forbidden - login problem</li>
+     * <li>401 Unauthorized - user unauthorized</li>     
+     * <li>403 Forbidden - if the role is not allowed to use this feature or the user is not allow to create media</li>
+     * <li>404 Not found : The DOI does not exist
+     * <li>409 Conflict if a user is associated to more than one role</li>
      * <li>500 Internal Server Error - server internal error, try later and if 
      * problem persists please contact us</li>
      * </ul>
-     * @param mediaForm Form
-     * @return a media related to an URL for a given DOI 
-     * @throws ResourceException Will be thrown when an error happens               
-     */
+     */   
     @Requirement(
-            reqId = "DOI_SRV_080",
-            reqName = "Création d'un média"
+            reqId = Requirement.DOI_SRV_080,
+            reqName = Requirement.DOI_SRV_080_NAME
+    ) 
+    @Requirement(
+            reqId = Requirement.DOI_MONIT_020,
+            reqName = Requirement.DOI_MONIT_020_NAME
+    )   
+    @Requirement(
+            reqId = Requirement.DOI_INTER_070,
+            reqName = Requirement.DOI_INTER_070_NAME
+    )    
+    @Requirement(
+            reqId = Requirement.DOI_AUTO_020,
+            reqName = Requirement.DOI_AUTO_020_NAME
+    )     
+    @Requirement(
+            reqId = Requirement.DOI_AUTO_030,
+            reqName = Requirement.DOI_AUTO_030_NAME
     )     
     @Post
     public Representation createMedia(final Form mediaForm) throws ResourceException{
         getLogger().entering(getClass().getName(), "createMedia", new Object[]{this.mediaName, mediaForm.getMatrixString()});
         
-        checkInputs(mediaForm);
+        checkInputs(this.mediaName, mediaForm);
         final String result;
         try {         
             setStatus(Status.SUCCESS_OK);
-            Series headers = (Series) getRequestAttributes().get("org.restlet.http.headers");
-            String selectedRole = headers.getFirstValue(SELECTED_ROLE_PARAMETER, "");            
+            String selectedRole = extractSelectedRoleFromRequestIfExists();         
             checkPermission(mediaForm.getFirstValue(DOI_PARAMETER), selectedRole);            
             result = this.doiApp.getClient().createMedia(this.mediaName, mediaForm);
         } catch (ClientMdsException ex) {
-            getLogger().throwing(getClass().getName(), "createMedia", ex);                    
-            throw new ResourceException(ex.getStatus(), ex.getDetailMessage());
+            getLogger().throwing(getClass().getName(), "createMedia", ex);  
+            if(ex.getStatus().getCode() == 400) {
+                throw new ResourceException(ex.getStatus(), ex.getDetailMessage());                
+            } else {
+                ((BaseApplication)getApplication()).sendAlertWhenDataCiteFailed(ex);                          
+                throw new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getDetailMessage());                
+            }
         }
         
         getLogger().exiting(getClass().getName(), "createMedia", result);        
@@ -128,16 +159,27 @@ public class MediaResource extends BaseMdsResource {
     
     /**
      * Checks input parameters
+     * @param doi DOI number
      * @param mediaForm the parameters
-     * @ResourceException if DOI_PARAMETER is not set
-     */
-    private void checkInputs(final Form mediaForm) {
+     * @throws ResourceException - 400 Bad Request if DOI_PARAMETER is not set
+     */ 
+    @Requirement(
+            reqId = Requirement.DOI_INTER_070,
+            reqName = Requirement.DOI_INTER_070_NAME
+    )        
+    private void checkInputs(final String doi, final Form mediaForm) throws ResourceException {
         getLogger().entering(this.getClass().getName(), "checkInputs", mediaForm);
         StringBuilder errorMsg = new StringBuilder();
-        if (isValueNotExist(mediaForm, DOI_PARAMETER)) {
+        if(doi == null || doi.isEmpty() || !doi.startsWith(DoiSettings.getInstance().getString(Consts.INIST_DOI))) {
             getLogger().log(Level.FINE, "{0} value is not set", DOI_PARAMETER);
-            errorMsg = errorMsg.append(DOI_PARAMETER).append(" value is not set.");
-        }    
+            errorMsg = errorMsg.append(DOI_PARAMETER).append(" value is not set.");            
+        } else {
+            try {
+                ClientMDS.checkIfAllCharsAreValid(doi);
+            } catch (IllegalArgumentException ex) {
+                errorMsg = errorMsg.append(DOI_PARAMETER).append(" no valid syntax.");
+            }
+        }
         if(errorMsg.length() == 0) {        
             getLogger().fine("The form is valid");                    
         } else {
@@ -165,10 +207,10 @@ public class MediaResource extends BaseMdsResource {
     /**
      * Describes the GET method.
      * @param info Wadl description for a GET method
-     */
+     */ 
     @Requirement(
-            reqId = "DOI_DOC_010",
-            reqName = "Documentation des interfaces"
+            reqId = Requirement.DOI_DOC_010,
+            reqName = Requirement.DOI_DOC_010_NAME
     )      
     @Override
     protected final void describeGet(final MethodInfo info) {
@@ -177,8 +219,6 @@ public class MediaResource extends BaseMdsResource {
 
         addRequestDocToMethod(info, createQueryParamDoc(DoiMdsApplication.DOI_TEMPLATE, ParameterStyle.TEMPLATE, "DOI name", true, "xs:string"));
         addResponseDocToMethod(info, createResponseDoc(Status.SUCCESS_OK, "Operation successful", mediaRepresentation()));
-        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_UNAUTHORIZED, "no login", "explainRepresentation"));
-        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_FORBIDDEN, "login problem or dataset belongs to another party", "explainRepresentation"));
         addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_NOT_FOUND, "DOI does not exist in our database", "explainRepresentation"));
         addResponseDocToMethod(info, createResponseDoc(Status.SERVER_ERROR_INTERNAL, "server internal error, try later and if problem persists please contact us", "explainRepresentation"));
     } 
@@ -186,10 +226,10 @@ public class MediaResource extends BaseMdsResource {
     /**
      * Describes POST method.
      * @param info Wadl description for describing POST method
-     */
+     */ 
     @Requirement(
-            reqId = "DOI_DOC_010",
-            reqName = "Documentation des interfaces"
+            reqId = Requirement.DOI_DOC_010,
+            reqName = Requirement.DOI_DOC_010_NAME
     )      
     @Override
     protected final void describePost(final MethodInfo info) {
@@ -210,10 +250,10 @@ public class MediaResource extends BaseMdsResource {
                 Arrays.asList(createQueryParamDoc(SELECTED_ROLE_PARAMETER, ParameterStyle.HEADER, "A user can select one role when he is associated to several roles", false, "xs:string")), 
                 rep);        
         addResponseDocToMethod(info, createResponseDoc(Status.SUCCESS_OK, "Operation successful", "explainRepresentation"));
-        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_BAD_REQUEST, "invalid XML, wrong prefix", "explainRepresentation"));
-        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_UNAUTHORIZED, "no login", "explainRepresentation"));
-        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_FORBIDDEN, "login problem, quota exceeded", "explainRepresentation"));
+        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_BAD_REQUEST, DOI_PARAMETER+" not provided or one or more of the specified mime-types or urls are invalid (e.g. non supported mime-type, not allowed url domain, etc.)", "explainRepresentation"));
+        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_UNAUTHORIZED, "if no role is provided", "explainRepresentation"));
+        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_FORBIDDEN, "if the role is not allowed to use this feature or the user is not allow to create media", "explainRepresentation"));
+        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_CONFLICT, "if a user is associated to more than one role", "explainRepresentation"));        
         addResponseDocToMethod(info, createResponseDoc(Status.SERVER_ERROR_INTERNAL, "server internal error, try later and if problem persists please contact us", "explainRepresentation"));           
     }     
-      
 }

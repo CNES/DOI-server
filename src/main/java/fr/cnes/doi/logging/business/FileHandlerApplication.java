@@ -5,7 +5,8 @@
  */
 package fr.cnes.doi.logging.business;
 
-import fr.cnes.doi.utils.Requirement;
+import fr.cnes.doi.utils.spec.CoverageAnnotation;
+import fr.cnes.doi.utils.spec.Requirement;
 import java.io.IOException;
 import java.util.logging.FileHandler;
 
@@ -15,8 +16,10 @@ import java.util.logging.FileHandler;
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 @Requirement(
-        reqId = "DOI_ARCHI_040",
-        reqName = "Logs"
+        reqId = Requirement.DOI_ARCHI_020,
+        reqName = Requirement.DOI_ARCHI_020_NAME,
+        coverage = CoverageAnnotation.PARTIAL,
+        comment = "Log4J n'est pas utilisé"        
 )
 public class FileHandlerApplication extends FileHandler {
 

@@ -7,6 +7,7 @@ package fr.cnes.doi.application;
 
 import fr.cnes.doi.services.CnesStatusService;
 import fr.cnes.doi.settings.DoiSettings;
+import fr.cnes.doi.settings.EmailSettings;
 import org.restlet.data.ChallengeScheme;
 import org.restlet.ext.wadl.WadlApplication;
 import org.restlet.security.ChallengeAuthenticator;
@@ -18,7 +19,7 @@ import java.util.Set;
 import java.util.logging.Level;
 
 import fr.cnes.doi.settings.ProxySettings;
-import fr.cnes.doi.utils.Requirement;
+import fr.cnes.doi.utils.spec.Requirement;
 import org.restlet.ext.wadl.ApplicationInfo;
 import org.restlet.ext.wadl.WadlCnesRepresentation;
 import org.restlet.representation.Representation;
@@ -29,8 +30,8 @@ import org.restlet.representation.Representation;
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 @Requirement(
-        reqId = "DOI_DOC_010",
-        reqName = "Documentation des interfaces"
+        reqId = Requirement.DOI_DOC_010,
+        reqName = Requirement.DOI_DOC_010_NAME
 )
 public class BaseApplication extends WadlApplication {
 
@@ -47,12 +48,12 @@ public class BaseApplication extends WadlApplication {
     /**
      * Instance of configuration settings.
      */
-    protected final DoiSettings config;  
-    
+    protected final DoiSettings config;
+
     /**
      * Proxy settings.
      */
-    protected final ProxySettings proxySettings;    
+    protected final ProxySettings proxySettings;
 
     /**
      * This constructor creates an instance of proxySettings. By creating the
@@ -69,7 +70,7 @@ public class BaseApplication extends WadlApplication {
      * @see BaseApplication#createCoreService
      */
     public BaseApplication() {
-        this.config = DoiSettings.getInstance(); 
+        this.config = DoiSettings.getInstance();
         this.proxySettings = ProxySettings.getInstance();
         getServices().add(this.createCoreService(DEFAULT_CORS_ORIGIN, DEFAULT_CORS_CREDENTIALS));
         setStatusService(new CnesStatusService());
@@ -104,8 +105,8 @@ public class BaseApplication extends WadlApplication {
      * @return Authenticator based on a challenge scheme
      */
     @Requirement(
-            reqId = "DOI_AUTH_040",
-            reqName = "Association des projets"
+            reqId = Requirement.DOI_AUTH_010,
+            reqName = Requirement.DOI_AUTH_010_NAME
     )
     protected ChallengeAuthenticator createAuthenticator() {
         getLogger().entering(DoiMdsApplication.class.getName(), "createAuthenticator");
@@ -119,21 +120,24 @@ public class BaseApplication extends WadlApplication {
 
         return guard;
     }
-    
+
     /**
      * Creates HTML representation of the WADL.
      *
      * @param applicationInfo Application description
      * @return the HTML representation of the WADL
      */
-    @Requirement(
-            reqId = "DOI_DOC_010",
-            reqName = "Documentation des interfaces"
-    )
     @Override
     protected Representation createHtmlRepresentation(ApplicationInfo applicationInfo) {
         WadlCnesRepresentation wadl = new WadlCnesRepresentation(applicationInfo);
         return wadl.getHtmlRepresentation();
-    }    
+    }
+
+    public void sendAlertWhenDataCiteFailed(final Exception ex) {
+        String subject = "Datacite problem";
+        String message = "Dear administrator, an error has been detected"
+                + " coming from Datacite, please look to the Service status\n" + ex;
+        EmailSettings.getInstance().sendMessage(subject, message);
+    }
 
 }

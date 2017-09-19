@@ -26,17 +26,21 @@ import org.restlet.engine.Engine;
 import org.restlet.representation.Representation;
 
 import fr.cnes.doi.exception.ClientMdsException;
-import fr.cnes.doi.utils.Requirement;
+import fr.cnes.doi.utils.spec.Requirement;
+import java.util.Iterator;
+import org.restlet.data.CharacterSet;
+import org.restlet.data.Language;
+import org.restlet.representation.StringRepresentation;
 
 /**
  * Client to query Metadata store service at Datacite.
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
- * @see "https://datacite.readme.io/v1.0/docs/api"
+ * @see "https://mds.datacite.org/static/apidoc"
  */
 @Requirement(
-        reqId = "DOI_ARCHI_020",
-        reqName = "Interface avec Datacite Metadata Store"
+        reqId = Requirement.DOI_INTER_010,
+        reqName = Requirement.DOI_INTER_010_NAME
 )
 public class ClientMDS extends BaseClient {
 
@@ -365,7 +369,7 @@ public class ClientMDS extends BaseClient {
      * @throws IllegalArgumentException An exception is thrown when at least one
      * character is not part of 0-9a-zA-Z\\-._+:/ of a DOI name
      */
-    private void checkIfAllCharsAreValid(String test) {
+    public static void checkIfAllCharsAreValid(String test) {
         if (!test.matches("^[0-9a-zA-Z\\-._+:/\\s]+$")) {
             throw new IllegalArgumentException("Only these characters are allowed 0-9a-zA-Z\\-._+:/ in a DOI name");
         }
@@ -382,10 +386,6 @@ public class ClientMDS extends BaseClient {
      * are not provided or when one character at least in the DOI name is not
      * valid
      */
-    @Requirement(
-            reqId = "DOI_SRV_020",
-            reqName = "Enregistrement d'un DOI"
-    )
     private void checkInputForm(final Form form) {
         Map<String, String> map = form.getValuesMap();
         if (map.containsKey(POST_DOI) && map.containsKey(POST_URL)) {
@@ -419,11 +419,14 @@ public class ClientMDS extends BaseClient {
     }
 
     /**
-     * This request returns an URL associated with a given DOI.
+     * This request returns an URL associated with a given DOI. A 200 status is
+     * an operation successful. The DOI prefix may replace according to the
+     * {@link ClientMDS#context}.
      *
-     * The different status:
-     * <ul>
-     * <li>200 OK - operation successful</li>
+     * @param doiName DOI name
+     * @return an URL or no content (DOI is known to MDS, but is not minted (or
+     * not resolvable e.g. due to handle's latency))
+     * @throws ClientMdsException - if an error happens <ul>
      * <li>204 No Content - DOI is known to MDS, but is not minted (or not
      * resolvable e.g. due to handle's latency)</li>
      * <li>401 Unauthorized - no login</li>
@@ -432,17 +435,8 @@ public class ClientMDS extends BaseClient {
      * <li>500 Internal Server Error - server internal error, try later and if
      * problem persists please contact us</li>
      * </ul>
-     * The DOI prefix may replace according to the {@link ClientMDS#context}.
-     *
-     * @param doiName DOI name
-     * @return an URL or no content (DOI is known to MDS, but is not minted (or
-     * not resolvable e.g. due to handle's latency))
-     * @throws ClientMdsException An exception is thrown for a status!=2xx
+     * @see "https://mds.datacite.org/static/apidoc#tocAnchor-13"
      */
-    @Requirement(
-            reqId = "DOI_SRV_070",
-            reqName = "Récupération de l'URL"
-    )
     public String getDoi(final String doiName) throws ClientMdsException {
         String result = null;
         Reference url = createReferenceWithDOI(DOI_RESOURCE, doiName);
@@ -462,15 +456,11 @@ public class ClientMDS extends BaseClient {
 
     /**
      * This request returns a list of all DOIs for the requesting datacentre.
-     *
-     * There is no guaranteed order. The different status:
-     * <ul>
-     * <li>200 OK - operation successful</li>
-     * <li>204 No Content - no DOIs founds</li>
-     * </ul>
+     * There is no guaranteed order. A 200 status is an operation successful.
      *
      * @return a list of all DOI or no content when no DOIs founds
-     * @throws ClientMdsException An exception is thrown for a status!=2xx
+     * @throws ClientMdsException 204 No Content - no DOIs founds
+     * @see "https://mds.datacite.org/static/apidoc#tocAnchor-14"
      */
     public String getDoiCollection() throws ClientMdsException {
         String result = null;
@@ -494,12 +484,14 @@ public class ClientMDS extends BaseClient {
      * This method will attempt to update URL if you specify existing DOI.
      * Standard domains and quota restrictions check will be performed. A
      * Datacentre's doiQuotaUsed will be increased by 1. A new record in
-     * Datasets will be created.
+     * Datasets will be created when 201 Created status is returned.
      *
-     * <p>
-     * The different status:
-     * <ul>
-     * <li>201 Created - operation successful</li>
+     * The DOI prefix may replace according to the {@link ClientMDS#context}.
+     *
+     * @param form A form with the following attributes doi and url
+     * @return short explanation of status code e.g. CREATED,
+     * HANDLE_ALREADY_EXISTS etc
+     * @throws ClientMdsException - if an error happens <ul>
      * <li>400 Bad Request - request body must be exactly two lines: DOI and
      * URL; wrong domain, wrong prefix</li>
      * <li>401 Unauthorized - no login</li>
@@ -508,17 +500,8 @@ public class ClientMDS extends BaseClient {
      * <li>500 Internal Server Error - server internal error, try later and if
      * problem persists please contact us</li>
      * </ul>
-     * The DOI prefix may replace according to the {@link ClientMDS#context}.
-     *
-     * @param form A form with the following attributes doi and url
-     * @return short explanation of status code e.g. CREATED,
-     * HANDLE_ALREADY_EXISTS etc
-     * @throws ClientMdsException Will throw an exception when status!=2xx
+     * @see "https://mds.datacite.org/static/apidoc#tocAnchor-15"
      */
-    @Requirement(
-            reqId = "DOI_SRV_020",
-            reqName = "Enregistrement d'un DOI"
-    )
     public String createDoi(final Form form) throws ClientMdsException {
         try {
             String result;
@@ -530,6 +513,7 @@ public class ClientMDS extends BaseClient {
             String requestBody = POST_DOI + "=" + form.getFirstValue(POST_DOI) + "\n" + POST_URL + "=" + form.getFirstValue(POST_URL);
             requestBody = new String(requestBody.getBytes("UTF-8"), "UTF-8");
             this.client.getRequestAttributes().put("charset", "UTF-8");
+            this.client.getRequestAttributes().put("Content-Type", "text/plain");
             this.client.getLogger().log(Level.INFO, "POST {0} with parameters {1}", new Object[]{url, requestBody});
             Representation rep = this.client.post(requestBody, MediaType.TEXT_PLAIN);
             Status responseStatus = this.client.getStatus();
@@ -566,11 +550,12 @@ public class ClientMDS extends BaseClient {
 
     /**
      * This request returns the most recent version of metadata associated with
-     * a given DOI.
+     * a given DOI. A status of 200 is an operation successful. The DOI prefix
+     * may replace according to the {@link ClientMDS#context}.
      *
-     * The different status:
-     * <ul>
-     * <li>200 OK - operation successful</li>
+     * @param doiName DOI name
+     * @return XML representing a dataset
+     * @throws ClientMdsException - if an error happens <ul>
      * <li>401 Unauthorized - no login</li>
      * <li>403 Forbidden - login problem or dataset belongs to another
      * party</li>
@@ -580,11 +565,6 @@ public class ClientMDS extends BaseClient {
      * <li>500 Internal Server Error - server internal error, try later and if
      * problem persists please contact us</li>
      * </ul>
-     * The DOI prefix may replace according to the {@link ClientMDS#context}.
-     *
-     * @param doiName DOI name
-     * @return XML representing a dataset
-     * @throws ClientMdsException Will throw an exception when status != 2xx
      */
     public Resource getMetadataAsObject(final String doiName) throws ClientMdsException {
         final Representation rep = getMetadata(doiName);
@@ -592,9 +572,13 @@ public class ClientMDS extends BaseClient {
     }
 
     /**
-     * Returns the metadata based on its DOI name. The different responses are
-     * the followings :
-     * <ul>
+     * Returns the metadata based on its DOI name. A status of 200 is an
+     * operation successful. The DOI prefix may replace according to the
+     * {@link ClientMDS#context}.
+     *
+     * @param doiName DOI name
+     * @return the metadata as XML
+     * @throws ClientMdsException - if an error happens <ul>
      * <li>200 OK - operation successful</li>
      * <li>401 Unauthorized - no login</li>
      * <li>403 Forbidden - login problem or dataset belongs to another
@@ -605,21 +589,12 @@ public class ClientMDS extends BaseClient {
      * <li>500 Internal Server Error - server internal error, try later and if
      * problem persists please contact us</li>
      * </ul>
-     * The DOI prefix may replace according to the {@link ClientMDS#context}.
-     *
-     * @param doiName DOI name
-     * @return the metadata as XML
-     * @throws ClientMdsException Will throw when a problem happens with
-     * datacite
+     * @see "https://mds.datacite.org/static/apidoc#tocAnchor-15"
      */
-    @Requirement(
-            reqId = "DOI_SRV_060",
-            reqName = "Récupération des métadonnées"
-    )
     public Representation getMetadata(final String doiName) throws ClientMdsException {
         Reference url = createReferenceWithDOI(METADATA_RESOURCE, doiName);
         Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "GET {0}", url.toString());
-        this.client.setReference(url);
+        this.client.setReference(url);                
         this.client.getLogger().log(Level.INFO, "GET {0}", url);
         Representation rep = this.client.get(MediaType.APPLICATION_XML);
         Status status = this.client.getStatus();
@@ -632,59 +607,43 @@ public class ClientMDS extends BaseClient {
     }
 
     /**
-     * This request stores new version of metadata.
+     * This request stores new version of metadata. Creates metadata with 201
+     * status when operation successful. The DOI prefix may replace according to
+     * the {@link ClientMDS#context}.
      *
-     * The different status:
-     * <ul>
-     * <li>201 Created - operation successful</li>
+     * @param entity A valid XML
+     * @return short explanation of status code e.g.
+     * CREATED,HANDLE_ALREADY_EXISTS etc
+     * @throws ClientMdsException - if an error happens <ul>
      * <li>400 Bad Request - invalid XML, wrong prefix</li>
      * <li>401 Unauthorized - no login</li>
      * <li>403 Forbidden - login problem, quota exceeded</li>
      * <li>500 Internal Server Error - server internal error, try later and if
      * problem persists please contact us</li>
      * </ul>
-     * The DOI prefix may replace according to the {@link ClientMDS#context}.
-     *
-     * @param entity A valid XML
-     * @return short explanation of status code e.g. CREATED,
-     * HANDLE_ALREADY_EXISTS etc
-     * @throws ClientMdsException Will throw an error when a problem happens
-     * with DataCite
+     * @see "https://mds.datacite.org/static/apidoc#tocAnchor-18"
      */
-    @Requirement(
-            reqId = "DOI_SRV_010",
-            reqName = "Création de métadonnées"
-    )
     public String createMetadata(final Representation entity) throws ClientMdsException {
         Resource resource = parseDataciteResource(entity);
         return this.createMetadata(resource);
     }
 
     /**
-     * Creates metadata. The different status:
-     * <ul>
-     * <li>201 Created - operation successful</li>
+     * Creates metadata with 201 status when operation successful. The DOI
+     * prefix may replace according to the {@link ClientMDS#context}.
+     *
+     * @param entity Metadata
+     * @return short explanation of status code e.g. CREATED,
+     * HANDLE_ALREADY_EXISTS etc
+     * @throws ClientMdsException - if an error happens <ul>
      * <li>400 Bad Request - invalid XML, wrong prefix</li>
      * <li>401 Unauthorized - no login</li>
      * <li>403 Forbidden - login problem, quota exceeded</li>
      * <li>500 Internal Server Error - server internal error, try later and if
      * problem persists please contact us</li>
      * </ul>
-     * The DOI prefix may replace according to the {@link ClientMDS#context}.
-     *
-     * @param entity Metadata
-     * @return short explanation of status code e.g. CREATED,
-     * HANDLE_ALREADY_EXISTS etc
-     * @throws ClientMdsException Will throw an exception for status != 2xx
+     * @see "https://mds.datacite.org/static/apidoc#tocAnchor-18"
      */
-    @Requirement(
-            reqId = "DOI_SRV_010",
-            reqName = "Création de métadonnées"
-    )
-    @Requirement(
-            reqId = "DOI_SRV_040",
-            reqName = "Mise à jour des métadonnées d'un DOI"
-    )
     public String createMetadata(final Resource entity) throws ClientMdsException {
         String result = null;
         Identifier id = entity.getIdentifier();
@@ -707,9 +666,12 @@ public class ClientMDS extends BaseClient {
      * This request marks a dataset as 'inactive'.
      *
      * To activate it again, POST new metadata or set the isActive-flag in the
-     * user interface. The different status:
-     * <ul>
-     * <li>200 OK - operation successful: dataset deactivated</li>
+     * user interface. A status of 200 is an operation successful. The DOI
+     * prefix may replace according to the {@link ClientMDS#context}.
+     *
+     * @param doiName DOI name
+     * @return XML representing a dataset
+     * @throws ClientMdsException - if an error happens <ul>
      * <li>401 Unauthorized - no login</li>
      * <li>403 Forbidden - login problem or dataset belongs to another
      * party</li>
@@ -717,11 +679,7 @@ public class ClientMDS extends BaseClient {
      * <li>500 Internal Server Error - server internal error, try later and if
      * problem persists please contact us</li>
      * </ul>
-     * The DOI prefix may replace according to the {@link ClientMDS#context}.
-     *
-     * @param doiName DOI name
-     * @return XML representing a dataset
-     * @throws ClientMdsException Will throw an exception for status != 2xx
+     * @see "https://mds.datacite.org/static/apidoc#tocAnchor-19"
      */
     public Resource deleteMetadataDoiAsObject(final String doiName) throws ClientMdsException {
         Representation rep = this.deleteMetadata(doiName);
@@ -732,9 +690,12 @@ public class ClientMDS extends BaseClient {
      * This request marks a dataset as 'inactive'.
      *
      * To activate it again, POST new metadata or set the isActive-flag in the
-     * user interface. The different status:
-     * <ul>
-     * <li>200 OK - operation successful: dataset deactivated</li>
+     * user interface. A status of 200 is an operation successful The DOI prefix
+     * may replace according to the {@link ClientMDS#context}.
+     *
+     * @param doiName DOI name
+     * @return the deleted metadata
+     * @throws ClientMdsException - if an error happens <ul>
      * <li>401 Unauthorized - no login</li>
      * <li>403 Forbidden - login problem or dataset belongs to another
      * party</li>
@@ -742,17 +703,8 @@ public class ClientMDS extends BaseClient {
      * <li>500 Internal Server Error - server internal error, try later and if
      * problem persists please contact us</li>
      * </ul>
-     * The DOI prefix may replace according to the {@link ClientMDS#context}.
-     *
-     * @param doiName DOI name
-     * @return the deleted metadata
-     * @throws ClientMdsException throw an error when a problem happens with
-     * DataCite
+     * @see "https://mds.datacite.org/static/apidoc#tocAnchor-19"
      */
-    @Requirement(
-            reqId = "DOI_SRV_050",
-            reqName = "Désactivation d'un DOI"
-    )
     public Representation deleteMetadata(final String doiName) throws ClientMdsException {
         Reference url = createReferenceWithDOI(METADATA_RESOURCE, doiName);
         Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "DELETE {0}", url.toString());
@@ -769,11 +721,12 @@ public class ClientMDS extends BaseClient {
 
     /**
      * This request returns list of pairs of media type and URLs associated with
-     * a given DOI.
+     * a given DOI. A status of 200 is an operation successful. The DOI prefix
+     * may replace according to the {@link ClientMDS#context}.
      *
-     * The difference status:
-     * <ul>
-     * <li>200 OK - operation successful</li>
+     * @param doiName DOI name
+     * @return list of pairs of media type and URLs
+     * @throws ClientMdsException - if an error happens <ul>
      * <li>401 Unauthorized - no login</li>
      * <li>403 login problem or dataset belongs to another party</li>
      * <li>404 Not Found - No media attached to the DOI or DOI does not exist in
@@ -781,11 +734,7 @@ public class ClientMDS extends BaseClient {
      * <li>500 Internal Server Error - server internal error, try later and if
      * problem persists please contact us</li>
      * </ul>
-     * The DOI prefix may replace according to the {@link ClientMDS#context}.
-     *
-     * @param doiName DOI name
-     * @return list of pairs of media type and URLs
-     * @throws ClientMdsException Will throw an exception for status != 2xx
+     * @see "https://mds.datacite.org/static/apidoc#tocAnchor-21"
      */
     public String getMedia(final String doiName) throws ClientMdsException {
         String result;
@@ -803,12 +752,17 @@ public class ClientMDS extends BaseClient {
     }
 
     /**
-     * Will add/update media type/urls pairs to a DOI.
+     * Will add/update media type/urls pairs to a DOI. A status of 200 is an
+     * operation successful.Standard domain restrictions check will be
+     * performed. The DOI prefix may replace according to the
+     * {@link ClientMDS#context}.
      *
-     * Standard domain restrictions check will be performed. The different
-     * status:
-     * <ul>
-     * <li>200 OK - operation successful</li>
+     * @param doiName DOI identifier
+     * @param form Multiple lines in the following format{mime-type}={url} where
+     * {mime-type} and {url} have to be replaced by your mime type and URL,
+     * UFT-8 encoded.
+     * @return short explanation of status code
+     * @throws ClientMdsException - if an error happens <ul>
      * <li>400 Bad Request - one or more of the specified mime-types or urls are
      * invalid (e.g. non supported mime-type, not allowed url domain, etc.)</li>
      * <li>401 Unauthorized - no login</li>
@@ -816,25 +770,15 @@ public class ClientMDS extends BaseClient {
      * <li>500 Internal Server Error - server internal error, try later and if
      * problem persists please contact us</li>
      * </ul>
-     * The DOI prefix may replace according to the {@link ClientMDS#context}.
-     *
-     * @param doiName DOI identifier
-     * @param form Multiple lines in the following format{mime-type}={url} where
-     * {mime-type} and {url} have to be replaced by your mime type and URL,
-     * UFT-8 encoded.
-     * @return short explanation of status code
-     * @throws ClientMdsException Will throw an exception for status != 2xx
+     * @see "https://mds.datacite.org/static/apidoc#tocAnchor-22"
      */
-    @Requirement(
-            reqId = "DOI_SRV_080",
-            reqName = "Création d'un média"
-    )
     public String createMedia(final String doiName, final Form form) throws ClientMdsException {
         String result;
         Reference url = createReferenceWithDOI(METADATA_RESOURCE, doiName);
         Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "POST {0}", url.toString());
         this.client.setReference(url);
-        Representation response = this.client.post(form);
+        Representation entity = createEntity(form);
+        Representation response = this.client.post(entity, MediaType.TEXT_PLAIN);
         Status responseStatus = this.client.getStatus();
         try {
             result = this.getText(response, responseStatus);
@@ -842,6 +786,25 @@ public class ClientMDS extends BaseClient {
             this.client.release();
         }
         return result;
+    }
+
+    /**
+     * Creates an entity based on the form. The form contains a set of
+     * mime-type/url
+     *
+     * @param mediaForm form
+     * @return Text entity
+     */
+    private Representation createEntity(final Form mediaForm) {
+        Iterator<Parameter> iter = mediaForm.iterator();
+        StringBuilder entity = new StringBuilder();
+        while (iter.hasNext()) {
+            Parameter param = iter.next();
+            String mimeType = param.getName();
+            String url = param.getValue();
+            entity = entity.append(mimeType).append("=").append(url).append("\n");
+        }
+        return new StringRepresentation(entity.toString(),MediaType.TEXT_PLAIN, Language.ENGLISH, CharacterSet.UTF_8);
     }
 
 }

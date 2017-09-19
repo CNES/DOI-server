@@ -5,7 +5,6 @@
  */
 package fr.cnes.doi.client;
 
-import fr.cnes.doi.utils.Requirement;
 import java.util.ArrayList;
 import java.util.List;
 import org.restlet.data.Status;
@@ -18,10 +17,6 @@ import org.restlet.resource.ResourceException;
  * Checks the status of the landing page.
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-@Requirement(
-        reqId = "DOI_DISPO_020",
-        reqName = "Vérification des landing pages"
-)
 public class ClientLandingPage extends BaseClient {
 
     private static final String BASE_URI = "http://doi.org";

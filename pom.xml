@@ -98,6 +98,39 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin> 
+                <groupId>org.apache.maven.plugins</groupId> 
+                <artifactId>maven-javadoc-plugin</artifactId> 
+                <version>3.0.0-M1</version> 
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>                
+                <configuration>
+                    <show>private</show>
+                    <!--<encoding>UTF-8</encoding>-->
+                    <!--<docencoding>UTF-8</docencoding>-->
+                    <!--<charset>UTF-8</charset>-->
+                    <groups>
+                        <group>
+                            <title>Core Packages</title>
+                            <packages>fr.cnes.doi.server:fr.cnes.doi.application*:fr.cnes.doi.resource*:fr.cnes.doi.security*:fr.cnes.doi.services</packages>
+                        </group>                                             
+                        <group>
+                            <title>Extension Packages</title>
+                            <packages>fr.cnes.doi.plugin*:fr.cnes.doi.db</packages>
+                        </group>
+                        <group>
+                            <title>Utility Packages</title>
+                            <packages>fr.cnes.doi.settings:fr.cnes.doi.exception:fr.cnes.doi.logging*:fr.cnes.doi.client:org.datacite.*:fr.cnes.doi.utils</packages>
+                        </group>                          
+                    </groups>
+                </configuration>                
+            </plugin>              
         </plugins>
     </build>
     <dependencies>
@@ -195,14 +228,31 @@
     </developers>
     <reporting>
         <plugins>
-            <plugin> 
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId> 
                 <artifactId>maven-javadoc-plugin</artifactId> 
-                <version>2.10.4</version> 
+                <version>3.0.0-M1</version> 
                 <configuration>
                     <show>private</show>
+                    <encoding>UTF-8</encoding>
+                    <docencoding>UTF-8</docencoding>
+                    <charset>UTF-8</charset>
+                    <groups>
+                        <group>
+                            <title>Core Packages</title>
+                            <packages>fr.cnes.doi.server:fr.cnes.doi.application*:fr.cnes.doi.resource*:fr.cnes.doi.security*:fr.cnes.doi.services</packages>
+                        </group>                                             
+                        <group>
+                            <title>Extension Packages</title>
+                            <packages>fr.cnes.doi.plugin*:fr.cnes.doi.db</packages>
+                        </group>
+                        <group>
+                            <title>Utility Packages</title>
+                            <packages>fr.cnes.doi.settings:fr.cnes.doi.exception:fr.cnes.doi.logging*:fr.cnes.doi.client:org.datacite.*:fr.cnes.doi.utils</packages>
+                        </group>                          
+                    </groups>
                 </configuration>                
-            </plugin>          
+            </plugin>              
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>

@@ -40,8 +40,8 @@ import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.settings.EmailSettings;
 import fr.cnes.doi.settings.JettySettings;
 import fr.cnes.doi.settings.ProxySettings;
-import fr.cnes.doi.utils.Requirement;
 import fr.cnes.doi.utils.Utils;
+import fr.cnes.doi.utils.spec.Requirement;
 
 /**
  * DoiServer contains the configuration of this server and the methods to
@@ -98,10 +98,6 @@ public class DoiServer extends Component {
     /**
      * Init log services.
      */
-    @Requirement(
-            reqId = "DOI_ARCHI_040",
-            reqName = "Logs"
-    )
     private void initLogServices() {
         LOGGER.entering(getClass().getName(), "initLogServices");
         this.getLogService().setLoggerName(Utils.HTTP_LOGGER_NAME);
@@ -130,9 +126,9 @@ public class DoiServer extends Component {
      * Configures the Server in HTTP and HTTPS.
      */
     @Requirement(
-            reqId = "DOI_ARCHI_010",
-            reqName = "Protocole HTTP et HTTPS pour les API"
-    )
+            reqId = Requirement.DOI_ARCHI_010,
+            reqName = Requirement.DOI_ARCHI_010_NAME
+    )      
     private void configureServer() {
         LOGGER.entering(getClass().getName(), "init");
 
@@ -147,10 +143,6 @@ public class DoiServer extends Component {
     /**
      * Inits the HTTP server.
      */
-    @Requirement(
-            reqId = "DOI_ARCHI_010",
-            reqName = "Protocole HTTP et HTTPS pour les API"
-    )
     private void initHttpServer() {
         Server serverHttp = startHttpServer(settings.getInt(Consts.SERVER_HTTP_PORT, DEFAULT_HTTP_PORT));
         this.getServers().add(serverHttp);
@@ -160,10 +152,6 @@ public class DoiServer extends Component {
     /**
      * Inits the HTTPS server.
      */
-    @Requirement(
-            reqId = "DOI_ARCHI_010",
-            reqName = "Protocole HTTP et HTTPS pour les API"
-    )
     private void initHttpsServer() {
         Server serverHttps = startHttpsServer(settings.getInt(Consts.SERVER_HTTPS_PORT, DEFAULT_HTTPS_PORT));
         this.getServers().add(serverHttps);
@@ -184,10 +172,6 @@ public class DoiServer extends Component {
      * Inits supported protocols. Theses protocols are used by the server to
      * access to resources
      */
-    @Requirement(
-            reqId = "DOI_ARCHI_010",
-            reqName = "Protocole HTTP et HTTPS pour les API"
-    )
     private void initClients() {
         this.getClients().add(Protocol.HTTP);
         this.getClients().add(Protocol.HTTPS);
@@ -198,14 +182,6 @@ public class DoiServer extends Component {
     /**
      * Routes the applications.
      */
-    @Requirement(
-            reqId = "DOI_ARCHI_010",
-            reqName = "Protocole HTTP et HTTPS pour les API"
-    )
-    @Requirement(
-            reqId = "DOI_AUTH_040",
-            reqName = "Association des projets"
-    )
     private void initAttachApplication() {
         Application appDoiProject = new DoiMdsApplication();
         Application appAdmin = new AdminApplication();
@@ -238,10 +214,6 @@ public class DoiServer extends Component {
      * @param port HTTP port
      * @return the HTTP server
      */
-    @Requirement(
-            reqId = "DOI_ARCHI_010",
-            reqName = "Protocole HTTP et HTTPS pour les API"
-    )
     private Server startHttpServer(final Integer port) {
         LOGGER.entering(getClass().getName(), "startHttpServer", port);
         Server server = new Server(Protocol.HTTP, port, this);
@@ -255,10 +227,6 @@ public class DoiServer extends Component {
      * @param port HTTPS port
      * @return the HTTPS server
      */
-    @Requirement(
-            reqId = "DOI_ARCHI_010",
-            reqName = "Protocole HTTP et HTTPS pour les API"
-    )
     private Server startHttpsServer(final Integer port) {
         LOGGER.entering(getClass().getName(), "startHttpsServer", port);
         String pathKeyStore;
@@ -302,10 +270,6 @@ public class DoiServer extends Component {
      *
      * @return the path of the new location of the keystore.
      */
-    @Requirement(
-            reqId = "DOI_ARCHI_010",
-            reqName = "Protocole HTTP et HTTPS pour les API"
-    )
     private String extractKeyStoreToPath() {
         String result;
         Representation jks = new ClientResource(LocalReference.createClapReference("class/doiServerKey.jks")).get();

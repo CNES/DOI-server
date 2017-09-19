@@ -7,6 +7,7 @@ package fr.cnes.doi.resource.admin;
 
 import fr.cnes.doi.resource.BaseResource;
 import fr.cnes.doi.utils.UniqueProjectName;
+import fr.cnes.doi.utils.spec.Requirement;
 import java.util.Map;
 import org.restlet.data.Form;
 import org.restlet.data.MediaType;
@@ -43,16 +44,28 @@ public class SuffixProjectsResource extends BaseResource {
         setDescription("This resource handles the project suffix in the DOI name");
     }
 
+    @Requirement(
+            reqId = Requirement.DOI_SRV_140,
+            reqName = Requirement.DOI_SRV_140_NAME
+    )     
     @Get("json")
     public Map<String, Integer> getProjectsNameAsJson() {
         return UniqueProjectName.getInstance().getProjects();
     }
 
+    @Requirement(
+            reqId = Requirement.DOI_SRV_140,
+            reqName = Requirement.DOI_SRV_140_NAME
+    )     
     @Get("xml")
     public Map<String, Integer> getProjectsNameAsXml() {
         return UniqueProjectName.getInstance().getProjects();
     }
 
+    @Requirement(
+            reqId = Requirement.DOI_SRV_130,
+            reqName = Requirement.DOI_SRV_130_NAME
+    )     
     @Post
     public Representation createProject(final Form mediaForm) {
         getLogger().entering(SuffixProjectsResource.class.getName(), "createProject", mediaForm);
@@ -69,30 +82,39 @@ public class SuffixProjectsResource extends BaseResource {
      * Checks input parameters
      *
      * @param mediaForm the parameters
-     * @ResourceException if PROJECT_NAME_PARAMETER is not set
+     * @throws ResourceException - if PROJECT_NAME_PARAMETER is not set
      */
-    private void checkInputs(final Form mediaForm) {
+    private void checkInputs(final Form mediaForm) throws ResourceException {
         if (isValueNotExist(mediaForm, PROJECT_NAME_PARAMETER)) {
             getLogger().fine(PROJECT_NAME_PARAMETER + " value is not set");
             throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, PROJECT_NAME_PARAMETER + " parameter must be set");
         }
         getLogger().fine("The form is valid");
     }
-    
+
     /**
      * projects representation
+     *
      * @return Wadl representation for projects
      */
+    @Requirement(
+            reqId = Requirement.DOI_DOC_010,
+            reqName = Requirement.DOI_DOC_010_NAME
+    )    
     private RepresentationInfo projectsRepresentation() {
         final RepresentationInfo repInfo = new RepresentationInfo();
-        repInfo.setMediaType(MediaType.APPLICATION_XML);        
+        repInfo.setMediaType(MediaType.APPLICATION_XML);
         final DocumentationInfo docInfo = new DocumentationInfo();
         docInfo.setTitle("Projects Representation");
         docInfo.setTextContent("The representation contains informations about all projects.");
-        repInfo.setDocumentation(docInfo);        
+        repInfo.setDocumentation(docInfo);
         return repInfo;
-    }     
+    }
 
+    @Requirement(
+            reqId = Requirement.DOI_DOC_010,
+            reqName = Requirement.DOI_DOC_010_NAME
+    )      
     @Override
     protected void describeGet(MethodInfo info) {
         info.setName(Method.GET);
@@ -100,12 +122,16 @@ public class SuffixProjectsResource extends BaseResource {
         addResponseDocToMethod(info, createResponseDoc(Status.SUCCESS_OK, "Operation successful", projectsRepresentation()));
     }
 
+    @Requirement(
+            reqId = Requirement.DOI_DOC_010,
+            reqName = Requirement.DOI_DOC_010_NAME
+    )      
     @Override
     protected void describePost(MethodInfo info) {
         info.setName(Method.POST);
         info.setDocumentation("Creates a project suffix");
-        addRequestDocToMethod(info, createQueryParamDoc(SuffixProjectsResource.PROJECT_NAME_PARAMETER, ParameterStyle.MATRIX, "project name", true, "xs:string"));        
-        addResponseDocToMethod(info, createResponseDoc(Status.SUCCESS_OK, "Operation successful", stringRepresentation()));        
-    }    
+        addRequestDocToMethod(info, createQueryParamDoc(SuffixProjectsResource.PROJECT_NAME_PARAMETER, ParameterStyle.MATRIX, "project name", true, "xs:string"));
+        addResponseDocToMethod(info, createResponseDoc(Status.SUCCESS_OK, "Operation successful", stringRepresentation()));
+    }
 
 }

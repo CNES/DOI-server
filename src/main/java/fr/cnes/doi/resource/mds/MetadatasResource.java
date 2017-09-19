@@ -5,6 +5,7 @@
  */
 package fr.cnes.doi.resource.mds;
 
+import fr.cnes.doi.application.BaseApplication;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
@@ -30,7 +31,8 @@ import org.xml.sax.SAXException;
 
 import fr.cnes.doi.exception.ClientMdsException;
 import static fr.cnes.doi.security.UtilsHeader.SELECTED_ROLE_PARAMETER;
-import fr.cnes.doi.utils.Requirement;
+import fr.cnes.doi.utils.spec.CoverageAnnotation;
+import fr.cnes.doi.utils.spec.Requirement;
 import java.util.logging.Level;
 import javax.xml.bind.ValidationException;
 
@@ -48,7 +50,7 @@ public class MetadatasResource extends BaseMdsResource {
     /**
      * Init.
      *
-     * @throws ResourceException
+     * @throws ResourceException - if a problem happens
      */
     @Override
     protected void doInit() throws ResourceException {
@@ -58,38 +60,46 @@ public class MetadatasResource extends BaseMdsResource {
 
     /**
      * Create Metadata for a given DOI. The DOI name is given in the metadata
-     * entity. This request stores new version of metadata. The different
-     * status:
-     * <ul>
-     * <li>201 Created - operation successful</li>
-     * <li>400 Bad Request - invalid XML, wrong prefix</li>
-     * <li>401 Unauthorized - no login</li>
-     * <li>403 Forbidden - login problem, quota exceeded</li>
-     * <li>500 Internal Server Error - server internal error, try later and if
-     * problem persists please contact us</li>
-     * </ul>
+     * entity. This request stores new version of metadata and returns a 201
+     * status when the operation is successful.
      *
      * @param entity Metadata representation
      * @return short explanation of status code e.g. CREATED,
      * HANDLE_ALREADY_EXISTS etc
-     * @throws ResourceException Will be thrown when an error happens
+     * @throws ResourceException - if an error happens <ul>
+     * <li>400 Bad Request - invalid XML, wrong prefix in the metadata</li>
+     * <li>403 Forbidden - Not allow to execute this request </li>
+     * <li>401 Unauthorized - this request needs authentication</li>
+     * <li>409 Conflict if a user is associated to more than one role</li>
+     * <li>500 Internal Server Error - DataCite Schema not available or problem
+     * when requesting DataCite</li>
+     * <li>1001 Connector error - Network problem</li>
+     * </ul>
      */
     @Requirement(
-            reqId = "DOI_SRV_010",
-            reqName = "Création de métadonnées"
+            reqId = Requirement.DOI_SRV_010,
+            reqName = Requirement.DOI_SRV_010_NAME
     )
     @Requirement(
-            reqId = "DOI_SRV_040",
-            reqName = "Mise à jour des métadonnées d'un DOI"
+            reqId = Requirement.DOI_SRV_040,
+            reqName = Requirement.DOI_SRV_040_NAME
     )
     @Requirement(
-            reqId = "DOI_ARCHI_050",
-            reqName = "Vérification du schéma de métadonnées"
+            reqId = Requirement.DOI_MONIT_020,
+            reqName = Requirement.DOI_MONIT_020_NAME
     )
     @Requirement(
-            reqId = "DOI_AUTH_050",
-            reqName = "Vérification du projet"
-    )
+            reqId = Requirement.DOI_INTER_070,
+            reqName = Requirement.DOI_INTER_070_NAME
+    )    
+    @Requirement(
+            reqId = Requirement.DOI_AUTO_020,
+            reqName = Requirement.DOI_AUTO_020_NAME
+    )     
+    @Requirement(
+            reqId = Requirement.DOI_AUTO_030,
+            reqName = Requirement.DOI_AUTO_030_NAME
+    )     
     @Post
     public String createMetadata(final Representation entity) throws ResourceException {
         getLogger().entering(getClass().getName(), "createMetadata");
@@ -101,22 +111,23 @@ public class MetadatasResource extends BaseMdsResource {
             org.datacite.schema.kernel_4.Resource resource = createDataCiteResourceObject(entity);
             String selectedRole = extractSelectedRoleFromRequestIfExists();
             checkPermission(resource.getIdentifier().getValue(), selectedRole);
-            resource.setPublisher("Centre National d'Etudes Spatiales (CNES)");
+            resource.setPublisher("CNES");
             result = this.doiApp.getClient().createMetadata(resource);
         } catch (ClientMdsException ex) {
             getLogger().throwing(getClass().getName(), "createMetadata", ex);
-            throw new ResourceException(ex.getStatus(), ex.getDetailMessage(), ex);
+            ((BaseApplication) getApplication()).sendAlertWhenDataCiteFailed(ex);
+            throw new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getDetailMessage(), ex);
         } catch (ValidationException ex) {
             getLogger().throwing(getClass().getName(), "createMetadata", ex);
-            throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "invalid XML", ex);            
-        } catch (JAXBException ex) {            
+            throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "invalid XML", ex);
+        } catch (JAXBException ex) {
             getLogger().throwing(getClass().getName(), "createMetadata", ex);
             throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "invalid XML", ex);
         } catch (SAXException ex) {
             getLogger().throwing(getClass().getName(), "createMetadata", ex);
             throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "DataCite schema not available", ex);
         } catch (IOException ex) {
-            getLogger().throwing(getClass().getName(), "createMetadata", ex);            
+            getLogger().throwing(getClass().getName(), "createMetadata", ex);
             throw new ResourceException(Status.CONNECTOR_ERROR_COMMUNICATION, "Network problem", ex);
         }
         getLogger().exiting(getClass().getName(), "createMetadata", result);
@@ -124,11 +135,15 @@ public class MetadatasResource extends BaseMdsResource {
     }
 
     /**
-     * Checks inputs
+     * Checks inputs.
      *
      * @param obj object to check
-     * @throws ResourceException - if entity is null
+     * @throws ResourceException - 400 Bad Request if entity is null
      */
+    @Requirement(
+            reqId = Requirement.DOI_INTER_070,
+            reqName = Requirement.DOI_INTER_070_NAME
+    )    
     private void checkInputs(final Object obj) {
         getLogger().entering(this.getClass().getName(), "checkInputs");
         if (isObjectNotExist(obj)) {
@@ -136,7 +151,7 @@ public class MetadatasResource extends BaseMdsResource {
             getLogger().throwing(this.getClass().getName(), "checkInputs", ex);
             throw ex;
         }
-        getLogger().exiting(this.getClass().getName(), "checkInputs");        
+        getLogger().exiting(this.getClass().getName(), "checkInputs");
     }
 
     /**
@@ -150,6 +165,14 @@ public class MetadatasResource extends BaseMdsResource {
      * @throws IOException - if a problem happens when retrieving the entity
      * @throws ValidationException - if metadata is not valid against the schema
      */
+    @Requirement(
+            reqId = Requirement.DOI_INTER_060,
+            reqName = Requirement.DOI_INTER_060_NAME
+    )
+    @Requirement(
+            reqId = Requirement.DOI_INTER_070,
+            reqName = Requirement.DOI_INTER_070_NAME
+    )    
     private org.datacite.schema.kernel_4.Resource createDataCiteResourceObject(final Representation entity) throws JAXBException, SAXException, ValidationException, IOException {
         JAXBContext ctx = JAXBContext.newInstance(new Class[]{org.datacite.schema.kernel_4.Resource.class});
         Unmarshaller um = ctx.createUnmarshaller();
@@ -158,24 +181,11 @@ public class MetadatasResource extends BaseMdsResource {
         MyValidationEventHandler validationHandler = new MyValidationEventHandler(getLogger());
         um.setEventHandler(validationHandler);
         JAXBElement<Resource> jaxbResource = (JAXBElement<Resource>) um.unmarshal(entity.getStream());
-        if(validationHandler.isValid()) {
-            return jaxbResource.getValue();    
+        if (validationHandler.isValid()) {
+            return jaxbResource.getValue();
         } else {
             throw new ValidationException(validationHandler.getErrorMsg());
-        }        
-    }
-
-    /**
-     * Extract <i>selectedRole</i> from HTTP header.
-     *
-     * @return the selected role or an empty string when there is no selected
-     * role
-     */
-    private String extractSelectedRoleFromRequestIfExists() {
-        Series headers = (Series) getRequestAttributes().get("org.restlet.http.headers");
-        String selectedRole = headers.getFirstValue(SELECTED_ROLE_PARAMETER, "");
-        getLogger().log(Level.INFO, "Selected role : {0}", selectedRole);
-        return selectedRole;
+        }
     }
 
     /**
@@ -184,9 +194,9 @@ public class MetadatasResource extends BaseMdsResource {
      * @param info Wadl description for POST method
      */
     @Requirement(
-            reqId = "DOI_DOC_010",
-            reqName = "Documentation des interfaces"
-    )
+            reqId = Requirement.DOI_DOC_010,
+            reqName = Requirement.DOI_DOC_010_NAME
+    )      
     @Override
     protected final void describePost(final MethodInfo info) {
         info.setName(Method.POST);
@@ -201,11 +211,12 @@ public class MetadatasResource extends BaseMdsResource {
         );
 
         addResponseDocToMethod(info, createResponseDoc(Status.SUCCESS_CREATED, "Operation successful", "explainRepresentation"));
-        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_BAD_REQUEST, "invalid XML, wrong prefix", "explainRepresentation"));
-        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_UNAUTHORIZED, "no login", "explainRepresentation"));
-        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_FORBIDDEN, "login problem, quota exceeded", "explainRepresentation"));
-        addResponseDocToMethod(info, createResponseDoc(Status.SERVER_ERROR_INTERNAL, "server internal error, try later and if problem persists please contact us", "explainRepresentation"));
+        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_BAD_REQUEST, "invalid XML, wrong prefix in the metadata", "explainRepresentation"));
+        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_UNAUTHORIZED, "this request needs authentication", "explainRepresentation"));
+        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_FORBIDDEN, "Not allow to execute the request", "explainRepresentation"));
+        addResponseDocToMethod(info, createResponseDoc(Status.SERVER_ERROR_INTERNAL, "DataCite Schema not available or problem when requesting DataCite", "explainRepresentation"));
         addResponseDocToMethod(info, createResponseDoc(Status.CONNECTOR_ERROR_COMMUNICATION, "Network problem", "explainRepresentation"));
+        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_CONFLICT, "Error when an user is associated to more than one role", "explainRepresentation"));
 
     }
 
@@ -213,9 +224,11 @@ public class MetadatasResource extends BaseMdsResource {
      * Metadata Validation.
      */
     @Requirement(
-            reqId = "DOI_ARCHI_050",
-            reqName = "Vérification du schéma de métadonnées"
-    )
+            reqId = Requirement.DOI_ARCHI_020,
+            reqName = Requirement.DOI_ARCHI_020_NAME,
+            coverage = CoverageAnnotation.PARTIAL,
+            comment = "Log4J n'est pas utilisé"
+    )    
     private static class MyValidationEventHandler implements ValidationEventHandler {
 
         private final Logger logger;
@@ -246,23 +259,30 @@ public class MetadatasResource extends BaseMdsResource {
         }
 
         /**
-         * Returns true when metadata is valid against the schema otherwise false.
-         * @return true when metadata is valid against the schema otherwise false
+         * Returns true when metadata is valid against the schema otherwise
+         * false.
+         *
+         * @return true when metadata is valid against the schema otherwise
+         * false
          */
         public boolean isValid() {
             return !this.isNotValid();
         }
 
         /**
-         * Returns true when metadata is not valid against the schema otherwise false.
-         * @return true when metadata is not valid against the schema otherwise false
+         * Returns true when metadata is not valid against the schema otherwise
+         * false.
+         *
+         * @return true when metadata is not valid against the schema otherwise
+         * false
          */
         public boolean isNotValid() {
             return this.hasError;
         }
-        
+
         /**
          * Returns the errorMsg or null when no error message.
+         *
          * @return the errorMsg or null when no error message
          */
         public String getErrorMsg() {

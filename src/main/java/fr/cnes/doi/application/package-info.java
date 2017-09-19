@@ -14,7 +14,7 @@
  * delete) DOIs.</li>
  * <li>A {@link fr.cnes.doi.application.DoiCrossCiteApplication Cross Cite application} that is responsible to get citation from 
  * a registered DOI</li>
- * <li>A {@link fr.cnes.doi.application.AdminApplication web application} that provides resources for the administration of the tool</li> 
+ * <li>A {@link fr.cnes.doi.application.AdminApplication administation application} that provides resources for the administration</li> 
  * </ul>
  * 
  * <h2>1 - Introduction</h2>
@@ -38,10 +38,7 @@
  * language of the article and the formatting style to format a citation for a 
  * specific DOI.
  * 
- * <h2>3 - Monitoring application</h2>
- * An application following the monitoring of DataCite
- * 
- * <h2>4 - Administration application</h2>
+ * <h2>3 - Administration application</h2>
  * An application providing resources for the administration of the DOI server.
  */
 package fr.cnes.doi.application;

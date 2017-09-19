@@ -5,10 +5,16 @@
  */
 package fr.cnes.doi.plugin;
 
+import fr.cnes.doi.utils.spec.Requirement;
+
 /**
  * Provides metadata about the plugin.
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
+@Requirement(
+        reqId = Requirement.DOI_ARCHI_030,
+        reqName = Requirement.DOI_ARCHI_030_NAME      
+)
 public interface PluginMetadata {
     
     /**

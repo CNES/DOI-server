@@ -29,6 +29,7 @@ import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.settings.EmailSettings;
 import fr.cnes.doi.utils.Utils;
+import fr.cnes.doi.utils.spec.Requirement;
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 import java.io.File;
@@ -38,12 +39,18 @@ import java.io.File;
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
+@Requirement(
+        reqId = Requirement.DOI_DEV_010,
+        reqName = Requirement.DOI_DEV_010_NAME
+)
+@Requirement(
+        reqId = Requirement.DOI_DEV_020,
+        reqName = Requirement.DOI_DEV_020_NAME
+)
 public class Starter {
 
     static {
         ClientResource client = new ClientResource(LocalReference.createClapReference("class/logging.properties"));
-        // InputStream is =
-        // Starter.class.getResourceAsStream("logging.properties");
         Representation logging = client.get();
         try {
             LogManager.getLogManager().readConfiguration(logging.getStream());
@@ -126,6 +133,10 @@ public class Starter {
      *
      * @param server the server
      */
+    @Requirement(
+            reqId = Requirement.DOI_ARCHI_040,
+            reqName = Requirement.DOI_ARCHI_040_NAME
+    )    
     private static void startServer(final DoiServer server) {
         GLOBAL_LOGGER.entering(Starter.class.getName(), "startServer");
         try {

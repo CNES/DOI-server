@@ -7,6 +7,7 @@ package fr.cnes.doi.security;
 
 import fr.cnes.doi.db.TokenDBHelper;
 import fr.cnes.doi.utils.Utils;
+import fr.cnes.doi.utils.spec.Requirement;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import java.util.logging.Level;
@@ -18,9 +19,13 @@ import org.restlet.security.User;
 import org.restlet.security.Verifier;
 
 /**
- *
+ * Security class for checking token.
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
+@Requirement(
+        reqId = Requirement.DOI_AUTH_020,
+        reqName = Requirement.DOI_AUTH_020_NAME
+)
 public class TokenBasedVerifier implements Verifier {
 
     private final TokenDBHelper tokenDB;
@@ -69,7 +74,7 @@ public class TokenBasedVerifier implements Verifier {
      * Process token.
      * @param request request
      * @param token token
-     * @return 
+     * @return the status given by {@link Verifier}
      */
     private int processToken(Request request, String token) {
         int result;

@@ -6,9 +6,12 @@
 package fr.cnes.doi.logging.api;
 
 import fr.cnes.doi.services.DoiMonitoring;
+import fr.cnes.doi.settings.Consts;
+import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.settings.EmailSettings;
-import fr.cnes.doi.utils.Requirement;
 import fr.cnes.doi.utils.Utils;
+import fr.cnes.doi.utils.spec.CoverageAnnotation;
+import fr.cnes.doi.utils.spec.Requirement;
 
 import java.text.MessageFormat;
 import java.util.Date;
@@ -31,18 +34,20 @@ import org.restlet.service.LogService;
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 @Requirement(
-        reqId = "DOI_SRV_130",
-        reqName = "Monitoring des temps de réponse"
+        reqId = Requirement.DOI_MONIT_010,
+        reqName = Requirement.DOI_MONIT_010_NAME
 )
 @Requirement(
-        reqId = "DOI_ARCHI_040",
-        reqName = "Logs"
+        reqId = Requirement.DOI_ARCHI_020,
+        reqName = Requirement.DOI_ARCHI_020_NAME,
+        coverage = CoverageAnnotation.PARTIAL,
+        comment = "Log4J n'est pas utilisé"        
 )
 public class MonitoringLogFilter extends LogFilter {
 
     private static final Date START_DATE_MONITORING = new Date();
 
-    private static final float THRESHOLD_SPEED_PERCENT = 130;
+    private static final float THRESHOLD_SPEED_PERCENT = Float.valueOf(DoiSettings.getInstance().getString(Consts.THRESHOLD_SPEED_PERCENT));
 
     private static final Logger APP_LOGGER = Utils.getAppLogger();
 

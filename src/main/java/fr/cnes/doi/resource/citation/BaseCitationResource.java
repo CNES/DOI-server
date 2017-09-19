@@ -7,7 +7,6 @@ package fr.cnes.doi.resource.citation;
 
 import fr.cnes.doi.application.DoiCrossCiteApplication;
 import fr.cnes.doi.resource.BaseResource;
-import fr.cnes.doi.utils.Requirement;
 import org.restlet.data.MediaType;
 import org.restlet.ext.wadl.DocumentationInfo;
 import org.restlet.ext.wadl.RepresentationInfo;
@@ -15,45 +14,44 @@ import org.restlet.resource.ResourceException;
 
 /**
  * Base resource for CrossCite application.
+ *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-@Requirement(
-        reqId = "DOI_DOC_010",
-        reqName = "Documentation des interfaces"
-)
 public class BaseCitationResource extends BaseResource {
-    
+
     /**
      * Parameter providing the digital object identifier.
      */
     public static final String DOI_PARAMETER = "doi";
-    
+
     /**
      * Language parameter to format the citation.
      */
     public static final String LANG_PARAMETER = "lang";
-    
+
     /**
      * Style parameter to format the citation.
      */
     public static final String STYLE_PARAMETER = "style";
-    
+
     /**
      * Cross cite application.
      */
     protected DoiCrossCiteApplication app;
-    
+
     /**
      * Init.
-     * @throws ResourceException
+     *
+     * @throws ResourceException - if a problem happens
      */
     @Override
     protected void doInit() throws ResourceException {
-        this.app = (DoiCrossCiteApplication)getApplication();        
-    } 
+        this.app = (DoiCrossCiteApplication) getApplication();
+    }
 
     /**
      * List representation.
+     *
      * @param title Title of the representation
      * @param media Media type of the response
      * @param content Explanation of the representation
@@ -61,11 +59,11 @@ public class BaseCitationResource extends BaseResource {
      */
     protected RepresentationInfo listRepresentation(final String title, final MediaType media, final String content) {
         final RepresentationInfo repInfo = new RepresentationInfo();
-        repInfo.setMediaType(media);        
+        repInfo.setMediaType(media);
         final DocumentationInfo docInfo = new DocumentationInfo();
         docInfo.setTitle(title);
         docInfo.setTextContent(content);
-        repInfo.setDocumentation(docInfo);        
-        return repInfo;        
+        repInfo.setDocumentation(docInfo);
+        return repInfo;
     }
 }

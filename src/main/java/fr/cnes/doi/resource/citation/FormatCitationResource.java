@@ -5,6 +5,7 @@
  */
 package fr.cnes.doi.resource.citation;
 
+import fr.cnes.doi.application.BaseApplication;
 import java.util.Arrays;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
@@ -15,7 +16,7 @@ import org.restlet.resource.Get;
 import org.restlet.resource.ResourceException;
 
 import fr.cnes.doi.exception.ClientCrossCiteException;
-import fr.cnes.doi.utils.Requirement;
+import fr.cnes.doi.utils.spec.Requirement;
 import java.util.logging.Level;
 
 /**
@@ -49,7 +50,7 @@ public class FormatCitationResource extends BaseCitationResource {
 
     /**
      * Init by getting doi, lang and style values.
-     * @throws ResourceException 
+     * @throws ResourceException - if a problem happens
      */
     @Override
     protected void doInit() throws ResourceException {
@@ -78,10 +79,14 @@ public class FormatCitationResource extends BaseCitationResource {
     /**
      * Returns the formatted citation.
      * @return the formatted citation
-     */
+     */   
     @Requirement(
-            reqId = "DOI_SRV_120",
-            reqName = "Formatage d'une citation"
+            reqId = Requirement.DOI_SRV_120,
+            reqName = Requirement.DOI_SRV_120_NAME
+    )   
+    @Requirement(
+            reqId = Requirement.DOI_MONIT_020,
+            reqName = Requirement.DOI_MONIT_020_NAME
     )     
     @Get
     public String getFormat() {
@@ -96,15 +101,16 @@ public class FormatCitationResource extends BaseCitationResource {
             return result;
         } catch (ClientCrossCiteException ex) {
             getLogger().throwing(this.getClass().getName(), "getFormat", ex);
+            ((BaseApplication)getApplication()).sendAlertWhenDataCiteFailed(ex);
             throw new ResourceException(ex.getStatus(), ex.getDetailMessage());
         }
     }
     
     /**
      * Checks input parameters
-     * @ResourceException if DOI_PARAMETER and LANG_PARAMETER and STYLE_PARAMETER are not set
+     * @throws ResourceException - if DOI_PARAMETER and LANG_PARAMETER and STYLE_PARAMETER are not set
      */
-    private void checkInputs() {
+    private void checkInputs() throws ResourceException {
         getLogger().entering(this.getClass().getName(), "checkInputs");
         StringBuilder errorMsg = new StringBuilder();
         if (this.doiName == null || this.doiName.isEmpty()) {
@@ -128,17 +134,15 @@ public class FormatCitationResource extends BaseCitationResource {
             throw ex;
         }        
         getLogger().exiting(this.getClass().getName(), "checkInputs");        
-    }      
-    
-    
+    }           
            
     /**
      * Describes the Get Method.
      * @param info Wadl description
-     */
+     */  
     @Requirement(
-            reqId = "DOI_DOC_010",
-            reqName = "Documentation des interfaces"
+            reqId = Requirement.DOI_DOC_010,
+            reqName = Requirement.DOI_DOC_010_NAME
     )      
     @Override
     protected final void describeGet(final MethodInfo info) {

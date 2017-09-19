@@ -5,12 +5,17 @@
  */
 package fr.cnes.doi.db;
 
+import fr.cnes.doi.utils.spec.Requirement;
 import java.util.Observable;
 
 /**
  * Interface for handling the token database.
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
+@Requirement(
+        reqId = Requirement.DOI_INTER_040,
+        reqName = Requirement.DOI_INTER_040_NAME
+)
 public abstract class TokenDBHelper extends Observable {
     
     public abstract void init(Object configuration);

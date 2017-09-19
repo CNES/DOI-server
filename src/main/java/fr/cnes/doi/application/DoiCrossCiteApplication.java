@@ -12,7 +12,7 @@ import fr.cnes.doi.client.ClientCrossCiteCitation;
 import fr.cnes.doi.resource.citation.FormatCitationResource;
 import fr.cnes.doi.resource.citation.LanguageCitationResource;
 import fr.cnes.doi.resource.citation.StyleCitationResource;
-import fr.cnes.doi.utils.Requirement;
+import fr.cnes.doi.utils.spec.Requirement;
 
 /**
  * Provides an application to get citation from a registered DOI. Books and
@@ -40,16 +40,20 @@ import fr.cnes.doi.utils.Requirement;
  * @see "http://citation.crosscite.org/"
  */
 @Requirement(
-        reqId = "DOI_SRV_100",
-        reqName = "Listing des styles"
+        reqId = Requirement.DOI_SRV_100,
+        reqName = Requirement.DOI_SRV_100_NAME
 )
 @Requirement(
-        reqId = "DOI_SRV_110",
-        reqName = "Listing des langues"
+        reqId = Requirement.DOI_SRV_110,
+        reqName = Requirement.DOI_SRV_110_NAME
 )
 @Requirement(
-        reqId = "DOI_SRV_120",
-        reqName = "Formatage d'une citation"
+        reqId = Requirement.DOI_SRV_120,
+        reqName = Requirement.DOI_SRV_120_NAME
+)
+@Requirement(
+        reqId = Requirement.DOI_MONIT_020,
+        reqName = Requirement.DOI_MONIT_020_NAME
 )
 public class DoiCrossCiteApplication extends BaseApplication {
 
@@ -80,10 +84,6 @@ public class DoiCrossCiteApplication extends BaseApplication {
      * null null     {@link fr.cnes.doi.client.ClientCrossCiteCitation
 	 * ClientCrossCiteCitation} proxy when the configuration is set.
      */
-    @Requirement(
-            reqId = "DOI_DOC_010",
-            reqName = "Documentation des interfaces"
-    )
     public DoiCrossCiteApplication() {
         super();
         getLogger().entering(DoiCrossCiteApplication.class.getName(), "Constructor");

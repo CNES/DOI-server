@@ -5,7 +5,8 @@
  */
 package fr.cnes.doi.logging.api;
 
-import fr.cnes.doi.utils.Requirement;
+import fr.cnes.doi.utils.spec.CoverageAnnotation;
+import fr.cnes.doi.utils.spec.Requirement;
 import java.util.Date;
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
@@ -17,8 +18,10 @@ import org.restlet.engine.util.DateUtils;
  * @author malapert
  */
 @Requirement(
-        reqId = "DOI_ARCHI_040",
-        reqName = "Logs"
+        reqId = Requirement.DOI_ARCHI_020,
+        reqName = Requirement.DOI_ARCHI_020_NAME,
+        coverage = CoverageAnnotation.PARTIAL,
+        comment = "Log4J n'est pas utilisé"        
 )
 public class LogAccessFormatter extends Formatter {
 

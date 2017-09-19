@@ -6,11 +6,16 @@
 package fr.cnes.doi.plugin;
 
 import fr.cnes.doi.db.ProjectSuffixDBHelper;
+import fr.cnes.doi.utils.spec.Requirement;
 
 /**
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
+@Requirement(
+        reqId = Requirement.DOI_ARCHI_030,
+        reqName = Requirement.DOI_ARCHI_030_NAME      
+)
 public abstract class ProjectSuffixPluginHelper extends ProjectSuffixDBHelper implements PluginMetadata {
     
 }

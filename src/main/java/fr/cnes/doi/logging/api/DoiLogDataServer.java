@@ -20,7 +20,8 @@ import fr.cnes.doi.resource.mds.MetadataResource;
 import fr.cnes.doi.resource.mds.MetadatasResource;
 import fr.cnes.doi.server.DoiServer;
 import fr.cnes.doi.services.DoiMonitoring;
-import fr.cnes.doi.utils.Requirement;
+import fr.cnes.doi.utils.spec.CoverageAnnotation;
+import fr.cnes.doi.utils.spec.Requirement;
 
 /**
  * Creates a default logger.
@@ -28,8 +29,10 @@ import fr.cnes.doi.utils.Requirement;
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 @Requirement(
-        reqId = "DOI_ARCHI_040",
-        reqName = "Logs"
+        reqId = Requirement.DOI_ARCHI_020,
+        reqName = Requirement.DOI_ARCHI_020_NAME,
+        coverage = CoverageAnnotation.PARTIAL,
+        comment = "Log4J n'est pas utilisé"        
 )
 public class DoiLogDataServer extends LogService {
 
@@ -64,10 +67,6 @@ public class DoiLogDataServer extends LogService {
      *
      * @return monitoring object
      */
-    @Requirement(
-            reqId = "DOI_SRV_130",
-            reqName = "Monitoring des temps de réponse"
-    )
     private DoiMonitoring initMonitoring() {
 
         DoiMonitoring monitoring = new DoiMonitoring();

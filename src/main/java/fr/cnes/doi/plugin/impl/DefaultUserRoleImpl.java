@@ -56,7 +56,7 @@ public class DefaultUserRoleImpl extends UserRolePluginHelper {
     }   
 
     @Override
-    public void addUsersToAdminGroup(final List<User> adminGroup) {
+    public void setUsersToAdminGroup(final List<User> adminGroup) {
         adminGroup.add(users.get(0));
         adminGroup.add(users.get(1));
     }

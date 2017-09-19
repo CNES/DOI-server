@@ -5,6 +5,7 @@
  */
 package fr.cnes.doi.db;
 
+import fr.cnes.doi.utils.spec.Requirement;
 import java.util.List;
 import java.util.Observable;
 import org.restlet.security.MemoryRealm;
@@ -16,6 +17,10 @@ import org.restlet.security.User;
  * This database is used to authenticate the requests.
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
+@Requirement(
+        reqId = Requirement.DOI_INTER_050,
+        reqName = Requirement.DOI_INTER_050_NAME
+)
 public abstract class  UserRoleDBHelper extends Observable {
     
     public static final String ADD_USER_NOTIFICATION = "AddUserNotification";
@@ -64,6 +69,6 @@ public abstract class  UserRoleDBHelper extends Observable {
      * Adds user to Administrators group
      * @param adminGroup list of users to add
      */
-    public abstract void addUsersToAdminGroup(final List<User> adminGroup);
+    public abstract void setUsersToAdminGroup(final List<User> adminGroup);    
     
 }
