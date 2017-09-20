@@ -5,6 +5,7 @@
  */
 package fr.cnes.doi.resource.citation;
 
+import fr.cnes.doi.InitServerForTest;
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;
@@ -34,68 +35,75 @@ import fr.cnes.doi.settings.DoiSettings;
  */
 public class StyleCitationResourceTest {
 
-	private static DoiServer doiServer;
-	private Client cl;
-	private static DoiSettings instance;
+    private static Client cl;
 
-	public StyleCitationResourceTest() throws InterruptedException, Exception {
-		cl = new Client(new Context(), Protocol.HTTPS);
-		Series<Parameter> parameters = cl.getContext().getParameters();
-		parameters.add("truststorePath", "jks/doiServerKey.jks");
-		parameters.add("truststorePassword", instance.getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
-		parameters.add("truststoreType", "JKS");
-	}
+    public StyleCitationResourceTest() throws InterruptedException, Exception {
+    }
 
-	@BeforeClass
-	public static void setUpClass() {
-		try {
-			InitSettingsForTest.init();
-			instance = DoiSettings.getInstance();
-			doiServer = new DoiServer(instance);
+    @BeforeClass
+    public static void setUpClass() {
+        InitServerForTest.init();
+        cl = new Client(new Context(), Protocol.HTTPS);
+        Series<Parameter> parameters = cl.getContext().getParameters();
+        parameters.add("truststorePath", "jks/doiServerKey.jks");
+        parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
+        parameters.add("truststoreType", "JKS");
+    }
 
-		} catch (Exception ex) {
-			Logger.getLogger(StyleCitationResourceTest.class.getName()).log(Level.SEVERE, null, ex);
-		}
-	}
+    @AfterClass
+    public static void tearDownClass() {
+        InitServerForTest.close();
+    }
 
-	@AfterClass
-	public static void tearDownClass() {
+    @Before
+    public void setUp() {
+    }
 
-	}
+    @After
+    public void tearDown() throws Exception {
 
-	@Before
-	public void setUp() {
-	}
+    }
 
-	@After
-	public void tearDown() throws Exception {
-
-	}
-
-	/**
-	 * Test of getStyles method, of class StyleCitationResource.
-	 */
-	@Test
-	public void testGetStyles() {
-		System.out.println("getStyles");
-		String expResult = "academy-of-management-review";
-		String result = "";
-		try {
-			doiServer.start();
-			ClientResource client = new ClientResource("https://localhost:8183/citation/style");
-			client.setNext(cl);
-			List<String> rep = client.get(List.class);
-			result = rep.get(0);
-		} catch (Exception ex) {
-			Logger.getLogger(StyleCitationResourceTest.class.getName()).log(Level.SEVERE, null, ex);
-		} finally {
-			try {
-				doiServer.stop();
-			} catch (Exception ex) {
-				Logger.getLogger(StyleCitationResourceTest.class.getName()).log(Level.SEVERE, null, ex);
-			}
-			assertEquals(expResult, result);
-		}
-	}
+    /**
+     * Test of getStyles method, of class StyleCitationResource.
+     */
+    @Test
+    public void testGetStylesHttps() {
+        System.out.println("getStyles");
+        String expResult = "academy-of-management-review";
+        String result = "";
+        try {
+            String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);                        
+            ClientResource client = new ClientResource("https://localhost:"+port+"/citation/style");
+            client.setNext(cl);
+            List<String> rep = client.get(List.class);
+            result = rep.get(0);
+        } catch (Exception ex) {
+            Logger.getLogger(StyleCitationResourceTest.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            assertEquals(expResult, result);
+        }
+    }
+    
+    /**
+     * Test of getStyles method, of class StyleCitationResource.
+     */
+    @Test
+    public void testGetStylesHttp() {
+        System.out.println("getStyles");
+        String expResult = "academy-of-management-review";
+        String result = "";
+        try {
+            String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);                        
+            ClientResource client = new ClientResource("http://localhost:"+port+"/citation/style");
+            client.setNext(cl);
+            List<String> rep = client.get(List.class);
+            result = rep.get(0);
+        } catch (Exception ex) {
+            Logger.getLogger(StyleCitationResourceTest.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            assertEquals(expResult, result);
+        }
+    }    
 
 }

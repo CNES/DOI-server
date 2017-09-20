@@ -81,11 +81,11 @@ public class MediaResource extends BaseMdsResource {
             rep = new StringRepresentation(medias, MediaType.TEXT_URI_LIST);
         } catch (ClientMdsException ex) {
             getLogger().throwing(getClass().getName(), "getMedias", ex);    
-            if(ex.getStatus().getCode() == 404) {
-                throw new ResourceException(ex.getStatus(), ex.getDetailMessage());                
+            if(ex.getStatus().getCode() == Status.CLIENT_ERROR_NOT_FOUND.getCode()) {
+                throw new ResourceException(ex.getStatus(), ex.getMessage(), ex);                
             } else {
                 ((BaseApplication)getApplication()).sendAlertWhenDataCiteFailed(ex);
-                throw new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getDetailMessage());
+                throw new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex);
             }
         }
         
@@ -144,11 +144,11 @@ public class MediaResource extends BaseMdsResource {
             result = this.doiApp.getClient().createMedia(this.mediaName, mediaForm);
         } catch (ClientMdsException ex) {
             getLogger().throwing(getClass().getName(), "createMedia", ex);  
-            if(ex.getStatus().getCode() == 400) {
-                throw new ResourceException(ex.getStatus(), ex.getDetailMessage());                
+            if(ex.getStatus().getCode() == Status.CLIENT_ERROR_BAD_REQUEST.getCode()) {
+                throw new ResourceException(ex.getStatus(), ex.getMessage(), ex);                
             } else {
                 ((BaseApplication)getApplication()).sendAlertWhenDataCiteFailed(ex);                          
-                throw new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getDetailMessage());                
+                throw new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex);                
             }
         }
         

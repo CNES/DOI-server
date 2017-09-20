@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource xmlns="http://datacite.org/schema/kernel-4" 
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+          xsi:schemaLocation="http://datacite.org/schema/kernel-4 http://schema.datacite.org/meta/kernel-4/metadata.xsd">
+    <identifier identifierType="DOI">10.5072/828606/8c3e91ad45ca855b477126bc073ae44b</identifier>
+    <creators>
+        <creator>
+            <creatorName>CNES</creatorName>
+        </creator>
+        <creator>
+            <creatorName>LATMOS</creatorName>
+        </creator>
+    </creators>
+    <titles>
+        <title>J1_105min_Pacific_Nominal_MacroCycle</title>
+    </titles>
+    <publisher>CNES</publisher>
+    <publicationYear>2017</publicationYear>
+    <resourceType resourceTypeGeneral="Dataset"></resourceType>
+    <subjects>
+        <subject>
+            CFOSAT simulated data.
+        </subject>
+    </subjects>
+    <contributors>
+        <contributor contributorType="Producer">
+            <contributorName>CNES</contributorName>
+        </contributor>        
+        <contributor contributorType="Producer">
+            <contributorName>LATMOS</contributorName>
+        </contributor>
+        <contributor contributorType="RightsHolder">
+            <contributorName>CNES</contributorName>
+        </contributor>
+        <contributor contributorType="ResearchGroup">
+            <contributorName>METEO-FRANCE</contributorName>
+        </contributor>        
+        <contributor contributorType="ResearchGroup">
+            <contributorName>IFREMER</contributorName>
+        </contributor>           
+    </contributors>
+    <dates>
+        <date dateType="Created">2017-06-01</date>
+    </dates>
+    <language>en</language>
+    <alternateIdentifiers>
+        <alternateIdentifier alternateIdentifierType="SEF identifier">J1_105min_Pacific_Nominal_MacroCycle</alternateIdentifier>
+    </alternateIdentifiers>
+    <relatedIdentifiers>
+        <relatedIdentifier relatedIdentifierType="URL" relationType="IsDocumentedBy">https://cfosat-sef.cnes.fr/cnes_to_cfosat/documents/Product_Format_Description.pdf</relatedIdentifier>
+        <relatedIdentifier relatedIdentifierType="URL" relationType="IsDocumentedBy">https://cfosat-sef.cnes.fr/cnes_to_cfosat/documents/Product_Users_Guide.pdf</relatedIdentifier>
+        <relatedIdentifier relatedIdentifierType="URL" relationType="IsDocumentedBy">https://cfosat-sef.cnes.fr/cnes_to_cfosat/documents/SWIM_Instrument_Manual.pdf</relatedIdentifier>
+    </relatedIdentifiers>
+    <sizes>
+        <size>1.5 GB</size>
+    </sizes>
+    <formats>
+        <format>application/x-netcdf</format>
+    </formats>
+    <version>0.1</version>
+    <geoLocations>
+        <geoLocation>
+            <geoLocationPlace>Pacific</geoLocationPlace>
+        </geoLocation>
+    </geoLocations>
+
+</resource>

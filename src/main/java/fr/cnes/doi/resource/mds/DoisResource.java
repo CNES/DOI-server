@@ -22,7 +22,6 @@ import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
-import org.restlet.util.Series;
 
 import fr.cnes.doi.exception.ClientMdsException;
 import static fr.cnes.doi.security.UtilsHeader.SELECTED_ROLE_PARAMETER;
@@ -69,10 +68,10 @@ public class DoisResource extends BaseMdsResource {
         } catch (ClientMdsException ex) {
             getLogger().throwing(getClass().getName(), "getDois", ex);
             if (ex.getStatus().getCode() == Status.SUCCESS_NO_CONTENT.getCode()) {
-                throw new ResourceException(ex.getStatus(), ex.getDetailMessage());
+                throw new ResourceException(ex.getStatus(), ex.getMessage(), ex);
             } else {
                 ((BaseApplication) getApplication()).sendAlertWhenDataCiteFailed(ex);
-                throw new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getDetailMessage());
+                throw new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex);
             }
         }
     }
@@ -153,10 +152,10 @@ public class DoisResource extends BaseMdsResource {
         } catch (ClientMdsException ex) {
             getLogger().throwing(getClass().getName(), "createDoi", ex);
             if (ex.getStatus().getCode() == Status.CLIENT_ERROR_PRECONDITION_FAILED.getCode()) {
-                throw new ResourceException(ex.getStatus(), ex.getDetailMessage());
+                throw new ResourceException(ex.getStatus(), ex.getMessage(), ex);
             } else {
                 ((BaseApplication) getApplication()).sendAlertWhenDataCiteFailed(ex);
-                throw new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getDetailMessage());
+                throw new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex);
             }
         }
 

@@ -5,6 +5,7 @@
  */
 package fr.cnes.doi.application;
 
+import fr.cnes.doi.exception.MailingException;
 import fr.cnes.doi.services.CnesStatusService;
 import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.settings.EmailSettings;
@@ -20,6 +21,7 @@ import java.util.logging.Level;
 
 import fr.cnes.doi.settings.ProxySettings;
 import fr.cnes.doi.utils.spec.Requirement;
+import java.util.logging.Logger;
 import org.restlet.ext.wadl.ApplicationInfo;
 import org.restlet.ext.wadl.WadlCnesRepresentation;
 import org.restlet.representation.Representation;
@@ -137,7 +139,11 @@ public class BaseApplication extends WadlApplication {
         String subject = "Datacite problem";
         String message = "Dear administrator, an error has been detected"
                 + " coming from Datacite, please look to the Service status\n" + ex;
-        EmailSettings.getInstance().sendMessage(subject, message);
+        try {
+            EmailSettings.getInstance().sendMessage(subject, message);
+        } catch (MailingException ex1) {
+            getLogger().log(Level.SEVERE, null, ex1.getMessage());
+        }
     }
 
 }

@@ -116,7 +116,7 @@ public class MetadatasResource extends BaseMdsResource {
         } catch (ClientMdsException ex) {
             getLogger().throwing(getClass().getName(), "createMetadata", ex);
             ((BaseApplication) getApplication()).sendAlertWhenDataCiteFailed(ex);
-            throw new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getDetailMessage(), ex);
+            throw new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(),  ex);
         } catch (ValidationException ex) {
             getLogger().throwing(getClass().getName(), "createMetadata", ex);
             throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "invalid XML", ex);

@@ -31,6 +31,7 @@ import java.util.Iterator;
 import org.restlet.data.CharacterSet;
 import org.restlet.data.Language;
 import org.restlet.representation.StringRepresentation;
+import org.restlet.resource.ResourceException;
 
 /**
  * Client to query Metadata store service at Datacite.
@@ -401,19 +402,16 @@ public class ClientMDS extends BaseClient {
      * Returns the text of a response.
      *
      * @param rep Response of the server
-     * @param status Status of the response
      * @return the text of the response
-     * @throws ClientMdsException An exception is thrown for a status!=2xx
+     * @throws ClientMdsException An exception is thrown when cannot convert the
+     * Representation to text
      */
-    private String getText(final Representation rep, final Status status) throws ClientMdsException {
+    private String getText(final Representation rep) throws ClientMdsException {
         String result;
         try {
             result = rep.getText();
         } catch (IOException ex) {
             throw new ClientMdsException(Status.SERVER_ERROR_INTERNAL, ex);
-        }
-        if (!status.isSuccess()) {
-            throw new ClientMdsException(status, result);
         }
         return result;
     }
@@ -443,15 +441,16 @@ public class ClientMDS extends BaseClient {
         this.client.getLogger().log(Level.INFO, "GET {0}", url.toString());
 
         this.client.setReference(url);
-        Representation rep = this.client.get();
-        Status responseStatus = this.client.getStatus();
-
+        Representation rep;
         try {
-            this.getText(rep, responseStatus);
+            rep = this.client.get();
+            result = this.getText(rep);
+            return result;
+        } catch (ResourceException ex) {
+            throw new ClientMdsException(ex.getStatus(), ex.getResponse().getEntityAsText(), ex);
         } finally {
             client.release();
         }
-        return result;
     }
 
     /**
@@ -468,14 +467,16 @@ public class ClientMDS extends BaseClient {
         this.client.getLogger().log(Level.INFO, "GET {0}", url.toString());
 
         this.client.setReference(url);
-        Representation rep = this.client.get();
-        Status responseStatus = this.client.getStatus();
+        Representation rep;
         try {
-            this.getText(rep, responseStatus);
+            rep = this.client.get();
+            result = this.getText(rep);
+            return result;
+        } catch (ResourceException ex) {
+            throw new ClientMdsException(ex.getStatus(), ex.getResponse().getEntityAsText());
         } finally {
             client.release();
         }
-        return result;
     }
 
     /**
@@ -516,9 +517,10 @@ public class ClientMDS extends BaseClient {
             this.client.getRequestAttributes().put("Content-Type", "text/plain");
             this.client.getLogger().log(Level.INFO, "POST {0} with parameters {1}", new Object[]{url, requestBody});
             Representation rep = this.client.post(requestBody, MediaType.TEXT_PLAIN);
-            Status responseStatus = this.client.getStatus();
-            result = getText(rep, responseStatus);
+            result = getText(rep);
             return result;
+        } catch (ResourceException ex) {
+            throw new ClientMdsException(ex.getStatus(), ex.getResponse().getEntityAsText());
         } catch (UnsupportedEncodingException ex) {
             throw new ClientMdsException(Status.SERVER_ERROR_INTERNAL, ex);
         } finally {
@@ -537,7 +539,7 @@ public class ClientMDS extends BaseClient {
     private Resource parseDataciteResource(final Representation rep) throws ClientMdsException {
         final Resource resource;
         try {
-            final String result = getText(rep, Status.SUCCESS_OK);
+            final String result = getText(rep);
             JAXBContext ctx = JAXBContext.newInstance(new Class[]{org.datacite.schema.kernel_4.Resource.class});
             Unmarshaller um = ctx.createUnmarshaller();
             JAXBElement<Resource> jaxbResource = (JAXBElement<Resource>) um.unmarshal(new ByteArrayInputStream(result.getBytes()));
@@ -594,15 +596,15 @@ public class ClientMDS extends BaseClient {
     public Representation getMetadata(final String doiName) throws ClientMdsException {
         Reference url = createReferenceWithDOI(METADATA_RESOURCE, doiName);
         Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "GET {0}", url.toString());
-        this.client.setReference(url);                
+        this.client.setReference(url);
         this.client.getLogger().log(Level.INFO, "GET {0}", url);
-        Representation rep = this.client.get(MediaType.APPLICATION_XML);
-        Status status = this.client.getStatus();
-        client.release();
-        if (status.isSuccess()) {
+        try {
+            Representation rep = this.client.get(MediaType.APPLICATION_XML);
             return rep;
-        } else {
-            throw new ClientMdsException(status, status.getDescription());
+        } catch (ResourceException ex) {
+            throw new ClientMdsException(ex.getStatus(), ex.getResponse().getEntityAsText());
+        } finally {
+            client.release();
         }
     }
 
@@ -652,14 +654,17 @@ public class ClientMDS extends BaseClient {
         Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "POST {0}", url.toString());
         this.client.setReference(url);
         this.client.getRequestAttributes().put("charset", "UTF-8");
-        Representation response = this.client.post(entity, MediaType.APPLICATION_XML);
-        Status responseStatus = this.client.getStatus();
+
         try {
-            result = getText(response, responseStatus);
+            Representation response = this.client.post(entity, MediaType.APPLICATION_XML);
+            result = getText(response);
+            return result;
+        } catch (ResourceException ex) {
+            throw new ClientMdsException(ex.getStatus(), ex.getResponse().getEntityAsText());
         } finally {
-            this.client.release();
+            client.release();
         }
-        return result;
+
     }
 
     /**
@@ -741,14 +746,15 @@ public class ClientMDS extends BaseClient {
         Reference url = createReferenceWithDOI(MEDIA_RESOURCE, doiName);
         Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "GET {0}", url.toString());
         this.client.setReference(url);
-        Representation response = this.client.delete();
-        Status responseStatus = this.client.getStatus();
         try {
-            result = this.getText(response, responseStatus);
+            Representation response = this.client.delete();
+            result = this.getText(response);
+            return result;
+        } catch (ResourceException ex) {
+            throw new ClientMdsException(ex.getStatus(), ex.getResponse().getEntityAsText());
         } finally {
             this.client.release();
         }
-        return result;
     }
 
     /**
@@ -778,14 +784,15 @@ public class ClientMDS extends BaseClient {
         Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "POST {0}", url.toString());
         this.client.setReference(url);
         Representation entity = createEntity(form);
-        Representation response = this.client.post(entity, MediaType.TEXT_PLAIN);
-        Status responseStatus = this.client.getStatus();
         try {
-            result = this.getText(response, responseStatus);
+            Representation response = this.client.post(entity, MediaType.TEXT_PLAIN);
+            result = this.getText(response);
+            return result;
+        } catch (ResourceException ex) {
+            throw new ClientMdsException(ex.getStatus(), ex.getResponse().getEntityAsText());
         } finally {
             this.client.release();
         }
-        return result;
     }
 
     /**
@@ -804,7 +811,7 @@ public class ClientMDS extends BaseClient {
             String url = param.getValue();
             entity = entity.append(mimeType).append("=").append(url).append("\n");
         }
-        return new StringRepresentation(entity.toString(),MediaType.TEXT_PLAIN, Language.ENGLISH, CharacterSet.UTF_8);
+        return new StringRepresentation(entity.toString(), MediaType.TEXT_PLAIN, Language.ENGLISH, CharacterSet.UTF_8);
     }
 
 }

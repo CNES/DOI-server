@@ -23,12 +23,7 @@ import fr.cnes.doi.settings.DoiSettings;
  * @author Claire
  *
  */
-public class InitSettingsForTest {
-
-    /**
-     * Configuration file
-     */
-    private static InputStream inputStream = ClientMDSTest.class.getResourceAsStream("/config.properties");
+public class InitSettingsForTest {  
 
     /**
      * Init loggers
@@ -42,17 +37,22 @@ public class InitSettingsForTest {
     public static void init() {
         try {
             String secretKey = System.getProperty("private.key");
-            if (secretKey != null) {
-                String result = new BufferedReader(new InputStreamReader(inputStream)).lines()
-                        .collect(Collectors.joining("\n"));
+            if (secretKey != null) {                
+                String result;
+                try (InputStream inputStream = ClientMDSTest.class.getResourceAsStream("/config.properties")) {
+                    result = new BufferedReader(new InputStreamReader(inputStream)).lines()
+                            .collect(Collectors.joining("\n"));
+                }
                 result = UtilsCryptography.decrypt(result, secretKey);
                 // Replace the value to use the proxy by the system property
-                String useProxy = System.getProperty("proxy.use");
+                String useProxy = System.getProperty("proxy.use");                
                 if (useProxy != null) {
                     result = result.replace("Starter.Proxy.used = false", "Starter.Proxy.used=" + useProxy);
                 } else {
                     LOGGER.log(Level.INFO, "The key proxy.use is not set, default param applied");
                 }
+                // Replace the value to use pre prod context
+                result = result.replace("Starter.CONTEXT_MODE=DEV", "Starter.CONTEXT_MODE=PRE_PROD");
                 InputStream stream = new ByteArrayInputStream(result.getBytes(StandardCharsets.UTF_8));
                 DoiSettings.getInstance().setPropertiesFile(stream);
             } else {

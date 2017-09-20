@@ -33,6 +33,7 @@ import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.security.TokenBasedVerifier;
 import fr.cnes.doi.security.TokenSecurity;
 import fr.cnes.doi.utils.spec.Requirement;
+import org.restlet.routing.Template;
 
 /**
  * Provides an application to handle Data Object Identifier within an
@@ -238,9 +239,9 @@ public class DoiMdsApplication extends BaseApplication {
     private Router createRouter() {
         getLogger().entering(DoiMdsApplication.class.getName(), "createRouter");
 
-        Router router = new Router(getContext());
+        Router router = new Router(getContext());        
         router.attach(DOI_URI, DoisResource.class);
-        router.attach(DOI_URI + DOI_NAME_URI, DoiResource.class);
+        router.attach(DOI_URI + DOI_NAME_URI, DoiResource.class).getTemplate().setMatchingMode(Template.MODE_STARTS_WITH);
         router.attach(METADATAS_URI, MetadatasResource.class);
         router.attach(METADATAS_URI + DOI_NAME_URI, MetadataResource.class);
         router.attach(MEDIA_URI + DOI_NAME_URI, MediaResource.class);

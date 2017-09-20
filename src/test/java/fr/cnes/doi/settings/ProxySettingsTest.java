@@ -107,7 +107,7 @@ public class ProxySettingsTest {
 	public void testGetProxyAuthentication() {
 		System.out.println("getProxyAuthentication");
 		ChallengeResponse result = instance.getProxyAuthentication();
-		assertNull(result);
+		assertNotNull(result);
 	}
 
 	/**

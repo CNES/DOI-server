@@ -5,6 +5,7 @@
  */
 package fr.cnes.doi.logging.api;
 
+import fr.cnes.doi.exception.MailingException;
 import fr.cnes.doi.services.DoiMonitoring;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
@@ -123,7 +124,11 @@ public class MonitoringLogFilter extends LogFilter {
                     + "--------\n"
                     + " * Average : " + average + "\n"
                     + " * current : " + currentDuration + "\n";
-            email.sendMessage(subject, msg);
+            try {
+                email.sendMessage(subject, msg);
+            } catch (MailingException ex) {
+                Logger.getLogger(MonitoringLogFilter.class.getName()).log(Level.SEVERE, null, ex.getMessage());
+            }
         }
     }
 

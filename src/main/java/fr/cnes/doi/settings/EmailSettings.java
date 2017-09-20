@@ -5,6 +5,8 @@
  */
 package fr.cnes.doi.settings;
 
+import fr.cnes.doi.exception.DoiRuntimeException;
+import fr.cnes.doi.exception.MailingException;
 import fr.cnes.doi.utils.spec.Requirement;
 import java.util.Map;
 import java.util.TreeMap;
@@ -116,8 +118,9 @@ public final class EmailSettings {
      * @param subject Email's subject
      * @param msg Email's message
      * @return True when the message is sent
+     * @throws MailingException - if the SMTP server cannot be reached    
      */
-    public boolean sendMessage(final String subject, final String msg) {
+    public boolean sendMessage(final String subject, final String msg) throws MailingException {
         LOGGER.entering(this.getClass().getName(), "sendMessage", new Object[]{subject, msg});
         boolean result;
         try {
@@ -126,10 +129,9 @@ public final class EmailSettings {
             request.setChallengeResponse(
                     new ChallengeResponse(ChallengeScheme.SMTP_PLAIN, getAuthUser(), getAuthPwd()));
             result = sendMail(Protocol.valueOf(getSmtpProtocol()), request, Boolean.getBoolean(getTlsEnable()), subject,
-                    msg);
-        } catch (RuntimeException ex) {
-            LOGGER.log(Level.SEVERE, String.format("Cannot send the message with the subject %s : %s", subject, msg));
-            result = false;
+                    msg);        
+        } catch(RuntimeException ex) {            
+            throw new MailingException("The SMTP server cannot be reached");
         } catch (Exception ex) { 
             LOGGER.log(Level.SEVERE, String.format("Cannot send the message with the subject %s : %s", subject, msg), ex);
             result = false;

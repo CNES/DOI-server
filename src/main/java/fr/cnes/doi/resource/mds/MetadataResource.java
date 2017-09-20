@@ -9,8 +9,6 @@ import fr.cnes.doi.application.BaseApplication;
 import fr.cnes.doi.application.DoiMdsApplication;
 import fr.cnes.doi.client.ClientMDS;
 import fr.cnes.doi.exception.ClientMdsException;
-import static fr.cnes.doi.resource.mds.BaseMdsResource.DOI_PARAMETER;
-import static fr.cnes.doi.security.UtilsHeader.SELECTED_ROLE_PARAMETER;
 import fr.cnes.doi.utils.spec.Requirement;
 
 import java.util.Arrays;
@@ -23,7 +21,6 @@ import org.restlet.representation.Representation;
 import org.restlet.resource.Delete;
 import org.restlet.resource.Get;
 import org.restlet.resource.ResourceException;
-import org.restlet.util.Series;
 
 /**
  * Resources to handle a metadata.
@@ -81,11 +78,11 @@ public class MetadataResource extends BaseMdsResource {
             rep = this.doiApp.getClient().getMetadata(this.doiName);
         } catch (ClientMdsException ex) {
             getLogger().throwing(getClass().getName(), "getMetadata", ex);
-            if (ex.getStatus().getCode() == 404 || ex.getStatus().getCode() == 410) {
-                throw new ResourceException(ex.getStatus(), ex.getDetailMessage());
+            if (ex.getStatus().getCode() == Status.CLIENT_ERROR_NOT_FOUND.getCode() || ex.getStatus().getCode() == Status.CLIENT_ERROR_GONE.getCode()) {
+                throw new ResourceException(ex.getStatus(), ex.getMessage(), ex);
             } else {
                 ((BaseApplication)getApplication()).sendAlertWhenDataCiteFailed(ex);
-                throw new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getDetailMessage());
+                throw new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex);
             }
         }
 
@@ -141,7 +138,7 @@ public class MetadataResource extends BaseMdsResource {
             rep = this.doiApp.getClient().deleteMetadata(this.doiName);
         } catch (ClientMdsException ex) {
             getLogger().throwing(getClass().getName(), "deleteMetadata", ex);
-            if (ex.getStatus().getCode() == 404) {
+            if (ex.getStatus().getCode() == Status.CLIENT_ERROR_NOT_FOUND.getCode()) {
                 throw new ResourceException(ex.getStatus(), ex.getDetailMessage());
             } else {
                 ((BaseApplication)getApplication()).sendAlertWhenDataCiteFailed(ex);            

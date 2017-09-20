@@ -7,6 +7,7 @@ package fr.cnes.doi.services;
 
 import fr.cnes.doi.client.ClientLandingPage;
 import fr.cnes.doi.client.ClientSearchDataCite;
+import fr.cnes.doi.exception.MailingException;
 import fr.cnes.doi.settings.EmailSettings;
 import fr.cnes.doi.utils.spec.Requirement;
 import java.util.List;
@@ -62,7 +63,11 @@ public class LandingPageMonitoring implements Runnable {
             email.sendMessage(subject, msg);
             LOGGER.log(Level.INFO, msg);
         } catch (Exception ex) {
-            email.sendMessage("Unrecoverable errors when checking landing pages", ex.toString());
+            try {
+                email.sendMessage("Unrecoverable errors when checking landing pages", ex.toString());
+            } catch (MailingException ex1) {
+                LOGGER.log(Level.SEVERE, null, ex1.getMessage());
+            }
             LOGGER.log(Level.SEVERE, null, ex);
         }
     }

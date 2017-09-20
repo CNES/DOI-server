@@ -5,6 +5,7 @@
  */
 package fr.cnes.doi.server;
 
+import fr.cnes.doi.exception.MailingException;
 import fr.cnes.doi.security.TokenSecurity;
 import fr.cnes.doi.security.UtilsCryptography;
 import java.io.BufferedReader;
@@ -119,7 +120,11 @@ public class Starter {
                 LOGGER.info("Unable to stop the server");
             } finally {
                 GLOBAL_LOGGER.info("Interrups the server, which is stopping");
-                EmailSettings.getInstance().sendMessage("[DOI] Stopping Server", "Ther server has been interrupted");
+                try {
+                    EmailSettings.getInstance().sendMessage("[DOI] Stopping Server", "Ther server has been interrupted");
+                } catch (MailingException ex) {
+                    GLOBAL_LOGGER.log(Level.SEVERE, null, ex.getMessage());
+                }
                 server.interrupt();
                 server.join();
             }

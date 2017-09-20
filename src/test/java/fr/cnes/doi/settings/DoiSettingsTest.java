@@ -141,14 +141,4 @@ public class DoiSettingsTest {
 		assertEquals(expResult, result);
 	}
 
-	/**
-	 * Test of displayConfigFile method, of class DoiSettings.
-	 */
-	@Test
-	public void testDisplayConfigFile() {
-		System.out.println("displayConfigFile");
-		instance.displayConfigFile();
-		assertTrue(true);
-	}
-
 }

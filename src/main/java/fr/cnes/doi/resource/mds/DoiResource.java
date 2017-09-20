@@ -5,12 +5,12 @@
  */
 package fr.cnes.doi.resource.mds;
 
-import com.sun.scenario.Settings;
 import fr.cnes.doi.application.BaseApplication;
 import fr.cnes.doi.application.DoiMdsApplication;
 import fr.cnes.doi.client.ClientMDS;
 import fr.cnes.doi.exception.ClientMdsException;
 import fr.cnes.doi.settings.Consts;
+import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.utils.spec.Requirement;
 
 import java.util.Arrays;
@@ -50,7 +50,8 @@ public class DoiResource extends BaseMdsResource {
     protected void doInit() throws ResourceException {
         super.doInit();
         setDescription("The resource can retrieve a DOI");
-        this.doiName = getAttribute(DoiMdsApplication.DOI_TEMPLATE);
+        this.doiName = getResourcePath().replace(DoiMdsApplication.DOI_URI+"/", "");
+        //this.doiName = getAttribute(DoiMdsApplication.DOI_TEMPLATE);
     }
 
     /**
@@ -97,10 +98,10 @@ public class DoiResource extends BaseMdsResource {
         } catch (ClientMdsException ex) {
             getLogger().throwing(getClass().getName(), "getDoi", ex);
             if (ex.getStatus().getCode() == Status.CLIENT_ERROR_NOT_FOUND.getCode()) {
-                throw new ResourceException(ex.getStatus(), ex.getDetailMessage());
+                throw new ResourceException(ex.getStatus(), ex.getMessage(), ex);
             } else {
                 ((BaseApplication) getApplication()).sendAlertWhenDataCiteFailed(ex);
-                throw new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getDetailMessage());
+                throw new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex);
             }
         }
     }
@@ -119,7 +120,7 @@ public class DoiResource extends BaseMdsResource {
     private void checkInput(String doiName) throws ResourceException {
         if (doiName == null || doiName.isEmpty()) {
             throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "doiName cannot be null or empty");
-        } else if (!doiName.startsWith(Settings.get(Consts.INIST_DOI))) {
+        } else if (!doiName.startsWith(DoiSettings.getInstance().getString(Consts.INIST_DOI))) {
             throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "the DOI"
                     + " prefix must contains the prefix of the institution");
         } else {
