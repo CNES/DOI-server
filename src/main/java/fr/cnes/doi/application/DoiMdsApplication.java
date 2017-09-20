@@ -243,8 +243,8 @@ public class DoiMdsApplication extends BaseApplication {
         router.attach(DOI_URI, DoisResource.class);
         router.attach(DOI_URI + DOI_NAME_URI, DoiResource.class).getTemplate().setMatchingMode(Template.MODE_STARTS_WITH);
         router.attach(METADATAS_URI, MetadatasResource.class);
-        router.attach(METADATAS_URI + DOI_NAME_URI, MetadataResource.class);
-        router.attach(MEDIA_URI + DOI_NAME_URI, MediaResource.class);
+        router.attach(METADATAS_URI + DOI_NAME_URI, MetadataResource.class).getTemplate().setMatchingMode(Template.MODE_STARTS_WITH);
+        router.attach(MEDIA_URI + DOI_NAME_URI, MediaResource.class).getTemplate().setMatchingMode(Template.MODE_STARTS_WITH);
 
         getLogger().exiting(DoiMdsApplication.class.getName(), "createRouter", router);
 

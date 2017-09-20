@@ -140,7 +140,6 @@ public class DoisResource extends BaseMdsResource {
     @Post("form")
     public String createDoi(final Form doiForm) throws ResourceException {
         getLogger().entering(getClass().getName(), "createDoi");
-
         checkInputs(doiForm);
         getLogger().finest(doiForm.getMatrixString());
         String result;

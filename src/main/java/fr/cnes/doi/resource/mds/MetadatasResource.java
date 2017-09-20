@@ -26,14 +26,11 @@ import org.restlet.ext.wadl.ParameterStyle;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
-import org.restlet.util.Series;
 import org.xml.sax.SAXException;
 
 import fr.cnes.doi.exception.ClientMdsException;
-import static fr.cnes.doi.security.UtilsHeader.SELECTED_ROLE_PARAMETER;
 import fr.cnes.doi.utils.spec.CoverageAnnotation;
 import fr.cnes.doi.utils.spec.Requirement;
-import java.util.logging.Level;
 import javax.xml.bind.ValidationException;
 
 /**

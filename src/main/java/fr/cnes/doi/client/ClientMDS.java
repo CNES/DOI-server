@@ -508,7 +508,6 @@ public class ClientMDS extends BaseClient {
             String result;
             this.checkInputForm(form);
             Reference url = createReference(DOI_RESOURCE);
-            url = url.addQueryParameter(this.getTestMode());
             Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "POST {0}", url.toString());
             this.client.setReference(url);
             String requestBody = POST_DOI + "=" + form.getFirstValue(POST_DOI) + "\n" + POST_URL + "=" + form.getFirstValue(POST_URL);
@@ -747,7 +746,7 @@ public class ClientMDS extends BaseClient {
         Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "GET {0}", url.toString());
         this.client.setReference(url);
         try {
-            Representation response = this.client.delete();
+            Representation response = this.client.get();
             result = this.getText(response);
             return result;
         } catch (ResourceException ex) {
@@ -780,7 +779,7 @@ public class ClientMDS extends BaseClient {
      */
     public String createMedia(final String doiName, final Form form) throws ClientMdsException {
         String result;
-        Reference url = createReferenceWithDOI(METADATA_RESOURCE, doiName);
+        Reference url = createReferenceWithDOI(MEDIA_RESOURCE, doiName);
         Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "POST {0}", url.toString());
         this.client.setReference(url);
         Representation entity = createEntity(form);

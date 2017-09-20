@@ -17,7 +17,7 @@ import org.junit.runners.Suite;
  * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({fr.cnes.doi.resource.mds.MetadatasResourceTest.class, fr.cnes.doi.resource.mds.DoisResourceTest.class, fr.cnes.doi.resource.mds.MetadataResourceTest.class, fr.cnes.doi.resource.mds.DoiResourceTest.class, fr.cnes.doi.resource.mds.MediaResourceTest.class})
+@Suite.SuiteClasses({fr.cnes.doi.resource.mds.DoisResourceTest.class, fr.cnes.doi.resource.mds.MetadataResourceTest.class, fr.cnes.doi.resource.mds.DoiResourceTest.class, fr.cnes.doi.resource.mds.MediaResourceTest.class, fr.cnes.doi.resource.mds.MetadatasResourceTest.class})
 public class MdsSuite {
 
     @BeforeClass

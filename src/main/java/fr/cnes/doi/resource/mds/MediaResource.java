@@ -30,7 +30,6 @@ import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
-import org.restlet.util.Series;
 
 /** 
  * Resource to handle to Media.
@@ -48,7 +47,7 @@ public class MediaResource extends BaseMdsResource {
     @Override
     protected void doInit() throws ResourceException {   
         super.doInit();
-        this.mediaName = getAttribute(DoiMdsApplication.DOI_TEMPLATE);
+        this.mediaName = getResourcePath().replace(DoiMdsApplication.MEDIA_URI+"/", "");
     }
 
     /**
@@ -140,7 +139,7 @@ public class MediaResource extends BaseMdsResource {
         try {         
             setStatus(Status.SUCCESS_OK);
             String selectedRole = extractSelectedRoleFromRequestIfExists();         
-            checkPermission(mediaForm.getFirstValue(DOI_PARAMETER), selectedRole);            
+            checkPermission(this.mediaName, selectedRole);            
             result = this.doiApp.getClient().createMedia(this.mediaName, mediaForm);
         } catch (ClientMdsException ex) {
             getLogger().throwing(getClass().getName(), "createMedia", ex);  

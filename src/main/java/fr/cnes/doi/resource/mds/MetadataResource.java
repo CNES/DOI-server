@@ -44,7 +44,7 @@ public class MetadataResource extends BaseMdsResource {
     protected void doInit() throws ResourceException {
         super.doInit();
         setDescription("This resource handles a metadata : retrieve, delete");
-        this.doiName = getAttribute(DoiMdsApplication.DOI_TEMPLATE);
+        this.doiName = getResourcePath().replace(DoiMdsApplication.METADATAS_URI+"/", "");
     }
 
     /**
