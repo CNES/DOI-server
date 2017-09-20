@@ -75,15 +75,16 @@ public final class DoiSettings {
      * private constructor
      */
     private DoiSettings() {
-        init();
+        Properties properties = loadConfigurationFile(CONFIG_PROPERTIES);
+        init(properties);
     }
 
     /**
      * Loads configuration file and set it in memory.
+     * @param properties Configuration file
      */
-    private void init() {
-        LOGGER.entering(this.getClass().getName(), "init");
-        Properties properties = loadConfigurationFile(CONFIG_PROPERTIES);
+    private void init(final Properties properties) {
+        LOGGER.entering(this.getClass().getName(), "init");        
         fillConcurrentMap(properties);
         computePathOfTheApplication();
         PluginFactory.init(this.map);
@@ -247,7 +248,11 @@ public final class DoiSettings {
     }
 
     /**
-     * Returns the value of the key or null if no mapping for the key
+     * Returns the value of the key or null if no mapping for the key.
+     * A special processing is done for the key {@value fr.cnes.doi.settings.Consts#INIST_DOI}. 
+     * When this key is called the value changes in respect of {@value fr.cnes.doi.settings.Consts#CONTEXT_MODE}.
+     * When {@value fr.cnes.doi.settings.Consts#CONTEXT_MODE} is set to PRE_PROD, {@value fr.cnes.doi.settings.Consts#INIST_DOI}
+     * is set to {@value #INIST_TEST_DOI}.
      *
      * @param key key to search
      * @return the value of the key
@@ -409,7 +414,7 @@ public final class DoiSettings {
         Properties properties = new Properties();
         try (FileInputStream is = new FileInputStream(new File(path))) {
             properties.load(is);
-            fillConcurrentMap(properties);
+            init(properties);
         }
         LOGGER.exiting(this.getClass().getName(), "setPropertiesFile");                
     }
@@ -424,9 +429,9 @@ public final class DoiSettings {
         LOGGER.entering(this.getClass().getName(), "setPropertiesFile");                
         Properties properties = new Properties();
         properties.load(is);
-        fillConcurrentMap(properties);
+        init(properties);
         LOGGER.exiting(this.getClass().getName(), "setPropertiesFile");                        
-    }
+    }        
 
     /**
      * Returns the path of the application on the file system.

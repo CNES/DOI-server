@@ -200,13 +200,31 @@ public class RoleAuthorizer implements Observer {
     @Override
     public void update(Observable o, Object obj) {
         LOGGER.entering(this.getClass().getName(), "update", new Object[]{o, obj});
-
+        
         // Loads the admin group - admin group is defined by default
         Group adminGroup = findGroupByName(GROUP_ADMIN);
 
         // Loads the application MDS related to admin group
         Application mds = loadApplicationBy(adminGroup, DoiMdsApplication.NAME);
+        
+        if (mds == null) {
+            LOGGER.warning(DoiMdsApplication.NAME + " is not defined in the REAM");
+        } else {
+            updateObserver(o, obj, mds);
+        }
 
+        LOGGER.exiting(this.getClass().getName(), "update");
+    }
+    
+    /**
+     * Updates REALM for mds.
+     * @param o observable
+     * @param obj message
+     * @param mds application
+     */
+    private void updateObserver(Observable o, Object obj, Application mds) {
+        LOGGER.entering(this.getClass().getName(), "updateObserver", new Object[]{o, obj, mds.getName()});
+        
         if (o instanceof ProjectSuffixDBHelper) {
             LOGGER.finest("Observable is a ProjectSuffixDB type");
 
@@ -233,8 +251,7 @@ public class RoleAuthorizer implements Observer {
                     break;
             }
         }
-
-        LOGGER.exiting(this.getClass().getName(), "update");
+        LOGGER.exiting(this.getClass().getName(), "update");        
     }
 
     /**
@@ -242,7 +259,7 @@ public class RoleAuthorizer implements Observer {
      *
      * @param group group linked to an application
      * @param appName application name
-     * @return the application
+     * @return the application or null if the application is not defined in the REALM
      */
     private Application loadApplicationBy(final Group group, final String appName) {
         LOGGER.entering(this.getClass().getName(), "loadApplicationBy", new Object[]{group.getName(), appName});
@@ -256,11 +273,6 @@ public class RoleAuthorizer implements Observer {
             if (app.getName().equals(appName)) {
                 searchedApp = app;
             }
-        }
-        if (searchedApp == null) {
-            DoiRuntimeException doiRuntimeEx = new DoiRuntimeException("Application " + appName + " not found");
-            LOGGER.throwing(this.getClass().getName(), "loadApplicationBy", doiRuntimeEx);
-            throw doiRuntimeEx;
         }
 
         LOGGER.exiting(this.getClass().getName(), "loadApplicationBy", searchedApp);

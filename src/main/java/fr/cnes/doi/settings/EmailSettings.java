@@ -127,7 +127,10 @@ public final class EmailSettings {
                     new ChallengeResponse(ChallengeScheme.SMTP_PLAIN, getAuthUser(), getAuthPwd()));
             result = sendMail(Protocol.valueOf(getSmtpProtocol()), request, Boolean.getBoolean(getTlsEnable()), subject,
                     msg);
-        } catch (Exception ex) {
+        } catch (RuntimeException ex) {
+            LOGGER.log(Level.SEVERE, String.format("Cannot send the message with the subject %s : %s", subject, msg));
+            result = false;
+        } catch (Exception ex) { 
             LOGGER.log(Level.SEVERE, String.format("Cannot send the message with the subject %s : %s", subject, msg), ex);
             result = false;
         }
@@ -150,29 +153,29 @@ public final class EmailSettings {
             final String msg) throws Exception {
         boolean result;
         LOGGER.entering(this.getClass().getName(), "sendMail", new Object[]{protocol.getName(), startTls, subject, msg});
-        final Client client = new Client(protocol);
-        Context context = new Context();
-        client.setContext(context);
-        client.getContext().getParameters().add("debug", String.valueOf(getDebug()));
-        client.getContext().getParameters().add("startTls", Boolean.toString(startTls).toLowerCase());
         Map<String, String> dataModel = new TreeMap<>();
         dataModel.put("subject", subject);
         dataModel.put("message", msg);
         dataModel.put("from",
                 DoiSettings.getInstance().getString(Consts.SERVER_CONTACT_ADMIN, "L-doi-support@cnes.fr"));
         dataModel.put("to", DoiSettings.getInstance().getString(Consts.SERVER_CONTACT_ADMIN, "L-doi-support@cnes.fr"));
+        
         Representation mailFtl = new ClientResource(LocalReference.createClapReference("class/email.ftl")).get();
         Representation mail = new TemplateRepresentation(mailFtl, dataModel, MediaType.TEXT_XML);
-        request.setEntity(mail);
-        final Response response = client.handle(request);
-        Status status = response.getStatus();
+        request.setEntity(mail);        
+        Context context = new Context();
+        final ClientResource client = new ClientResource(context, request);                
+        client.setProtocol(protocol);
+        client.getContext().getParameters().add("debug", String.valueOf(getDebug()));
+        client.getContext().getParameters().add("startTls", Boolean.toString(startTls).toLowerCase());
+        Representation rep = client.get();
+        Status status = client.getStatus();
         if (status.isError()) {
             LOGGER.log(Level.SEVERE, "Cannot send the email! : {0}", status.getDescription());
             result = false;
         } else {
             result = true;
-        }
-        client.stop();
+        }        
         LOGGER.exiting(this.getClass().getName(), "sendMail", result);
         return result;
     }

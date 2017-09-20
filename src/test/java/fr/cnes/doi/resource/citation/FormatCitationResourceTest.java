@@ -86,7 +86,7 @@ public class FormatCitationResourceTest {
 	@Test
 	public void testGetFormat() {
 		System.out.println("getFormat");
-		String expResult = "Garza, K., Goble, C., Brooke, J., & Jay, C. 2015. Framing the community data system interface. Proceedings of the 2015 British HCI Conference on - British HCI ’15. ACM Press. https://doi.org/10.1145/2783446.2783605.\n";
+		String expResult = "Garza, K., Goble, C., Brooke, J., & Jay, C. 2015. Framing the community data system interface. Proceedings of the 2015 British HCI Conference on - British HCI ’15. Presented at the the 2015 British HCI Conference, ACM Press. https://doi.org/10.1145/2783446.2783605.\n";
 		String result = "";
 		String doiName = "10.1145/2783446.2783605";
 		String style = "academy-of-management-review";
