@@ -11,7 +11,6 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.logging.Logger;
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.ValidationEvent;
@@ -177,9 +176,9 @@ public class MetadatasResource extends BaseMdsResource {
         um.setSchema(schema);
         MyValidationEventHandler validationHandler = new MyValidationEventHandler(getLogger());
         um.setEventHandler(validationHandler);
-        JAXBElement<Resource> jaxbResource = (JAXBElement<Resource>) um.unmarshal(entity.getStream());
+        Resource resource = (Resource) um.unmarshal(entity.getStream());
         if (validationHandler.isValid()) {
-            return jaxbResource.getValue();
+            return resource;
         } else {
             throw new ValidationException(validationHandler.getErrorMsg());
         }

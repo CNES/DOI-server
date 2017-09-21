@@ -32,6 +32,7 @@ import org.restlet.data.Status;
 
 /**
  * Security class for token generation.
+ *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 @Requirement(
@@ -62,9 +63,9 @@ public class TokenSecurity {
 
     public static final String DATE_FORMAT = "E MMM dd HH:mm:ss z yyyy";
 
-    private String tokenKey;
+    private static final TokenDBHelper tokenDB = PluginFactory.getToken();
 
-    private TokenDBHelper tokenDB;
+    private String tokenKey;
 
     /**
      * Class to handle the instance
@@ -99,9 +100,16 @@ public class TokenSecurity {
     }
 
     private TokenSecurity() {
+        init();
+    }
+
+    /**
+     * Init.
+     */
+    private void init() {
         String token = DoiSettings.getInstance().getString(Consts.TOKEN_KEY);
         this.tokenKey = (token == null) ? DEFAULT_TOKEN_KEY : token;
-        this.tokenDB = PluginFactory.getToken();
+        TokenSecurity.tokenDB.init(null);
     }
 
     public enum TimeUnit {
@@ -194,7 +202,8 @@ public class TokenSecurity {
      *
      * @param jwtToken token JWT
      * @return the information
-     * @throws DoiRuntimeException - if an error happens getting information from the token
+     * @throws DoiRuntimeException - if an error happens getting information
+     * from the token
      */
     public Jws<Claims> getTokenInformation(final String jwtToken) {
         try {

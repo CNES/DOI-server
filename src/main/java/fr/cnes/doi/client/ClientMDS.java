@@ -5,13 +5,11 @@
  */
 package fr.cnes.doi.client;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import java.util.logging.Level;
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import org.datacite.schema.kernel_4.Resource;
@@ -27,11 +25,19 @@ import org.restlet.representation.Representation;
 
 import fr.cnes.doi.exception.ClientMdsException;
 import fr.cnes.doi.utils.spec.Requirement;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Iterator;
+import javax.xml.XMLConstants;
+import javax.xml.bind.Marshaller;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
 import org.restlet.data.CharacterSet;
 import org.restlet.data.Language;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ResourceException;
+import org.xml.sax.SAXException;
 
 /**
  * Client to query Metadata store service at Datacite.
@@ -538,12 +544,10 @@ public class ClientMDS extends BaseClient {
     private Resource parseDataciteResource(final Representation rep) throws ClientMdsException {
         final Resource resource;
         try {
-            final String result = getText(rep);
             JAXBContext ctx = JAXBContext.newInstance(new Class[]{org.datacite.schema.kernel_4.Resource.class});
             Unmarshaller um = ctx.createUnmarshaller();
-            JAXBElement<Resource> jaxbResource = (JAXBElement<Resource>) um.unmarshal(new ByteArrayInputStream(result.getBytes()));
-            resource = jaxbResource.getValue();
-        } catch (JAXBException ex) {
+            resource = (Resource) um.unmarshal(rep.getStream());            
+        } catch (JAXBException | IOException ex) {
             throw new ClientMdsException(Status.SERVER_ERROR_INTERNAL, ex);
         }
         return resource;
@@ -646,20 +650,41 @@ public class ClientMDS extends BaseClient {
      * @see "https://mds.datacite.org/static/apidoc#tocAnchor-18"
      */
     public String createMetadata(final Resource entity) throws ClientMdsException {
-        String result = null;
-        Identifier id = entity.getIdentifier();
-        id.setValue(getDoiAccorgindToContext(id.getValue()));
-        Reference url = createReference(METADATA_RESOURCE);
-        Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "POST {0}", url.toString());
-        this.client.setReference(url);
-        this.client.getRequestAttributes().put("charset", "UTF-8");
-
         try {
-            Representation response = this.client.post(entity, MediaType.APPLICATION_XML);
+            String result;
+            Identifier id = entity.getIdentifier();
+            id.setValue(getDoiAccorgindToContext(id.getValue()));
+            Reference url = createReference(METADATA_RESOURCE);
+            Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "POST {0}", url.toString());
+            OutputStream output = new OutputStream() {
+                private StringBuilder string = new StringBuilder();
+
+                @Override
+                public void write(int b) throws IOException {
+                    this.string.append((char) b);
+                }
+
+                //Netbeans IDE automatically overrides this toString()
+                @Override
+                public String toString() {
+                    return this.string.toString();
+                }
+            };
+            JAXBContext jaxbContext = JAXBContext.newInstance(new Class[]{org.datacite.schema.kernel_4.Resource.class});
+            Marshaller marshaller = jaxbContext.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_SCHEMA_LOCATION, "http://datacite.org/schema/kernel-4 http://schema.datacite.org/meta/kernel-4/metadata.xsd");
+            Schema schema = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI).newSchema(new URL("https://schema.datacite.org/meta/kernel-4.0/metadata.xsd"));
+            marshaller.setSchema(schema);
+            marshaller.marshal(entity, output);
+            this.client.setReference(url);
+            this.client.getRequestAttributes().put("charset", "UTF-8");
+            Representation response = this.client.post(new StringRepresentation(output.toString(), MediaType.APPLICATION_XML));            
             result = getText(response);
             return result;
         } catch (ResourceException ex) {
             throw new ClientMdsException(ex.getStatus(), ex.getResponse().getEntityAsText());
+        } catch (JAXBException | SAXException | MalformedURLException ex) {
+            throw new ClientMdsException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex);
         } finally {
             client.release();
         }

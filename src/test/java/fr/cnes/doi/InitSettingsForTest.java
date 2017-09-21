@@ -12,7 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import fr.cnes.doi.client.ClientMDSTest;
+import fr.cnes.doi.client.ClientProxyTest;
 import fr.cnes.doi.security.UtilsCryptography;
 import fr.cnes.doi.settings.DoiSettings;
 
@@ -39,7 +39,7 @@ public class InitSettingsForTest {
             String secretKey = System.getProperty("private.key");
             if (secretKey != null) {                
                 String result;
-                try (InputStream inputStream = ClientMDSTest.class.getResourceAsStream("/config.properties")) {
+                try (InputStream inputStream = ClientProxyTest.class.getResourceAsStream("/config.properties")) {
                     result = new BufferedReader(new InputStreamReader(inputStream)).lines()
                             .collect(Collectors.joining("\n"));
                 }

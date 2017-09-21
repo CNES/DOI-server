@@ -13,6 +13,7 @@ import fr.cnes.doi.utils.spec.Requirement;
 
 import java.util.Arrays;
 import java.util.logging.Level;
+import org.datacite.schema.kernel_4.Resource;
 import org.restlet.data.Method;
 import org.restlet.data.Status;
 import org.restlet.ext.wadl.MethodInfo;
@@ -51,7 +52,7 @@ public class MetadataResource extends BaseMdsResource {
      * Retuns the metadata for a given DOI. 200 status is returned when the
      * operation is successful.
      *
-     * @return the metadata for a given DOI
+     * @return the metadata for a given DOI as Json or XML
      * @throws ResourceException - if an error happens<ul>
      * <li>400 Bad Request - DOI's syntax is not valid</li>     
      * <li>404 Not Found - DOI does not exist in DataCite</li>
@@ -68,14 +69,14 @@ public class MetadataResource extends BaseMdsResource {
             reqId = Requirement.DOI_MONIT_020,
             reqName = Requirement.DOI_MONIT_020_NAME
     )      
-    @Get
-    public Representation getMetadata() throws ResourceException {
+    @Get("xml|json")
+    public Resource getMetadata() throws ResourceException {
         getLogger().entering(getClass().getName(), "getMetadata", this.doiName);
         checkInputs(doiName);
-        Representation rep;
+        Resource resource;
         try {
             setStatus(Status.SUCCESS_OK);
-            rep = this.doiApp.getClient().getMetadata(this.doiName);
+            resource = this.doiApp.getClient().getMetadataAsObject(this.doiName);
         } catch (ClientMdsException ex) {
             getLogger().throwing(getClass().getName(), "getMetadata", ex);
             if (ex.getStatus().getCode() == Status.CLIENT_ERROR_NOT_FOUND.getCode() || ex.getStatus().getCode() == Status.CLIENT_ERROR_GONE.getCode()) {
@@ -87,7 +88,7 @@ public class MetadataResource extends BaseMdsResource {
         }
 
         getLogger().exiting(getClass().getName(), "getMetadata");
-        return rep;
+        return resource;
     }
 
     /**

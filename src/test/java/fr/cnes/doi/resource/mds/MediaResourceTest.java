@@ -17,6 +17,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Ignore;
 import org.restlet.Client;
 import org.restlet.Context;
 import org.restlet.data.ChallengeResponse;
@@ -66,11 +67,49 @@ public class MediaResourceTest {
     @After
     public void tearDown() {
     }
+    
+    /**
+     * Test of getMedias method, of class MediaResource.
+     */
+    @Test
+    public void testGetMediasHttps() throws IOException {
+        System.out.println("getMedias");
+        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
+        ClientResource client = new ClientResource("https://localhost:" + port + "/mds/media/"+DOI);
+        client.setNext(cl);
+        int code;
+        try {
+            Representation rep = client.get();
+            code = client.getStatus().getCode();
+        } catch(ResourceException ex) {
+            code = ex.getStatus().getCode();
+        }
+        assertEquals(Status.SUCCESS_OK.getCode(), code);
+    }
+    
+    /**
+     * Test of getMedias method, of class MediaResource.
+     */    
+    @Test
+    public void testGetMediasHttp() throws IOException {
+        System.out.println("getMedias");
+        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);
+        ClientResource client = new ClientResource("http://localhost:" + port + "/mds/media/"+DOI);        
+        int code;
+        try {
+            Representation rep = client.get();
+            code = client.getStatus().getCode();
+        } catch(ResourceException ex) {
+            code = ex.getStatus().getCode();
+        }
+        assertEquals(Status.SUCCESS_OK.getCode(), code);
+    }        
 
     /**
      * Test of getMedias method, of class MediaResource.
      */
     @Test
+    @Ignore
     public void testGetMediasWithNoMediaHttps() throws IOException {
         System.out.println("getMedias");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
@@ -88,8 +127,9 @@ public class MediaResourceTest {
     
     /**
      * Test of getMedias method, of class MediaResource.
-     */
+     */    
     @Test
+    @Ignore
     public void testGetMediasWithNoMediaHttp() throws IOException {
         System.out.println("getMedias");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);
@@ -107,7 +147,7 @@ public class MediaResourceTest {
     /**
      * Test of createMedia method, of class MediaResource.
      */
-    @Test
+    @Test    
     public void testCreateMedia() {
         System.out.println("createMedia");
         Form mediaForm = new Form();

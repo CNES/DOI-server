@@ -46,43 +46,15 @@ public class LanguageCitationResource extends BaseCitationResource {
             reqId = Requirement.DOI_MONIT_020,
             reqName = Requirement.DOI_MONIT_020_NAME
     )      
-    @Get("json")
-    public List<String> getLanguagesToJSON() {
-        getLogger().entering(this.getClass().getName(), "getLanguagesToJSON");
+    @Get("json|xml")
+    public List<String> getLanguages() {
+        getLogger().entering(this.getClass().getName(), "getLanguages");
         try {
             List<String> result = this.app.getClient().getLanguages();
-            getLogger().exiting(this.getClass().getName(), "getLanguagesToJSON", result);
+            getLogger().exiting(this.getClass().getName(), "getLanguages", result);
             return result;
         } catch (ClientCrossCiteException ex) {
-            getLogger().throwing(this.getClass().getName(), "getLanguagesToJSON", ex);
-            ((BaseApplication)getApplication()).sendAlertWhenDataCiteFailed(ex);            
-            throw new ResourceException(ex.getStatus(), ex.getDetailMessage());
-        }
-    }
-
-    /**
-     * Returns the languages as XML to format the citation.
-     *
-     * @return the languages
-     */ 
-    @Requirement(
-            reqId = Requirement.DOI_SRV_110,
-            reqName = Requirement.DOI_SRV_110_NAME
-    )   
-    @Requirement(
-            reqId = Requirement.DOI_MONIT_020,
-            reqName = Requirement.DOI_MONIT_020_NAME
-    )      
-    @Get("xml")
-    public List<String> getLanguagesToXML() {
-        getLogger().entering(this.getClass().getName(), "getLanguagesToXML");
-
-        try {
-            List<String> result = this.app.getClient().getLanguages();
-            getLogger().exiting(this.getClass().getName(), "getLanguagesToXML", result);
-            return result;
-        } catch (ClientCrossCiteException ex) {
-            getLogger().throwing(this.getClass().getName(), "getLanguagesToXML", ex);    
+            getLogger().throwing(this.getClass().getName(), "getLanguages", ex);
             ((BaseApplication)getApplication()).sendAlertWhenDataCiteFailed(ex);            
             throw new ResourceException(ex.getStatus(), ex.getDetailMessage());
         }

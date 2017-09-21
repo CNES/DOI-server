@@ -51,40 +51,16 @@ public class StyleCitationResource extends BaseCitationResource {
             reqId = Requirement.DOI_MONIT_020,
             reqName = Requirement.DOI_MONIT_020_NAME
     )      
-    @Get("json")
-    public List<String> getStylesToJSON() {
-        getLogger().entering(this.getClass().getName(), "getStylesToJSON");
+    @Get("json|xml")
+    public List<String> getStyles() {
+        getLogger().entering(this.getClass().getName(), "getStyles");
         try {
             List<String> result = this.app.getClient().getStyles();
-            getLogger().exiting(this.getClass().getName(), "getStylesToJSON", result);
+            getLogger().exiting(this.getClass().getName(), "getStyles", result);
             return result;
         } catch (ClientCrossCiteException ex) {
-            getLogger().throwing(this.getClass().getName(), "getStylesToJSON", ex);
+            getLogger().throwing(this.getClass().getName(), "getStyles", ex);
             ((BaseApplication)getApplication()).sendAlertWhenDataCiteFailed(ex);                        
-            throw new ResourceException(ex.getStatus(), ex.getDetailMessage());
-        }
-    } 
-    
-    /**
-     * Returns the styles as XML for a citation.
-     * @return the possibles styles for a citation
-     */
-    @Requirement(
-            reqId = Requirement.DOI_SRV_100,
-            reqName = Requirement.DOI_SRV_100_NAME
-    )     
-    @Requirement(
-            reqId = Requirement.DOI_MONIT_020,
-            reqName = Requirement.DOI_MONIT_020_NAME
-    )      
-    @Get("xml")
-    public List<String> getStylesToXML() {
-        try {
-            List<String> result = this.app.getClient().getStyles();
-            getLogger().exiting(this.getClass().getName(), "getStylesToXML", result);
-            return result;
-        } catch (ClientCrossCiteException ex) {
-            getLogger().throwing(this.getClass().getName(), "getStylesToXML", ex);            
             throw new ResourceException(ex.getStatus(), ex.getDetailMessage());
         }
     }  

@@ -104,6 +104,11 @@ public class AdminApplication extends BaseApplication {
      * Status page.
      */
     public static final String STATUS_URI = "/status";
+    
+    /**
+     * Stats page.
+     */
+    public static final String STATS_URI = "/stats";    
 
     /**
      * URI to create a project suffix.
@@ -126,9 +131,14 @@ public class AdminApplication extends BaseApplication {
     public static final String TOKEN_NAME_URI = "/{" + TOKEN_TEMPLATE + "}";
 
     /**
-     * Status page for DataCite.
+     * DataCite Status page.
      */
     private static final String TARGET_URL = "http://status.datacite.org";
+    
+    /**
+     * DataCite Stats page.
+     */
+    private static final String TARGET_STATS_URL = "https://stats.datacite.org/#tab-prefixes";    
 
     /**
      * Token database.
@@ -268,6 +278,7 @@ public class AdminApplication extends BaseApplication {
         Router router = new Router(getContext());
         addStatusPage(router);
         addServicesStatus(router);
+        addServicesStats(router);
         addRouteForWebSite(router);
 
         getLogger().exiting(AdminApplication.class.getName(), "createWebSiteRouter", router);
@@ -319,6 +330,32 @@ public class AdminApplication extends BaseApplication {
 
         getLogger().exiting(AdminApplication.class.getName(), "addServicesStatus");
     }
+    
+    /**
+     * Adds route {@value #STATS_URI} to the services giving the DataCite
+     * stats.
+     *
+     * @param router router
+     */
+    private void addServicesStats(final Router router) {
+        getLogger().entering(AdminApplication.class.getName(), "addServicesStats");
+
+        Redirector redirector = new Redirector(getContext(), TARGET_STATS_URL, Redirector.MODE_CLIENT_PERMANENT);
+
+        Filter authentication = new Filter() {
+            @Override
+            protected int doHandle(Request request, Response response) {
+                if (ProxySettings.getInstance().isWithProxy()) {
+                    request.setProxyChallengeResponse(ProxySettings.getInstance().getProxyAuthentication());
+                }
+                return super.doHandle(request, response);
+            }
+        };
+        authentication.setNext(redirector);
+        router.attach(STATS_URI, authentication);
+
+        getLogger().exiting(AdminApplication.class.getName(), "addServicesStatus");
+    }    
 
     /**
      * Adds default route to the website when it exists. The website must be

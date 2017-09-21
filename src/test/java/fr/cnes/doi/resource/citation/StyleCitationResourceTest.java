@@ -24,10 +24,11 @@ import org.restlet.data.Protocol;
 import org.restlet.resource.ClientResource;
 import org.restlet.util.Series;
 
-import fr.cnes.doi.InitSettingsForTest;
-import fr.cnes.doi.server.DoiServer;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
+import org.junit.Assert;
+import org.restlet.data.MediaType;
+import org.restlet.representation.Representation;
 
 /**
  *
@@ -103,6 +104,48 @@ public class StyleCitationResourceTest {
             Logger.getLogger(StyleCitationResourceTest.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             assertEquals(expResult, result);
+        }
+    }    
+    
+    /**
+     * Test of getStyles method, of class StyleCitationResource.
+     */
+    @Test
+    public void testGetStylesHttpsAsJSON() {
+        System.out.println("getStyles");
+        String expResult = "academy-of-management-review";
+        String result = "";
+        try {
+            String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);                        
+            ClientResource client = new ClientResource("https://localhost:"+port+"/citation/style");
+            client.setNext(cl);
+            Representation rep = client.get(MediaType.APPLICATION_JSON);
+            result = rep.getText();
+        } catch (Exception ex) {
+            Logger.getLogger(StyleCitationResourceTest.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            Assert.assertTrue(result.contains("["));
+        }
+    }    
+    
+    /**
+     * Test of getStyles method, of class StyleCitationResource.
+     */
+    @Test
+    public void testGetStylesHttpsAsXML() {
+        System.out.println("getStyles");
+        String expResult = "academy-of-management-review";
+        String result = "";
+        try {
+            String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);                        
+            ClientResource client = new ClientResource("https://localhost:"+port+"/citation/style");
+            client.setNext(cl);
+            Representation rep = client.get(MediaType.APPLICATION_XML);
+            result = rep.getText();
+        } catch (Exception ex) {
+            Logger.getLogger(StyleCitationResourceTest.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            Assert.assertTrue(result.contains("<"));
         }
     }    
 
