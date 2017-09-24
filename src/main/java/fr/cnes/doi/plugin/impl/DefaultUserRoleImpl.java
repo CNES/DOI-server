@@ -37,11 +37,13 @@ public class DefaultUserRoleImpl extends UserRolePluginHelper {
         User cc = new User("caillet", "pppp", "Claire", "Caillet", "claire.caillet@cnes.fr");
         User test1 = new User("test1", "test1");
         User test2 = new User("test2", "test2");
+        User userWithNoRole = new User("norole", "norole");
         users.add(admin);
         users.add(jcm);
         users.add(cc);
         users.add(test1);
-        users.add(test2);        
+        users.add(test2);   
+        users.add(userWithNoRole);
     }
     
 

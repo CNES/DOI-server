@@ -18,6 +18,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Rule;
+import org.junit.rules.ExpectedException;
 import org.restlet.Client;
 import org.restlet.Context;
 import org.restlet.data.ChallengeScheme;
@@ -27,20 +29,24 @@ import org.restlet.data.Parameter;
 import org.restlet.data.Protocol;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
+import org.restlet.resource.ResourceException;
 import org.restlet.util.Series;
 
 /**
- *
- * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
+ * Tests the suffixProjects resource of the AdminisrationApplication.
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class SuffixProjectsResourceTest {
 
+    @Rule
+    public ExpectedException exceptions = ExpectedException.none(); 
+    
     /**
-     * Cache file for tests
+     * Cache file for tests.
      */
     private static final String cacheFile = "src/test/resources/projects.conf";
     
-    private static Client cl;
+    private static Client cl;        
 
     public SuffixProjectsResourceTest() {
     }
@@ -85,38 +91,44 @@ public class SuffixProjectsResourceTest {
 
     /**
      * Test of getProjectsNameAsJson method, of class SuffixProjectsResource.
+     * @throws java.io.IOException - if OutOfMemoryErrors
      */
     @Test
     public void testGetProjectsNameAsJson() throws IOException {
-        System.out.println("getProjectsNameAsJson");
+        System.out.println("getProjectsNameAsJson throw a HTTPS server");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:"+port+"/admin/suffixProject");
         client.setNext(cl);
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
         Representation response = client.get(MediaType.APPLICATION_JSON); 
         String projects = response.getText();
-        assertNotNull(projects);
-        assertTrue(projects.contains("{"));
+        client.release();
+        assertNotNull("Test if the response is not null",projects);
+        assertTrue("Test if the response is a JSON format",projects.contains("{"));
     }
 
     /**
      * Test of getProjectsNameAsXml method, of class SuffixProjectsResource.
+     * @throws java.io.IOException - if OutOfMemoryErrors
      */
     @Test
     public void testGetProjectsNameAsXml() throws IOException {
-        System.out.println("getProjectsNameAsXml");
+        System.out.println("getProjectsNameAsXml through a HTTPS server");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:"+port+"/admin/suffixProject");
         client.setNext(cl);
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
         Representation response = client.get(MediaType.APPLICATION_XML); 
         String projects = response.getText();
-        assertNotNull(projects);
-        assertTrue(projects.contains("<ConcurrentHashMap>"));
+        client.release();
+        assertNotNull("Test if the response is not null",projects);
+        assertTrue("Test is the response is in XML format",projects.contains("<ConcurrentHashMap>"));
     }
 
     /**
      * Test of createProject method, of class SuffixProjectsResource.
+     * This method is used to create a short DOI suffix given for a specific project.     
+     * @throws java.io.IOException - if OutOfMemoryErrors
      */
     @Test
     public void testCreateProject() throws IOException {
@@ -129,7 +141,32 @@ public class SuffixProjectsResourceTest {
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
         Representation response = client.post(form); 
         String projectID = response.getText();
-        assertNotNull(projectID);
+        client.release();
+        assertNotNull("Test is the server returns the DOI suffix", projectID);
     }
+    
+    /**
+     * Test of createProject method, of class SuffixProjectsResource.
+     * A ResourceException is thrown because the submitted parameters are wrongs.
+     * @throws ResourceException
+     */
+    @Test
+    public void testCreateProjectWithWrongParameter() {
+        System.out.println("createProject with wrong parameters");
+        
+        exceptions.expect(ResourceException.class);
+        
+        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
+        ClientResource client = new ClientResource("https://localhost:"+port+"/admin/suffixProject");
+        client.setNext(cl);
+        Form form = new Form();
+        form.add("project", "Myphhfffcvdscsdfvdffff");
+        client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
+        try {
+            Representation response = client.post(form); 
+        } finally {
+            client.release();            
+        }
+    }    
 
 }

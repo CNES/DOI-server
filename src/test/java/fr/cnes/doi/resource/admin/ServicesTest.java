@@ -26,8 +26,8 @@ import org.restlet.resource.ResourceException;
 import org.restlet.util.Series;
 
 /**
- *
- * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
+ * Tests services from the Administration application.
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class ServicesTest {
     
@@ -60,11 +60,11 @@ public class ServicesTest {
     }
 
     /**
-     * Test of createToken method, of class TokenResource.
+     * Test of getStatus service through a HTTPS server, of class AdministrationApplication.
      */
     @Test
     public void getStatus()  {
-        System.out.println("getProjectsNameAsJson");
+        System.out.println("getStatus service through a HTTPS server");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:"+port+"/status");        
         client.setNext(cl);    
@@ -75,7 +75,8 @@ public class ServicesTest {
         } catch(ResourceException ex) {
             status = ex.getStatus();
         }
-        assertEquals(Status.SUCCESS_OK.getCode(), status.getCode());
+        client.release();
+        assertEquals("Test of status service",Status.SUCCESS_OK.getCode(), status.getCode());
     }    
     
     /**
@@ -84,7 +85,7 @@ public class ServicesTest {
     @Test
     @Ignore
     public void getStats()  {
-        System.out.println("getProjectsNameAsJson");
+        System.out.println("getStats service through a HTTPS server");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:"+port+"/stats");        
         client.setNext(cl);    
@@ -95,7 +96,8 @@ public class ServicesTest {
         } catch(ResourceException ex) {
             status = ex.getStatus();
         }
-        assertEquals(Status.SUCCESS_OK.getCode(), status.getCode());
+        client.release();
+        assertEquals("Test of stats service",Status.SUCCESS_OK.getCode(), status.getCode());
     }      
     
 }

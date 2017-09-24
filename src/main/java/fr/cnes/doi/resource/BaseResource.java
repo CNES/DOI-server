@@ -29,7 +29,7 @@ import org.restlet.resource.ResourceException;
         reqId = Requirement.DOI_DOC_010,
         reqName = Requirement.DOI_DOC_010_NAME
 )
-public class BaseResource extends WadlServerResource {
+public abstract class BaseResource extends WadlServerResource {
 
     @Override
     protected void doInit() throws ResourceException {

@@ -9,8 +9,6 @@ import fr.cnes.doi.InitServerForTest;
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -26,13 +24,16 @@ import org.restlet.util.Series;
 
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
+import java.io.IOException;
 import org.junit.Assert;
 import org.restlet.data.MediaType;
 import org.restlet.representation.Representation;
+import org.restlet.resource.ResourceException;
 
 /**
+ * Tests the citation style resource.
  *
- * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class StyleCitationResourceTest {
 
@@ -66,87 +67,91 @@ public class StyleCitationResourceTest {
     }
 
     /**
-     * Test of getStyles method, of class StyleCitationResource.
+     * Test of getStyles method through a HTTPS server, of class
+     * StyleCitationResource.
      */
     @Test
     public void testGetStylesHttps() {
-        System.out.println("getStyles");
+        System.out.println("getStyles through a HTTPS server");
         String expResult = "academy-of-management-review";
         String result = "";
+        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
+        ClientResource client = new ClientResource("https://localhost:" + port + "/citation/style");
+        client.setNext(cl);
         try {
-            String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);                        
-            ClientResource client = new ClientResource("https://localhost:"+port+"/citation/style");
-            client.setNext(cl);
             List<String> rep = client.get(List.class);
             result = rep.get(0);
         } catch (Exception ex) {
-            Logger.getLogger(StyleCitationResourceTest.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            assertEquals(expResult, result);
+            client.release();
+            assertEquals("Test if the server returns the right response", expResult, result);
         }
     }
-    
+
     /**
-     * Test of getStyles method, of class StyleCitationResource.
+     * Test of getStyles method through a HTTP server, of class
+     * StyleCitationResource.
      */
     @Test
     public void testGetStylesHttp() {
-        System.out.println("getStyles");
+        System.out.println("getStyles through a HTTP server");
         String expResult = "academy-of-management-review";
         String result = "";
+        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);
+        ClientResource client = new ClientResource("http://localhost:" + port + "/citation/style");
+        client.setNext(cl);
         try {
-            String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);                        
-            ClientResource client = new ClientResource("http://localhost:"+port+"/citation/style");
-            client.setNext(cl);
             List<String> rep = client.get(List.class);
             result = rep.get(0);
         } catch (Exception ex) {
-            Logger.getLogger(StyleCitationResourceTest.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            assertEquals(expResult, result);
+            client.release();
+            assertEquals("Test if the server returns the right response", expResult, result);
         }
-    }    
-    
+    }
+
     /**
-     * Test of getStyles method, of class StyleCitationResource.
+     * Test of getStyles method as a JSON response, of class
+     * StyleCitationResource.
      */
     @Test
     public void testGetStylesHttpsAsJSON() {
-        System.out.println("getStyles");
+        System.out.println("getStyles as a JSON response");
         String expResult = "academy-of-management-review";
         String result = "";
+        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
+        ClientResource client = new ClientResource("https://localhost:" + port + "/citation/style");
+        client.setNext(cl);
         try {
-            String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);                        
-            ClientResource client = new ClientResource("https://localhost:"+port+"/citation/style");
-            client.setNext(cl);
             Representation rep = client.get(MediaType.APPLICATION_JSON);
             result = rep.getText();
-        } catch (Exception ex) {
-            Logger.getLogger(StyleCitationResourceTest.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ResourceException | IOException ex) {
         } finally {
-            Assert.assertTrue(result.contains("["));
+            client.release();
+            Assert.assertTrue("Test is the server returns a JSON response", result.contains("["));
         }
-    }    
-    
+    }
+
     /**
-     * Test of getStyles method, of class StyleCitationResource.
+     * Test of getStyles method as a XML response, of class
+     * StyleCitationResource.
      */
     @Test
     public void testGetStylesHttpsAsXML() {
-        System.out.println("getStyles");
+        System.out.println("getStyles as a XML response");
         String expResult = "academy-of-management-review";
         String result = "";
+        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
+        ClientResource client = new ClientResource("https://localhost:" + port + "/citation/style");
+        client.setNext(cl);
         try {
-            String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);                        
-            ClientResource client = new ClientResource("https://localhost:"+port+"/citation/style");
-            client.setNext(cl);
             Representation rep = client.get(MediaType.APPLICATION_XML);
             result = rep.getText();
-        } catch (Exception ex) {
-            Logger.getLogger(StyleCitationResourceTest.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ResourceException | IOException ex) {
         } finally {
-            Assert.assertTrue(result.contains("<"));
+            client.release();
+            Assert.assertTrue("Test is the server returns a XML response", result.contains("<"));
         }
-    }    
+    }
 
 }

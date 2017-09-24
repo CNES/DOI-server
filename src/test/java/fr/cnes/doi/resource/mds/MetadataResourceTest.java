@@ -19,7 +19,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.Ignore;
 import org.restlet.Client;
 import org.restlet.Context;
 import org.restlet.data.ChallengeResponse;
@@ -36,8 +35,8 @@ import org.restlet.util.Series;
 import org.xml.sax.SAXException;
 
 /**
- *
- * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
+ * Tests the metadataResource.
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class MetadataResourceTest {
 
@@ -71,7 +70,13 @@ public class MetadataResourceTest {
     }
 
     /**
-     * Test of getMetadata method, of class MetadataResource.
+     * Test of getMetadata method throw a HTTPS server, of class MetadataResource.
+     * A Status.SUCCESS_OK is expected when the metadata is
+     * available whereas a Status.CLIENT_ERROR_GONE is expected
+     * when the metadata is deleted.
+     * @throws java.io.IOException - if OutOfMemoryErrors
+     * @throws javax.xml.bind.JAXBException - if a parsing problem occurs
+     * @throws org.xml.sax.SAXException - if a parsing problme occurs
      */
     @Test
     public void testGetMetadata() throws IOException, JAXBException, SAXException {
@@ -89,16 +94,23 @@ public class MetadataResourceTest {
             code = ex.getStatus().getCode();
             doi = "";
         }
+        client.release();
         assertTrue(Status.SUCCESS_OK.getCode() == code || Status.CLIENT_ERROR_GONE.getCode() == code);
         assertTrue(DOI.equals(doi) || doi.isEmpty());
     }
     
     /**
-     * Test of getMetadata method, of class MetadataResource.
+     * Test of getMetadata method throw a HTTPS server with a Json response, of class MetadataResource.
+     * Status.SUCCESS_OK is expected when the metadata is
+     * available whereas a Status.CLIENT_ERROR_GONE is expected
+     * when the metadata is deleted.
+     * @throws java.io.IOException - if OutOfMemoryErrors
+     * @throws javax.xml.bind.JAXBException - if a parsing problem occurs
+     * @throws org.xml.sax.SAXException - if a parsing problem occurs
      */
     @Test
     public void testGetMetadataAsJson() throws IOException, JAXBException, SAXException {
-        System.out.println("getMetadata");
+        System.out.println("getMetadata as Json");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + "/mds/metadata/" + DOI);
         client.setNext(cl);
@@ -112,12 +124,17 @@ public class MetadataResourceTest {
             code = ex.getStatus().getCode();
             result = "";
         }
+        client.release();
         assertTrue(Status.SUCCESS_OK.getCode() == code || Status.CLIENT_ERROR_GONE.getCode() == code);
         assertTrue(result.contains("{"));
     }    
     
     /**
-     * Test of getMetadata method, of class MetadataResource.
+     * Test of getMetadata method with a wrong DOI through a HTTPS server, of class MetadataResource.
+     * A Status.CLIENT_ERROR_NOT_FOUND is expected
+     * @throws java.io.IOException - if OutOfMemoryErrors
+     * @throws javax.xml.bind.JAXBException - if a parsing problem occurs
+     * @throws org.xml.sax.SAXException - if a parsing problem occurs    
      */
     @Test
     public void testGetMetadataFromWrongDOI() throws IOException, JAXBException, SAXException {
@@ -135,39 +152,43 @@ public class MetadataResourceTest {
             code = ex.getStatus().getCode();
             doi = "";
         }
+        client.release();
         assertEquals(Status.CLIENT_ERROR_NOT_FOUND.getCode(), code);
 
     }   
     
-    /**
-     * Test of getMetadata method, of class MetadataResource.
-     */
-    @Test
-    @Ignore
-    public void testGetMetadataFromWrongPrefix() throws IOException, JAXBException, SAXException {
-        System.out.println("getMetadata");
-        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-        ClientResource client = new ClientResource("https://localhost:" + port + "/mds/metadata/10.1145/2783446.2783605");
-        client.setNext(cl);
-        int code;
-        String doi;
-        try {
-            Resource resource = client.get(Resource.class);
-            code = client.getStatus().getCode();
-            doi = resource.getIdentifier().getValue();
-        } catch (ResourceException ex) {
-            code = ex.getStatus().getCode();
-            doi = "";
-        }
-        assertEquals(Status.CLIENT_ERROR_FORBIDDEN.getCode(), code);
-
-    }      
+//    /**
+//     * Test of getMetadata method, of class MetadataResource.
+//     */
+//    @Test
+//    @Ignore
+//    public void testGetMetadataFromWrongPrefix() throws IOException, JAXBException, SAXException {
+//        System.out.println("getMetadata");
+//        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
+//        ClientResource client = new ClientResource("https://localhost:" + port + "/mds/metadata/10.1145/2783446.2783605");
+//        client.setNext(cl);
+//        int code;
+//        String doi;
+//        try {
+//            Resource resource = client.get(Resource.class);
+//            code = client.getStatus().getCode();
+//            doi = resource.getIdentifier().getValue();
+//        } catch (ResourceException ex) {
+//            code = ex.getStatus().getCode();
+//            doi = "";
+//        }
+//        assertEquals(Status.CLIENT_ERROR_FORBIDDEN.getCode(), code);
+//
+//    }      
 
     /**
      * Test of deleteMetadata method, of class MetadataResource.
+     * A Status.SUCCESS_OK is expected
+     * @throws javax.xml.bind.JAXBException - if a parsing problem occurs
+     * @throws org.xml.sax.SAXException - if a parsing problem occurs
+     * @throws java.io.IOException - if OutOfMemoryErrors
      */
     @Test
-    @Ignore
     public void testDeleteMetadata() throws JAXBException, SAXException, IOException {
         System.out.println("deleteMetadata");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
@@ -189,6 +210,7 @@ public class MetadataResourceTest {
         } catch (ResourceException ex) {
             code = ex.getStatus().getCode();
         }
+        client.release();
         assertEquals(Status.SUCCESS_OK.getCode(), code);
     }
 }

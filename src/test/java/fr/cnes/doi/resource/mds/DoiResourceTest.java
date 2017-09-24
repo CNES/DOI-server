@@ -27,7 +27,7 @@ import org.restlet.util.Series;
 
 /**
  *
- * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class DoiResourceTest {
     
@@ -61,8 +61,9 @@ public class DoiResourceTest {
     }
 
     /**
-     * Test of getDoi method with http, of class DoiResource.
-     * @throws java.io.IOException
+     * Test of getDoi method through a HTTP server, of class DoiResource.
+     * A Status.SUCCESS_OK is expected and the response <i>https://cfosat.cnes.fr/</i>
+     * @throws java.io.IOException - if OutOfMemoryErrors
      */
     @Test
     public void testGetDoiHttp() throws IOException {
@@ -72,12 +73,13 @@ public class DoiResourceTest {
         Representation rep = client.get();
         Status status = client.getStatus();
         assertEquals(status.getCode(), Status.SUCCESS_OK.getCode());
-        assertEquals("https://cfosat.cnes.fr/", rep.getText());
+        assertEquals("Test the landing page is the right one","https://cfosat.cnes.fr/", rep.getText());
     }
     
     /**
-     * Test of getDoi method with http, of class DoiResource.
-     * @throws java.io.IOException
+     * Test of getDoi method through a HTTP server, of class DoiResource.
+     * A Status.SUCCESS_OK is expected and the response <i>https://cfosat.cnes.fr/</i>
+     * @throws java.io.IOException - if OutOfMemoryErrors
      */
     @Test
     public void testGetDoiHttps() throws IOException {
@@ -88,12 +90,14 @@ public class DoiResourceTest {
         Representation rep = client.get();
         Status status = client.getStatus();
         assertEquals(status.getCode(), Status.SUCCESS_OK.getCode());
-        assertEquals("https://cfosat.cnes.fr/", rep.getText());
+        assertEquals("Test the landing page is the right one","https://cfosat.cnes.fr/", rep.getText());
     }    
     
     /**
-     * Test of getDoi method not found with https, of class DoiResource.
-     * @throws java.io.IOException
+     * Test of getDoi method when the DOI is not found through a HTTPS server, of class DoiResource.
+     * A Status.CLIENT_ERROR_NOT_FOUND is expected because the 
+     * DOI does not exist.
+     * @throws java.io.IOException - if OutOfMemoryErrors
      */
     @Test
     public void testGetDoiNotFoundHttps() throws IOException {        
@@ -107,30 +111,31 @@ public class DoiResourceTest {
             code = client.getStatus().getCode();
         } catch (ResourceException ex) {
             code = ex.getStatus().getCode();
-        }
-        
+        } 
+        client.release();
         assertEquals(code, Status.CLIENT_ERROR_NOT_FOUND.getCode());
     }        
     
-    /**
-     * Test of getDoi method with http, of class DoiResource.
-     * @throws java.io.IOException
-     */
-    @Test
-    public void testGetDoiNotAllowedHttps() throws IOException {        
-        System.out.println("getDoi not allowed https");      
-        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-        ClientResource client = new ClientResource("https://localhost:"+port+"/mds/dois/10.4072/828606");
-        client.setNext(cl);
-        int code;
-        try {
-            Representation rep = client.get();
-            code = client.getStatus().getCode();
-        } catch (ResourceException ex) {   
-            code = ex.getStatus().getCode();
-        }
-        
-        assertEquals(code, Status.CLIENT_ERROR_BAD_REQUEST.getCode());
-    }     
+//    /**
+//     * Test of getDoi method when the DOI prefix is not the right one through a HTTPS server, of class DoiResource.
+//     * @throws java.io.IOException
+//     */
+//    @Test
+//    @Ignore
+//    public void testGetDoiNotAllowedHttps() throws IOException {        
+//        System.out.println("getDoi not allowed https");      
+//        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
+//        ClientResource client = new ClientResource("https://localhost:"+port+"/mds/dois/10.4072/828606");
+//        client.setNext(cl);
+//        int code;
+//        try {
+//            Representation rep = client.get();
+//            code = client.getStatus().getCode();
+//        } catch (ResourceException ex) {   
+//            code = ex.getStatus().getCode();
+//        }
+//        
+//        assertEquals(code, Status.CLIENT_ERROR_BAD_REQUEST.getCode());
+//    }     
     
 }

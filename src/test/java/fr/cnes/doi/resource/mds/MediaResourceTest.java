@@ -33,8 +33,8 @@ import org.restlet.resource.ResourceException;
 import org.restlet.util.Series;
 
 /**
- *
- * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
+ * Tests the mediaResource.
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class MediaResourceTest {
     
@@ -70,6 +70,7 @@ public class MediaResourceTest {
     
     /**
      * Test of getMedias method, of class MediaResource.
+     * @throws java.io.IOException - if OutOfMemoryErrors
      */
     @Test
     public void testGetMediasHttps() throws IOException {
@@ -84,11 +85,13 @@ public class MediaResourceTest {
         } catch(ResourceException ex) {
             code = ex.getStatus().getCode();
         }
+        client.release();
         assertEquals(Status.SUCCESS_OK.getCode(), code);
     }
     
     /**
      * Test of getMedias method, of class MediaResource.
+     * @throws java.io.IOException - if OutOfMemoryErrors
      */    
     @Test
     public void testGetMediasHttp() throws IOException {
@@ -102,18 +105,21 @@ public class MediaResourceTest {
         } catch(ResourceException ex) {
             code = ex.getStatus().getCode();
         }
+        client.release();
         assertEquals(Status.SUCCESS_OK.getCode(), code);
     }        
 
     /**
-     * Test of getMedias method, of class MediaResource.
+     * Test of getMedias method when the DOI does not exist through a HTTPS server, of class MediaResource.
+     * A Status.CLIENT_ERROR_NOT_FOUND is expected because the DOI
+     * is not found in the DataCite database.
+     * @throws java.io.IOException - if OutOfMemoryErrors
      */
     @Test
-    @Ignore
-    public void testGetMediasWithNoMediaHttps() throws IOException {
-        System.out.println("getMedias");
+    public void testGetMediasWithWrongDOIHttps() throws IOException {
+        System.out.println("getMedias with wrong DOI through a HTTPS server");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-        ClientResource client = new ClientResource("https://localhost:" + port + "/mds/media/"+DOI);
+        ClientResource client = new ClientResource("https://localhost:" + port + "/mds/media/10.5072/828606/8c3e");
         client.setNext(cl);
         int code;
         try {
@@ -122,18 +128,22 @@ public class MediaResourceTest {
         } catch(ResourceException ex) {
             code = ex.getStatus().getCode();
         }
+        client.release();
         assertEquals(Status.CLIENT_ERROR_NOT_FOUND.getCode(), code);
     }
     
     /**
-     * Test of getMedias method, of class MediaResource.
+     * Test of getMedias method when the DOI does not exist through a HTTP server, of class MediaResource.
+     * A Status.CLIENT_ERROR_NOT_FOUND is expected because the DOI
+     * is not found in the DataCite database.
+     * @throws java.io.IOException - if OutOfMemoryErrors
      */    
     @Test
     @Ignore
-    public void testGetMediasWithNoMediaHttp() throws IOException {
-        System.out.println("getMedias");
+    public void testGetMediasWithWrongDOIHttp() throws IOException {
+        System.out.println("getMedias with wrong DOI through HTTP server");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);
-        ClientResource client = new ClientResource("http://localhost:" + port + "/mds/media/"+DOI);        
+        ClientResource client = new ClientResource("http://localhost:" + port + "/mds/media/10.5072/828606/8c3e");        
         int code;
         try {
             Representation rep = client.get();
@@ -141,11 +151,13 @@ public class MediaResourceTest {
         } catch(ResourceException ex) {
             code = ex.getStatus().getCode();
         }
+        client.release();
         assertEquals(Status.CLIENT_ERROR_NOT_FOUND.getCode(), code);
     }    
 
     /**
      * Test of createMedia method, of class MediaResource.
+     * A Status.SUCCESS_OK is expected
      */
     @Test    
     public void testCreateMedia() {
@@ -174,6 +186,7 @@ public class MediaResourceTest {
         } catch(ResourceException ex) {
             code = ex.getStatus().getCode();
         }
+        client.release();
         assertEquals(Status.SUCCESS_OK.getCode(), code);
     }
     

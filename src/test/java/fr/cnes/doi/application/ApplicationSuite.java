@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fr.cnes.doi.resource.mds;
+package fr.cnes.doi.application;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -13,12 +13,12 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 /**
- *
+ * Suite of tests
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({fr.cnes.doi.resource.mds.DoisResourceTest.class, fr.cnes.doi.resource.mds.MetadataResourceTest.class, fr.cnes.doi.resource.mds.DoiResourceTest.class, fr.cnes.doi.resource.mds.MediaResourceTest.class, fr.cnes.doi.resource.mds.MetadatasResourceTest.class})
-public class MdsSuite {
+@Suite.SuiteClasses({fr.cnes.doi.application.DoiCrossCiteApplicationTest.class, fr.cnes.doi.application.AdminApplicationTest.class, fr.cnes.doi.application.DoiMdsApplicationTest.class})
+public class ApplicationSuite {
 
     @BeforeClass
     public static void setUpClass() throws Exception {

@@ -43,6 +43,8 @@ public class ClientLandingPage extends BaseClient {
             } catch (ResourceException ex) {
                 this.errors.add(doi);
                 LOGGER.fine(ex.getMessage());
+            } finally {
+                this.client.release();
             }
         }
     }

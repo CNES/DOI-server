@@ -6,21 +6,19 @@
 package fr.cnes.doi.resource.admin;
 
 import fr.cnes.doi.InitServerForTest;
-import static fr.cnes.doi.resource.mds.MediaResourceTest.DOI;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import java.io.IOException;
-import junit.framework.AssertionFailedError;
 import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Rule;
+import org.junit.rules.ExpectedException;
 import org.restlet.Client;
 import org.restlet.Context;
-import org.restlet.data.ChallengeResponse;
 import org.restlet.data.ChallengeScheme;
 import org.restlet.data.Form;
 import org.restlet.data.Parameter;
@@ -32,13 +30,17 @@ import org.restlet.resource.ResourceException;
 import org.restlet.util.Series;
 
 /**
+ * Tests Token resource of the Administation application.
  *
- * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class TokenResourceTest {
 
     private static Client cl;
     public static final String DOI = "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b";
+    
+    @Rule
+    public ExpectedException exceptions = ExpectedException.none();    
 
     public TokenResourceTest() {
     }
@@ -68,6 +70,8 @@ public class TokenResourceTest {
 
     /**
      * Test of createToken method, of class TokenResource.
+     *
+     * @throws java.io.IOException - if OutOfMemoryErrors
      */
     @Test
     public void testCreateToken() throws IOException {
@@ -82,15 +86,68 @@ public class TokenResourceTest {
         Representation response = client.post(form);
         String token = response.getText();
         client.release();
-        assertNotNull(token);
+        assertNotNull("Test if a token is returned", token);
     }
-
+    
     /**
-     * Test of getTokenInformation method, of class TokenResource.
+     * Test of createToken method with wrong parameters, of class TokenResource.
+     * A ResourceException is thrown because the send parameters are wrong.
+     *
+     * @throws ResourceException - 
      */
     @Test
-    public void testGetTokenInformation() throws IOException {
-        System.out.println("getTokenInformation");
+    public void testCreateTokenWithWrongParameters() {
+        System.out.println("createToken with wrong parameters");
+        exceptions.expect(ResourceException.class);
+        
+        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
+        ClientResource client = new ClientResource("https://localhost:" + port + "/admin/token");
+        client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
+        client.setNext(cl);
+        Form form = new Form();
+        form.add("identif", "jcm");
+        form.add("projec", "828606");
+        try {
+            Representation response = client.post(form);
+        } finally {
+            client.release();  
+        }            
+    }    
+    
+    /**
+     * Test of createToken method with wrong credentials, of class TokenResource.
+     * A Status.CLIENT_ERROR_UNAUTHORIZED is expected
+     * @throws java.io.IOException - if OutOfMemoryErrors
+     */
+    @Test
+    public void testCreateTokenWithWrongCredentials() throws IOException {
+        System.out.println("createToken");
+        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
+        ClientResource client = new ClientResource("https://localhost:" + port + "/admin/token");
+        client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "test");
+        client.setNext(cl);
+        Form form = new Form();
+        form.add("identifier", "jcm");
+        form.add("projectID", "828606");
+        Status status;
+        try {
+            Representation response = client.post(form);
+            status = client.getStatus();
+        } catch(ResourceException ex) {
+            status = ex.getStatus();
+        }
+        client.release();
+        assertEquals("Test if a token is returned with wrong credentials", Status.CLIENT_ERROR_UNAUTHORIZED.getCode(), status.getCode());
+    }    
+
+    /**
+     * Test of getTokenInformation method with wrong credentials, of class TokenResource.
+     * A Status.CLIENT_ERROR_UNAUTHORIZED is expected
+     * @throws java.io.IOException - if OutOfMemoryErrors
+     */
+    @Test
+    public void testGetTokenInformationWithWrongCredentials() throws IOException {
+        System.out.println("getTokenInformation with wrong credentials");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + "/admin/token");
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
@@ -103,120 +160,17 @@ public class TokenResourceTest {
         client.release();
 
         client = new ClientResource("https://localhost:" + port + "/admin/token/" + token);
-        client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
+        client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "test");
+        Status status;
         try {
             Representation rep = client.get();
-            String text = rep.getText();
-            assertNotNull(text);
-            assertTrue(text.contains("{"));
+            status = client.getStatus();
         } catch (ResourceException ex) {
-            Assert.fail();
+            status=ex.getStatus();
         }
         client.release();
+        assertEquals("Test is the information is returned with wrong credentials",Status.CLIENT_ERROR_UNAUTHORIZED.getCode(), status.getCode());
 
     }
-
-    /**
-     * Test of getTokenInformation method, of class TokenResource.
-     */
-    @Test
-    public void testTokenAuthenticationWithBadRole() throws IOException {
-        System.out.println("getTokenInformation");
-        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-        ClientResource client = new ClientResource("https://localhost:" + port + "/admin/token");
-        client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
-        client.setNext(cl);
-        Form form = new Form();
-        form.add("identifier", "jcm");
-        form.add("projectID", "828606");
-        Representation response = client.post(form);
-        String token = response.getText();
-        client.release();
-
-        Form mediaForm = new Form();
-        mediaForm.add("image/fits", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
-        mediaForm.add("image/jpeg", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
-        mediaForm.add("image/png", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
-        client = new ClientResource("https://localhost:" + port + "/mds/media/" + DOI);
-        client.setNext(cl);
-        ChallengeResponse cr = new ChallengeResponse(ChallengeScheme.HTTP_OAUTH_BEARER);
-        cr.setRawValue(token);
-        //cr.setRawValue("asdsqqscsqcqdcqscqc");
-        client.setChallengeResponse(cr);
-
-        Status status;
-        try {
-            client.post(mediaForm);
-            status = client.getStatus();
-        } catch (ResourceException ex) {
-            status = ex.getStatus();
-        }
-        assertEquals(Status.CLIENT_ERROR_FORBIDDEN.getCode(), status.getCode());     
-    }
-    
-    /**
-     * Test of getTokenInformation method, of class TokenResource.
-     */
-    @Test
-    public void testTokenAuthenticationWithRightRole() throws IOException {
-        System.out.println("getTokenInformation");
-        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-        ClientResource client = new ClientResource("https://localhost:" + port + "/admin/token");
-        client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
-        client.setNext(cl);
-        Form form = new Form();
-        form.add("identifier", "malapert");
-        form.add("projectID", "828606");
-        Representation response = client.post(form);
-        String token = response.getText();
-        client.release();
-
-        Form mediaForm = new Form();
-        mediaForm.add("image/fits", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
-        mediaForm.add("image/jpeg", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
-        mediaForm.add("image/png", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
-        client = new ClientResource("https://localhost:" + port + "/mds/media/" + DOI);
-        client.setNext(cl);
-        ChallengeResponse cr = new ChallengeResponse(ChallengeScheme.HTTP_OAUTH_BEARER);
-        cr.setRawValue(token);
-        //cr.setRawValue("asdsqqscsqcqdcqscqc");
-        client.setChallengeResponse(cr);
-
-        Status status;
-        try {
-            client.post(mediaForm);
-            status = client.getStatus();
-        } catch (ResourceException ex) {
-            status = ex.getStatus();
-        }
-        assertEquals(Status.SUCCESS_OK.getCode(), status.getCode());     
-    }    
-    
-    /**
-     * Test of getTokenInformation method, of class TokenResource.
-     */
-    @Test
-    public void testTokenAuthenticationWithWrongToken() throws IOException {
-        System.out.println("getTokenInformation");
-        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-        Form mediaForm = new Form();
-        mediaForm.add("image/fits", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
-        mediaForm.add("image/jpeg", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
-        mediaForm.add("image/png", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
-        ClientResource client = new ClientResource("https://localhost:" + port + "/mds/media/" + DOI);
-        client.setNext(cl);
-        ChallengeResponse cr = new ChallengeResponse(ChallengeScheme.HTTP_OAUTH_BEARER);        
-        cr.setRawValue("asdsqqscsqcqdcqscqc");
-        client.setChallengeResponse(cr);
-
-        Status status;
-        try {
-            client.post(mediaForm);
-            status = client.getStatus();
-        } catch (ResourceException ex) {
-            status = ex.getStatus();
-        }
-        assertEquals(Status.CLIENT_ERROR_FORBIDDEN.getCode(), status.getCode());     
-    }    
 
 }

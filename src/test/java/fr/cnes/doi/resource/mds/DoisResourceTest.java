@@ -32,8 +32,8 @@ import org.restlet.resource.ResourceException;
 import org.restlet.util.Series;
 
 /**
- *
- * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
+ * Tests the DoisResource
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class DoisResourceTest {
 
@@ -89,36 +89,42 @@ public class DoisResourceTest {
     }
 
     /**
-     * Test of getDois method, of class DoisResource.
+     * Test of getDois method through a HTTPS server, of class DoisResource.
+     * @throws java.io.IOException - if OutOfMemoryErrors
      */
     @Test
     public void testGetDoisHttps() throws IOException {
-        System.out.println("getDois");
+        System.out.println("getDois though a HTTPS server");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + "/mds/dois");
         client.setNext(cl);
         Representation rep = client.get();
-        assertNotNull(rep.getText());
+        assertNotNull("Test if the response is not null", rep.getText());
     }
 
     /**
-     * Test of getDois method, of class DoisResource.
+     * Test of getDois method  though a HTTP server, of class DoisResource.
+     * @throws java.io.IOException - if OutOfMemoryErrors
      */
     @Test
     public void testGetDoisHttp() throws IOException {
-        System.out.println("getDois");
+        System.out.println("getDois though a HTTP server");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);
         ClientResource client = new ClientResource("http://localhost:" + port + "/mds/dois");
         Representation rep = client.get();
-        assertNotNull(rep.getText());
+        assertNotNull("Test if the response is not null", rep.getText());
     }
 
     /**
-     * Test of createDoi method, of class DoisResource.
+     * Test of createDoi method when a user is contained in several roles without a selected role, of class DoisResource.
+     * Status.CLIENT_ERROR_CONFLICT is expected because the user is 
+     * associated to several roles. So, the user must selected one role so that
+     * the system applies his rights.
+     * @throws java.io.IOException - if OutOfMemoryErrors
      */
     @Test
     public void testCreateDoiConflictHttps() throws IOException {
-        System.out.println("createDoi");
+        System.out.println("createDoi without a selected role");
         Form doiForm = new Form();
         doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b"));
         doiForm.add(new Parameter(DoisResource.URL_PARAMETER, "http://www.cnes.fr"));
@@ -134,15 +140,18 @@ public class DoisResourceTest {
         } catch (ResourceException ex) {
             code = ex.getStatus().getCode();
         }
+        client.release();
         assertEquals(Status.CLIENT_ERROR_CONFLICT.getCode(), code);
     }
 
     /**
      * Test of createDoi method, of class DoisResource.
+     * A Status.SUCCESS_CREATED is expected.
+     * @throws java.io.IOException - if OutOfMemoryErrors
      */
     @Test
     public void testCreateDoiHttps() throws IOException {
-        System.out.println("createDoi");
+        System.out.println("createDoi through HTTPS server");
 
         Form doiForm = new Form();
         doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b"));
@@ -173,10 +182,12 @@ public class DoisResourceTest {
     
     /**
      * Test of createDoi method, of class DoisResource.
+     * A Status.SUCCESS_CREATED is expected.     
+     * @throws java.io.IOException - if OutOfMemoryErrors
      */
     @Test
     public void testCreateDoiHttp() throws IOException {
-        System.out.println("createDoi");
+        System.out.println("createDoi through a HTTP server");
 
         Form doiForm = new Form();
         doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b"));
@@ -205,11 +216,14 @@ public class DoisResourceTest {
     }  
     
     /**
-     * Test of createDoi method, of class DoisResource.
+     * Test of createDoi method with a not registered DOI, of class DoisResource.
+     * A Status.CLIENT_ERROR_PRECONDITION_FAILED is expected
+     * because the DOI metadata was not registered first.
+     * @throws java.io.IOException - if OutOfMemoryErrors
      */
     @Test
     public void testCreateFalseDoiHttps() throws IOException {
-        System.out.println("createDoi");
+        System.out.println("createDoi with a not registered DOI");
 
         Form doiForm = new Form();
         doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.5072/828606/8c3e91ad45ca855b477126bc073ae"));
@@ -238,38 +252,38 @@ public class DoisResourceTest {
         assertEquals(Status.CLIENT_ERROR_PRECONDITION_FAILED.getCode(), code);
     }    
     
-    /**
-     * Test of createDoi method, of class DoisResource.
-     */
-    @Test
-    public void testCreateDoiWithWrongPrefixHttps() throws IOException {
-        System.out.println("createDoi");
-
-        Form doiForm = new Form();
-        doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.4072/828606/8c3e91ad45ca855b477126bc073ae"));
-        doiForm.add(new Parameter(DoisResource.URL_PARAMETER, "http://www.cnes.fr"));
-
-        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-        ClientResource client = new ClientResource("https://localhost:" + port + "/mds/dois");
-        client.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "malapert", "pwd"));
-        final String RESTLET_HTTP_HEADERS = "org.restlet.http.headers";
-
-        Map<String, Object> reqAttribs = client.getRequestAttributes();
-        Series headers = (Series) reqAttribs.get(RESTLET_HTTP_HEADERS);
-        if (headers == null) {
-            headers = new Series<>(Header.class);
-            reqAttribs.put(RESTLET_HTTP_HEADERS, headers);
-        }
-        headers.add(UtilsHeader.SELECTED_ROLE_PARAMETER, "828606");
-        client.setNext(cl);
-        int code;
-        try {
-            Representation rep = client.post(doiForm);
-            code = client.getStatus().getCode();
-        } catch (ResourceException ex) {
-            code = ex.getStatus().getCode();
-        }
-        assertEquals(Status.CLIENT_ERROR_FORBIDDEN.getCode(), code);
-    }        
+//    /**
+//     * Test of createDoi method, of class DoisResource.
+//     */
+//    @Test
+//    public void testCreateDoiWithWrongPrefixHttps() throws IOException {
+//        System.out.println("createDoi");
+//
+//        Form doiForm = new Form();
+//        doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.4072/828606/8c3e91ad45ca855b477126bc073ae"));
+//        doiForm.add(new Parameter(DoisResource.URL_PARAMETER, "http://www.cnes.fr"));
+//
+//        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
+//        ClientResource client = new ClientResource("https://localhost:" + port + "/mds/dois");
+//        client.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "malapert", "pwd"));
+//        final String RESTLET_HTTP_HEADERS = "org.restlet.http.headers";
+//
+//        Map<String, Object> reqAttribs = client.getRequestAttributes();
+//        Series headers = (Series) reqAttribs.get(RESTLET_HTTP_HEADERS);
+//        if (headers == null) {
+//            headers = new Series<>(Header.class);
+//            reqAttribs.put(RESTLET_HTTP_HEADERS, headers);
+//        }
+//        headers.add(UtilsHeader.SELECTED_ROLE_PARAMETER, "828606");
+//        client.setNext(cl);
+//        int code;
+//        try {
+//            Representation rep = client.post(doiForm);
+//            code = client.getStatus().getCode();
+//        } catch (ResourceException ex) {
+//            code = ex.getStatus().getCode();
+//        }
+//        assertEquals(Status.CLIENT_ERROR_FORBIDDEN.getCode(), code);
+//    }        
 
 }

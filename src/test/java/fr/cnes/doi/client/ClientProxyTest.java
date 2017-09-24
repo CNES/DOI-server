@@ -36,11 +36,10 @@ import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.junit.Ignore;
-import org.restlet.data.ChallengeResponse;
 
 /**
  *
- * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class ClientProxyTest {
 
@@ -77,7 +76,7 @@ public class ClientProxyTest {
      * Test the connection through the proxy. Works only if the test is executed
      * behind a proxy
      *
-     * @throws Exception
+     * @throws Exception - if OutOfMemoryErrors
      */
     @Test
     @Ignore
@@ -116,7 +115,7 @@ public class ClientProxyTest {
      * Test the connection through the proxy with BaseClient. Works only if the
      * test is executed behind a proxy
      *
-     * @throws Exception
+     * @throws Exception - if OutOfMemoryErrors
      */
     @Test
     @Ignore
@@ -141,7 +140,7 @@ public class ClientProxyTest {
      * Test the connection through the proxy with BaseClient and crossCite URL.
      * Works only if the test is executed behind a proxy
      *
-     * @throws Exception
+     * @throws Exception - if OutOfMemoryErrors
      */
     @Test
     @Ignore
@@ -157,13 +156,6 @@ public class ClientProxyTest {
         Representation rep = baseClient.client.get();
         Status status = baseClient.client.getStatus();
         Assert.assertTrue("Test si la requete est OK", status.isSuccess());
-
-    }
-
-    @Test
-    @Ignore
-    public void testDefaultHttpClient() throws Exception {
-        DefaultHttpClient httpClient = new DefaultHttpClient();
 
     }
 

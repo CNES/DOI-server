@@ -40,7 +40,7 @@ public class Utils {
         if (f.isDirectory()) {
             File[] files = f.listFiles();
             for (File file : files) {
-                loadFileInClassPath(f);
+                loadFileInClassPath(file);
             }
         }
     }

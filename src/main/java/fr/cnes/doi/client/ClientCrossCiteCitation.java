@@ -77,7 +77,7 @@ public class ClientCrossCiteCitation extends BaseClient {
             if (status.isSuccess()) {
                 ObjectMapper mapper = new ObjectMapper();
                 return mapper.readValue(rep.getStream(), List.class);
-            } else {
+            } else {                
                 throw new ClientCrossCiteException(status, status.getDescription());
             }
         } catch (IOException | ResourceException ex) {
@@ -135,7 +135,6 @@ public class ClientCrossCiteCitation extends BaseClient {
             if (status.isSuccess()) {
                 result = rep.getText();
             } else {
-                client.release();
                 throw new ClientCrossCiteException(status, status.getDescription());
             }
             return result;

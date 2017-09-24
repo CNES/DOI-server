@@ -16,7 +16,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import fr.cnes.doi.InitSettingsForTest;
-import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.exception.MailingException;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
@@ -126,7 +125,7 @@ public class EmailSettingsTest {
 
     /**
      * Test of sendMessage method, of class EmailSettings.
-     * @throws fr.cnes.doi.exception.MailingException
+     * @throws fr.cnes.doi.exception.MailingException - Host not found
      */
     @Test
     public void testSendMessage() throws MailingException {

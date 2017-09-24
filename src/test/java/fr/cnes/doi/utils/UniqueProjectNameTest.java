@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package fr.cnes.doi.utils;
 
@@ -15,6 +15,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import fr.cnes.doi.InitSettingsForTest;
+import fr.cnes.doi.exception.DoiRuntimeException;
+import org.junit.Rule;
+import org.junit.rules.ExpectedException;
 
 /**
  * @author Claire
@@ -22,70 +25,80 @@ import fr.cnes.doi.InitSettingsForTest;
  */
 public class UniqueProjectNameTest {
 
-	/**
-	 * Cache file for tests
-	 */
-	private static final String cacheFile = "src/test/resources/projects.conf";
+    @Rule
+    public ExpectedException exceptions = ExpectedException.none();
 
-	/**
-	 * Init the settings
-	 */
-	@BeforeClass
-	public static void setUpClass() {
-		InitSettingsForTest.init();
-	}
+    /**
+     * Cache file for tests
+     */
+    private static final String cacheFile = "src/test/resources/projects.conf";
 
-	/**
-	 * Executed before each test
-	 */
-	@Before
-	public void setUp() {
-		// Save the projects.conf file
-		try {
-			Files.copy(new File(UniqueProjectNameTest.cacheFile).toPath(),
-					new File(UniqueProjectNameTest.cacheFile + ".bak").toPath(), StandardCopyOption.REPLACE_EXISTING);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+    /**
+     * Init the settings
+     */
+    @BeforeClass
+    public static void setUpClass() {
+        InitSettingsForTest.init();
+    }
 
-	/**
-	 * Executed after each test
-	 */
-	@After
-	public void tearDown() {
-		// restore the cache file
-		try {
-			Files.copy(new File(UniqueProjectNameTest.cacheFile + ".bak").toPath(),
-					new File(UniqueProjectNameTest.cacheFile).toPath(), StandardCopyOption.REPLACE_EXISTING);
-			Files.delete(new File(UniqueProjectNameTest.cacheFile + ".bak").toPath());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+    /**
+     * Executed before each test
+     */
+    @Before
+    public void setUp() {
+        // Save the projects.conf file
+        try {
+            Files.copy(new File(UniqueProjectNameTest.cacheFile).toPath(),
+                    new File(UniqueProjectNameTest.cacheFile + ".bak").toPath(), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-	/**
-	 * Test method for
-	 * {@link fr.cnes.doi.utils.UniqueProjectName#getShortName(String, int)}
-	 */
-	@Test
-	public void testGetShortName() {
+    /**
+     * Executed after each test
+     */
+    @After
+    public void tearDown() {
+        // restore the cache file
+        try {
+            Files.copy(new File(UniqueProjectNameTest.cacheFile + ".bak").toPath(),
+                    new File(UniqueProjectNameTest.cacheFile).toPath(), StandardCopyOption.REPLACE_EXISTING);
+            Files.delete(new File(UniqueProjectNameTest.cacheFile + ".bak").toPath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-		// New id
-		int idSWOT = UniqueProjectName.getInstance().getShortName("SWOT", 6);
-		Assert.assertTrue(UniqueProjectName.getInstance().getShortName("SWOT", 6) == idSWOT);
+    /**
+     * Test method for
+     * {@link fr.cnes.doi.utils.UniqueProjectName#getShortName(String, int)}
+     */
+    @Test
+    public void testGetShortName() {
 
-		// Id already in the file
-		Assert.assertTrue(UniqueProjectName.getInstance().getShortName("CFOSAT", 6) == 828606);
+        // New id
+        int idSWOT = UniqueProjectName.getInstance().getShortName("SWOT", 6);
+        Assert.assertTrue(UniqueProjectName.getInstance().getShortName("SWOT", 6) == idSWOT);
 
-		// lenght requested out of range
-		try {
-			UniqueProjectName.getInstance().getShortName("CFOSAT", 10);
-			Assert.fail();
-		} catch (RuntimeException e) {
-			e.printStackTrace();
-		}
+        // Id already in the file
+        Assert.assertTrue(UniqueProjectName.getInstance().getShortName("CFOSAT", 6) == 828606);
 
-	}
+    }
+
+    /**
+     * Test method for
+     * {@link fr.cnes.doi.utils.UniqueProjectName#getShortName(String, int)}
+     */
+    @Test
+    public void testGetShortNameWithLongName() {
+
+        exceptions.expect(DoiRuntimeException.class);
+        exceptions.expectMessage("The short name cannot be build because the length requested is too big");
+
+        // lenght requested out of range
+        UniqueProjectName.getInstance().getShortName("CFOSAT", 10);
+
+    }
 
 }

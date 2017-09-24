@@ -15,6 +15,9 @@ import java.util.stream.Collectors;
 import fr.cnes.doi.client.ClientProxyTest;
 import fr.cnes.doi.security.UtilsCryptography;
 import fr.cnes.doi.settings.DoiSettings;
+import java.util.Properties;
+import java.util.logging.LogManager;
+import org.restlet.engine.Engine;
 
 /**
  * Class to read the settings from the crypted config file and to enable the
@@ -23,21 +26,22 @@ import fr.cnes.doi.settings.DoiSettings;
  * @author Claire
  *
  */
-public class InitSettingsForTest {  
+public class InitSettingsForTest {
 
     /**
-     * Init loggers
+     * Init loggers.
      */
-    private static final Logger LOGGER = Logger.getLogger(InitSettingsForTest.class.getName());
+    private static final Logger LOGGER = Engine.getLogger(InitSettingsForTest.class);
 
     /**
-     * Init
+     * Reads the settings.
      *
      */
     public static void init() {
+        initLogging();
         try {
             String secretKey = System.getProperty("private.key");
-            if (secretKey != null) {                
+            if (secretKey != null) {
                 String result;
                 try (InputStream inputStream = ClientProxyTest.class.getResourceAsStream("/config.properties")) {
                     result = new BufferedReader(new InputStreamReader(inputStream)).lines()
@@ -45,7 +49,7 @@ public class InitSettingsForTest {
                 }
                 result = UtilsCryptography.decrypt(result, secretKey);
                 // Replace the value to use the proxy by the system property
-                String useProxy = System.getProperty("proxy.use");                
+                String useProxy = System.getProperty("proxy.use");
                 if (useProxy != null) {
                     result = result.replace("Starter.Proxy.used = false", "Starter.Proxy.used=" + useProxy);
                 } else {
@@ -63,6 +67,15 @@ public class InitSettingsForTest {
             LOGGER.log(Level.SEVERE, "Error during initialisation of the settings", e);
         }
 
+    }
+
+    private static void initLogging() {
+        LogManager.getLogManager().reset();
+        Properties p = new Properties();
+        p.setProperty("org.eclipse.jetty.LEVEL", "OFF");
+        org.eclipse.jetty.util.log.StdErrLog.setProperties(p);
+        Logger globalLogger = Logger.getLogger(java.util.logging.Logger.GLOBAL_LOGGER_NAME);
+        globalLogger.setLevel(java.util.logging.Level.OFF);
     }
 
 }

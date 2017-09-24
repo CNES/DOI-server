@@ -21,7 +21,6 @@ import java.util.logging.Level;
 
 import fr.cnes.doi.settings.ProxySettings;
 import fr.cnes.doi.utils.spec.Requirement;
-import java.util.logging.Logger;
 import org.restlet.ext.wadl.ApplicationInfo;
 import org.restlet.ext.wadl.WadlCnesRepresentation;
 import org.restlet.representation.Representation;
@@ -35,7 +34,7 @@ import org.restlet.representation.Representation;
         reqId = Requirement.DOI_DOC_010,
         reqName = Requirement.DOI_DOC_010_NAME
 )
-public class BaseApplication extends WadlApplication {
+public abstract class BaseApplication extends WadlApplication {
 
     /**
      * Default value of 'Access-Control-Allow-Origin' header.

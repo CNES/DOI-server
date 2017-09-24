@@ -355,8 +355,8 @@ public class AdminApplication extends BaseApplication {
         router.attach(STATS_URI, authentication);
 
         getLogger().exiting(AdminApplication.class.getName(), "addServicesStatus");
-    }    
-
+    } 
+    
     /**
      * Adds default route to the website when it exists. The website must be
      * located in the {@value #JS_DIR} directory.

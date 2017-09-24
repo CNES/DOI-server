@@ -3,14 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fr.cnes.doi.resource.mds;
+package fr.cnes.doi.perfo;
 
+import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import org.datacite.schema.kernel_4.Resource;
 import org.junit.After;
@@ -18,26 +20,21 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
-import org.restlet.Client;
-import org.restlet.Context;
-import org.restlet.data.Parameter;
-import org.restlet.data.Protocol;
+import org.junit.experimental.categories.Category;
 import org.restlet.resource.ClientResource;
-import org.restlet.util.Series;
 
 /**
  *
- * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-public class PerformanceTest {
+public class ITperformance {
 
-    public static final String DOI = "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b";
-
-    private static final Logger LOG = Logger.getLogger(PerformanceTest.class.getName());
+    private static final Logger LOG = Logger.getLogger(ITperformance.class.getName());
     private ExecutorService clientExec = Executors.newFixedThreadPool(100);
 
-    public PerformanceTest() {
+    public ITperformance() {
     }
 
     @BeforeClass
@@ -59,33 +56,48 @@ public class PerformanceTest {
     }
 
     @Test
-    public void test() {
+    @Ignore
+    public void test() {        
         LOG.info("Start testing");
-        for (int i = 0; i < 100; i++) {
-            clientExec.execute(new GetMetadata(i));
+        ConcurrentHashMap map = new ConcurrentHashMap();
+        map.put("nbErrors", 0);
+        int nbIter = 0;
+        try {
+            for (int i = 0; i < 50; i++) {
+                nbIter = i+1;
+                clientExec.execute(new GetMetadata(i, map));
+            }
+        } catch (RuntimeException ex) {
+
+        } finally {
+            System.out.println("nbErrors = " + map.get("nbErrors"));
+            System.out.println("nbIters = "+nbIter);
         }
-        Assert.assertTrue(true);
+        Assert.assertTrue(map.get("nbErrors").equals(0) && nbIter == 50);
         LOG.info("All working fine");
         clientExec.shutdown();
-
     }
 
     private static class GetMetadata implements Runnable {
 
         private int i;
+        private ConcurrentHashMap map;
 
-        public GetMetadata(int i) {
+        public GetMetadata(int i, ConcurrentHashMap map) {
             this.i = i;
+            this.map = map;
         }
 
         @Override
         public void run() {
             String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);
-            ClientResource client = new ClientResource("http://localhost:" + port + "/mds/metadata/" + DOI);            
+            ClientResource client = new ClientResource("http://localhost:" + port + "/mds?method=options");
             try {
                 Resource resource = client.get(Resource.class);
-                LOG.log(Level.INFO, "OK for the {0} tests", new Object[]{this.i});                
+                LOG.log(Level.INFO, "OK for the {0} tests", new Object[]{this.i});
             } catch (RuntimeException ex) {
+                int nbErrors = ((int) this.map.get("nbErrors")) + 1;
+                this.map.put("nbErrors", nbErrors);
                 LOG.log(Level.INFO, "Error after {0} tests :{1}", new Object[]{this.i, ex.getMessage()});
             } finally {
                 client.release();
