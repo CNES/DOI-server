@@ -87,7 +87,7 @@ public class HttpClientHelperPatch extends HttpClientHelper {
     public void start() throws Exception {
         super.start();
         ((DefaultHttpClient)this.getHttpClient()).getCredentialsProvider().setCredentials(
-                new AuthScope(DoiSettings.getInstance().getString(Consts.SERVER_PROXY_HOST), Integer.valueOf(DoiSettings.getInstance().getString(Consts.SERVER_PROXY_PORT))),
+                new AuthScope(DoiSettings.getInstance().getString(Consts.SERVER_PROXY_HOST), Integer.parseInt(DoiSettings.getInstance().getString(Consts.SERVER_PROXY_PORT))),
                 new UsernamePasswordCredentials(DoiSettings.getInstance().getSecret(Consts.SERVER_PROXY_LOGIN), DoiSettings.getInstance().getSecret(Consts.SERVER_PROXY_PWD))
         );        
     }    

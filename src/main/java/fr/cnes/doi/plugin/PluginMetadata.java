@@ -21,36 +21,36 @@ public interface PluginMetadata {
      * Returns the name of the plugin.
      * @return the name
      */
-    public String getName();
+    String getName();
     
     /**
      * Returns the description of the plugin
      * @return description
      */
-    public String getDescription();
+    String getDescription();
     
     /**
      * Returns the version of the plugin.
      * @return the version
      */
-    public String getVersion();
+    String getVersion();
     
     /**
      * Returns the author of the plugin.
      * @return the author
      */
-    public String getAuthor();
+    String getAuthor();
     
     /**
      * Returns the owner of the plugin.
      * @return 
      */
-    public String getOwner();
+    String getOwner();
     
     /**
      * Returns the license of the plugin.
      * @return 
      */
-    public String getLicense();
+    String getLicense();
     
 }

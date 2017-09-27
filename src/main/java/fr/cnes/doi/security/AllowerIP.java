@@ -45,8 +45,8 @@ public class AllowerIP extends org.restlet.routing.Filter {
         super(context);
         getLogger().entering(this.getClass().getName(), "Constructor");
         this.allowedAddresses = new CopyOnWriteArraySet<>();
-        this.allowedAddresses.add("0:0:0:0:0:0:0:1");
-        this.allowedAddresses.add("127.0.0.1");
+        this.allowedAddresses.add(LOCALHOST_IPV6);
+        this.allowedAddresses.add(LOCALHOST_IPV4);
         addCustomIP(allowedAddresses);
         getLogger().exiting(this.getClass().getName(), "Constructor");
     }

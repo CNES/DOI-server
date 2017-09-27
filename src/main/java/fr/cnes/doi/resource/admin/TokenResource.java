@@ -45,22 +45,22 @@ public class TokenResource extends BaseResource {
     /**
      * User ID of the operator that creates the token.
      */
-    public static String IDENTIFIER_PARAMETER = "identifier";
+    public static final String IDENTIFIER_PARAMETER = "identifier";
 
     /**
      * Token for a specific project.
      */
-    public static String PROJECT_ID_PARAMETER = "projectID";
+    public static final String PROJECT_ID_PARAMETER = "projectID";
 
     /**
      * Unit of time used to define the expiration time of the token.
      */
-    public static String UNIT_OF_TIME_PARAMETER = "typeOfTime";
+    public static final String UNIT_OF_TIME_PARAMETER = "typeOfTime";
 
     /**
      * Amount of time for which the token is not expirated.
      */
-    public static String AMOUNT_OF_TIME_PARAMETER = "amountTime";
+    public static final String AMOUNT_OF_TIME_PARAMETER = "amountTime";
 
     /**
      * Token parameter catched from the URL.
@@ -94,14 +94,14 @@ public class TokenResource extends BaseResource {
             String projectID = info.getFirstValue(PROJECT_ID_PARAMETER, null);
             String timeParam = info.getFirstValue(UNIT_OF_TIME_PARAMETER, "0");
 
-            int timeUnit = timeParam.equals("0") ? 1 : Integer.valueOf(timeParam);
+            int timeUnit = timeParam.equals("0") ? 1 : Integer.parseInt(timeParam);
             TimeUnit unit = TokenSecurity.TimeUnit.getTimeUnitFrom(timeUnit);
 
-            int amount = Integer.valueOf(info.getFirstValue(AMOUNT_OF_TIME_PARAMETER, "1"));
+            int amount = Integer.parseInt(info.getFirstValue(AMOUNT_OF_TIME_PARAMETER, "1"));
 
             String tokenJwt = TokenSecurity.getInstance().generate(
                     userID,
-                    Integer.valueOf(projectID),
+                    Integer.parseInt(projectID),
                     unit,
                     amount
             );

@@ -8,10 +8,11 @@ package fr.cnes.doi.utils;
 import java.util.logging.Logger;
 
 import fr.cnes.doi.logging.shell.ShellHandler;
+import java.lang.reflect.Array;
+import java.util.HashSet;
 import java.util.Map;
-import java.util.Objects;
+import java.util.Map.Entry;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Utility Class.
@@ -19,7 +20,12 @@ import java.util.stream.Collectors;
  * @author Jean-Christophe Malapert
  * @author Claire
  */
-public class Utils {      
+public class Utils {
+
+    /**
+     * An empty immutable {@code Object} array.
+     */
+    public static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
 
     /**
      * Name of the logger in console without date.
@@ -71,7 +77,7 @@ public class Utils {
      *
      * @return the logger
      */
-    public static Logger getShellLogger() {
+    public synchronized static Logger getShellLogger() {
 
         if (shellLogger == null) {
             shellLogger = Logger.getLogger(SHELL_LOGGER_NAME);
@@ -87,7 +93,7 @@ public class Utils {
      *
      * @return the logger
      */
-    public static Logger getAppLogger() {
+    public synchronized static Logger getAppLogger() {
         if (appLogger == null) {
             appLogger = Logger.getLogger(APP_LOGGER_NAME);
         }
@@ -96,6 +102,7 @@ public class Utils {
 
     /**
      * Returns the keys related to a value within a map.
+     *
      * @param <T> the type of the key
      * @param <E> the type of the value
      * @param map map
@@ -103,10 +110,104 @@ public class Utils {
      * @return the keys related to a value
      */
     public static <T, E> Set<T> getKeysByValue(final Map<T, E> map, final E value) {
-        return map.entrySet()
-                .stream()
-                .filter(entry -> Objects.equals(entry.getValue(), value))
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toSet());
-    }    
+        Set<T> keys = new HashSet<>();
+        for (Entry<T, E> entry : map.entrySet()) {
+            if (entry.getValue().equals(value)) {
+                keys.add(entry.getKey());
+            }
+        }
+        return keys;
+    }
+
+    /**
+     * <p>
+     * Defensive programming technique to change a {@code null} reference to an
+     * empty one.
+     *
+     * <p>
+     * This method returns an empty array for a {@code null} input array.
+     *
+     * @param array the array to check for {@code null} or empty
+     * @param type the class representation of the desired array
+     * @param <T> the class type
+     * @return the same array, {@code public static} empty array if {@code null}
+     * @throws IllegalArgumentException if the type argument is null
+     * @since 3.5
+     */
+    public static <T> T[] nullToEmpty(final T[] array, final Class<T[]> type) {
+        if (type == null) {
+            throw new IllegalArgumentException("The type must not be null");
+        }
+
+        if (array == null) {
+            return type.cast(Array.newInstance(type.getComponentType(), 0));
+        }
+        return array;
+    }
+
+    /**
+     * <p>
+     * Defensive programming technique to change a {@code null} reference to an
+     * empty one.
+     *
+     * <p>
+     * This method returns an empty array for a {@code null} input array.
+     *
+     * <p>
+     * As a memory optimizing technique an empty array passed in will be
+     * overridden with the empty {@code public static} references in this class.
+     *
+     * @param array the array to check for {@code null} or empty
+     * @return the same array, {@code public static} empty array if {@code null}
+     * or empty input
+     * @since 2.5
+     */
+    public static Object[] nullToEmpty(final Object[] array) {
+        if (isEmpty(array)) {
+            return EMPTY_OBJECT_ARRAY;
+        }
+        return array;
+    }
+
+    /**
+     * <p>
+     * Checks if an array of Objects is empty or {@code null}.
+     *
+     * @param array the array to test
+     * @return {@code true} if the array is empty or {@code null}
+     * @since 2.1
+     */
+    public static boolean isEmpty(final Object[] array) {
+        return getLength(array) == 0;
+    }
+
+    /**
+     * <p>
+     * Returns the length of the specified array. This method can deal with
+     * {@code Object} arrays and with primitive arrays.
+     *
+     * <p>
+     * If the input array is {@code null}, {@code 0} is returned.
+     *
+     * <pre>
+     * Utils.getLength(null)            = 0
+     * Utils.getLength([])              = 0
+     * Utils.getLength([null])          = 1
+     * Utils.getLength([true, false])   = 2
+     * Utils.getLength([1, 2, 3])       = 3
+     * Utils.getLength(["a", "b", "c"]) = 3
+     * </pre>
+     *
+     * @param array the array to retrieve the length from, may be null
+     * @return The length of the array, or {@code 0} if the array is
+     * {@code null}
+     * @throws IllegalArgumentException if the object argument is not an array.
+     * @since 2.1
+     */
+    public static int getLength(final Object array) {
+        if (array == null) {
+            return 0;
+        }
+        return Array.getLength(array);
+    }
 }

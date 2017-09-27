@@ -21,6 +21,7 @@ import java.util.logging.Level;
 
 import fr.cnes.doi.settings.ProxySettings;
 import fr.cnes.doi.utils.spec.Requirement;
+import java.util.Collections;
 import org.restlet.ext.wadl.ApplicationInfo;
 import org.restlet.ext.wadl.WadlCnesRepresentation;
 import org.restlet.representation.Representation;
@@ -39,7 +40,7 @@ public abstract class BaseApplication extends WadlApplication {
     /**
      * Default value of 'Access-Control-Allow-Origin' header.
      */
-    public static final Set DEFAULT_CORS_ORIGIN = new HashSet(Arrays.asList("*"));
+    public static final Set DEFAULT_CORS_ORIGIN = Collections.unmodifiableSet(new HashSet(Arrays.asList("*")));
 
     /**
      * If true, adds 'Access-Control-Allow-Credentials' header.

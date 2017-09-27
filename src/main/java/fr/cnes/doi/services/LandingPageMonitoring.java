@@ -40,7 +40,7 @@ public class LandingPageMonitoring implements Runnable {
         LOGGER.info("Checking landing pages");
         EmailSettings email = EmailSettings.getInstance();
         String subject;
-        String msg;
+        StringBuffer msg = new StringBuffer();
         try {
 
             ClientSearchDataCite client = new ClientSearchDataCite();
@@ -49,19 +49,19 @@ public class LandingPageMonitoring implements Runnable {
 
             if (clientLandingPage.isSuccess()) {
                 subject = "Landing pages checked with success";
-                msg = "All landing pages (" + response.size() + ") are on-line";
+                msg = msg.append("All landing pages (").append(response.size()).append(") are on-line");
             } else {
                 subject = "Landing pages checked with errors";
                 List<String> errors = clientLandingPage.getErrors();
-                msg = errors.size() + " are off-line !!!\n";
-                msg += "List of off-line landing pages:\n";
-                msg += "-------------------------------\n";
+                msg = msg.append(errors.size()).append(" are off-line !!!\n");
+                msg = msg.append("List of off-line landing pages:\n");
+                msg = msg.append("-------------------------------\n");
                 for (String error : errors) {
-                    msg += "- " + error + "\n";
+                    msg = msg.append("- ").append(error).append("\n");
                 }
             }
-            email.sendMessage(subject, msg);
-            LOGGER.log(Level.INFO, msg);
+            email.sendMessage(subject, msg.toString());
+            LOGGER.log(Level.INFO, msg.toString());
         } catch (Exception ex) {
             try {
                 email.sendMessage("Unrecoverable errors when checking landing pages", ex.toString());

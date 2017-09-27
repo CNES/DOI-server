@@ -18,13 +18,13 @@ import org.restlet.security.User;
  */
 public class DefaultUserRoleImpl extends UserRolePluginHelper {
 
-    private final List<User> users = new ArrayList<>();
+    private static final List<User> users = new ArrayList<>();
     private final String NAME = this.getClass().getName();
-    private final String DESCRIPTION = "Provides a pre-defined list of users and groups";
-    private final String VERSION = "1.0.0";
-    private final String OWNER = "CNES";
-    private final String AUTHOR = "Jean-Christophe Malapert";
-    private final String LICENSE = "LGPLV3";
+    private static final String DESCRIPTION = "Provides a pre-defined list of users and groups";
+    private static final String VERSION = "1.0.0";
+    private static final String OWNER = "CNES";
+    private static final String AUTHOR = "Jean-Christophe Malapert";
+    private static final String LICENSE = "LGPLV3";
 
     public DefaultUserRoleImpl() {
 

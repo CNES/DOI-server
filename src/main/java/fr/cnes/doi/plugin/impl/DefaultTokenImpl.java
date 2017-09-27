@@ -12,6 +12,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.text.DateFormat;
@@ -122,7 +123,7 @@ public class DefaultTokenImpl extends TokenDBPluginHelper {
         File directory = new File(tokenConfFile.getParent());
         Files.createDirectories(directory.toPath());
         Files.createFile(tokenConfFile.toPath());
-        Files.write(tokenConfFile.toPath(), "#Token;Project suffix;Expiration date\n".getBytes(), StandardOpenOption.APPEND);
+        Files.write(tokenConfFile.toPath(), "#Token;Project suffix;Expiration date\n".getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
     }
 
     @Override
@@ -139,7 +140,7 @@ public class DefaultTokenImpl extends TokenDBPluginHelper {
             // should be fine, the JWT representation does not contain ;
             String line = jwt + ";" + projectSuffix + ";" + expirationDate + "\n";
             LOGGER.log(Level.FINEST, "token inserted : {0}", line);
-            Files.write(new File(this.tokenConf).toPath(), line.getBytes(), StandardOpenOption.APPEND);
+            Files.write(new File(this.tokenConf).toPath(), line.getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
             this.db.put(jwt, new ConcurrentHashMap<String, Object>() {
                 private static final long serialVersionUID = 3109256773218160485L;
 

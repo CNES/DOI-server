@@ -17,12 +17,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Utility class for plugins.
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class Utils {
 
-    private static Logger LOGGER = fr.cnes.doi.utils.Utils.getAppLogger();
+    private static final Logger LOGGER = fr.cnes.doi.utils.Utils.getAppLogger();
 
     /**
      * Adds a path in the classPath.
@@ -36,11 +36,14 @@ public class Utils {
     )
     public static void addPath(String path) throws Exception {
         LOGGER.fine(String.format("Add path %s to plugin", path));
+        if(path == null) {
+            throw new NullPointerException("path variable is null");
+        }
         File f = new File(path);
         if (f.isDirectory()) {
             File[] files = f.listFiles();
-            for (File file : files) {
-                loadFileInClassPath(file);
+            for (Object file : fr.cnes.doi.utils.Utils.nullToEmpty(files)) {
+                loadFileInClassPath((File)file);
             }
         }
     }

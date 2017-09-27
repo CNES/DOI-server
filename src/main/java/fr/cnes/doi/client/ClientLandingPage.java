@@ -8,7 +8,6 @@ package fr.cnes.doi.client;
 import java.util.ArrayList;
 import java.util.List;
 import org.restlet.data.Status;
-import org.restlet.representation.Representation;
 import org.restlet.resource.ResourceException;
 //TODO : Utiliser getDoi de Mds à la place
 
@@ -35,7 +34,7 @@ public class ClientLandingPage extends BaseClient {
             this.client.setReference(BASE_URI);
             this.client.addSegment(doi);
             try {
-                Representation rep = this.client.get();
+                this.client.get();
                 Status status = this.client.getStatus();
                 if (status.isError()) {
                     this.errors.add(doi);

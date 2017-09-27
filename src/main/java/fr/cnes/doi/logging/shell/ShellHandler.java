@@ -26,12 +26,12 @@ public final class ShellHandler extends ConsoleHandler {
     }
 
     @Override
-    public final synchronized void setFormatter(Formatter newFormatter) throws SecurityException {
+    public synchronized void setFormatter(Formatter newFormatter) throws SecurityException {
         super.setFormatter(newFormatter);
     }
 
     @Override
-    public final synchronized void setLevel(Level newLevel) throws SecurityException {
+    public synchronized void setLevel(Level newLevel) throws SecurityException {
         super.setLevel(newLevel);
     }
 

@@ -18,7 +18,6 @@ import org.restlet.ext.wadl.RepresentationInfo;
 import org.restlet.ext.wadl.RequestInfo;
 import org.restlet.ext.wadl.ResponseInfo;
 import org.restlet.ext.wadl.WadlServerResource;
-import org.restlet.resource.ResourceException;
 
 /**
  * Base resource.
@@ -30,11 +29,6 @@ import org.restlet.resource.ResourceException;
         reqName = Requirement.DOI_DOC_010_NAME
 )
 public abstract class BaseResource extends WadlServerResource {
-
-    @Override
-    protected void doInit() throws ResourceException {
-        super.doInit();
-    }
 
     public boolean isValueExist(final Form form, final String parameterName) {
         boolean result;

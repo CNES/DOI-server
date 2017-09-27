@@ -38,9 +38,9 @@ import org.restlet.security.User;
 )
 public class RoleAuthorizer implements Observer {
 
-    public static String ROLE_ADMIN = "admin";
-    public static String GROUP_USERS = "Users";
-    public static String GROUP_ADMIN = "Administrator";
+    public static final String ROLE_ADMIN = "admin";
+    public static final String GROUP_USERS = "Users";
+    public static final String GROUP_ADMIN = "Administrator";
 
     /**
      * Logger.
@@ -100,8 +100,8 @@ public class RoleAuthorizer implements Observer {
 
         Map<String, Integer> projects = UniqueProjectName.getInstance().getProjects();
         LOGGER.log(Level.INFO, "{0} projects have already been registered", projects.size());
-        for (String project : projects.keySet()) {
-            Integer projectID = projects.get(project);
+        for(Map.Entry<String, Integer> entry : projects.entrySet()) {
+            Integer projectID = entry.getValue();
             Role role = new Role(app, String.valueOf(projectID));
             List<User> users = userRolePlugin.getUsersFromRole(String.valueOf(projectID));
             for (User user : users) {

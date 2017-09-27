@@ -92,7 +92,7 @@ public class DoiServer extends Component {
     public DoiServer(final DoiSettings settings) {
         super();
         this.settings = settings;
-        startWithProxy(settings);
+        startWithProxy();
     }
 
     /**
@@ -197,9 +197,8 @@ public class DoiServer extends Component {
     /**
      * Starts with proxy.
      *
-     * @param settings
      */
-    private void startWithProxy(final DoiSettings settings) {
+    private void startWithProxy() {
         LOGGER.entering(getClass().getName(), "startWithProxy");
         initLogServices();
         ProxySettings.getInstance();

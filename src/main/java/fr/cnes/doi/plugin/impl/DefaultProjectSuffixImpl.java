@@ -10,6 +10,7 @@ import fr.cnes.doi.security.RoleAuthorizer;
 import fr.cnes.doi.settings.DoiSettings;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
@@ -111,7 +112,7 @@ public class DefaultProjectSuffixImpl extends ProjectSuffixPluginHelper {
                         LOGGER.log(Level.WARNING, "The line {0} is not formatted in the expected way", line);
                     } else {
                         String projectName = split[0];
-                        int id = Integer.valueOf(split[1]);
+                        int id = Integer.parseInt(split[1]);
                         this.idProjMap.put(id, projectName);
                         this.projIdMap.put(projectName, id);
                     }
@@ -132,7 +133,7 @@ public class DefaultProjectSuffixImpl extends ProjectSuffixPluginHelper {
         File directory = new File(projConfFile.getParent());
         Files.createDirectories(directory.toPath());
         Files.createFile(projConfFile.toPath());
-        Files.write(projConfFile.toPath(), "Project Name;Id\n".getBytes(), StandardOpenOption.APPEND);
+        Files.write(projConfFile.toPath(), "Project Name;Id\n".getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
     }
 
     @Override
@@ -140,7 +141,7 @@ public class DefaultProjectSuffixImpl extends ProjectSuffixPluginHelper {
         boolean isAdded = false;
         try {
             String line = projectName + ";" + projectID + "\n";
-            Files.write(new File(this.projectConf).toPath(), line.getBytes(), StandardOpenOption.APPEND);
+            Files.write(new File(this.projectConf).toPath(), line.getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
             this.projIdMap.put(projectName, projectID);
             this.idProjMap.put(projectID, projectName);
             isAdded = true;

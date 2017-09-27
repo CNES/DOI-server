@@ -15,7 +15,6 @@ import fr.cnes.doi.utils.spec.CoverageAnnotation;
 import fr.cnes.doi.utils.spec.Requirement;
 
 import java.text.MessageFormat;
-import java.util.Date;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -46,8 +45,6 @@ import org.restlet.service.LogService;
 )
 public class MonitoringLogFilter extends LogFilter {
 
-    private static final Date START_DATE_MONITORING = new Date();
-
     private static final float THRESHOLD_SPEED_PERCENT = Float.valueOf(DoiSettings.getInstance().getString(Consts.THRESHOLD_SPEED_PERCENT));
 
     private static final Logger APP_LOGGER = Utils.getAppLogger();
@@ -71,7 +68,7 @@ public class MonitoringLogFilter extends LogFilter {
         if (logService != null) {
             if (logService.getLoggerName() != null) {
                 Engine.getLogger(logService.getLoggerName());
-            } else if ((context != null) && (context.getLogger().getParent() != null)) {
+            } else if (context != null && context.getLogger().getParent() != null) {
                 Engine.getLogger(context.getLogger().getParent().getName() + "."
                         + LogUtils.getBestClassName(logService.getClass()));
             } else {

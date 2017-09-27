@@ -49,7 +49,7 @@ public class DoiLogDataServer extends LogService {
         try {
             this.setLoggerName(logName);
 
-            if ((logName != null) && !logName.equals("")) {
+            if (logName != null && !logName.equals("")) {
                 Engine.getLogger(logName);
             }
         } catch (SecurityException ex) {

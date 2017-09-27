@@ -36,7 +36,7 @@ public final class FileHandlerLogAPIServer extends AccessLogFileHandler {
     }
 
     @Override
-    public final synchronized void setLevel(final Level level) {
+    public synchronized void setLevel(final Level level) {
         super.setLevel(level);
     }
 

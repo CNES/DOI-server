@@ -34,6 +34,7 @@ import fr.cnes.doi.utils.spec.Requirement;
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 
 /**
  * DOI server
@@ -307,7 +308,7 @@ public class Starter {
 
                     try {
                         inputStream = new FileInputStream(arg);
-                        inputReader = new InputStreamReader(inputStream);
+                        inputReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
                         reader = new BufferedReader(inputReader);
                         String content = reader.lines().collect(Collectors.joining("\n"));
                         content = UtilsCryptography.decrypt(content, settings.getSecretKey());

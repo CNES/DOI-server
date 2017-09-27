@@ -5,7 +5,6 @@
  */
 package fr.cnes.doi.settings;
 
-import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.exception.MailingException;
 import fr.cnes.doi.utils.spec.Requirement;
 import java.util.Map;
@@ -13,10 +12,8 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.restlet.Client;
 import org.restlet.Context;
 import org.restlet.Request;
-import org.restlet.Response;
 import org.restlet.data.ChallengeResponse;
 import org.restlet.data.ChallengeScheme;
 import org.restlet.data.LocalReference;
@@ -170,7 +167,7 @@ public final class EmailSettings {
         client.setProtocol(protocol);
         client.getContext().getParameters().add("debug", String.valueOf(getDebug()));
         client.getContext().getParameters().add("startTls", Boolean.toString(startTls).toLowerCase());
-        Representation rep = client.get();
+        client.get();
         Status status = client.getStatus();
         if (status.isError()) {
             LOGGER.log(Level.SEVERE, "Cannot send the email! : {0}", status.getDescription());

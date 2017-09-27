@@ -104,7 +104,7 @@ public class MetadatasResource extends BaseMdsResource {
         String result;
         try {
             setStatus(Status.SUCCESS_CREATED);
-            org.datacite.schema.kernel_4.Resource resource = createDataCiteResourceObject(entity);
+            Resource resource = createDataCiteResourceObject(entity);
             String selectedRole = extractSelectedRoleFromRequestIfExists();
             checkPermission(resource.getIdentifier().getValue(), selectedRole);
             resource.setPublisher("CNES");
@@ -169,8 +169,8 @@ public class MetadatasResource extends BaseMdsResource {
             reqId = Requirement.DOI_INTER_070,
             reqName = Requirement.DOI_INTER_070_NAME
     )    
-    private org.datacite.schema.kernel_4.Resource createDataCiteResourceObject(final Representation entity) throws JAXBException, SAXException, ValidationException, IOException {
-        JAXBContext ctx = JAXBContext.newInstance(new Class[]{org.datacite.schema.kernel_4.Resource.class});
+    private Resource createDataCiteResourceObject(final Representation entity) throws JAXBException, SAXException, ValidationException, IOException {
+        JAXBContext ctx = JAXBContext.newInstance(new Class[]{Resource.class});
         Unmarshaller um = ctx.createUnmarshaller();
         Schema schema = this.doiApp.getSchemaFactory().newSchema(new URL(SCHEMA_DATACITE));
         um.setSchema(schema);

@@ -7,6 +7,8 @@ package fr.cnes.doi.resource.mds;
 
 import fr.cnes.doi.application.BaseApplication;
 import fr.cnes.doi.client.ClientMDS;
+import static fr.cnes.doi.client.ClientMDS.POST_DOI;
+import static fr.cnes.doi.client.ClientMDS.POST_URL;
 import java.util.Arrays;
 import java.util.logging.Level;
 import org.restlet.data.Form;
@@ -60,20 +62,23 @@ public class DoisResource extends BaseMdsResource {
     @Get
     public Representation getDois() throws ResourceException {
         getLogger().entering(getClass().getName(), "getDois");
+        Representation rep;
         try {
             setStatus(Status.SUCCESS_OK);
             String dois = this.doiApp.getClient().getDoiCollection();
             getLogger().exiting(getClass().getName(), "getDois", dois);
-            return new StringRepresentation(dois, MediaType.TEXT_URI_LIST);
+            rep = new StringRepresentation(dois, MediaType.TEXT_URI_LIST);
         } catch (ClientMdsException ex) {
             getLogger().throwing(getClass().getName(), "getDois", ex);
             if (ex.getStatus().getCode() == Status.SUCCESS_NO_CONTENT.getCode()) {
-                throw new ResourceException(ex.getStatus(), ex.getMessage(), ex);
+                setStatus(Status.SUCCESS_NO_CONTENT);
+                rep = new StringRepresentation(ex.getMessage());
             } else {
                 ((BaseApplication) getApplication()).sendAlertWhenDataCiteFailed(ex);
                 throw new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex);
             }
         }
+        return rep;
     }
 
     /**
@@ -273,6 +278,7 @@ public class DoisResource extends BaseMdsResource {
         info.setDocumentation("Retrieves the DOI collection");
         addResponseDocToMethod(info, createResponseDoc(Status.SUCCESS_OK, "Operation successful", successFullRepresentation()));
         addResponseDocToMethod(info, createResponseDoc(Status.SUCCESS_NO_CONTENT, "no DOIs founds", noContentRepresentation()));
+        addResponseDocToMethod(info, createResponseDoc(Status.SERVER_ERROR_INTERNAL, "Unexpected error"));        
     }
 
     /**
@@ -286,8 +292,8 @@ public class DoisResource extends BaseMdsResource {
     )      
     private RepresentationInfo requestRepresentation() {
         RepresentationInfo rep = new RepresentationInfo(MediaType.APPLICATION_WWW_FORM);
-        rep.getParameters().add(createQueryParamDoc("doi", ParameterStyle.PLAIN, "DOI name", true, "xs:string"));
-        rep.getParameters().add(createQueryParamDoc("url", ParameterStyle.PLAIN, "URL of the landing page", true, "xs:string"));
+        rep.getParameters().add(createQueryParamDoc(POST_DOI, ParameterStyle.PLAIN, "DOI name", true, "xs:string"));
+        rep.getParameters().add(createQueryParamDoc(POST_URL, ParameterStyle.PLAIN, "URL of the landing page", true, "xs:string"));
         return rep;
     }
 

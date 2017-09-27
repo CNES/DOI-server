@@ -544,7 +544,7 @@ public class ClientMDS extends BaseClient {
     private Resource parseDataciteResource(final Representation rep) throws ClientMdsException {
         final Resource resource;
         try {
-            JAXBContext ctx = JAXBContext.newInstance(new Class[]{org.datacite.schema.kernel_4.Resource.class});
+            JAXBContext ctx = JAXBContext.newInstance(new Class[]{Resource.class});
             Unmarshaller um = ctx.createUnmarshaller();
             resource = (Resource) um.unmarshal(rep.getStream());            
         } catch (JAXBException | IOException ex) {
@@ -670,7 +670,7 @@ public class ClientMDS extends BaseClient {
                     return this.string.toString();
                 }
             };
-            JAXBContext jaxbContext = JAXBContext.newInstance(new Class[]{org.datacite.schema.kernel_4.Resource.class});
+            JAXBContext jaxbContext = JAXBContext.newInstance(new Class[]{Resource.class});
             Marshaller marshaller = jaxbContext.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_SCHEMA_LOCATION, "http://datacite.org/schema/kernel-4 http://schema.datacite.org/meta/kernel-4/metadata.xsd");
             Schema schema = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI).newSchema(new URL("https://schema.datacite.org/meta/kernel-4.0/metadata.xsd"));
