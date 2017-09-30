@@ -32,8 +32,10 @@ public class LogAccessFormatter extends Formatter {
      * @return Returns a format such as Date - record
      */
     @Override
-    public String format(LogRecord record) {
-        return (DateUtils.format(new Date(), DateUtils.FORMAT_RFC_3339.get(0)) + " - " + record.getMessage() + "\n");
+    public String format(final LogRecord record) {
+        return (DateUtils.format(new Date(), 
+                DateUtils.FORMAT_RFC_3339.get(0)) + " - " + record.getMessage() + "\n"
+                );
     }
 
 }

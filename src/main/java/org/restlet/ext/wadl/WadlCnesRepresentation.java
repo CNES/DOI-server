@@ -15,6 +15,7 @@ import org.restlet.engine.Engine;
 import org.restlet.ext.xml.TransformRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.ext.xml.XmlRepresentation;
+import org.restlet.representation.EmptyRepresentation;
 import org.restlet.representation.InputRepresentation;
 
 /**
@@ -44,25 +45,26 @@ public class WadlCnesRepresentation extends WadlRepresentation {
      */
     @Override
     public Representation getHtmlRepresentation() {
-        Representation representation = null;
-        URL wadl2htmlXsltUrl = Engine
+        Representation representation;
+        final URL wadl2htmlXsltUrl = Engine
                 .getResource("org/restlet/ext/wadl/wadlcnes2html.xslt");
 
-        if (wadl2htmlXsltUrl != null) {
+        if (wadl2htmlXsltUrl == null) {
+            representation = new EmptyRepresentation();
+        } else {        
             try {
                 setSaxSource(XmlRepresentation.getSaxSource(this));
-                InputRepresentation xslRep = new InputRepresentation(
+                final InputRepresentation xslRep = new InputRepresentation(
                         wadl2htmlXsltUrl.openStream(),
                         MediaType.APPLICATION_W3C_XSLT);
                 representation = new TransformRepresentation(
                         Context.getCurrent(), this, xslRep);
                 representation.setMediaType(MediaType.TEXT_HTML);
             } catch (IOException e) {
-                Context.getCurrent()
-                        .getLogger()
-                        .log(Level.WARNING,
+                Context.getCurrentLogger().log(Level.WARNING,
                                 "Unable to generate the WADL HTML representation",
                                 e);
+                representation = new EmptyRepresentation();
             }
         }
 

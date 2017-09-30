@@ -6,7 +6,7 @@
 package fr.cnes.doi.resource.citation;
 
 import fr.cnes.doi.application.DoiCrossCiteApplication;
-import fr.cnes.doi.resource.BaseResource;
+import fr.cnes.doi.resource.AbstractResource;
 import org.restlet.data.MediaType;
 import org.restlet.ext.wadl.DocumentationInfo;
 import org.restlet.ext.wadl.RepresentationInfo;
@@ -17,27 +17,27 @@ import org.restlet.resource.ResourceException;
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-public class BaseCitationResource extends BaseResource {
+public class BaseCitationResource extends AbstractResource {
 
     /**
-     * Parameter providing the digital object identifier.
+     * Parameter providing the digital object identifier {@value #DOI_PARAMETER}.
      */
     public static final String DOI_PARAMETER = "doi";
 
     /**
-     * Language parameter to format the citation.
+     * Language parameter to format the citation {@value #LANG_PARAMETER}.
      */
     public static final String LANG_PARAMETER = "lang";
 
     /**
-     * Style parameter to format the citation.
+     * Style parameter to format the citation {@value #STYLE_PARAMETER}.
      */
     public static final String STYLE_PARAMETER = "style";
 
     /**
      * Cross cite application.
      */
-    protected DoiCrossCiteApplication app;
+    private DoiCrossCiteApplication app;
 
     /**
      * Init.
@@ -57,7 +57,8 @@ public class BaseCitationResource extends BaseResource {
      * @param content Explanation of the representation
      * @return the Wadl representation of this representation
      */
-    protected RepresentationInfo listRepresentation(final String title, final MediaType media, final String content) {
+    protected RepresentationInfo listRepresentation(final String title, 
+            final MediaType media, final String content) {
         final RepresentationInfo repInfo = new RepresentationInfo();
         repInfo.setMediaType(media);
         final DocumentationInfo docInfo = new DocumentationInfo();
@@ -65,5 +66,13 @@ public class BaseCitationResource extends BaseResource {
         docInfo.setTextContent(content);
         repInfo.setDocumentation(docInfo);
         return repInfo;
+    }
+
+    /**
+     * Returns CrossCiteApplication.
+     * @return the app
+     */
+    public DoiCrossCiteApplication getApp() {
+        return app;
     }
 }

@@ -5,7 +5,7 @@
  */
 package fr.cnes.doi.resource.citation;
 
-import fr.cnes.doi.application.BaseApplication;
+import fr.cnes.doi.application.AbstractApplication;
 import java.util.List;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
@@ -22,6 +22,11 @@ import fr.cnes.doi.utils.spec.Requirement;
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class StyleCitationResource extends BaseCitationResource {
+    
+    /**
+     * Class name.
+     */
+    private static final String CLASS_NAME = StyleCitationResource.class.getName();
 
     /**
      * Init.
@@ -42,26 +47,29 @@ public class StyleCitationResource extends BaseCitationResource {
     /**
      * Returns the styles as JSON array for a citation.
      * @return the possibles styles for a citation
+     * @throws ResourceException - Will thrown an Exception when a problem happens 
+     * during the request to Cross Cite
      */  
     @Requirement(
-            reqId = Requirement.DOI_SRV_100,
-            reqName = Requirement.DOI_SRV_100_NAME
-    )   
+        reqId = Requirement.DOI_SRV_100,
+        reqName = Requirement.DOI_SRV_100_NAME
+        )   
     @Requirement(
-            reqId = Requirement.DOI_MONIT_020,
-            reqName = Requirement.DOI_MONIT_020_NAME
-    )      
+        reqId = Requirement.DOI_MONIT_020,
+        reqName = Requirement.DOI_MONIT_020_NAME
+        )      
     @Get("json|xml")
-    public List<String> getStyles() {
-        getLogger().entering(this.getClass().getName(), "getStyles");
+    public List<String> getStyles() throws ResourceException{
+        getLogger().entering(CLASS_NAME, "getStyles");
         try {
-            List<String> result = this.app.getClient().getStyles();
-            getLogger().exiting(this.getClass().getName(), "getStyles", result);
+            final List<String> result = this.getApp().getClient().getStyles();
+            getLogger().exiting(CLASS_NAME, "getStyles", result);
             return result;
         } catch (ClientCrossCiteException ex) {
-            getLogger().throwing(this.getClass().getName(), "getStyles", ex);
-            ((BaseApplication)getApplication()).sendAlertWhenDataCiteFailed(ex);                        
-            throw new ResourceException(ex.getStatus(), ex.getDetailMessage());
+            getLogger().throwing(CLASS_NAME, "getStyles", ex);
+            ((AbstractApplication)
+                    getApplication()).sendAlertWhenDataCiteFailed(ex);                        
+            throw new ResourceException(ex.getStatus(), ex.getDetailMessage(), ex);
         }
     }  
           
@@ -70,15 +78,27 @@ public class StyleCitationResource extends BaseCitationResource {
      * @param info Wadl description
      */     
     @Requirement(
-            reqId = Requirement.DOI_DOC_010,
-            reqName = Requirement.DOI_DOC_010_NAME
-    )      
+        reqId = Requirement.DOI_DOC_010,
+        reqName = Requirement.DOI_DOC_010_NAME
+        )      
     @Override
     protected final void describeGet(final MethodInfo info) {
         info.setName(Method.GET);
         info.setDocumentation("Retrieves the list of supported styles"); 
-        addResponseDocToMethod(info, createResponseDoc(Status.SUCCESS_OK, "Operation successful", listRepresentation("Style representation", MediaType.TEXT_XML, "A List of String representing the possible styles")));        
-        addResponseDocToMethod(info, createResponseDoc(Status.SUCCESS_OK, "Operation successful", listRepresentation("Style representation", MediaType.APPLICATION_JSON, "A JSON array representing the possible styles")));                
-        addResponseDocToMethod(info, createResponseDoc(Status.SERVER_ERROR_INTERNAL, "server internal error, try later and if problem persists please contact us"));
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.SUCCESS_OK, "Operation successful", 
+                listRepresentation("Style representation", MediaType.TEXT_XML, 
+                        "A List of String representing the possible styles"))
+        );        
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.SUCCESS_OK, "Operation successful", 
+                listRepresentation("Style representation", 
+                        MediaType.APPLICATION_JSON, 
+                        "A JSON array representing the possible styles"))
+        );                
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.SERVER_ERROR_INTERNAL, "server internal error, try later "
+                        + "and if problem persists please contact us")
+        );
     }      
 }

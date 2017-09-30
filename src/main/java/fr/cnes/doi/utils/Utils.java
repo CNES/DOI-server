@@ -55,21 +55,21 @@ public class Utils {
     /**
      * Checks whether the char sequence is empty.
      *
-     * @param cs the char sequence
+     * @param charSeq the char sequence
      * @return True when the char sequence is empty otherwise False
      */
-    public static boolean isEmpty(final CharSequence cs) {
-        return cs == null || cs.length() == 0;
+    public static boolean isEmpty(final CharSequence charSeq) {
+        return charSeq == null || charSeq.length() == 0;
     }
 
     /**
      * Checks whether the char sequence is not empty.
      *
-     * @param cs the char sequence
+     * @param charSeq the char sequence
      * @return True when the char sequence is not empty otherwise False
      */
-    public static boolean isNotEmpty(final CharSequence cs) {
-        return !isEmpty(cs);
+    public static boolean isNotEmpty(final CharSequence charSeq) {
+        return !isEmpty(charSeq);
     }
 
     /**
@@ -110,9 +110,10 @@ public class Utils {
      * @return the keys related to a value
      */
     public static <T, E> Set<T> getKeysByValue(final Map<T, E> map, final E value) {
-        Set<T> keys = new HashSet<>();
-        for (Entry<T, E> entry : map.entrySet()) {
-            if (entry.getValue().equals(value)) {
+        final Set<T> keys = new HashSet<>();
+        for (final Entry<T, E> entry : map.entrySet()) {
+            final E entryVal = entry.getValue();
+            if (entryVal.equals(value)) {
                 keys.add(entry.getKey());
             }
         }
@@ -132,17 +133,19 @@ public class Utils {
      * @param <T> the class type
      * @return the same array, {@code public static} empty array if {@code null}
      * @throws IllegalArgumentException if the type argument is null
-     * @since 3.5
      */
-    public static <T> T[] nullToEmpty(final T[] array, final Class<T[]> type) {
+    public static <T> T[] nullToEmpty(final T[] array, final Class<T[]> type) {        
         if (type == null) {
             throw new IllegalArgumentException("The type must not be null");
         }
-
+        
+        T[] result;
         if (array == null) {
-            return type.cast(Array.newInstance(type.getComponentType(), 0));
+            result = type.cast(Array.newInstance(type.getComponentType(), 0));
+        } else {
+            result = array;
         }
-        return array;
+        return result;
     }
 
     /**
@@ -160,13 +163,15 @@ public class Utils {
      * @param array the array to check for {@code null} or empty
      * @return the same array, {@code public static} empty array if {@code null}
      * or empty input
-     * @since 2.5
      */
     public static Object[] nullToEmpty(final Object[] array) {
+        Object[] result;
         if (isEmpty(array)) {
-            return EMPTY_OBJECT_ARRAY;
+            result = EMPTY_OBJECT_ARRAY;
+        } else {
+            result = array;
         }
-        return array;
+        return result;
     }
 
     /**
@@ -175,7 +180,6 @@ public class Utils {
      *
      * @param array the array to test
      * @return {@code true} if the array is empty or {@code null}
-     * @since 2.1
      */
     public static boolean isEmpty(final Object[] array) {
         return getLength(array) == 0;
@@ -202,12 +206,14 @@ public class Utils {
      * @return The length of the array, or {@code 0} if the array is
      * {@code null}
      * @throws IllegalArgumentException if the object argument is not an array.
-     * @since 2.1
      */
     public static int getLength(final Object array) {
+        int length;
         if (array == null) {
-            return 0;
+            length = 0;
+        } else {
+            length = Array.getLength(array);
         }
-        return Array.getLength(array);
+        return length;
     }
 }

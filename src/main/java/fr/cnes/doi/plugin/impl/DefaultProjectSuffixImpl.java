@@ -5,7 +5,7 @@
  */
 package fr.cnes.doi.plugin.impl;
 
-import fr.cnes.doi.plugin.ProjectSuffixPluginHelper;
+import fr.cnes.doi.plugin.AbstractProjectSuffixPluginHelper;
 import fr.cnes.doi.security.RoleAuthorizer;
 import fr.cnes.doi.settings.DoiSettings;
 import java.io.File;
@@ -23,7 +23,7 @@ import java.util.logging.Logger;
  * Default implementation of the project suffix database.
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-public class DefaultProjectSuffixImpl extends ProjectSuffixPluginHelper {
+public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper {
 
     /**
      * Default file if the path is not defined in the configuration file
@@ -57,7 +57,7 @@ public class DefaultProjectSuffixImpl extends ProjectSuffixPluginHelper {
     private final Map<String, Integer> projIdMap = new ConcurrentHashMap<>();
 
     public DefaultProjectSuffixImpl() {
-
+        super();
     }           
 
     /**

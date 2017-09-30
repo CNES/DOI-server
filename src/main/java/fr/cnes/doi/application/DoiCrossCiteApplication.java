@@ -40,22 +40,22 @@ import fr.cnes.doi.utils.spec.Requirement;
  * @see "http://citation.crosscite.org/"
  */
 @Requirement(
-        reqId = Requirement.DOI_SRV_100,
-        reqName = Requirement.DOI_SRV_100_NAME
-)
+    reqId = Requirement.DOI_SRV_100,
+    reqName = Requirement.DOI_SRV_100_NAME
+    )
 @Requirement(
-        reqId = Requirement.DOI_SRV_110,
-        reqName = Requirement.DOI_SRV_110_NAME
-)
+    reqId = Requirement.DOI_SRV_110,
+    reqName = Requirement.DOI_SRV_110_NAME
+    )
 @Requirement(
-        reqId = Requirement.DOI_SRV_120,
-        reqName = Requirement.DOI_SRV_120_NAME
-)
+    reqId = Requirement.DOI_SRV_120,
+    reqName = Requirement.DOI_SRV_120_NAME
+    )
 @Requirement(
-        reqId = Requirement.DOI_MONIT_020,
-        reqName = Requirement.DOI_MONIT_020_NAME
-)
-public class DoiCrossCiteApplication extends BaseApplication {
+    reqId = Requirement.DOI_MONIT_020,
+    reqName = Requirement.DOI_MONIT_020_NAME
+    )
+public class DoiCrossCiteApplication extends AbstractApplication {       
 
     /**
      * URI to get the styles, which are used to format the citation.
@@ -75,6 +75,11 @@ public class DoiCrossCiteApplication extends BaseApplication {
     public static final String NAME = "Cross Cite Application";
 
     /**
+     * Class name.
+     */
+    private static final String CLASS_NAME = DoiCrossCiteApplication.class.getName();  
+    
+    /**
      * Client to query CrossCite.
      */
     private final ClientCrossCiteCitation client = new ClientCrossCiteCitation();
@@ -86,17 +91,19 @@ public class DoiCrossCiteApplication extends BaseApplication {
      */
     public DoiCrossCiteApplication() {
         super();
-        getLogger().entering(DoiCrossCiteApplication.class.getName(), "Constructor");
+        getLogger().entering(CLASS_NAME, "Constructor");
 
         setName(NAME);
-        StringBuilder description = new StringBuilder();
+        final StringBuilder description = new StringBuilder();
         description.append("Books and journal articles have long benefited from "
                 + "an infrastructure that makes them easy to cite, a key element"
                 + " in the process of research and academic discourse. "
                 + "We believe that you should cite data in just the same way "
-                + "that you can cite other sources of information, " + "such as articles and books.");
+                + "that you can cite other sources of information, " 
+                + "such as articles and books.");
         description.append("DataCite DOIs help further research and assures "
-                + "reliable, predictable, and unambiguous access to research " + "data in order to:");
+                + "reliable, predictable, and unambiguous access to research " 
+                + "data in order to:");
         description.append("<ul>");
         description.append("<li>support proper attribution and credit</li>");
         description.append("<li>support collaboration and reuse of data</li>");
@@ -113,7 +120,7 @@ public class DoiCrossCiteApplication extends BaseApplication {
                 + "enhance reuse of their data (Wilkinson 2016).");
         setDescription(description.toString());
 
-        getLogger().exiting(DoiCrossCiteApplication.class.getName(), "Constructor");
+        getLogger().exiting(CLASS_NAME, "Constructor");
     }
 
     /**
@@ -130,14 +137,14 @@ public class DoiCrossCiteApplication extends BaseApplication {
      */
     @Override
     public Restlet createInboundRoot() {
-        getLogger().entering(DoiCrossCiteApplication.class.getName(), "createInboundRoot");
+        getLogger().entering(CLASS_NAME, "createInboundRoot");
 
-        Router router = new Router(getContext());
+        final Router router = new Router(getContext());
         router.attach(STYLES_URI, StyleCitationResource.class);
         router.attach(LANGUAGE_URI, LanguageCitationResource.class);
         router.attach(FORMAT_URI, FormatCitationResource.class);
 
-        getLogger().exiting(DoiCrossCiteApplication.class.getName(), "createInboundRoot");
+        getLogger().exiting(CLASS_NAME, "createInboundRoot");
         return router;
     }
 

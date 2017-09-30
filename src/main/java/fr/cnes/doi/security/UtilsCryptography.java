@@ -9,6 +9,7 @@ import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.utils.Utils;
 import static fr.cnes.doi.utils.Utils.isNotEmpty;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
@@ -62,10 +63,10 @@ public class UtilsCryptography {
     public static String decrypt(final String encryptedInput, final String secretKey) {
         if (isNotEmpty(encryptedInput)) {
             try {
-                Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
-                cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(secretKey.getBytes("UTF-8"), KEY_ALGORITHM));
-                return new String(cipher.doFinal(Base64.getDecoder().decode(encryptedInput)), "UTF-8");
-            } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | UnsupportedEncodingException | IllegalBlockSizeException | BadPaddingException ex) {
+                final Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
+                cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(secretKey.getBytes(StandardCharsets.UTF_8), KEY_ALGORITHM));
+                return new String(cipher.doFinal(Base64.getDecoder().decode(encryptedInput)), StandardCharsets.UTF_8);
+            } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException ex) {
                 Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
                 throw new DoiRuntimeException(ex);
             }
@@ -94,8 +95,8 @@ public class UtilsCryptography {
      */
     public static String encrypt(final String str, final String secretKey) {
         try {
-            Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
-            cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(secretKey.getBytes("UTF-8"), KEY_ALGORITHM));
+            final Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
+            cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(secretKey.getBytes(StandardCharsets.UTF_8), KEY_ALGORITHM));
             return Base64.getEncoder().encodeToString(cipher.doFinal(str.getBytes("UTF-8")));
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | UnsupportedEncodingException | IllegalBlockSizeException | BadPaddingException ex) {
             Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);

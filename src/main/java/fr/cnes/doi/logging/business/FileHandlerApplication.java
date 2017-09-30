@@ -26,8 +26,8 @@ public class FileHandlerApplication extends FileHandler {
     /**
      * File handler for applications.
      *
-     * @throws IOException
-     * @throws SecurityException
+     * @throws IOException IOException
+     * @throws SecurityException SecurityException
      */
     public FileHandlerApplication() throws IOException, SecurityException {
         super();

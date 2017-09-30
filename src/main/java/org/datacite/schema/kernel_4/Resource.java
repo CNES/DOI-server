@@ -977,7 +977,7 @@ public class Resource {
          * {@link Resource.AlternateIdentifiers.AlternateIdentifier }
          *
          *
-         * @return
+         * @return An array of alternate identifiers
          */
         public List<Resource.AlternateIdentifiers.AlternateIdentifier> getAlternateIdentifier() {
             if (alternateIdentifier == null) {
@@ -3091,7 +3091,7 @@ public class Resource {
          */
         @XmlAttribute(name = "identifierType", required = true)
         @XmlSchemaType(name = "anySimpleType")
-        public final static String IDENTIFIER_TYPE = "DOI";
+        public static final String IDENTIFIER_TYPE = "DOI";
 
         /**
          * Gets the value of the value property.

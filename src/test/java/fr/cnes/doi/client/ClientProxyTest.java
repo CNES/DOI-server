@@ -128,8 +128,8 @@ public class ClientProxyTest {
                     DoiSettings.getInstance().getSecret(Consts.SERVER_PROXY_PWD));
         }
 
-        Representation rep = baseClient.client.get();
-        Status status = baseClient.client.getStatus();
+        Representation rep = baseClient.getClient().get();
+        Status status = baseClient.getClient().getStatus();
         Assert.assertTrue("Test si la requete est OK", status.isSuccess());
 
         System.out.println(rep.getText());
@@ -153,8 +153,8 @@ public class ClientProxyTest {
                     DoiSettings.getInstance().getSecret(Consts.SERVER_PROXY_PWD));
         }
 
-        Representation rep = baseClient.client.get();
-        Status status = baseClient.client.getStatus();
+        Representation rep = baseClient.getClient().get();
+        Status status = baseClient.getClient().getStatus();
         Assert.assertTrue("Test si la requete est OK", status.isSuccess());
 
     }

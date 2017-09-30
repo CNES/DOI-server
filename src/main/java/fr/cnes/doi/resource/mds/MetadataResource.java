@@ -5,7 +5,7 @@
  */
 package fr.cnes.doi.resource.mds;
 
-import fr.cnes.doi.application.BaseApplication;
+import fr.cnes.doi.application.AbstractApplication;
 import fr.cnes.doi.application.DoiMdsApplication;
 import fr.cnes.doi.client.ClientMDS;
 import fr.cnes.doi.exception.ClientMdsException;
@@ -30,10 +30,19 @@ import org.restlet.resource.ResourceException;
  */
 public class MetadataResource extends BaseMdsResource {
 
+    /**
+     * 
+     */
     public static final String GET_METADATA = "Get a Metadata";
 
+    /**
+     * 
+     */
     public static final String DELETE_METADATA = "Delete a Metadata";
 
+    /**
+     * DOI name, which is set on the URL template.
+     */
     private String doiName;
 
     /**
@@ -73,16 +82,16 @@ public class MetadataResource extends BaseMdsResource {
     public Resource getMetadata() throws ResourceException {
         getLogger().entering(getClass().getName(), "getMetadata", this.doiName);
         checkInputs(doiName);
-        Resource resource;
+        final Resource resource;
         try {
             setStatus(Status.SUCCESS_OK);
-            resource = this.doiApp.getClient().getMetadataAsObject(this.doiName);
+            resource = this.getDoiApp().getClient().getMetadataAsObject(this.doiName);
         } catch (ClientMdsException ex) {
             getLogger().throwing(getClass().getName(), "getMetadata", ex);
             if (ex.getStatus().getCode() == Status.CLIENT_ERROR_NOT_FOUND.getCode() || ex.getStatus().getCode() == Status.CLIENT_ERROR_GONE.getCode()) {
                 throw new ResourceException(ex.getStatus(), ex.getMessage(), ex);
             } else {
-                ((BaseApplication)getApplication()).sendAlertWhenDataCiteFailed(ex);
+                ((AbstractApplication)getApplication()).sendAlertWhenDataCiteFailed(ex);
                 throw new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex);
             }
         }
@@ -130,20 +139,27 @@ public class MetadataResource extends BaseMdsResource {
     public Representation deleteMetadata() throws ResourceException {
         getLogger().entering(getClass().getName(), "deleteMetadata");
         checkInputs(this.doiName);
-        Representation rep;
+        final Representation rep;
         try {
-            String selectedRole = extractSelectedRoleFromRequestIfExists();
+            final String selectedRole = extractSelectedRoleFromRequestIfExists();
             getLogger().entering(getClass().getName(), "deleteMetadata", new Object[]{this.doiName, selectedRole});
             checkPermission(this.doiName, selectedRole);
             setStatus(Status.SUCCESS_OK);
-            rep = this.doiApp.getClient().deleteMetadata(this.doiName);
-        } catch (ClientMdsException ex) {
-            getLogger().throwing(getClass().getName(), "deleteMetadata", ex);
-            if (ex.getStatus().getCode() == Status.CLIENT_ERROR_NOT_FOUND.getCode()) {
-                throw new ResourceException(ex.getStatus(), ex.getDetailMessage());
+            rep = this.getDoiApp().getClient().deleteMetadata(this.doiName);
+        } catch (ClientMdsException exception) {
+            getLogger().throwing(getClass().getName(), "deleteMetadata", exception);
+            if (exception.getStatus().getCode() == Status.CLIENT_ERROR_NOT_FOUND.getCode()) {
+                throw new ResourceException(
+                        exception.getStatus(), exception.getDetailMessage(), 
+                        exception
+                );
             } else {
-                ((BaseApplication)getApplication()).sendAlertWhenDataCiteFailed(ex);            
-                throw new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getDetailMessage());
+                ((AbstractApplication)getApplication())
+                        .sendAlertWhenDataCiteFailed(exception);            
+                throw new ResourceException(
+                        Status.SERVER_ERROR_INTERNAL, exception.getDetailMessage(), 
+                        exception
+                );
             }
         }
 
@@ -157,20 +173,39 @@ public class MetadataResource extends BaseMdsResource {
      * @param info Wadl description for GET method
      */
     @Requirement(
-            reqId = Requirement.DOI_DOC_010,
-            reqName = Requirement.DOI_DOC_010_NAME
-    )      
+        reqId = Requirement.DOI_DOC_010,
+        reqName = Requirement.DOI_DOC_010_NAME
+        )      
     @Override
     protected final void describeGet(final MethodInfo info) {
         info.setName(Method.GET);
         info.setDocumentation("Get a specific metadata");
 
-        addRequestDocToMethod(info, createQueryParamDoc(DoiMdsApplication.DOI_TEMPLATE, ParameterStyle.TEMPLATE, "DOI name", true, "xs:string"));
+        addRequestDocToMethod(info, createQueryParamDoc(
+                DoiMdsApplication.DOI_TEMPLATE, ParameterStyle.TEMPLATE, 
+                "DOI name", true, "xs:string")
+        );
 
-        addResponseDocToMethod(info, createResponseDoc(Status.SUCCESS_OK, "Operation successful", "metadataRepresentation"));
-        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_NOT_FOUND, "DOI does not exist in DataCite", "explainRepresentation"));
-        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_GONE, "the requested dataset was marked inactive (using DELETE method)", "explainRepresentation"));
-        addResponseDocToMethod(info, createResponseDoc(Status.SERVER_ERROR_INTERNAL, "server internal error, try later and if problem persists please contact us", "explainRepresentation"));
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.SUCCESS_OK, "Operation successful", 
+                "metadataRepresentation")
+        );
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.CLIENT_ERROR_NOT_FOUND, 
+                "DOI does not exist in DataCite", 
+                "explainRepresentation")
+        );
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.CLIENT_ERROR_GONE, 
+                "the requested dataset was marked inactive (using DELETE method)", 
+                "explainRepresentation")
+        );
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.SERVER_ERROR_INTERNAL, 
+                "server internal error, try later and if problem persists please "
+                        + "contact us", 
+                "explainRepresentation")
+        );
     }
 
     /**
@@ -189,16 +224,47 @@ public class MetadataResource extends BaseMdsResource {
 
         addRequestDocToMethod(info,
                 Arrays.asList(
-                        createQueryParamDoc(DoiMdsApplication.DOI_TEMPLATE, ParameterStyle.TEMPLATE, "DOI name", true, "xs:string"),
-                        createQueryParamDoc("selectedRole", ParameterStyle.HEADER, "A user can select one role when he is associated to several roles", false, "xs:string")
+                        createQueryParamDoc(DoiMdsApplication.DOI_TEMPLATE, 
+                                ParameterStyle.TEMPLATE, "DOI name", true, "xs:string"
+                        ),
+                        createQueryParamDoc("selectedRole", ParameterStyle.HEADER, 
+                                "A user can select one role when he is associated "
+                                        + "to several roles", false, "xs:string"
+                        )
                 )
         );
-        addResponseDocToMethod(info, createResponseDoc(Status.SUCCESS_OK, "Operation successful", "metadataRepresentation"));
-        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_UNAUTHORIZED, "if no role is provided", "explainRepresentation"));
-        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_FORBIDDEN, "if the role is not allowed to use this feature or the role is not allow to delete the DOI", "explainRepresentation"));
-        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_NOT_FOUND, "DOI does not exist in our database", "explainRepresentation"));
-        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_CONFLICT, "Error when a user is associated to more than one role", "explainRepresentation"));
-        addResponseDocToMethod(info, createResponseDoc(Status.SERVER_ERROR_INTERNAL, "server internal error, try later and if problem persists please contact us", "explainRepresentation"));
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.SUCCESS_OK, 
+                "Operation successful", 
+                "metadataRepresentation")
+        );
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.CLIENT_ERROR_UNAUTHORIZED, 
+                "if no role is provided", 
+                "explainRepresentation")
+        );
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.CLIENT_ERROR_FORBIDDEN, 
+                "if the role is not allowed to use this feature or the role is "
+                        + "not allow to delete the DOI", 
+                "explainRepresentation")
+        );
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.CLIENT_ERROR_NOT_FOUND, 
+                "DOI does not exist in our database", 
+                "explainRepresentation")
+        );
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.CLIENT_ERROR_CONFLICT, 
+                "Error when a user is associated to more than one role", 
+                "explainRepresentation")
+        );
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.SERVER_ERROR_INTERNAL, 
+                "server internal error, try later and if problem persists please "
+                        + "contact us", 
+                "explainRepresentation")
+        );
     } 
     
     /**
@@ -210,7 +276,7 @@ public class MetadataResource extends BaseMdsResource {
             reqId = Requirement.DOI_INTER_070,
             reqName = Requirement.DOI_INTER_070_NAME
     )    
-    private void checkInputs(String doiName) throws ResourceException {
+    private void checkInputs(final String doiName) throws ResourceException {
         getLogger().entering(this.getClass().getName(), "checkInputs", doiName);
         StringBuilder errorMsg = new StringBuilder();
         if(doiName == null || doiName.isEmpty()) {
@@ -226,9 +292,10 @@ public class MetadataResource extends BaseMdsResource {
         if(errorMsg.length() == 0) {        
             getLogger().fine("The input is valid");                    
         } else {
-            ResourceException ex =  new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, errorMsg.toString());            
-            getLogger().throwing(this.getClass().getName(), "checkInputs", ex);
-            throw ex;
+            final ResourceException exception =  new ResourceException(
+                    Status.CLIENT_ERROR_BAD_REQUEST, errorMsg.toString());            
+            getLogger().throwing(this.getClass().getName(), "checkInputs", exception);
+            throw exception;
         }          
         getLogger().exiting(this.getClass().getName(), "checkInputs"); 
     }

@@ -11,7 +11,6 @@ import fr.cnes.doi.security.UtilsCryptography;
 import fr.cnes.doi.server.Starter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -40,6 +39,11 @@ import java.net.URLDecoder;
         reqName = Requirement.DOI_CONFIG_010_NAME
 )
 public final class DoiSettings {
+    
+    /**
+     * Class name.
+     */
+    private static final String CLASS_NAME = DoiSettings.class.getName();
 
     /**
      * Configuration files in JAR.
@@ -67,7 +71,7 @@ public final class DoiSettings {
     private String secretKey = UtilsCryptography.DEFAULT_SECRET_KEY;
 
     /**
-     * Path where the Java application is located.
+     * Path where the Java application inputStream located.
      */
     private String pathApp;
 
@@ -75,7 +79,7 @@ public final class DoiSettings {
      * private constructor
      */
     private DoiSettings() {
-        Properties properties = loadConfigurationFile(CONFIG_PROPERTIES);
+        final Properties properties = loadConfigurationFile(CONFIG_PROPERTIES);
         init(properties);
     }
 
@@ -84,28 +88,28 @@ public final class DoiSettings {
      * @param properties Configuration file
      */
     private void init(final Properties properties) {
-        LOGGER.entering(this.getClass().getName(), "init");        
+        LOGGER.entering(CLASS_NAME, "init");        
         fillConcurrentMap(properties);
         computePathOfTheApplication();
         PluginFactory.init(this.map);
-        LOGGER.exiting(this.getClass().getName(), "init");        
+        LOGGER.exiting(CLASS_NAME, "init");        
     }
 
     private void computePathOfTheApplication() {
-        LOGGER.entering(this.getClass().getName(), "computePathOfTheApplication");
+        LOGGER.entering(CLASS_NAME, "computePathOfTheApplication");
         try {
-            String path = Starter.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+            final String path = Starter.class.getProtectionDomain().getCodeSource().getLocation().getPath();
             String decodedPath = URLDecoder.decode(path, "UTF-8");
-            int posLastSlash = decodedPath.lastIndexOf("/");
+            final int posLastSlash = decodedPath.lastIndexOf("/");
             decodedPath = decodedPath.substring(0, posLastSlash);
             this.pathApp = decodedPath;
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(DoiSettings.class.getName()).log(Level.SEVERE, null, ex);
-            DoiRuntimeException doiEx = new DoiRuntimeException(ex);
-            LOGGER.throwing(this.getClass().getName(), "computePathOfTheApplication", doiEx);
+            final DoiRuntimeException doiEx = new DoiRuntimeException(ex);
+            LOGGER.throwing(CLASS_NAME, "computePathOfTheApplication", doiEx);
             throw doiEx;
         }
-        LOGGER.exiting(this.getClass().getName(), "computePathOfTheApplication");
+        LOGGER.exiting(CLASS_NAME, "computePathOfTheApplication");
     }
 
     /**
@@ -114,21 +118,21 @@ public final class DoiSettings {
      * @param path path to the configuration file.
      * @return the configuration file content
      */
-    private Properties loadConfigurationFile(String path) {
-        LOGGER.entering(this.getClass().getName(), "loadConfigurationFile", path);
-        Properties properties = new Properties();
-        ClientResource client = new ClientResource(LocalReference.createClapReference("class/config.properties"));
-        Representation configurationFile = client.get();
+    private Properties loadConfigurationFile(final String path) {
+        LOGGER.entering(CLASS_NAME, "loadConfigurationFile", path);
+        final Properties properties = new Properties();
+        final ClientResource client = new ClientResource(LocalReference.createClapReference("class/config.properties"));
+        final Representation configurationFile = client.get();
         try {
             properties.load(configurationFile.getStream());
         } catch (IOException e) {
-            DoiRuntimeException doiEx = new DoiRuntimeException("Unable to load " + path, e);
-            LOGGER.throwing(this.getClass().getName(), "loadConfigurationFile", doiEx);
+            final DoiRuntimeException doiEx = new DoiRuntimeException("Unable to load " + path, e);
+            LOGGER.throwing(CLASS_NAME, "loadConfigurationFile", doiEx);
             throw doiEx;
         } finally {
             client.release();
         }
-        LOGGER.exiting(this.getClass().getName(), "loadConfigurationFile", properties);
+        LOGGER.exiting(CLASS_NAME, "loadConfigurationFile", properties);
         return properties;
     }
     
@@ -137,37 +141,38 @@ public final class DoiSettings {
      */
     public void validConfigurationFile() {
         StringBuilder validation = new StringBuilder();
+        final String message = "Sets ";
         if(isNotExist(this.map, Consts.INIST_DOI)) {
-            validation = validation.append("Sets ").append(Consts.INIST_DOI).append("\n");
+            validation = validation.append(message).append(Consts.INIST_DOI).append("\n");
         }
         if(isNotExist(this.map, Consts.INIST_LOGIN)) {
-            validation = validation.append("Sets ").append(Consts.INIST_LOGIN).append("\n");
+            validation = validation.append(message).append(Consts.INIST_LOGIN).append("\n");
         }
         if(isNotExist(this.map, Consts.INIST_PWD)) {
-            validation = validation.append("Sets ").append(Consts.INIST_PWD).append("\n");
+            validation = validation.append(message).append(Consts.INIST_PWD).append("\n");
         }    
         if(isNotExist(this.map, Consts.SERVER_PROXY_USED)) {
-            validation = validation.append("Sets ").append(Consts.SERVER_PROXY_USED).append("\n");
+            validation = validation.append(message).append(Consts.SERVER_PROXY_USED).append("\n");
         }
         if(isNotExist(this.map, Consts.PLUGIN_PROJECT_SUFFIX)){
-            validation = validation.append("Sets ").append(Consts.PLUGIN_PROJECT_SUFFIX).append("\n");
+            validation = validation.append(message).append(Consts.PLUGIN_PROJECT_SUFFIX).append("\n");
         }
         if(isNotExist(this.map, Consts.PLUGIN_TOKEN)){
-            validation = validation.append("Sets ").append(Consts.PLUGIN_TOKEN).append("\n");
+            validation = validation.append(message).append(Consts.PLUGIN_TOKEN).append("\n");
         } 
         if(isNotExist(this.map, Consts.PLUGIN_USER_GROUP_MGT)){
-            validation = validation.append("Sets ").append(Consts.PLUGIN_USER_GROUP_MGT).append("\n");
+            validation = validation.append(message).append(Consts.PLUGIN_USER_GROUP_MGT).append("\n");
         }         
         if(validation.length()!=0) {
             throw new DoiRuntimeException(validation.toString());
         }
     }
     
-    private boolean isExist( ConcurrentHashMap<String,String> properties, String keyword) {
+    private boolean isExist(final  ConcurrentHashMap<String,String> properties, final String keyword) {
         return properties.containsKey(keyword) && !properties.get(keyword).isEmpty();
     }
     
-    private boolean isNotExist( ConcurrentHashMap<String,String> properties, String keyword) {
+    private boolean isNotExist(final  ConcurrentHashMap<String,String> properties, final String keyword) {
         return !isExist(properties, keyword);
     }
 
@@ -177,11 +182,11 @@ public final class DoiSettings {
      * @param properties the configuration file content
      */
     private void fillConcurrentMap(final Properties properties) {
-        LOGGER.entering(this.getClass().getName(), "fillConcurrentMap", properties);
+        LOGGER.entering(CLASS_NAME, "fillConcurrentMap", properties);
         for (final Entry<Object, Object> entry : properties.entrySet()) {
             map.put((String) entry.getKey(), (String) entry.getValue());
         }
-        LOGGER.exiting(this.getClass().getName(), "fillConcurrentMap");
+        LOGGER.exiting(CLASS_NAME, "fillConcurrentMap");
     }
 
     /**
@@ -192,7 +197,7 @@ public final class DoiSettings {
         /**
          * Unique Instance unique not pre-initiliaze
          */
-        private final static DoiSettings INSTANCE = new DoiSettings();
+        private static final DoiSettings INSTANCE = new DoiSettings();
     }
 
     /**
@@ -208,7 +213,7 @@ public final class DoiSettings {
      * Tests if the key has a value.
      *
      * @param key key to test
-     * @return True when the value is different or null and empty
+     * @return True when the value inputStream different or null and empty
      */
     public boolean hasValue(final String key) {
         LOGGER.log(Level.CONFIG, "hasValue({0}) = {1}", new Object[]{key, Utils.isNotEmpty(getString(key))});
@@ -239,7 +244,7 @@ public final class DoiSettings {
      * Returns the value of the key as string.
      *
      * @param key key to search
-     * @param defaultValue Default value if the key is not found
+     * @param defaultValue Default value if the key inputStream not found
      * @return the value of the key
      */
     public String getString(final String key, final String defaultValue) {
@@ -249,19 +254,19 @@ public final class DoiSettings {
 
     /**
      * Returns the value of the key or null if no mapping for the key.
-     * A special processing is done for the key {@value fr.cnes.doi.settings.Consts#INIST_DOI}. 
-     * When this key is called the value changes in respect of {@value fr.cnes.doi.settings.Consts#CONTEXT_MODE}.
-     * When {@value fr.cnes.doi.settings.Consts#CONTEXT_MODE} is set to PRE_PROD, {@value fr.cnes.doi.settings.Consts#INIST_DOI}
-     * is set to {@value #INIST_TEST_DOI}.
+     * A special processing inputStream done for the key {@value fr.cnes.doi.settings.Consts#INIST_DOI}. 
+ When this key inputStream called the value changes in respect of {@value fr.cnes.doi.settings.Consts#CONTEXT_MODE}.
+     * When {@value fr.cnes.doi.settings.Consts#CONTEXT_MODE} inputStream set to PRE_PROD, {@value fr.cnes.doi.settings.Consts#INIST_DOI}
+ inputStream set to {@value #INIST_TEST_DOI}.
      *
      * @param key key to search
      * @return the value of the key
      */
     public String getString(final String key) {
-        String value;
+        final String value;
         if(Consts.INIST_DOI.equals(key)) {
-            String context = this.getString(Consts.CONTEXT_MODE, "DEV");
-            value = context.equals("PRE_PROD") ? INIST_TEST_DOI : this.getString(Consts.INIST_DOI, null);
+            final String context = this.getString(Consts.CONTEXT_MODE, "DEV");
+            value = "PRE_PROD".equals(context) ? INIST_TEST_DOI : this.getString(Consts.INIST_DOI, null);
         } else {
             value = this.getString(key, null);
         }
@@ -269,8 +274,8 @@ public final class DoiSettings {
     }
 
     /**
-     * Returns the decoded value of the sky. An exception is raised when the key
-     * is not encoded on 16bits.
+     * Returns the decoded value of the sky. An exception inputStream raised when the key
+ inputStream not encoded on 16bits.
      *
      * @param key key to search
      * @return the decoded vale
@@ -288,8 +293,8 @@ public final class DoiSettings {
     }
 
     /**
-     * Returns the value of the key as an integer. NumberFormatException is
-     * raisen when the value of the key in not compatible with an integer
+     * Returns the value of the key as an integer. NumberFormatException inputStream
+ raisen when the value of the key in not compatible with an integer
      *
      * @param key key to search
      * @return the value
@@ -301,8 +306,8 @@ public final class DoiSettings {
     }
 
     /**
-     * Returns the value of the key as an integer. NumberFormatException is
-     * raisen when the value of the key in not compatible
+     * Returns the value of the key as an integer. NumberFormatException inputStream
+ raisen when the value of the key in not compatible
      *
      * @param key key to search
      * @param defaultValue default value
@@ -315,8 +320,8 @@ public final class DoiSettings {
     }
 
     /**
-     * Returns the value of the key as a boolean. An exception is raisen when
-     * the value of the key in not compatible with a boolean
+     * Returns the value of the key as a boolean. An exception inputStream raisen when
+ the value of the key in not compatible with a boolean
      *
      * @param key key to search
      * @return the value
@@ -324,17 +329,17 @@ public final class DoiSettings {
      */
     public boolean getBoolean(final String key) {
         if (getString(key) == null) {
-            IllegalArgumentException ex = new IllegalArgumentException("Key not found : " + key);
-            LOGGER.throwing(this.getClass().getName(), "getBoolean", ex);
-            throw ex;
+            final IllegalArgumentException exception = new IllegalArgumentException("Key not found : " + key);
+            LOGGER.throwing(CLASS_NAME, "getBoolean", exception);
+            throw exception;
         } else {
             return Boolean.parseBoolean(getString(key));
         }
     }
 
     /**
-     * Returns the value of the key as a long. NumberFormatException is raisen
-     * when the value of the key in not compatible
+     * Returns the value of the key as a long. NumberFormatException inputStream raisen
+ when the value of the key in not compatible
      *
      * @param key key to search
      * @return the value
@@ -346,8 +351,8 @@ public final class DoiSettings {
     }
 
     /**
-     * Returns the value of the key as a long. NumberFormatException is raisen
-     * when the value of the key in not compatible
+     * Returns the value of the key as a long. NumberFormatException inputStream raisen
+ when the value of the key in not compatible
      *
      * @param key key to search
      * @param defaultValue default value
@@ -355,7 +360,7 @@ public final class DoiSettings {
      * @exception NumberFormatException - if the string does not contain a
      * parsable long
      */
-    public Long getLong(String key, String defaultValue) {
+    public Long getLong(final String key, final String defaultValue) {
         return Long.parseLong(getString(key, defaultValue));
     }
 
@@ -363,9 +368,9 @@ public final class DoiSettings {
      * Displays the configuration file.
      */
     public void displayConfigFile() {
-        LOGGER.entering(this.getClass().getName(), "displayConfigFile");
-        ClientResource client = new ClientResource(LocalReference.createClapReference("class/" + CONFIG_PROPERTIES));
-        Representation configurationFile = client.get();
+        LOGGER.entering(CLASS_NAME, "displayConfigFile");
+        final ClientResource client = new ClientResource(LocalReference.createClapReference("class/" + CONFIG_PROPERTIES));
+        final Representation configurationFile = client.get();
         try {
             copyStream(configurationFile.getStream(), System.out);
         } catch (IOException ex) {
@@ -373,64 +378,60 @@ public final class DoiSettings {
         } finally {
             client.release();
         }
-        LOGGER.exiting(this.getClass().getName(), "displayConfigFile");
+        LOGGER.exiting(CLASS_NAME, "displayConfigFile");
     }
 
     /**
      * Copy input stream to output stream.
      *
-     * @param is input stream
-     * @param os output stream
+     * @param inputStream input stream
+     * @param outputStream output stream
      */
-    private void copyStream(final InputStream is, final OutputStream os) {
-        LOGGER.entering(this.getClass().getName(), "copyStream");
+    private void copyStream(final InputStream inputStream, final OutputStream outputStream) {
+        LOGGER.entering(CLASS_NAME, "copyStream");
         final int buffer_size = 1024;
         try {
-            byte[] bytes = new byte[buffer_size];
+            final byte[] bytes = new byte[buffer_size];
             for (;;) {
-                int count = is.read(bytes, 0, buffer_size);
+                final int count = inputStream.read(bytes, 0, buffer_size);
                 if (count == -1) {
                     break;
                 }
-                os.write(bytes, 0, count);
+                outputStream.write(bytes, 0, count);
             }
-            is.close();
-            os.flush();
-            os.close();
+            inputStream.close();
+            outputStream.flush();
+            outputStream.close();
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, "error when displaying the configuraiton file on the standard output", ex);
         }
-        LOGGER.exiting(this.getClass().getName(), "copyStream");
+        LOGGER.exiting(CLASS_NAME, "copyStream");
     }
 
     /**
      * Sets a custom properties file.
      *
      * @param path Path to the properties file
-     * @throws java.io.FileNotFoundException
+     * @throws IOException - if an error occurred when reading from the input stream.
      */
-    public void setPropertiesFile(final String path) throws FileNotFoundException, IOException {
-        LOGGER.entering(this.getClass().getName(), "setPropertiesFile", path);        
-        Properties properties = new Properties();
-        try (FileInputStream is = new FileInputStream(new File(path))) {
-            properties.load(is);
-            init(properties);
-        }
-        LOGGER.exiting(this.getClass().getName(), "setPropertiesFile");                
+    public void setPropertiesFile(final String path) throws IOException {
+        final InputStream inputStream = new FileInputStream(new File(path));
+        setPropertiesFile(inputStream);
     }
 
     /**
      * Sets a custom properties file.
      *
-     * @param is Input stream
-     * @throws java.io.IOException
+     * @param inputStream Input stream 
+     * @throws java.io.IOException - if an error occurred when reading from the input stream.
      */
-    public void setPropertiesFile(final InputStream is) throws IOException {
-        LOGGER.entering(this.getClass().getName(), "setPropertiesFile");                
-        Properties properties = new Properties();
-        properties.load(is);
+    public void setPropertiesFile(final InputStream inputStream) throws IOException {
+        LOGGER.entering(CLASS_NAME, "setPropertiesFile");                
+        final Properties properties = new Properties();
+        properties.load(inputStream);
         init(properties);
-        LOGGER.exiting(this.getClass().getName(), "setPropertiesFile");                        
+        inputStream.close();
+        LOGGER.exiting(CLASS_NAME, "setPropertiesFile");                        
     }        
 
     /**

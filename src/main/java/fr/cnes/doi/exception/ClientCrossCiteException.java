@@ -14,7 +14,15 @@ import org.restlet.data.Status;
 public class ClientCrossCiteException extends Exception {
 
     private static final long serialVersionUID = -246999030222838204L;
+    
+    /**
+     * Detail message.
+     */
     private final String detailMessage;
+    
+    /**
+     * HTTP status.
+     */
     private final Status status;
     
     /**
@@ -81,10 +89,15 @@ public class ClientCrossCiteException extends Exception {
                 break;
             default:
                 result = "Internal error";
+                break;
         }
         return result;
     } 
     
+    /**
+     * Returns the status.
+     * @return the status
+     */
     public Status getStatus() {
         return this.status;
     }

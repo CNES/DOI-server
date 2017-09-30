@@ -43,13 +43,13 @@ public interface PluginMetadata {
     
     /**
      * Returns the owner of the plugin.
-     * @return 
+     * @return the owner
      */
     String getOwner();
     
     /**
      * Returns the license of the plugin.
-     * @return 
+     * @return the license
      */
     String getLicense();
     

@@ -126,7 +126,7 @@ public class MetadataResourceTest {
         }
         client.release();
         assertTrue(Status.SUCCESS_OK.getCode() == code || Status.CLIENT_ERROR_GONE.getCode() == code);
-        assertTrue(result.contains("{"));
+        assertTrue(result.contains("{")||result.isEmpty());
     }    
     
     /**

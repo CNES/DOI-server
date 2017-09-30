@@ -6,9 +6,8 @@
 package fr.cnes.doi.resource.admin;
 
 import fr.cnes.doi.application.AdminApplication;
-import static fr.cnes.doi.application.AdminApplication.TOKEN_TEMPLATE;
-import fr.cnes.doi.resource.BaseResource;
-import fr.cnes.doi.db.TokenDBHelper;
+import fr.cnes.doi.resource.AbstractResource;
+import fr.cnes.doi.db.AbstractTokenDBHelper;
 import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.exception.TokenSecurityException;
 import fr.cnes.doi.security.TokenSecurity;
@@ -30,6 +29,8 @@ import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
+import static fr.cnes.doi.application.AdminApplication.TOKEN_TEMPLATE;
+
 
 /**
  * Provides a resource to create token and to decrypt token
@@ -40,7 +41,7 @@ import org.restlet.resource.ResourceException;
         reqId = Requirement.DOI_INTER_040,
         reqName = Requirement.DOI_INTER_040_NAME
 )
-public class TokenResource extends BaseResource {
+public class TokenResource extends AbstractResource {
 
     /**
      * User ID of the operator that creates the token.
@@ -70,8 +71,12 @@ public class TokenResource extends BaseResource {
     /**
      * The token database.
      */
-    private TokenDBHelper tokenDB;
+    private AbstractTokenDBHelper tokenDB;
 
+    /**
+     * Set-up method that can be overridden in order to initialize the state of the resource
+     * @throws ResourceException - if a problem happens
+     */
     @Override
     protected void doInit() throws ResourceException {
         super.doInit();
@@ -80,26 +85,40 @@ public class TokenResource extends BaseResource {
         this.tokenDB = ((AdminApplication) this.getApplication()).getTokenDB();
     }
    
+    /**
+     * Creates and stores a token.
+     * 
+     * The token creation is based on several actions :
+     * <ul>
+     *  <li>{@link #checkInputs checks the input parameters}</li>
+     *  <li>creates the {@link fr.cnes.doi.security.TokenSecurity#generate}</li>
+     *  <li>stores the token in 
+     * {@link fr.cnes.doi.db.AbstractTokenDBHelper token database}</li>     
+     * </ul>
+     * 
+     * @param info submitted information when requesting the token creation
+     * @return the token
+     */
     @Requirement(
-            reqId = Requirement.DOI_SRV_150,
-            reqName = Requirement.DOI_SRV_150_NAME
-    )     
+        reqId = Requirement.DOI_SRV_150,
+        reqName = Requirement.DOI_SRV_150_NAME
+        )     
     @Post
-    public String createToken(Form info) {
+    public String createToken(final Form info) {
         getLogger().entering(TokenResource.class.getName(), "createToken", info);
 
         checkInputs(info);
         try {
-            String userID = info.getFirstValue(IDENTIFIER_PARAMETER, null);
-            String projectID = info.getFirstValue(PROJECT_ID_PARAMETER, null);
-            String timeParam = info.getFirstValue(UNIT_OF_TIME_PARAMETER, "0");
+            final String userID = info.getFirstValue(IDENTIFIER_PARAMETER, null);
+            final String projectID = info.getFirstValue(PROJECT_ID_PARAMETER, null);
+            final String timeParam = info.getFirstValue(UNIT_OF_TIME_PARAMETER, "0");
 
-            int timeUnit = timeParam.equals("0") ? 1 : Integer.parseInt(timeParam);
-            TimeUnit unit = TokenSecurity.TimeUnit.getTimeUnitFrom(timeUnit);
+            final int timeUnit = "0".equals(timeParam) ? 1 : Integer.parseInt(timeParam);
+            final TimeUnit unit = TokenSecurity.TimeUnit.getTimeUnitFrom(timeUnit);
 
-            int amount = Integer.parseInt(info.getFirstValue(AMOUNT_OF_TIME_PARAMETER, "1"));
+            final int amount = Integer.parseInt(info.getFirstValue(AMOUNT_OF_TIME_PARAMETER, "1"));
 
-            String tokenJwt = TokenSecurity.getInstance().generate(
+            final String tokenJwt = TokenSecurity.getInstance().generate(
                     userID,
                     Integer.parseInt(projectID),
                     unit,
@@ -113,16 +132,16 @@ public class TokenResource extends BaseResource {
             return tokenJwt;
         } catch (TokenSecurityException ex) {
             getLogger().throwing(TokenResource.class.getName(), "createToken", ex);
-            throw new ResourceException(ex.getStatus(), ex.getMessage());
+            throw new ResourceException(ex.getStatus(), ex.getMessage(), ex);
         }
     }
 
     /**
-     * Checks input parameters
+     * Checks input parameters.          
      *
      * @param mediaForm the parameters
-     * @throws ResourceException - if PROJECT_ID_PARAMETER and IDENTIFIER_PARAMETER are
-     * not set
+     * @throws ResourceException - if {@link #PROJECT_ID_PARAMETER} and 
+     * {@link #IDENTIFIER_PARAMETER} are not set
      */  
     private void checkInputs(final Form mediaForm) throws ResourceException {
         getLogger().entering(this.getClass().getName(), "checkInputs", mediaForm);
@@ -138,21 +157,27 @@ public class TokenResource extends BaseResource {
         if (errorMsg.length() == 0) {
             getLogger().fine("The form is valid");
         } else {
-            ResourceException ex = new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, errorMsg.toString());
-            getLogger().throwing(this.getClass().getName(), "checkInputs", ex);
-            throw ex;
+            final ResourceException exception = new ResourceException(
+                    Status.CLIENT_ERROR_BAD_REQUEST, errorMsg.toString());
+            getLogger().throwing(this.getClass().getName(), "checkInputs", exception);
+            throw exception;
         }
     }
    
+    /**
+     * Returns the information from the token encoded as JSon format.
+     * @return the included information in the token
+     */
     @Requirement(
-            reqId = Requirement.DOI_SRV_160,
-            reqName = Requirement.DOI_SRV_160_NAME
-    )     
+        reqId = Requirement.DOI_SRV_160,
+        reqName = Requirement.DOI_SRV_160_NAME
+        )     
     @Get
     public Representation getTokenInformation() {
         getLogger().entering(this.getClass().getName(), "getTokenInformation");
         try {
-            Jws<Claims> jws = TokenSecurity.getInstance().getTokenInformation(this.tokenParam);
+            final Jws<Claims> jws = TokenSecurity.getInstance()
+                    .getTokenInformation(this.tokenParam);
             getLogger().exiting(this.getClass().getName(), "getTokenInformation");
             return new JsonRepresentation(jws);
         } catch (DoiRuntimeException ex) {
@@ -179,32 +204,62 @@ public class TokenResource extends BaseResource {
         return repInfo;
     }     
 
+    /**
+     * Describes GET method.
+     * @param info method info
+     */
     @Requirement(
-            reqId = Requirement.DOI_DOC_010,
-            reqName = Requirement.DOI_DOC_010_NAME
-    )      
+        reqId = Requirement.DOI_DOC_010,
+        reqName = Requirement.DOI_DOC_010_NAME
+        )      
     @Override
-    protected void describeGet(MethodInfo info) {
+    protected void describeGet(final MethodInfo info) {
         info.setName(Method.GET);
         info.setDocumentation("Get information about a specific token");
-        addRequestDocToMethod(info, createQueryParamDoc(TOKEN_TEMPLATE, ParameterStyle.TEMPLATE, "token", true, "xs:string"));                
-        addResponseDocToMethod(info, createResponseDoc(Status.SUCCESS_OK, "Operation successful", jsonRepresentation()));
-        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_BAD_REQUEST, "Wrong token"));
+        addRequestDocToMethod(info, createQueryParamDoc(
+                TOKEN_TEMPLATE, ParameterStyle.TEMPLATE, 
+                "token", true, "xs:string")
+        );                
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.SUCCESS_OK, "Operation successful", jsonRepresentation())
+        );
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.CLIENT_ERROR_BAD_REQUEST, "Wrong token")
+        );
     }   
 
+    /**
+     * Describes POST method.
+     * @param info method info
+     */
     @Requirement(
-            reqId = Requirement.DOI_DOC_010,
-            reqName = Requirement.DOI_DOC_010_NAME
-    )      
+        reqId = Requirement.DOI_DOC_010,
+        reqName = Requirement.DOI_DOC_010_NAME
+        )      
     @Override
-    protected void describePost(MethodInfo info) {
+    protected void describePost(final MethodInfo info) {
         info.setName(Method.POST);
         info.setDocumentation("Creates a token");
-        addRequestDocToMethod(info, createQueryParamDoc(IDENTIFIER_PARAMETER, ParameterStyle.MATRIX, "User ID of the operator that creates the token", true, "xs:string"));                
-        addRequestDocToMethod(info, createQueryParamDoc(PROJECT_ID_PARAMETER, ParameterStyle.MATRIX, "Token for a specific project", true, "xs:string"));                        
-        addRequestDocToMethod(info, createQueryParamDoc(UNIT_OF_TIME_PARAMETER, ParameterStyle.MATRIX, "Unit of time used to define the expiration time of the token", false, "xs:int"));                        
-        addResponseDocToMethod(info, createResponseDoc(Status.SUCCESS_OK, "Operation successful", stringRepresentation()));
-        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_BAD_REQUEST, "Submitted values are not valid"));        
+        addRequestDocToMethod(info, createQueryParamDoc(
+                IDENTIFIER_PARAMETER, ParameterStyle.MATRIX, 
+                "User ID of the operator that creates the token", true, "xs:string")
+        );                
+        addRequestDocToMethod(info, createQueryParamDoc(
+                PROJECT_ID_PARAMETER, ParameterStyle.MATRIX, 
+                "Token for a specific project", true, "xs:string")
+        );                        
+        addRequestDocToMethod(info, createQueryParamDoc(
+                UNIT_OF_TIME_PARAMETER, ParameterStyle.MATRIX, 
+                "Unit of time used to define the expiration time of the token", 
+                false, "xs:int")
+        );                        
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.SUCCESS_OK, "Operation successful", 
+                stringRepresentation())
+        );
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.CLIENT_ERROR_BAD_REQUEST, "Submitted values are not valid")
+        );        
     }        
 
 }

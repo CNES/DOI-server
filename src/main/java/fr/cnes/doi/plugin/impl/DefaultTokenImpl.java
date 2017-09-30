@@ -5,7 +5,7 @@
  */
 package fr.cnes.doi.plugin.impl;
 
-import fr.cnes.doi.plugin.TokenDBPluginHelper;
+import fr.cnes.doi.plugin.AbstractTokenDBPluginHelper;
 import fr.cnes.doi.security.TokenSecurity;
 import fr.cnes.doi.settings.DoiSettings;
 import io.jsonwebtoken.Claims;
@@ -29,7 +29,7 @@ import java.util.logging.Logger;
  * Default implementation of the token database.
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-public class DefaultTokenImpl extends TokenDBPluginHelper {
+public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
 
     private final String NAME = this.getClass().getName();
     private static final String DESCRIPTION = "Provides a pre-defined list of users and groups";
@@ -53,7 +53,7 @@ public class DefaultTokenImpl extends TokenDBPluginHelper {
     private Map<String, Map<String, Object>> db = new ConcurrentHashMap<>();
 
     public DefaultTokenImpl() {
-
+        super();
     }
 
     @Override

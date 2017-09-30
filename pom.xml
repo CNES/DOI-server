@@ -363,11 +363,33 @@
                         </reports>
                     </reportSet>
                 </reportSets>
-            </plugin>            
+            </plugin> 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>2.17</version>
+                <configuration>
+                    <configLocation>${project.basedir}/ConfTools/Checkstyle_7.2.0_CNES_C_2016.12.05.xml</configLocation>
+                    <excludes>org/datacite/**/*.java,fr/cnes/doi/plugin/impl/*.java,fr/cnes/doi/utils/spec/*.java</excludes>                      
+                </configuration>
+            </plugin>                       
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
                 <version>3.8</version>
+                <configuration>
+                    <rulesets>
+                        <ruleset>${project.basedir}/ConfTools/pmd_5.8.1._CNES_C_2017.09.04.xml</ruleset>
+                    </rulesets>
+                    <skip>${skip.pmd.check}</skip>
+                    <excludes>
+                        <exclude>fr/cnes/doi/utils/HttpClientHelperPatch.java</exclude>
+                        <exclude>fr/cnes/doi/server/Starter.java</exclude>
+                        <exclude>org/datacite/**/*.java</exclude>
+                        <exclude>fr/cnes/doi/plugin/impl/*.java</exclude>
+                        <exclude>fr/cnes/doi/utils/spec/*.java</exclude>
+                    </excludes>                    
+                </configuration>
             </plugin>    
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

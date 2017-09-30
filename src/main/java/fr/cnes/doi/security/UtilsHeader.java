@@ -18,7 +18,7 @@ import fr.cnes.doi.utils.spec.Requirement;
 public class UtilsHeader {
     
     /**
-     * The parameter to select the role of the operator when he is implied in different groups.
+     * The parameter to select the role of the operator when he is implied in different groups {@value #SELECTED_ROLE_PARAMETER}.
      */
     public static final String SELECTED_ROLE_PARAMETER = "selectedRole";    
     

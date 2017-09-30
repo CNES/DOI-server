@@ -173,24 +173,29 @@ public enum ResourceType {
     OTHER("Other");
     private final String value;
 
+    /**
+     * Constructor.
+     * @param v resource type
+     */
     ResourceType(String v) {
         value = v;
     }
 
     /**
-     *
-     * @return
+     * Gets the value.
+     * @return the value
      */
     public String value() {
         return value;
     }
 
     /**
-     *
-     * @param v
-     * @return
+     * Gets the resource type from a value
+     * @param v value
+     * @return the resource type
+     * @throws IllegalArgumentException - if Resource type not found
      */
-    public static ResourceType fromValue(String v) {
+    public static ResourceType fromValue(String v) throws IllegalArgumentException{
         for (ResourceType c : ResourceType.values()) {
             if (c.value.equals(v)) {
                 return c;

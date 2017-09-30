@@ -18,7 +18,14 @@ public class ClientMdsException extends Exception {
 
     private static final long serialVersionUID = -5061913391706889102L;
 
+    /**
+     * Detail message.
+     */
     private final String detailMessage;
+    
+    /**
+     * HTTP status.
+     */
     private final Status status;
     
     /**
@@ -105,10 +112,15 @@ public class ClientMdsException extends Exception {
                 break;
             default:
                 result = "Internal error";
+                break;
         }
         return result;
     } 
     
+    /**
+     * Returns the status.
+     * @return the status
+     */
     public Status getStatus() {
         return this.status;
     }

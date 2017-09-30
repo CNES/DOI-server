@@ -5,8 +5,8 @@
  */
 package fr.cnes.doi.services;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,21 +20,14 @@ import org.restlet.data.Method;
 public class DoiMonitoring {
 
     /**
-     * Logger
+     * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(DoiMonitoring.class.getName());
 
     /**
      * Hash map of records to compute average time to answer requests.
      */
-    private final Map<String, DoiMonitoringRecord> applications = new HashMap<>();
-
-    /**
-     * Constructor.
-     */
-    public DoiMonitoring() {
-
-    }
+    private final Map<String, DoiMonitoringRecord> applications = new ConcurrentHashMap<>();
 
     /**
      * Registers the features to monitor.
@@ -56,15 +49,15 @@ public class DoiMonitoring {
      * @param path path URI
      * @param duration duration in ms
      */
-    public void addMeasurement(final Method name, final String path, float duration) {
+    public void addMeasurement(final Method name, final String path, final float duration) {
         LOGGER.entering(getClass().getName(), "addMeasurement", new Object[]{name.getName(), path, duration});
-        String id = name.getName() + path;
-        if (this.applications.containsKey(id)) {
-            DoiMonitoringRecord record = this.applications.get(name.getName() + path);
-            float previousSpeedAverage = (float) record.getAverage();
+        final String identifier = name.getName() + path;
+        if (this.applications.containsKey(identifier)) {
+            final DoiMonitoringRecord record = this.applications.get(name.getName() + path);
+            final float previousSpeedAverage = (float) record.getAverage();
             LOGGER.log(Level.CONFIG, "current speed average = {0}", previousSpeedAverage);
-            int previousNbAccess = (int) record.getNbAccess();
-            float newSpeedAverage = (previousSpeedAverage + duration) / (previousNbAccess + 1);
+            final int previousNbAccess = (int) record.getNbAccess();
+            final float newSpeedAverage = (previousSpeedAverage + duration) / (previousNbAccess + 1);
             LOGGER.log(Level.CONFIG, "new speed average = {0}", newSpeedAverage);
             record.setAverage(newSpeedAverage);
             record.setNbAccess(previousNbAccess + 1);
@@ -82,8 +75,8 @@ public class DoiMonitoring {
      * @return True when the feature is registered
      */
     public boolean isRegistered(final Method name, final String path) {
-        String id = name.getName() + path;
-        boolean isRegistered = this.applications.containsKey(id);
+        final String identifier = name.getName() + path;
+        final boolean isRegistered = this.applications.containsKey(identifier);
         LOGGER.log(Level.FINER, "{0} {1} is registered : {2}", new Object[]{name, path, isRegistered});       
         return isRegistered;
     }
@@ -96,15 +89,15 @@ public class DoiMonitoring {
      * @return the average speed
      */
     public float getCurrentAverage(final Method name, final String path) {        
-        String id = name.getName() + path;
+        final String identifier = name.getName() + path;
         if (isRegistered(name, path)) {
-            float average = this.applications.get(id).getAverage();
+            final float average = this.applications.get(identifier).getAverage();
             LOGGER.finer(String.format("getCurrentAverage for %s %s : %s", name, path, average));
             return average;
         } else {
-            IllegalArgumentException ex = new IllegalArgumentException(id + " is not registered");
-            LOGGER.throwing(this.getClass().getName(), "getCurrentAverage", ex);
-            throw ex;
+            final IllegalArgumentException exception = new IllegalArgumentException(identifier + " is not registered");
+            LOGGER.throwing(this.getClass().getName(), "getCurrentAverage", exception);
+            throw exception;
         }
     }
 
@@ -116,8 +109,8 @@ public class DoiMonitoring {
      * @return the description
      */
     public String getDescription(final Method name, final String path) {        
-        String id = name.getName() + path;
-        String description = this.applications.get(id).getDescription();
+        final String identifier = name.getName() + path;
+        final String description = this.applications.get(identifier).getDescription();
         LOGGER.log(Level.FINER, "getDescription : {0}", description);
         return description;
     }

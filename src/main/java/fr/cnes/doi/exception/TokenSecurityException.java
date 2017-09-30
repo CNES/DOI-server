@@ -18,6 +18,9 @@ public class TokenSecurityException extends Exception {
 
     private static final long serialVersionUID = 7133144912794016901L;
     
+    /**
+     * HTTP status.
+     */
     private final Status status;
     
     /**
@@ -65,6 +68,10 @@ public class TokenSecurityException extends Exception {
         Engine.getLogger(Utils.APP_LOGGER_NAME).log(Level.SEVERE, this.getMessage(), this.getCause());        
     }
     
+    /**
+     * Returns the status.
+     * @return the status
+     */
     public Status getStatus() {
         return this.status;
     }            

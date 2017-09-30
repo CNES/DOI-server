@@ -22,6 +22,11 @@ import org.restlet.data.ChallengeScheme;
         reqName = Requirement.DOI_CONFIG_010_NAME
 )
 public final class ProxySettings {
+    
+    /**
+     * Class name.
+     */
+    private static final String CLASS_NAME = ProxySettings.class.getName();
 
     /**
      * Application logger.
@@ -70,12 +75,15 @@ public final class ProxySettings {
         init();
     }
 
+    /**
+     * 
+     */
     private static class ProxySettingsHolder {
 
         /**
          * Unique Instance unique not pre-initiliaze
          */
-        private final static ProxySettings INSTANCE = new ProxySettings();
+        private static final ProxySettings INSTANCE = new ProxySettings();
     }
 
     /**
@@ -88,12 +96,11 @@ public final class ProxySettings {
     }
 
     /**
-     * Init the proxy setting
-     *
+     * Init the proxy setting     
      */
     public void init() {
-        LOGGER.entering(this.getClass().getName(), "init");
-        DoiSettings settings = DoiSettings.getInstance();
+        LOGGER.entering(CLASS_NAME, "init");
+        final DoiSettings settings = DoiSettings.getInstance();
         this.proxyHost = settings.getString(Consts.SERVER_PROXY_HOST);
         this.proxyPort = settings.getString(Consts.SERVER_PROXY_PORT);
 
@@ -106,7 +113,7 @@ public final class ProxySettings {
         
         LOGGER.info("Proxy settings have been loaded");
         
-        LOGGER.exiting(this.getClass().getName(), "init");        
+        LOGGER.exiting(CLASS_NAME, "init");        
     }
 
     /**

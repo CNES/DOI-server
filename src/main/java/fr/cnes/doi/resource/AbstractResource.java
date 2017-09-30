@@ -20,19 +20,28 @@ import org.restlet.ext.wadl.ResponseInfo;
 import org.restlet.ext.wadl.WadlServerResource;
 
 /**
- * Base resource.
+ * Abstract resource.
+ * 
+ * Each resource must extend from this abstract class. This abstract class allows
+ * the WADL description.
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
+ * @see <a href="https://www.w3.org/Submission/wadl/">WADL</a>
  */
 @Requirement(
         reqId = Requirement.DOI_DOC_010,
         reqName = Requirement.DOI_DOC_010_NAME
 )
-public abstract class BaseResource extends WadlServerResource {
+public abstract class AbstractResource extends WadlServerResource {
 
+    /**
+     * Tests if the form is not null and the parameter exists in the form.
+     * @param form submitted form
+     * @param parameterName parameter name in the form
+     * @return True when the form is not null and the parameter exists in the form otherwise False
+     */
     public boolean isValueExist(final Form form, final String parameterName) {
-        boolean result;
-
+        final boolean result;
         if (isObjectNotExist(form)) {
             result = false;
         } else {
@@ -41,14 +50,30 @@ public abstract class BaseResource extends WadlServerResource {
         return result;
     }
 
+    /**
+     * The opposite of {@link #isValueExist}
+     * @param form submitted form
+     * @param parameterName parameter name
+     * @return False when the form is not null and the parameter exists in the form otherwise True
+     */
     public boolean isValueNotExist(final Form form, final String parameterName) {
         return !isValueExist(form, parameterName);
     }
 
+    /**
+     * Test if an object is null.
+     * @param obj object to test
+     * @return True when the object is not null otherwise False
+     */
     public boolean isObjectExist(final Object obj) {
         return obj != null;
     }
 
+    /**
+     * Test if an object is not null.
+     * @param obj object to test
+     * @return True when the object is null otherwise False
+     */    
     public boolean isObjectNotExist(final Object obj) {
         return !isObjectExist(obj);
     }
@@ -73,7 +98,7 @@ public abstract class BaseResource extends WadlServerResource {
      */
     protected void addRequestDocToMethod(final MethodInfo info, final List<ParameterInfo> params) {
         final RequestInfo request = new RequestInfo();
-        for (ParameterInfo param : params) {
+        for (final ParameterInfo param : params) {
             request.getParameters().add(param);
         }
         info.setRequest(request);
@@ -86,7 +111,9 @@ public abstract class BaseResource extends WadlServerResource {
      * @param params Request parameters
      * @param rep Representation entity of the request
      */
-    protected void addRequestDocToMethod(final MethodInfo info, final List<ParameterInfo> params, RepresentationInfo rep) {
+    protected void addRequestDocToMethod(
+            final MethodInfo info, final List<ParameterInfo> params, 
+            final RepresentationInfo rep) {
         addRequestDocToMethod(info, params);
         info.getRequest().getRepresentations().add(rep);
     }
@@ -109,7 +136,7 @@ public abstract class BaseResource extends WadlServerResource {
      * @return Response Wadl description
      */
     protected ResponseInfo createResponseDoc(final Status status, final String doc) {
-        ResponseInfo responseInfo = new ResponseInfo();
+        final ResponseInfo responseInfo = new ResponseInfo();
         responseInfo.getStatuses().add(status);
         responseInfo.setDocumentation(doc);
         return responseInfo;
@@ -123,9 +150,11 @@ public abstract class BaseResource extends WadlServerResource {
      * @param refRepresentation reference to the representation of the response
      * @return the response Wadl description
      */
-    protected ResponseInfo createResponseDoc(final Status status, final String doc, final String refRepresentation) {
-        ResponseInfo response = createResponseDoc(status, doc);
-        RepresentationInfo rep = new RepresentationInfo();
+    protected ResponseInfo createResponseDoc(
+            final Status status, final String doc, 
+            final String refRepresentation) {
+        final ResponseInfo response = createResponseDoc(status, doc);
+        final RepresentationInfo rep = new RepresentationInfo();
         rep.setReference(refRepresentation);
         response.getRepresentations().add(rep);
         return response;
@@ -139,8 +168,10 @@ public abstract class BaseResource extends WadlServerResource {
      * @param representation Representation of the response
      * @return the response Wadl description
      */
-    protected ResponseInfo createResponseDoc(final Status status, final String doc, final RepresentationInfo representation) {
-        ResponseInfo response = createResponseDoc(status, doc);
+    protected ResponseInfo createResponseDoc(
+            final Status status, final String doc, 
+            final RepresentationInfo representation) {
+        final ResponseInfo response = createResponseDoc(status, doc);
         response.getRepresentations().add(representation);
         return response;
     }
@@ -155,8 +186,10 @@ public abstract class BaseResource extends WadlServerResource {
      * @param datatype data type
      * @return the query Wadl description
      */
-    protected ParameterInfo createQueryParamDoc(final String name, final ParameterStyle style, final String doc, boolean isRequired, final String datatype) {
-        ParameterInfo param = new ParameterInfo();
+    protected ParameterInfo createQueryParamDoc(
+            final String name, final ParameterStyle style, 
+            final String doc, final boolean isRequired, final String datatype) {
+        final ParameterInfo param = new ParameterInfo();
         param.setName(name);
         param.setStyle(style);
         param.setDocumentation(doc);
@@ -174,8 +207,10 @@ public abstract class BaseResource extends WadlServerResource {
      * @param xmlElement XML element of the schema
      * @return Wadl element for the representation
      */
-    protected RepresentationInfo createQueryRepresentationDoc(final String identifier, final MediaType mediaType, final String doc, final String xmlElement) {
-        RepresentationInfo rep = new RepresentationInfo();
+    protected RepresentationInfo createQueryRepresentationDoc(
+            final String identifier, final MediaType mediaType, 
+            final String doc, final String xmlElement) {
+        final RepresentationInfo rep = new RepresentationInfo();
         rep.setIdentifier(identifier);
         rep.setMediaType(mediaType);
         rep.setDocumentation(doc);

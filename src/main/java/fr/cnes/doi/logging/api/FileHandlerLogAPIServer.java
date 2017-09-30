@@ -35,6 +35,10 @@ public final class FileHandlerLogAPIServer extends AccessLogFileHandler {
         this.setLevel(Level.INFO);
     }
 
+    /**
+     * Sets the level.
+     * @param level the level
+     */
     @Override
     public synchronized void setLevel(final Level level) {
         super.setLevel(level);

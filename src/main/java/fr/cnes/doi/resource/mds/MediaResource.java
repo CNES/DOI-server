@@ -5,7 +5,7 @@
  */
 package fr.cnes.doi.resource.mds;
 
-import fr.cnes.doi.application.BaseApplication;
+import fr.cnes.doi.application.AbstractApplication;
 import fr.cnes.doi.application.DoiMdsApplication;
 import fr.cnes.doi.client.ClientMDS;
 import fr.cnes.doi.exception.ClientMdsException;
@@ -37,8 +37,10 @@ import org.restlet.resource.ResourceException;
  */
 public class MediaResource extends BaseMdsResource {    
 
-    private String mediaName;
-        
+    /**
+     * DOI parsed from the URL.
+     */
+    private String mediaName;        
 
     /**
      * Init by getting the media name.
@@ -61,29 +63,29 @@ public class MediaResource extends BaseMdsResource {
      * </ul>
      */  
     @Requirement(
-            reqId = Requirement.DOI_SRV_090,
-            reqName = Requirement.DOI_SRV_090_NAME
-    ) 
+        reqId = Requirement.DOI_SRV_090,
+        reqName = Requirement.DOI_SRV_090_NAME
+        ) 
     @Requirement(
-            reqId = Requirement.DOI_MONIT_020,
-            reqName = Requirement.DOI_MONIT_020_NAME
-    )      
+        reqId = Requirement.DOI_MONIT_020,
+        reqName = Requirement.DOI_MONIT_020_NAME
+        )      
     @Get
-    public Representation getMedias() {
+    public Representation getMedias() throws ResourceException {
         getLogger().entering(getClass().getName(), "getMedias", this.mediaName);
         
         final Representation rep;
-        String medias;
+        final String medias;
         try {
             setStatus(Status.SUCCESS_OK);
-            medias = this.doiApp.getClient().getMedia(this.mediaName);
+            medias = this.getDoiApp().getClient().getMedia(this.mediaName);
             rep = new StringRepresentation(medias, MediaType.TEXT_URI_LIST);
         } catch (ClientMdsException ex) {
             getLogger().throwing(getClass().getName(), "getMedias", ex);    
             if(ex.getStatus().getCode() == Status.CLIENT_ERROR_NOT_FOUND.getCode()) {
                 throw new ResourceException(ex.getStatus(), ex.getMessage(), ex);                
             } else {
-                ((BaseApplication)getApplication()).sendAlertWhenDataCiteFailed(ex);
+                ((AbstractApplication)getApplication()).sendAlertWhenDataCiteFailed(ex);
                 throw new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex);
             }
         }
@@ -100,10 +102,13 @@ public class MediaResource extends BaseMdsResource {
      * @param mediaForm Form
      * @return short explanation of status code 
      * @throws ResourceException - if an error happens :<ul>
-     * <li>400 Bad Request - {@value fr.cnes.doi.resource.mds.BaseMdsResource#DOI_PARAMETER} not provided or one or more of the specified mime-types or urls are
+     * <li>400 Bad Request - 
+     * {@value fr.cnes.doi.resource.mds.BaseMdsResource#DOI_PARAMETER} not 
+     * provided or one or more of the specified mime-types or urls are
      * invalid (e.g. non supported mime-type, not allowed url domain, etc.)</li>
      * <li>401 Unauthorized - user unauthorized</li>     
-     * <li>403 Forbidden - if the role is not allowed to use this feature or the user is not allow to create media</li>
+     * <li>403 Forbidden - if the role is not allowed to use this feature or 
+     * the user is not allow to create media</li>
      * <li>404 Not found : The DOI does not exist
      * <li>409 Conflict if a user is associated to more than one role</li>
      * <li>500 Internal Server Error - server internal error, try later and if 
@@ -111,25 +116,25 @@ public class MediaResource extends BaseMdsResource {
      * </ul>
      */   
     @Requirement(
-            reqId = Requirement.DOI_SRV_080,
-            reqName = Requirement.DOI_SRV_080_NAME
-    ) 
+        reqId = Requirement.DOI_SRV_080,
+        reqName = Requirement.DOI_SRV_080_NAME
+        ) 
     @Requirement(
-            reqId = Requirement.DOI_MONIT_020,
-            reqName = Requirement.DOI_MONIT_020_NAME
-    )   
+        reqId = Requirement.DOI_MONIT_020,
+        reqName = Requirement.DOI_MONIT_020_NAME
+        )   
     @Requirement(
             reqId = Requirement.DOI_INTER_070,
             reqName = Requirement.DOI_INTER_070_NAME
     )    
     @Requirement(
-            reqId = Requirement.DOI_AUTO_020,
-            reqName = Requirement.DOI_AUTO_020_NAME
-    )     
+        reqId = Requirement.DOI_AUTO_020,
+        reqName = Requirement.DOI_AUTO_020_NAME
+        )     
     @Requirement(
-            reqId = Requirement.DOI_AUTO_030,
-            reqName = Requirement.DOI_AUTO_030_NAME
-    )     
+        reqId = Requirement.DOI_AUTO_030,
+        reqName = Requirement.DOI_AUTO_030_NAME
+        )     
     @Post
     public Representation createMedia(final Form mediaForm) throws ResourceException{
         getLogger().entering(getClass().getName(), "createMedia", new Object[]{this.mediaName, mediaForm.getMatrixString()});
@@ -138,16 +143,19 @@ public class MediaResource extends BaseMdsResource {
         final String result;
         try {         
             setStatus(Status.SUCCESS_OK);
-            String selectedRole = extractSelectedRoleFromRequestIfExists();         
+            final String selectedRole = extractSelectedRoleFromRequestIfExists();         
             checkPermission(this.mediaName, selectedRole);            
-            result = this.doiApp.getClient().createMedia(this.mediaName, mediaForm);
+            result = this.getDoiApp().getClient().createMedia(this.mediaName, mediaForm);
         } catch (ClientMdsException ex) {
             getLogger().throwing(getClass().getName(), "createMedia", ex);  
             if(ex.getStatus().getCode() == Status.CLIENT_ERROR_BAD_REQUEST.getCode()) {
                 throw new ResourceException(ex.getStatus(), ex.getMessage(), ex);                
             } else {
-                ((BaseApplication)getApplication()).sendAlertWhenDataCiteFailed(ex);                          
-                throw new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex);                
+                ((AbstractApplication)getApplication())
+                        .sendAlertWhenDataCiteFailed(ex);                          
+                throw new ResourceException(
+                        Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex
+                );                
             }
         }
         
@@ -182,9 +190,10 @@ public class MediaResource extends BaseMdsResource {
         if(errorMsg.length() == 0) {        
             getLogger().fine("The form is valid");                    
         } else {
-            ResourceException ex =  new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, errorMsg.toString());            
-            getLogger().throwing(this.getClass().getName(), "checkInputs", ex);
-            throw ex;
+            final ResourceException exception =  new ResourceException(
+                    Status.CLIENT_ERROR_BAD_REQUEST, errorMsg.toString());            
+            getLogger().throwing(this.getClass().getName(), "checkInputs", exception);
+            throw exception;
         }      
         getLogger().exiting(this.getClass().getName(), "checkInputs");        
     }      
@@ -198,7 +207,8 @@ public class MediaResource extends BaseMdsResource {
         repInfo.setMediaType(MediaType.TEXT_PLAIN);        
         final DocumentationInfo docInfo = new DocumentationInfo();
         docInfo.setTitle("Media representation");
-        docInfo.setTextContent("This request returns a key-value list of media types/urls for a given DOI name");
+        docInfo.setTextContent("This request returns a key-value list of media "
+                + "types/urls for a given DOI name");
         repInfo.setDocumentation(docInfo);
         return repInfo;
     }    
@@ -216,10 +226,22 @@ public class MediaResource extends BaseMdsResource {
         info.setName(Method.GET);
         info.setDocumentation("Get a specific media for a given DOI");
 
-        addRequestDocToMethod(info, createQueryParamDoc(DoiMdsApplication.DOI_TEMPLATE, ParameterStyle.TEMPLATE, "DOI name", true, "xs:string"));
-        addResponseDocToMethod(info, createResponseDoc(Status.SUCCESS_OK, "Operation successful", mediaRepresentation()));
-        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_NOT_FOUND, "DOI does not exist in our database", "explainRepresentation"));
-        addResponseDocToMethod(info, createResponseDoc(Status.SERVER_ERROR_INTERNAL, "server internal error, try later and if problem persists please contact us", "explainRepresentation"));
+        addRequestDocToMethod(info, createQueryParamDoc(
+                DoiMdsApplication.DOI_TEMPLATE, ParameterStyle.TEMPLATE, 
+                "DOI name", true, "xs:string")
+        );
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.SUCCESS_OK, "Operation successful", mediaRepresentation())
+        );
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.CLIENT_ERROR_NOT_FOUND, "DOI does not exist in our database", 
+                "explainRepresentation")
+        );
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.SERVER_ERROR_INTERNAL, "server internal error, try later "
+                        + "and if problem persists please contact us", 
+                "explainRepresentation")
+        );
     } 
 
     /**
@@ -234,7 +256,7 @@ public class MediaResource extends BaseMdsResource {
     protected final void describePost(final MethodInfo info) {
         info.setName(Method.POST);
         info.setDocumentation("POST will add/update media type/urls pairs to a DOI. Standard domain restrictions check will be performed.");
-                        ParameterInfo param = new ParameterInfo();
+        final ParameterInfo param = new ParameterInfo();
         param.setName("{mediaType}");
         param.setStyle(ParameterStyle.PLAIN);        
         param.setRequired(false);
@@ -242,7 +264,7 @@ public class MediaResource extends BaseMdsResource {
         param.setFixed("{url}");
         param.setRepeating(true);
         param.setDocumentation("(key/value) = (mediaType/url)");
-        RepresentationInfo rep = new RepresentationInfo(MediaType.APPLICATION_WWW_FORM);
+        final RepresentationInfo rep = new RepresentationInfo(MediaType.APPLICATION_WWW_FORM);
         rep.getParameters().add(param);
         
         addRequestDocToMethod(info, 

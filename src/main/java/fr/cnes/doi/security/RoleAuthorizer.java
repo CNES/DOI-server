@@ -5,10 +5,10 @@
  */
 package fr.cnes.doi.security;
 
-import fr.cnes.doi.db.UserRoleDBHelper;
+import fr.cnes.doi.db.AbstractUserRoleDBHelper;
 import fr.cnes.doi.application.AdminApplication;
 import fr.cnes.doi.application.DoiMdsApplication;
-import fr.cnes.doi.db.ProjectSuffixDBHelper;
+import fr.cnes.doi.db.AbstractProjectSuffixDBHelper;
 import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.utils.UniqueProjectName;
@@ -30,6 +30,7 @@ import org.restlet.security.User;
 
 /**
  * Security class for authentication by REALM.
+ *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 @Requirement(
@@ -38,14 +39,41 @@ import org.restlet.security.User;
 )
 public class RoleAuthorizer implements Observer {
 
+    /**
+     * Class name.
+     */
+    private static final String CLASS_NAME = RoleAuthorizer.class.getName();
+
+    /**
+     * Role name for the amdinistrators {@value #ROLE_ADMIN}.
+     */
     public static final String ROLE_ADMIN = "admin";
+    
+    /**
+     * Group name for the users {@value #GROUP_USERS}
+     */    
     public static final String GROUP_USERS = "Users";
+    
+    /**
+     * Group name for the amdinistrators {@value #GROUP_ADMIN}.
+     */    
     public static final String GROUP_ADMIN = "Administrator";
 
     /**
      * Logger.
      */
     public static final Logger LOGGER = Utils.getAppLogger();
+    
+   /**
+     * Plugin for user management.
+     */
+    private static final AbstractUserRoleDBHelper USER_ROLE_PLUGIN = PluginFactory.getUserManagement();
+    
+    /**
+     * Realm.
+     */
+    private static final MemoryRealm REALM = USER_ROLE_PLUGIN.getRealm();
+    
 
     /**
      * Class to handle the instance
@@ -56,7 +84,7 @@ public class RoleAuthorizer implements Observer {
         /**
          * Unique Instance unique
          */
-        private final static RoleAuthorizer INSTANCE = new RoleAuthorizer();
+        private static final RoleAuthorizer INSTANCE = new RoleAuthorizer();
     }
 
     /**
@@ -68,43 +96,51 @@ public class RoleAuthorizer implements Observer {
         return RoleAuthorizerHolder.INSTANCE;
     }
 
-    private static final UserRoleDBHelper userRolePlugin = PluginFactory.getUserManagement();
-    private static final MemoryRealm REALM = userRolePlugin.getRealm();
 
+    /**
+     * Constructor.
+     */
     private RoleAuthorizer() {
         initUsersGroups();
     }
 
+    /**
+     * Init users and groups in REALM.
+     */
     private void initUsersGroups() {
-        LOGGER.entering(this.getClass().getName(), "initUsersGroups");
+        LOGGER.entering(CLASS_NAME, "initUsersGroups");
 
-        userRolePlugin.init(null);
+        USER_ROLE_PLUGIN.init(null);
 
         // Add users
         LOGGER.info("Add users to REALM");
-        RoleAuthorizer.REALM.setUsers(userRolePlugin.getUsers());
+        RoleAuthorizer.REALM.setUsers(USER_ROLE_PLUGIN.getUsers());
 
         // Add Groups       
-        Group administrators = new Group(GROUP_ADMIN, "Administrators");
+        final Group administrators = new Group(GROUP_ADMIN, "Administrators");
         LOGGER.info("Add users to Administrators group");
-        userRolePlugin.setUsersToAdminGroup(administrators.getMemberUsers());
+        USER_ROLE_PLUGIN.setUsersToAdminGroup(administrators.getMemberUsers());
         RoleAuthorizer.REALM.getRootGroups().add(administrators);
 
-        LOGGER.exiting(this.getClass().getName(), "initUsersGroups");
+        LOGGER.exiting(CLASS_NAME, "initUsersGroups");
     }
 
-    private void initForMds(Application app) {
-        LOGGER.entering(this.getClass().getName(), "initForMds", new Object[]{REALM, app.getName()});
+    /**
+     * Sets Realm to Mds application.
+     * @param app Mds application
+     */
+    private void initForMds(final Application app) {
+        LOGGER.entering(CLASS_NAME, "initForMds", new Object[]{REALM, app.getName()});
 
         initForAdmin(app);
 
-        Map<String, Integer> projects = UniqueProjectName.getInstance().getProjects();
+        final Map<String, Integer> projects = UniqueProjectName.getInstance().getProjects();
         LOGGER.log(Level.INFO, "{0} projects have already been registered", projects.size());
-        for(Map.Entry<String, Integer> entry : projects.entrySet()) {
-            Integer projectID = entry.getValue();
-            Role role = new Role(app, String.valueOf(projectID));
-            List<User> users = userRolePlugin.getUsersFromRole(String.valueOf(projectID));
-            for (User user : users) {
+        for (final Map.Entry<String, Integer> entry : projects.entrySet()) {
+            final Integer projectID = entry.getValue();
+            final Role role = new Role(app, String.valueOf(projectID));           
+            final List<User> users = USER_ROLE_PLUGIN.getUsersFromRole(String.valueOf(projectID));
+            for (final User user : users) {
                 LOGGER.log(Level.INFO, "Add user {0} to role {1} for {2}", new Object[]{user, projectID, app.getName()});
                 RoleAuthorizer.REALM.map(user, role);
             }
@@ -113,14 +149,19 @@ public class RoleAuthorizer implements Observer {
         app.getContext().setDefaultEnroler(RoleAuthorizer.REALM.getEnroler());
         app.getContext().setDefaultVerifier(RoleAuthorizer.REALM.getVerifier());
 
-        LOGGER.exiting(this.getClass().getName(), "initForMds");
+        LOGGER.exiting(CLASS_NAME, "initForMds");
     }
 
+    /**
+     * Finds a group by its name
+     * @param name group name
+     * @return the group
+     */
     private Group findGroupByName(final String name) {
-        LOGGER.entering(this.getClass().getName(), "findGroupByName", name);
-        List<Group> groups = RoleAuthorizer.REALM.getRootGroups();
+        LOGGER.entering(CLASS_NAME, "findGroupByName", name);
+        final List<Group> groups = RoleAuthorizer.REALM.getRootGroups();
         Group searchedGroup = null;
-        for (Group group : groups) {
+        for (final Group group : groups) {
             LOGGER.finest(String.format("group name : %s", group.getName()));
             if (group.getName().equals(name)) {
                 searchedGroup = group;
@@ -130,34 +171,38 @@ public class RoleAuthorizer implements Observer {
         }
         if (searchedGroup == null) {
             LOGGER.info(String.format("Please, create a group %s", name));
-            DoiRuntimeException runtimeEx = new DoiRuntimeException(String.format("Please, create a group %s", name));
+            final DoiRuntimeException runtimeEx = new DoiRuntimeException(String.format("Please, create a group %s", name));
             LOGGER.throwing(GROUP_USERS, name, runtimeEx);
             throw runtimeEx;
         }
-        LOGGER.exiting(this.getClass().getName(), "findGroupByName", searchedGroup);
+        LOGGER.exiting(CLASS_NAME, "findGroupByName", searchedGroup);
         return searchedGroup;
     }
 
-    private void initForAdmin(Application app) {
-        LOGGER.entering(this.getClass().getName(), "initForAdmin", new Object[]{REALM, app.getName()});
+    /**
+     * Sets Realm for admin application.
+     * @param app Admin application
+     */
+    private void initForAdmin(final Application app) {
+        LOGGER.entering(CLASS_NAME, "initForAdmin", new Object[]{REALM, app.getName()});
 
-        Group admin = findGroupByName(GROUP_ADMIN);
+        final Group admin = findGroupByName(GROUP_ADMIN);
 
         RoleAuthorizer.REALM.map(admin, Role.get(app, ROLE_ADMIN));
         app.getContext().setDefaultEnroler(RoleAuthorizer.REALM.getEnroler());
         app.getContext().setDefaultVerifier(RoleAuthorizer.REALM.getVerifier());
 
-        LOGGER.exiting(this.getClass().getName(), "initForAdmin");
+        LOGGER.exiting(CLASS_NAME, "initForAdmin");
     }
 
     /**
-     * Init Realm for application.
+     * Init Realm for an application.
      *
      * @param app application
      * @return True when the realm is initialized otherwise False
      */
-    public boolean createRealmFor(Application app) {
-        LOGGER.entering(this.getClass().getName(), "createReamFor", app.getName());
+    public boolean createRealmFor(final Application app) {
+        LOGGER.entering(CLASS_NAME, "createReamFor", app.getName());
 
         boolean isCreated;
         switch (app.getName()) {
@@ -177,7 +222,7 @@ public class RoleAuthorizer implements Observer {
                 break;
         }
 
-        LOGGER.exiting(this.getClass().getName(), "createReamFor", isCreated);
+        LOGGER.exiting(CLASS_NAME, "createReamFor", isCreated);
 
         return isCreated;
     }
@@ -186,7 +231,7 @@ public class RoleAuthorizer implements Observer {
      * Adds/removes the <i>users</i> group to the new role name related to the
      * application MDS
      *
-     * @param o observable
+     * @param obs observable
      * @param obj message
      */
     @Requirement(
@@ -196,52 +241,53 @@ public class RoleAuthorizer implements Observer {
     @Requirement(
             reqId = Requirement.DOI_INTER_030,
             reqName = Requirement.DOI_INTER_030_NAME
-    )    
+    )
     @Override
-    public void update(Observable o, Object obj) {
-        LOGGER.entering(this.getClass().getName(), "update", new Object[]{o, obj});
-        
+    public void update(final Observable obs, final Object obj) {
+        LOGGER.entering(CLASS_NAME, "update", new Object[]{obs, obj});
+
         // Loads the admin group - admin group is defined by default
-        Group adminGroup = findGroupByName(GROUP_ADMIN);
+        final Group adminGroup = findGroupByName(GROUP_ADMIN);
 
         // Loads the application MDS related to admin group
-        Application mds = loadApplicationBy(adminGroup, DoiMdsApplication.NAME);
-        
+        final Application mds = loadApplicationBy(adminGroup, DoiMdsApplication.NAME);
+
         if (mds == null) {
-            LOGGER.warning(DoiMdsApplication.NAME + " is not defined in the REAM");
+            LOGGER.warning(DoiMdsApplication.NAME + " is not defined in the REALM");
         } else {
-            updateObserver(o, obj, mds);
+            updateObserver(obs, obj, mds);
         }
 
-        LOGGER.exiting(this.getClass().getName(), "update");
+        LOGGER.exiting(CLASS_NAME, "update");
     }
-    
+
     /**
      * Updates REALM for mds.
-     * @param o observable
+     *
+     * @param obs observable
      * @param obj message
      * @param mds application
      */
-    private void updateObserver(Observable o, Object obj, Application mds) {
-        LOGGER.entering(this.getClass().getName(), "updateObserver", new Object[]{o, obj, mds.getName()});
-        
-        if (o instanceof ProjectSuffixDBHelper) {
+    private void updateObserver(final Observable obs, final Object obj, final Application mds) {
+        LOGGER.entering(CLASS_NAME, "updateObserver", new Object[]{obs, obj, mds.getName()});
+
+        if (obs instanceof AbstractProjectSuffixDBHelper) {
             LOGGER.finest("Observable is a ProjectSuffixDB type");
 
-            String[] message = (String[]) obj;
+            final String[] message = (String[]) obj;
 
-            String operation = message[0];
-            String roleName = message[1];
-            List<User> users = userRolePlugin.getUsersFromRole(roleName);
+            final String operation = message[0];
+            final String roleName = message[1];
+            final List<User> users = USER_ROLE_PLUGIN.getUsersFromRole(roleName);
             switch (operation) {
-                case ProjectSuffixDBHelper.ADD_RECORD:
-                    for (User user : users) {
+                case AbstractProjectSuffixDBHelper.ADD_RECORD:
+                    for (final User user : users) {
                         RoleAuthorizer.REALM.map(user, Role.get(mds, roleName));
                         LOGGER.log(Level.INFO, "Adds the user {0} to the new role {1} related to the {2}", new Object[]{user, roleName, mds.getName()});
                     }
                     break;
-                case ProjectSuffixDBHelper.DELETE_RECORD:
-                    for (User user : users) {
+                case AbstractProjectSuffixDBHelper.DELETE_RECORD:
+                    for (final User user : users) {
                         RoleAuthorizer.REALM.unmap(user, mds, roleName);
                         LOGGER.log(Level.INFO, "Remove the user {0} to the role {1} related to the {2}", new Object[]{user, roleName, mds.getName()});
                     }
@@ -251,7 +297,7 @@ public class RoleAuthorizer implements Observer {
                     break;
             }
         }
-        LOGGER.exiting(this.getClass().getName(), "update");        
+        LOGGER.exiting(CLASS_NAME, "update");
     }
 
     /**
@@ -259,23 +305,24 @@ public class RoleAuthorizer implements Observer {
      *
      * @param group group linked to an application
      * @param appName application name
-     * @return the application or null if the application is not defined in the REALM
+     * @return the application or null if the application is not defined in the
+     * REALM
      */
     private Application loadApplicationBy(final Group group, final String appName) {
-        LOGGER.entering(this.getClass().getName(), "loadApplicationBy", new Object[]{group.getName(), appName});
+        LOGGER.entering(CLASS_NAME, "loadApplicationBy", new Object[]{group.getName(), appName});
 
-        Set<Role> roles = RoleAuthorizer.REALM.findRoles(group);
-        Iterator<Role> roleIter = roles.iterator();
+        final Set<Role> roles = RoleAuthorizer.REALM.findRoles(group);
+        final Iterator<Role> roleIter = roles.iterator();
         Application searchedApp = null;
         while (roleIter.hasNext()) {
-            Role role = roleIter.next();
-            Application app = role.getApplication();
+            final Role role = roleIter.next();
+            final Application app = role.getApplication();
             if (app.getName().equals(appName)) {
                 searchedApp = app;
             }
         }
 
-        LOGGER.exiting(this.getClass().getName(), "loadApplicationBy", searchedApp);
+        LOGGER.exiting(CLASS_NAME, "loadApplicationBy", searchedApp);
 
         return searchedApp;
     }

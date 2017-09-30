@@ -5,7 +5,7 @@
  */
 package fr.cnes.doi.security;
 
-import fr.cnes.doi.db.TokenDBHelper;
+import fr.cnes.doi.db.AbstractTokenDBHelper;
 import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.exception.TokenSecurityException;
 import fr.cnes.doi.plugin.PluginFactory;
@@ -61,10 +61,19 @@ public class TokenSecurity {
      */
     public static final String DEFAULT_TOKEN_KEY = "Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=";
 
+    /**
+     * Default date format for the token {@value #DATE_FORMAT}
+     */
     public static final String DATE_FORMAT = "E MMM dd HH:mm:ss z yyyy";
 
-    private static final TokenDBHelper tokenDB = PluginFactory.getToken();
+    /**
+     * Plugin for token database.
+     */
+    private static final AbstractTokenDBHelper TOKEN_DB = PluginFactory.getToken();
 
+    /**
+     * token key.
+     */
     private String tokenKey;
 
     /**
@@ -76,7 +85,7 @@ public class TokenSecurity {
         /**
          * Unique Instance unique
          */
-        private final static TokenSecurity INSTANCE = new TokenSecurity();
+        private static final TokenSecurity INSTANCE = new TokenSecurity();
     }
 
     /**
@@ -95,7 +104,7 @@ public class TokenSecurity {
      * @see <a href="https://fr.wikipedia.org/wiki/Base64">Base64</a>
      */
     public static String createKeySignatureHS256() {
-        Key key = MacProvider.generateKey(SignatureAlgorithm.HS256);
+        final Key key = MacProvider.generateKey(SignatureAlgorithm.HS256);
         return TextCodec.BASE64.encode(key.getEncoded());
     }
 
@@ -107,30 +116,58 @@ public class TokenSecurity {
      * Init.
      */
     private void init() {
-        String token = DoiSettings.getInstance().getString(Consts.TOKEN_KEY);
+        final String token = DoiSettings.getInstance().getString(Consts.TOKEN_KEY);
         this.tokenKey = (token == null) ? DEFAULT_TOKEN_KEY : token;
-        TokenSecurity.tokenDB.init(null);
+        TokenSecurity.TOKEN_DB.init(null);
     }
 
+    /**
+     * Time unit.
+     */
     public enum TimeUnit {
+        /**
+         * Hour.
+         */
         HOUR(Calendar.HOUR),
+        /**
+         * Day.
+         */
         DAY(Calendar.DATE),
+        /**
+         * Year.
+         */
         YEAR(Calendar.YEAR);
 
+        /**
+         * time unit
+         */
         private final int timeUnit;
 
-        TimeUnit(int timeUnit) {
+        /**
+         * Constructor.
+         * @param timeUnit time unit
+         */
+        TimeUnit(final int timeUnit) {
             this.timeUnit = timeUnit;
         }
 
+        /**
+         * Returns the time unit.
+         * @return the time unit
+         */
         public int getTimeUnit() {
             return this.timeUnit;
         }
 
+        /**
+         * Returns the time unit from a value.
+         * @param value vale
+         * @return time unit
+         */
         public static TimeUnit getTimeUnitFrom(final int value) {
             TimeUnit result = null;
-            TimeUnit[] units = TimeUnit.values();
-            for (TimeUnit unit : units) {
+            final TimeUnit[] units = TimeUnit.values();
+            for (final TimeUnit unit : units) {
                 if (unit.getTimeUnit() == value) {
                     result = unit;
                     break;
@@ -152,17 +189,17 @@ public class TokenSecurity {
      * not first registered
      */
     public String generate(final String userID, final int projectID, final TokenSecurity.TimeUnit timeUnit, final int amount) throws TokenSecurityException {
-        Map<String, Integer> projects = UniqueProjectName.getInstance().getProjects();
-        Set<String> projectNameColl = Utils.getKeysByValue(projects, projectID);
+        final Map<String, Integer> projects = UniqueProjectName.getInstance().getProjects();
+        final Set<String> projectNameColl = Utils.getKeysByValue(projects, projectID);
         if (projectNameColl.isEmpty()) {
             throw new TokenSecurityException(Status.CLIENT_ERROR_BAD_REQUEST, "No register " + PROJECT_ID + ", please create one");
         }
-        String projectName = projectNameColl.iterator().next();
+        final String projectName = projectNameColl.iterator().next();
 
-        Date now = Date.from(Instant.now());
-        Date expirationTime = computeExpirationDate(now, timeUnit.getTimeUnit(), amount);
+        final Date now = Date.from(Instant.now());
+        final Date expirationTime = computeExpirationDate(now, timeUnit.getTimeUnit(), amount);
 
-        String token = Jwts.builder()
+        final String token = Jwts.builder()
                 .setIssuer(DoiSettings.getInstance().getString(Consts.APP_NAME))
                 .setIssuedAt(Date.from(Instant.now()))
                 .setSubject(userID)
@@ -205,20 +242,23 @@ public class TokenSecurity {
      * @throws DoiRuntimeException - if an error happens getting information
      * from the token
      */
-    public Jws<Claims> getTokenInformation(final String jwtToken) {
+    public Jws<Claims> getTokenInformation(final String jwtToken) throws DoiRuntimeException{
         try {
-            Jws<Claims> jws = Jwts.parser()
+            return Jwts.parser()
                     .requireIssuer(DoiSettings.getInstance().getString(Consts.APP_NAME))
                     .setSigningKey(TextCodec.BASE64.decode(getTokenKey()))
                     .parseClaimsJws(jwtToken);
-            return jws;
         } catch (RuntimeException ex) {
             throw new DoiRuntimeException(ex.getMessage(), ex);
         }
     }
 
-    public TokenDBHelper getTokenDB() {
-        return this.tokenDB;
+    /**
+     * Returns the token DB.
+     * @return the token DB
+     */
+    public AbstractTokenDBHelper getTOKEN_DB() {
+        return TokenSecurity.TOKEN_DB;
     }
 
     /**
@@ -229,10 +269,10 @@ public class TokenSecurity {
      * @param amount amount
      * @return the expiration date
      */
-    private Date computeExpirationDate(final Date now, int calendarTime, int amount) {
-        Calendar c = Calendar.getInstance();
-        c.setTime(now);
-        c.add(calendarTime, amount);
-        return c.getTime();
+    private Date computeExpirationDate(final Date now, final int calendarTime, final int amount) {
+        final Calendar calendar = Calendar.getInstance();
+        calendar.setTime(now);
+        calendar.add(calendarTime, amount);
+        return calendar.getTime();
     }
 }

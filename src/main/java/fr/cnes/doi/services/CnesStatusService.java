@@ -17,12 +17,12 @@ import org.restlet.resource.ClientResource;
 import org.restlet.service.StatusService;
 
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.utils.Utils;
 import fr.cnes.doi.settings.Consts;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Provides a specific error page, which is sent in the HTTP response.
@@ -45,6 +45,7 @@ public class CnesStatusService extends StatusService {
      * Creates a specific error page.
      */
     public CnesStatusService() {
+        super();
         this.settings = DoiSettings.getInstance();
     }
 
@@ -58,8 +59,8 @@ public class CnesStatusService extends StatusService {
      */
     @Override
     public Representation getRepresentation(final Status status, final Request request, final Response response) {
-        Map<String, String> dataModel = createDataModel(response);
-        Representation mailFtl = new ClientResource(LocalReference.createClapReference("class/CnesStatus.ftl")).get();
+        final Map<String, String> dataModel = createDataModel(response);
+        final Representation mailFtl = new ClientResource(LocalReference.createClapReference("class/CnesStatus.ftl")).get();
         return new TemplateRepresentation(mailFtl, dataModel, MediaType.TEXT_HTML);
     }
 
@@ -72,7 +73,7 @@ public class CnesStatusService extends StatusService {
      */
     private Map<String, String> createDataModel(final Response response) {
         LOGGER.entering(CnesStatusService.class.getName(), "createDataModel");
-        final Map<String, String> dataModel = new TreeMap<>();
+        final Map<String, String> dataModel = new ConcurrentHashMap<>();
         dataModel.put("applicationName", Application.getCurrent().getName());
         dataModel.put("statusCode", String.valueOf(response.getStatus().getCode()));
         dataModel.put("statusName", response.getStatus().getReasonPhrase());

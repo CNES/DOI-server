@@ -5,7 +5,7 @@
  */
 package fr.cnes.doi.resource.mds;
 
-import fr.cnes.doi.application.BaseApplication;
+import fr.cnes.doi.application.AbstractApplication;
 import fr.cnes.doi.application.DoiMdsApplication;
 import fr.cnes.doi.client.ClientMDS;
 import fr.cnes.doi.exception.ClientMdsException;
@@ -33,6 +33,9 @@ import org.restlet.resource.ResourceException;
  */
 public class DoiResource extends BaseMdsResource {
 
+    /**
+     * 
+     */
     public static final String GET_DOI = "Get DOI";
 
     /**
@@ -71,23 +74,23 @@ public class DoiResource extends BaseMdsResource {
      * </ul>
      */
     @Requirement(
-            reqId = Requirement.DOI_SRV_070,
-            reqName = Requirement.DOI_SRV_070_NAME
-    )
+        reqId = Requirement.DOI_SRV_070,
+        reqName = Requirement.DOI_SRV_070_NAME
+        )
     @Requirement(
-            reqId = Requirement.DOI_MONIT_020,
-            reqName = Requirement.DOI_MONIT_020_NAME
-    )
+        reqId = Requirement.DOI_MONIT_020,
+        reqName = Requirement.DOI_MONIT_020_NAME
+        )
     @Requirement(
-            reqId = Requirement.DOI_INTER_070,
-            reqName = Requirement.DOI_INTER_070_NAME
-    )    
+        reqId = Requirement.DOI_INTER_070,
+        reqName = Requirement.DOI_INTER_070_NAME
+        )    
     @Get
     public Representation getDoi() throws ResourceException {
         getLogger().entering(getClass().getName(), "getDoi", this.doiName);
         checkInput(this.doiName);
         try {
-            String doi = this.doiApp.getClient().getDoi(this.doiName);
+            final String doi = this.getDoiApp().getClient().getDoi(this.doiName);
             if (doi != null && !doi.isEmpty()) {
                 setStatus(Status.SUCCESS_OK);
             } else {
@@ -100,7 +103,7 @@ public class DoiResource extends BaseMdsResource {
             if (ex.getStatus().getCode() == Status.CLIENT_ERROR_NOT_FOUND.getCode()) {
                 throw new ResourceException(ex.getStatus(), ex.getMessage(), ex);
             } else {
-                ((BaseApplication) getApplication()).sendAlertWhenDataCiteFailed(ex);
+                ((AbstractApplication) getApplication()).sendAlertWhenDataCiteFailed(ex);
                 throw new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex);
             }
         }
@@ -114,12 +117,15 @@ public class DoiResource extends BaseMdsResource {
      * institution suffix.
      */
     @Requirement(
-            reqId = Requirement.DOI_INTER_070,
-            reqName = Requirement.DOI_INTER_070_NAME
-    )
-    private void checkInput(String doiName) throws ResourceException {
+        reqId = Requirement.DOI_INTER_070,
+        reqName = Requirement.DOI_INTER_070_NAME
+        )
+    private void checkInput(final String doiName) throws ResourceException {
         if (doiName == null || doiName.isEmpty()) {
-            throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "doiName cannot be null or empty");
+            throw new ResourceException(
+                    Status.CLIENT_ERROR_BAD_REQUEST, 
+                    "doiName cannot be null or empty"
+            );
         } else if (!doiName.startsWith(DoiSettings.getInstance().getString(Consts.INIST_DOI))) {
             throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "the DOI"
                     + " prefix must contains the prefix of the institution");
@@ -157,22 +163,41 @@ public class DoiResource extends BaseMdsResource {
      * @param info Wadl description
      */
     @Requirement(
-            reqId = Requirement.DOI_DOC_010,
-            reqName = Requirement.DOI_DOC_010_NAME
-    )      
+        reqId = Requirement.DOI_DOC_010,
+        reqName = Requirement.DOI_DOC_010_NAME
+        )      
     @Override
     protected final void describeGet(final MethodInfo info) {
         info.setName(Method.GET);
         info.setDocumentation("Get the landing page related to a given DOI");
         addRequestDocToMethod(info, Arrays.asList(
-                createQueryParamDoc(DoiMdsApplication.DOI_TEMPLATE, ParameterStyle.TEMPLATE, "DOI name", true, "xs:string")
+                createQueryParamDoc(
+                        DoiMdsApplication.DOI_TEMPLATE, 
+                        ParameterStyle.TEMPLATE, "DOI name", true, "xs:string"
+                )
         ));
 
-        addResponseDocToMethod(info, createResponseDoc(Status.SUCCESS_OK, "Operation successful", doiRepresentation()));
-        addResponseDocToMethod(info, createResponseDoc(Status.SUCCESS_NO_CONTENT, "DOI is known to MDS, but is not minted (or not resolvable e.g. due to handle's latency)", "explainRepresentation"));
-        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_BAD_REQUEST, "if the DOI does not contain the institution suffix", "explainRepresentation"));
-        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_NOT_FOUND, "DOI does not exist in DataCite", "explainRepresentation"));
-        addResponseDocToMethod(info, createResponseDoc(Status.SERVER_ERROR_INTERNAL, "server internal error, try later and if problem persists please contact us", "explainRepresentation"));
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.SUCCESS_OK, "Operation successful", doiRepresentation())
+        );
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.SUCCESS_NO_CONTENT, 
+                "DOI is known to MDS, but is not minted (or not resolvable e.g. "
+                        + "due to handle's latency)", "explainRepresentation")
+        );
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.CLIENT_ERROR_BAD_REQUEST, "if the DOI does not contain "
+                        + "the institution suffix", "explainRepresentation")
+        );
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.CLIENT_ERROR_NOT_FOUND, "DOI does not exist in DataCite",
+                "explainRepresentation")
+        );
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.SERVER_ERROR_INTERNAL, "server internal error, try later "
+                        + "and if problem persists please contact us", 
+                "explainRepresentation")
+        );
     }
 
 }

@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.logging.Level;
@@ -107,7 +106,7 @@ public class Starter {
     /**
      * Stops the server
      *
-     * @param server
+     * @param server HTTP or HTTPS server
      */
     private static void stopServer(final Thread server) {
         GLOBAL_LOGGER.entering(Starter.class.getName(), "stopServer");
@@ -292,7 +291,7 @@ public class Starter {
                     arg = g.getOptarg();
                     try {
                         byte[] encodedFile = Files.readAllBytes(Paths.get(arg));
-                        String contentFile = new String(encodedFile, Charset.forName("UTF-8"));
+                        String contentFile = new String(encodedFile, StandardCharsets.UTF_8);
                         contentFile = UtilsCryptography.encrypt(contentFile, settings.getSecretKey());
                         SHELL_LOGGER.info(contentFile);
                     } catch (Exception ex) {

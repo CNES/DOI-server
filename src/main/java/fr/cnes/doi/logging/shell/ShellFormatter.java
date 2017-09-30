@@ -15,8 +15,13 @@ import java.util.logging.LogRecord;
  */
 public final class ShellFormatter extends Formatter {
 
+    /**
+     * Format.
+     * @param record log record
+     * @return the formatted log record
+     */
     @Override
-    public String format(LogRecord record) {
+    public String format(final LogRecord record) {
         return record.getMessage();
     }
 }

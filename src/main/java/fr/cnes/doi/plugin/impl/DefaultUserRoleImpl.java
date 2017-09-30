@@ -5,7 +5,7 @@
  */
 package fr.cnes.doi.plugin.impl;
 
-import fr.cnes.doi.plugin.UserRolePluginHelper;
+import fr.cnes.doi.plugin.AbstractUserRolePluginHelper;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,7 +16,7 @@ import org.restlet.security.User;
  * This implementation defines users/groups/roles.
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-public class DefaultUserRoleImpl extends UserRolePluginHelper {
+public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
 
     private static final List<User> users = new ArrayList<>();
     private final String NAME = this.getClass().getName();
@@ -27,7 +27,7 @@ public class DefaultUserRoleImpl extends UserRolePluginHelper {
     private static final String LICENSE = "LGPLV3";
 
     public DefaultUserRoleImpl() {
-
+        super();
     }
     
     @Override

@@ -17,7 +17,7 @@ import java.util.logging.Level;
 public final class ShellHandler extends ConsoleHandler {
 
     /**
-     * Handler that represents a output shell
+     * Handler that represents a output shell.
      */
     public ShellHandler() {
         super();
@@ -25,13 +25,27 @@ public final class ShellHandler extends ConsoleHandler {
         this.setLevel(Level.INFO);
     }
 
+    /**
+     * Set a Formatter. This Formatter will be used to format LogRecords for this Handler.
+     * Some Handlers may not use Formatters, in which case the Formatter will be remembered, but not used.
+     * @param newFormatter the Formatter to use (may not be null)
+     * @throws SecurityException - if a security manager exists and if the caller does not have LoggingPermission("control").
+     */
     @Override
-    public synchronized void setFormatter(Formatter newFormatter) throws SecurityException {
+    public synchronized void setFormatter(final Formatter newFormatter) throws SecurityException {
         super.setFormatter(newFormatter);
     }
 
+    /**
+     * Set the log level specifying which message levels will be logged by this Handler. 
+     * Message levels lower than this value will be discarded. The intention is to 
+     * allow developers to turn on voluminous logging, but to limit the messages 
+     * that are sent to certain Handlers.
+     * @param newLevel - the new value for the log level
+     * @throws SecurityException - if a security manager exists and if the caller does not have LoggingPermission
+     */
     @Override
-    public synchronized void setLevel(Level newLevel) throws SecurityException {
+    public synchronized void setLevel(final Level newLevel) throws SecurityException {
         super.setLevel(newLevel);
     }
 

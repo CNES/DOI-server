@@ -36,7 +36,7 @@ public class DoiMonitoringRecord {
      * @param average Average speed of the request
      * @param nbAccess Number of access
      */
-    public DoiMonitoringRecord(final String description, float average, int nbAccess) {
+    public DoiMonitoringRecord(final String description, final float average, final int nbAccess) {
         super();
         this.description = description;
         this.average = average;
@@ -75,7 +75,7 @@ public class DoiMonitoringRecord {
      *
      * @param average the average to set
      */
-    public void setAverage(float average) {
+    public void setAverage(final float average) {
         this.average = average;
     }
 
@@ -93,7 +93,7 @@ public class DoiMonitoringRecord {
      *
      * @param nbAccess the nbAccess to set
      */
-    public void setNbAccess(int nbAccess) {
+    public void setNbAccess(final int nbAccess) {
         this.nbAccess = nbAccess;
     }
 

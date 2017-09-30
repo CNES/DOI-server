@@ -5,17 +5,24 @@
  */
 package fr.cnes.doi.plugin;
 
-import fr.cnes.doi.db.ProjectSuffixDBHelper;
+import fr.cnes.doi.db.AbstractUserRoleDBHelper;
 import fr.cnes.doi.utils.spec.Requirement;
 
 /**
- *
+ * Plugin to define users and groups of the system.
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 @Requirement(
         reqId = Requirement.DOI_ARCHI_030,
         reqName = Requirement.DOI_ARCHI_030_NAME      
 )
-public abstract class ProjectSuffixPluginHelper extends ProjectSuffixDBHelper implements PluginMetadata {
+public abstract class AbstractUserRolePluginHelper 
+        extends AbstractUserRoleDBHelper implements PluginMetadata {    
     
+    /**
+     * Empty constructor.
+     */
+    protected AbstractUserRolePluginHelper() {
+        super();
+    }
 }

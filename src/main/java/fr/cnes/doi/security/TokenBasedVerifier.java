@@ -5,7 +5,7 @@
  */
 package fr.cnes.doi.security;
 
-import fr.cnes.doi.db.TokenDBHelper;
+import fr.cnes.doi.db.AbstractTokenDBHelper;
 import fr.cnes.doi.utils.Utils;
 import fr.cnes.doi.utils.spec.Requirement;
 import io.jsonwebtoken.Claims;
@@ -28,24 +28,37 @@ import org.restlet.security.Verifier;
 )
 public class TokenBasedVerifier implements Verifier {
 
-    private final TokenDBHelper tokenDB;
+    /**
+     * Token DB.
+     */
+    private final AbstractTokenDBHelper tokenDB;
     /**
      * Logger.
      */
     public static final Logger LOGGER = Utils.getAppLogger();
 
-    public TokenBasedVerifier(final TokenDBHelper tokenDB) {
+    /**
+     * Constructor.
+     * @param tokenDB token DB
+     */
+    public TokenBasedVerifier(final AbstractTokenDBHelper tokenDB) {
         this.tokenDB = tokenDB;
     }
 
+    /**
+     * Verifies the token.
+     * @param request request
+     * @param response response
+     * @return the result
+     */
     @Override
-    public int verify(Request request, Response response) {
-        int result;
-        ChallengeResponse cr = request.getChallengeResponse();
-        if (cr == null) {
+    public int verify(final Request request, final Response response) {
+        final int result;
+        final ChallengeResponse challResponse = request.getChallengeResponse();
+        if (challResponse == null) {
             result = Verifier.RESULT_MISSING;
         } else {
-            result = processAuthentication(request, cr);
+            result = processAuthentication(request, challResponse);
         }
 
         return result;
@@ -54,12 +67,12 @@ public class TokenBasedVerifier implements Verifier {
     /**
      * Process Authentication.     
      * @param request request
-     * @param cr authentication object
+     * @param challResponse authentication object
      * @return the authentication status
      */
-    private int processAuthentication(Request request, ChallengeResponse cr) {
-        int result;
-        String token = cr.getRawValue();
+    private int processAuthentication(final Request request, final ChallengeResponse challResponse) {
+        final int result;
+        final String token = challResponse.getRawValue();
         if (token == null) {
             result = Verifier.RESULT_MISSING;
         } else if (this.tokenDB.isExist(token)) {
@@ -76,17 +89,17 @@ public class TokenBasedVerifier implements Verifier {
      * @param token token
      * @return the status given by {@link Verifier}
      */
-    private int processToken(Request request, String token) {
-        int result;
+    private int processToken(final Request request, final String token) {
+        final int result;
         if (this.tokenDB.isExpirated(token)) {
             LOGGER.log(Level.INFO, "token {0} is expirated", token);
             result = Verifier.RESULT_INVALID;
         } else {
             result = Verifier.RESULT_VALID;
-            Jws<Claims> tokenInfo = TokenSecurity.getInstance().getTokenInformation(token);
-            Claims body = tokenInfo.getBody();
-            String userID = body.getSubject();
-            Integer projectID = (Integer) body.get(TokenSecurity.PROJECT_ID);
+            final Jws<Claims> tokenInfo = TokenSecurity.getInstance().getTokenInformation(token);
+            final Claims body = tokenInfo.getBody();
+            final String userID = body.getSubject();
+            final Integer projectID = (Integer) body.get(TokenSecurity.PROJECT_ID);
             LOGGER.log(Level.INFO, "token {0} is valid, {1} for {2} are authenticated", new Object[]{token, userID, projectID});
             request.getClientInfo().setUser(new User(userID));
             request.getHeaders().set(UtilsHeader.SELECTED_ROLE_PARAMETER, String.valueOf(projectID));

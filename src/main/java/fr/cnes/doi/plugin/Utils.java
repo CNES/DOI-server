@@ -22,27 +22,38 @@ import java.util.logging.Logger;
  */
 public class Utils {
 
+    /**
+     * Logger.
+     */
     private static final Logger LOGGER = fr.cnes.doi.utils.Utils.getAppLogger();
 
     /**
      * Adds a path in the classPath.
      *
      * @param path path
-     * @throws Exception
+     * @throws IllegalArgumentException - if path is null
+     * @throws NoSuchMethodException - if a matching method is not found.
+     * @throws IllegalAccessException - if this Method object is enforcing Java 
+     * language access control and the underlying method is inaccessible.
+     * @throws InvocationTargetException - if the underlying method throws an exception.
+     * @throws MalformedURLException - If a protocol handler for the URL could 
+     * not be found, or if some other error occurred while constructing the URL
      */
     @Requirement(
             reqId = Requirement.DOI_ARCHI_040,
             reqName = Requirement.DOI_ARCHI_040_NAME
     )
-    public static void addPath(String path) throws Exception {
+    public static void addPath(final String path) 
+            throws IllegalArgumentException, NoSuchMethodException, 
+            IllegalAccessException, InvocationTargetException, MalformedURLException {
         LOGGER.fine(String.format("Add path %s to plugin", path));
         if(path == null) {
-            throw new NullPointerException("path variable is null");
+            throw new IllegalArgumentException("path variable is null");
         }
-        File f = new File(path);
-        if (f.isDirectory()) {
-            File[] files = f.listFiles();
-            for (Object file : fr.cnes.doi.utils.Utils.nullToEmpty(files)) {
+        final File pathDir = new File(path);
+        if (pathDir.isDirectory()) {
+            final File[] files = pathDir.listFiles();
+            for (final Object file : fr.cnes.doi.utils.Utils.nullToEmpty(files)) {
                 loadFileInClassPath((File)file);
             }
         }
@@ -51,21 +62,25 @@ public class Utils {
     /**
      * Adds a file in a classpath.
      *
-     * @param f file
-     * @throws NoSuchMethodException
-     * @throws IllegalAccessException
-     * @throws IllegalArgumentException
-     * @throws InvocationTargetException
-     * @throws MalformedURLException
+     * @param file file
+     * @throws NoSuchMethodException - if a matching method is not found.
+     * @throws IllegalAccessException - if this Method object is enforcing Java 
+     * language access control and the underlying method is inaccessible.
+     * @throws InvocationTargetException - if the underlying method throws an exception.
+     * @throws MalformedURLException - If a protocol handler for the URL could 
+     * not be found, or if some other error occurred while constructing the URL
      */
-    public static void loadFileInClassPath(File f) throws NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, MalformedURLException {
-        LOGGER.log(Level.FINE, "Adds file {0} to classpathS", f);
-        URI u = f.toURI();
-        URLClassLoader urlClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-        Class<URLClassLoader> urlClass = URLClassLoader.class;
-        Method method = urlClass.getDeclaredMethod("addURL", new Class[]{URL.class});
+    public static void loadFileInClassPath(final File file) 
+            throws NoSuchMethodException, IllegalAccessException, 
+            InvocationTargetException, 
+            MalformedURLException {
+        LOGGER.log(Level.FINE, "Adds file {0} to classpathS", file);
+        final URI uri = file.toURI();
+        final URLClassLoader urlClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
+        final Class<URLClassLoader> urlClass = URLClassLoader.class;
+        final Method method = urlClass.getDeclaredMethod("addURL", new Class[]{URL.class});
         method.setAccessible(true);
-        method.invoke(urlClassLoader, new Object[]{u.toURL()});
+        method.invoke(urlClassLoader, new Object[]{uri.toURL()});
     }
 
 }

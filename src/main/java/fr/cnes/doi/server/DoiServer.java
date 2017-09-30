@@ -81,6 +81,9 @@ public class DoiServer extends Component {
      */
     private final DoiSettings settings;
 
+    /**
+     * Logger.
+     */
     private static final Logger LOGGER = Logger.getLogger(DoiServer.class.getName());
 
     /**
@@ -102,19 +105,18 @@ public class DoiServer extends Component {
         LOGGER.entering(getClass().getName(), "initLogServices");
         this.getLogService().setLoggerName(Utils.HTTP_LOGGER_NAME);
 
-        LogService logServiceApplication = new DoiLogDataServer(Utils.APP_LOGGER_NAME, true);
+        final LogService logServiceApplication = new DoiLogDataServer(Utils.APP_LOGGER_NAME, true);
         this.getServices().add(logServiceApplication);
 
-        Service logServiceSecurity = new LogService(true) {
-            /*
-			 * (non-Javadoc)
-			 * 
-			 * @see
-			 * org.restlet.service.LogService#createInboundFilter(org.restlet.
-			 * Context)
+        final Service logServiceSecurity = new LogService(true) {
+            /**
+             * Creates a filter
+             * @param context context
+             * @return Filter
+             * @see org.restlet.service.LogService#createInboundFilter(org.restlet.Context)
              */
             @Override
-            public Filter createInboundFilter(Context context) {
+            public Filter createInboundFilter(final Context context) {
                 return new DoiSecurityLogFilter("fr.cnes.doi.logging.security");
             }
         };
@@ -128,7 +130,7 @@ public class DoiServer extends Component {
     @Requirement(
             reqId = Requirement.DOI_ARCHI_010,
             reqName = Requirement.DOI_ARCHI_010_NAME
-    )      
+    )
     private void configureServer() {
         LOGGER.entering(getClass().getName(), "init");
 
@@ -144,7 +146,7 @@ public class DoiServer extends Component {
      * Inits the HTTP server.
      */
     private void initHttpServer() {
-        Server serverHttp = startHttpServer(settings.getInt(Consts.SERVER_HTTP_PORT, DEFAULT_HTTP_PORT));
+        final Server serverHttp = startHttpServer(settings.getInt(Consts.SERVER_HTTP_PORT, DEFAULT_HTTP_PORT));
         this.getServers().add(serverHttp);
         initJettyConfiguration(serverHttp);
     }
@@ -153,7 +155,7 @@ public class DoiServer extends Component {
      * Inits the HTTPS server.
      */
     private void initHttpsServer() {
-        Server serverHttps = startHttpsServer(settings.getInt(Consts.SERVER_HTTPS_PORT, DEFAULT_HTTPS_PORT));
+        final Server serverHttps = startHttpsServer(settings.getInt(Consts.SERVER_HTTPS_PORT, DEFAULT_HTTPS_PORT));
         this.getServers().add(serverHttps);
         initJettyConfiguration(serverHttps);
     }
@@ -161,10 +163,10 @@ public class DoiServer extends Component {
     /**
      * Init the Jetty configuration and applies it to the server.
      *
-     * @param server
+     * @param server HTTP or HTTPS server
      */
-    private void initJettyConfiguration(Server server) {
-        JettySettings jettyProps = new JettySettings(server, settings);
+    private void initJettyConfiguration(final Server server) {
+        final JettySettings jettyProps = new JettySettings(server, settings);
         jettyProps.addParamsToServerContext();
     }
 
@@ -183,8 +185,8 @@ public class DoiServer extends Component {
      * Routes the applications.
      */
     private void initAttachApplication() {
-        Application appDoiProject = new DoiMdsApplication();
-        Application appAdmin = new AdminApplication();
+        final Application appDoiProject = new DoiMdsApplication();
+        final Application appAdmin = new AdminApplication();
         this.getDefaultHost().attach(MDS_URI, appDoiProject);
         this.getDefaultHost().attach(CITATION_URI, new DoiCrossCiteApplication());
         this.getDefaultHost().attachDefault(appAdmin);
@@ -215,7 +217,7 @@ public class DoiServer extends Component {
      */
     private Server startHttpServer(final Integer port) {
         LOGGER.entering(getClass().getName(), "startHttpServer", port);
-        Server server = new Server(Protocol.HTTP, port, this);
+        final Server server = new Server(Protocol.HTTP, port, this);
         LOGGER.exiting(getClass().getName(), "startHttpServer");
         return server;
     }
@@ -228,14 +230,14 @@ public class DoiServer extends Component {
      */
     private Server startHttpsServer(final Integer port) {
         LOGGER.entering(getClass().getName(), "startHttpsServer", port);
-        String pathKeyStore;
+        final String pathKeyStore;
         if (settings.hasValue(Consts.SERVER_HTTPS_KEYSTORE_PATH)) {
             pathKeyStore = settings.getString(Consts.SERVER_HTTPS_KEYSTORE_PATH);
         } else {
             pathKeyStore = extractKeyStoreToPath();
         }
 
-        String pathKeyTrustStore;
+        final String pathKeyTrustStore;
         if (settings.hasValue(Consts.SERVER_HTTPS_TRUST_STORE_PATH)) {
             pathKeyTrustStore = settings.getString(Consts.SERVER_HTTPS_TRUST_STORE_PATH);
         } else {
@@ -243,8 +245,8 @@ public class DoiServer extends Component {
         }
 
         // create embedding https jetty server
-        Server server = new Server(new Context(), Protocol.HTTPS, port, this);
-        Series<Parameter> parameters = server.getContext().getParameters();
+        final Server server = new Server(new Context(), Protocol.HTTPS, port, this);
+        final Series<Parameter> parameters = server.getContext().getParameters();
         parameters.add("sslContextFactory", "org.restlet.engine.ssl.DefaultSslContextFactory");
         // Specifies the path for the keystore used by the server
         parameters.add("keyStorePath", pathKeyStore);
@@ -271,13 +273,13 @@ public class DoiServer extends Component {
      */
     private String extractKeyStoreToPath() {
         String result;
-        Representation jks = new ClientResource(LocalReference.createClapReference("class/doiServerKey.jks")).get();
+        final Representation jks = new ClientResource(LocalReference.createClapReference("class/doiServerKey.jks")).get();
         try {
-            Path outputDirectory = new File("jks").toPath();
+            final Path outputDirectory = new File("jks").toPath();
             if (Files.notExists(outputDirectory)) {
                 Files.createDirectory(outputDirectory);
             }
-            File outputFile = new File(outputDirectory.getFileName() + File.separator + "doiServerKey.jks");
+            final File outputFile = new File(outputDirectory.getFileName() + File.separator + "doiServerKey.jks");
             Files.copy(jks.getStream(), outputFile.toPath(), REPLACE_EXISTING);
             result = outputDirectory.getFileName() + File.separator + "doiServerKey.jks";
         } catch (IOException ex) {

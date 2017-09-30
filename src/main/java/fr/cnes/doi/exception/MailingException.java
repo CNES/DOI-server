@@ -31,7 +31,7 @@ public class MailingException extends Exception {
      * @param message the detail message. The detail message is saved for later
      * retrieval by the MailingException.getMessage() method
      */
-    public MailingException(String message) {
+    public MailingException(final String message) {
         super(message);
     }
 
@@ -46,7 +46,7 @@ public class MailingException extends Exception {
      * MailingException.getCause() method). (A null value is permitted, and
      * indicates that the cause is nonexistent or unknown.)
      */
-    public MailingException(Throwable cause) {
+    public MailingException(final Throwable cause) {
         super(cause);
     }
 
@@ -61,7 +61,7 @@ public class MailingException extends Exception {
      * MailingException.getCause() method). (A null value is permitted, and
      * indicates that the cause is nonexistent or unknown.)
      */
-    public MailingException(String message, Throwable cause) {
+    public MailingException(final String message, final Throwable cause) {
         super(message, cause);
     }
 

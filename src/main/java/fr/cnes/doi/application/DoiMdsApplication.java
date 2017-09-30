@@ -23,7 +23,7 @@ import org.restlet.security.MethodAuthorizer;
 import org.restlet.routing.Router;
 
 import fr.cnes.doi.client.ClientMDS;
-import fr.cnes.doi.db.TokenDBHelper;
+import fr.cnes.doi.db.AbstractTokenDBHelper;
 import fr.cnes.doi.resource.mds.DoiResource;
 import fr.cnes.doi.resource.mds.DoisResource;
 import fr.cnes.doi.resource.mds.MediaResource;
@@ -103,8 +103,13 @@ import org.restlet.routing.Template;
         reqId = Requirement.DOI_MONIT_020,
         reqName = Requirement.DOI_MONIT_020_NAME
 )
-public class DoiMdsApplication extends BaseApplication {
+public class DoiMdsApplication extends AbstractApplication {
 
+    /**
+     * Class name.
+     */
+    private static final String CLASS_NAME = DoiMdsApplication.class.getName();
+    
     /**
      * Template Query for DOI : {@value #DOI_TEMPLATE}.
      */
@@ -148,14 +153,14 @@ public class DoiMdsApplication extends BaseApplication {
     /**
      * Token DB that contains the set of generated token.
      */
-    private final TokenDBHelper tokenDB;
+    private final AbstractTokenDBHelper tokenDB;
 
     /**
      * Creates the Digital Object Identifier server application.
      */
     public DoiMdsApplication() {
         super();
-        getLogger().entering(DoiMdsApplication.class.getName(), "Constructor");
+        getLogger().entering(CLASS_NAME, "Constructor");
 
         setName(NAME);
         setDescription("Provides an application for handling Data Object Identifier at CNES<br/>"
@@ -163,12 +168,12 @@ public class DoiMdsApplication extends BaseApplication {
                 + "<li>metadata : Registration of the associated metadata</li>"
                 + "<li>media : Possbility to obtain metadata in various formats and/or get automatic, direct access to an object rather than via the \"landing page\"</li>"
                 + "</ul>");
-        String contextUse = this.config.getString(Consts.CONTEXT_MODE);
+        final String contextUse = this.getConfig().getString(Consts.CONTEXT_MODE);
         client = new ClientMDS(ClientMDS.Context.valueOf(contextUse), getLoginMds(), getPwdMds());
 
-        this.tokenDB = TokenSecurity.getInstance().getTokenDB();
+        this.tokenDB = TokenSecurity.getInstance().getTOKEN_DB();
 
-        getLogger().exiting(DoiMdsApplication.class.getName(), "Constructor");
+        getLogger().exiting(CLASS_NAME, "Constructor");
     }
 
     /**
@@ -190,29 +195,29 @@ public class DoiMdsApplication extends BaseApplication {
      */
     @Override
     public Restlet createInboundRoot() {
-        getLogger().entering(DoiMdsApplication.class.getName(), "createInboundRoot");
+        getLogger().entering(CLASS_NAME, "createInboundRoot");
 
         // Defines the strategy of authentication (authentication is not required)
         //   - authentication with login/pwd
-        ChallengeAuthenticator ca = createAuthenticator();
-        ca.setOptional(true);
+        final ChallengeAuthenticator challAuth = createAuthenticator();
+        challAuth.setOptional(true);
 
         //   - authentication with token
-        ChallengeAuthenticator ct = createTokenAuthenticator();
-        ct.setOptional(true);
+        final ChallengeAuthenticator challTokenAuth = createTokenAuthenticator();
+        challTokenAuth.setOptional(true);
 
         //  create a pipeline of authentication
-        ca.setNext(ct);
+        challAuth.setNext(challTokenAuth);
 
-        // Set specific authroization on method after checking authentication
-        MethodAuthorizer ma = createMethodAuthorizer();
-        ct.setNext(ma);
+        // Set specific authorization on method after checking authentication
+        final MethodAuthorizer methodAuth = createMethodAuthorizer();
+        challTokenAuth.setNext(methodAuth);
 
         // Router
-        ma.setNext(createRouter());
+        methodAuth.setNext(createRouter());
 
-        getLogger().exiting(DoiMdsApplication.class.getName(), "createInboundRoot", ca);
-        return ca;
+        getLogger().exiting(CLASS_NAME, "createInboundRoot", challAuth);
+        return challAuth;
     }
 
     /**
@@ -237,16 +242,16 @@ public class DoiMdsApplication extends BaseApplication {
      * @return the router
      */    
     private Router createRouter() {
-        getLogger().entering(DoiMdsApplication.class.getName(), "createRouter");
+        getLogger().entering(CLASS_NAME, "createRouter");
 
-        Router router = new Router(getContext());        
+        final Router router = new Router(getContext());        
         router.attach(DOI_URI, DoisResource.class);
         router.attach(DOI_URI + DOI_NAME_URI, DoiResource.class).getTemplate().setMatchingMode(Template.MODE_STARTS_WITH);
         router.attach(METADATAS_URI, MetadatasResource.class);
         router.attach(METADATAS_URI + DOI_NAME_URI, MetadataResource.class).getTemplate().setMatchingMode(Template.MODE_STARTS_WITH);
         router.attach(MEDIA_URI + DOI_NAME_URI, MediaResource.class).getTemplate().setMatchingMode(Template.MODE_STARTS_WITH);
 
-        getLogger().exiting(DoiMdsApplication.class.getName(), "createRouter", router);
+        getLogger().exiting(CLASS_NAME, "createRouter", router);
 
         return router;
     }
@@ -258,16 +263,16 @@ public class DoiMdsApplication extends BaseApplication {
      * @return Authorizer based on authorized methods
      */
     private MethodAuthorizer createMethodAuthorizer() {
-        getLogger().entering(DoiMdsApplication.class.getName(), "createMethodAuthorizer");
+        getLogger().entering(CLASS_NAME, "createMethodAuthorizer");
 
-        MethodAuthorizer methodAuth = new MethodAuthorizer();
+        final MethodAuthorizer methodAuth = new MethodAuthorizer();
         methodAuth.getAnonymousMethods().add(Method.GET);
         methodAuth.getAuthenticatedMethods().add(Method.GET);
         methodAuth.getAuthenticatedMethods().add(Method.POST);
         methodAuth.getAuthenticatedMethods().add(Method.PUT);
         methodAuth.getAuthenticatedMethods().add(Method.DELETE);
 
-        getLogger().exiting(DoiMdsApplication.class.getName(), "createMethodAuthorizer", methodAuth);
+        getLogger().exiting(CLASS_NAME, "createMethodAuthorizer", methodAuth);
         return methodAuth;
     }
 
@@ -282,14 +287,14 @@ public class DoiMdsApplication extends BaseApplication {
             reqName = Requirement.DOI_AUTH_020_NAME
     )
     private ChallengeAuthenticator createTokenAuthenticator() {
-        getLogger().entering(DoiMdsApplication.class.getName(), "createTokenAuthenticator");
+        getLogger().entering(CLASS_NAME, "createTokenAuthenticator");
 
-        ChallengeAuthenticator guard = new ChallengeAuthenticator(
+        final ChallengeAuthenticator guard = new ChallengeAuthenticator(
                 getContext(), ChallengeScheme.HTTP_OAUTH_BEARER, "testRealm");
-        TokenBasedVerifier verifier = new TokenBasedVerifier(getTokenDB());
+        final TokenBasedVerifier verifier = new TokenBasedVerifier(getTokenDB());
         guard.setVerifier(verifier);
 
-        getLogger().exiting(DoiMdsApplication.class.getName(), "createTokenAuthenticator", guard);
+        getLogger().exiting(CLASS_NAME, "createTokenAuthenticator", guard);
 
         return guard;
     }
@@ -309,7 +314,7 @@ public class DoiMdsApplication extends BaseApplication {
      * @return the DataCite's login
      */
     private String getLoginMds() {
-        return this.config.getSecret(Consts.INIST_LOGIN);
+        return this.getConfig().getSecret(Consts.INIST_LOGIN);
     }
 
     /**
@@ -318,7 +323,7 @@ public class DoiMdsApplication extends BaseApplication {
      * @return the DataCite's pwd
      */
     private String getPwdMds() {
-        return this.config.getSecret(Consts.INIST_PWD);
+        return this.getConfig().getSecret(Consts.INIST_PWD);
     }
 
     /**
@@ -327,7 +332,7 @@ public class DoiMdsApplication extends BaseApplication {
      * @return the DOI prefix
      */
     public String getDataCentrePrefix() {
-        return this.config.getString(Consts.INIST_DOI);
+        return this.getConfig().getString(Consts.INIST_DOI);
     }
 
     /**
@@ -344,7 +349,7 @@ public class DoiMdsApplication extends BaseApplication {
      *
      * @return the token database
      */
-    public TokenDBHelper getTokenDB() {
+    public AbstractTokenDBHelper getTokenDB() {
         return this.tokenDB;
     }
 

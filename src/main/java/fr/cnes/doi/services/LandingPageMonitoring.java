@@ -26,37 +26,35 @@ import java.util.logging.Logger;
 )
 public class LandingPageMonitoring implements Runnable {
 
+    /**
+     * Logger.
+     */
     private static final Logger LOGGER = Logger.getLogger(LandingPageMonitoring.class.getName());
 
     /**
-     * Constructor.
+     * run.
      */
-    public LandingPageMonitoring() {
-        super();
-    }
-
     @Override
     public void run() {
         LOGGER.info("Checking landing pages");
-        EmailSettings email = EmailSettings.getInstance();
-        String subject;
+        final EmailSettings email = EmailSettings.getInstance();        
         StringBuffer msg = new StringBuffer();
         try {
-
-            ClientSearchDataCite client = new ClientSearchDataCite();
-            List<String> response = client.getDois();
-            ClientLandingPage clientLandingPage = new ClientLandingPage(response);
+            final String subject;
+            final ClientSearchDataCite client = new ClientSearchDataCite();
+            final List<String> response = client.getDois();
+            final ClientLandingPage clientLandingPage = new ClientLandingPage(response);
 
             if (clientLandingPage.isSuccess()) {
                 subject = "Landing pages checked with success";
                 msg = msg.append("All landing pages (").append(response.size()).append(") are on-line");
             } else {
                 subject = "Landing pages checked with errors";
-                List<String> errors = clientLandingPage.getErrors();
+                final List<String> errors = clientLandingPage.getErrors();
                 msg = msg.append(errors.size()).append(" are off-line !!!\n");
                 msg = msg.append("List of off-line landing pages:\n");
                 msg = msg.append("-------------------------------\n");
-                for (String error : errors) {
+                for (final String error : errors) {
                     msg = msg.append("- ").append(error).append("\n");
                 }
             }

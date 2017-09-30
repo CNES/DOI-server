@@ -5,33 +5,39 @@
  */
 package fr.cnes.doi.plugin;
 
-import fr.cnes.doi.db.ProjectSuffixDBHelper;
+import fr.cnes.doi.db.AbstractProjectSuffixDBHelper;
 import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.settings.Consts;
-import java.util.LinkedHashMap;
 import java.util.Map;
-import fr.cnes.doi.db.UserRoleDBHelper;
+import fr.cnes.doi.db.AbstractUserRoleDBHelper;
 import fr.cnes.doi.utils.spec.Requirement;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 @Requirement(
-        reqId = Requirement.DOI_ARCHI_030,
-        reqName = Requirement.DOI_ARCHI_030_NAME      
-)
+    reqId = Requirement.DOI_ARCHI_030,
+    reqName = Requirement.DOI_ARCHI_030_NAME      
+    )
 public final class PluginFactory {
+    
+    /**
+     * Map the name of an interface to the name of a corresponding concrete
+     * implementation class.
+     */
+    private static final Map<String, String> PLUGINS_IMPL = new ConcurrentHashMap<>();    
 
     /**
      * Loads the path of plugins from Settings.
      *
      * @param settings config settings
      */
-    public static void init(Map<String, String> settings) {
-        String userRealPlugin = settings.get(Consts.PLUGIN_USER_GROUP_MGT);
-        String projectSuffixPlugin = settings.get(Consts.PLUGIN_PROJECT_SUFFIX);
-        String tokenPlugin = settings.get(Consts.PLUGIN_TOKEN);
+    public static void init(final Map<String, String> settings) {
+        final String userRealPlugin = settings.getOrDefault(Consts.PLUGIN_USER_GROUP_MGT,"");
+        final String projectSuffixPlugin = settings.getOrDefault(Consts.PLUGIN_PROJECT_SUFFIX,"");
+        final String tokenPlugin = settings.getOrDefault(Consts.PLUGIN_TOKEN,"");        
         PLUGINS_IMPL.put(Consts.PLUGIN_USER_GROUP_MGT, userRealPlugin);
         PLUGINS_IMPL.put(Consts.PLUGIN_PROJECT_SUFFIX, projectSuffixPlugin);
         PLUGINS_IMPL.put(Consts.PLUGIN_TOKEN, tokenPlugin);
@@ -42,10 +48,9 @@ public final class PluginFactory {
      *
      * @return the plugin
      */
-    public static UserRoleDBHelper getUserManagement() {
-        String implClassName = PLUGINS_IMPL.get(Consts.PLUGIN_USER_GROUP_MGT);
-        UserRoleDBHelper result = (UserRoleDBHelper) buildObject(implClassName);
-        return result;
+    public static AbstractUserRoleDBHelper getUserManagement() {
+        final String implClassName = PLUGINS_IMPL.get(Consts.PLUGIN_USER_GROUP_MGT);
+        return (AbstractUserRoleDBHelper) buildObject(implClassName);
     }
 
     /**
@@ -53,10 +58,9 @@ public final class PluginFactory {
      *
      * @return the plugin
      */
-    public static ProjectSuffixDBHelper getProjectSuffix() {
-        String implClassName = PLUGINS_IMPL.get(Consts.PLUGIN_PROJECT_SUFFIX);
-        ProjectSuffixDBHelper result = (ProjectSuffixDBHelper) buildObject(implClassName);
-        return result;
+    public static AbstractProjectSuffixDBHelper getProjectSuffix() {
+        final String implClassName = PLUGINS_IMPL.get(Consts.PLUGIN_PROJECT_SUFFIX);
+        return (AbstractProjectSuffixDBHelper) buildObject(implClassName);
     }
 
     /**
@@ -64,28 +68,22 @@ public final class PluginFactory {
      *
      * @return the plugin
      */
-    public static TokenDBPluginHelper getToken() {
-        String implClassName = PLUGINS_IMPL.get(Consts.PLUGIN_TOKEN);
-        TokenDBPluginHelper result = (TokenDBPluginHelper) buildObject(implClassName);
-        return result;
+    public static AbstractTokenDBPluginHelper getToken() {
+        final String implClassName = PLUGINS_IMPL.get(Consts.PLUGIN_TOKEN);
+        return (AbstractTokenDBPluginHelper) buildObject(implClassName);
     }
-
-    /**
-     * Map the name of an interface to the name of a corresponding concrete
-     * implementation class.
-     */
-    private static final Map<String, String> PLUGINS_IMPL = new LinkedHashMap<>();
 
     /**
      * instantiates the plugin.
      *
      * @param aClassName the plugin name
-     * @return
+     * @return instance of aClassName
+     * @throws DoiRuntimeException - if aClassName cannot be instantiated
      */
-    private static Object buildObject(final String aClassName) {
-        Object result = null;
+    private static Object buildObject(final String aClassName) throws DoiRuntimeException{
+        final Object result;
         try {
-            Class implClass = Class.forName(aClassName);
+            final Class implClass = Class.forName(aClassName);
             result = implClass.newInstance();
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
             throw new DoiRuntimeException(ex);

@@ -258,19 +258,20 @@ public enum ContributorType {
     }
 
     /**
-     *
-     * @return
+     * Gets the value.
+     * @return the value
      */
     public String value() {
         return value;
     }
 
     /**
-     *
-     * @param v
-     * @return
+     * Gets the contributor type from a value
+     * @param v value
+     * @return the contributor type
+     * @throws IllegalArgumentException - if contributor type not found
      */
-    public static ContributorType fromValue(String v) {
+    public static ContributorType fromValue(String v) throws IllegalArgumentException{
         for (ContributorType c : ContributorType.values()) {
             if (c.value.equals(v)) {
                 return c;

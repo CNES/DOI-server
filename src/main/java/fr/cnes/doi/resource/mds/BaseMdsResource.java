@@ -6,8 +6,7 @@
 package fr.cnes.doi.resource.mds;
 
 import fr.cnes.doi.application.DoiMdsApplication;
-import fr.cnes.doi.resource.BaseResource;
-import static fr.cnes.doi.security.UtilsHeader.SELECTED_ROLE_PARAMETER;
+import fr.cnes.doi.resource.AbstractResource;
 import fr.cnes.doi.utils.spec.Requirement;
 import java.util.List;
 import java.util.logging.Level;
@@ -15,28 +14,30 @@ import org.restlet.data.Status;
 import org.restlet.resource.ResourceException;
 import org.restlet.security.Role;
 import org.restlet.util.Series;
+import static fr.cnes.doi.security.UtilsHeader.SELECTED_ROLE_PARAMETER;
+
 
 /**
  * Base resource for the different resources.
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-public class BaseMdsResource extends BaseResource {
+public class BaseMdsResource extends AbstractResource {
 
     /**
-     * The parameter that describes the DOI name.
+     * The parameter that describes the DOI name {@value #DOI_PARAMETER}.
      */
     public static final String DOI_PARAMETER = "doi";
 
     /**
-     * The parameter that describes the landing page related to the DOI.
+     * The parameter that describes the landing page related to the DOI {@value #URL_PARAMETER}.
      */
     public static final String URL_PARAMETER = "url";
 
     /**
      * DOI Mds application.
      */
-    protected DoiMdsApplication doiApp;
+    private DoiMdsApplication doiApp;
 
     /**
      * Init.
@@ -53,7 +54,7 @@ public class BaseMdsResource extends BaseResource {
      * @param roles roles
      * @return True when the user has only one single role otherwise False
      */
-    private boolean hasSingleRole(List<Role> roles) {
+    private boolean hasSingleRole(final List<Role> roles) {
         return roles.size() == 1;
     }
 
@@ -63,7 +64,7 @@ public class BaseMdsResource extends BaseResource {
      * @param roles roles
      * @return True when the user has no role otherwise False
      */
-    private boolean hasNoRole(List<Role> roles) {
+    private boolean hasNoRole(final List<Role> roles) {
         return roles.isEmpty();
     }
 
@@ -73,7 +74,7 @@ public class BaseMdsResource extends BaseResource {
      * @param suffusedWithRole selected role
      * @return True when the user has selected a role otherwise False
      */
-    private boolean hasSelectedRole(String suffusedWithRole) {
+    private boolean hasSelectedRole(final String suffusedWithRole) {
         return !suffusedWithRole.isEmpty();
     }
 
@@ -103,25 +104,32 @@ public class BaseMdsResource extends BaseResource {
                 getLogger().log(Level.FINEST, "User is not in Role {0}", selectedRole);
                 getLogger().log(Level.WARNING, "DOIServer : The role {0} is not allowed to use this feature", selectedRole);
                 getLogger().exiting(getClass().getName(), "getRoleName");
-                ResourceException ex = new ResourceException(Status.CLIENT_ERROR_FORBIDDEN, "DOIServer : The role " + selectedRole + " is not allowed to use this feature");
-                getLogger().throwing(this.getClass().getName(), "getRoleName", ex);
-                throw ex;
+                final ResourceException exception = new ResourceException(
+                        Status.CLIENT_ERROR_FORBIDDEN, 
+                        "DOIServer : The role " + selectedRole 
+                                + " is not allowed to use this feature"
+                );
+                getLogger().throwing(this.getClass().getName(), "getRoleName", exception);
+                throw exception;
             }
         } else {
-            List<Role> roles = getClientInfo().getRoles();
+            final List<Role> roles = getClientInfo().getRoles();
             if (hasNoRole(roles)) {
-                ResourceException ex = new ResourceException(Status.CLIENT_ERROR_UNAUTHORIZED, "DOIServer : No role");
-                getLogger().throwing(this.getClass().getName(), "getRoleName", ex);
-                throw ex;
+                final ResourceException exception = new ResourceException(
+                        Status.CLIENT_ERROR_UNAUTHORIZED, "DOIServer : No role");
+                getLogger().throwing(this.getClass().getName(), "getRoleName", exception);
+                throw exception;
             } else if (hasSingleRole(roles)) {
-                Role role = roles.get(0);
+                final Role role = roles.get(0);
                 roleName = role.getName();
                 getLogger().log(Level.FINEST, "User has a single Role {0}", role);
             } else {
                 getLogger().log(Level.WARNING, "DOIServer : Cannot know which role must be applied");
-                ResourceException ex = new ResourceException(Status.CLIENT_ERROR_CONFLICT, "DOIServer : Cannot know which role must be applied");
-                getLogger().throwing(this.getClass().getName(), "getRoleName", ex);
-                throw ex;
+                final ResourceException exception = new ResourceException(
+                        Status.CLIENT_ERROR_CONFLICT, 
+                        "DOIServer : Cannot know which role must be applied");
+                getLogger().throwing(this.getClass().getName(), "getRoleName", exception);
+                throw exception;
             }
         }
         getLogger().exiting(getClass().getName(), "getRoleName", roleName);
@@ -154,16 +162,18 @@ public class BaseMdsResource extends BaseResource {
             reqId = Requirement.DOI_AUTO_030,
             reqName = Requirement.DOI_AUTO_030_NAME
     )    
-    protected void checkPermission(final String doiName, final String selectedRole) throws ResourceException {
+    protected void checkPermission(final String doiName, final String selectedRole) 
+            throws ResourceException {
         getLogger().entering(getClass().getName(), "checkPermission", new Object[]{doiName, selectedRole});
-        String projectRole = getRoleName(selectedRole);
-        String prefixCNES = this.doiApp.getDataCentrePrefix();
+        final String projectRole = getRoleName(selectedRole);
+        final String prefixCNES = this.getDoiApp().getDataCentrePrefix();
         if (!doiName.startsWith(prefixCNES + "/" + projectRole + "/")) {
             getLogger().log(Level.WARNING, "You are not allowed to use this method : {0} with {1}", new Object[]{doiName, selectedRole});
             getLogger().exiting(getClass().getName(), "checkPermission");
-            ResourceException ex = new ResourceException(Status.CLIENT_ERROR_FORBIDDEN, "You are not allowed to use this method");
-            getLogger().throwing(this.getClass().getName(), "checkPermission", ex);
-            throw ex;
+            final ResourceException exception = new ResourceException(
+                    Status.CLIENT_ERROR_FORBIDDEN, "You are not allowed to use this method");
+            getLogger().throwing(this.getClass().getName(), "checkPermission", exception);
+            throw exception;
         }
         getLogger().exiting(getClass().getName(), "checkPermission");
     }
@@ -175,14 +185,22 @@ public class BaseMdsResource extends BaseResource {
      * role
      */
     @Requirement(
-            reqId = Requirement.DOI_AUTO_020,
-            reqName = Requirement.DOI_AUTO_020_NAME
-    )    
+        reqId = Requirement.DOI_AUTO_020,
+        reqName = Requirement.DOI_AUTO_020_NAME
+        )    
     public String extractSelectedRoleFromRequestIfExists() {
-        Series headers = (Series) getRequestAttributes().get("org.restlet.http.headers");
-        String selectedRole = headers.getFirstValue(SELECTED_ROLE_PARAMETER, "");
+        final Series headers = (Series) getRequestAttributes().get("org.restlet.http.headers");
+        final String selectedRole = headers.getFirstValue(SELECTED_ROLE_PARAMETER, "");
         getLogger().log(Level.INFO, "Selected role : {0}", selectedRole);
         return selectedRole;
     }    
+
+    /**
+     * Returns the Mds application.
+     * @return the doiApp
+     */
+    public DoiMdsApplication getDoiApp() {
+        return doiApp;
+    }
 
 }

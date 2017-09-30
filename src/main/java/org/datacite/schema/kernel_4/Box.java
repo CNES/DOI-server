@@ -75,7 +75,7 @@ public class Box {
     /**
      * Gets the value of the westBoundLongitude property.
      *
-     * @return
+     * @return the value of the westBoundLongitude property
      */
     public float getWestBoundLongitude() {
         return westBoundLongitude;
@@ -84,7 +84,7 @@ public class Box {
     /**
      * Sets the value of the westBoundLongitude property.
      *
-     * @param value
+     * @param value the value of the westBoundLongitude property
      */
     public void setWestBoundLongitude(float value) {
         this.westBoundLongitude = value;
@@ -93,7 +93,7 @@ public class Box {
     /**
      * Gets the value of the eastBoundLongitude property.
      *
-     * @return
+     * @return the value of the eastBoundLongitude property
      */
     public float getEastBoundLongitude() {
         return eastBoundLongitude;
@@ -102,7 +102,7 @@ public class Box {
     /**
      * Sets the value of the eastBoundLongitude property.
      *
-     * @param value
+     * @param value the value of the eastBoundLongitude property
      */
     public void setEastBoundLongitude(float value) {
         this.eastBoundLongitude = value;
@@ -111,7 +111,7 @@ public class Box {
     /**
      * Gets the value of the southBoundLatitude property.
      *
-     * @return
+     * @return the value of the southBoundLatitude property
      */
     public float getSouthBoundLatitude() {
         return southBoundLatitude;
@@ -120,7 +120,7 @@ public class Box {
     /**
      * Sets the value of the southBoundLatitude property.
      *
-     * @param value
+     * @param value the value of the southBoundLatitude property
      */
     public void setSouthBoundLatitude(float value) {
         this.southBoundLatitude = value;
@@ -129,7 +129,7 @@ public class Box {
     /**
      * Gets the value of the northBoundLatitude property.
      *
-     * @return
+     * @return the value of the northBoundLatitude property
      */
     public float getNorthBoundLatitude() {
         return northBoundLatitude;
@@ -138,7 +138,7 @@ public class Box {
     /**
      * Sets the value of the northBoundLatitude property.
      *
-     * @param value
+     * @param value the value of the northBoundLatitude property
      */
     public void setNorthBoundLatitude(float value) {
         this.northBoundLatitude = value;

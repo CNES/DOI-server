@@ -6,7 +6,6 @@
 package fr.cnes.doi.client;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import java.util.logging.Level;
 import javax.xml.bind.JAXBContext;
@@ -28,6 +27,8 @@ import fr.cnes.doi.utils.spec.Requirement;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.text.MessageFormat;
 import java.util.Iterator;
 import javax.xml.XMLConstants;
 import javax.xml.bind.Marshaller;
@@ -52,47 +53,47 @@ import org.xml.sax.SAXException;
 public class ClientMDS extends BaseClient {
 
     /**
-     * Metadata store service endpoint.
+     * Metadata store service endpoint {@value #DATA_CITE_URL}.
      */
     public static final String DATA_CITE_URL = "https://mds.datacite.org";
 
     /**
-     * Metadata store test service endpoint.
+     * Metadata store test service endpoint {@value #DATA_CITE_TEST_URL}.
      */
     public static final String DATA_CITE_TEST_URL = "https://mds.test.datacite.org";
 
     /**
-     * DOI resource.
+     * DOI resource {@value #DOI_RESOURCE}.
      */
     public static final String DOI_RESOURCE = "doi";
 
     /**
-     * Metadata resource.
+     * Metadata resource {@value #METADATA_RESOURCE}.
      */
     public static final String METADATA_RESOURCE = "metadata";
 
     /**
-     * Media resource.
+     * Media resource {@value #MEDIA_RESOURCE}.
      */
     public static final String MEDIA_RESOURCE = "media";
 
     /**
-     *
+     * Test mode sets to true.
      */
     public static final Parameter TEST_MODE = new Parameter("testMode", "true");
 
     /**
-     * Test DOI prefix.
+     * Test DOI prefix {@value #TEST_DOI_PREFIX}.
      */
     public static final String TEST_DOI_PREFIX = "10.5072";
 
     /**
-     * DOI query parameter.
+     * DOI query parameter {@value #POST_DOI}.
      */
     public static final String POST_DOI = "doi";
 
     /**
-     * URL query parameter.
+     * URL query parameter {@value #POST_URL}.
      */
     public static final String POST_URL = "url";
 
@@ -147,7 +148,8 @@ public class ClientMDS extends BaseClient {
          */
         private final String dataCiteUrl;
 
-        Context(boolean isTestMode, boolean isDoiPrefix, final String dataciteUrl, final Level levelLog) {
+        Context(final boolean isTestMode, final boolean isDoiPrefix, 
+                final String dataciteUrl, final Level levelLog) {
             this.isTestMode = isTestMode;
             this.isDoiPrefix = isDoiPrefix;
             this.dataCiteUrl = dataciteUrl;
@@ -193,7 +195,7 @@ public class ClientMDS extends BaseClient {
         /**
          * Sets the level log for the context
          *
-         * @param levelLog
+         * @param levelLog level log
          */
         private void setLevelLog(final Level levelLog) {
             this.levelLog = levelLog;
@@ -205,13 +207,20 @@ public class ClientMDS extends BaseClient {
          * @param context the context
          * @param levelLog the level log
          */
-        public static void setLevelLog(Context context, Level levelLog) {
+        public static void setLevelLog(final Context context, final Level levelLog) {
             context.setLevelLog(levelLog);
         }
 
     }
 
+    /**
+     * Selected test mode.
+     */
     private final Parameter testMode;
+    
+    /**
+     * Context.
+     */
     private final Context context;
 
     /**
@@ -245,9 +254,9 @@ public class ClientMDS extends BaseClient {
         super(DATA_CITE_URL);
         this.context = context;
         this.testMode = this.context.hasTestMode() ? TEST_MODE : null;
-        this.client.getLogger().setUseParentHandlers(true);
-        this.client.getLogger().setLevel(Level.ALL);
-        this.client.setLoggable(true);
+        this.getClient().getLogger().setUseParentHandlers(true);
+        this.getClient().getLogger().setLevel(Level.ALL);
+        this.getClient().setLoggable(true);
     }
 
     /**
@@ -276,8 +285,8 @@ public class ClientMDS extends BaseClient {
      */
     public ClientMDS(final Context context, final String login, final String pwd) {
         this(context);
-        this.client.getLogger().log(Level.FINEST, "Authentication with HTTP_BASIC : {0}/{1}", new Object[]{login, pwd});
-        this.client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, login, pwd);
+        this.getClient().getLogger().log(Level.FINEST, "Authentication with HTTP_BASIC : {0}/{1}", new Object[]{login, pwd});
+        this.getClient().setChallengeResponse(ChallengeScheme.HTTP_BASIC, login, pwd);
     }
 
     /**
@@ -297,11 +306,11 @@ public class ClientMDS extends BaseClient {
      * @return the renamed DOI with the test prefix
      */
     private String useTestPrefix(final String doiName) {
-        String[] split = doiName.split("/");
+        final String[] split = doiName.split("/");
         split[0] = TEST_DOI_PREFIX;
-        String testingPrefix = String.join("/", split);
-        String message = String.format("DOI %s has been renamed as %s for testing", doiName, testingPrefix);
-        this.client.getLogger().log(Level.INFO, message);
+        final String testingPrefix = String.join("/", split);
+        final String message = String.format("DOI %s has been renamed as %s for testing", doiName, testingPrefix);
+        this.getClient().getLogger().log(Level.INFO, message);
         return testingPrefix;
     }
 
@@ -310,7 +319,7 @@ public class ClientMDS extends BaseClient {
      * {@link DATA_CITE_TEST_URL}
      */
     private void initReference() {
-        this.client.setReference(this.context.getDataCiteUrl());
+        this.getClient().setReference(this.context.getDataCiteUrl());
     }
 
     /**
@@ -321,7 +330,7 @@ public class ClientMDS extends BaseClient {
      */
     private Reference createReference(final String segment) {
         this.initReference();
-        Reference url = this.client.addSegment(segment);
+        Reference url = this.getClient().addSegment(segment);
         if (this.getTestMode() != null) {
             url = url.addQueryParameter(this.getTestMode());
         }
@@ -336,10 +345,10 @@ public class ClientMDS extends BaseClient {
      * @return the URL to query
      */
     private Reference createReferenceWithDOI(final String segment, final String doiName) {
-        String requestDOI = getDoiAccorgindToContext(doiName);
-        Reference ref = createReference(segment);
-        String[] split = requestDOI.split("/");
-        for (String segmentUri : split) {
+        final String requestDOI = getDoiAccorgindToContext(doiName);
+        final Reference ref = createReference(segment);
+        final String[] split = requestDOI.split("/");
+        for (final String segmentUri : split) {
             ref.addSegment(segmentUri);
         }
         return ref;
@@ -376,9 +385,10 @@ public class ClientMDS extends BaseClient {
      * @throws IllegalArgumentException An exception is thrown when at least one
      * character is not part of 0-9a-zA-Z\\-._+:/ of a DOI name
      */
-    public static void checkIfAllCharsAreValid(String test) {
+    public static void checkIfAllCharsAreValid(final String test) {
         if (!test.matches("^[0-9a-zA-Z\\-._+:/\\s]+$")) {
-            throw new IllegalArgumentException("Only these characters are allowed 0-9a-zA-Z\\-._+:/ in a DOI name");
+            throw new IllegalArgumentException("Only these characters are allowed "
+                    + "0-9a-zA-Z\\-._+:/ in a DOI name");
         }
     }
 
@@ -393,14 +403,17 @@ public class ClientMDS extends BaseClient {
      * are not provided or when one character at least in the DOI name is not
      * valid
      */
-    private void checkInputForm(final Form form) {
-        Map<String, String> map = form.getValuesMap();
+    private void checkInputForm(final Form form) throws IllegalArgumentException{
+        final Map<String, String> map = form.getValuesMap();
         if (map.containsKey(POST_DOI) && map.containsKey(POST_URL)) {
             final String doiName = form.getFirstValue(POST_DOI);
             checkIfAllCharsAreValid(doiName);
             form.set(POST_DOI, getDoiAccorgindToContext(doiName));
         } else {
-            throw new IllegalArgumentException(POST_DOI + " and " + POST_URL + " parameters are required");
+            throw new IllegalArgumentException(MessageFormat.format(
+                    "{0} and {1} parameters are required",
+                    POST_DOI, POST_URL)
+            );
         }
     }
 
@@ -413,7 +426,7 @@ public class ClientMDS extends BaseClient {
      * Representation to text
      */
     private String getText(final Representation rep) throws ClientMdsException {
-        String result;
+        final String result;
         try {
             result = rep.getText();
         } catch (IOException ex) {
@@ -442,20 +455,20 @@ public class ClientMDS extends BaseClient {
      * @see "https://mds.datacite.org/static/apidoc#tocAnchor-13"
      */
     public String getDoi(final String doiName) throws ClientMdsException {
-        String result = null;
-        Reference url = createReferenceWithDOI(DOI_RESOURCE, doiName);
-        this.client.getLogger().log(Level.INFO, "GET {0}", url.toString());
+        final String result;
+        final Reference url = createReferenceWithDOI(DOI_RESOURCE, doiName);
+        this.getClient().getLogger().log(Level.INFO, "GET {0}", url.toString());
 
-        this.client.setReference(url);
-        Representation rep;
+        this.getClient().setReference(url);
+        final Representation rep;
         try {
-            rep = this.client.get();
+            rep = this.getClient().get();
             result = this.getText(rep);
             return result;
         } catch (ResourceException ex) {
             throw new ClientMdsException(ex.getStatus(), ex.getResponse().getEntityAsText(), ex);
         } finally {
-            client.release();
+            this.getClient().release();
         }
     }
 
@@ -468,20 +481,20 @@ public class ClientMDS extends BaseClient {
      * @see "https://mds.datacite.org/static/apidoc#tocAnchor-14"
      */
     public String getDoiCollection() throws ClientMdsException {
-        String result = null;
-        Reference url = createReference(DOI_RESOURCE);
-        this.client.getLogger().log(Level.INFO, "GET {0}", url.toString());
+        final String result;
+        final Reference url = createReference(DOI_RESOURCE);
+        this.getClient().getLogger().log(Level.INFO, "GET {0}", url.toString());
 
-        this.client.setReference(url);
-        Representation rep;
+        this.getClient().setReference(url);
+        final Representation rep;
         try {
-            rep = this.client.get();
+            rep = this.getClient().get();
             result = this.getText(rep);
             return result;
         } catch (ResourceException ex) {
-            throw new ClientMdsException(ex.getStatus(), ex.getResponse().getEntityAsText());
+            throw new ClientMdsException(ex.getStatus(), ex.getResponse().getEntityAsText(), ex);
         } finally {
-            client.release();
+            this.getClient().release();
         }
     }
 
@@ -511,25 +524,29 @@ public class ClientMDS extends BaseClient {
      */
     public String createDoi(final Form form) throws ClientMdsException {
         try {
-            String result;
+            final String result;
             this.checkInputForm(form);
-            Reference url = createReference(DOI_RESOURCE);
+            final Reference url = createReference(DOI_RESOURCE);
             Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "POST {0}", url.toString());
-            this.client.setReference(url);
-            String requestBody = POST_DOI + "=" + form.getFirstValue(POST_DOI) + "\n" + POST_URL + "=" + form.getFirstValue(POST_URL);
-            requestBody = new String(requestBody.getBytes("UTF-8"), "UTF-8");
-            this.client.getRequestAttributes().put("charset", "UTF-8");
-            this.client.getRequestAttributes().put("Content-Type", "text/plain");
-            this.client.getLogger().log(Level.INFO, "POST {0} with parameters {1}", new Object[]{url, requestBody});
-            Representation rep = this.client.post(requestBody, MediaType.TEXT_PLAIN);
+            this.getClient().setReference(url);
+            String requestBody = 
+                    POST_DOI + "=" + form.getFirstValue(POST_DOI) + "\n" 
+                    + POST_URL + "=" + form.getFirstValue(POST_URL);
+            requestBody = new String(requestBody.getBytes(
+                    StandardCharsets.UTF_8), 
+                    StandardCharsets.UTF_8
+            );
+            final Map<String,Object> requestAttributes = this.getClient().getRequestAttributes();
+            requestAttributes.put("charset", StandardCharsets.UTF_8);
+            requestAttributes.put("Content-Type", "text/plain");
+            this.getClient().getLogger().log(Level.INFO, "POST {0} with parameters {1}", new Object[]{url, requestBody});
+            final Representation rep = this.getClient().post(requestBody, MediaType.TEXT_PLAIN);
             result = getText(rep);
             return result;
         } catch (ResourceException ex) {
-            throw new ClientMdsException(ex.getStatus(), ex.getResponse().getEntityAsText());
-        } catch (UnsupportedEncodingException ex) {
-            throw new ClientMdsException(Status.SERVER_ERROR_INTERNAL, ex);
+            throw new ClientMdsException(ex.getStatus(), ex.getResponse().getEntityAsText(), ex);
         } finally {
-            this.client.release();
+            this.getClient().release();
         }
     }
 
@@ -544,9 +561,9 @@ public class ClientMDS extends BaseClient {
     private Resource parseDataciteResource(final Representation rep) throws ClientMdsException {
         final Resource resource;
         try {
-            JAXBContext ctx = JAXBContext.newInstance(new Class[]{Resource.class});
-            Unmarshaller um = ctx.createUnmarshaller();
-            resource = (Resource) um.unmarshal(rep.getStream());            
+            final JAXBContext ctx = JAXBContext.newInstance(new Class[]{Resource.class});
+            final Unmarshaller unMarshaller = ctx.createUnmarshaller();
+            resource = (Resource) unMarshaller.unmarshal(rep.getStream());            
         } catch (JAXBException | IOException ex) {
             throw new ClientMdsException(Status.SERVER_ERROR_INTERNAL, ex);
         }
@@ -597,17 +614,16 @@ public class ClientMDS extends BaseClient {
      * @see "https://mds.datacite.org/static/apidoc#tocAnchor-15"
      */
     public Representation getMetadata(final String doiName) throws ClientMdsException {
-        Reference url = createReferenceWithDOI(METADATA_RESOURCE, doiName);
+        final Reference url = createReferenceWithDOI(METADATA_RESOURCE, doiName);
         Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "GET {0}", url.toString());
-        this.client.setReference(url);
-        this.client.getLogger().log(Level.INFO, "GET {0}", url);
+        this.getClient().setReference(url);
+        this.getClient().getLogger().log(Level.INFO, "GET {0}", url);
         try {
-            Representation rep = this.client.get(MediaType.APPLICATION_XML);
-            return rep;
+            return this.getClient().get(MediaType.APPLICATION_XML);
         } catch (ResourceException ex) {
-            throw new ClientMdsException(ex.getStatus(), ex.getResponse().getEntityAsText());
+            throw new ClientMdsException(ex.getStatus(), ex.getResponse().getEntityAsText(), ex);
         } finally {
-            client.release();
+            this.getClient().release();
         }
     }
 
@@ -629,7 +645,7 @@ public class ClientMDS extends BaseClient {
      * @see "https://mds.datacite.org/static/apidoc#tocAnchor-18"
      */
     public String createMetadata(final Representation entity) throws ClientMdsException {
-        Resource resource = parseDataciteResource(entity);
+        final Resource resource = parseDataciteResource(entity);
         return this.createMetadata(resource);
     }
 
@@ -651,42 +667,59 @@ public class ClientMDS extends BaseClient {
      */
     public String createMetadata(final Resource entity) throws ClientMdsException {
         try {
-            String result;
-            Identifier id = entity.getIdentifier();
-            id.setValue(getDoiAccorgindToContext(id.getValue()));
-            Reference url = createReference(METADATA_RESOURCE);
+            final String result;
+            final Identifier identifier = entity.getIdentifier();
+            identifier.setValue(getDoiAccorgindToContext(identifier.getValue()));
+            final Reference url = createReference(METADATA_RESOURCE);
             Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "POST {0}", url.toString());
-            OutputStream output = new OutputStream() {
-                private StringBuilder string = new StringBuilder();
+            final OutputStream output = new OutputStream() {
+                /**
+                 * Output stream.
+                 */
+                private final StringBuilder response = new StringBuilder();
 
+                /**
+                 * Write into output stream
+                 * @param b char
+                 * @throws IOException  - if a problem happens
+                 */
                 @Override
-                public void write(int b) throws IOException {
-                    this.string.append((char) b);
+                public void write(final int b) throws IOException {
+                    this.response.append((char) b);
                 }
 
-                //Netbeans IDE automatically overrides this toString()
+                /**
+                 * Transforms toString.
+                 * @return response as String
+                 */
                 @Override
                 public String toString() {
-                    return this.string.toString();
+                    return this.response.toString();
                 }
             };
-            JAXBContext jaxbContext = JAXBContext.newInstance(new Class[]{Resource.class});
-            Marshaller marshaller = jaxbContext.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_SCHEMA_LOCATION, "http://datacite.org/schema/kernel-4 http://schema.datacite.org/meta/kernel-4/metadata.xsd");
-            Schema schema = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI).newSchema(new URL("https://schema.datacite.org/meta/kernel-4.0/metadata.xsd"));
+            final JAXBContext jaxbContext = JAXBContext.newInstance(new Class[]{Resource.class});
+            final Marshaller marshaller = jaxbContext.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_SCHEMA_LOCATION, 
+                    "http://datacite.org/schema/kernel-4 "
+                    + "http://schema.datacite.org/meta/kernel-4/metadata.xsd");
+            final Schema schema = SchemaFactory.newInstance(
+                    XMLConstants.W3C_XML_SCHEMA_NS_URI
+            ).newSchema(new URL("https://schema.datacite.org/meta/kernel-4.0/metadata.xsd"));
             marshaller.setSchema(schema);
             marshaller.marshal(entity, output);
-            this.client.setReference(url);
-            this.client.getRequestAttributes().put("charset", "UTF-8");
-            Representation response = this.client.post(new StringRepresentation(output.toString(), MediaType.APPLICATION_XML));            
+            this.getClient().setReference(url);
+            this.getClient().getRequestAttributes().put("charset", "UTF-8");
+            final Representation response = this.getClient().post(
+                    new StringRepresentation(output.toString(), MediaType.APPLICATION_XML)
+            );            
             result = getText(response);
             return result;
         } catch (ResourceException ex) {
-            throw new ClientMdsException(ex.getStatus(), ex.getResponse().getEntityAsText());
+            throw new ClientMdsException(ex.getStatus(), ex.getResponse().getEntityAsText(), ex);
         } catch (JAXBException | SAXException | MalformedURLException ex) {
             throw new ClientMdsException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex);
         } finally {
-            client.release();
+            this.getClient().release();
         }
 
     }
@@ -711,7 +744,7 @@ public class ClientMDS extends BaseClient {
      * @see "https://mds.datacite.org/static/apidoc#tocAnchor-19"
      */
     public Resource deleteMetadataDoiAsObject(final String doiName) throws ClientMdsException {
-        Representation rep = this.deleteMetadata(doiName);
+        final Representation rep = this.deleteMetadata(doiName);
         return parseDataciteResource(rep);
     }
 
@@ -735,12 +768,12 @@ public class ClientMDS extends BaseClient {
      * @see "https://mds.datacite.org/static/apidoc#tocAnchor-19"
      */
     public Representation deleteMetadata(final String doiName) throws ClientMdsException {
-        Reference url = createReferenceWithDOI(METADATA_RESOURCE, doiName);
+        final Reference url = createReferenceWithDOI(METADATA_RESOURCE, doiName);
         Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "DELETE {0}", url.toString());
-        this.client.setReference(url);
-        Representation response = this.client.delete();
-        Status status = this.client.getStatus();
-        this.client.release();
+        this.getClient().setReference(url);
+        final Representation response = this.getClient().delete();
+        final Status status = this.getClient().getStatus();
+        this.getClient().release();
         if (status.isSuccess()) {
             return response;
         } else {
@@ -766,18 +799,18 @@ public class ClientMDS extends BaseClient {
      * @see "https://mds.datacite.org/static/apidoc#tocAnchor-21"
      */
     public String getMedia(final String doiName) throws ClientMdsException {
-        String result;
-        Reference url = createReferenceWithDOI(MEDIA_RESOURCE, doiName);
+        final String result;
+        final Reference url = createReferenceWithDOI(MEDIA_RESOURCE, doiName);
         Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "GET {0}", url.toString());
-        this.client.setReference(url);
+        this.getClient().setReference(url);
         try {
-            Representation response = this.client.get();
+            final Representation response = this.getClient().get();
             result = this.getText(response);
             return result;
         } catch (ResourceException ex) {
-            throw new ClientMdsException(ex.getStatus(), ex.getResponse().getEntityAsText());
+            throw new ClientMdsException(ex.getStatus(), ex.getResponse().getEntityAsText(), ex);
         } finally {
-            this.client.release();
+            this.getClient().release();
         }
     }
 
@@ -803,19 +836,19 @@ public class ClientMDS extends BaseClient {
      * @see "https://mds.datacite.org/static/apidoc#tocAnchor-22"
      */
     public String createMedia(final String doiName, final Form form) throws ClientMdsException {
-        String result;
-        Reference url = createReferenceWithDOI(MEDIA_RESOURCE, doiName);
+        final String result;
+        final Reference url = createReferenceWithDOI(MEDIA_RESOURCE, doiName);
         Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "POST {0}", url.toString());
-        this.client.setReference(url);
-        Representation entity = createEntity(form);
+        this.getClient().setReference(url);
+        final Representation entity = createEntity(form);
         try {
-            Representation response = this.client.post(entity, MediaType.TEXT_PLAIN);
+            final Representation response = this.getClient().post(entity, MediaType.TEXT_PLAIN);
             result = this.getText(response);
             return result;
         } catch (ResourceException ex) {
-            throw new ClientMdsException(ex.getStatus(), ex.getResponse().getEntityAsText());
+            throw new ClientMdsException(ex.getStatus(), ex.getResponse().getEntityAsText(), ex);
         } finally {
-            this.client.release();
+            this.getClient().release();
         }
     }
 
@@ -827,15 +860,20 @@ public class ClientMDS extends BaseClient {
      * @return Text entity
      */
     private Representation createEntity(final Form mediaForm) {
-        Iterator<Parameter> iter = mediaForm.iterator();
+        final Iterator<Parameter> iter = mediaForm.iterator();
         StringBuilder entity = new StringBuilder();
         while (iter.hasNext()) {
-            Parameter param = iter.next();
-            String mimeType = param.getName();
-            String url = param.getValue();
+            final Parameter param = iter.next();
+            final String mimeType = param.getName();
+            final String url = param.getValue();
             entity = entity.append(mimeType).append("=").append(url).append("\n");
         }
-        return new StringRepresentation(entity.toString(), MediaType.TEXT_PLAIN, Language.ENGLISH, CharacterSet.UTF_8);
+        return new StringRepresentation(
+                entity.toString(), 
+                MediaType.TEXT_PLAIN, 
+                Language.ENGLISH, 
+                CharacterSet.UTF_8
+        );
     }
 
 }

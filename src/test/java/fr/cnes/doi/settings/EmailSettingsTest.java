@@ -113,13 +113,13 @@ public class EmailSettingsTest {
     }
 
     /**
-     * Test of getDebug method, of class EmailSettings.
+     * Test of isDebug method, of class EmailSettings.
      */
     @Test
     public void testGetDebug() {
         System.out.println("getDebug");
         boolean expResult = false;
-        boolean result = instance.getDebug();
+        boolean result = instance.isDebug();
         assertEquals(expResult, result);
     }
 

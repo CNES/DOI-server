@@ -5,7 +5,7 @@
  */
 package fr.cnes.doi.plugin;
 
-import fr.cnes.doi.db.TokenDBHelper;
+import fr.cnes.doi.db.AbstractTokenDBHelper;
 import fr.cnes.doi.utils.spec.Requirement;
 
 /**
@@ -16,6 +16,14 @@ import fr.cnes.doi.utils.spec.Requirement;
         reqId = Requirement.DOI_ARCHI_030,
         reqName = Requirement.DOI_ARCHI_030_NAME      
 )
-public abstract class TokenDBPluginHelper extends TokenDBHelper implements PluginMetadata {
+public abstract class AbstractTokenDBPluginHelper 
+        extends AbstractTokenDBHelper implements PluginMetadata {
+    
+    /**
+     * Empty constructor.
+     */
+    protected AbstractTokenDBPluginHelper() {
+        super();
+    }    
     
 }

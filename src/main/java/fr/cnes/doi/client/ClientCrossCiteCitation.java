@@ -59,7 +59,7 @@ public class ClientCrossCiteCitation extends BaseClient {
      * Init the endpoint.
      */
     protected void init() {
-        this.client.setReference(new Reference(CROSS_CITE_URL));
+        this.getClient().setReference(new Reference(CROSS_CITE_URL));
     }
 
     /**
@@ -67,23 +67,24 @@ public class ClientCrossCiteCitation extends BaseClient {
      *
      * @param segment resource name
      * @return the response
+     * @throws ClientCrossCiteException - if an error happens when requesting CrossCite
      */
     private List<String> getList(final String segment) throws ClientCrossCiteException {
         try {
-            Reference ref = client.addSegment(segment);
-            client.setReference(ref);
-            Representation rep = client.get();
-            Status status = client.getStatus();
+            final Reference ref = getClient().addSegment(segment);
+            this.getClient().setReference(ref);
+            final Representation rep = this.getClient().get();
+            final Status status = this.getClient().getStatus();
             if (status.isSuccess()) {
-                ObjectMapper mapper = new ObjectMapper();
+                final ObjectMapper mapper = new ObjectMapper();
                 return mapper.readValue(rep.getStream(), List.class);
             } else {                
                 throw new ClientCrossCiteException(status, status.getDescription());
             }
         } catch (IOException | ResourceException ex) {
-            throw new ClientCrossCiteException(Status.SERVER_ERROR_INTERNAL, ex.getMessage());
+            throw new ClientCrossCiteException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex);
         } finally {
-            client.release();
+            this.getClient().release();
         }
     }
 
@@ -121,17 +122,18 @@ public class ClientCrossCiteCitation extends BaseClient {
      * @throws fr.cnes.doi.exception.ClientCrossCiteException Will thrown an
      * Exception when a problem happens during the request to Cross Cite
      */
-    public String getFormat(final String doiName, final String style, final String language) throws ClientCrossCiteException {
+    public String getFormat(final String doiName, final String style, 
+            final String language) throws ClientCrossCiteException {
         init();
-        String result;
+        final String result;
         try {
-            Reference ref = client.addSegment(FORMAT_URI);
+            Reference ref = this.getClient().addSegment(FORMAT_URI);
             ref = ref.addQueryParameter("doi", doiName);
             ref = ref.addQueryParameter("style", style);
             ref = ref.addQueryParameter("lang", language);
-            client.setReference(ref);
-            Representation rep = client.get();
-            Status status = client.getStatus();
+            this.getClient().setReference(ref);
+            final Representation rep = this.getClient().get();
+            final Status status = this.getClient().getStatus();
             if (status.isSuccess()) {
                 result = rep.getText();
             } else {
@@ -139,11 +141,11 @@ public class ClientCrossCiteCitation extends BaseClient {
             }
             return result;
         } catch (IOException ex) {
-            throw new ClientCrossCiteException(Status.SERVER_ERROR_INTERNAL, ex.getMessage());
+            throw new ClientCrossCiteException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex);
         } catch (ResourceException ex) {
-            throw new ClientCrossCiteException(ex.getStatus(), ex.getMessage());
+            throw new ClientCrossCiteException(ex.getStatus(), ex.getMessage(), ex);
         } finally {
-            client.release();
+            this.getClient().release();
         }
     }
 }

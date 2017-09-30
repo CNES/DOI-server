@@ -33,7 +33,7 @@ public class DoiRuntimeException extends RuntimeException {
      * DoiRuntimeException.getCause() method). (A null value is permitted, and
      * indicates that the cause is nonexistent or unknown.)
      */
-    public DoiRuntimeException(String message, Throwable cause) {
+    public DoiRuntimeException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
@@ -45,7 +45,7 @@ public class DoiRuntimeException extends RuntimeException {
      * @param message the detail message. The detail message is saved for later
      * retrieval by the DoiRuntimeException.getMessage() method
      */
-    public DoiRuntimeException(String message) {
+    public DoiRuntimeException(final String message) {
         super(message);
     }
 
@@ -60,7 +60,7 @@ public class DoiRuntimeException extends RuntimeException {
      * DoiRuntimeException.getCause() method). (A null value is permitted, and
      * indicates that the cause is nonexistent or unknown.)
      */
-    public DoiRuntimeException(Throwable cause) {
+    public DoiRuntimeException(final Throwable cause) {
         super(cause);
     }
 

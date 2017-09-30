@@ -5,10 +5,8 @@
  */
 package fr.cnes.doi.resource.mds;
 
-import fr.cnes.doi.application.BaseApplication;
+import fr.cnes.doi.application.AbstractApplication;
 import fr.cnes.doi.client.ClientMDS;
-import static fr.cnes.doi.client.ClientMDS.POST_DOI;
-import static fr.cnes.doi.client.ClientMDS.POST_URL;
 import java.util.Arrays;
 import java.util.logging.Level;
 import org.restlet.data.Form;
@@ -27,6 +25,8 @@ import org.restlet.resource.ResourceException;
 
 import fr.cnes.doi.exception.ClientMdsException;
 import static fr.cnes.doi.security.UtilsHeader.SELECTED_ROLE_PARAMETER;
+import static fr.cnes.doi.client.ClientMDS.POST_DOI;
+import static fr.cnes.doi.client.ClientMDS.POST_URL;
 import fr.cnes.doi.utils.spec.Requirement;
 
 /**
@@ -36,8 +36,14 @@ import fr.cnes.doi.utils.spec.Requirement;
  */
 public class DoisResource extends BaseMdsResource {
 
+    /**
+     * 
+     */
     public static final String LIST_ALL_DOIS = "List all DOIs";
 
+    /**
+     * 
+     */
     public static final String CREATE_DOI = "Create a DOI";
 
     /**
@@ -65,7 +71,7 @@ public class DoisResource extends BaseMdsResource {
         Representation rep;
         try {
             setStatus(Status.SUCCESS_OK);
-            String dois = this.doiApp.getClient().getDoiCollection();
+            final String dois = this.getDoiApp().getClient().getDoiCollection();
             getLogger().exiting(getClass().getName(), "getDois", dois);
             rep = new StringRepresentation(dois, MediaType.TEXT_URI_LIST);
         } catch (ClientMdsException ex) {
@@ -74,7 +80,7 @@ public class DoisResource extends BaseMdsResource {
                 setStatus(Status.SUCCESS_NO_CONTENT);
                 rep = new StringRepresentation(ex.getMessage());
             } else {
-                ((BaseApplication) getApplication()).sendAlertWhenDataCiteFailed(ex);
+                ((AbstractApplication) getApplication()).sendAlertWhenDataCiteFailed(ex);
                 throw new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex);
             }
         }
@@ -119,46 +125,46 @@ public class DoisResource extends BaseMdsResource {
      * </ul>
      */ 
     @Requirement(
-            reqId = Requirement.DOI_SRV_020,
-            reqName = Requirement.DOI_SRV_020_NAME
-    )   
+        reqId = Requirement.DOI_SRV_020,
+        reqName = Requirement.DOI_SRV_020_NAME
+        )   
     @Requirement(
-            reqId = Requirement.DOI_SRV_030,
-            reqName = Requirement.DOI_SRV_030_NAME
-    )    
+        reqId = Requirement.DOI_SRV_030,
+        reqName = Requirement.DOI_SRV_030_NAME
+        )    
     @Requirement(
-            reqId = Requirement.DOI_MONIT_020,
-            reqName = Requirement.DOI_MONIT_020_NAME
-    ) 
+        reqId = Requirement.DOI_MONIT_020,
+        reqName = Requirement.DOI_MONIT_020_NAME
+        ) 
     @Requirement(
-            reqId = Requirement.DOI_INTER_070,
-            reqName = Requirement.DOI_INTER_070_NAME
-    )    
+        reqId = Requirement.DOI_INTER_070,
+        reqName = Requirement.DOI_INTER_070_NAME
+        )    
     @Requirement(
-            reqId = Requirement.DOI_AUTO_020,
-            reqName = Requirement.DOI_AUTO_020_NAME
-    )     
+        reqId = Requirement.DOI_AUTO_020,
+        reqName = Requirement.DOI_AUTO_020_NAME
+        )     
     @Requirement(
-            reqId = Requirement.DOI_AUTO_030,
-            reqName = Requirement.DOI_AUTO_030_NAME
-    )     
+        reqId = Requirement.DOI_AUTO_030,
+        reqName = Requirement.DOI_AUTO_030_NAME
+        )     
     @Post("form")
     public String createDoi(final Form doiForm) throws ResourceException {
         getLogger().entering(getClass().getName(), "createDoi");
         checkInputs(doiForm);
         getLogger().finest(doiForm.getMatrixString());
-        String result;
-        String selectedRole = extractSelectedRoleFromRequestIfExists();
+        final String result;
+        final String selectedRole = extractSelectedRoleFromRequestIfExists();
         checkPermission(doiForm.getFirstValue(DOI_PARAMETER), selectedRole);
         try {
             setStatus(Status.SUCCESS_CREATED);
-            result = this.doiApp.getClient().createDoi(doiForm);
+            result = this.getDoiApp().getClient().createDoi(doiForm);
         } catch (ClientMdsException ex) {
             getLogger().throwing(getClass().getName(), "createDoi", ex);
             if (ex.getStatus().getCode() == Status.CLIENT_ERROR_PRECONDITION_FAILED.getCode()) {
                 throw new ResourceException(ex.getStatus(), ex.getMessage(), ex);
             } else {
-                ((BaseApplication) getApplication()).sendAlertWhenDataCiteFailed(ex);
+                ((AbstractApplication) getApplication()).sendAlertWhenDataCiteFailed(ex);
                 throw new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex);
             }
         }
@@ -177,9 +183,9 @@ public class DoisResource extends BaseMdsResource {
      * URL_PARAMETER are not set
      */  
     @Requirement(
-            reqId = Requirement.DOI_INTER_070,
-            reqName = Requirement.DOI_INTER_070_NAME
-    )    
+        reqId = Requirement.DOI_INTER_070,
+        reqName = Requirement.DOI_INTER_070_NAME
+        )    
     private void checkInputs(final Form mediaForm) throws ResourceException {
         StringBuilder errorMsg = new StringBuilder();
         if (isValueNotExist(mediaForm, DOI_PARAMETER)) {
@@ -199,9 +205,10 @@ public class DoisResource extends BaseMdsResource {
         if (errorMsg.length() == 0) {
             getLogger().fine("The form is valid");
         } else {
-            ResourceException ex = new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, errorMsg.toString());
-            getLogger().throwing(this.getClass().getName(), "checkInputs", ex);
-            throw ex;
+            final ResourceException exception = new ResourceException(
+                    Status.CLIENT_ERROR_BAD_REQUEST, errorMsg.toString());
+            getLogger().throwing(this.getClass().getName(), "checkInputs", exception);
+            throw exception;
         }
     }
 
@@ -219,7 +226,8 @@ public class DoisResource extends BaseMdsResource {
         repInfo.setMediaType(MediaType.TEXT_URI_LIST);
         final DocumentationInfo docInfo = new DocumentationInfo();
         docInfo.setTitle("DOI collection representation");
-        docInfo.setTextContent("This request returns a list of all DOIs for the requesting datacentre. There is no guaranteed order.");
+        docInfo.setTextContent("This request returns a list of all DOIs for the "
+                + "requesting datacentre. There is no guaranteed order.");
         repInfo.setDocumentation(docInfo);
         return repInfo;
     }
@@ -258,7 +266,8 @@ public class DoisResource extends BaseMdsResource {
         repInfo.setMediaType(MediaType.TEXT_PLAIN);
         final DocumentationInfo docInfo = new DocumentationInfo();
         docInfo.setTitle("Explain representation");
-        docInfo.setTextContent("short explanation of status code e.g. CREATED, HANDLE_ALREADY_EXISTS etc");
+        docInfo.setTextContent("short explanation of status code e.g. CREATED, "
+                + "HANDLE_ALREADY_EXISTS etc");
         repInfo.setDocumentation(docInfo);
         return repInfo;
     }
@@ -276,9 +285,12 @@ public class DoisResource extends BaseMdsResource {
     protected final void describeGet(final MethodInfo info) {
         info.setName(Method.GET);
         info.setDocumentation("Retrieves the DOI collection");
-        addResponseDocToMethod(info, createResponseDoc(Status.SUCCESS_OK, "Operation successful", successFullRepresentation()));
-        addResponseDocToMethod(info, createResponseDoc(Status.SUCCESS_NO_CONTENT, "no DOIs founds", noContentRepresentation()));
-        addResponseDocToMethod(info, createResponseDoc(Status.SERVER_ERROR_INTERNAL, "Unexpected error"));        
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.SUCCESS_OK, "Operation successful", successFullRepresentation()));
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.SUCCESS_NO_CONTENT, "no DOIs founds", noContentRepresentation()));
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.SERVER_ERROR_INTERNAL, "Unexpected error"));        
     }
 
     /**
@@ -291,9 +303,11 @@ public class DoisResource extends BaseMdsResource {
             reqName = Requirement.DOI_DOC_010_NAME
     )      
     private RepresentationInfo requestRepresentation() {
-        RepresentationInfo rep = new RepresentationInfo(MediaType.APPLICATION_WWW_FORM);
-        rep.getParameters().add(createQueryParamDoc(POST_DOI, ParameterStyle.PLAIN, "DOI name", true, "xs:string"));
-        rep.getParameters().add(createQueryParamDoc(POST_URL, ParameterStyle.PLAIN, "URL of the landing page", true, "xs:string"));
+        final RepresentationInfo rep = new RepresentationInfo(MediaType.APPLICATION_WWW_FORM);
+        rep.getParameters().add(createQueryParamDoc(
+                POST_DOI, ParameterStyle.PLAIN, "DOI name", true, "xs:string"));
+        rep.getParameters().add(createQueryParamDoc(
+                POST_URL, ParameterStyle.PLAIN, "URL of the landing page", true, "xs:string"));
         return rep;
     }
 
@@ -303,9 +317,9 @@ public class DoisResource extends BaseMdsResource {
      * @param info Wadl description
      */
     @Requirement(
-            reqId = Requirement.DOI_DOC_010,
-            reqName = Requirement.DOI_DOC_010_NAME
-    )      
+        reqId = Requirement.DOI_DOC_010,
+        reqName = Requirement.DOI_DOC_010_NAME
+        )      
     @Override
     protected final void describePost(final MethodInfo info) {
         info.setName(Method.POST);
@@ -317,17 +331,46 @@ public class DoisResource extends BaseMdsResource {
 
         addRequestDocToMethod(info,
                 Arrays.asList(
-                        createQueryParamDoc(SELECTED_ROLE_PARAMETER, ParameterStyle.HEADER, "A user can select one role when he is associated to several roles", false, "xs:string")
+                        createQueryParamDoc(SELECTED_ROLE_PARAMETER, 
+                                ParameterStyle.HEADER, 
+                                "A user can select one role when he is associated "
+                                        + "to several roles", false, "xs:string")
                 ),
                 requestRepresentation());
 
-        addResponseDocToMethod(info, createResponseDoc(Status.SUCCESS_CREATED, "Operation successful", explainStatusRepresentation()));
-        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_BAD_REQUEST, "request body must be exactly two lines: DOI and URL; wrong domain, wrong prefix", "explainRepresentation"));
-        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_UNAUTHORIZED, "this request need an authorization", "explainRepresentation"));
-        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_FORBIDDEN, "Not allow to execute this request", "explainRepresentation"));
-        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_PRECONDITION_FAILED, "metadata must be uploaded first", "explainRepresentation"));
-        addResponseDocToMethod(info, createResponseDoc(Status.SERVER_ERROR_INTERNAL, "Error when requesting DataCite", "explainRepresentation"));
-        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_CONFLICT, "Error when an user is associated to more than one role", "explainRepresentation"));
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.SUCCESS_CREATED, "Operation successful", explainStatusRepresentation()));
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.CLIENT_ERROR_BAD_REQUEST, 
+                "request body must be exactly two lines: DOI and URL; wrong domain, "
+                        + "wrong prefix", 
+                "explainRepresentation")
+        );
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.CLIENT_ERROR_UNAUTHORIZED, 
+                "this request need an authorization", 
+                "explainRepresentation")
+        );
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.CLIENT_ERROR_FORBIDDEN, 
+                "Not allow to execute this request", 
+                "explainRepresentation")
+        );
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.CLIENT_ERROR_PRECONDITION_FAILED, 
+                "metadata must be uploaded first", 
+                "explainRepresentation")
+        );
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.SERVER_ERROR_INTERNAL, 
+                "Error when requesting DataCite", 
+                "explainRepresentation")
+        );
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.CLIENT_ERROR_CONFLICT, 
+                "Error when an user is associated to more than one role", 
+                "explainRepresentation")
+        );
 
     }
 }
