@@ -22,8 +22,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 /**
  * Default implementation of the token database.
@@ -37,16 +38,15 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
     private static final String OWNER = "CNES";
     private static final String AUTHOR = "Jean-Christophe Malapert";
     private static final String LICENSE = "LGPLV3";
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = LogManager.getLogger(DefaultTokenImpl.class.getName());      
 
     /**
      * Default file if the path is not defined in the configuration file
      */
     private static final String DEFAULT_CACHE_FILE = "data/token.conf";
-
-    /**
-     * logger.
-     */
-    private static final Logger LOGGER = Logger.getLogger(DefaultTokenImpl.class.getName());
 
     private String tokenConf;
 
@@ -71,7 +71,7 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
             }
 
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Cannot access the cache file for retrieving Token ", e);
+            LOG.fatal("Cannot access the cache file for retrieving Token ", e);
         }
     }
 
@@ -82,7 +82,7 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
      * @throws IOException Exception when trying to load the file
      */
     private void loadProjectConf(File projConfFile) throws IOException {
-        LOGGER.log(Level.FINEST, "Cache file exists : {0}", projConfFile.getAbsolutePath());
+        LOG.debug("Cache file exists : "+ projConfFile.getAbsolutePath());
 
         List<String> lines = Files.readAllLines(projConfFile.toPath());
         // Si le fichier contient autre chose que la ligne d'entete
@@ -95,11 +95,10 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
                 } else {
                     String[] split = line.split(";");
                     if (split.length != 3) {
-                        LOGGER.log(Level.WARNING, "The line {0} is not formatted in the expected way", line);
+                        LOG.fatal(String.format("The line %s is not formatted in the expected way", line));
                     } else {
                         this.db.put(split[0], new ConcurrentHashMap<String, Object>() {
                             private static final long serialVersionUID = 3109256773218160485L;
-
                             {
                                 put("projectSuffix", split[1]);
                                 put("expirationDate", split[2]);
@@ -119,7 +118,7 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
      */
     private void createProjectConf(File tokenConfFile) throws IOException {
         // Init the config file
-        LOGGER.log(Level.FINEST, "Cache file does not exist, create it : {0}", tokenConfFile.getAbsolutePath());
+        LOG.info("Cache file does not exist, create it : "+ tokenConfFile.getAbsolutePath());
         File directory = new File(tokenConfFile.getParent());
         Files.createDirectories(directory.toPath());
         Files.createFile(tokenConfFile.toPath());
@@ -128,7 +127,6 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
 
     @Override
     public boolean addToken(String jwt) {
-        LOGGER.log(Level.FINEST, "Entering in addToken : {0}", jwt);
 
         boolean isAdded = false;
         try {
@@ -139,7 +137,7 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
 
             // should be fine, the JWT representation does not contain ;
             String line = jwt + ";" + projectSuffix + ";" + expirationDate + "\n";
-            LOGGER.log(Level.FINEST, "token inserted : {0}", line);
+            LOG.info("token inserted : "+ line);
             Files.write(new File(this.tokenConf).toPath(), line.getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
             this.db.put(jwt, new ConcurrentHashMap<String, Object>() {
                 private static final long serialVersionUID = 3109256773218160485L;
@@ -151,7 +149,7 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
             });
             isAdded = true;
         } catch (IOException | RuntimeException e) {
-            LOGGER.log(Level.SEVERE, "The token " + jwt + "cannot be saved in the file", e);
+            LOG.fatal("The token " + jwt + "cannot be saved in the file", e);
         }
         return isAdded;
     }
@@ -175,7 +173,7 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
             Date expDate = dateFormat.parse(dateStr);
             isExpirated = new Date().after(expDate);
         } catch (ParseException ex) {
-            LOGGER.log(Level.SEVERE, null, ex);
+            LOG.fatal(ex);
         }
         return isExpirated;
     }

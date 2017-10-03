@@ -5,27 +5,30 @@
  */
 package fr.cnes.doi.security;
 
+import fr.cnes.doi.logging.business.JsonMessage;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import java.text.MessageFormat;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.concurrent.CopyOnWriteArraySet;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.restlet.Context;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.data.Status;
 
 /**
- *
+ * IP filtering
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class AllowerIP extends org.restlet.routing.Filter {
     
     /**
-     * Class name.
+     * Logger.
      */
-    private static final String CLASS_NAME = AllowerIP.class.getName();
+    private static final Logger LOG = LogManager.getLogger(AllowerIP.class.getName());
 
     /**
      * Localhost in IPv6.
@@ -48,12 +51,12 @@ public class AllowerIP extends org.restlet.routing.Filter {
      */
     public AllowerIP(final Context context) {
         super(context);
-        getLogger().entering(CLASS_NAME, "Constructor");
+        LOG.traceEntry();
         this.allowedAddresses = new CopyOnWriteArraySet<>();
         this.allowedAddresses.add(LOCALHOST_IPV6);
         this.allowedAddresses.add(LOCALHOST_IPV4);
         addCustomIP(allowedAddresses);
-        getLogger().exiting(CLASS_NAME, "Constructor");
+        LOG.traceExit();
     }
 
     /**
@@ -62,17 +65,17 @@ public class AllowerIP extends org.restlet.routing.Filter {
      * @param allowedAddresses the new allowed addresses
      */
     private void addCustomIP(final Set<String> allowedAddresses) {
-        getLogger().entering(CLASS_NAME, "addCustomIP", allowedAddresses);
+        LOG.traceEntry("Parameter : {}",allowedAddresses);
         final String ips = DoiSettings.getInstance().getString(Consts.ADMIN_IP_ALLOWER);
         if (ips != null) {
             final StringTokenizer tokenizer = new StringTokenizer(ips, "|");
             while (tokenizer.hasMoreTokens()) {
                 final String newIP = tokenizer.nextToken();
-                getLogger().info(MessageFormat.format("Adds this IP {0} for allowing the access to the amdinistration application", newIP));
+                LOG.info("Adds this IP {} for allowing the access to the amdinistration application", newIP);
                 allowedAddresses.add(newIP);
             }
         }
-        getLogger().exiting(CLASS_NAME, "addCustomIP");
+        LOG.traceExit();
     }
 
     /**
@@ -83,15 +86,16 @@ public class AllowerIP extends org.restlet.routing.Filter {
      */
     @Override
     protected int beforeHandle(final Request request, final Response response) {
+        LOG.traceEntry(new JsonMessage(request));
         int result = STOP;
         final String ipClient = request.getClientInfo().getAddress();
         if (getAllowedAddresses().contains(ipClient)) {
             result = CONTINUE;
         } else {
-            getLogger().warning(MessageFormat.format("You IP address {0} was blocked", ipClient));
+            LOG.info("You IP address {} was blocked", ipClient);
             response.setStatus(Status.CLIENT_ERROR_FORBIDDEN, "Your IP address was blocked");
         }
-        return result;
+        return LOG.traceExit(result);
     }
 
     /**
@@ -100,7 +104,8 @@ public class AllowerIP extends org.restlet.routing.Filter {
      * @return the allowed addresses
      */
     public Set<String> getAllowedAddresses() {
-        return allowedAddresses;
+        LOG.traceEntry();
+        return LOG.traceExit(allowedAddresses);
     }
 
 }

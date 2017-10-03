@@ -9,12 +9,12 @@ import fr.cnes.doi.application.DoiMdsApplication;
 import fr.cnes.doi.resource.AbstractResource;
 import fr.cnes.doi.utils.spec.Requirement;
 import java.util.List;
-import java.util.logging.Level;
 import org.restlet.data.Status;
 import org.restlet.resource.ResourceException;
 import org.restlet.security.Role;
 import org.restlet.util.Series;
 import static fr.cnes.doi.security.UtilsHeader.SELECTED_ROLE_PARAMETER;
+import org.apache.logging.log4j.Logger;
 
 
 /**
@@ -23,6 +23,11 @@ import static fr.cnes.doi.security.UtilsHeader.SELECTED_ROLE_PARAMETER;
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class BaseMdsResource extends AbstractResource {
+    
+    /**
+     * Logger.
+     */
+    protected Logger LOG;
 
     /**
      * The parameter that describes the DOI name {@value #DOI_PARAMETER}.
@@ -32,7 +37,7 @@ public class BaseMdsResource extends AbstractResource {
     /**
      * The parameter that describes the landing page related to the DOI {@value #URL_PARAMETER}.
      */
-    public static final String URL_PARAMETER = "url";
+    public static final String URL_PARAMETER = "url";    
 
     /**
      * DOI Mds application.
@@ -45,7 +50,11 @@ public class BaseMdsResource extends AbstractResource {
      */
     @Override
     protected void doInit() throws ResourceException {
+        super.doInit();
         this.doiApp = (DoiMdsApplication) getApplication();
+        LOG = this.doiApp.getLog();
+        LOG.traceEntry();        
+        LOG.traceExit();
     }
 
     /**
@@ -55,7 +64,8 @@ public class BaseMdsResource extends AbstractResource {
      * @return True when the user has only one single role otherwise False
      */
     private boolean hasSingleRole(final List<Role> roles) {
-        return roles.size() == 1;
+        LOG.traceEntry("Parameter : {}",roles);
+        return LOG.traceExit(roles.size() == 1);
     }
 
     /**
@@ -65,7 +75,8 @@ public class BaseMdsResource extends AbstractResource {
      * @return True when the user has no role otherwise False
      */
     private boolean hasNoRole(final List<Role> roles) {
-        return roles.isEmpty();
+        LOG.traceEntry("Parameter : {}",roles);        
+        return LOG.traceExit(roles.isEmpty());
     }
 
     /**
@@ -75,7 +86,8 @@ public class BaseMdsResource extends AbstractResource {
      * @return True when the user has selected a role otherwise False
      */
     private boolean hasSelectedRole(final String suffusedWithRole) {
-        return !suffusedWithRole.isEmpty();
+        LOG.traceEntry("Parameter : {}",suffusedWithRole);
+        return LOG.traceExit(!suffusedWithRole.isEmpty());
     }
 
     /**
@@ -93,47 +105,39 @@ public class BaseMdsResource extends AbstractResource {
      * role
      */
     private String getRoleName(final String selectedRole) throws ResourceException {
-        getLogger().entering(getClass().getName(), "getRoleName", selectedRole);
+        LOG.traceEntry("Parameter : {}",selectedRole);
         final String roleName;
         if (hasSelectedRole(selectedRole)) {
-            getLogger().log(Level.FINEST, "Role selected : {0}", selectedRole);
+            LOG.debug("Role selected : "+ selectedRole);
             if (isInRole(selectedRole)) {
-                getLogger().log(Level.FINEST, "User is in Role {0}", selectedRole);
+                LOG.debug("User is in Role : "+ selectedRole);
                 roleName = selectedRole;
             } else {
-                getLogger().log(Level.FINEST, "User is not in Role {0}", selectedRole);
-                getLogger().log(Level.WARNING, "DOIServer : The role {0} is not allowed to use this feature", selectedRole);
-                getLogger().exiting(getClass().getName(), "getRoleName");
-                final ResourceException exception = new ResourceException(
+                LOG.debug("User is not in Role :"+ selectedRole);
+                LOG.info("DOIServer : The role {} is not allowed to use this feature", selectedRole);
+                throw LOG.throwing(new ResourceException(
                         Status.CLIENT_ERROR_FORBIDDEN, 
                         "DOIServer : The role " + selectedRole 
                                 + " is not allowed to use this feature"
-                );
-                getLogger().throwing(this.getClass().getName(), "getRoleName", exception);
-                throw exception;
+                ));
             }
         } else {
             final List<Role> roles = getClientInfo().getRoles();
             if (hasNoRole(roles)) {
-                final ResourceException exception = new ResourceException(
-                        Status.CLIENT_ERROR_UNAUTHORIZED, "DOIServer : No role");
-                getLogger().throwing(this.getClass().getName(), "getRoleName", exception);
-                throw exception;
+                throw LOG.throwing(new ResourceException(
+                        Status.CLIENT_ERROR_UNAUTHORIZED, "DOIServer : No role"));
             } else if (hasSingleRole(roles)) {
                 final Role role = roles.get(0);
                 roleName = role.getName();
-                getLogger().log(Level.FINEST, "User has a single Role {0}", role);
+                LOG.debug("User has a single Role "+ role);
             } else {
-                getLogger().log(Level.WARNING, "DOIServer : Cannot know which role must be applied");
-                final ResourceException exception = new ResourceException(
+                LOG.info("DOIServer : Cannot know which role must be applied");
+                throw LOG.throwing(new ResourceException(
                         Status.CLIENT_ERROR_CONFLICT, 
-                        "DOIServer : Cannot know which role must be applied");
-                getLogger().throwing(this.getClass().getName(), "getRoleName", exception);
-                throw exception;
+                        "DOIServer : Cannot know which role must be applied"));
             }
         }
-        getLogger().exiting(getClass().getName(), "getRoleName", roleName);
-        return roleName;
+        return LOG.traceExit(roleName);
     }
 
     /**
@@ -164,18 +168,15 @@ public class BaseMdsResource extends AbstractResource {
     )    
     protected void checkPermission(final String doiName, final String selectedRole) 
             throws ResourceException {
-        getLogger().entering(getClass().getName(), "checkPermission", new Object[]{doiName, selectedRole});
+        LOG.traceEntry("Parameters : {} and {}", doiName, selectedRole);
         final String projectRole = getRoleName(selectedRole);
         final String prefixCNES = this.getDoiApp().getDataCentrePrefix();
         if (!doiName.startsWith(prefixCNES + "/" + projectRole + "/")) {
-            getLogger().log(Level.WARNING, "You are not allowed to use this method : {0} with {1}", new Object[]{doiName, selectedRole});
-            getLogger().exiting(getClass().getName(), "checkPermission");
-            final ResourceException exception = new ResourceException(
-                    Status.CLIENT_ERROR_FORBIDDEN, "You are not allowed to use this method");
-            getLogger().throwing(this.getClass().getName(), "checkPermission", exception);
-            throw exception;
+            LOG.debug("You are not allowed to use this method : {} with {}", doiName, selectedRole);
+            throw LOG.throwing(new ResourceException(
+                    Status.CLIENT_ERROR_FORBIDDEN, "You are not allowed to use this method"));
         }
-        getLogger().exiting(getClass().getName(), "checkPermission");
+        LOG.traceExit();
     }
     
     /**
@@ -189,10 +190,10 @@ public class BaseMdsResource extends AbstractResource {
         reqName = Requirement.DOI_AUTO_020_NAME
         )    
     public String extractSelectedRoleFromRequestIfExists() {
+        LOG.traceEntry();
         final Series headers = (Series) getRequestAttributes().get("org.restlet.http.headers");
         final String selectedRole = headers.getFirstValue(SELECTED_ROLE_PARAMETER, "");
-        getLogger().log(Level.INFO, "Selected role : {0}", selectedRole);
-        return selectedRole;
+        return LOG.traceExit(selectedRole);
     }    
 
     /**

@@ -17,17 +17,19 @@ import org.restlet.service.TaskService;
 import java.io.File;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 
 import fr.cnes.doi.resource.admin.SuffixProjectsResource;
 import fr.cnes.doi.resource.admin.TokenResource;
 import fr.cnes.doi.services.LandingPageMonitoring;
 import fr.cnes.doi.db.AbstractTokenDBHelper;
+import fr.cnes.doi.logging.business.JsonMessage;
 import fr.cnes.doi.security.AllowerIP;
 import fr.cnes.doi.security.TokenSecurity;
 import fr.cnes.doi.settings.ProxySettings;
 import fr.cnes.doi.utils.spec.CoverageAnnotation;
 import fr.cnes.doi.utils.spec.Requirement;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.routing.Filter;
@@ -111,9 +113,9 @@ public class AdminApplication extends AbstractApplication {
     public static final String TOKEN_NAME_URI = "/{" + TOKEN_TEMPLATE + "}";    
     
     /**
-     * Class name.
+     * Logger.
      */
-    private static final String CLASS_NAME = AdminApplication.class.getName();     
+    private static final Logger LOG = LogManager.getLogger(AdminApplication.class.getName());     
 
     /**
      * Default directory where the web site is located.
@@ -155,15 +157,11 @@ public class AdminApplication extends AbstractApplication {
      */
     public AdminApplication() {
         super();
-        getLogger().entering(CLASS_NAME, "Constructor");
-
         setName(NAME);
         setDescription("Provides an application for handling features related to "
                 + "the administration system of the DOI server.");
         this.setTaskService(createTaskService());
         this.tokenDB = TokenSecurity.getInstance().getTOKEN_DB();
-
-        getLogger().exiting(CLASS_NAME, "Constructor");
     }
 
     /**
@@ -176,17 +174,14 @@ public class AdminApplication extends AbstractApplication {
             reqName = Requirement.DOI_DISPO_020_NAME
     )
     private TaskService createTaskService() {
-        getLogger().entering(CLASS_NAME, "createTaskService");
-
+        LOG.traceEntry();
         final TaskService checkLandingPageTask = new TaskService(true, true);
-        getLogger().log(Level.INFO, "Sets CheckLandingPage running at each {0} {1}", new Object[]{PERIOD_SCHEDULER, PERIOD_UNIT});
+        LOG.info("Sets CheckLandingPage running at each {} {}", PERIOD_SCHEDULER, PERIOD_UNIT);
         checkLandingPageTask.scheduleAtFixedRate(
                 new LandingPageMonitoring(), 0, 
                 PERIOD_SCHEDULER, PERIOD_UNIT
         );
-
-        getLogger().exiting(CLASS_NAME, "createTaskService");
-        return checkLandingPageTask;
+        return LOG.traceExit(checkLandingPageTask);
     }
 
     /**
@@ -210,8 +205,7 @@ public class AdminApplication extends AbstractApplication {
      */
     @Override
     public Restlet createInboundRoot() {
-        getLogger().entering(CLASS_NAME, "createInboundRoot");
-
+        LOG.traceEntry();
         // Defines the strategy of authentication (authentication is not required)
         //   - authentication with login/pwd
         final ChallengeAuthenticator challAuth = createAuthenticator();
@@ -236,9 +230,7 @@ public class AdminApplication extends AbstractApplication {
         router.attachDefault(webSiteRouter);
         router.attach(ADMIN_URI, challAuth);
 
-        getLogger().exiting(CLASS_NAME, "createInboundRoot", router);
-
-        return router;
+        return LOG.traceExit(router);
     }
 
     /**
@@ -256,16 +248,14 @@ public class AdminApplication extends AbstractApplication {
      * @return the router
      */
     private Router createAdminRouter() {
-        getLogger().entering(CLASS_NAME, "createAdminRouter");
-
+        LOG.traceEntry();
+        
         final Router router = new Router(getContext());
         router.attach(SUFFIX_PROJECT_URI, SuffixProjectsResource.class);
         router.attach(TOKEN_URI, TokenResource.class);
         router.attach(TOKEN_URI + TOKEN_NAME_URI, TokenResource.class);
 
-        getLogger().exiting(CLASS_NAME, "createAdminRouter", router);
-
-        return router;
+        return LOG.traceExit(router);
     }
 
     /**
@@ -281,17 +271,15 @@ public class AdminApplication extends AbstractApplication {
      * @return The router for the public web site
      */
     private Router createWebSiteRouter() {
-        getLogger().entering(CLASS_NAME, "createWebSiteRouter");
-
+        LOG.traceEntry();
+                
         final Router router = new Router(getContext());
         addStatusPage(router);
         addServicesStatus(router);
         addServicesStats(router);
         addRouteForWebSite(router);
 
-        getLogger().exiting(CLASS_NAME, "createWebSiteRouter", router);
-
-        return router;
+        return LOG.traceExit(router);
     }
 
     /**
@@ -303,13 +291,13 @@ public class AdminApplication extends AbstractApplication {
      * @param router router
      */
     private void addStatusPage(final Router router) {
-        getLogger().entering(CLASS_NAME, "addStatusPage");
-
+        LOG.traceEntry("Parameter : {}", new JsonMessage(router));
+        
         final Directory directory = new Directory(getContext(), LocalReference.createClapReference(STATUS_PAGE_CLASSPATH));
         directory.setDeeplyAccessible(true);
         router.attach(RESOURCE_URI, directory);
 
-        getLogger().exiting(CLASS_NAME, "addStatusPage");
+        LOG.traceExit();
 
     }
 
@@ -320,7 +308,7 @@ public class AdminApplication extends AbstractApplication {
      * @param router router
      */
     private void addServicesStatus(final Router router) {
-        getLogger().entering(CLASS_NAME, "addServicesStatus");
+        LOG.traceEntry("Parameter : {}", new JsonMessage(router));
 
         final Redirector redirector = new Redirector(getContext(), TARGET_URL, Redirector.MODE_SERVER_OUTBOUND);
 
@@ -346,7 +334,7 @@ public class AdminApplication extends AbstractApplication {
         authentication.setNext(redirector);
         router.attach(STATUS_URI, authentication);
 
-        getLogger().exiting(CLASS_NAME, "addServicesStatus");
+        LOG.traceExit();
     }
     
     /**
@@ -356,7 +344,7 @@ public class AdminApplication extends AbstractApplication {
      * @param router router
      */
     private void addServicesStats(final Router router) {
-        getLogger().entering(CLASS_NAME, "addServicesStats");
+        LOG.traceEntry("Parameter : {}", new JsonMessage(router));
 
         final Redirector redirector = new Redirector(
                 getContext(), 
@@ -386,7 +374,7 @@ public class AdminApplication extends AbstractApplication {
         authentication.setNext(redirector);
         router.attach(STATS_URI, authentication);
 
-        getLogger().exiting(CLASS_NAME, "addServicesStatus");
+        LOG.traceExit();
     } 
     
     /**
@@ -396,22 +384,21 @@ public class AdminApplication extends AbstractApplication {
      * @param router router
      */
     private void addRouteForWebSite(final Router router) {
-        getLogger().entering(CLASS_NAME, "addRouteForWebSite");
-
+        LOG.traceEntry("Parameter : {}", new JsonMessage(router));
+        
         final String pathApp = this.getConfig().getPathApp();
         final File file = new File(pathApp + File.separator + JS_DIR);
         if (file.canRead()) {
-            getLogger().info(String.format("The website for DOI server is ready here %s", file.getPath()));
+            LOG.info("The website for DOI server is ready here {}", file.getPath());
             final Directory ihm = new Directory(getContext(), "file://" + file.getPath());
             ihm.setListingAllowed(true);
             ihm.setDeeplyAccessible(true);
             ihm.setIndexName("index");
             router.attachDefault(ihm);
         } else {
-            getLogger().info("The website for DOI server is not installed");
+            LOG.warn("The website for DOI server is not installed");
         }
-
-        getLogger().exiting(CLASS_NAME, "addRouteForWebSite");
+        LOG.traceExit();
     }
 
     /**
@@ -422,8 +409,8 @@ public class AdminApplication extends AbstractApplication {
      * resources.
      */
     private RoleAuthorizer createRoleAuthorizer() {
-        getLogger().entering(CLASS_NAME, "createRoleAuthorizer");
-
+        LOG.traceEntry();
+        
         final RoleAuthorizer roleAuth = new RoleAuthorizer();
         roleAuth.setAuthorizedRoles(
                 Arrays.asList(
@@ -431,9 +418,7 @@ public class AdminApplication extends AbstractApplication {
                 )
         );
 
-        getLogger().exiting(CLASS_NAME, "createRoleAuthorizer", roleAuth);
-
-        return roleAuth;
+        return LOG.traceExit(roleAuth);
     }
 
     /**
@@ -443,6 +428,15 @@ public class AdminApplication extends AbstractApplication {
      */    
     public AbstractTokenDBHelper getTokenDB() {
         return this.tokenDB;
-    }   
+    }  
+    
+    /**
+     * Returns the logger.
+     * @return the logger
+     */
+    @Override
+    public Logger getLog() {
+        return LOG;
+    }    
 
 }

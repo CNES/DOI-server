@@ -35,11 +35,6 @@ public class BaseClient {
     private final ClientResource client;
 
     /**
-     * Logger.
-     */
-    private static final Logger LOGGER = Utils.getAppLogger();
-
-    /**
      * Constructor.
      *
      * @param uri URI of the client's end point
@@ -92,14 +87,6 @@ public class BaseClient {
      */
     public ClientResource getClient() {
         return client;
-    }
-    
-    /**
-     * Returns the logger.
-     * @return the LOGGER
-     */
-    public static Logger getLOGGER() {
-        return LOGGER;
-    }    
+    }  
 
 }

@@ -16,30 +16,29 @@ import org.restlet.resource.ResourceException;
 
 import fr.cnes.doi.exception.ClientCrossCiteException;
 import fr.cnes.doi.utils.spec.Requirement;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * The supported languages for citation.
  *
  * @author Jean-christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-public class LanguageCitationResource extends BaseCitationResource {
+public class LanguageCitationResource extends BaseCitationResource {    
     
-    /**
-     * Class name.
-     */
-    private static final String CLASS_NAME = LanguageCitationResource.class.getName();
-
     /**
      * Init.
      * @throws ResourceException - if a problem happens
      */
     @Override
     protected void doInit() throws ResourceException {
-        super.doInit();
+        super.doInit();        
+        LOG.traceEntry();
         final StringBuilder description = new StringBuilder();
         description.append("Selects a Language and Country.");
         description.append("The language is used to format the citation.");
         setDescription(description.toString());
+        LOG.traceExit();
     }
 
     /**
@@ -59,16 +58,15 @@ public class LanguageCitationResource extends BaseCitationResource {
         )      
     @Get("json|xml")
     public List<String> getLanguages() throws ResourceException {
-        getLogger().entering(CLASS_NAME, "getLanguages");
+        LOG.traceEntry();
+        final List<String> result;
         try {
-            final List<String> result = this.getApp().getClient().getLanguages();
-            getLogger().exiting(CLASS_NAME, "getLanguages", result);
-            return result;
+            result = this.getApp().getClient().getLanguages();
         } catch (ClientCrossCiteException ex) {
-            getLogger().throwing(CLASS_NAME, "getLanguages", ex);
             ((AbstractApplication)getApplication()).sendAlertWhenDataCiteFailed(ex);            
-            throw new ResourceException(ex.getStatus(), ex.getDetailMessage(), ex);
+            throw LOG.throwing(new ResourceException(ex.getStatus(), ex.getDetailMessage(), ex));
         }
+        return LOG.traceExit(result);        
     }
 
     /**

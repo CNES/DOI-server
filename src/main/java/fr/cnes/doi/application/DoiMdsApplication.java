@@ -33,6 +33,8 @@ import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.security.TokenBasedVerifier;
 import fr.cnes.doi.security.TokenSecurity;
 import fr.cnes.doi.utils.spec.Requirement;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.restlet.routing.Template;
 
 /**
@@ -105,10 +107,6 @@ import org.restlet.routing.Template;
 )
 public class DoiMdsApplication extends AbstractApplication {
 
-    /**
-     * Class name.
-     */
-    private static final String CLASS_NAME = DoiMdsApplication.class.getName();
     
     /**
      * Template Query for DOI : {@value #DOI_TEMPLATE}.
@@ -144,6 +142,11 @@ public class DoiMdsApplication extends AbstractApplication {
      * Application name : {@value #NAME}
      */
     public static final String NAME = "Metadata Store Application";
+    
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = LogManager.getLogger(DoiMdsApplication.class.getName());      
 
     /**
      * Client to query Mds Datacite.
@@ -160,8 +163,6 @@ public class DoiMdsApplication extends AbstractApplication {
      */
     public DoiMdsApplication() {
         super();
-        getLogger().entering(CLASS_NAME, "Constructor");
-
         setName(NAME);
         setDescription("Provides an application for handling Data Object Identifier at CNES<br/>"
                 + "This application provides 3 API:" + "<ul>" + "<li>dois : DOI minting</li>"
@@ -172,8 +173,6 @@ public class DoiMdsApplication extends AbstractApplication {
         client = new ClientMDS(ClientMDS.Context.valueOf(contextUse), getLoginMds(), getPwdMds());
 
         this.tokenDB = TokenSecurity.getInstance().getTOKEN_DB();
-
-        getLogger().exiting(CLASS_NAME, "Constructor");
     }
 
     /**
@@ -195,8 +194,8 @@ public class DoiMdsApplication extends AbstractApplication {
      */
     @Override
     public Restlet createInboundRoot() {
-        getLogger().entering(CLASS_NAME, "createInboundRoot");
-
+        LOG.traceEntry();
+        
         // Defines the strategy of authentication (authentication is not required)
         //   - authentication with login/pwd
         final ChallengeAuthenticator challAuth = createAuthenticator();
@@ -216,8 +215,7 @@ public class DoiMdsApplication extends AbstractApplication {
         // Router
         methodAuth.setNext(createRouter());
 
-        getLogger().exiting(CLASS_NAME, "createInboundRoot", challAuth);
-        return challAuth;
+        return LOG.traceExit(challAuth);
     }
 
     /**
@@ -242,8 +240,8 @@ public class DoiMdsApplication extends AbstractApplication {
      * @return the router
      */    
     private Router createRouter() {
-        getLogger().entering(CLASS_NAME, "createRouter");
-
+        LOG.traceEntry();
+        
         final Router router = new Router(getContext());        
         router.attach(DOI_URI, DoisResource.class);
         router.attach(DOI_URI + DOI_NAME_URI, DoiResource.class).getTemplate().setMatchingMode(Template.MODE_STARTS_WITH);
@@ -251,9 +249,7 @@ public class DoiMdsApplication extends AbstractApplication {
         router.attach(METADATAS_URI + DOI_NAME_URI, MetadataResource.class).getTemplate().setMatchingMode(Template.MODE_STARTS_WITH);
         router.attach(MEDIA_URI + DOI_NAME_URI, MediaResource.class).getTemplate().setMatchingMode(Template.MODE_STARTS_WITH);
 
-        getLogger().exiting(CLASS_NAME, "createRouter", router);
-
-        return router;
+        return LOG.traceExit(router);
     }
 
     /**
@@ -263,8 +259,8 @@ public class DoiMdsApplication extends AbstractApplication {
      * @return Authorizer based on authorized methods
      */
     private MethodAuthorizer createMethodAuthorizer() {
-        getLogger().entering(CLASS_NAME, "createMethodAuthorizer");
-
+        LOG.traceEntry();
+        
         final MethodAuthorizer methodAuth = new MethodAuthorizer();
         methodAuth.getAnonymousMethods().add(Method.GET);
         methodAuth.getAuthenticatedMethods().add(Method.GET);
@@ -272,8 +268,7 @@ public class DoiMdsApplication extends AbstractApplication {
         methodAuth.getAuthenticatedMethods().add(Method.PUT);
         methodAuth.getAuthenticatedMethods().add(Method.DELETE);
 
-        getLogger().exiting(CLASS_NAME, "createMethodAuthorizer", methodAuth);
-        return methodAuth;
+        return LOG.traceExit(methodAuth);
     }
 
     /**
@@ -287,16 +282,14 @@ public class DoiMdsApplication extends AbstractApplication {
             reqName = Requirement.DOI_AUTH_020_NAME
     )
     private ChallengeAuthenticator createTokenAuthenticator() {
-        getLogger().entering(CLASS_NAME, "createTokenAuthenticator");
-
+        LOG.traceEntry();
+        
         final ChallengeAuthenticator guard = new ChallengeAuthenticator(
                 getContext(), ChallengeScheme.HTTP_OAUTH_BEARER, "testRealm");
         final TokenBasedVerifier verifier = new TokenBasedVerifier(getTokenDB());
         guard.setVerifier(verifier);
 
-        getLogger().exiting(CLASS_NAME, "createTokenAuthenticator", guard);
-
-        return guard;
+        return LOG.traceExit(guard);
     }
 
     /**
@@ -305,7 +298,8 @@ public class DoiMdsApplication extends AbstractApplication {
      * @return the schema factory
      */
     public SchemaFactory getSchemaFactory() {
-        return this.schemaFactory;
+        LOG.traceEntry();
+        return LOG.traceExit(this.schemaFactory);
     }
 
     /**
@@ -314,7 +308,8 @@ public class DoiMdsApplication extends AbstractApplication {
      * @return the DataCite's login
      */
     private String getLoginMds() {
-        return this.getConfig().getSecret(Consts.INIST_LOGIN);
+        LOG.traceEntry();
+        return LOG.traceExit(this.getConfig().getSecret(Consts.INIST_LOGIN));
     }
 
     /**
@@ -323,7 +318,8 @@ public class DoiMdsApplication extends AbstractApplication {
      * @return the DataCite's pwd
      */
     private String getPwdMds() {
-        return this.getConfig().getSecret(Consts.INIST_PWD);
+        LOG.traceEntry();
+        return LOG.traceExit(this.getConfig().getSecret(Consts.INIST_PWD));
     }
 
     /**
@@ -332,7 +328,8 @@ public class DoiMdsApplication extends AbstractApplication {
      * @return the DOI prefix
      */
     public String getDataCentrePrefix() {
-        return this.getConfig().getString(Consts.INIST_DOI);
+        LOG.traceEntry();
+        return LOG.traceExit(this.getConfig().getString(Consts.INIST_DOI));
     }
 
     /**
@@ -341,7 +338,8 @@ public class DoiMdsApplication extends AbstractApplication {
      * @return the client
      */
     public ClientMDS getClient() {
-        return this.client;
+        LOG.traceEntry();
+        return LOG.traceExit(this.client);
     }
 
     /**
@@ -350,7 +348,17 @@ public class DoiMdsApplication extends AbstractApplication {
      * @return the token database
      */
     public AbstractTokenDBHelper getTokenDB() {
-        return this.tokenDB;
+        LOG.traceEntry();
+        return LOG.traceExit(this.tokenDB);
+    }
+    
+    /**
+     * Returns the logger.
+     * @return the logger
+     */
+    @Override
+    public Logger getLog() {
+        return LOG;
     }
 
     /**

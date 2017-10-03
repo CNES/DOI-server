@@ -17,11 +17,12 @@ import org.restlet.service.CorsService;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Level;
 
 import fr.cnes.doi.settings.ProxySettings;
 import fr.cnes.doi.utils.spec.Requirement;
 import java.util.Collections;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.restlet.ext.wadl.ApplicationInfo;
 import org.restlet.ext.wadl.WadlCnesRepresentation;
 import org.restlet.representation.Representation;
@@ -50,10 +51,10 @@ public abstract class AbstractApplication extends WadlApplication {
     public static final boolean DEFAULT_CORS_CREDENTIALS = true;
 
     /**
-     * Class name.
+     * Logger.
      */
-    private static final String CLASS_NAME = AbstractApplication.class.getName();
-
+    private static final Logger LOG = LogManager.getLogger(AbstractApplication.class.getName()); 
+       
     /**
      * Instance of configuration settings.
      */
@@ -97,17 +98,14 @@ public abstract class AbstractApplication extends WadlApplication {
      */
     protected final CorsService createCoreService(final Set corsOrigin,
                                                   final boolean corsCredentials) {
-        getLogger().entering(CLASS_NAME, "createCoreService");
-
+        LOG.traceEntry();
         final CorsService corsService = new CorsService();
-        getLogger().log(Level.INFO, "Allows all origins {0}", corsOrigin);
+        LOG.info("Allows all origins {}", corsOrigin);
         corsService.setAllowedOrigins(corsOrigin);
-        getLogger().log(Level.INFO, "Allows Credientials {0}", corsCredentials);
-        corsService.setAllowedCredentials(corsCredentials);
+        LOG.info("Allows Credientials {}", corsCredentials);
+        corsService.setAllowedCredentials(corsCredentials);        
 
-        getLogger().exiting(CLASS_NAME, "createCoreService", corsService);
-
-        return corsService;
+        return LOG.traceExit(corsService);
     }
 
     /**
@@ -120,8 +118,7 @@ public abstract class AbstractApplication extends WadlApplication {
             reqName = Requirement.DOI_AUTH_010_NAME
     )
     protected ChallengeAuthenticator createAuthenticator() {
-        getLogger().entering(DoiMdsApplication.class.getName(), "createAuthenticator");
-
+        LOG.traceEntry();
         final ChallengeAuthenticator guard = new ChallengeAuthenticator(
                 getContext(), ChallengeScheme.HTTP_BASIC, "realm"
         );
@@ -129,9 +126,7 @@ public abstract class AbstractApplication extends WadlApplication {
         guard.setVerifier(this.getContext().getDefaultVerifier());
         guard.setEnroler(this.getContext().getDefaultEnroler());
 
-        getLogger().exiting(DoiMdsApplication.class.getName(), "createAuthenticator", guard);
-
-        return guard;
+        return LOG.traceExit(guard);
     }
 
     /**
@@ -152,13 +147,14 @@ public abstract class AbstractApplication extends WadlApplication {
      * @param exception error message to send
      */
     public void sendAlertWhenDataCiteFailed(final Exception exception) {
+        LOG.traceEntry("Parameters : {}",exception);
         final String subject = "Datacite problem";
         final String message = "Dear administrator, an error has been detected"
                 + " coming from Datacite, please look to the Service status\n" + exception;
         try {
             EmailSettings.getInstance().sendMessage(subject, message);
         } catch (MailingException ex1) {
-            getLogger().log(Level.SEVERE, null, ex1.getMessage());
+            LOG.error(ex1);
         }
     }
 
@@ -168,7 +164,8 @@ public abstract class AbstractApplication extends WadlApplication {
      * @return the config
      */
     protected DoiSettings getConfig() {
-        return config;
+        LOG.traceEntry();
+        return LOG.traceExit(config);
     }
 
     /**
@@ -177,7 +174,16 @@ public abstract class AbstractApplication extends WadlApplication {
      * @return the proxySettings
      */
     protected ProxySettings getProxySettings() {
-        return proxySettings;
+        LOG.traceEntry();
+        return LOG.traceExit(proxySettings);        
+    }    
+    
+    /**
+     * Returns the logger.
+     * @return the logger
+     */
+    public Logger getLog() {
+        return LOG;
     }
 
 }

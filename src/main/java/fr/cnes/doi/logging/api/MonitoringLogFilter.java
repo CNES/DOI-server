@@ -10,22 +10,18 @@ import fr.cnes.doi.services.DoiMonitoring;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.settings.EmailSettings;
-import fr.cnes.doi.utils.Utils;
 import fr.cnes.doi.utils.spec.CoverageAnnotation;
 import fr.cnes.doi.utils.spec.Requirement;
 
 import java.text.MessageFormat;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import org.restlet.Context;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.data.Method;
-import org.restlet.engine.Engine;
 import org.restlet.engine.log.LogFilter;
-import org.restlet.engine.log.LogUtils;
 import org.restlet.service.LogService;
 
 /**
@@ -39,9 +35,7 @@ import org.restlet.service.LogService;
 )
 @Requirement(
         reqId = Requirement.DOI_ARCHI_020,
-        reqName = Requirement.DOI_ARCHI_020_NAME,
-        coverage = CoverageAnnotation.PARTIAL,
-        comment = "Log4J n'est pas utilisé"        
+        reqName = Requirement.DOI_ARCHI_020_NAME
 )
 public class MonitoringLogFilter extends LogFilter {
 
@@ -49,11 +43,6 @@ public class MonitoringLogFilter extends LogFilter {
      * Threshold from which an alarm is send.
      */
     private static final float THRESHOLD_SPEED_PERCENT = Float.valueOf(DoiSettings.getInstance().getString(Consts.THRESHOLD_SPEED_PERCENT));
-
-    /**
-     * Logger.
-     */
-    private static final Logger APP_LOGGER = Utils.getAppLogger();
 
     /**
      * The monitoring object
@@ -71,16 +60,16 @@ public class MonitoringLogFilter extends LogFilter {
         super(context, logService);
         this.monitoring = doiMonitoring;
 
-        if (logService != null) {
-            if (logService.getLoggerName() != null) {
-                Engine.getLogger(logService.getLoggerName());
-            } else if (context != null && context.getLogger().getParent() != null) {
-                Engine.getLogger(context.getLogger().getParent().getName() + "."
-                        + LogUtils.getBestClassName(logService.getClass()));
-            } else {
-                Engine.getLogger(LogUtils.getBestClassName(logService.getClass()));
-            }
-        }
+//        if (logService != null) {
+//            if (logService.getLoggerName() != null) {
+//                Engine.getLogger(logService.getLoggerName());
+//            } else if (context != null && context.getLogger().getParent() != null) {
+//                Engine.getLogger(context.getLogger().getParent().getName() + "."
+//                        + LogUtils.getBestClassName(logService.getClass()));
+//            } else {
+//                Engine.getLogger(LogUtils.getBestClassName(logService.getClass()));
+//            }
+//        }
     }
 
     /**
@@ -90,14 +79,14 @@ public class MonitoringLogFilter extends LogFilter {
      */
     @Override
     protected void afterHandle(final Request request, final Response response) {
-        if (APP_LOGGER.isLoggable(Level.INFO) && response.getStatus().isSuccess()) {
+        if (response.getStatus().isSuccess()) {
             final String path = request.getResourceRef().getPath();
             final Method method = request.getMethod();
             final long startTime = (Long) request.getAttributes().get("org.restlet.startTime");
             final int duration = (int) (System.currentTimeMillis() - startTime);
             if (monitoring.isRegistered(method, path)) {
                 monitoring.addMeasurement(method, path, duration);
-                APP_LOGGER.log(Level.INFO, MessageFormat.format("{0}({1} {2}) - current speed average : {3} ms / current measure: {4} ms", monitoring.getDescription(method, path), method.getName(), path, monitoring.getCurrentAverage(method, path), duration));
+                LogManager.getLogger(this.logService.getLoggerName()).info(MessageFormat.format("{0}({1} {2}) - current speed average : {3} ms / current measure: {4} ms", monitoring.getDescription(method, path), method.getName(), path, monitoring.getCurrentAverage(method, path), duration));
                 sendAlertIfNeeded(monitoring.getCurrentAverage(method, path), duration, path, method);
             }
         }
@@ -127,7 +116,8 @@ public class MonitoringLogFilter extends LogFilter {
             try {
                 email.sendMessage(subject, msg);
             } catch (MailingException ex) {
-                Logger.getLogger(MonitoringLogFilter.class.getName()).log(Level.SEVERE, null, ex.getMessage());
+                LogManager.getLogger(this.logService.getLoggerName()).error(ex);
+                //Logger.getLogger(MonitoringLogFilter.class.getName()).log(Level.SEVERE, null, ex.getMessage());
             }
         }
     }

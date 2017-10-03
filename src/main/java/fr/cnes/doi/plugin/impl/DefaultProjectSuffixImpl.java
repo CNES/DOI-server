@@ -16,8 +16,8 @@ import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Default implementation of the project suffix database.
@@ -31,9 +31,9 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
     private static final String DEFAULT_CACHE_FILE = "data/projects.conf";
 
     /**
-     * logger.
+     * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(DefaultProjectSuffixImpl.class.getName());
+    private static final Logger LOG = LogManager.getLogger(DefaultTokenImpl.class.getName());
 
     private final String NAME = this.getClass().getName();
     private static final String DESCRIPTION = "Provides a pre-defined list of users and groups";
@@ -84,7 +84,7 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
             }
             this.addObserver(RoleAuthorizer.getInstance());
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Cannot access the cache file for the mapping projects/id " + projectConf, e);
+            LOG.fatal("Cannot access the cache file for the mapping projects/id " + projectConf, e);
         }
 
     }
@@ -96,7 +96,7 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
      * @throws IOException Exception when trying to load the file
      */
     private void loadProjectConf(File projConfFile) throws IOException {
-        LOGGER.log(Level.FINEST, "Cache file exists : {0}", projConfFile.getAbsolutePath());
+        LOG.debug("Cache file exists : {}", projConfFile.getAbsolutePath());
 
         List<String> lines = Files.readAllLines(projConfFile.toPath());
         // Si le fichier contient autre chose que la ligne d'entete
@@ -109,7 +109,7 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
                 } else {
                     String[] split = line.split(";");
                     if (split.length != 2) {
-                        LOGGER.log(Level.WARNING, "The line {0} is not formatted in the expected way", line);
+                        LOG.debug("The line {} is not formatted in the expected way", line);
                     } else {
                         String projectName = split[0];
                         int id = Integer.parseInt(split[1]);
@@ -129,7 +129,7 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
      */
     private void createProjectConf(File projConfFile) throws IOException {
         // Init the config file
-        LOGGER.log(Level.FINEST, "Cache file does not exist, create it : {0}", projConfFile.getAbsolutePath());
+        LOG.debug("Cache file does not exist, create it : {}", projConfFile.getAbsolutePath());
         File directory = new File(projConfFile.getParent());
         Files.createDirectories(directory.toPath());
         Files.createFile(projConfFile.toPath());
@@ -148,8 +148,7 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
             setChanged();
             notifyObservers(new String[]{ADD_RECORD, String.valueOf(projectID)});
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE,
-                    "The id " + projectID + " of the project " + projectName + "cannot be saved in the file", e);
+            LOG.fatal("The id " + projectID + " of the project " + projectName + "cannot be saved in the file", e);
         }
         return isAdded;
     }

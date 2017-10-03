@@ -20,19 +20,19 @@ import fr.cnes.doi.resource.mds.MetadataResource;
 import fr.cnes.doi.resource.mds.MetadatasResource;
 import fr.cnes.doi.server.DoiServer;
 import fr.cnes.doi.services.DoiMonitoring;
+import fr.cnes.doi.settings.Consts;
+import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.utils.spec.CoverageAnnotation;
 import fr.cnes.doi.utils.spec.Requirement;
 
 /**
- * Creates a default logger.
+ * Creates a LOG service to monitor the speed of applications.
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 @Requirement(
         reqId = Requirement.DOI_ARCHI_020,
-        reqName = Requirement.DOI_ARCHI_020_NAME,
-        coverage = CoverageAnnotation.PARTIAL,
-        comment = "Log4J n'est pas utilisé"        
+        reqName = Requirement.DOI_ARCHI_020_NAME
 )
 public class DoiLogDataServer extends LogService {
 
@@ -45,7 +45,7 @@ public class DoiLogDataServer extends LogService {
      */
     public DoiLogDataServer(final String logName, final boolean isEnabled) {
         super(isEnabled);
-        //this.setResponseLogFormat(DoiSettings.getInstance().getString(Consts.LOG_FORMAT));
+        this.setResponseLogFormat(DoiSettings.getInstance().getString(Consts.LOG_FORMAT));
         try {
             this.setLoggerName(logName);
 
@@ -84,7 +84,7 @@ public class DoiLogDataServer extends LogService {
                 DoisResource.CREATE_DOI
         );
         monitoring.register(Method.GET, 
-                DoiServer.MDS_URI + DoiMdsApplication.DOI_NAME_URI, 
+                DoiServer.MDS_URI + DoiMdsApplication.DOI_URI + DoiMdsApplication.DOI_NAME_URI, 
                 DoiResource.GET_DOI
         );
         monitoring.register(Method.POST, 

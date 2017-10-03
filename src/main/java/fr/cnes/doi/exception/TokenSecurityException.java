@@ -5,10 +5,7 @@
  */
 package fr.cnes.doi.exception;
 
-import fr.cnes.doi.utils.Utils;
-import java.util.logging.Level;
 import org.restlet.data.Status;
-import org.restlet.engine.Engine;
 
 /**
  *
@@ -30,7 +27,6 @@ public class TokenSecurityException extends Exception {
     public TokenSecurityException(final Status status) {
         super();
         this.status = status;
-        Engine.getLogger(Utils.APP_LOGGER_NAME).log(Level.SEVERE, status.getDescription());
     }
     
     /**
@@ -41,7 +37,6 @@ public class TokenSecurityException extends Exception {
     public TokenSecurityException(final Status status, final String message) {
         super(message);
         this.status = status;
-        Engine.getLogger(Utils.APP_LOGGER_NAME).log(Level.SEVERE, this.getMessage());
     }    
     
     /**
@@ -52,7 +47,6 @@ public class TokenSecurityException extends Exception {
     public TokenSecurityException(final Status status,final Throwable cause) {
         super(cause);
         this.status = status;
-        Engine.getLogger(Utils.APP_LOGGER_NAME).log(Level.SEVERE, cause.getMessage());
     }    
     
     /**
@@ -65,7 +59,6 @@ public class TokenSecurityException extends Exception {
     public TokenSecurityException(final Status status, final String message, final Throwable cause) {
         super(message, cause);
         this.status = status;
-        Engine.getLogger(Utils.APP_LOGGER_NAME).log(Level.SEVERE, this.getMessage(), this.getCause());        
     }
     
     /**

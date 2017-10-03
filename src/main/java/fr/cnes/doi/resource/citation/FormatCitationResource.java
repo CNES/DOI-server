@@ -17,7 +17,8 @@ import org.restlet.resource.ResourceException;
 
 import fr.cnes.doi.exception.ClientCrossCiteException;
 import fr.cnes.doi.utils.spec.Requirement;
-import java.util.logging.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Formats a citation.
@@ -31,12 +32,7 @@ import java.util.logging.Level;
  * and harvard3
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-public class FormatCitationResource extends BaseCitationResource { 
-    
-    /**
-     * Class name.
-     */
-    private static final String CLASS_NAME = FormatCitationResource.class.getName();
+public class FormatCitationResource extends BaseCitationResource {       
 
     /**
      * The digital object identifier to format.
@@ -59,15 +55,16 @@ public class FormatCitationResource extends BaseCitationResource {
      */
     @Override
     protected void doInit() throws ResourceException {
-        super.doInit();        
-        
+        super.doInit();                     
+        LOG.traceEntry();
+                 
         this.doiName = getQueryValue(DOI_PARAMETER);
         this.language = getQueryValue(LANG_PARAMETER);
         this.style = getQueryValue(STYLE_PARAMETER);        
         
-        getLogger().log(Level.FINE, "DOI Parameter : {0}", this.doiName);        
-        getLogger().log(Level.FINE, "LANGUAGE Parameter : {0}", this.language);
-        getLogger().log(Level.FINE, "STYLE Parameter : {0}", this.language);        
+        LOG.debug("DOI Parameter : "+ this.doiName);        
+        LOG.debug("LANGUAGE Parameter : "+ this.language);
+        LOG.debug("STYLE Parameter : "+ this.language);        
         
         final StringBuilder description = new StringBuilder();
         description.append("CrossRef, DataCite and mEDRA support formatted "
@@ -79,6 +76,7 @@ public class FormatCitationResource extends BaseCitationResource {
                 + " found in the CSL style repository. Many styles are supported,"
                 + " including common styles such as apa and harvard3");
         setDescription(description.toString());       
+        LOG.traceExit();
     }
 
     /**
@@ -98,21 +96,16 @@ public class FormatCitationResource extends BaseCitationResource {
         )     
     @Get
     public String getFormat() {
-        getLogger().entering(CLASS_NAME, "getFormats");        
-        try {
-            getLogger().entering(CLASS_NAME, "getFormat",new Object[]{this.doiName, this.language, this.style});
-            
+        LOG.traceEntry();
+        try {            
             checkInputs();
             final String result = this.getApp().getClient().getFormat(
                     this.doiName, this.style, this.language
-            );
-            
-            getLogger().exiting(CLASS_NAME, "getFormats", result);
-            return result;
+            );            
+            return LOG.traceExit(result);
         } catch (ClientCrossCiteException ex) {
-            getLogger().throwing(CLASS_NAME, "getFormat", ex);
             ((AbstractApplication)getApplication()).sendAlertWhenDataCiteFailed(ex);
-            throw new ResourceException(ex.getStatus(), ex.getDetailMessage(), ex);
+            throw LOG.throwing(new ResourceException(ex.getStatus(), ex.getDetailMessage(), ex));
         }
     }
     
@@ -122,30 +115,24 @@ public class FormatCitationResource extends BaseCitationResource {
      * and {@link #STYLE_PARAMETER} are not set
      */
     private void checkInputs() throws ResourceException {
-        getLogger().entering(CLASS_NAME, "checkInputs");
-        StringBuilder errorMsg = new StringBuilder();
+        LOG.traceEntry();
+        final StringBuilder errorMsg = new StringBuilder();
         if (this.doiName == null || this.doiName.isEmpty()) {
-            getLogger().log(Level.FINE, "{0} value is not set", DOI_PARAMETER);
-            errorMsg = errorMsg.append(DOI_PARAMETER).append(" value is not set.");
+            errorMsg.append(DOI_PARAMETER).append(" value is not set.");
         } 
         if (this.language == null || this.language.isEmpty()) {
-            getLogger().log(Level.FINE, "{0} value is not set", LANG_PARAMETER);
-            errorMsg = errorMsg.append(LANG_PARAMETER).append(" value is not set.");            
+            errorMsg.append(LANG_PARAMETER).append(" value is not set.");            
         }    
         if (this.style == null || this.style.isEmpty()) {
-            getLogger().log(Level.FINE, "{0} value is not set", STYLE_PARAMETER);
-            errorMsg = errorMsg.append(STYLE_PARAMETER).append(" value is not set.");            
+            errorMsg.append(STYLE_PARAMETER).append(" value is not set.");            
         }        
         if(errorMsg.length() == 0) {        
-            getLogger().fine("The parameters are valid");                    
+            LOG.debug("The parameters are valid");                    
         } else {
-            getLogger().warning(errorMsg.toString());
-            final ResourceException exception = new ResourceException(
-                    Status.CLIENT_ERROR_BAD_REQUEST, errorMsg.toString());            
-            getLogger().throwing(CLASS_NAME, "checkInputs", exception);
-            throw exception;
+            throw LOG.throwing(new ResourceException(
+                    Status.CLIENT_ERROR_BAD_REQUEST, errorMsg.toString()));            
         }        
-        getLogger().exiting(CLASS_NAME, "checkInputs");        
+        LOG.traceExit();
     }           
            
     /**

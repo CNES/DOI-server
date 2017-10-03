@@ -11,11 +11,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.LogRecord;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.data.ClientInfo;
-import org.restlet.engine.Engine;
 import org.restlet.routing.Filter;
 import org.restlet.security.Role;
 
@@ -25,9 +24,7 @@ import org.restlet.security.Role;
  */
 @Requirement(
         reqId = Requirement.DOI_ARCHI_020,
-        reqName = Requirement.DOI_ARCHI_020_NAME,
-        coverage = CoverageAnnotation.PARTIAL,
-        comment = "Log4J n'est pas utilisé"        
+        reqName = Requirement.DOI_ARCHI_020_NAME
 )
 public class DoiSecurityLogFilter extends Filter {
 
@@ -74,9 +71,10 @@ public class DoiSecurityLogFilter extends Filter {
             }
 
             final LogRecord logRecord = (LogRecord) logRecordObj;
-            logRecord.setMessage("User: " + user + "\tProfile: " + profile + "\t" + logRecord.getMessage());
-            final Logger logger = Engine.getLogger(loggerName);
-            logger.log(logRecord);
+            logRecord.setMessage("User: " + user + "\tProfile: " + profile + "\t" + logRecord.getMessage());            
+            LogManager.getLogger(loggerName).info(logRecord);
+            //final Logger logger = Engine.getLogger(loggerName);
+            //logger.log(logRecord);
 
         }
     }

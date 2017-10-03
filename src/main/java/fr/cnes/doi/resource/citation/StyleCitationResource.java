@@ -16,17 +16,14 @@ import org.restlet.resource.ResourceException;
 
 import fr.cnes.doi.exception.ClientCrossCiteException;
 import fr.cnes.doi.utils.spec.Requirement;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * The supported styles for citation.
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-public class StyleCitationResource extends BaseCitationResource {
-    
-    /**
-     * Class name.
-     */
-    private static final String CLASS_NAME = StyleCitationResource.class.getName();
+public class StyleCitationResource extends BaseCitationResource {    
 
     /**
      * Init.
@@ -34,7 +31,8 @@ public class StyleCitationResource extends BaseCitationResource {
      */
     @Override
     protected void doInit() throws ResourceException {
-        super.doInit();
+        super.doInit();                
+        LOG.traceEntry();
         final StringBuilder description = new StringBuilder();
         description.append("Selects a style");
         description.append("A \"style\" can be chosen from the list of style "
@@ -42,6 +40,7 @@ public class StyleCitationResource extends BaseCitationResource {
         description.append("Many styles are supported, including common styles "
                 + "such as apa and harvard3.");
         setDescription(description.toString());        
+        LOG.traceExit();
     }
 
     /**
@@ -60,17 +59,16 @@ public class StyleCitationResource extends BaseCitationResource {
         )      
     @Get("json|xml")
     public List<String> getStyles() throws ResourceException{
-        getLogger().entering(CLASS_NAME, "getStyles");
+        LOG.traceEntry();
+        final List<String> result;
         try {
-            final List<String> result = this.getApp().getClient().getStyles();
-            getLogger().exiting(CLASS_NAME, "getStyles", result);
-            return result;
+            result = this.getApp().getClient().getStyles();
         } catch (ClientCrossCiteException ex) {
-            getLogger().throwing(CLASS_NAME, "getStyles", ex);
             ((AbstractApplication)
                     getApplication()).sendAlertWhenDataCiteFailed(ex);                        
-            throw new ResourceException(ex.getStatus(), ex.getDetailMessage(), ex);
+            throw LOG.throwing(new ResourceException(ex.getStatus(), ex.getDetailMessage(), ex));
         }
+        return LOG.traceExit(result);
     }  
           
     /**

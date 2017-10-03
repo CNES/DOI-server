@@ -5,10 +5,11 @@
  */
 package fr.cnes.doi.services;
 
+import fr.cnes.doi.utils.Utils;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import org.restlet.data.Method;
 
@@ -22,7 +23,7 @@ public class DoiMonitoring {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(DoiMonitoring.class.getName());
+    private static final Logger LOG = LogManager.getLogger(Utils.APP_LOGGER_NAME);
 
     /**
      * Hash map of records to compute average time to answer requests.
@@ -37,9 +38,9 @@ public class DoiMonitoring {
      * @param description Feature's description
      */
     public void register(final Method name, final String path, final String description) {
-        LOGGER.entering(getClass().getName(), "register", new Object[]{name.getName(), path, description});
+        LOG.traceEntry("Parameters : {}, {}, {}",name, path, description);
         this.applications.put(name.getName() + path, new DoiMonitoringRecord(description, 0.0f, 0));
-        LOGGER.exiting(getClass().getName(), "register");
+        LOG.traceExit();
     }
 
     /**
@@ -50,21 +51,21 @@ public class DoiMonitoring {
      * @param duration duration in ms
      */
     public void addMeasurement(final Method name, final String path, final float duration) {
-        LOGGER.entering(getClass().getName(), "addMeasurement", new Object[]{name.getName(), path, duration});
+        LOG.traceEntry("Parameters : {} {} {}", name.getName(), path, duration);
         final String identifier = name.getName() + path;
         if (this.applications.containsKey(identifier)) {
             final DoiMonitoringRecord record = this.applications.get(name.getName() + path);
             final float previousSpeedAverage = (float) record.getAverage();
-            LOGGER.log(Level.CONFIG, "current speed average = {0}", previousSpeedAverage);
+            LOG.info("current speed average = {}", previousSpeedAverage);
             final int previousNbAccess = (int) record.getNbAccess();
             final float newSpeedAverage = (previousSpeedAverage + duration) / (previousNbAccess + 1);
-            LOGGER.log(Level.CONFIG, "new speed average = {0}", newSpeedAverage);
+            LOG.info("new speed average = {}", newSpeedAverage);
             record.setAverage(newSpeedAverage);
             record.setNbAccess(previousNbAccess + 1);
         } else {
-            LOGGER.warning("Unable to add the measurement : Unknown feature");
+            LOG.info("Unable to add the measurement : Unknown feature");
         }
-        LOGGER.exiting(getClass().getName(), "addMEasurement");
+        LOG.traceExit();
     }
 
     /**
@@ -75,10 +76,13 @@ public class DoiMonitoring {
      * @return True when the feature is registered
      */
     public boolean isRegistered(final Method name, final String path) {
+        LOG.traceEntry("Parameters : {} and {}", name.getName(), path);
         final String identifier = name.getName() + path;
+        //TODO : a bug here - applications contain the template where as path has
+        //the value of the template
         final boolean isRegistered = this.applications.containsKey(identifier);
-        LOGGER.log(Level.FINER, "{0} {1} is registered : {2}", new Object[]{name, path, isRegistered});       
-        return isRegistered;
+        LOG.debug(name+" "+path+" is registered : " + isRegistered);       
+        return LOG.traceExit(isRegistered);
     }
 
     /**
@@ -88,17 +92,16 @@ public class DoiMonitoring {
      * @param path path URI
      * @return the average speed
      */
-    public float getCurrentAverage(final Method name, final String path) {        
+    public float getCurrentAverage(final Method name, final String path) {    
+        LOG.traceEntry("Parameters : {} and {}", name.getName(), path);
+        final float average;
         final String identifier = name.getName() + path;
         if (isRegistered(name, path)) {
-            final float average = this.applications.get(identifier).getAverage();
-            LOGGER.finer(String.format("getCurrentAverage for %s %s : %s", name, path, average));
-            return average;
+            average = this.applications.get(identifier).getAverage();
         } else {
-            final IllegalArgumentException exception = new IllegalArgumentException(identifier + " is not registered");
-            LOGGER.throwing(this.getClass().getName(), "getCurrentAverage", exception);
-            throw exception;
+            throw LOG.throwing(new IllegalArgumentException(identifier + " is not registered"));
         }
+        return LOG.traceExit(average);
     }
 
     /**
@@ -108,11 +111,11 @@ public class DoiMonitoring {
      * @param path path URI
      * @return the description
      */
-    public String getDescription(final Method name, final String path) {        
+    public String getDescription(final Method name, final String path) {    
+        LOG.traceEntry("Parameters : {} and {}", name.getName(), path);        
         final String identifier = name.getName() + path;
         final String description = this.applications.get(identifier).getDescription();
-        LOGGER.log(Level.FINER, "getDescription : {0}", description);
-        return description;
+        return LOG.traceExit(description);
     }
 
 }

@@ -5,9 +5,6 @@
  */
 package fr.cnes.doi.utils;
 
-import java.util.logging.Logger;
-
-import fr.cnes.doi.logging.shell.ShellHandler;
 import java.lang.reflect.Array;
 import java.util.HashSet;
 import java.util.Map;
@@ -20,7 +17,7 @@ import java.util.Set;
  * @author Jean-Christophe Malapert
  * @author Claire
  */
-public class Utils {
+public class Utils {    
 
     /**
      * An empty immutable {@code Object} array.
@@ -33,24 +30,14 @@ public class Utils {
     public static final String SHELL_LOGGER_NAME = "fr.cnes.doi.logging.shell";
 
     /**
-     * Name of the logger for http requests and answers.
+     * Name of the logger for http requests and answers {@value #HTTP_LOGGER_NAME}.
      */
     public static final String HTTP_LOGGER_NAME = "fr.cnes.doi.logging.api";
 
     /**
-     * Name of the logger for applicative logs.
+     * Name of the logger to measure performances {@value #APP_LOGGER_NAME}.
      */
     public static final String APP_LOGGER_NAME = "fr.cnes.doi.logging.app";
-
-    /**
-     * Logger for applicative logs.
-     */
-    private static Logger appLogger;
-
-    /**
-     * Logger in the console to display msg info like help.
-     */
-    private static Logger shellLogger;
 
     /**
      * Checks whether the char sequence is empty.
@@ -70,34 +57,6 @@ public class Utils {
      */
     public static boolean isNotEmpty(final CharSequence charSeq) {
         return !isEmpty(charSeq);
-    }
-
-    /**
-     * Gets the shell logger to log in the console without date
-     *
-     * @return the logger
-     */
-    public synchronized static Logger getShellLogger() {
-
-        if (shellLogger == null) {
-            shellLogger = Logger.getLogger(SHELL_LOGGER_NAME);
-            shellLogger.addHandler(new ShellHandler());
-            shellLogger.setUseParentHandlers(false);
-        }
-        return shellLogger;
-    }
-
-    /**
-     * Gets the application logger to log in the specific file for applicative
-     * messages
-     *
-     * @return the logger
-     */
-    public synchronized static Logger getAppLogger() {
-        if (appLogger == null) {
-            appLogger = Logger.getLogger(APP_LOGGER_NAME);
-        }
-        return appLogger;
     }
 
     /**

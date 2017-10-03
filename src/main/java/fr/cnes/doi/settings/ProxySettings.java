@@ -6,8 +6,8 @@
 package fr.cnes.doi.settings;
 
 import fr.cnes.doi.utils.spec.Requirement;
-import java.util.Arrays;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import org.restlet.data.ChallengeResponse;
 import org.restlet.data.ChallengeScheme;
@@ -21,17 +21,12 @@ import org.restlet.data.ChallengeScheme;
         reqId = Requirement.DOI_CONFIG_010,
         reqName = Requirement.DOI_CONFIG_010_NAME
 )
-public final class ProxySettings {
-    
-    /**
-     * Class name.
-     */
-    private static final String CLASS_NAME = ProxySettings.class.getName();
+public final class ProxySettings {    
 
     /**
      * Application logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(ProxySettings.class.getName());
+    private static final Logger LOG = LogManager.getLogger(ProxySettings.class.getName());
 
     /**
      * Proxy configuration - host
@@ -72,9 +67,126 @@ public final class ProxySettings {
      * Private constructor
      */
     private ProxySettings() {
+        LOG.traceEntry();
         init();
+        LOG.traceExit();
     }
 
+
+    /**
+     * Access to unique INSTANCE of Settings
+     *
+     * @return the configuration instance.
+     */
+    public static ProxySettings getInstance() {
+        LOG.traceEntry();
+        return LOG.traceExit(ProxySettingsHolder.INSTANCE);
+    }
+
+    /**
+     * Init the proxy setting     
+     */
+    public void init() {
+        LOG.traceEntry();
+        final DoiSettings settings = DoiSettings.getInstance();
+        LOG.info("----- proxy parameters ----");  
+        
+        this.proxyHost = settings.getString(Consts.SERVER_PROXY_HOST);
+        LOG.info("proxyHost : {}",this.proxyHost);
+        
+        this.proxyPort = settings.getString(Consts.SERVER_PROXY_PORT);
+        LOG.info("proxyPort : {}",this.proxyPort);
+        
+        this.proxyUser = settings.getSecret(Consts.SERVER_PROXY_LOGIN);
+        LOG.info("proxyUser : {}",this.proxyUser);        
+        
+        this.proxyPassword = settings.getSecret(Consts.SERVER_PROXY_PWD);
+        LOG.info("proxyPassword : {}",this.proxyPassword);                
+        
+        this.nonProxyHosts = settings.getString(Consts.SERVER_NONPROXY_HOSTS);
+        LOG.info("nonProxyHosts : {}",this.nonProxyHosts);                
+        
+        this.proxySet = settings.getBoolean(Consts.SERVER_PROXY_USED);
+        LOG.info("proxySet : {}",this.proxySet);                        
+        
+        this.proxyAuthentication = new ChallengeResponse(ChallengeScheme.HTTP_BASIC, this.proxyUser, this.proxyPassword);        
+        
+        LOG.info("Proxy settings have been loaded");
+        LOG.info("--------------------------");        
+        
+        LOG.traceExit();
+    }
+
+    /**
+     * Gets the withProxy value
+     *
+     * @return the withProxy
+     */
+    public boolean isWithProxy() {
+        LOG.traceEntry();
+        return LOG.traceExit(this.proxySet);
+    }
+
+    /**
+     * Gets the proxyHost value
+     *
+     * @return the proxyHost
+     */
+    public String getProxyHost() {
+        LOG.traceEntry();
+        return LOG.traceExit(proxyHost);
+    }
+
+    /**
+     * Gets the proxyPort value
+     *
+     * @return the proxyPort
+     */
+    public String getProxyPort() {
+        LOG.traceEntry();
+        return LOG.traceExit(proxyPort);
+    }
+
+    /**
+     * Gets the proxyUser value
+     *
+     * @return the proxyUser
+     */
+    public String getProxyUser() {
+        LOG.traceEntry();
+        return LOG.traceExit(proxyUser);
+    }
+
+    /**
+     * Gets the proxyPassword value
+     *
+     * @return the proxyPassword
+     */
+    public String getProxyPassword() {
+        LOG.traceEntry();
+        return LOG.traceExit(proxyPassword);
+    }
+
+    /**
+     * Gets the proxyAuthentication value
+     *
+     * @return the proxyAuthentication
+     */
+    public ChallengeResponse getProxyAuthentication() {
+        LOG.traceEntry();
+        return LOG.traceExit(proxyAuthentication);
+    }
+
+    /**
+     * Gets the nonproxyHosts value
+     *
+     * @return the nonproxyHosts
+     */
+    public String getNonProxyHosts() {
+        LOG.traceEntry();
+        return LOG.traceExit(nonProxyHosts);
+    }
+    
     /**
      * 
      */
@@ -84,106 +196,6 @@ public final class ProxySettings {
          * Unique Instance unique not pre-initiliaze
          */
         private static final ProxySettings INSTANCE = new ProxySettings();
-    }
-
-    /**
-     * Access to unique INSTANCE of Settings
-     *
-     * @return the configuration instance.
-     */
-    public static ProxySettings getInstance() {
-        return ProxySettingsHolder.INSTANCE;
-    }
-
-    /**
-     * Init the proxy setting     
-     */
-    public void init() {
-        LOGGER.entering(CLASS_NAME, "init");
-        final DoiSettings settings = DoiSettings.getInstance();
-        this.proxyHost = settings.getString(Consts.SERVER_PROXY_HOST);
-        this.proxyPort = settings.getString(Consts.SERVER_PROXY_PORT);
-
-        this.proxyUser = settings.getSecret(Consts.SERVER_PROXY_LOGIN);
-        this.proxyPassword = settings.getSecret(Consts.SERVER_PROXY_PWD);
-        this.nonProxyHosts = settings.getString(Consts.SERVER_NONPROXY_HOSTS);
-
-        this.proxySet = settings.getBoolean(Consts.SERVER_PROXY_USED);
-        this.proxyAuthentication = new ChallengeResponse(ChallengeScheme.HTTP_BASIC, this.proxyUser, this.proxyPassword);
-        
-        LOGGER.info("Proxy settings have been loaded");
-        
-        LOGGER.exiting(CLASS_NAME, "init");        
-    }
-
-    /**
-     * Gets the withProxy value
-     *
-     * @return the withProxy
-     */
-    public boolean isWithProxy() {
-        LOGGER.config(String.format("isWithProxy : %s", this.proxySet));
-        return this.proxySet;
-    }
-
-    /**
-     * Gets the proxyHost value
-     *
-     * @return the proxyHost
-     */
-    public String getProxyHost() {
-        LOGGER.config(String.format("getProxyHost : %s", this.proxyHost));        
-        return proxyHost;
-    }
-
-    /**
-     * Gets the proxyPort value
-     *
-     * @return the proxyPort
-     */
-    public String getProxyPort() {
-        LOGGER.config(String.format("getProxyPort : %s", this.proxyPort));                
-        return proxyPort;
-    }
-
-    /**
-     * Gets the proxyUser value
-     *
-     * @return the proxyUser
-     */
-    public String getProxyUser() {
-        LOGGER.config(String.format("getProxyUser : %s", this.proxyUser));                
-        return proxyUser;
-    }
-
-    /**
-     * Gets the proxyPassword value
-     *
-     * @return the proxyPassword
-     */
-    public String getProxyPassword() {
-        LOGGER.config(String.format("getProxyPassword: %s", this.proxyPassword));                
-        return proxyPassword;
-    }
-
-    /**
-     * Gets the proxyAuthentication value
-     *
-     * @return the proxyAuthentication
-     */
-    public ChallengeResponse getProxyAuthentication() {
-        LOGGER.config(String.format("getProxyAuthentication - login:"+this.proxyAuthentication.getIdentifier()+" pwd:"+Arrays.toString(this.proxyAuthentication.getSecret())));                
-        return proxyAuthentication;
-    }
-
-    /**
-     * Gets the nonproxyHosts value
-     *
-     * @return the nonproxyHosts
-     */
-    public String getNonProxyHosts() {
-        LOGGER.config(String.format("getNonProxyHosts : %s", this.nonProxyHosts));                        
-        return nonProxyHosts;
-    }
+    }    
 
 }

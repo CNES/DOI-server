@@ -6,12 +6,12 @@
 package fr.cnes.doi.security;
 
 import fr.cnes.doi.db.AbstractTokenDBHelper;
-import fr.cnes.doi.utils.Utils;
+import fr.cnes.doi.logging.business.JsonMessage;
 import fr.cnes.doi.utils.spec.Requirement;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.data.ChallengeResponse;
@@ -29,19 +29,21 @@ import org.restlet.security.Verifier;
 public class TokenBasedVerifier implements Verifier {
 
     /**
-     * Token DB.
-     */
-    private final AbstractTokenDBHelper tokenDB;
-    /**
      * Logger.
      */
-    public static final Logger LOGGER = Utils.getAppLogger();
+    private static final Logger LOG = LogManager.getLogger(TokenBasedVerifier.class.getName());
+    
+    /**
+     * Token DB.
+     */
+    private final AbstractTokenDBHelper tokenDB;    
 
     /**
      * Constructor.
      * @param tokenDB token DB
      */
     public TokenBasedVerifier(final AbstractTokenDBHelper tokenDB) {
+        LOG.traceEntry(new JsonMessage(tokenDB));
         this.tokenDB = tokenDB;
     }
 
@@ -53,6 +55,7 @@ public class TokenBasedVerifier implements Verifier {
      */
     @Override
     public int verify(final Request request, final Response response) {
+        LOG.traceEntry(new JsonMessage(request));
         final int result;
         final ChallengeResponse challResponse = request.getChallengeResponse();
         if (challResponse == null) {
@@ -60,8 +63,7 @@ public class TokenBasedVerifier implements Verifier {
         } else {
             result = processAuthentication(request, challResponse);
         }
-
-        return result;
+        return LOG.traceExit(result);
     }
 
     /**
@@ -71,8 +73,10 @@ public class TokenBasedVerifier implements Verifier {
      * @return the authentication status
      */
     private int processAuthentication(final Request request, final ChallengeResponse challResponse) {
+        LOG.traceEntry(new JsonMessage(request));        
         final int result;
         final String token = challResponse.getRawValue();
+        LOG.debug("Token from challenge response : "+token);
         if (token == null) {
             result = Verifier.RESULT_MISSING;
         } else if (this.tokenDB.isExist(token)) {
@@ -80,7 +84,7 @@ public class TokenBasedVerifier implements Verifier {
         } else {
             result = Verifier.RESULT_INVALID;
         }
-        return result;
+        return LOG.traceExit(result);
     }
 
     /**
@@ -90,9 +94,11 @@ public class TokenBasedVerifier implements Verifier {
      * @return the status given by {@link Verifier}
      */
     private int processToken(final Request request, final String token) {
+        LOG.traceEntry(new JsonMessage(request));
+        LOG.traceEntry(token);
         final int result;
         if (this.tokenDB.isExpirated(token)) {
-            LOGGER.log(Level.INFO, "token {0} is expirated", token);
+            LOG.info("token {} is expirated", token);
             result = Verifier.RESULT_INVALID;
         } else {
             result = Verifier.RESULT_VALID;
@@ -100,10 +106,10 @@ public class TokenBasedVerifier implements Verifier {
             final Claims body = tokenInfo.getBody();
             final String userID = body.getSubject();
             final Integer projectID = (Integer) body.get(TokenSecurity.PROJECT_ID);
-            LOGGER.log(Level.INFO, "token {0} is valid, {1} for {2} are authenticated", new Object[]{token, userID, projectID});
+            LOG.info("token {} is valid, {} for {} are authenticated", token, userID, projectID);
             request.getClientInfo().setUser(new User(userID));
             request.getHeaders().set(UtilsHeader.SELECTED_ROLE_PARAMETER, String.valueOf(projectID));
         }
-        return result;
+        return LOG.traceExit(result);
     }
 }

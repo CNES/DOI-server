@@ -14,6 +14,8 @@ import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.utils.spec.Requirement;
 
 import java.util.Arrays;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
 import org.restlet.data.Status;
@@ -36,7 +38,7 @@ public class DoiResource extends BaseMdsResource {
     /**
      * 
      */
-    public static final String GET_DOI = "Get DOI";
+    public static final String GET_DOI = "Get DOI";   
 
     /**
      * DOI template.
@@ -52,9 +54,12 @@ public class DoiResource extends BaseMdsResource {
     @Override
     protected void doInit() throws ResourceException {
         super.doInit();
+        LOG.traceEntry();
         setDescription("The resource can retrieve a DOI");
         this.doiName = getResourcePath().replace(DoiMdsApplication.DOI_URI+"/", "");
         //this.doiName = getAttribute(DoiMdsApplication.DOI_TEMPLATE);
+        LOG.debug(this.doiName);
+        LOG.traceExit();
     }
 
     /**
@@ -87,7 +92,8 @@ public class DoiResource extends BaseMdsResource {
         )    
     @Get
     public Representation getDoi() throws ResourceException {
-        getLogger().entering(getClass().getName(), "getDoi", this.doiName);
+        LOG.traceEntry();
+        final Representation result;
         checkInput(this.doiName);
         try {
             final String doi = this.getDoiApp().getClient().getDoi(this.doiName);
@@ -96,17 +102,16 @@ public class DoiResource extends BaseMdsResource {
             } else {
                 setStatus(Status.SUCCESS_NO_CONTENT);
             }
-            getLogger().exiting(getClass().getName(), "getDoi", doi);
-            return new StringRepresentation(doi, MediaType.TEXT_PLAIN);
+            result = new StringRepresentation(doi, MediaType.TEXT_PLAIN);
         } catch (ClientMdsException ex) {
-            getLogger().throwing(getClass().getName(), "getDoi", ex);
             if (ex.getStatus().getCode() == Status.CLIENT_ERROR_NOT_FOUND.getCode()) {
-                throw new ResourceException(ex.getStatus(), ex.getMessage(), ex);
+                throw LOG.throwing(new ResourceException(ex.getStatus(), ex.getMessage(), ex));
             } else {
                 ((AbstractApplication) getApplication()).sendAlertWhenDataCiteFailed(ex);
-                throw new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex);
+                throw LOG.throwing(new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex));
             }
         }
+        return LOG.traceExit(result);
     }
 
     /**
@@ -121,21 +126,23 @@ public class DoiResource extends BaseMdsResource {
         reqName = Requirement.DOI_INTER_070_NAME
         )
     private void checkInput(final String doiName) throws ResourceException {
-        if (doiName == null || doiName.isEmpty()) {
-            throw new ResourceException(
+        LOG.traceEntry("Parameter : {}",doiName);
+        if (doiName == null || doiName.isEmpty()) {            
+            throw LOG.throwing(new ResourceException(
                     Status.CLIENT_ERROR_BAD_REQUEST, 
                     "doiName cannot be null or empty"
-            );
+            ));
         } else if (!doiName.startsWith(DoiSettings.getInstance().getString(Consts.INIST_DOI))) {
-            throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "the DOI"
-                    + " prefix must contains the prefix of the institution");
+            throw LOG.throwing(new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "the DOI"
+                    + " prefix must contains the prefix of the institution"));
         } else {
             try {
                 ClientMDS.checkIfAllCharsAreValid(doiName);
             } catch (IllegalArgumentException ex) {
-                throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, ex);
+                throw LOG.throwing(new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, ex));
             }
         }
+        LOG.traceExit();
     }
 
     /**

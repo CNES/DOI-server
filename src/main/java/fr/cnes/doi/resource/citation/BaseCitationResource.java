@@ -7,6 +7,7 @@ package fr.cnes.doi.resource.citation;
 
 import fr.cnes.doi.application.DoiCrossCiteApplication;
 import fr.cnes.doi.resource.AbstractResource;
+import org.apache.logging.log4j.Logger;
 import org.restlet.data.MediaType;
 import org.restlet.ext.wadl.DocumentationInfo;
 import org.restlet.ext.wadl.RepresentationInfo;
@@ -17,7 +18,7 @@ import org.restlet.resource.ResourceException;
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-public class BaseCitationResource extends AbstractResource {
+public class BaseCitationResource extends AbstractResource {        
 
     /**
      * Parameter providing the digital object identifier {@value #DOI_PARAMETER}.
@@ -33,6 +34,11 @@ public class BaseCitationResource extends AbstractResource {
      * Style parameter to format the citation {@value #STYLE_PARAMETER}.
      */
     public static final String STYLE_PARAMETER = "style";
+    
+    /**
+     * Logger.
+     */
+    protected Logger LOG;    
 
     /**
      * Cross cite application.
@@ -46,7 +52,9 @@ public class BaseCitationResource extends AbstractResource {
      */
     @Override
     protected void doInit() throws ResourceException {
+        super.doInit();
         this.app = (DoiCrossCiteApplication) getApplication();
+        this.LOG = this.app.getLog();
     }
 
     /**

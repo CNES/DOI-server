@@ -5,10 +5,7 @@
  */
 package fr.cnes.doi.exception;
 
-import fr.cnes.doi.utils.Utils;
-import java.util.logging.Level;
 import org.restlet.data.Status;
-import org.restlet.engine.Engine;
 
 /**
  * Exception for Client Cross Cite.
@@ -36,7 +33,6 @@ public class ClientMdsException extends Exception {
         super();
         this.detailMessage = computeDetailMessage(status);
         this.status = status;
-        Engine.getLogger(Utils.APP_LOGGER_NAME).log(Level.SEVERE, this.detailMessage);
     }
     
     /**
@@ -48,7 +44,6 @@ public class ClientMdsException extends Exception {
         super(message);
         this.detailMessage = computeDetailMessage(status);
         this.status = status;
-        Engine.getLogger(Utils.APP_LOGGER_NAME).log(Level.SEVERE, this.detailMessage);
     }    
     
     /**
@@ -60,7 +55,6 @@ public class ClientMdsException extends Exception {
         super(cause);
         this.detailMessage = computeDetailMessage(status);
         this.status = status;
-        Engine.getLogger(Utils.APP_LOGGER_NAME).log(Level.SEVERE, this.detailMessage);
     }    
     
     /**
@@ -74,7 +68,6 @@ public class ClientMdsException extends Exception {
         super(message, cause);
         this.detailMessage = computeDetailMessage(status);
         this.status = status;
-        Engine.getLogger(Utils.APP_LOGGER_NAME).log(Level.SEVERE, this.detailMessage);        
     }
     
     /**

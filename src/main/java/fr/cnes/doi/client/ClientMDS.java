@@ -437,15 +437,14 @@ public class ClientMDS extends BaseClient {
 
     /**
      * This request returns an URL associated with a given DOI. A 200 status is
-     * an operation successful. The DOI prefix may replace according to the
-     * {@link ClientMDS#context}.
+     * an operation successful. A 204 status means no content (DOI is known to MDS, 
+     * but is not minted (or not resolvable e.g. due to handle's latency) The DOI 
+     * prefix may replace according to the {@link ClientMDS#context}.
      *
      * @param doiName DOI name
      * @return an URL or no content (DOI is known to MDS, but is not minted (or
      * not resolvable e.g. due to handle's latency))
      * @throws ClientMdsException - if an error happens <ul>
-     * <li>204 No Content - DOI is known to MDS, but is not minted (or not
-     * resolvable e.g. due to handle's latency)</li>
      * <li>401 Unauthorized - no login</li>
      * <li>403 - login problem or dataset belongs to another party</li>
      * <li>404 Not Found - DOI does not exist in our database</li>
@@ -475,6 +474,7 @@ public class ClientMDS extends BaseClient {
     /**
      * This request returns a list of all DOIs for the requesting datacentre.
      * There is no guaranteed order. A 200 status is an operation successful.
+     * A 204 status means no Content (no DOIs found)
      *
      * @return a list of all DOI or no content when no DOIs founds
      * @throws ClientMdsException 204 No Content - no DOIs founds

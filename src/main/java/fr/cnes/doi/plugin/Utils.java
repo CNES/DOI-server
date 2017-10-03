@@ -13,8 +13,9 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 /**
  * Utility class for plugins.
@@ -25,7 +26,7 @@ public class Utils {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = fr.cnes.doi.utils.Utils.getAppLogger();
+    private static final Logger LOG = LogManager.getLogger(Utils.class.getName());
 
     /**
      * Adds a path in the classPath.
@@ -46,9 +47,9 @@ public class Utils {
     public static void addPath(final String path) 
             throws IllegalArgumentException, NoSuchMethodException, 
             IllegalAccessException, InvocationTargetException, MalformedURLException {
-        LOGGER.fine(String.format("Add path %s to plugin", path));
+        LOG.debug("Add path {} to plugin", path);
         if(path == null) {
-            throw new IllegalArgumentException("path variable is null");
+            throw LOG.throwing(new IllegalArgumentException("path variable is null"));
         }
         final File pathDir = new File(path);
         if (pathDir.isDirectory()) {
@@ -74,7 +75,7 @@ public class Utils {
             throws NoSuchMethodException, IllegalAccessException, 
             InvocationTargetException, 
             MalformedURLException {
-        LOGGER.log(Level.FINE, "Adds file {0} to classpathS", file);
+        LOG.debug("Adds file {} to classpathS", file);
         final URI uri = file.toURI();
         final URLClassLoader urlClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
         final Class<URLClassLoader> urlClass = URLClassLoader.class;

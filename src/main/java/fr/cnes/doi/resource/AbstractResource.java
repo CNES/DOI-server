@@ -5,8 +5,10 @@
  */
 package fr.cnes.doi.resource;
 
+import fr.cnes.doi.application.AbstractApplication;
 import fr.cnes.doi.utils.spec.Requirement;
 import java.util.List;
+import org.apache.logging.log4j.Logger;
 import org.restlet.data.Form;
 import org.restlet.data.MediaType;
 import org.restlet.data.Status;
@@ -18,6 +20,7 @@ import org.restlet.ext.wadl.RepresentationInfo;
 import org.restlet.ext.wadl.RequestInfo;
 import org.restlet.ext.wadl.ResponseInfo;
 import org.restlet.ext.wadl.WadlServerResource;
+import org.restlet.resource.ResourceException;
 
 /**
  * Abstract resource.
@@ -33,7 +36,18 @@ import org.restlet.ext.wadl.WadlServerResource;
         reqName = Requirement.DOI_DOC_010_NAME
 )
 public abstract class AbstractResource extends WadlServerResource {
+    
+    /**
+     * Logger.
+     */
+    private Logger LOG;     
 
+    @Override
+    protected void doInit() throws ResourceException {
+        super.doInit(); 
+        this.LOG = ((AbstractApplication)getApplication()).getLog();
+    }       
+    
     /**
      * Tests if the form is not null and the parameter exists in the form.
      * @param form submitted form
@@ -41,13 +55,14 @@ public abstract class AbstractResource extends WadlServerResource {
      * @return True when the form is not null and the parameter exists in the form otherwise False
      */
     public boolean isValueExist(final Form form, final String parameterName) {
+        LOG.traceEntry("Parameters : {} and {}", form, parameterName);
         final boolean result;
         if (isObjectNotExist(form)) {
             result = false;
         } else {
             result = form.getFirstValue(parameterName) != null;
         }
-        return result;
+        return LOG.traceExit(result);
     }
 
     /**
@@ -57,7 +72,8 @@ public abstract class AbstractResource extends WadlServerResource {
      * @return False when the form is not null and the parameter exists in the form otherwise True
      */
     public boolean isValueNotExist(final Form form, final String parameterName) {
-        return !isValueExist(form, parameterName);
+        LOG.traceEntry("Parameters : {} and {}", form, parameterName);        
+        return LOG.traceExit(!isValueExist(form, parameterName));
     }
 
     /**
@@ -66,7 +82,8 @@ public abstract class AbstractResource extends WadlServerResource {
      * @return True when the object is not null otherwise False
      */
     public boolean isObjectExist(final Object obj) {
-        return obj != null;
+        LOG.traceEntry("Parameter : {}",obj);
+        return LOG.traceExit(obj != null);
     }
 
     /**
@@ -75,7 +92,8 @@ public abstract class AbstractResource extends WadlServerResource {
      * @return True when the object is null otherwise False
      */    
     public boolean isObjectNotExist(final Object obj) {
-        return !isObjectExist(obj);
+        LOG.traceEntry("Parameter : {}",obj);        
+        return LOG.traceExit(!isObjectExist(obj));
     }
 
     /**

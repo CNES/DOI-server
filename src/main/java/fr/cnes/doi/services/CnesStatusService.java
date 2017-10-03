@@ -5,6 +5,8 @@
  */
 package fr.cnes.doi.services;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import fr.cnes.doi.logging.business.JsonMessage;
 import org.restlet.Application;
 import org.restlet.Request;
 import org.restlet.Response;
@@ -17,12 +19,12 @@ import org.restlet.resource.ClientResource;
 import org.restlet.service.StatusService;
 
 import java.util.Map;
-import java.util.logging.Logger;
 
 import fr.cnes.doi.settings.DoiSettings;
-import fr.cnes.doi.utils.Utils;
 import fr.cnes.doi.settings.Consts;
 import java.util.concurrent.ConcurrentHashMap;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Provides a specific error page, which is sent in the HTTP response.
@@ -37,10 +39,10 @@ public class CnesStatusService extends StatusService {
     private final DoiSettings settings;
 
     /**
-     * Application logger.
+     * Logger.
      */
-    private static final Logger LOGGER = Utils.getAppLogger();
-
+    private static final Logger LOG = LogManager.getLogger(CnesStatusService.class.getName());
+    
     /**
      * Creates a specific error page.
      */
@@ -72,7 +74,7 @@ public class CnesStatusService extends StatusService {
      * @return the data model
      */
     private Map<String, String> createDataModel(final Response response) {
-        LOGGER.entering(CnesStatusService.class.getName(), "createDataModel");
+        LOG.traceEntry(new JsonMessage(response));
         final Map<String, String> dataModel = new ConcurrentHashMap<>();
         dataModel.put("applicationName", Application.getCurrent().getName());
         dataModel.put("statusCode", String.valueOf(response.getStatus().getCode()));
@@ -80,7 +82,6 @@ public class CnesStatusService extends StatusService {
         dataModel.put("statusDescription", response.getStatus().getDescription());
         dataModel.put("logo", "/resources/images/Cnes-logo.png");
         dataModel.put("contactAdmin", settings.getString(Consts.SERVER_CONTACT_ADMIN, ""));
-        LOGGER.exiting(CnesStatusService.class.getName(), "createDataModel", "Data model for CNES status page : " + dataModel);
-        return dataModel;
+        return LOG.traceExit(dataModel);
     }
 }

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration xmlns="http://logging.apache.org/log4j/2.0/config">
+
+    <Appenders>
+        <File name="PERFO" fileName="perfo.log" append="true">     
+            <PatternLayout pattern="%-5p | %d{yyyy-MM-dd HH:mm:ss} | [%t] %C{2} (%F:%L) - %m%n"/>   
+        </File>
+        <File name="FILE" fileName="logfile.log" append="true">
+            <PatternLayout pattern="%highlight{%-5level %d{yyyy-MM-dd HH:mm:ss}} %C{2} (%F:%L) - %m%n"/>
+        </File>
+        <File name="API" fileName="api.log" append="true">                
+            <PatternLayout pattern="[%-5p - %t] %d %c - %m%n"/>
+        </File>
+        <Console name="CONSOLE" target="SYSTEM_OUT">
+            <PatternLayout pattern="%highlight{%-5level %d{yyyy-MM-dd HH:mm:ss}} %C{2} (%F:%L) - %m%n"/><!--%highlight{%d [%t] %-5level}: %msg%n%throwable-->
+        </Console>
+        <Console name="SHELL" target="SYSTEM_OUT">
+            <PatternLayout pattern="%highlight{%-5level} %msg%n"/>
+        </Console>        
+    </Appenders>
+
+    <Loggers>
+        <Logger name="fr.cnes.doi.logging.app">
+            <AppenderRef ref="PERFO"/>                        
+        </Logger>        
+        <Logger name="fr.cnes.doi.logging.api">
+            <AppenderRef ref="API"/>                        
+        </Logger>
+        <Logger name="fr.cnes.doi.application" level="info">
+            <AppenderRef ref="CONSOLE"/>
+            <AppenderRef ref="FILE"/>            
+        </Logger>
+        <Logger name="fr.cnes.doi.server.Starter" level="info">
+             <AppenderRef ref="SHELL"/>
+        </Logger>
+
+        <Root level="info">
+            <!--<AppenderRef ref="CONSOLE"/>-->
+            <AppenderRef ref="FILE"/>
+        </Root>
+    </Loggers>
+
+</Configuration>

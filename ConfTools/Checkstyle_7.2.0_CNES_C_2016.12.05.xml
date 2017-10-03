@@ -42,7 +42,7 @@
       <property name="allowOneCharVarInForLoop" value="true"/>
       <property name="tokens" value="VARIABLE_DEF"/>
     </module>
-    <module name="MemberName"/>
+    <!--<module name="MemberName"/>-->
     <module name="MethodName"/>
     <module name="MissingDeprecated"/>
     <module name="MissingOverride"/>
@@ -80,7 +80,7 @@
     <module name="CyclomaticComplexity">
       <property name="max" value="12"/>
     </module>
-    <module name="HiddenField"/>
+    <!--<module name="HiddenField"/>-->
     <module name="MagicNumber"/>
     <module name="JavadocMethod">
       <property name="validateThrows" value="true"/>

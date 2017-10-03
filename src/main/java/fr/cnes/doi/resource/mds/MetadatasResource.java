@@ -9,7 +9,6 @@ import fr.cnes.doi.application.AbstractApplication;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
-import java.util.logging.Logger;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -31,6 +30,8 @@ import fr.cnes.doi.exception.ClientMdsException;
 import fr.cnes.doi.utils.spec.CoverageAnnotation;
 import fr.cnes.doi.utils.spec.Requirement;
 import javax.xml.bind.ValidationException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Resource to handle a collection of metadata.
@@ -48,7 +49,7 @@ public class MetadatasResource extends BaseMdsResource {
      * Datacite Schema.
      */
     public static final String SCHEMA_DATACITE = "https://schema.datacite.org/meta/kernel-4.0/metadata.xsd";
-
+    
     /**
      * Init.
      *
@@ -56,8 +57,10 @@ public class MetadatasResource extends BaseMdsResource {
      */
     @Override
     protected void doInit() throws ResourceException {
-        super.doInit();
+        super.doInit();                
+        LOG.traceEntry();
         setDescription("This resource can create metadata");
+        LOG.traceExit();
     }
 
     /**
@@ -104,8 +107,7 @@ public class MetadatasResource extends BaseMdsResource {
         )     
     @Post
     public String createMetadata(final Representation entity) throws ResourceException {
-        getLogger().entering(getClass().getName(), "createMetadata");
-
+        LOG.traceEntry("Entering in createMetadata with argument "+entity);
         checkInputs(entity);
         final String result;
         try {
@@ -116,40 +118,34 @@ public class MetadatasResource extends BaseMdsResource {
             resource.setPublisher("CNES");
             result = this.getDoiApp().getClient().createMetadata(resource);
         } catch (ClientMdsException ex) {
-            getLogger().throwing(getClass().getName(), "createMetadata", ex);
             ((AbstractApplication) getApplication()).sendAlertWhenDataCiteFailed(ex);
-            throw new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(),  ex);
+            throw LOG.traceExit(new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(),  ex));
         } catch (ValidationException ex) {
-            getLogger().throwing(getClass().getName(), "createMetadata", ex);
-            throw new ResourceException(
+            throw LOG.traceExit(new ResourceException(
                     Status.CLIENT_ERROR_BAD_REQUEST, 
                     "invalid XML", 
-                    ex
+                    ex)
             );
         } catch (JAXBException ex) {
-            getLogger().throwing(getClass().getName(), "createMetadata", ex);
-            throw new ResourceException(
+            throw LOG.traceExit(new ResourceException(
                     Status.CLIENT_ERROR_BAD_REQUEST, 
                     "invalid XML", 
-                    ex
+                    ex)
             );
-        } catch (SAXException ex) {
-            getLogger().throwing(getClass().getName(), "createMetadata", ex);
-            throw new ResourceException(
+        } catch (SAXException ex) {            
+            throw LOG.traceExit(new ResourceException(
                     Status.SERVER_ERROR_INTERNAL, 
                     "DataCite schema not available", 
-                    ex
+                    ex)
             );
-        } catch (IOException ex) {
-            getLogger().throwing(getClass().getName(), "createMetadata", ex);
-            throw new ResourceException(
+        } catch (IOException ex) {           
+            throw LOG.traceExit(new ResourceException(
                     Status.CONNECTOR_ERROR_COMMUNICATION, 
                     "Network problem", 
-                    ex
+                    ex)
             );
         }
-        getLogger().exiting(getClass().getName(), "createMetadata", result);
-        return result;
+        return LOG.traceExit(result);
     }
 
     /**
@@ -163,14 +159,13 @@ public class MetadatasResource extends BaseMdsResource {
             reqName = Requirement.DOI_INTER_070_NAME
     )    
     private void checkInputs(final Object obj) throws ResourceException {
-        getLogger().entering(this.getClass().getName(), "checkInputs");
+        LOG.traceEntry("Parameter : "+obj);
         if (isObjectNotExist(obj)) {
-            final ResourceException exception = new ResourceException(
-                    Status.CLIENT_ERROR_BAD_REQUEST, "Entity cannot be null");
-            getLogger().throwing(this.getClass().getName(), "checkInputs", exception);
-            throw exception;
+            throw LOG.traceExit(new ResourceException(
+                    Status.CLIENT_ERROR_BAD_REQUEST, "Entity cannot be null")
+            );
         }
-        getLogger().exiting(this.getClass().getName(), "checkInputs");
+        LOG.traceExit();
     }
 
     /**
@@ -193,19 +188,20 @@ public class MetadatasResource extends BaseMdsResource {
         reqName = Requirement.DOI_INTER_070_NAME
         )    
     private Resource createDataCiteResourceObject(final Representation entity) throws JAXBException, SAXException, ValidationException, IOException {
+        LOG.traceEntry("Parameter : "+entity);
         final JAXBContext ctx = JAXBContext.newInstance(new Class[]{Resource.class});
         final Unmarshaller unMarshal = ctx.createUnmarshaller();
         final Schema schema = this.getDoiApp().getSchemaFactory()
                 .newSchema(new URL(SCHEMA_DATACITE));
         unMarshal.setSchema(schema);
         final MyValidationEventHandler validationHandler = 
-                new MyValidationEventHandler(getLogger());
+                new MyValidationEventHandler(LOG);
         unMarshal.setEventHandler(validationHandler);
         final Resource resource = (Resource) unMarshal.unmarshal(entity.getStream());
         if (validationHandler.isValid()) {
-            return resource;
+            return LOG.traceExit(resource);
         } else {
-            throw new ValidationException(validationHandler.getErrorMsg());
+            throw LOG.traceExit(new ValidationException(validationHandler.getErrorMsg()));
         }
     }
 
@@ -271,7 +267,7 @@ public class MetadatasResource extends BaseMdsResource {
         );
         addResponseDocToMethod(info, createResponseDoc(
                 Status.CLIENT_ERROR_CONFLICT, 
-                "Error when an user is associated to more than one role", 
+                "Error when an user is associated to more than one role without setting selectedRole parameter", 
                 "explainRepresentation")
         );
 
@@ -280,12 +276,10 @@ public class MetadatasResource extends BaseMdsResource {
     /**
      * Metadata Validation.
      */
-    @Requirement(
+@Requirement(
         reqId = Requirement.DOI_ARCHI_020,
-        reqName = Requirement.DOI_ARCHI_020_NAME,
-        coverage = CoverageAnnotation.PARTIAL,
-        comment = "Log4J n'est pas utilisé"
-        )    
+        reqName = Requirement.DOI_ARCHI_020_NAME
+)   
     private static class MyValidationEventHandler implements ValidationEventHandler {
 
         /**
@@ -318,19 +312,19 @@ public class MetadatasResource extends BaseMdsResource {
          */
         @Override
         public boolean handleEvent(final ValidationEvent event) {
-            StringBuilder stringBuilder = new StringBuilder("\nEVENT");
-            stringBuilder = stringBuilder.append("SEVERITY:  ").append(event.getSeverity()).append("\n");
-            stringBuilder = stringBuilder.append("MESSAGE:  ").append(event.getMessage()).append("\n");
-            stringBuilder = stringBuilder.append("LINKED EXCEPTION:  ").append(event.getLinkedException()).append("\n");
-            stringBuilder = stringBuilder.append("LOCATOR\n");
-            stringBuilder = stringBuilder.append("    LINE NUMBER:  ").append(event.getLocator().getLineNumber()).append("\n");
-            stringBuilder = stringBuilder.append("    COLUMN NUMBER:  ").append(event.getLocator().getColumnNumber()).append("\n");
-            stringBuilder = stringBuilder.append("    OFFSET:  ").append(event.getLocator().getOffset()).append("\n");
-            stringBuilder = stringBuilder.append("    OBJECT:  ").append(event.getLocator().getObject()).append("\n");
-            stringBuilder = stringBuilder.append("    NODE:  ").append(event.getLocator().getNode()).append("\n");
-            stringBuilder = stringBuilder.append("    URL  ").append(event.getLocator().getURL()).append("\n");
+            final StringBuilder stringBuilder = new StringBuilder("\nEVENT");
+            stringBuilder.append("SEVERITY:  ").append(event.getSeverity()).append("\n");
+            stringBuilder.append("MESSAGE:  ").append(event.getMessage()).append("\n");
+            stringBuilder.append("LINKED EXCEPTION:  ").append(event.getLinkedException()).append("\n");
+            stringBuilder.append("LOCATOR\n");
+            stringBuilder.append("    LINE NUMBER:  ").append(event.getLocator().getLineNumber()).append("\n");
+            stringBuilder.append("    COLUMN NUMBER:  ").append(event.getLocator().getColumnNumber()).append("\n");
+            stringBuilder.append("    OFFSET:  ").append(event.getLocator().getOffset()).append("\n");
+            stringBuilder.append("    OBJECT:  ").append(event.getLocator().getObject()).append("\n");
+            stringBuilder.append("    NODE:  ").append(event.getLocator().getNode()).append("\n");
+            stringBuilder.append("    URL  ").append(event.getLocator().getURL()).append("\n");
             this.errorMsg = stringBuilder.toString();
-            this.logger.warning(this.errorMsg);
+            this.logger.info(this.errorMsg);
             this.hasError = true;
             return true;
         }
@@ -343,7 +337,9 @@ public class MetadatasResource extends BaseMdsResource {
          * false
          */
         public boolean isValid() {
-            return !this.isNotValid();
+            this.logger.traceEntry();
+            return this.logger.traceExit(!this.isNotValid());
+            
         }
 
         /**
@@ -354,7 +350,8 @@ public class MetadatasResource extends BaseMdsResource {
          * false
          */
         public boolean isNotValid() {
-            return this.hasError;
+            this.logger.traceEntry();
+            return this.logger.traceExit(this.hasError);
         }
 
         /**
@@ -363,7 +360,8 @@ public class MetadatasResource extends BaseMdsResource {
          * @return the errorMsg or null when no error message
          */
         public String getErrorMsg() {
-            return this.errorMsg;
+            this.logger.traceEntry();
+            return this.logger.traceExit(this.errorMsg);
         }
     }
 

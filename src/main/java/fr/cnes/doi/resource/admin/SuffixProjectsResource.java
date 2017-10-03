@@ -5,10 +5,12 @@
  */
 package fr.cnes.doi.resource.admin;
 
+import fr.cnes.doi.application.AdminApplication;
 import fr.cnes.doi.resource.AbstractResource;
 import fr.cnes.doi.utils.UniqueProjectName;
 import fr.cnes.doi.utils.spec.Requirement;
 import java.util.Map;
+import org.apache.logging.log4j.Logger;
 import org.restlet.data.Form;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
@@ -39,8 +41,12 @@ public class SuffixProjectsResource extends AbstractResource {
     /**
      * Number of digits ({@value #NB_DIGITS}) in which the suffix project is encoded.
      */
-    public static final int NB_DIGITS = 6;
-
+    public static final int NB_DIGITS = 6;    
+    
+    /**
+     * Logger.
+     */
+    private Logger LOG;
     
     /**
      * Set-up method that can be overridden in order to initialize the state of the resource.
@@ -49,7 +55,11 @@ public class SuffixProjectsResource extends AbstractResource {
     @Override
     protected void doInit() throws ResourceException {
         super.doInit();
+        final AdminApplication app = (AdminApplication) getApplication();
+        LOG = app.getLog();        
+        LOG.traceEntry();
         setDescription("This resource handles the project suffix in the DOI name");
+        LOG.traceExit();
     }
 
     /**
@@ -62,7 +72,8 @@ public class SuffixProjectsResource extends AbstractResource {
         )     
     @Get("json|xml")
     public Map<String, Integer> getProjectsNameAsJson() {
-        return UniqueProjectName.getInstance().getProjects();
+        LOG.traceEntry();
+        return LOG.traceExit(UniqueProjectName.getInstance().getProjects());
     }
 
     /**
@@ -79,14 +90,11 @@ public class SuffixProjectsResource extends AbstractResource {
         )     
     @Post
     public Representation createProject(final Form mediaForm) {
-        getLogger().entering(SuffixProjectsResource.class.getName(), "createProject", mediaForm);
-
+        LOG.traceEntry();
         checkInputs(mediaForm);
         final String projectName = mediaForm.getFirstValue(PROJECT_NAME_PARAMETER);
         final int digits = UniqueProjectName.getInstance().getShortName(projectName, NB_DIGITS);
-
-        getLogger().exiting(SuffixProjectsResource.class.getName(), "createProject", digits);
-        return new StringRepresentation(String.valueOf(digits));
+        return LOG.traceExit(new StringRepresentation(String.valueOf(digits)));
     }
 
     /**
@@ -96,12 +104,13 @@ public class SuffixProjectsResource extends AbstractResource {
      * @throws ResourceException - if PROJECT_NAME_PARAMETER is not set
      */
     private void checkInputs(final Form mediaForm) throws ResourceException {
+        LOG.traceEntry("Parameter : {}",mediaForm);
         if (isValueNotExist(mediaForm, PROJECT_NAME_PARAMETER)) {
-            getLogger().fine(PROJECT_NAME_PARAMETER + " value is not set");
-            throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, 
-                    PROJECT_NAME_PARAMETER + " parameter must be set");
+            throw LOG.throwing(new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, 
+                    PROJECT_NAME_PARAMETER + " parameter must be set"));
         }
-        getLogger().fine("The form is valid");
+        LOG.debug("The form is valid");
+        LOG.traceExit();
     }
 
     /**

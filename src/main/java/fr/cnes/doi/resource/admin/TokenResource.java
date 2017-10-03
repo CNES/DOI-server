@@ -15,7 +15,6 @@ import fr.cnes.doi.security.TokenSecurity.TimeUnit;
 import fr.cnes.doi.utils.spec.Requirement;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
-import java.util.logging.Level;
 import org.restlet.data.Form;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
@@ -30,6 +29,8 @@ import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
 import static fr.cnes.doi.application.AdminApplication.TOKEN_TEMPLATE;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 /**
@@ -61,7 +62,7 @@ public class TokenResource extends AbstractResource {
     /**
      * Amount of time for which the token is not expirated.
      */
-    public static final String AMOUNT_OF_TIME_PARAMETER = "amountTime";
+    public static final String AMOUNT_OF_TIME_PARAMETER = "amountTime";      
 
     /**
      * Token parameter catched from the URL.
@@ -72,6 +73,11 @@ public class TokenResource extends AbstractResource {
      * The token database.
      */
     private AbstractTokenDBHelper tokenDB;
+    
+    /**
+     * Logger.     
+     */
+    private Logger LOG;
 
     /**
      * Set-up method that can be overridden in order to initialize the state of the resource
@@ -80,9 +86,14 @@ public class TokenResource extends AbstractResource {
     @Override
     protected void doInit() throws ResourceException {
         super.doInit();
+        final AdminApplication app = (AdminApplication) getApplication();
+        LOG = app.getLog();        
+        LOG.traceEntry();        
         setDescription("This resource handles the token");        
         this.tokenParam = getAttribute(TOKEN_TEMPLATE);
         this.tokenDB = ((AdminApplication) this.getApplication()).getTokenDB();
+        LOG.debug("Token Param : {}",this.tokenParam);
+        LOG.traceExit();
     }
    
     /**
@@ -105,8 +116,7 @@ public class TokenResource extends AbstractResource {
         )     
     @Post
     public String createToken(final Form info) {
-        getLogger().entering(TokenResource.class.getName(), "createToken", info);
-
+        LOG.traceEntry("Paramater : {}",info);
         checkInputs(info);
         try {
             final String userID = info.getFirstValue(IDENTIFIER_PARAMETER, null);
@@ -124,15 +134,13 @@ public class TokenResource extends AbstractResource {
                     unit,
                     amount
             );
-            getLogger().log(Level.INFO, "Token created {0}for project {1} during {2} {3}", new Object[]{tokenJwt, projectID, amount, unit.name()});
+            LOG.info("Token created {} for project {} during {} {}", tokenJwt, projectID, amount, unit.name());
 
             this.tokenDB.addToken(tokenJwt);
 
-            getLogger().exiting(TokenResource.class.getName(), "createToken", tokenJwt);
-            return tokenJwt;
+            return LOG.traceExit(tokenJwt);
         } catch (TokenSecurityException ex) {
-            getLogger().throwing(TokenResource.class.getName(), "createToken", ex);
-            throw new ResourceException(ex.getStatus(), ex.getMessage(), ex);
+            throw LOG.throwing(new ResourceException(ex.getStatus(), ex.getMessage(), ex));
         }
     }
 
@@ -144,23 +152,19 @@ public class TokenResource extends AbstractResource {
      * {@link #IDENTIFIER_PARAMETER} are not set
      */  
     private void checkInputs(final Form mediaForm) throws ResourceException {
-        getLogger().entering(this.getClass().getName(), "checkInputs", mediaForm);
-        StringBuilder errorMsg = new StringBuilder();
+        LOG.traceEntry("Parameter : {}",mediaForm);
+        final StringBuilder errorMsg = new StringBuilder();
         if (isValueNotExist(mediaForm, IDENTIFIER_PARAMETER)) {
-            getLogger().log(Level.FINE, "{0} value is not set", IDENTIFIER_PARAMETER);
-            errorMsg = errorMsg.append(IDENTIFIER_PARAMETER).append(" value is not set.");
+            errorMsg.append(IDENTIFIER_PARAMETER).append(" value is not set.");
         }
         if (isValueNotExist(mediaForm, PROJECT_ID_PARAMETER)) {
-            getLogger().log(Level.FINE, "{0} value is not set", PROJECT_ID_PARAMETER);
-            errorMsg = errorMsg.append(PROJECT_ID_PARAMETER).append(" value is not set.");
+            errorMsg.append(PROJECT_ID_PARAMETER).append(" value is not set.");
         }
         if (errorMsg.length() == 0) {
-            getLogger().fine("The form is valid");
+            LOG.debug("The form is valid");
         } else {
-            final ResourceException exception = new ResourceException(
-                    Status.CLIENT_ERROR_BAD_REQUEST, errorMsg.toString());
-            getLogger().throwing(this.getClass().getName(), "checkInputs", exception);
-            throw exception;
+            throw LOG.throwing(new ResourceException(
+                    Status.CLIENT_ERROR_BAD_REQUEST, errorMsg.toString()));
         }
     }
    
@@ -174,15 +178,13 @@ public class TokenResource extends AbstractResource {
         )     
     @Get
     public Representation getTokenInformation() {
-        getLogger().entering(this.getClass().getName(), "getTokenInformation");
+        LOG.traceEntry();
         try {
             final Jws<Claims> jws = TokenSecurity.getInstance()
                     .getTokenInformation(this.tokenParam);
-            getLogger().exiting(this.getClass().getName(), "getTokenInformation");
-            return new JsonRepresentation(jws);
+            return LOG.traceExit(new JsonRepresentation(jws));
         } catch (DoiRuntimeException ex) {
-            getLogger().throwing(this.getClass().getName(), "getTokenInformation", ex);            
-            throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, ex);
+            throw LOG.throwing(new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, ex));
         }
     }
     

@@ -10,8 +10,8 @@ import fr.cnes.doi.utils.spec.Requirement;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import org.restlet.Context;
 import org.restlet.Request;
@@ -41,16 +41,11 @@ public final class EmailSettings {
      * Default debug : {@value #DEFAULT_DEBUG}.
      */
     private static final boolean DEFAULT_DEBUG = false;
-
-    /**
-     * Class name.
-     */
-    private static final String CLASS_NAME = EmailSettings.class.getName();
-
+    
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(EmailSettings.class.getName());
+    private static final Logger LOG = LogManager.getLogger(EmailSettings.class.getName());
 
     /**
      * SMTP URL.
@@ -118,16 +113,33 @@ public final class EmailSettings {
      * Init singleton.
      */
     public void init() {
-        LOGGER.entering(CLASS_NAME, "init");
+        LOG.traceEntry();
+        LOG.info("----- Email parameters ----");
+        
         final DoiSettings settings = DoiSettings.getInstance();
-        this.smtpProtocol = settings.getString(Consts.SMTP_PROTOCOL);
-        this.smtpUrl = settings.getString(Consts.SMTP_URL);
+        
+        this.smtpProtocol = settings.getString(Consts.SMTP_PROTOCOL);        
+        LOG.info(String.format("smtp protocol : %s",this.smtpProtocol));
+        
+        this.smtpUrl = settings.getString(Consts.SMTP_URL);        
+        LOG.info(String.format("smtp URL : %s",this.smtpUrl));        
+        
         this.authUser = settings.getSecret(Consts.SMTP_AUTH_USER);
+        LOG.info(String.format("auth user : %s",this.authUser));                
+        
         this.authPwd = settings.getSecret(Consts.SMTP_AUTH_PWD);
+        LOG.info(String.format("auth pwd : %s",this.authPwd));                
+        
         this.tlsEnable = settings.getString(Consts.SMTP_STARTTLS_ENABLE);
+        LOG.info(String.format("TLS enable : %s",this.tlsEnable));                        
+        
         this.contactAdmin = settings.getString(Consts.SERVER_CONTACT_ADMIN);
-        LOGGER.info("Email settings have been loaded");
-        LOGGER.exiting(CLASS_NAME, "init");
+        LOG.info(String.format("Contact admin : %s",this.contactAdmin));                                
+        
+        LOG.info("Email settings have been loaded");
+        LOG.info("---------------------------");        
+        
+        LOG.traceExit();
     }
 
     /**
@@ -136,7 +148,7 @@ public final class EmailSettings {
      * @param isEnabled True if debug is enabled otherwise False
      */
     public void setDebug(final boolean isEnabled) {
-        LOGGER.log(Level.CONFIG, "setDebug to {0}", isEnabled);
+        LOG.traceEntry("Parameter : {}", isEnabled);
         this.debug = isEnabled;
     }
 
@@ -146,8 +158,7 @@ public final class EmailSettings {
      * @return debug
      */
     public boolean isDebug() {
-        LOGGER.log(Level.CONFIG, "getDebug : {0}", this.debug);
-        return this.debug;
+        return LOG.traceExit(this.debug);
     }
 
     /**
@@ -159,22 +170,21 @@ public final class EmailSettings {
      * @throws MailingException - if the SMTP server cannot be reached
      */
     public boolean sendMessage(final String subject, final String msg) throws MailingException {
-        LOGGER.entering(CLASS_NAME, "sendMessage", new Object[]{subject, msg});
+        LOG.traceEntry("Parameters : {} and {}", subject, msg);
         boolean result;
         try {
             final Request request = new Request(Method.POST, getSmtpURL());
-            LOGGER.finer("Sets the login/passwd for the SMTP server");
+            LOG.debug("Sets the login/passwd for the SMTP server");
             request.setChallengeResponse(
                     new ChallengeResponse(ChallengeScheme.SMTP_PLAIN, getAuthUser(), getAuthPwd()));
             result = sendMail(Protocol.valueOf(getSmtpProtocol()), request, Boolean.getBoolean(getTlsEnable()), subject, msg);
         } catch (RuntimeException ex) {
-            throw new MailingException("The SMTP server cannot be reached", ex);
+            throw LOG.throwing(new MailingException("The SMTP server cannot be reached", ex));
         } catch (Exception ex) {
-            LOGGER.log(Level.SEVERE, String.format("Cannot send the message with the subject %s : %s", subject, msg), ex);
+            LOG.error("Cannot send the message with the subject {} : {}", subject, msg, ex);
             result = false;
         }
-        LOGGER.exiting(CLASS_NAME, "sendMessage", result);
-        return result;
+        return LOG.traceExit(result);
     }
 
     /**
@@ -190,14 +200,14 @@ public final class EmailSettings {
      */
     private boolean sendMail(final Protocol protocol, final Request request, final boolean startTls, final String subject,
             final String msg) throws Exception {
+        LOG.traceEntry("With parameters");
+        final DoiSettings settings = DoiSettings.getInstance();
         boolean result;
-        LOGGER.entering(CLASS_NAME, "sendMail", new Object[]{protocol.getName(), startTls, subject, msg});
         final Map<String, String> dataModel = new ConcurrentHashMap<>();
         dataModel.put("subject", subject);
         dataModel.put("message", msg);
-        dataModel.put("from",
-                DoiSettings.getInstance().getString(Consts.SERVER_CONTACT_ADMIN, "L-doi-support@cnes.fr"));
-        dataModel.put("to", DoiSettings.getInstance().getString(Consts.SERVER_CONTACT_ADMIN, "L-doi-support@cnes.fr"));
+        dataModel.put("from", settings.getString(Consts.SERVER_CONTACT_ADMIN, "L-doi-support@cnes.fr"));
+        dataModel.put("to", settings.getString(Consts.SERVER_CONTACT_ADMIN, "L-doi-support@cnes.fr"));
 
         final Representation mailFtl = new ClientResource(LocalReference.createClapReference("class/email.ftl")).get();
         final Representation mail = new TemplateRepresentation(mailFtl, dataModel, MediaType.TEXT_XML);
@@ -210,13 +220,12 @@ public final class EmailSettings {
         client.get();
         final Status status = client.getStatus();
         if (status.isError()) {
-            LOGGER.log(Level.SEVERE, "Cannot send the email! : {0}", status.getDescription());
+            LOG.error("Cannot send the email! : {}", status.getDescription());
             result = false;
         } else {
             result = true;
         }
-        LOGGER.exiting(CLASS_NAME, "sendMail", result);
-        return result;
+        return LOG.traceExit(result);
     }
 
     /**
@@ -225,8 +234,8 @@ public final class EmailSettings {
      * @return the URL
      */
     public String getSmtpURL() {
-        LOGGER.log(Level.CONFIG, "getSmtpUrl : {0}", this.smtpUrl);
-        return smtpUrl;
+        LOG.traceEntry();
+        return LOG.traceExit(smtpUrl);
     }
 
     /**
@@ -235,8 +244,8 @@ public final class EmailSettings {
      * @return the port
      */
     public String getSmtpProtocol() {
-        LOGGER.log(Level.CONFIG, "getSmtpProtocol : {0}", this.smtpProtocol);
-        return smtpProtocol;
+        LOG.traceEntry();
+        return LOG.traceExit(smtpProtocol);
     }
 
     /**
@@ -245,8 +254,8 @@ public final class EmailSettings {
      * @return the tlsEnable
      */
     public String getTlsEnable() {
-        LOGGER.log(Level.CONFIG, "getTlsEnable : {0}", this.tlsEnable);
-        return tlsEnable;
+        LOG.traceEntry();
+        return LOG.traceExit(tlsEnable);
     }
 
     /**
@@ -255,8 +264,8 @@ public final class EmailSettings {
      * @return the authUser
      */
     public String getAuthUser() {
-        LOGGER.log(Level.CONFIG, "getAuthUser : {0}", this.authUser);
-        return authUser;
+        LOG.traceEntry();
+        return LOG.traceExit(authUser);
     }
 
     /**
@@ -265,8 +274,8 @@ public final class EmailSettings {
      * @return the authPwd
      */
     public String getAuthPwd() {
-        LOGGER.log(Level.CONFIG, "getAuthPwd : {0}", this.authPwd);
-        return authPwd;
+        LOG.traceEntry();
+        return LOG.traceExit(authPwd);
     }
 
     /**
@@ -275,8 +284,8 @@ public final class EmailSettings {
      * @return the contactAdmin
      */
     public String getContactAdmin() {
-        LOGGER.log(Level.CONFIG, "getContactAdmin : {0}", this.contactAdmin);
-        return contactAdmin;
+        LOG.traceEntry();
+        return LOG.traceExit(contactAdmin);
     }
 
 }

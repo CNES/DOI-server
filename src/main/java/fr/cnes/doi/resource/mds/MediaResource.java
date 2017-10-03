@@ -15,7 +15,8 @@ import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.utils.spec.Requirement;
 
 import java.util.Arrays;
-import java.util.logging.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.restlet.data.Form;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
@@ -35,7 +36,7 @@ import org.restlet.resource.ResourceException;
  * Resource to handle to Media.
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-public class MediaResource extends BaseMdsResource {    
+public class MediaResource extends BaseMdsResource {            
 
     /**
      * DOI parsed from the URL.
@@ -48,8 +49,11 @@ public class MediaResource extends BaseMdsResource {
      */
     @Override
     protected void doInit() throws ResourceException {   
-        super.doInit();
+        super.doInit();        
+        LOG.traceEntry();
         this.mediaName = getResourcePath().replace(DoiMdsApplication.MEDIA_URI+"/", "");
+        LOG.debug(this.mediaName);
+        LOG.traceExit();
     }
 
     /**
@@ -72,8 +76,7 @@ public class MediaResource extends BaseMdsResource {
         )      
     @Get
     public Representation getMedias() throws ResourceException {
-        getLogger().entering(getClass().getName(), "getMedias", this.mediaName);
-        
+        LOG.traceEntry();
         final Representation rep;
         final String medias;
         try {
@@ -81,17 +84,15 @@ public class MediaResource extends BaseMdsResource {
             medias = this.getDoiApp().getClient().getMedia(this.mediaName);
             rep = new StringRepresentation(medias, MediaType.TEXT_URI_LIST);
         } catch (ClientMdsException ex) {
-            getLogger().throwing(getClass().getName(), "getMedias", ex);    
             if(ex.getStatus().getCode() == Status.CLIENT_ERROR_NOT_FOUND.getCode()) {
-                throw new ResourceException(ex.getStatus(), ex.getMessage(), ex);                
+                throw LOG.throwing(new ResourceException(ex.getStatus(), ex.getMessage(), ex));
             } else {
                 ((AbstractApplication)getApplication()).sendAlertWhenDataCiteFailed(ex);
-                throw new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex);
+                throw LOG.throwing(new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex));
             }
         }
         
-        getLogger().exiting(getClass().getName(), "getMedias", medias);        
-        return rep;
+        return LOG.traceExit(rep);
     } 
     
     /**
@@ -137,8 +138,7 @@ public class MediaResource extends BaseMdsResource {
         )     
     @Post
     public Representation createMedia(final Form mediaForm) throws ResourceException{
-        getLogger().entering(getClass().getName(), "createMedia", new Object[]{this.mediaName, mediaForm.getMatrixString()});
-        
+        LOG.traceEntry("Parameter : {}",mediaForm);
         checkInputs(this.mediaName, mediaForm);
         final String result;
         try {         
@@ -147,20 +147,17 @@ public class MediaResource extends BaseMdsResource {
             checkPermission(this.mediaName, selectedRole);            
             result = this.getDoiApp().getClient().createMedia(this.mediaName, mediaForm);
         } catch (ClientMdsException ex) {
-            getLogger().throwing(getClass().getName(), "createMedia", ex);  
             if(ex.getStatus().getCode() == Status.CLIENT_ERROR_BAD_REQUEST.getCode()) {
-                throw new ResourceException(ex.getStatus(), ex.getMessage(), ex);                
+                throw LOG.traceExit(new ResourceException(ex.getStatus(), ex.getMessage(), ex));
             } else {
                 ((AbstractApplication)getApplication())
                         .sendAlertWhenDataCiteFailed(ex);                          
-                throw new ResourceException(
-                        Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex
+                throw LOG.traceExit(new ResourceException(
+                        Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex)
                 );                
             }
         }
-        
-        getLogger().exiting(getClass().getName(), "createMedia", result);        
-        return new StringRepresentation(result);
+        return LOG.traceExit(new StringRepresentation(result));
     }  
     
     
@@ -175,27 +172,24 @@ public class MediaResource extends BaseMdsResource {
             reqName = Requirement.DOI_INTER_070_NAME
     )        
     private void checkInputs(final String doi, final Form mediaForm) throws ResourceException {
-        getLogger().entering(this.getClass().getName(), "checkInputs", mediaForm);
-        StringBuilder errorMsg = new StringBuilder();
+        LOG.traceEntry("Parameters : {} and {}",doi, mediaForm);
+        final StringBuilder errorMsg = new StringBuilder();
         if(doi == null || doi.isEmpty() || !doi.startsWith(DoiSettings.getInstance().getString(Consts.INIST_DOI))) {
-            getLogger().log(Level.FINE, "{0} value is not set", DOI_PARAMETER);
-            errorMsg = errorMsg.append(DOI_PARAMETER).append(" value is not set.");            
+            errorMsg.append(DOI_PARAMETER).append(" value is not set.");            
         } else {
             try {
                 ClientMDS.checkIfAllCharsAreValid(doi);
             } catch (IllegalArgumentException ex) {
-                errorMsg = errorMsg.append(DOI_PARAMETER).append(" no valid syntax.");
+                errorMsg.append(DOI_PARAMETER).append(" no valid syntax.");
             }
         }
         if(errorMsg.length() == 0) {        
-            getLogger().fine("The form is valid");                    
+            LOG.debug("The form is valid");                    
         } else {
-            final ResourceException exception =  new ResourceException(
-                    Status.CLIENT_ERROR_BAD_REQUEST, errorMsg.toString());            
-            getLogger().throwing(this.getClass().getName(), "checkInputs", exception);
-            throw exception;
+            throw LOG.throwing(new ResourceException(
+                    Status.CLIENT_ERROR_BAD_REQUEST, errorMsg.toString()));
         }      
-        getLogger().exiting(this.getClass().getName(), "checkInputs");        
+        LOG.traceExit();
     }      
    
     /**
@@ -274,7 +268,7 @@ public class MediaResource extends BaseMdsResource {
         addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_BAD_REQUEST, DOI_PARAMETER+" not provided or one or more of the specified mime-types or urls are invalid (e.g. non supported mime-type, not allowed url domain, etc.)", "explainRepresentation"));
         addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_UNAUTHORIZED, "if no role is provided", "explainRepresentation"));
         addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_FORBIDDEN, "if the role is not allowed to use this feature or the user is not allow to create media", "explainRepresentation"));
-        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_CONFLICT, "if a user is associated to more than one role", "explainRepresentation"));        
+        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_CONFLICT, "if a user is associated to more than one role without setting selectedRole parameter", "explainRepresentation"));        
         addResponseDocToMethod(info, createResponseDoc(Status.SERVER_ERROR_INTERNAL, "server internal error, try later and if problem persists please contact us", "explainRepresentation"));           
     }     
 }

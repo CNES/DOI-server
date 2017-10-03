@@ -12,7 +12,8 @@ import fr.cnes.doi.exception.ClientMdsException;
 import fr.cnes.doi.utils.spec.Requirement;
 
 import java.util.Arrays;
-import java.util.logging.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.datacite.schema.kernel_4.Resource;
 import org.restlet.data.Method;
 import org.restlet.data.Status;
@@ -38,7 +39,7 @@ public class MetadataResource extends BaseMdsResource {
     /**
      * 
      */
-    public static final String DELETE_METADATA = "Delete a Metadata";
+    public static final String DELETE_METADATA = "Delete a Metadata";    
 
     /**
      * DOI name, which is set on the URL template.
@@ -52,9 +53,12 @@ public class MetadataResource extends BaseMdsResource {
      */
     @Override
     protected void doInit() throws ResourceException {
-        super.doInit();
+        super.doInit();        
+        LOG.traceEntry();
         setDescription("This resource handles a metadata : retrieve, delete");
         this.doiName = getResourcePath().replace(DoiMdsApplication.METADATAS_URI+"/", "");
+        LOG.debug("DOI name "+this.doiName);
+        LOG.traceExit();
     }
 
     /**
@@ -80,24 +84,21 @@ public class MetadataResource extends BaseMdsResource {
     )      
     @Get("xml|json")
     public Resource getMetadata() throws ResourceException {
-        getLogger().entering(getClass().getName(), "getMetadata", this.doiName);
+        LOG.traceEntry();
         checkInputs(doiName);
         final Resource resource;
         try {
             setStatus(Status.SUCCESS_OK);
             resource = this.getDoiApp().getClient().getMetadataAsObject(this.doiName);
         } catch (ClientMdsException ex) {
-            getLogger().throwing(getClass().getName(), "getMetadata", ex);
             if (ex.getStatus().getCode() == Status.CLIENT_ERROR_NOT_FOUND.getCode() || ex.getStatus().getCode() == Status.CLIENT_ERROR_GONE.getCode()) {
-                throw new ResourceException(ex.getStatus(), ex.getMessage(), ex);
+                throw LOG.throwing(new ResourceException(ex.getStatus(), ex.getMessage(), ex));
             } else {
                 ((AbstractApplication)getApplication()).sendAlertWhenDataCiteFailed(ex);
-                throw new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex);
+                throw LOG.throwing(new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex));
             }
         }
-
-        getLogger().exiting(getClass().getName(), "getMetadata");
-        return resource;
+        return LOG.traceExit(resource);
     }
 
     /**
@@ -137,34 +138,30 @@ public class MetadataResource extends BaseMdsResource {
     )     
     @Delete
     public Representation deleteMetadata() throws ResourceException {
-        getLogger().entering(getClass().getName(), "deleteMetadata");
+        LOG.traceEntry();
         checkInputs(this.doiName);
         final Representation rep;
         try {
             final String selectedRole = extractSelectedRoleFromRequestIfExists();
-            getLogger().entering(getClass().getName(), "deleteMetadata", new Object[]{this.doiName, selectedRole});
             checkPermission(this.doiName, selectedRole);
             setStatus(Status.SUCCESS_OK);
             rep = this.getDoiApp().getClient().deleteMetadata(this.doiName);
         } catch (ClientMdsException exception) {
-            getLogger().throwing(getClass().getName(), "deleteMetadata", exception);
             if (exception.getStatus().getCode() == Status.CLIENT_ERROR_NOT_FOUND.getCode()) {
-                throw new ResourceException(
+                throw LOG.traceExit(new ResourceException(
                         exception.getStatus(), exception.getDetailMessage(), 
-                        exception
+                        exception)
                 );
             } else {
                 ((AbstractApplication)getApplication())
                         .sendAlertWhenDataCiteFailed(exception);            
-                throw new ResourceException(
+                throw LOG.traceExit(new ResourceException(
                         Status.SERVER_ERROR_INTERNAL, exception.getDetailMessage(), 
-                        exception
+                        exception)
                 );
             }
         }
-
-        getLogger().exiting(getClass().getName(), "deleteMetadata");
-        return rep;
+        return LOG.traceExit(rep);
     }
 
     /**
@@ -256,7 +253,8 @@ public class MetadataResource extends BaseMdsResource {
         );
         addResponseDocToMethod(info, createResponseDoc(
                 Status.CLIENT_ERROR_CONFLICT, 
-                "Error when a user is associated to more than one role", 
+                "Error when a user is associated to more than one role without "
+                        + "setting selectedRole parameter", 
                 "explainRepresentation")
         );
         addResponseDocToMethod(info, createResponseDoc(
@@ -277,10 +275,9 @@ public class MetadataResource extends BaseMdsResource {
             reqName = Requirement.DOI_INTER_070_NAME
     )    
     private void checkInputs(final String doiName) throws ResourceException {
-        getLogger().entering(this.getClass().getName(), "checkInputs", doiName);
+        LOG.traceEntry("Parameter : {}",doiName);
         StringBuilder errorMsg = new StringBuilder();
         if(doiName == null || doiName.isEmpty()) {
-            getLogger().log(Level.FINE, "{0} value is not set", DoiMdsApplication.DOI_TEMPLATE);
             errorMsg = errorMsg.append(DoiMdsApplication.DOI_TEMPLATE).append(" value is not set.");  
         } else {
             try {
@@ -290,13 +287,11 @@ public class MetadataResource extends BaseMdsResource {
             }
         }
         if(errorMsg.length() == 0) {        
-            getLogger().fine("The input is valid");                    
+            LOG.debug("The input is valid");                    
         } else {
-            final ResourceException exception =  new ResourceException(
-                    Status.CLIENT_ERROR_BAD_REQUEST, errorMsg.toString());            
-            getLogger().throwing(this.getClass().getName(), "checkInputs", exception);
-            throw exception;
+            throw LOG.throwing(new ResourceException(
+                    Status.CLIENT_ERROR_BAD_REQUEST, errorMsg.toString()));            
         }          
-        getLogger().exiting(this.getClass().getName(), "checkInputs"); 
+        LOG.traceExit();
     }
 }

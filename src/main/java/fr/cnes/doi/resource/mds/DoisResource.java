@@ -8,7 +8,6 @@ package fr.cnes.doi.resource.mds;
 import fr.cnes.doi.application.AbstractApplication;
 import fr.cnes.doi.client.ClientMDS;
 import java.util.Arrays;
-import java.util.logging.Level;
 import org.restlet.data.Form;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
@@ -28,6 +27,8 @@ import static fr.cnes.doi.security.UtilsHeader.SELECTED_ROLE_PARAMETER;
 import static fr.cnes.doi.client.ClientMDS.POST_DOI;
 import static fr.cnes.doi.client.ClientMDS.POST_URL;
 import fr.cnes.doi.utils.spec.Requirement;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Resource to handle a collection of DOI.
@@ -45,6 +46,7 @@ public class DoisResource extends BaseMdsResource {
      * 
      */
     public static final String CREATE_DOI = "Create a DOI";
+        
 
     /**
      * Init.
@@ -54,7 +56,9 @@ public class DoisResource extends BaseMdsResource {
     @Override
     protected void doInit() throws ResourceException {
         super.doInit();
+        LOG.traceEntry();
         setDescription("The resource contains the list of DOI and can create a new DOI");
+        LOG.traceExit();
     }
 
     /**
@@ -67,24 +71,22 @@ public class DoisResource extends BaseMdsResource {
      */       
     @Get
     public Representation getDois() throws ResourceException {
-        getLogger().entering(getClass().getName(), "getDois");
-        Representation rep;
+        LOG.traceEntry();
+        final Representation rep;
         try {
             setStatus(Status.SUCCESS_OK);
             final String dois = this.getDoiApp().getClient().getDoiCollection();
-            getLogger().exiting(getClass().getName(), "getDois", dois);
+            if (dois != null && !dois.isEmpty()) {
+                setStatus(Status.SUCCESS_OK);
+            } else {
+                setStatus(Status.SUCCESS_NO_CONTENT);
+            }            
             rep = new StringRepresentation(dois, MediaType.TEXT_URI_LIST);
         } catch (ClientMdsException ex) {
-            getLogger().throwing(getClass().getName(), "getDois", ex);
-            if (ex.getStatus().getCode() == Status.SUCCESS_NO_CONTENT.getCode()) {
-                setStatus(Status.SUCCESS_NO_CONTENT);
-                rep = new StringRepresentation(ex.getMessage());
-            } else {
-                ((AbstractApplication) getApplication()).sendAlertWhenDataCiteFailed(ex);
-                throw new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex);
-            }
-        }
-        return rep;
+            ((AbstractApplication) getApplication()).sendAlertWhenDataCiteFailed(ex);            
+            throw LOG.throwing(new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex));
+        }        
+        return LOG.traceExit(rep);
     }
 
     /**
@@ -150,9 +152,8 @@ public class DoisResource extends BaseMdsResource {
         )     
     @Post("form")
     public String createDoi(final Form doiForm) throws ResourceException {
-        getLogger().entering(getClass().getName(), "createDoi");
+        LOG.traceEntry("Parameter : {}", doiForm);
         checkInputs(doiForm);
-        getLogger().finest(doiForm.getMatrixString());
         final String result;
         final String selectedRole = extractSelectedRoleFromRequestIfExists();
         checkPermission(doiForm.getFirstValue(DOI_PARAMETER), selectedRole);
@@ -160,17 +161,15 @@ public class DoisResource extends BaseMdsResource {
             setStatus(Status.SUCCESS_CREATED);
             result = this.getDoiApp().getClient().createDoi(doiForm);
         } catch (ClientMdsException ex) {
-            getLogger().throwing(getClass().getName(), "createDoi", ex);
             if (ex.getStatus().getCode() == Status.CLIENT_ERROR_PRECONDITION_FAILED.getCode()) {
-                throw new ResourceException(ex.getStatus(), ex.getMessage(), ex);
+                throw LOG.throwing(new ResourceException(ex.getStatus(), ex.getMessage(), ex));
             } else {
                 ((AbstractApplication) getApplication()).sendAlertWhenDataCiteFailed(ex);
-                throw new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex);
+                throw LOG.throwing(new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex));
             }
         }
 
-        getLogger().exiting(getClass().getName(), "createDoi", result);
-        return result;
+        return LOG.traceExit(result);
     }
 
     /**
@@ -187,9 +186,9 @@ public class DoisResource extends BaseMdsResource {
         reqName = Requirement.DOI_INTER_070_NAME
         )    
     private void checkInputs(final Form mediaForm) throws ResourceException {
+        LOG.traceEntry("Parameter : {}",mediaForm);
         StringBuilder errorMsg = new StringBuilder();
         if (isValueNotExist(mediaForm, DOI_PARAMETER)) {
-            getLogger().log(Level.FINE, "{0} value is not set", DOI_PARAMETER);
             errorMsg = errorMsg.append(DOI_PARAMETER).append(" value is not set.");
         } else {
             try {
@@ -199,17 +198,15 @@ public class DoisResource extends BaseMdsResource {
             } 
         }
         if (isValueNotExist(mediaForm, URL_PARAMETER)) {
-            getLogger().log(Level.FINE, "{0} value is not set", URL_PARAMETER);
             errorMsg = errorMsg.append(URL_PARAMETER).append(" value is not set.");
         }
         if (errorMsg.length() == 0) {
-            getLogger().fine("The form is valid");
+            LOG.debug("The form is valid");
         } else {
-            final ResourceException exception = new ResourceException(
-                    Status.CLIENT_ERROR_BAD_REQUEST, errorMsg.toString());
-            getLogger().throwing(this.getClass().getName(), "checkInputs", exception);
-            throw exception;
+            throw LOG.throwing(new ResourceException(
+                    Status.CLIENT_ERROR_BAD_REQUEST, errorMsg.toString()));
         }
+        LOG.traceExit();
     }
 
     /**
@@ -368,7 +365,8 @@ public class DoisResource extends BaseMdsResource {
         );
         addResponseDocToMethod(info, createResponseDoc(
                 Status.CLIENT_ERROR_CONFLICT, 
-                "Error when an user is associated to more than one role", 
+                "Error when an user is associated to more than one role without "
+                        + "setting selectedRole parameter", 
                 "explainRepresentation")
         );
 

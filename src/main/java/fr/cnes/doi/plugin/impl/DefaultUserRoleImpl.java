@@ -9,6 +9,8 @@ import fr.cnes.doi.plugin.AbstractUserRolePluginHelper;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.restlet.security.User;
 
 /**
@@ -25,6 +27,10 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
     private static final String OWNER = "CNES";
     private static final String AUTHOR = "Jean-Christophe Malapert";
     private static final String LICENSE = "LGPLV3";
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = LogManager.getLogger(DefaultUserRoleImpl.class.getName());       
 
     public DefaultUserRoleImpl() {
         super();

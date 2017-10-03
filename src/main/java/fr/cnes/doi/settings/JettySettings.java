@@ -6,11 +6,11 @@
 package fr.cnes.doi.settings;
 
 import fr.cnes.doi.utils.spec.Requirement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.restlet.Server;
 import org.restlet.data.Parameter;
 import org.restlet.ext.jetty.JettyServerHelper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Fills Jetty configuration file based on DoiSettings and registers it in
@@ -25,10 +25,10 @@ import org.restlet.ext.jetty.JettyServerHelper;
 public final class JettySettings extends JettyServerHelper {
     
     /**
-     * Class name.
+     * Logger.
      */
-    private static final String CLASS_NAME = JettySettings.class.getName();
-
+    private static final Logger LOG = LogManager.getLogger(JettySettings.class.getName());     
+    
     /**
      * DOI settings.
      */
@@ -37,12 +37,7 @@ public final class JettySettings extends JettyServerHelper {
     /**
      * Server.
      */
-    private final Server server;
-    
-    /**
-     * Logger.
-     */
-    private static final Logger LOGGER = Logger.getLogger(JettySettings.class.getName());    
+    private final Server server;       
 
     /**
      * Constructs settings for Jetty.
@@ -52,10 +47,10 @@ public final class JettySettings extends JettyServerHelper {
      */
     public JettySettings(final Server server, final DoiSettings settings) {
         super(server);
-        LOGGER.entering(CLASS_NAME, "Constructor");
+        LOG.trace("Entering in Constructor");
         this.server = server;
         this.settings = settings;
-        LOGGER.exiting(CLASS_NAME, "Constructor");        
+        LOG.trace("Exiting from Constructor");
     }
 
     /**
@@ -68,15 +63,17 @@ public final class JettySettings extends JettyServerHelper {
      */
     @Override
     public int getHttpRequestHeaderSize() {
-        LOGGER.entering(CLASS_NAME, "getHttpRequestHeaderSize");        
+        LOG.traceEntry();
         int result;
         try {
             result = settings.getInt(Consts.JETTY_REQUEST_HEADER_SIZE);
+            LOG.debug("getHttpRequestHeaderSize : default value from configuration file loaded");            
         } catch (Exception e) {
             result = super.getHttpRequestHeaderSize();
+            LOG.debug("getHttpRequestHeaderSize : default value loaded");            
         }
-        LOGGER.exiting(CLASS_NAME, "getHttpRequestHeaderSize", result);                
-        return result;
+        LOG.info("getHttpRequestHeaderSize : {}", result);
+        return LOG.traceExit(result);
     }
 
     /**
@@ -88,14 +85,17 @@ public final class JettySettings extends JettyServerHelper {
      */
     @Override
     public int getHttpResponseHeaderSize() {
-        LOGGER.entering(CLASS_NAME, "getHttpResponseHeaderSize");                
+        LOG.traceEntry();                
         int result;
         try {
             result = settings.getInt(Consts.JETTY_RESPONSE_HEADER_SIZE);
+            LOG.debug("getHttpResponseHeaderSize : default value from configuration file loaded");            
         } catch (Exception e) {
             result = super.getHttpResponseHeaderSize();
+            LOG.debug("getHttpResponseHeaderSize : default value loaded");                        
         }
-        LOGGER.exiting(CLASS_NAME, "getHttpResponseHeaderSize", result);                        
+        LOG.info("getHttpResponseHeaderSize : {}", result);
+        LOG.trace("Exiting from getHttpResponseHeaderSize with result {}", result);
         return result;
     }
 
@@ -106,15 +106,17 @@ public final class JettySettings extends JettyServerHelper {
      */
     @Override
     public int getThreadPoolMinThreads() {
-        LOGGER.entering(CLASS_NAME, "getThreadPoolMinThreads");                        
+        LOG.traceEntry();
         int result;
         try {
             result =  settings.getInt(Consts.JETTY_MIN_THREADS);
+            LOG.debug("getThreadPoolMinThreads : default value from configuration file loaded");                        
         } catch (Exception e) {
             result = super.getThreadPoolMinThreads();
+            LOG.debug("getThreadPoolMinThreads : default value loaded");                                    
         }
-        LOGGER.exiting(CLASS_NAME, "getThreadPoolMinThreads", result);                                
-        return result;
+        LOG.info("getThreadPoolMinThreads : {}", result);                
+        return LOG.traceExit(result);
     }
 
     /**
@@ -124,15 +126,17 @@ public final class JettySettings extends JettyServerHelper {
      */
     @Override
     public int getThreadPoolMaxThreads() {
-        LOGGER.entering(CLASS_NAME, "getThreadPoolMaxThreads");   
+        LOG.traceEntry();
         int result;
         try {
             result = settings.getInt(Consts.JETTY_MAX_THREADS);
+            LOG.debug("getThreadPoolMaxThreads : default value from configuration file loaded");                                    
         } catch (Exception e) {
             result = super.getThreadPoolMaxThreads();
+            LOG.debug("getThreadPoolMaxThreads : default value loaded");                                                
         }
-        LOGGER.exiting(CLASS_NAME, "getThreadPoolMaxThreads", result);           
-        return result;
+        LOG.info("getThreadPoolMaxThreads : {}", result);                        
+        return LOG.traceExit(result);
     }
 
     /**
@@ -142,15 +146,17 @@ public final class JettySettings extends JettyServerHelper {
      */
     @Override
     public int getThreadPoolThreadsPriority() {
-        LOGGER.entering(CLASS_NAME, "getThreadPoolThreadsPriority");           
+        LOG.traceEntry();
         int result;
         try {
             result = settings.getInt(Consts.JETTY_THREADS_PRIORITY);
+            LOG.debug("getThreadPoolThreadsPriority : default value from configuration file loaded");                                                
         } catch (Exception e) {
             result = super.getThreadPoolThreadsPriority();
+            LOG.debug("getThreadPoolThreadsPriority : default value loaded");                                                            
         }
-        LOGGER.exiting(CLASS_NAME, "getThreadPoolThreadsPriority", result);                   
-        return result;
+        LOG.info("getThreadPoolThreadsPriority : {}", result);                                
+        return LOG.traceExit(result);
     }
 
     /**
@@ -161,15 +167,17 @@ public final class JettySettings extends JettyServerHelper {
      */
     @Override
     public int getThreadPoolIdleTimeout() {
-        LOGGER.entering(CLASS_NAME, "getThreadPoolIdleTimeout"); 
+        LOG.traceEntry();
         int result;
         try {
             result = settings.getInt(Consts.JETTY_THREAD_MAX_IDLE_TIME_MS);
+            LOG.debug("getThreadPoolIdleTimeout : default value from configuration file loaded");                                                            
         } catch (Exception e) {
             result = super.getThreadPoolIdleTimeout();
+            LOG.debug("getThreadPoolIdleTimeout : default value loaded");                                                                        
         }
-        LOGGER.exiting(CLASS_NAME, "getThreadPoolIdleTimeout", result);         
-        return result;
+        LOG.info("getThreadPoolIdleTimeout : {}", result);                                        
+        return LOG.traceExit(result);
     }
 
     /**
@@ -180,15 +188,17 @@ public final class JettySettings extends JettyServerHelper {
      */
     @Override
     public long getThreadPoolStopTimeout() {
-        LOGGER.entering(CLASS_NAME, "getThreadPoolStopTimeout");         
+        LOG.traceEntry();
         long result;
         try {
             result = settings.getLong(Consts.JETTY_THREAD_STOP_TIME_MS);
+            LOG.debug("getThreadPoolStopTimeout : default value from configuration file loaded");                                                                        
         } catch (Exception e) {
             result = super.getThreadPoolStopTimeout();
+            LOG.debug("getThreadPoolStopTimeout : default value loaded");                                                                                    
         }
-        LOGGER.exiting(CLASS_NAME, "getThreadPoolStopTimeout", result);                 
-        return result;
+        LOG.info("getThreadPoolStopTimeout : {}", result);
+        return LOG.traceExit(result);
     }
 
     /**
@@ -199,15 +209,17 @@ public final class JettySettings extends JettyServerHelper {
      */
     @Override
     public int getConnectorAcceptors() {
-        LOGGER.entering(CLASS_NAME, "getConnectorAcceptors");   
+        LOG.traceEntry();
         int result;
         try {
             result = settings.getInt(Consts.JETTY_ACCEPTOR_THREADS);
+            LOG.debug("getConnectorAcceptors : default value from configuration file loaded");                                                                                    
         } catch (Exception e) {
             result = super.getConnectorAcceptors();
+            LOG.debug("getConnectorAcceptors : default value loaded");                                                                                                
         }
-        LOGGER.exiting(CLASS_NAME, "getConnectorAcceptors", result);           
-        return result;
+        LOG.info("getConnectorAcceptors : {}", result);
+        return LOG.traceExit(result);
     }
 
     /**
@@ -218,15 +230,17 @@ public final class JettySettings extends JettyServerHelper {
      */
     @Override
     public int getConnectorSelectors() {
-        LOGGER.entering(CLASS_NAME, "getConnectorSelectors");        
+        LOG.traceEntry();
         int result;
         try {
             result = settings.getInt(Consts.JETTY_SELECTOR_THREADS);
+            LOG.debug("getConnectorSelectors : default value from configuration file loaded");                                                                                                
         } catch (Exception e) {
             result = super.getConnectorSelectors();
+            LOG.debug("getConnectorSelectors : default value loaded");                                                                                                            
         }
-        LOGGER.exiting(CLASS_NAME, "getConnectorSelectors", result);                   
-        return result;
+        LOG.info("getConnectorSelectors : {}", result);
+        return LOG.traceExit(result);
     }
 
     /**
@@ -237,15 +251,17 @@ public final class JettySettings extends JettyServerHelper {
      */
     @Override
     public int getLowResourceMonitorIdleTimeout() {
-        LOGGER.entering(CLASS_NAME, "getLowResourceMonitorIdleTimeout");                   
+        LOG.traceEntry();                 
         int result;
         try {
             result = settings.getInt(Consts.JETTY_LOW_RESOURCES_MAX_IDLE_TIME_MS);
+            LOG.debug("getLowResourceMonitorIdleTimeout : default value from configuration file loaded");                                                                                                            
         } catch (Exception e) {
             result = super.getLowResourceMonitorIdleTimeout();
+            LOG.debug("getLowResourceMonitorIdleTimeout : default value loaded");                                                                                                                        
         }
-        LOGGER.exiting(CLASS_NAME, "getLowResourceMonitorIdleTimeout", result);                           
-        return result;
+        LOG.info("getLowResourceMonitorIdleTimeout : {}", result);
+        return LOG.traceExit(result);
     }
 
     /**
@@ -256,15 +272,17 @@ public final class JettySettings extends JettyServerHelper {
      */
     @Override
     public int getLowResourceMonitorPeriod() {
-        LOGGER.entering(CLASS_NAME, "getLowResourceMonitorPeriod");                           
+        LOG.traceEntry();                          
         int result;
         try {
             result = settings.getInt(Consts.JETTY_LOW_RESOURCES_PERIOD);
+            LOG.debug("getLowResourceMonitorPeriod : default value from configuration file loaded");                                                                                                                        
         } catch (Exception e) {
             result = super.getLowResourceMonitorPeriod();
+            LOG.debug("getLowResourceMonitorPeriod : default value loaded");                                                                                                                                    
         }
-        LOGGER.exiting(CLASS_NAME, "getLowResourceMonitorPeriod", result);                                   
-        return result;
+        LOG.info("getLowResourceMonitorPeriod : {}", result);
+        return LOG.traceExit(result);
     }
 
     /**
@@ -275,15 +293,17 @@ public final class JettySettings extends JettyServerHelper {
      */
     @Override
     public long getLowResourceMonitorMaxMemory() {
-        LOGGER.entering(CLASS_NAME, "getLowResourceMonitorMaxMemory");                                   
+        LOG.traceEntry();
         long result;
         try {
             result = settings.getLong(Consts.JETTY_LOW_RESOURCES_MAX_MEMORY);
+            LOG.debug("getLowResourceMonitorMaxMemory : default value from configuration file loaded");                                                                                                                                    
         } catch (Exception e) {
             result = super.getLowResourceMonitorMaxMemory();
+            LOG.debug("getLowResourceMonitorMaxMemory : default value loaded");                                                                                                                                                
         }
-        LOGGER.exiting(CLASS_NAME, "getLowResourceMonitorMaxMemory", result);                                   
-        return result;
+        LOG.info("getLowResourceMonitorMaxMemory : {}", result);
+        return LOG.traceExit(result);
     }
 
     /**
@@ -294,15 +314,17 @@ public final class JettySettings extends JettyServerHelper {
      */
     @Override
     public int getLowResourceMonitorMaxConnections() {
-        LOGGER.entering(CLASS_NAME, "getLowResourceMonitorMaxConnections");                                           
+        LOG.traceEntry();
         int result;
         try {
             result = settings.getInt(Consts.JETTY_LOW_RESOURCES_MAX_MEMORY);
+            LOG.debug("getLowResourceMonitorMaxConnections : default value from configuration file loaded");                                                                                                                                                
         } catch (Exception e) {
             result = super.getLowResourceMonitorMaxConnections();
+            LOG.debug("getLowResourceMonitorMaxConnections : default value loaded");                                                                                                                                                            
         }
-        LOGGER.exiting(CLASS_NAME, "getLowResourceMonitorMaxConnections", result);                                                   
-        return result;
+        LOG.info("getLowResourceMonitorMaxConnections : {}", result);
+        return LOG.traceExit(result);
     }
 
     /**
@@ -313,15 +335,17 @@ public final class JettySettings extends JettyServerHelper {
      */
     @Override
     public boolean getLowResourceMonitorThreads() {
-        LOGGER.entering(CLASS_NAME, "getLowResourceMonitorThreads");                                                   
+        LOG.traceEntry();                                            
         boolean result;
         try {
             result = settings.getBoolean(Consts.JETTY_LOW_RESOURCES_THREADS);
+            LOG.debug("getLowResourceMonitorThreads : default value from configuration file loaded");                                                                                                                                                            
         } catch (Exception e) {
             result =  super.getLowResourceMonitorThreads();
+            LOG.debug("getLowResourceMonitorThreads : default value loaded");                                                                                                                                                                        
         }
-        LOGGER.exiting(CLASS_NAME, "getLowResourceMonitorThreads", result);                                                   
-        return result;
+        LOG.info("getLowResourceMonitorThreads : {}", result);
+        return LOG.traceExit(result);
     }
 
     /**
@@ -331,15 +355,17 @@ public final class JettySettings extends JettyServerHelper {
      */
     @Override
     public int getConnectorAcceptQueueSize() {
-        LOGGER.entering(CLASS_NAME, "getConnectorAcceptQueueSize");                                                   
+        LOG.traceEntry();
         int result;
         try {
             result = settings.getInt(Consts.JETTY_ACCEPT_QUEUE_SIZE);
+            LOG.debug("getConnectorAcceptQueueSize : default value from configuration file loaded");                                                                                                                                                                        
         } catch (Exception e) {
             result = super.getConnectorAcceptQueueSize();
+            LOG.debug("getConnectorAcceptQueueSize : default value loaded");                                                                                                                                                                                    
         }
-        LOGGER.exiting(CLASS_NAME, "getConnectorAcceptQueueSize");                                                           
-        return result;
+        LOG.info("getConnectorAcceptQueueSize : {}", result);
+        return LOG.traceExit(result);
     }
 
     /**
@@ -350,15 +376,17 @@ public final class JettySettings extends JettyServerHelper {
      */
     @Override
     public int getConnectorSoLingerTime() {
-        LOGGER.entering(CLASS_NAME, "getConnectorSoLingerTime");                                                           
+        LOG.traceEntry();
         int result;
         try {
             result = settings.getInt(Consts.JETTY_SO_LINGER_TIME);
+            LOG.debug("getConnectorSoLingerTime : default value from configuration file loaded");                                                                                                                                                                                    
         } catch (Exception e) {
             result = super.getConnectorSoLingerTime();
+            LOG.debug("getConnectorSoLingerTime : default value loaded");                                                                                                                                                                                                
         }
-        LOGGER.exiting(CLASS_NAME, "getConnectorSoLingerTime", result);                                                           
-        return result;
+        LOG.info("getConnectorSoLingerTime : {}", result);
+        return LOG.traceExit(result);
     }
 
     /**
@@ -371,15 +399,17 @@ public final class JettySettings extends JettyServerHelper {
      */
     @Override
     public int getConnectorIdleTimeout() {
-        LOGGER.entering(CLASS_NAME, "getConnectorIdleTimeout");  
+        LOG.traceEntry();
         int result;
         try {
             result = settings.getInt(Consts.JETTY_IO_MAX_IDLE_TIME_MS);
+            LOG.debug("getConnectorIdleTimeout : default value from configuration file loaded");                                                                                                                                                                                                
         } catch (Exception e) {
             result = super.getConnectorIdleTimeout();
+            LOG.debug("getConnectorIdleTimeout : default value loaded");                                                                                                                                                                                                            
         }
-        LOGGER.exiting(CLASS_NAME, "getConnectorIdleTimeout", result);                                                                   
-        return result;
+        LOG.info("getConnectorIdleTimeout : {}", result);
+        return LOG.traceExit(result);
     }
 
     /**
@@ -392,15 +422,17 @@ public final class JettySettings extends JettyServerHelper {
      */
     @Override
     public int getHttpOutputBufferSize() {
-        LOGGER.entering(CLASS_NAME, "getHttpOutputBufferSize");                                                                           
+        LOG.traceEntry();
         int result;
         try {
             result = settings.getInt(Consts.JETTY_RESPONSE_BUFFER_SIZE);
+            LOG.debug("getHttpOutputBufferSize : default value from configuration file loaded");                                                                                                                                                                                                            
         } catch (Exception e) {
             result = super.getHttpOutputBufferSize();
+            LOG.debug("getHttpOutputBufferSize : default value loaded");                                                                                                                                                                                                                        
         }
-        LOGGER.exiting(CLASS_NAME, "getHttpOutputBufferSize", result);                                                                                   
-        return result;
+        LOG.info("getHttpOutputBufferSize : {}", result);
+        return LOG.traceExit(result);
     }
 
     /**
@@ -410,15 +442,17 @@ public final class JettySettings extends JettyServerHelper {
      */
     @Override
     public int getHttpHeaderCacheSize() {
-        LOGGER.entering(CLASS_NAME, "getHttpHeaderCacheSize");
+        LOG.traceEntry();
         int result;
         try {
             result = settings.getInt(Consts.JETTY_REQUEST_BUFFER_SIZE);
+            LOG.debug("getHttpHeaderCacheSize : default value from configuration file loaded");                                                                                                                                                                                                                        
         } catch (Exception e) {
             result = super.getHttpHeaderCacheSize();
+            LOG.debug("getHttpHeaderCacheSize : default value loaded");                                                                                                                                                                                                                                    
         }
-        LOGGER.exiting(CLASS_NAME, "getHttpHeaderCacheSize", result);        
-        return result;
+        LOG.info("getHttpHeaderCacheSize : {}", result);
+        return LOG.traceExit(result);
     }
 
     /**
@@ -429,15 +463,17 @@ public final class JettySettings extends JettyServerHelper {
      */
     @Override
     public int getConnectorStopTimeout() {
-        LOGGER.entering(CLASS_NAME, "getConnectorStopTimeout");   
+        LOG.traceEntry();
         int result;
         try {
             result = settings.getInt(Consts.JETTY_GRACEFUL_SHUTDOWN);
+            LOG.debug("getConnectorStopTimeout : default value from configuration file loaded");                                                                                                                                                                                                                                    
         } catch (Exception e) {
             result = super.getConnectorStopTimeout();
+            LOG.debug("getConnectorStopTimeout : default value loaded");                                                                                                                                                                                                                                                
         }
-        LOGGER.exiting(CLASS_NAME, "getConnectorStopTimeout", result);                
-        return result;
+        LOG.info("getConnectorStopTimeout : {}", result);
+        return LOG.traceExit(result);
     }
 
     /**
@@ -448,22 +484,25 @@ public final class JettySettings extends JettyServerHelper {
      */
     @Override
     public long getLowResourceMonitorStopTimeout() {
-        LOGGER.entering(CLASS_NAME, "getLowResourceMonitorStopTimeout"); 
+        LOG.traceEntry(); 
         long result;
         try {
             result = settings.getLong(Consts.JETTY_GRACEFUL_SHUTDOWN);
+            LOG.debug("getLowResourceMonitorStopTimeout : default value from configuration file loaded");                                                                                                                                                                                                                                                
         } catch (Exception e) {
             result = super.getLowResourceMonitorStopTimeout();
+            LOG.debug("getLowResourceMonitorStopTimeout : default value loaded");                                                                                                                                                                                                                                                            
         }
-        LOGGER.entering(CLASS_NAME, "getLowResourceMonitorStopTimeout", result);                        
-        return result;
+        LOG.info("getLowResourceMonitorStopTimeout : {}", result);
+        return LOG.traceExit(result);
     }
 
     /**
      * addParamsToServerContext.     
      */
     public void addParamsToServerContext() {
-        LOGGER.entering(CLASS_NAME, "addParamsToServerContext");
+        LOG.traceEntry();
+        LOG.info("---- Jetty parameters ----");
         addParam("threadPool.minThreads", getThreadPoolMinThreads());
         addParam("threadPool.maxThreads", getThreadPoolMaxThreads());
         addParam("threadPool.threadsPriority", getThreadPoolThreadsPriority());
@@ -485,7 +524,9 @@ public final class JettySettings extends JettyServerHelper {
         addParam("lowResource.maxConnections", getLowResourceMonitorMaxConnections());
         addParam("lowResource.idleTimeout", getLowResourceMonitorIdleTimeout());
         addParam("lowResource.stopTimeout", getLowResourceMonitorStopTimeout());
-        LOGGER.entering(CLASS_NAME, "addParamsToServerContext");        
+        LOG.info("Jetty settings have been loaded");        
+        LOG.info("---------------------------");        
+        LOG.traceExit();
     }
 
     /**
@@ -496,16 +537,18 @@ public final class JettySettings extends JettyServerHelper {
      * @throws IllegalArgumentException - if propValue is null
      */
     private void addParam(final String propName, final Object propValue) {
+        LOG.traceEntry("Parameters : {} and {}", propName, propValue);
         if(propValue == null) {
             throw new IllegalArgumentException("propValue for "+propName+" is not defined");
         }
         final Parameter param = this.server.getContext().getParameters().getFirst(propName);
         if (param == null) {
             this.server.getContext().getParameters().add(propName, String.valueOf(propValue));
-            LOGGER.log(Level.CONFIG, "add to a new param {0} : {1}", new Object[]{propName, propValue});  
+            LOG.info("add to a new param {} : {}", propName, propValue);  
         } else {                      
             param.setValue(String.valueOf(propValue));
-            LOGGER.log(Level.CONFIG, "add to an existant param {0} : {1}", new Object[]{propName, propValue});                        
+            LOG.info("add to an existant param {} : {}", propName, propValue);
         }
+        LOG.traceExit();
     }
 }

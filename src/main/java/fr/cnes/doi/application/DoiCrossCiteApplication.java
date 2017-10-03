@@ -13,6 +13,8 @@ import fr.cnes.doi.resource.citation.FormatCitationResource;
 import fr.cnes.doi.resource.citation.LanguageCitationResource;
 import fr.cnes.doi.resource.citation.StyleCitationResource;
 import fr.cnes.doi.utils.spec.Requirement;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Provides an application to get citation from a registered DOI. Books and
@@ -75,9 +77,9 @@ public class DoiCrossCiteApplication extends AbstractApplication {
     public static final String NAME = "Cross Cite Application";
 
     /**
-     * Class name.
+     * Logger.
      */
-    private static final String CLASS_NAME = DoiCrossCiteApplication.class.getName();  
+    private static final Logger LOG = LogManager.getLogger(DoiCrossCiteApplication.class.getName());     
     
     /**
      * Client to query CrossCite.
@@ -91,8 +93,6 @@ public class DoiCrossCiteApplication extends AbstractApplication {
      */
     public DoiCrossCiteApplication() {
         super();
-        getLogger().entering(CLASS_NAME, "Constructor");
-
         setName(NAME);
         final StringBuilder description = new StringBuilder();
         description.append("Books and journal articles have long benefited from "
@@ -119,8 +119,6 @@ public class DoiCrossCiteApplication extends AbstractApplication {
                 + "Principles provide a guideline for the those that want to "
                 + "enhance reuse of their data (Wilkinson 2016).");
         setDescription(description.toString());
-
-        getLogger().exiting(CLASS_NAME, "Constructor");
     }
 
     /**
@@ -137,15 +135,14 @@ public class DoiCrossCiteApplication extends AbstractApplication {
      */
     @Override
     public Restlet createInboundRoot() {
-        getLogger().entering(CLASS_NAME, "createInboundRoot");
-
+        LOG.traceEntry();
+        
         final Router router = new Router(getContext());
         router.attach(STYLES_URI, StyleCitationResource.class);
         router.attach(LANGUAGE_URI, LanguageCitationResource.class);
         router.attach(FORMAT_URI, FormatCitationResource.class);
 
-        getLogger().exiting(CLASS_NAME, "createInboundRoot");
-        return router;
+        return LOG.traceExit(router);
     }
 
     /**
@@ -156,5 +153,14 @@ public class DoiCrossCiteApplication extends AbstractApplication {
     public ClientCrossCiteCitation getClient() {
         return this.client;
     }
+    
+    /**
+     * Returns the logger.
+     * @return the logger
+     */
+    @Override
+    public Logger getLog() {
+        return LOG;
+    }    
 
 }

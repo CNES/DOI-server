@@ -5,6 +5,7 @@
  */
 package fr.cnes.doi.server;
 
+import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.exception.MailingException;
 import fr.cnes.doi.security.TokenSecurity;
 import fr.cnes.doi.security.UtilsCryptography;
@@ -16,24 +17,19 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.logging.Level;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
-
-import org.restlet.data.LocalReference;
-import org.restlet.representation.Representation;
-import org.restlet.resource.ClientResource;
 
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.settings.EmailSettings;
-import fr.cnes.doi.utils.Utils;
 import fr.cnes.doi.utils.spec.Requirement;
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 
 /**
  * DOI server
@@ -51,30 +47,28 @@ import java.nio.charset.StandardCharsets;
 public class Starter {
 
     static {
-        ClientResource client = new ClientResource(LocalReference.createClapReference("class/logging.properties"));
-        Representation logging = client.get();
-        try {
-            LogManager.getLogManager().readConfiguration(logging.getStream());
-        } catch (final IOException e) {
-            Logger.getAnonymousLogger().severe("Could not load default logging.properties file");
-            Logger.getAnonymousLogger().severe(e.getMessage());
-        } finally {
-            client.release();
-        }
+        java.util.logging.Logger rootLogger = java.util.logging.LogManager.getLogManager().getLogger("");
+        java.util.logging.Handler[] handlers = rootLogger.getHandlers();
+        rootLogger.removeHandler(handlers[0]);
+        SLF4JBridgeHandler.install();
     }
 
     /**
      */
     public static final int BITS_16 = 16;
 
-    private static final Logger LOGGER = Logger.getLogger(Starter.class.getName());
-    private static final Logger SHELL_LOGGER = Utils.getShellLogger();
-    private static final Logger GLOBAL_LOGGER = Logger.getGlobal();
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = LogManager.getLogger(Starter.class.getName());
 
+    /**
+     * DOI Server.
+     */
     private static DoiServer doiServer;
 
     private static void displayHelp() {
-        GLOBAL_LOGGER.entering(Starter.class.getName(), "displayHelp");
+        LOG.trace("Entering in displayHelp");
         DoiSettings settings = DoiSettings.getInstance();
         StringBuilder help = new StringBuilder();
         help.append("------------ Help for DOI Server -----------\n");
@@ -85,7 +79,7 @@ public class Starter {
         help.append("with :\n");
         help.append("  --secret <key>               : The 16 bits secret key to crypt/decrypt\n");
         help.append("  --key-sign-secret <key>      : The key to sign the token\n");
-        help.append("                                 If not provided, a default one is used\n\n");
+        help.append("                                 If not provided, a default one is used\n");
         help.append("  -s                           : Starts the server\n");
         help.append("with OPTIONS:\n");
         help.append("  -h|--help                    : This output\n");
@@ -99,8 +93,8 @@ public class Starter {
         help.append("  -v|--version                 : DOI server version\n");
         help.append("\n");
         help.append("\n");
-        SHELL_LOGGER.info(help.toString());
-        GLOBAL_LOGGER.exiting(Starter.class.getName(), "displayHelp");
+        LOG.info(help.toString());
+        LOG.trace("Exiting from displayHelp");
     }
 
     /**
@@ -109,28 +103,28 @@ public class Starter {
      * @param server HTTP or HTTPS server
      */
     private static void stopServer(final Thread server) {
-        GLOBAL_LOGGER.entering(Starter.class.getName(), "stopServer");
+        LOG.trace("Entering in stopServer");
         try {
             try {
-                GLOBAL_LOGGER.info("Stopping the server ...");
+                LOG.info("Stopping the server ...");
                 doiServer.stop();
-                GLOBAL_LOGGER.info("Server stopped");
+                LOG.info("Server stopped");
             } catch (Exception ex) {
-                GLOBAL_LOGGER.info("Unable to stop the server");
-                LOGGER.info("Unable to stop the server");
+                LOG.fatal("Unable to stop the server", ex);
             } finally {
-                GLOBAL_LOGGER.info("Interrups the server, which is stopping");
+                LOG.info("Interrups the server, which is stopping");
                 try {
                     EmailSettings.getInstance().sendMessage("[DOI] Stopping Server", "Ther server has been interrupted");
                 } catch (MailingException ex) {
-                    GLOBAL_LOGGER.log(Level.SEVERE, null, ex.getMessage());
+                    LOG.fatal("Cannot send the notification to the administrator", ex);
                 }
                 server.interrupt();
                 server.join();
             }
         } catch (InterruptedException e) {
-            GLOBAL_LOGGER.finer(e.getMessage());
+            LOG.debug("Cannot interrupt the server", e);
         }
+        LOG.trace("Exiting from stopServer");
     }
 
     /**
@@ -141,18 +135,18 @@ public class Starter {
     @Requirement(
             reqId = Requirement.DOI_ARCHI_040,
             reqName = Requirement.DOI_ARCHI_040_NAME
-    )    
+    )
     private static void startServer(final DoiServer server) {
-        GLOBAL_LOGGER.entering(Starter.class.getName(), "startServer");
+        LOG.trace("Entering in startServer");
         try {
             fr.cnes.doi.plugin.Utils.addPath(DoiSettings.getInstance().getPathApp() + File.separatorChar + "plugins");
-            GLOBAL_LOGGER.info("Starting server ...");
+            LOG.info("Starting server ...");
             server.start();
-            GLOBAL_LOGGER.info("Server started");
+            LOG.info("Server started");
         } catch (Exception ex) {
-            GLOBAL_LOGGER.info("Unable to start the server");
-            LOGGER.info("Unable to start the server");
+            LOG.fatal("Unable to start the server");
         }
+        LOG.trace("Exiting from startServer");
     }
 
     /**
@@ -161,7 +155,7 @@ public class Starter {
      * @param settings Configuration
      */
     private static void launchServer(final DoiSettings settings) {
-        GLOBAL_LOGGER.entering(Starter.class.getName(), "launchServer");
+        LOG.trace("Entering in launchServer");
         settings.validConfigurationFile();
         doiServer = new DoiServer(settings);
         final Thread server = new Thread() {
@@ -174,26 +168,26 @@ public class Starter {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
-                LOGGER.info("interrupt received, killing server…");
+                LOG.info("interrupt received, killing server…");
                 stopServer(server);
             }
         });
 
         server.start();
-        GLOBAL_LOGGER.exiting(Starter.class.getName(), "launchServer");
+        LOG.trace("Exiting from launchServer");
     }
 
     /**
      * Displays version.
      */
     private static void displayVersion() {
-        GLOBAL_LOGGER.entering(Starter.class.getName(), "displayVersion");
+        LOG.trace("Entering in displayVersion");
         final DoiSettings settings = DoiSettings.getInstance();
         final String appName = settings.getString(Consts.APP_NAME);
         final String version = settings.getString(Consts.VERSION);
         final String copyright = settings.getString(Consts.COPYRIGHT);
-        LOGGER.log(Level.INFO, "{0} ({1}) - Version:{2}\n", new Object[]{appName, copyright, version});
-        GLOBAL_LOGGER.exiting(Starter.class.getName(), "displayVersion");
+        LOG.info("{} ({}) - Version:{}\n", appName, copyright, version);
+        LOG.trace("Exiting from displayVersion");
     }
 
     /**
@@ -239,51 +233,59 @@ public class Starter {
                     break;
                 //
                 case 'h':
-                    GLOBAL_LOGGER.fine("h option is selected");
+                    LOG.debug("h option is selected");
                     displayHelp();
                     break;
                 //
                 case 's':
-                    GLOBAL_LOGGER.fine("s option is selected");
+                    LOG.debug("s option is selected");
                     launchServer(settings);
                     break;
                 //
                 case 'k':
-                    GLOBAL_LOGGER.fine("k option is selected");
-                    System.out.println(TokenSecurity.createKeySignatureHS256());
+                    LOG.debug("k option is selected");
+                    LOG.info(TokenSecurity.createKeySignatureHS256());
                     break;
                 //
                 case 'e':
-                    GLOBAL_LOGGER.fine("e option is selected");
+                    LOG.debug("e option is selected");
                     arg = g.getOptarg();
-                    System.out.println(UtilsCryptography.decrypt(arg, settings.getSecretKey()));
+                    try {
+                        LOG.info(UtilsCryptography.decrypt(arg, settings.getSecretKey()));
+                    } catch (DoiRuntimeException ex) {
+                        LOG.fatal("Unable to decrypt {} : {}",arg,ex.getMessage());
+                    }
                     break;
                 //
                 case 'c':
-                    GLOBAL_LOGGER.fine("c option is selected");
+                    LOG.debug("c option is selected");
                     arg = g.getOptarg();
-                    System.out.println(UtilsCryptography.encrypt(arg, settings.getSecretKey()));
+                    try {
+                        LOG.info(UtilsCryptography.encrypt(arg, settings.getSecretKey()));
+                    } catch(DoiRuntimeException ex) {
+                        LOG.fatal("Unable to encrypt {} : {}",arg, ex.getMessage());
+                    }
                     break;
                 //
                 case 'd':
-                    GLOBAL_LOGGER.fine("d option is selected");
+                    LOG.debug("d option is selected");
                     settings.displayConfigFile();
                     break;
                 //
                 case 'f':
-                    GLOBAL_LOGGER.fine("f option is selected");
+                    LOG.debug("f option is selected");
                     arg = g.getOptarg();
                      {
                         try {
                             settings.setPropertiesFile(arg);
                         } catch (IOException ex) {
-                            LOGGER.info(ex.getMessage());
+                            LOG.fatal(ex.getMessage());
                         }
                     }
                     break;
                 //
                 case 'v':
-                    GLOBAL_LOGGER.fine("v option is selected");
+                    LOG.debug("v option is selected");
                     displayVersion();
                     break;
                 //
@@ -293,9 +295,9 @@ public class Starter {
                         byte[] encodedFile = Files.readAllBytes(Paths.get(arg));
                         String contentFile = new String(encodedFile, StandardCharsets.UTF_8);
                         contentFile = UtilsCryptography.encrypt(contentFile, settings.getSecretKey());
-                        SHELL_LOGGER.info(contentFile);
+                        LOG.info(contentFile);
                     } catch (Exception ex) {
-                        LOGGER.log(Level.INFO, "Error: {0}", ex.toString());
+                        LOG.fatal("Error: {}", ex.getMessage());
                     }
                     break;
                 //
@@ -311,16 +313,16 @@ public class Starter {
                         reader = new BufferedReader(inputReader);
                         String content = reader.lines().collect(Collectors.joining("\n"));
                         content = UtilsCryptography.decrypt(content, settings.getSecretKey());
-                        SHELL_LOGGER.info(content);
+                        LOG.info(content);
                     } catch (Exception ex) {
-                        LOGGER.log(Level.INFO, "Error: {0}", ex.toString());
+                        LOG.fatal("Error: {}", ex.getMessage());
                     } finally {
                         if (inputStream != null) {
                             try {
                                 inputStream.close();
 
                             } catch (IOException e) {
-                                LOGGER.log(Level.INFO, "Error closing inputstream: {0}", e.toString());
+                                LOG.fatal("Error closing inputstream: {}", e.getMessage(), e);
                             }
 
                         }
@@ -328,14 +330,14 @@ public class Starter {
                             try {
                                 inputReader.close();
                             } catch (IOException ex) {
-                                LOGGER.log(Level.INFO, "Error closing inputReader: {0}", ex.toString());
+                                LOG.fatal("Error closing inputReader: {}", ex.getMessage(), ex);
                             }
                         }
                         if (reader != null) {
                             try {
                                 reader.close();
                             } catch (IOException ex) {
-                                LOGGER.log(Level.INFO, "Error closing reader: {0}", ex.toString());
+                                LOG.fatal("Error closing reader: {}", ex.getMessage(), ex);
                             }
 
                         }
@@ -345,12 +347,12 @@ public class Starter {
                     break; // getopt() already printed an error
                 //
                 default:
-                    LOGGER.log(Level.INFO, "getopt() returned {0}\n", c);
+                    LOG.debug("getopt() returned {}\n", c);
             }
         }
         //
         for (int i = g.getOptind(); i < argv.length; i++) {
-            LOGGER.log(Level.INFO, "Non option argv element: {0}\n", argv[i]);
+            LOG.info("Non option argv element: {}\n", argv[i]);
         }
 
         if (argv.length == 0) {
