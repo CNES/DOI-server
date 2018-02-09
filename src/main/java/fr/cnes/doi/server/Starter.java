@@ -1,12 +1,26 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2018 Centre National d'Etudes Spatiales (CNES).
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3.0 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301  USA
  */
 package fr.cnes.doi.server;
 
 import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.exception.MailingException;
+import fr.cnes.doi.resource.admin.SuffixProjectsResource;
 import fr.cnes.doi.security.TokenSecurity;
 import fr.cnes.doi.security.UtilsCryptography;
 import java.io.BufferedReader;
@@ -22,11 +36,15 @@ import java.util.stream.Collectors;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.settings.EmailSettings;
+import fr.cnes.doi.utils.UniqueDoi;
 import fr.cnes.doi.utils.spec.Requirement;
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.logging.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.slf4j.bridge.SLF4JBridgeHandler;
@@ -77,6 +95,7 @@ public class Starter {
                 .append(settings.getString(Consts.VERSION)).append(".jar [--secret <key>] [OPTIONS] [-s]\n");
         help.append("\n\n");
         help.append("with :\n");
+        help.append("  --doi \"<INIST_prefix> <projectName> <landingPage>\" : Creates a DOI\n");                        
         help.append("  --secret <key>               : The 16 bits secret key to crypt/decrypt\n");
         help.append("  --key-sign-secret <key>      : The key to sign the token\n");
         help.append("                                 If not provided, a default one is used\n");
@@ -204,17 +223,19 @@ public class Starter {
         String arg;
 
         StringBuffer sb = new StringBuffer();
-        LongOpt[] longopts = new LongOpt[7];
+        LongOpt[] longopts = new LongOpt[8];
         longopts[0] = new LongOpt("help", LongOpt.NO_ARGUMENT, null, 'h');
         longopts[1] = new LongOpt("version", LongOpt.NO_ARGUMENT, null, 'v');
         longopts[2] = new LongOpt("secret", LongOpt.REQUIRED_ARGUMENT, sb, 0);
         longopts[3] = new LongOpt("decryptProperties", LongOpt.REQUIRED_ARGUMENT, null, 'z');
         longopts[4] = new LongOpt("cryptProperties", LongOpt.REQUIRED_ARGUMENT, null, 'y');
         longopts[5] = new LongOpt("key-sign", LongOpt.NO_ARGUMENT, null, 'k');
-        longopts[6] = new LongOpt("key-sign-secret", LongOpt.REQUIRED_ARGUMENT, sb, 1);
+        longopts[6] = new LongOpt("key-sign-secret", LongOpt.REQUIRED_ARGUMENT, null, 'a');
+        longopts[7] = new LongOpt("doi", LongOpt.REQUIRED_ARGUMENT, null, 'b');
+        
 
         //
-        Getopt g = new Getopt(progName, argv, "hvdske:c:f:y:z:", longopts);
+        Getopt g = new Getopt(progName, argv, "hvdske:c:f:y:z:a:b:", longopts);
         //
         while ((c = g.getopt()) != -1) {
             switch (c) {
@@ -225,13 +246,26 @@ public class Starter {
                     } else {
                         settings.setSecretKey(secretKey);
                     }
-                    break;
-                //    
-                case 1:
-                    String secretSignToken = g.getOptarg();
-                    TokenSecurity.getInstance().setTokenKey(secretSignToken);
-                    break;
+                    break;                                                                                               
                 //
+                case 'a':
+                    String secretSignToken = g.getOptarg();
+                    TokenSecurity.getInstance().setTokenKey(secretSignToken);                    
+                    break;
+                case 'b':
+                    String[] arguments = g.getOptarg().split(" ");
+                    String prefix = arguments[0];
+                    String projectName = arguments[1];
+                    String landingPage = arguments[2];
+                    {
+                        try {
+                            String doi = UniqueDoi.getInstance().createDOI(prefix, projectName, new URL(landingPage), SuffixProjectsResource.NB_DIGITS);
+                            LOG.info(doi);
+                        } catch (MalformedURLException ex) {
+                            throw new IllegalArgumentException(ex.getMessage());
+                        }
+                    }
+                    break;
                 case 'h':
                     LOG.debug("h option is selected");
                     displayHelp();

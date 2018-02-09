@@ -5,19 +5,15 @@
  */
 package fr.cnes.doi.db;
 
-import fr.cnes.doi.utils.spec.Requirement;
+import java.net.URL;
 import java.util.Map;
 import java.util.Observable;
 
 /**
- * Interface for handling the project suffix database.
+ * Interface for handling the DOI suffix database.
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-@Requirement(
-        reqId = Requirement.DOI_INTER_030,
-        reqName = Requirement.DOI_INTER_030_NAME
-)
-public abstract class AbstractProjectSuffixDBHelper extends Observable {
+public abstract class AbstractDoiDBHelper extends Observable {  
     
     /**
      * Notification message when the record is added {@value #ADD_RECORD}.
@@ -27,7 +23,7 @@ public abstract class AbstractProjectSuffixDBHelper extends Observable {
     /**
      * Notification message when the record is added {@value #DELETE_RECORD}.
      */    
-    public static final String DELETE_RECORD = "DELETE";    
+    public static final String DELETE_RECORD = "DELETE";      
 
     /**
      * Init the connection.
@@ -36,51 +32,45 @@ public abstract class AbstractProjectSuffixDBHelper extends Observable {
     public abstract void init(Object configuration);
     
     /**
-     * Adds a suffix project in the database.
-     * @param projectID suffix project
-     * @param projectName project name
-     * @return True when the suffix project is added otherwise False
+     * Creates and Adds a DOI for project in the database related to a landing page.
+     * @param doi DOI
+     * @param landingPage the landing page
+     * @return True when the DOI is added otherwise False
      */
-    public abstract boolean addProjectSuffix(int projectID, String projectName);
+    public abstract boolean addDoi(String doi, URL landingPage);    
     
     /**
-     * Deletes a suffix project from the database.
-     * @param projectID the suffix project
+     * Tests if the DOI exists in the database.
+     * @param doi the DOI
+     * @return True when the DOI exists otherwise False
      */
-    public abstract void deleteProject(int projectID);
-    
-    /**
-     * Tests is a suffix project exists in the database.
-     * @param projectID suffix project
-     * @return True when the suffix project exists otherwise False
-     */
-    public abstract boolean isExistID(int projectID);
+    public abstract boolean isExistDOI(String doi);
 
     /**
-     * Tests is the project name exists in the database.
-     * @param projectName the project name
-     * @return True when the project name exists otherwise False.
+     * Tests if the landing page exists in the database.
+     * @param landingPage the landing page
+     * @return True when the landing page exists otherwise False.
      */
-    public abstract boolean isExistProjectName(String projectName);
+    public abstract boolean isExistLandingPage(URL landingPage);
 
     /**
-     * Returns the project name based on the suffix project.
-     * @param projectID the suffix project
+     * Returns the landing page from DOI.
+     * @param doi the DOI
      * @return the project name
      */
-    public abstract String getProjectFrom(int projectID);
+    public abstract URL getLandingPageFrom(String doi);
 
     /**
-     * Returns the project suffix based on the project name.
-     * @param projectName the project name
-     * @return the suffix project
+     * Returns the DOI from the landing page.
+     * @param landingPage the landing page
+     * @return the DOI
      */
-    public abstract int getIDFrom(String projectName);
+    public abstract String getDOIFrom(URL landingPage);
             
     /**
      * Returns the database records.
      * @return the database records
      */
-    public abstract Map<String, Integer> getProjects();                
+    public abstract Map<URL, String> getRecords();                
     
 }

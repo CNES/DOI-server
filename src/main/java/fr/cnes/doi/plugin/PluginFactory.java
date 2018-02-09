@@ -37,10 +37,12 @@ public final class PluginFactory {
     public static void init(final Map<String, String> settings) {
         final String userRealPlugin = settings.getOrDefault(Consts.PLUGIN_USER_GROUP_MGT,"");
         final String projectSuffixPlugin = settings.getOrDefault(Consts.PLUGIN_PROJECT_SUFFIX,"");
-        final String tokenPlugin = settings.getOrDefault(Consts.PLUGIN_TOKEN,"");        
+        final String tokenPlugin = settings.getOrDefault(Consts.PLUGIN_TOKEN,"");    
+        final String doiPlugin = settings.getOrDefault(Consts.PLUGIN_DOI,""); 
         PLUGINS_IMPL.put(Consts.PLUGIN_USER_GROUP_MGT, userRealPlugin);
         PLUGINS_IMPL.put(Consts.PLUGIN_PROJECT_SUFFIX, projectSuffixPlugin);
         PLUGINS_IMPL.put(Consts.PLUGIN_TOKEN, tokenPlugin);
+        PLUGINS_IMPL.put(Consts.PLUGIN_DOI, doiPlugin);
     }
 
     /**
@@ -72,6 +74,16 @@ public final class PluginFactory {
         final String implClassName = PLUGINS_IMPL.get(Consts.PLUGIN_TOKEN);
         return (AbstractTokenDBPluginHelper) buildObject(implClassName);
     }
+    
+    /**
+     * Returns the concrete implementation of the DOI db.
+     *
+     * @return the plugin
+     */
+    public static AbstractDoiDBPluginHelper getDoi() {
+        final String implClassName = PLUGINS_IMPL.get(Consts.PLUGIN_DOI);
+        return (AbstractDoiDBPluginHelper) buildObject(implClassName);
+    }    
 
     /**
      * instantiates the plugin.
