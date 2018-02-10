@@ -25,18 +25,15 @@ import fr.cnes.doi.utils.spec.Requirement;
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-@Requirement(
-        reqId = Requirement.DOI_ARCHI_030,
-        reqName = Requirement.DOI_ARCHI_030_NAME      
-)
-public abstract class AbstractProjectSuffixPluginHelper 
+@Requirement(reqId = Requirement.DOI_ARCHI_030, reqName = Requirement.DOI_ARCHI_030_NAME)
+public abstract class AbstractProjectSuffixPluginHelper
         extends AbstractProjectSuffixDBHelper implements PluginMetadata {
-    
+
     /**
      * Empty constructor.
      */
     protected AbstractProjectSuffixPluginHelper() {
         super();
     }
-    
+
 }

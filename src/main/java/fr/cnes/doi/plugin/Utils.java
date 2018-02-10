@@ -53,10 +53,7 @@ public class Utils {
      * @throws MalformedURLException - If a protocol handler for the URL could 
      * not be found, or if some other error occurred while constructing the URL
      */
-    @Requirement(
-            reqId = Requirement.DOI_ARCHI_040,
-            reqName = Requirement.DOI_ARCHI_040_NAME
-    )
+    @Requirement(reqId = Requirement.DOI_ARCHI_040, reqName = Requirement.DOI_ARCHI_040_NAME)
     public static void addPath(final String path) 
             throws IllegalArgumentException, NoSuchMethodException, 
             IllegalAccessException, InvocationTargetException, MalformedURLException {

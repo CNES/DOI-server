@@ -19,6 +19,7 @@
 package fr.cnes.doi.resource.mds;
 
 import fr.cnes.doi.InitServerForTest;
+import fr.cnes.doi.client.ClientMDS;
 import fr.cnes.doi.client.ClientProxyTest;
 import fr.cnes.doi.security.UtilsHeader;
 import fr.cnes.doi.settings.Consts;
@@ -35,8 +36,13 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
+import org.mockserver.integration.ClientAndServer;
+import org.mockserver.model.HttpRequest;
+import org.mockserver.model.HttpResponse;
+import org.mockserver.verify.VerificationTimes;
 import org.restlet.Client;
 import org.restlet.Context;
 import org.restlet.data.ChallengeResponse;
@@ -64,7 +70,8 @@ public class MetadatasResourceTest {
     private static Client cl;
     private String result;
     private InputStream inputStream;
-    private InputStream inputStreamFileError;    
+    private InputStream inputStreamFileError; 
+    private ClientAndServer mockServer;    
 
     public MetadatasResourceTest() {
     }
@@ -88,12 +95,14 @@ public class MetadatasResourceTest {
     public void setUp() throws IOException {
         this.inputStream = ClientProxyTest.class.getResourceAsStream("/test.xml");
         this.inputStreamFileError = ClientProxyTest.class.getResourceAsStream("/wrongFileTest.xml");
+        mockServer = startClientAndServer(1081);
     }
 
     @After
     public void tearDown() throws IOException {
         this.inputStream.close();
         this.inputStreamFileError.close();
+        mockServer.stop();
     }
 
     /**
@@ -103,6 +112,10 @@ public class MetadatasResourceTest {
     @Test
     public void testCreateMetadataHttps() {
         System.out.println("createMetadata");
+        
+        mockServer.when(HttpRequest.request("/" + ClientMDS.METADATA_RESOURCE)
+                .withMethod("POST")).respond(HttpResponse.response().withStatusCode(201).withBody("CREATED"));
+        
         result = new BufferedReader(new InputStreamReader(inputStream)).lines()
                 .collect(Collectors.joining("\n"));
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
@@ -126,6 +139,9 @@ public class MetadatasResourceTest {
         }
         client.release();
         assertEquals(Status.SUCCESS_CREATED.getCode(), code);
+        
+        mockServer.verify(HttpRequest.request("/" + ClientMDS.METADATA_RESOURCE)
+                .withMethod("POST"), VerificationTimes.once());        
     }
     
     /**

@@ -31,10 +31,7 @@ import org.apache.logging.log4j.Logger;
  *
  * @author Jean-Christophe Malapert
  */
-@Requirement(
-        reqId = Requirement.DOI_CONFIG_010,
-        reqName = Requirement.DOI_CONFIG_010_NAME
-)
+@Requirement(reqId = Requirement.DOI_CONFIG_010,reqName = Requirement.DOI_CONFIG_010_NAME)
 public final class JettySettings extends JettyServerHelper {
     
     /**

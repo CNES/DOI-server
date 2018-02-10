@@ -56,6 +56,7 @@ public class BaseClient {
         //Engine.getInstance().getRegisteredClients().clear();
         registeredClients.add(new HttpClientHelperPatch(null));
         this.client = new ClientResource(uri);
+        this.client.setLoggable(false);
         configureProxyIfNeeded();
     }
 

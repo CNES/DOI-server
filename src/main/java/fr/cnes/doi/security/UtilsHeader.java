@@ -24,10 +24,7 @@ import fr.cnes.doi.utils.spec.Requirement;
  * Utility class.
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-@Requirement(
-        reqId = Requirement.DOI_AUTO_020,
-        reqName = Requirement.DOI_AUTO_020_NAME
-)
+@Requirement(reqId = Requirement.DOI_AUTO_020,reqName = Requirement.DOI_AUTO_020_NAME)
 public class UtilsHeader {
     
     /**

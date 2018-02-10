@@ -53,33 +53,14 @@ import org.restlet.routing.Redirector;
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-@Requirement(
-    reqId = Requirement.DOI_SRV_130,
-    reqName = Requirement.DOI_SRV_130_NAME
-    )
-@Requirement(
-    reqId = Requirement.DOI_SRV_140,
-    reqName = Requirement.DOI_SRV_140_NAME
-    )
-@Requirement(
-    reqId = Requirement.DOI_SRV_150,
-    reqName = Requirement.DOI_SRV_150_NAME
-    )
-@Requirement(
-    reqId = Requirement.DOI_SRV_160,
-    reqName = Requirement.DOI_SRV_160_NAME
-    )
-@Requirement(
-    reqId = Requirement.DOI_SRV_170,
-    reqName = Requirement.DOI_SRV_170_NAME,
-    coverage = CoverageAnnotation.NONE
-    )
-@Requirement(
-    reqId = Requirement.DOI_DISPO_020,
-    reqName = Requirement.DOI_DISPO_020_NAME
-    )
+@Requirement(reqId = Requirement.DOI_SRV_130, reqName = Requirement.DOI_SRV_130_NAME)
+@Requirement(reqId = Requirement.DOI_SRV_140, reqName = Requirement.DOI_SRV_140_NAME)
+@Requirement(reqId = Requirement.DOI_SRV_150, reqName = Requirement.DOI_SRV_150_NAME)
+@Requirement(reqId = Requirement.DOI_SRV_160, reqName = Requirement.DOI_SRV_160_NAME)
+@Requirement(reqId = Requirement.DOI_SRV_170, reqName = Requirement.DOI_SRV_170_NAME, coverage = CoverageAnnotation.NONE)
+@Requirement(reqId = Requirement.DOI_DISPO_020, reqName = Requirement.DOI_DISPO_020_NAME)
 public class AdminApplication extends AbstractApplication {
-    
+
     /**
      * Application name.
      */
@@ -99,11 +80,11 @@ public class AdminApplication extends AbstractApplication {
      * Status page.
      */
     public static final String STATUS_URI = "/status";
-    
+
     /**
      * Stats page.
      */
-    public static final String STATS_URI = "/stats";    
+    public static final String STATS_URI = "/stats";
 
     /**
      * URI to create a project suffix.
@@ -123,12 +104,12 @@ public class AdminApplication extends AbstractApplication {
     /**
      * URI to handle to get information from a token.
      */
-    public static final String TOKEN_NAME_URI = "/{" + TOKEN_TEMPLATE + "}";    
-    
+    public static final String TOKEN_NAME_URI = "/{" + TOKEN_TEMPLATE + "}";
+
     /**
      * Logger.
      */
-    private static final Logger LOG = LogManager.getLogger(AdminApplication.class.getName());     
+    private static final Logger LOG = LogManager.getLogger(AdminApplication.class.getName());
 
     /**
      * Default directory where the web site is located.
@@ -154,11 +135,11 @@ public class AdminApplication extends AbstractApplication {
      * DataCite Status page.
      */
     private static final String TARGET_URL = "http://status.datacite.org";
-    
+
     /**
      * DataCite Stats page.
      */
-    private static final String TARGET_STATS_URL = "https://stats.datacite.org/#tab-prefixes";    
+    private static final String TARGET_STATS_URL = "https://stats.datacite.org/#tab-prefixes";
 
     /**
      * Token database.
@@ -182,16 +163,13 @@ public class AdminApplication extends AbstractApplication {
      *
      * @return A task
      */
-    @Requirement(
-            reqId = Requirement.DOI_DISPO_020,
-            reqName = Requirement.DOI_DISPO_020_NAME
-    )
+    @Requirement(reqId = Requirement.DOI_DISPO_020,reqName = Requirement.DOI_DISPO_020_NAME)
     private TaskService createTaskService() {
         LOG.traceEntry();
         final TaskService checkLandingPageTask = new TaskService(true, true);
         LOG.info("Sets CheckLandingPage running at each {} {}", PERIOD_SCHEDULER, PERIOD_UNIT);
         checkLandingPageTask.scheduleAtFixedRate(
-                new LandingPageMonitoring(), 0, 
+                new LandingPageMonitoring(), 0,
                 PERIOD_SCHEDULER, PERIOD_UNIT
         );
         return LOG.traceExit(checkLandingPageTask);
@@ -201,17 +179,13 @@ public class AdminApplication extends AbstractApplication {
      * Creates a router for the AdminApplication. This router routes :
      * <ul>
      * <li>the web resources for the website with no authentication</li>
-     * <li>the REST resources for the system administration with
-     * authentication/authorization</li>
+     * <li>the REST resources for the system administration with authentication/authorization</li>
      * </ul>
-     * The web resources are attached by default to the AdminApplication where
-     * as the REST resources for the system administration are attached with the
-     * {@link AdminApplication#ADMIN_URI}
+     * The web resources are attached by default to the AdminApplication where as the REST resources
+     * for the system administration are attached with the {@link AdminApplication#ADMIN_URI}
      *
-     * @see AdminApplication#createWebSiteRouter() the router that contains the
-     * the web resources
-     * @see AdminApplication#createAdminRouter() the router that contains the
-     * REST resources
+     * @see AdminApplication#createWebSiteRouter() the router that contains the the web resources
+     * @see AdminApplication#createAdminRouter() the router that contains the REST resources
      * @see AdminApplication#createAuthenticator() the authentication mechanism
      * @see AdminApplication#createRoleAuthorizer() the authorization mechanism
      * @return Router
@@ -247,13 +221,13 @@ public class AdminApplication extends AbstractApplication {
     }
 
     /**
-     * Creates a router for REST services for the system administration. This
-     * router contains the following resources :
+     * Creates a router for REST services for the system administration. This router contains the
+     * following resources :
      * <ul>
-     * <li>{@link AdminApplication#SUFFIX_PROJECT_URI} resource to handle the
-     * project suffix, which is used in the Digital Object Identifier</li>
-     * <li>{@link AdminApplication#TOKEN_URI} resource to handle the token for
-     * the authentication</li>
+     * <li>{@link AdminApplication#SUFFIX_PROJECT_URI} resource to handle the project suffix, which
+     * is used in the Digital Object Identifier</li>
+     * <li>{@link AdminApplication#TOKEN_URI} resource to handle the token for the
+     * authentication</li>
      * </ul>
      *
      * @see SuffixProjectsResource Resource to handle the the project suffix
@@ -262,7 +236,7 @@ public class AdminApplication extends AbstractApplication {
      */
     private Router createAdminRouter() {
         LOG.traceEntry();
-        
+
         final Router router = new Router(getContext());
         router.attach(SUFFIX_PROJECT_URI, SuffixProjectsResource.class);
         router.attach(TOKEN_URI, TokenResource.class);
@@ -272,20 +246,20 @@ public class AdminApplication extends AbstractApplication {
     }
 
     /**
-     * Creates a router for the web site resources. This router contains the
-     * following resources:
+     * Creates a router for the web site resources. This router contains the following resources:
      * <ul>
-     * <li>{@link AdminApplication#RESOURCE_URI} to distribute the web resources
-     * for the status page</li>
+     * <li>{@link AdminApplication#RESOURCE_URI} to distribute the web resources for the status
+     * page</li>
      * <li>the website resources attached by default when it is available</li>
      * </ul>
-     * The website is located to {@link AdminApplication#JS_DIR} directory when
-     * it is distributed by the DOI server.
+     * The website is located to {@link AdminApplication#JS_DIR} directory when it is distributed by
+     * the DOI server.
+     *
      * @return The router for the public web site
      */
     private Router createWebSiteRouter() {
         LOG.traceEntry();
-                
+
         final Router router = new Router(getContext());
         addStatusPage(router);
         addServicesStatus(router);
@@ -305,7 +279,7 @@ public class AdminApplication extends AbstractApplication {
      */
     private void addStatusPage(final Router router) {
         LOG.traceEntry("Parameter : {}", new JsonMessage(router));
-        
+
         final Directory directory = new Directory(getContext(), LocalReference.createClapReference(STATUS_PAGE_CLASSPATH));
         directory.setDeeplyAccessible(true);
         router.attach(RESOURCE_URI, directory);
@@ -315,22 +289,22 @@ public class AdminApplication extends AbstractApplication {
     }
 
     /**
-     * Adds route {@value #STATUS_URI} to the services describing the DataCite
-     * status.
+     * Adds route {@value #STATUS_URI} to the services describing the DataCite status.
      *
      * @param router router
      */
     private void addServicesStatus(final Router router) {
         LOG.traceEntry("Parameter : {}", new JsonMessage(router));
 
-        final Redirector redirector = new Redirector(getContext(), TARGET_URL, Redirector.MODE_SERVER_OUTBOUND);
+        final Redirector redirector = new Redirector(getContext(), TARGET_URL,
+                Redirector.MODE_SERVER_OUTBOUND);
 
         final Filter authentication = new Filter() {
             /**
-             * Adds the proxy authentication and handles the call by distributing 
-             * it to the next Restlet. If no Restlet is attached, then a 
-             * Status.SERVER_ERROR_INTERNAL status is returned. 
-             * Returns Filter.CONTINUE by default.
+             * Adds the proxy authentication and handles the call by distributing it to the next
+             * Restlet. If no Restlet is attached, then a Status.SERVER_ERROR_INTERNAL status is
+             * returned. Returns Filter.CONTINUE by default.
+             *
              * @param request request
              * @param response response
              * @return The continuation status. Either Filter.CONTINUE or Filter.STOP.
@@ -349,10 +323,9 @@ public class AdminApplication extends AbstractApplication {
 
         LOG.traceExit();
     }
-    
+
     /**
-     * Adds route {@value #STATS_URI} to the services giving the DataCite
-     * stats.
+     * Adds route {@value #STATS_URI} to the services giving the DataCite stats.
      *
      * @param router router
      */
@@ -360,21 +333,21 @@ public class AdminApplication extends AbstractApplication {
         LOG.traceEntry("Parameter : {}", new JsonMessage(router));
 
         final Redirector redirector = new Redirector(
-                getContext(), 
-                TARGET_STATS_URL, 
+                getContext(),
+                TARGET_STATS_URL,
                 Redirector.MODE_CLIENT_PERMANENT
         );
 
         final Filter authentication = new Filter() {
             /**
-             * Adds the proxy authentication and handles the call by distributing 
-             * it to the next Restlet. If no Restlet is attached, then a 
-             * Status.SERVER_ERROR_INTERNAL status is returned. 
-             * Returns Filter.CONTINUE by default.
+             * Adds the proxy authentication and handles the call by distributing it to the next
+             * Restlet. If no Restlet is attached, then a Status.SERVER_ERROR_INTERNAL status is
+             * returned. Returns Filter.CONTINUE by default.
+             *
              * @param request request
              * @param response response
              * @return The continuation status. Either Filter.CONTINUE or Filter.STOP.
-             */            
+             */
             @Override
             protected int doHandle(final Request request, final Response response) {
                 final ProxySettings proxySettings = ProxySettings.getInstance();
@@ -388,17 +361,17 @@ public class AdminApplication extends AbstractApplication {
         router.attach(STATS_URI, authentication);
 
         LOG.traceExit();
-    } 
-    
+    }
+
     /**
-     * Adds default route to the website when it exists. The website must be
-     * located in the {@value #JS_DIR} directory.
+     * Adds default route to the website when it exists. The website must be located in the
+     * {@value #JS_DIR} directory.
      *
      * @param router router
      */
     private void addRouteForWebSite(final Router router) {
         LOG.traceEntry("Parameter : {}", new JsonMessage(router));
-        
+
         final String pathApp = this.getConfig().getPathApp();
         final File file = new File(pathApp + File.separator + JS_DIR);
         if (file.canRead()) {
@@ -415,15 +388,14 @@ public class AdminApplication extends AbstractApplication {
     }
 
     /**
-     * Creates a authorization based on the role. Only users attached to the
-     * role {@link fr.cnes.doi.security.RoleAuthorizer#ROLE_ADMIN} are allowed
+     * Creates a authorization based on the role. Only users attached to the role
+     * {@link fr.cnes.doi.security.RoleAuthorizer#ROLE_ADMIN} are allowed
      *
-     * @return the authorization that contains the access rights to the
-     * resources.
+     * @return the authorization that contains the access rights to the resources.
      */
     private RoleAuthorizer createRoleAuthorizer() {
         LOG.traceEntry();
-        
+
         final RoleAuthorizer roleAuth = new RoleAuthorizer();
         roleAuth.setAuthorizedRoles(
                 Arrays.asList(
@@ -438,18 +410,19 @@ public class AdminApplication extends AbstractApplication {
      * Returns the token database.
      *
      * @return the token database
-     */    
+     */
     public AbstractTokenDBHelper getTokenDB() {
         return this.tokenDB;
-    }  
-    
+    }
+
     /**
      * Returns the logger.
+     *
      * @return the logger
      */
     @Override
     public Logger getLog() {
         return LOG;
-    }    
+    }
 
 }

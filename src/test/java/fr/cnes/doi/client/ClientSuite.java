@@ -4,7 +4,7 @@
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
- * version 3.0 of the License, or (at your option) any later version.
+ * version 2.1 of the License, or (at your option) any later version.
  *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -16,24 +16,37 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package fr.cnes.doi.plugin;
+package fr.cnes.doi.client;
 
-import fr.cnes.doi.db.AbstractUserRoleDBHelper;
-import fr.cnes.doi.utils.spec.Requirement;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 
 /**
- * Plugin to define users and groups of the system.
  *
- * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
+ * @author Jean-Christophe Malapert
  */
-@Requirement(reqId = Requirement.DOI_ARCHI_030, reqName = Requirement.DOI_ARCHI_030_NAME)
-public abstract class AbstractUserRolePluginHelper
-        extends AbstractUserRoleDBHelper implements PluginMetadata {
+@RunWith(Suite.class)
+@Suite.SuiteClasses({fr.cnes.doi.client.ClientCrossCiteCitationTest.class, fr.cnes.doi.client.ClientMDSTest.class})
+public class ClientSuite {
 
-    /**
-     * Empty constructor.
-     */
-    protected AbstractUserRolePluginHelper() {
-        super();
+    @BeforeClass
+    public static void setUpClass() throws Exception {
     }
+
+    @AfterClass
+    public static void tearDownClass() throws Exception {
+    }
+
+    @Before
+    public void setUp() throws Exception {
+    }
+
+    @After
+    public void tearDown() throws Exception {
+    }
+    
 }

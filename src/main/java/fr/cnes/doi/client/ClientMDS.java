@@ -59,16 +59,18 @@ import org.xml.sax.SAXException;
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  * @see "https://mds.datacite.org/static/apidoc"
  */
-@Requirement(
-        reqId = Requirement.DOI_INTER_010,
-        reqName = Requirement.DOI_INTER_010_NAME
-)
+@Requirement(reqId = Requirement.DOI_INTER_010, reqName = Requirement.DOI_INTER_010_NAME)
 public class ClientMDS extends BaseClient {
 
     /**
      * Metadata store service endpoint {@value #DATA_CITE_URL}.
      */
     public static final String DATA_CITE_URL = "https://mds.datacite.org";
+
+    /**
+     * Metadata store mock service endpoint {@value #DATA_CITE_MOCK_URL}.
+     */
+    public static final String DATA_CITE_MOCK_URL = "http://localhost:1081";
 
     /**
      * Metadata store test service endpoint {@value #DATA_CITE_TEST_URL}.
@@ -118,7 +120,7 @@ public class ClientMDS extends BaseClient {
         /**
          * Development context.
          */
-        DEV(true, true, DATA_CITE_TEST_URL, Level.ALL),
+        DEV(false, true, DATA_CITE_MOCK_URL, Level.ALL),
         /**
          * Post development context.
          */
@@ -161,7 +163,7 @@ public class ClientMDS extends BaseClient {
          */
         private final String dataCiteUrl;
 
-        Context(final boolean isTestMode, final boolean isDoiPrefix, 
+        Context(final boolean isTestMode, final boolean isDoiPrefix,
                 final String dataciteUrl, final Level levelLog) {
             this.isTestMode = isTestMode;
             this.isDoiPrefix = isDoiPrefix;
@@ -230,7 +232,7 @@ public class ClientMDS extends BaseClient {
      * Selected test mode.
      */
     private final Parameter testMode;
-    
+
     /**
      * Context.
      */
@@ -264,12 +266,12 @@ public class ClientMDS extends BaseClient {
      * @param context Context using
      */
     public ClientMDS(final Context context) {
-        super(DATA_CITE_URL);
+        super(context.getDataCiteUrl());
         this.context = context;
         this.testMode = this.context.hasTestMode() ? TEST_MODE : null;
         this.getClient().getLogger().setUseParentHandlers(true);
         this.getClient().getLogger().setLevel(Level.ALL);
-        this.getClient().setLoggable(true);
+        this.getClient().setLoggable(false);
     }
 
     /**
@@ -298,6 +300,18 @@ public class ClientMDS extends BaseClient {
      */
     public ClientMDS(final Context context, final String login, final String pwd) {
         this(context);
+        this.getClient().getLogger().log(Level.FINEST, "Authentication with HTTP_BASIC : {0}/{1}", new Object[]{login, pwd});
+        this.getClient().setChallengeResponse(ChallengeScheme.HTTP_BASIC, login, pwd);
+    }
+
+    /**
+     * Creates a client to handle DataCite with a HTTP Basic authentication.
+     *
+     * @param login Login
+     * @param pwd password
+     */
+    public ClientMDS(final String login, final String pwd) {
+        this(Context.PROD);
         this.getClient().getLogger().log(Level.FINEST, "Authentication with HTTP_BASIC : {0}/{1}", new Object[]{login, pwd});
         this.getClient().setChallengeResponse(ChallengeScheme.HTTP_BASIC, login, pwd);
     }
@@ -416,7 +430,7 @@ public class ClientMDS extends BaseClient {
      * are not provided or when one character at least in the DOI name is not
      * valid
      */
-    private void checkInputForm(final Form form) throws IllegalArgumentException{
+    private void checkInputForm(final Form form) throws IllegalArgumentException {
         final Map<String, String> map = form.getValuesMap();
         if (map.containsKey(POST_DOI) && map.containsKey(POST_URL)) {
             final String doiName = form.getFirstValue(POST_DOI);
@@ -450,9 +464,9 @@ public class ClientMDS extends BaseClient {
 
     /**
      * This request returns an URL associated with a given DOI. A 200 status is
-     * an operation successful. A 204 status means no content (DOI is known to MDS, 
-     * but is not minted (or not resolvable e.g. due to handle's latency) The DOI 
-     * prefix may replace according to the {@link ClientMDS#context}.
+     * an operation successful. A 204 status means no content (DOI is known to
+     * MDS, but is not minted (or not resolvable e.g. due to handle's latency)
+     * The DOI prefix may replace according to the {@link ClientMDS#context}.
      *
      * @param doiName DOI name
      * @return an URL or no content (DOI is known to MDS, but is not minted (or
@@ -486,8 +500,8 @@ public class ClientMDS extends BaseClient {
 
     /**
      * This request returns a list of all DOIs for the requesting datacentre.
-     * There is no guaranteed order. A 200 status is an operation successful.
-     * A 204 status means no Content (no DOIs found)
+     * There is no guaranteed order. A 200 status is an operation successful. A
+     * 204 status means no Content (no DOIs found)
      *
      * @return a list of all DOI or no content when no DOIs founds
      * @throws ClientMdsException 204 No Content - no DOIs founds
@@ -542,14 +556,14 @@ public class ClientMDS extends BaseClient {
             final Reference url = createReference(DOI_RESOURCE);
             Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "POST {0}", url.toString());
             this.getClient().setReference(url);
-            String requestBody = 
-                    POST_DOI + "=" + form.getFirstValue(POST_DOI) + "\n" 
+            String requestBody
+                    = POST_DOI + "=" + form.getFirstValue(POST_DOI) + "\n"
                     + POST_URL + "=" + form.getFirstValue(POST_URL);
             requestBody = new String(requestBody.getBytes(
-                    StandardCharsets.UTF_8), 
+                    StandardCharsets.UTF_8),
                     StandardCharsets.UTF_8
             );
-            final Map<String,Object> requestAttributes = this.getClient().getRequestAttributes();
+            final Map<String, Object> requestAttributes = this.getClient().getRequestAttributes();
             requestAttributes.put("charset", StandardCharsets.UTF_8);
             requestAttributes.put("Content-Type", "text/plain");
             this.getClient().getLogger().log(Level.INFO, "POST {0} with parameters {1}", new Object[]{url, requestBody});
@@ -576,7 +590,7 @@ public class ClientMDS extends BaseClient {
         try {
             final JAXBContext ctx = JAXBContext.newInstance(new Class[]{Resource.class});
             final Unmarshaller unMarshaller = ctx.createUnmarshaller();
-            resource = (Resource) unMarshaller.unmarshal(rep.getStream());            
+            resource = (Resource) unMarshaller.unmarshal(rep.getStream());
         } catch (JAXBException | IOException ex) {
             throw new ClientMdsException(Status.SERVER_ERROR_INTERNAL, ex);
         }
@@ -693,8 +707,9 @@ public class ClientMDS extends BaseClient {
 
                 /**
                  * Write into output stream
+                 *
                  * @param b char
-                 * @throws IOException  - if a problem happens
+                 * @throws IOException - if a problem happens
                  */
                 @Override
                 public void write(final int b) throws IOException {
@@ -703,6 +718,7 @@ public class ClientMDS extends BaseClient {
 
                 /**
                  * Transforms toString.
+                 *
                  * @return response as String
                  */
                 @Override
@@ -712,7 +728,7 @@ public class ClientMDS extends BaseClient {
             };
             final JAXBContext jaxbContext = JAXBContext.newInstance(new Class[]{Resource.class});
             final Marshaller marshaller = jaxbContext.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_SCHEMA_LOCATION, 
+            marshaller.setProperty(Marshaller.JAXB_SCHEMA_LOCATION,
                     "http://datacite.org/schema/kernel-4 "
                     + "http://schema.datacite.org/meta/kernel-4/metadata.xsd");
             final Schema schema = SchemaFactory.newInstance(
@@ -724,7 +740,7 @@ public class ClientMDS extends BaseClient {
             this.getClient().getRequestAttributes().put("charset", "UTF-8");
             final Representation response = this.getClient().post(
                     new StringRepresentation(output.toString(), MediaType.APPLICATION_XML)
-            );            
+            );
             result = getText(response);
             return result;
         } catch (ResourceException ex) {
@@ -882,9 +898,9 @@ public class ClientMDS extends BaseClient {
             entity = entity.append(mimeType).append("=").append(url).append("\n");
         }
         return new StringRepresentation(
-                entity.toString(), 
-                MediaType.TEXT_PLAIN, 
-                Language.ENGLISH, 
+                entity.toString(),
+                MediaType.TEXT_PLAIN,
+                Language.ENGLISH,
                 CharacterSet.UTF_8
         );
     }

@@ -44,10 +44,7 @@ import org.restlet.resource.ResourceException;
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  * @see <a href="https://www.w3.org/Submission/wadl/">WADL</a>
  */
-@Requirement(
-        reqId = Requirement.DOI_DOC_010,
-        reqName = Requirement.DOI_DOC_010_NAME
-)
+@Requirement(reqId = Requirement.DOI_DOC_010, reqName = Requirement.DOI_DOC_010_NAME)
 public abstract class AbstractResource extends WadlServerResource {
     
     /**

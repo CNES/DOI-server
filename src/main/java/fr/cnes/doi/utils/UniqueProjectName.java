@@ -34,10 +34,7 @@ import java.util.Map;
  * Utils class to generate a unique number from the project name
  *
  */
-@Requirement(
-        reqId = Requirement.DOI_INTER_030,
-        reqName = Requirement.DOI_INTER_030_NAME
-)
+@Requirement(reqId = Requirement.DOI_INTER_030,reqName = Requirement.DOI_INTER_030_NAME)
 public class UniqueProjectName {
     
     /**

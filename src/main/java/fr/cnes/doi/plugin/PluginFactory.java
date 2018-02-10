@@ -17,17 +17,13 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-@Requirement(
-    reqId = Requirement.DOI_ARCHI_030,
-    reqName = Requirement.DOI_ARCHI_030_NAME      
-    )
+@Requirement(reqId = Requirement.DOI_ARCHI_030, reqName = Requirement.DOI_ARCHI_030_NAME)
 public final class PluginFactory {
-    
+
     /**
-     * Map the name of an interface to the name of a corresponding concrete
-     * implementation class.
+     * Map the name of an interface to the name of a corresponding concrete implementation class.
      */
-    private static final Map<String, String> PLUGINS_IMPL = new ConcurrentHashMap<>();    
+    private static final Map<String, String> PLUGINS_IMPL = new ConcurrentHashMap<>();
 
     /**
      * Loads the path of plugins from Settings.
@@ -35,10 +31,10 @@ public final class PluginFactory {
      * @param settings config settings
      */
     public static void init(final Map<String, String> settings) {
-        final String userRealPlugin = settings.getOrDefault(Consts.PLUGIN_USER_GROUP_MGT,"");
-        final String projectSuffixPlugin = settings.getOrDefault(Consts.PLUGIN_PROJECT_SUFFIX,"");
-        final String tokenPlugin = settings.getOrDefault(Consts.PLUGIN_TOKEN,"");    
-        final String doiPlugin = settings.getOrDefault(Consts.PLUGIN_DOI,""); 
+        final String userRealPlugin = settings.getOrDefault(Consts.PLUGIN_USER_GROUP_MGT, "");
+        final String projectSuffixPlugin = settings.getOrDefault(Consts.PLUGIN_PROJECT_SUFFIX, "");
+        final String tokenPlugin = settings.getOrDefault(Consts.PLUGIN_TOKEN, "");
+        final String doiPlugin = settings.getOrDefault(Consts.PLUGIN_DOI, "");
         PLUGINS_IMPL.put(Consts.PLUGIN_USER_GROUP_MGT, userRealPlugin);
         PLUGINS_IMPL.put(Consts.PLUGIN_PROJECT_SUFFIX, projectSuffixPlugin);
         PLUGINS_IMPL.put(Consts.PLUGIN_TOKEN, tokenPlugin);
@@ -74,7 +70,7 @@ public final class PluginFactory {
         final String implClassName = PLUGINS_IMPL.get(Consts.PLUGIN_TOKEN);
         return (AbstractTokenDBPluginHelper) buildObject(implClassName);
     }
-    
+
     /**
      * Returns the concrete implementation of the DOI db.
      *
@@ -83,7 +79,7 @@ public final class PluginFactory {
     public static AbstractDoiDBPluginHelper getDoi() {
         final String implClassName = PLUGINS_IMPL.get(Consts.PLUGIN_DOI);
         return (AbstractDoiDBPluginHelper) buildObject(implClassName);
-    }    
+    }
 
     /**
      * instantiates the plugin.
@@ -92,7 +88,7 @@ public final class PluginFactory {
      * @return instance of aClassName
      * @throws DoiRuntimeException - if aClassName cannot be instantiated
      */
-    private static Object buildObject(final String aClassName) throws DoiRuntimeException{
+    private static Object buildObject(final String aClassName) throws DoiRuntimeException {
         final Object result;
         try {
             final Class implClass = Class.forName(aClassName);

@@ -35,10 +35,7 @@ import org.restlet.representation.Representation;
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-@Requirement(
-        reqId = Requirement.DOI_INTER_010,
-        reqName = Requirement.DOI_INTER_010_NAME
-)
+@Requirement(reqId = Requirement.DOI_INTER_010,reqName = Requirement.DOI_INTER_010_NAME)
 public class ClientSearchDataCite extends BaseClient {
     
     /**

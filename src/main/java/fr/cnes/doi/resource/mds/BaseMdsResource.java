@@ -175,10 +175,7 @@ public class BaseMdsResource extends AbstractResource {
      * @see fr.cnes.doi.resource.admin.SuffixProjectsResource Creates a
      * suffixProject for a given project name
      */
-    @Requirement(
-            reqId = Requirement.DOI_AUTO_030,
-            reqName = Requirement.DOI_AUTO_030_NAME
-    )    
+    @Requirement(reqId = Requirement.DOI_AUTO_030,reqName = Requirement.DOI_AUTO_030_NAME)    
     protected void checkPermission(final String doiName, final String selectedRole) 
             throws ResourceException {
         LOG.traceEntry("Parameters : {} and {}", doiName, selectedRole);
@@ -198,10 +195,7 @@ public class BaseMdsResource extends AbstractResource {
      * @return the selected role or an empty string when there is no selected
      * role
      */
-    @Requirement(
-        reqId = Requirement.DOI_AUTO_020,
-        reqName = Requirement.DOI_AUTO_020_NAME
-        )    
+    @Requirement(reqId = Requirement.DOI_AUTO_020,reqName = Requirement.DOI_AUTO_020_NAME)    
     public String extractSelectedRoleFromRequestIfExists() {
         LOG.traceEntry();
         final Series headers = (Series) getRequestAttributes().get("org.restlet.http.headers");

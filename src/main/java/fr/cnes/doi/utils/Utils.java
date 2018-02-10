@@ -106,7 +106,8 @@ public class Utils {
      * @return the same array, {@code public static} empty array if {@code null}
      * @throws IllegalArgumentException if the type argument is null
      */
-    public static <T> T[] nullToEmpty(final T[] array, final Class<T[]> type) {        
+    public static <T> T[] nullToEmpty(final T[] array, final Class<T[]> type) 
+            throws IllegalArgumentException{        
         if (type == null) {
             throw new IllegalArgumentException("The type must not be null");
         }
@@ -179,7 +180,7 @@ public class Utils {
      * {@code null}
      * @throws IllegalArgumentException if the object argument is not an array.
      */
-    public static int getLength(final Object array) {
+    public static int getLength(final Object array) throws IllegalArgumentException {
         int length;
         if (array == null) {
             length = 0;

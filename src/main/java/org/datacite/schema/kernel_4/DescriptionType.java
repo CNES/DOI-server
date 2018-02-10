@@ -33,18 +33,9 @@ import javax.xml.bind.annotation.XmlType;
  * </pre>
  *
  */
-@Requirement(
-        reqId = "DOI_SRV_010",
-        reqName = "Création de métadonnées"
-)
-@Requirement(
-        reqId = "DOI_SRV_040",
-        reqName = "Mise à jour des métadonnées d'un DOI"
-)
-@Requirement(
-        reqId = "DOI_ARCHI_050",
-        reqName = "Vérification du schéma de métadonnées"
-)
+@Requirement(reqId = Requirement.DOI_SRV_010,reqName = Requirement.DOI_SRV_010_NAME)
+@Requirement(reqId = Requirement.DOI_SRV_040,reqName = Requirement.DOI_SRV_040_NAME)
+@Requirement(reqId = Requirement.DOI_INTER_060,reqName = Requirement.DOI_INTER_060_NAME)
 @XmlType(name = "descriptionType")
 @XmlEnum
 public enum DescriptionType {

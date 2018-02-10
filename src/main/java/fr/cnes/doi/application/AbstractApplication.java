@@ -45,10 +45,7 @@ import org.restlet.representation.Representation;
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-@Requirement(
-        reqId = Requirement.DOI_DOC_010,
-        reqName = Requirement.DOI_DOC_010_NAME
-)
+@Requirement(reqId = Requirement.DOI_DOC_010, reqName = Requirement.DOI_DOC_010_NAME)
 public abstract class AbstractApplication extends WadlApplication {
 
     /**
@@ -66,8 +63,8 @@ public abstract class AbstractApplication extends WadlApplication {
     /**
      * Logger.
      */
-    private static final Logger LOG = LogManager.getLogger(AbstractApplication.class.getName()); 
-       
+    private static final Logger LOG = LogManager.getLogger(AbstractApplication.class.getName());
+
     /**
      * Instance of configuration settings.
      */
@@ -110,13 +107,13 @@ public abstract class AbstractApplication extends WadlApplication {
      * @return CORS service
      */
     protected final CorsService createCoreService(final Set corsOrigin,
-                                                  final boolean corsCredentials) {
+            final boolean corsCredentials) {
         LOG.traceEntry();
         final CorsService corsService = new CorsService();
         LOG.info("Allows all origins {}", corsOrigin);
         corsService.setAllowedOrigins(corsOrigin);
         LOG.info("Allows Credientials {}", corsCredentials);
-        corsService.setAllowedCredentials(corsCredentials);        
+        corsService.setAllowedCredentials(corsCredentials);
 
         return LOG.traceExit(corsService);
     }
@@ -126,10 +123,7 @@ public abstract class AbstractApplication extends WadlApplication {
      *
      * @return Authenticator based on a challenge scheme
      */
-    @Requirement(
-            reqId = Requirement.DOI_AUTH_010,
-            reqName = Requirement.DOI_AUTH_010_NAME
-    )
+    @Requirement(reqId = Requirement.DOI_AUTH_010, reqName = Requirement.DOI_AUTH_010_NAME)
     protected ChallengeAuthenticator createAuthenticator() {
         LOG.traceEntry();
         final ChallengeAuthenticator guard = new ChallengeAuthenticator(
@@ -160,7 +154,7 @@ public abstract class AbstractApplication extends WadlApplication {
      * @param exception error message to send
      */
     public void sendAlertWhenDataCiteFailed(final Exception exception) {
-        LOG.traceEntry("Parameters : {}",exception);
+        LOG.traceEntry("Parameters : {}", exception);
         final String subject = "Datacite problem";
         final String message = "Dear administrator, an error has been detected"
                 + " coming from Datacite, please look to the Service status\n" + exception;
@@ -188,11 +182,12 @@ public abstract class AbstractApplication extends WadlApplication {
      */
     protected ProxySettings getProxySettings() {
         LOG.traceEntry();
-        return LOG.traceExit(proxySettings);        
-    }    
-    
+        return LOG.traceExit(proxySettings);
+    }
+
     /**
      * Returns the logger.
+     *
      * @return the logger
      */
     public Logger getLog() {

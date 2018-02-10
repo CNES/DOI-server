@@ -78,49 +78,18 @@ import org.restlet.routing.Template;
  * @see <a href="http://www.doi.org/hb.html">DOI Handbook</a>
  * @see <a href="https://mds.datacite.org/static/apidoc">API Documentation</a>
  */
-@Requirement(
-        reqId = Requirement.DOI_SRV_010,
-        reqName = Requirement.DOI_SRV_010_NAME
-)
-@Requirement(
-        reqId = Requirement.DOI_SRV_020,
-        reqName = Requirement.DOI_SRV_020_NAME
-)
-@Requirement(
-        reqId = Requirement.DOI_SRV_030,
-        reqName = Requirement.DOI_SRV_030_NAME
-)
-@Requirement(
-        reqId = Requirement.DOI_SRV_040,
-        reqName = Requirement.DOI_SRV_040_NAME
-)
-@Requirement(
-        reqId = Requirement.DOI_SRV_050,
-        reqName = Requirement.DOI_SRV_050_NAME
-)
-@Requirement(
-        reqId = Requirement.DOI_SRV_060,
-        reqName = Requirement.DOI_SRV_060_NAME
-)
-@Requirement(
-        reqId = Requirement.DOI_SRV_070,
-        reqName = Requirement.DOI_SRV_070_NAME
-)
-@Requirement(
-        reqId = Requirement.DOI_SRV_080,
-        reqName = Requirement.DOI_SRV_080_NAME
-)
-@Requirement(
-        reqId = Requirement.DOI_SRV_090,
-        reqName = Requirement.DOI_SRV_090_NAME
-)
-@Requirement(
-        reqId = Requirement.DOI_MONIT_020,
-        reqName = Requirement.DOI_MONIT_020_NAME
-)
+@Requirement(reqId = Requirement.DOI_SRV_010,reqName = Requirement.DOI_SRV_010_NAME)
+@Requirement(reqId = Requirement.DOI_SRV_020,reqName = Requirement.DOI_SRV_020_NAME)
+@Requirement(reqId = Requirement.DOI_SRV_030,reqName = Requirement.DOI_SRV_030_NAME)
+@Requirement(reqId = Requirement.DOI_SRV_040,reqName = Requirement.DOI_SRV_040_NAME)
+@Requirement(reqId = Requirement.DOI_SRV_050,reqName = Requirement.DOI_SRV_050_NAME)
+@Requirement(reqId = Requirement.DOI_SRV_060,reqName = Requirement.DOI_SRV_060_NAME)
+@Requirement(reqId = Requirement.DOI_SRV_070,reqName = Requirement.DOI_SRV_070_NAME)
+@Requirement(reqId = Requirement.DOI_SRV_080,reqName = Requirement.DOI_SRV_080_NAME)
+@Requirement(reqId = Requirement.DOI_SRV_090,reqName = Requirement.DOI_SRV_090_NAME)
+@Requirement(reqId = Requirement.DOI_MONIT_020,reqName = Requirement.DOI_MONIT_020_NAME)
 public class DoiMdsApplication extends AbstractApplication {
-
-    
+  
     /**
      * Template Query for DOI : {@value #DOI_TEMPLATE}.
      */
@@ -147,14 +116,14 @@ public class DoiMdsApplication extends AbstractApplication {
     public static final String MEDIA_URI = "/media";
 
     /**
-     * Schema.
-     */
-    private final SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-
-    /**
      * Application name : {@value #NAME}
      */
     public static final String NAME = "Metadata Store Application";
+    
+    /**
+     * Schema.
+     */
+    private final SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
     
     /**
      * Logger.
@@ -182,9 +151,8 @@ public class DoiMdsApplication extends AbstractApplication {
                 + "<li>metadata : Registration of the associated metadata</li>"
                 + "<li>media : Possbility to obtain metadata in various formats and/or get automatic, direct access to an object rather than via the \"landing page\"</li>"
                 + "</ul>");
-        final String contextUse = this.getConfig().getString(Consts.CONTEXT_MODE);
-        client = new ClientMDS(ClientMDS.Context.valueOf(contextUse), getLoginMds(), getPwdMds());
-
+        final String contextMode = this.getConfig().getString(Consts.CONTEXT_MODE);
+        client = new ClientMDS(ClientMDS.Context.valueOf(contextMode), getLoginMds(), getPwdMds());
         this.tokenDB = TokenSecurity.getInstance().getTOKEN_DB();
     }
 
@@ -290,10 +258,7 @@ public class DoiMdsApplication extends AbstractApplication {
      * @return the object that contains the business to check
      * @see TokenBasedVerifier the token verification
      */
-    @Requirement(
-            reqId = Requirement.DOI_AUTH_020,
-            reqName = Requirement.DOI_AUTH_020_NAME
-    )
+    @Requirement(reqId = Requirement.DOI_AUTH_020,reqName = Requirement.DOI_AUTH_020_NAME)
     private ChallengeAuthenticator createTokenAuthenticator() {
         LOG.traceEntry();
         

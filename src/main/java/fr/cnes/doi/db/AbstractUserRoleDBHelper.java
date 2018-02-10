@@ -30,10 +30,7 @@ import org.restlet.security.User;
  * This database is used to authenticate the requests.
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-@Requirement(
-        reqId = Requirement.DOI_INTER_050,
-        reqName = Requirement.DOI_INTER_050_NAME
-)
+@Requirement(reqId = Requirement.DOI_INTER_050,reqName = Requirement.DOI_INTER_050_NAME)
 public abstract class  AbstractUserRoleDBHelper extends Observable {
     
     /**

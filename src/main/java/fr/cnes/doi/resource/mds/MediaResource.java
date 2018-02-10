@@ -77,14 +77,8 @@ public class MediaResource extends BaseMdsResource {
      * <li>500 Internal Server Error - Error when requesting DataCite</li>
      * </ul>
      */  
-    @Requirement(
-        reqId = Requirement.DOI_SRV_090,
-        reqName = Requirement.DOI_SRV_090_NAME
-        ) 
-    @Requirement(
-        reqId = Requirement.DOI_MONIT_020,
-        reqName = Requirement.DOI_MONIT_020_NAME
-        )      
+    @Requirement(reqId = Requirement.DOI_SRV_090,reqName = Requirement.DOI_SRV_090_NAME) 
+    @Requirement(reqId = Requirement.DOI_MONIT_020,reqName = Requirement.DOI_MONIT_020_NAME)      
     @Get
     public Representation getMedias() throws ResourceException {
         LOG.traceEntry();
@@ -127,26 +121,11 @@ public class MediaResource extends BaseMdsResource {
      * problem persists please contact us</li>
      * </ul>
      */   
-    @Requirement(
-        reqId = Requirement.DOI_SRV_080,
-        reqName = Requirement.DOI_SRV_080_NAME
-        ) 
-    @Requirement(
-        reqId = Requirement.DOI_MONIT_020,
-        reqName = Requirement.DOI_MONIT_020_NAME
-        )   
-    @Requirement(
-            reqId = Requirement.DOI_INTER_070,
-            reqName = Requirement.DOI_INTER_070_NAME
-    )    
-    @Requirement(
-        reqId = Requirement.DOI_AUTO_020,
-        reqName = Requirement.DOI_AUTO_020_NAME
-        )     
-    @Requirement(
-        reqId = Requirement.DOI_AUTO_030,
-        reqName = Requirement.DOI_AUTO_030_NAME
-        )     
+    @Requirement(reqId = Requirement.DOI_SRV_080,reqName = Requirement.DOI_SRV_080_NAME) 
+    @Requirement(reqId = Requirement.DOI_MONIT_020,reqName = Requirement.DOI_MONIT_020_NAME)   
+    @Requirement(reqId = Requirement.DOI_INTER_070,reqName = Requirement.DOI_INTER_070_NAME)    
+    @Requirement(reqId = Requirement.DOI_AUTO_020,reqName = Requirement.DOI_AUTO_020_NAME)     
+    @Requirement(reqId = Requirement.DOI_AUTO_030,reqName = Requirement.DOI_AUTO_030_NAME)     
     @Post
     public Representation createMedia(final Form mediaForm) throws ResourceException{
         LOG.traceEntry("Parameter : {}",mediaForm);
@@ -178,10 +157,7 @@ public class MediaResource extends BaseMdsResource {
      * @param mediaForm the parameters
      * @throws ResourceException - 400 Bad Request if DOI_PARAMETER is not set
      */ 
-    @Requirement(
-            reqId = Requirement.DOI_INTER_070,
-            reqName = Requirement.DOI_INTER_070_NAME
-    )        
+    @Requirement(reqId = Requirement.DOI_INTER_070,reqName = Requirement.DOI_INTER_070_NAME)        
     private void checkInputs(final String doi, final Form mediaForm) throws ResourceException {
         LOG.traceEntry("Parameters : {} and {}",doi, mediaForm);
         final StringBuilder errorMsg = new StringBuilder();
@@ -222,10 +198,7 @@ public class MediaResource extends BaseMdsResource {
      * Describes the GET method.
      * @param info Wadl description for a GET method
      */ 
-    @Requirement(
-            reqId = Requirement.DOI_DOC_010,
-            reqName = Requirement.DOI_DOC_010_NAME
-    )      
+    @Requirement(reqId = Requirement.DOI_DOC_010,reqName = Requirement.DOI_DOC_010_NAME)      
     @Override
     protected final void describeGet(final MethodInfo info) {
         info.setName(Method.GET);
@@ -253,10 +226,7 @@ public class MediaResource extends BaseMdsResource {
      * Describes POST method.
      * @param info Wadl description for describing POST method
      */ 
-    @Requirement(
-            reqId = Requirement.DOI_DOC_010,
-            reqName = Requirement.DOI_DOC_010_NAME
-    )      
+    @Requirement(reqId = Requirement.DOI_DOC_010,reqName = Requirement.DOI_DOC_010_NAME)      
     @Override
     protected final void describePost(final MethodInfo info) {
         info.setName(Method.POST);

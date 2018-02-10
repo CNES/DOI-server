@@ -44,10 +44,7 @@ import org.restlet.resource.ClientResource;
  *
  * @author Jean-Christophe Malapert
  */
-@Requirement(
-        reqId = Requirement.DOI_CONFIG_010,
-        reqName = Requirement.DOI_CONFIG_010_NAME
-)
+@Requirement(reqId = Requirement.DOI_CONFIG_010,reqName = Requirement.DOI_CONFIG_010_NAME)
 public final class EmailSettings {
 
     /**

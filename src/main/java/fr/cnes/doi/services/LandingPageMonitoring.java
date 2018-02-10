@@ -33,10 +33,7 @@ import org.apache.logging.log4j.Logger;
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-@Requirement(
-        reqId = Requirement.DOI_DISPO_020,
-        reqName = Requirement.DOI_DISPO_020_NAME
-)
+@Requirement(reqId = Requirement.DOI_DISPO_020,reqName = Requirement.DOI_DISPO_020_NAME)
 public class LandingPageMonitoring implements Runnable {
 
     /**

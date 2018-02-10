@@ -85,14 +85,8 @@ public class MetadataResource extends BaseMdsResource {
      * <li>500 Internal Server Error - Error when calling DataCite</li>
      * </ul>
      */ 
-    @Requirement(
-            reqId = Requirement.DOI_SRV_060,
-            reqName = Requirement.DOI_SRV_060_NAME
-    )   
-    @Requirement(
-            reqId = Requirement.DOI_MONIT_020,
-            reqName = Requirement.DOI_MONIT_020_NAME
-    )      
+    @Requirement(reqId = Requirement.DOI_SRV_060,reqName = Requirement.DOI_SRV_060_NAME)   
+    @Requirement(reqId = Requirement.DOI_MONIT_020,reqName = Requirement.DOI_MONIT_020_NAME)      
     @Get("xml|json")
     public Resource getMetadata() throws ResourceException {
         LOG.traceEntry();
@@ -127,26 +121,11 @@ public class MetadataResource extends BaseMdsResource {
      * <li>500 Internal Server Error - Error when calling DataCite</li>
      * </ul>
      */ 
-    @Requirement(
-            reqId = Requirement.DOI_SRV_050,
-            reqName = Requirement.DOI_SRV_050_NAME
-    )   
-    @Requirement(
-            reqId = Requirement.DOI_MONIT_020,
-            reqName = Requirement.DOI_MONIT_020_NAME
-    )  
-    @Requirement(
-            reqId = Requirement.DOI_INTER_070,
-            reqName = Requirement.DOI_INTER_070_NAME
-    )    
-    @Requirement(
-            reqId = Requirement.DOI_AUTO_020,
-            reqName = Requirement.DOI_AUTO_020_NAME
-    )     
-    @Requirement(
-            reqId = Requirement.DOI_AUTO_030,
-            reqName = Requirement.DOI_AUTO_030_NAME
-    )     
+    @Requirement(reqId = Requirement.DOI_SRV_050,reqName = Requirement.DOI_SRV_050_NAME)   
+    @Requirement(reqId = Requirement.DOI_MONIT_020,reqName = Requirement.DOI_MONIT_020_NAME)  
+    @Requirement(reqId = Requirement.DOI_INTER_070,reqName = Requirement.DOI_INTER_070_NAME)    
+    @Requirement(reqId = Requirement.DOI_AUTO_020,reqName = Requirement.DOI_AUTO_020_NAME)     
+    @Requirement(reqId = Requirement.DOI_AUTO_030,reqName = Requirement.DOI_AUTO_030_NAME)     
     @Delete
     public Representation deleteMetadata() throws ResourceException {
         LOG.traceEntry();
@@ -180,10 +159,7 @@ public class MetadataResource extends BaseMdsResource {
      *
      * @param info Wadl description for GET method
      */
-    @Requirement(
-        reqId = Requirement.DOI_DOC_010,
-        reqName = Requirement.DOI_DOC_010_NAME
-        )      
+    @Requirement(reqId = Requirement.DOI_DOC_010,reqName = Requirement.DOI_DOC_010_NAME)      
     @Override
     protected final void describeGet(final MethodInfo info) {
         info.setName(Method.GET);
@@ -221,10 +197,7 @@ public class MetadataResource extends BaseMdsResource {
      *
      * @param info Wadl description for DELETE method
      */
-    @Requirement(
-            reqId = Requirement.DOI_DOC_010,
-            reqName = Requirement.DOI_DOC_010_NAME
-    )      
+    @Requirement(reqId = Requirement.DOI_DOC_010,reqName = Requirement.DOI_DOC_010_NAME)      
     @Override
     protected final void describeDelete(final MethodInfo info) {
         info.setName(Method.DELETE);
@@ -281,10 +254,7 @@ public class MetadataResource extends BaseMdsResource {
      * @param doiName DOI number
      * @throws ResourceException - 400 Bad Request if DOI_PARAMETER is not set
      */ 
-    @Requirement(
-            reqId = Requirement.DOI_INTER_070,
-            reqName = Requirement.DOI_INTER_070_NAME
-    )    
+    @Requirement(reqId = Requirement.DOI_INTER_070,reqName = Requirement.DOI_INTER_070_NAME)    
     private void checkInputs(final String doiName) throws ResourceException {
         LOG.traceEntry("Parameter : {}",doiName);
         StringBuilder errorMsg = new StringBuilder();

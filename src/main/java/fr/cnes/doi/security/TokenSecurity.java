@@ -52,10 +52,7 @@ import org.restlet.data.Status;
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-@Requirement(
-    reqId = Requirement.DOI_AUTH_020,
-    reqName = Requirement.DOI_AUTH_020_NAME
-    )
+@Requirement(reqId = Requirement.DOI_AUTH_020,reqName = Requirement.DOI_AUTH_020_NAME)
 public final class TokenSecurity {
 
     /**

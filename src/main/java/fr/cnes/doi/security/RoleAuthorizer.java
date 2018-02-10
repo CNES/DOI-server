@@ -46,10 +46,7 @@ import org.restlet.security.User;
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-@Requirement(
-        reqId = Requirement.DOI_AUTH_010,
-        reqName = Requirement.DOI_AUTH_010_NAME
-)
+@Requirement(reqId = Requirement.DOI_AUTH_010,reqName = Requirement.DOI_AUTH_010_NAME)
 public class RoleAuthorizer implements Observer {
 
     /**
@@ -236,14 +233,8 @@ public class RoleAuthorizer implements Observer {
      * @param obs observable
      * @param obj message
      */
-    @Requirement(
-            reqId = Requirement.DOI_SRV_130,
-            reqName = Requirement.DOI_SRV_130_NAME
-    )
-    @Requirement(
-            reqId = Requirement.DOI_INTER_030,
-            reqName = Requirement.DOI_INTER_030_NAME
-    )
+    @Requirement(reqId = Requirement.DOI_SRV_130,reqName = Requirement.DOI_SRV_130_NAME)
+    @Requirement(reqId = Requirement.DOI_INTER_030,reqName = Requirement.DOI_INTER_030_NAME)
     @Override
     public void update(final Observable obs, final Object obj) {
         LOG.traceEntry(new JsonMessage(obs));

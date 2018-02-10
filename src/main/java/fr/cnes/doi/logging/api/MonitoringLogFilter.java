@@ -41,14 +41,8 @@ import org.restlet.service.LogService;
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-@Requirement(
-        reqId = Requirement.DOI_MONIT_010,
-        reqName = Requirement.DOI_MONIT_010_NAME
-)
-@Requirement(
-        reqId = Requirement.DOI_ARCHI_020,
-        reqName = Requirement.DOI_ARCHI_020_NAME
-)
+@Requirement(reqId = Requirement.DOI_MONIT_010, reqName = Requirement.DOI_MONIT_010_NAME)
+@Requirement(reqId = Requirement.DOI_ARCHI_020, reqName = Requirement.DOI_ARCHI_020_NAME)
 public class MonitoringLogFilter extends LogFilter {
 
     /**
@@ -86,6 +80,7 @@ public class MonitoringLogFilter extends LogFilter {
 
     /**
      * Allows filtering after processing by the next Restlet. Does nothing by default.
+     *
      * @param request request
      * @param response response
      */
@@ -119,7 +114,7 @@ public class MonitoringLogFilter extends LogFilter {
             final String subject = "Speed performance alert for " + path;
             final String msg = "Dear administrator,\nthe speed performance of the "
                     + "application " + path + ""
-                    + " has been reduced than more 30% using the method " 
+                    + " has been reduced than more 30% using the method "
                     + method.getName() + ".\n\n"
                     + "Details:\n"
                     + "--------\n"

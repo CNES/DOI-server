@@ -40,8 +40,6 @@ import static fr.cnes.doi.security.UtilsHeader.SELECTED_ROLE_PARAMETER;
 import static fr.cnes.doi.client.ClientMDS.POST_DOI;
 import static fr.cnes.doi.client.ClientMDS.POST_URL;
 import fr.cnes.doi.utils.spec.Requirement;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * Resource to handle a collection of DOI.
@@ -139,30 +137,12 @@ public class DoisResource extends BaseMdsResource {
      * <li>500 Internal Server Error - Error when requesting DataCite</li>
      * </ul>
      */ 
-    @Requirement(
-        reqId = Requirement.DOI_SRV_020,
-        reqName = Requirement.DOI_SRV_020_NAME
-        )   
-    @Requirement(
-        reqId = Requirement.DOI_SRV_030,
-        reqName = Requirement.DOI_SRV_030_NAME
-        )    
-    @Requirement(
-        reqId = Requirement.DOI_MONIT_020,
-        reqName = Requirement.DOI_MONIT_020_NAME
-        ) 
-    @Requirement(
-        reqId = Requirement.DOI_INTER_070,
-        reqName = Requirement.DOI_INTER_070_NAME
-        )    
-    @Requirement(
-        reqId = Requirement.DOI_AUTO_020,
-        reqName = Requirement.DOI_AUTO_020_NAME
-        )     
-    @Requirement(
-        reqId = Requirement.DOI_AUTO_030,
-        reqName = Requirement.DOI_AUTO_030_NAME
-        )     
+    @Requirement(reqId = Requirement.DOI_SRV_020,reqName = Requirement.DOI_SRV_020_NAME)   
+    @Requirement(reqId = Requirement.DOI_SRV_030,reqName = Requirement.DOI_SRV_030_NAME)    
+    @Requirement(reqId = Requirement.DOI_MONIT_020,reqName = Requirement.DOI_MONIT_020_NAME) 
+    @Requirement(reqId = Requirement.DOI_INTER_070,reqName = Requirement.DOI_INTER_070_NAME)    
+    @Requirement(reqId = Requirement.DOI_AUTO_020,reqName = Requirement.DOI_AUTO_020_NAME)     
+    @Requirement(reqId = Requirement.DOI_AUTO_030,reqName = Requirement.DOI_AUTO_030_NAME)     
     @Post("form")
     public String createDoi(final Form doiForm) throws ResourceException {
         LOG.traceEntry("Parameter : {}", doiForm);
@@ -194,10 +174,7 @@ public class DoisResource extends BaseMdsResource {
      * @throws ResourceException - 400 Bad Request if DOI_PARAMETER and
      * URL_PARAMETER are not set
      */  
-    @Requirement(
-        reqId = Requirement.DOI_INTER_070,
-        reqName = Requirement.DOI_INTER_070_NAME
-        )    
+    @Requirement(reqId = Requirement.DOI_INTER_070,reqName = Requirement.DOI_INTER_070_NAME)    
     private void checkInputs(final Form mediaForm) throws ResourceException {
         LOG.traceEntry("Parameter : {}",mediaForm);
         StringBuilder errorMsg = new StringBuilder();
@@ -227,10 +204,7 @@ public class DoisResource extends BaseMdsResource {
      *
      * @return the Wadl Representation
      */
-    @Requirement(
-            reqId = Requirement.DOI_DOC_010,
-            reqName = Requirement.DOI_DOC_010_NAME
-    )      
+    @Requirement(reqId = Requirement.DOI_DOC_010,reqName = Requirement.DOI_DOC_010_NAME)      
     private RepresentationInfo successFullRepresentation() {
         final RepresentationInfo repInfo = new RepresentationInfo();
         repInfo.setMediaType(MediaType.TEXT_URI_LIST);
@@ -247,10 +221,7 @@ public class DoisResource extends BaseMdsResource {
      *
      * @return the Wadl description
      */
-    @Requirement(
-            reqId = Requirement.DOI_DOC_010,
-            reqName = Requirement.DOI_DOC_010_NAME
-    )      
+    @Requirement(reqId = Requirement.DOI_DOC_010,reqName = Requirement.DOI_DOC_010_NAME)      
     private RepresentationInfo noContentRepresentation() {
         final RepresentationInfo repInfo = new RepresentationInfo();
         repInfo.setMediaType(MediaType.TEXT_PLAIN);
@@ -266,10 +237,7 @@ public class DoisResource extends BaseMdsResource {
      *
      * @return the exit status representation
      */
-    @Requirement(
-            reqId = Requirement.DOI_DOC_010,
-            reqName = Requirement.DOI_DOC_010_NAME
-    )      
+    @Requirement(reqId = Requirement.DOI_DOC_010,reqName = Requirement.DOI_DOC_010_NAME)      
     private RepresentationInfo explainStatusRepresentation() {
         final RepresentationInfo repInfo = new RepresentationInfo();
         repInfo.setIdentifier("explainRepresentation");
@@ -287,10 +255,7 @@ public class DoisResource extends BaseMdsResource {
      *
      * @param info Wadl description
      */
-    @Requirement(
-            reqId = Requirement.DOI_DOC_010,
-            reqName = Requirement.DOI_DOC_010_NAME
-    )      
+    @Requirement(reqId = Requirement.DOI_DOC_010,reqName = Requirement.DOI_DOC_010_NAME)      
     @Override
     protected final void describeGet(final MethodInfo info) {
         info.setName(Method.GET);
@@ -308,10 +273,7 @@ public class DoisResource extends BaseMdsResource {
      *
      * @return representation
      */
-    @Requirement(
-            reqId = Requirement.DOI_DOC_010,
-            reqName = Requirement.DOI_DOC_010_NAME
-    )      
+    @Requirement(reqId = Requirement.DOI_DOC_010,reqName = Requirement.DOI_DOC_010_NAME)      
     private RepresentationInfo requestRepresentation() {
         final RepresentationInfo rep = new RepresentationInfo(MediaType.APPLICATION_WWW_FORM);
         rep.getParameters().add(createQueryParamDoc(
@@ -326,10 +288,7 @@ public class DoisResource extends BaseMdsResource {
      *
      * @param info Wadl description
      */
-    @Requirement(
-        reqId = Requirement.DOI_DOC_010,
-        reqName = Requirement.DOI_DOC_010_NAME
-        )      
+    @Requirement(reqId = Requirement.DOI_DOC_010,reqName = Requirement.DOI_DOC_010_NAME)      
     @Override
     protected final void describePost(final MethodInfo info) {
         info.setName(Method.POST);

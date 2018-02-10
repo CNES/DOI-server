@@ -35,7 +35,6 @@ import fr.cnes.doi.server.DoiServer;
 import fr.cnes.doi.services.DoiMonitoring;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
-import fr.cnes.doi.utils.spec.CoverageAnnotation;
 import fr.cnes.doi.utils.spec.Requirement;
 
 /**
@@ -43,10 +42,7 @@ import fr.cnes.doi.utils.spec.Requirement;
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-@Requirement(
-        reqId = Requirement.DOI_ARCHI_020,
-        reqName = Requirement.DOI_ARCHI_020_NAME
-)
+@Requirement(reqId = Requirement.DOI_ARCHI_020,reqName = Requirement.DOI_ARCHI_020_NAME)
 public class DoiLogDataServer extends LogService {
 
     //private Logger logger = Engine.getLogger(Utils.HTTP_LOGGER_NAME);

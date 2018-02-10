@@ -25,6 +25,7 @@ import fr.cnes.doi.utils.spec.Requirement;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
 import org.restlet.data.Reference;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
@@ -35,17 +36,19 @@ import org.restlet.resource.ResourceException;
  *
  * @author Jean-Christophe Malapert (Jean-Christophe.malapert@cnes.fr)
  */
-@Requirement(
-        reqId = Requirement.DOI_INTER_020,
-        reqName = Requirement.DOI_INTER_020_NAME
-)
+@Requirement(reqId = Requirement.DOI_INTER_020,reqName = Requirement.DOI_INTER_020_NAME)
 public class ClientCrossCiteCitation extends BaseClient {
 
     /**
      * Service end point.
      */
-    public static final String CROSS_CITE_URL = "http://citation.crosscite.org";
-
+    public static final String CROSS_CITE_URL = "http://citation.crosscite.org"; 
+    
+    /**
+     * Service end point.
+     */
+    public static final String CROSS_CITE_MOCK_URL = "http://localhost:1080";     
+    
     /**
      * Resource to get styles.
      */
@@ -60,19 +63,111 @@ public class ClientCrossCiteCitation extends BaseClient {
      * Resource to get format.
      */
     public static final String FORMAT_URI = "/format";
+    
+    /**
+     * Options for each context
+     */
+    public enum Context {
+
+        /**
+         * Development context.
+         */
+        DEV(CROSS_CITE_MOCK_URL, Level.OFF),
+        /**
+         * Post development context.
+         */
+        POST_DEV(CROSS_CITE_URL, Level.ALL),
+        /**
+         * Pre production context.
+         */
+        PRE_PROD(CROSS_CITE_URL, Level.FINE),
+        /**
+         * Production context.
+         */
+        PROD(CROSS_CITE_URL, Level.INFO);
+
+        /**
+         * Level log.
+         */
+        private Level levelLog;
+
+        /**
+         * DataCite URL.
+         */
+        private final String crossCiteUrl;
+
+        Context(final String dataciteUrl, final Level levelLog) {
+            this.crossCiteUrl = dataciteUrl;
+            this.levelLog = levelLog;
+        }
+
+
+        /**
+         * Returns the log level.
+         *
+         * @return the log level
+         */
+        public Level getLevelLog() {
+            return this.levelLog;
+        }
+
+        /**
+         * Returns the service end point.
+         *
+         * @return the service end point
+         */
+        public String getCrossCiteUrl() {
+            return this.crossCiteUrl;
+        }
+
+        /**
+         * Sets the level log for the context
+         *
+         * @param levelLog level log
+         */
+        private void setLevelLog(final Level levelLog) {
+            this.levelLog = levelLog;
+        }
+
+        /**
+         * Sets the level log for a given context
+         *
+         * @param context the context
+         * @param levelLog the level log
+         */
+        public static void setLevelLog(final Context context, final Level levelLog) {
+            context.setLevelLog(levelLog);
+        }
+
+    }    
+    
+    /**
+     * Context use.
+     */
+    private final Context contextUse;
 
     /**
      * Empty constructor.
      */
     public ClientCrossCiteCitation() {
         super(CROSS_CITE_URL);
+        this.contextUse = Context.PROD;
     }
+    
+    /**
+     * Constructor used for development purpose.
+     * @param context Context dev
+     */
+    public ClientCrossCiteCitation(Context context) {
+        super(context.getCrossCiteUrl());
+        this.contextUse = context;
+    }    
 
     /**
      * Init the endpoint.
      */
     protected void init() {
-        this.getClient().setReference(new Reference(CROSS_CITE_URL));
+        this.getClient().setReference(new Reference(this.contextUse.getCrossCiteUrl()));
     }
 
     /**

@@ -42,19 +42,14 @@ import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
 import static fr.cnes.doi.application.AdminApplication.TOKEN_TEMPLATE;
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 
 /**
  * Provides a resource to create token and to decrypt token
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-@Requirement(
-        reqId = Requirement.DOI_INTER_040,
-        reqName = Requirement.DOI_INTER_040_NAME
-)
+@Requirement(reqId = Requirement.DOI_INTER_040, reqName = Requirement.DOI_INTER_040_NAME)
 public class TokenResource extends AbstractResource {
 
     /**
@@ -75,61 +70,58 @@ public class TokenResource extends AbstractResource {
     /**
      * Amount of time for which the token is not expirated.
      */
-    public static final String AMOUNT_OF_TIME_PARAMETER = "amountTime";      
+    public static final String AMOUNT_OF_TIME_PARAMETER = "amountTime";
 
     /**
      * Token parameter catched from the URL.
      */
     private String tokenParam;
-    
+
     /**
      * The token database.
      */
     private AbstractTokenDBHelper tokenDB;
-    
+
     /**
-     * Logger.     
+     * Logger.
      */
     private Logger LOG;
 
     /**
      * Set-up method that can be overridden in order to initialize the state of the resource
+     *
      * @throws ResourceException - if a problem happens
      */
     @Override
     protected void doInit() throws ResourceException {
         super.doInit();
         final AdminApplication app = (AdminApplication) getApplication();
-        LOG = app.getLog();        
-        LOG.traceEntry();        
-        setDescription("This resource handles the token");        
+        LOG = app.getLog();
+        LOG.traceEntry();
+        setDescription("This resource handles the token");
         this.tokenParam = getAttribute(TOKEN_TEMPLATE);
         this.tokenDB = ((AdminApplication) this.getApplication()).getTokenDB();
-        LOG.debug("Token Param : {}",this.tokenParam);
+        LOG.debug("Token Param : {}", this.tokenParam);
         LOG.traceExit();
     }
-   
+
     /**
      * Creates and stores a token.
-     * 
+     *
      * The token creation is based on several actions :
      * <ul>
-     *  <li>{@link #checkInputs checks the input parameters}</li>
-     *  <li>creates the {@link fr.cnes.doi.security.TokenSecurity#generate}</li>
-     *  <li>stores the token in 
-     * {@link fr.cnes.doi.db.AbstractTokenDBHelper token database}</li>     
+     * <li>{@link #checkInputs checks the input parameters}</li>
+     * <li>creates the {@link fr.cnes.doi.security.TokenSecurity#generate}</li>
+     * <li>stores the token in {@link fr.cnes.doi.db.AbstractTokenDBHelper token database}</li>
      * </ul>
-     * 
+     *
      * @param info submitted information when requesting the token creation
      * @return the token
      */
-    @Requirement(
-        reqId = Requirement.DOI_SRV_150,
-        reqName = Requirement.DOI_SRV_150_NAME
-        )     
+    @Requirement(reqId = Requirement.DOI_SRV_150, reqName = Requirement.DOI_SRV_150_NAME)
     @Post
     public String createToken(final Form info) {
-        LOG.traceEntry("Paramater : {}",info);
+        LOG.traceEntry("Paramater : {}", info);
         checkInputs(info);
         try {
             final String userID = info.getFirstValue(IDENTIFIER_PARAMETER, null);
@@ -158,14 +150,14 @@ public class TokenResource extends AbstractResource {
     }
 
     /**
-     * Checks input parameters.          
+     * Checks input parameters.
      *
      * @param mediaForm the parameters
-     * @throws ResourceException - if {@link #PROJECT_ID_PARAMETER} and 
+     * @throws ResourceException - if {@link #PROJECT_ID_PARAMETER} and
      * {@link #IDENTIFIER_PARAMETER} are not set
-     */  
+     */
     private void checkInputs(final Form mediaForm) throws ResourceException {
-        LOG.traceEntry("Parameter : {}",mediaForm);
+        LOG.traceEntry("Parameter : {}", mediaForm);
         final StringBuilder errorMsg = new StringBuilder();
         if (isValueNotExist(mediaForm, IDENTIFIER_PARAMETER)) {
             errorMsg.append(IDENTIFIER_PARAMETER).append(" value is not set.");
@@ -180,15 +172,13 @@ public class TokenResource extends AbstractResource {
                     Status.CLIENT_ERROR_BAD_REQUEST, errorMsg.toString()));
         }
     }
-   
+
     /**
      * Returns the information from the token encoded as JSon format.
+     *
      * @return the included information in the token
      */
-    @Requirement(
-        reqId = Requirement.DOI_SRV_160,
-        reqName = Requirement.DOI_SRV_160_NAME
-        )     
+    @Requirement(reqId = Requirement.DOI_SRV_160, reqName = Requirement.DOI_SRV_160_NAME)
     @Get
     public Representation getTokenInformation() {
         LOG.traceEntry();
@@ -200,81 +190,75 @@ public class TokenResource extends AbstractResource {
             throw LOG.throwing(new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, ex));
         }
     }
-    
+
     /**
      * projects representation
+     *
      * @return Wadl representation for projects
      */
-    @Requirement(
-            reqId = Requirement.DOI_DOC_010,
-            reqName = Requirement.DOI_DOC_010_NAME
-    )      
+    @Requirement(reqId = Requirement.DOI_DOC_010, reqName = Requirement.DOI_DOC_010_NAME)
     private RepresentationInfo jsonRepresentation() {
         final RepresentationInfo repInfo = new RepresentationInfo();
-        repInfo.setMediaType(MediaType.APPLICATION_JSON);        
+        repInfo.setMediaType(MediaType.APPLICATION_JSON);
         final DocumentationInfo docInfo = new DocumentationInfo();
         docInfo.setTitle("Json Representation");
         docInfo.setTextContent("The representation contains informations about the token.");
-        repInfo.setDocumentation(docInfo);        
+        repInfo.setDocumentation(docInfo);
         return repInfo;
-    }     
+    }
 
     /**
      * Describes GET method.
+     *
      * @param info method info
      */
-    @Requirement(
-        reqId = Requirement.DOI_DOC_010,
-        reqName = Requirement.DOI_DOC_010_NAME
-        )      
+    @Requirement(reqId = Requirement.DOI_DOC_010, reqName = Requirement.DOI_DOC_010_NAME)
     @Override
     protected void describeGet(final MethodInfo info) {
         info.setName(Method.GET);
         info.setDocumentation("Get information about a specific token");
         addRequestDocToMethod(info, createQueryParamDoc(
-                TOKEN_TEMPLATE, ParameterStyle.TEMPLATE, 
+                TOKEN_TEMPLATE, ParameterStyle.TEMPLATE,
                 "token", true, "xs:string")
-        );                
+        );
         addResponseDocToMethod(info, createResponseDoc(
                 Status.SUCCESS_OK, "Operation successful", jsonRepresentation())
         );
         addResponseDocToMethod(info, createResponseDoc(
                 Status.CLIENT_ERROR_BAD_REQUEST, "Wrong token")
         );
-    }   
+    }
 
     /**
      * Describes POST method.
+     *
      * @param info method info
      */
-    @Requirement(
-        reqId = Requirement.DOI_DOC_010,
-        reqName = Requirement.DOI_DOC_010_NAME
-        )      
+    @Requirement(reqId = Requirement.DOI_DOC_010, reqName = Requirement.DOI_DOC_010_NAME)
     @Override
     protected void describePost(final MethodInfo info) {
         info.setName(Method.POST);
         info.setDocumentation("Creates a token");
         addRequestDocToMethod(info, createQueryParamDoc(
-                IDENTIFIER_PARAMETER, ParameterStyle.MATRIX, 
+                IDENTIFIER_PARAMETER, ParameterStyle.MATRIX,
                 "User ID of the operator that creates the token", true, "xs:string")
-        );                
+        );
         addRequestDocToMethod(info, createQueryParamDoc(
-                PROJECT_ID_PARAMETER, ParameterStyle.MATRIX, 
+                PROJECT_ID_PARAMETER, ParameterStyle.MATRIX,
                 "Token for a specific project", true, "xs:string")
-        );                        
+        );
         addRequestDocToMethod(info, createQueryParamDoc(
-                UNIT_OF_TIME_PARAMETER, ParameterStyle.MATRIX, 
-                "Unit of time used to define the expiration time of the token", 
+                UNIT_OF_TIME_PARAMETER, ParameterStyle.MATRIX,
+                "Unit of time used to define the expiration time of the token",
                 false, "xs:int")
-        );                        
+        );
         addResponseDocToMethod(info, createResponseDoc(
-                Status.SUCCESS_OK, "Operation successful", 
+                Status.SUCCESS_OK, "Operation successful",
                 stringRepresentation())
         );
         addResponseDocToMethod(info, createResponseDoc(
                 Status.CLIENT_ERROR_BAD_REQUEST, "Submitted values are not valid")
-        );        
-    }        
+        );
+    }
 
 }

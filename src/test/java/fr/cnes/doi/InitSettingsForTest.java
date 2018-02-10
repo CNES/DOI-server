@@ -56,28 +56,26 @@ public class InitSettingsForTest {
         initLogging();
         try {
             String secretKey = System.getProperty("private.key");
-            if (secretKey != null) {
-                String result;
-                try (InputStream inputStream = ClientProxyTest.class.getResourceAsStream("/config.properties")) {
-                    result = new BufferedReader(new InputStreamReader(inputStream)).lines()
-                            .collect(Collectors.joining("\n"));
-                }
-                result = UtilsCryptography.decrypt(result, secretKey);
-                // Replace the value to use the proxy by the system property
-                String useProxy = System.getProperty("proxy.use");
-                if (useProxy != null) {
-                    result = result.replace("Starter.Proxy.used = false", "Starter.Proxy.used=" + useProxy);
-                } else {
-                    LOGGER.log(Level.INFO, "The key proxy.use is not set, default param applied");
-                }
-                // Replace the value to use pre prod context
-                result = result.replace("Starter.CONTEXT_MODE=DEV", "Starter.CONTEXT_MODE=PRE_PROD");
-                InputStream stream = new ByteArrayInputStream(result.getBytes(StandardCharsets.UTF_8));
-                DoiSettings.getInstance().setPropertiesFile(stream);
-            } else {
-                LOGGER.log(Level.SEVERE, "The property private.key must be set to decrypt the config file");
-
+            String result;
+            try (InputStream inputStream = ClientProxyTest.class.getResourceAsStream("/config.properties")) {
+                result = new BufferedReader(new InputStreamReader(inputStream)).lines()
+                        .collect(Collectors.joining("\n"));
             }
+            if (secretKey != null) {
+                result = UtilsCryptography.decrypt(result, secretKey);
+            } else {
+                LOGGER.log(Level.WARNING, "No private.key provided, the configuration is not crypted");
+            }
+            // Replace the value to use the proxy by the system property
+            String useProxy = System.getProperty("proxy.use");
+            if (useProxy != null) {
+                result = result.replace("Starter.Proxy.used = false", "Starter.Proxy.used=" + useProxy);
+            } else {
+                LOGGER.log(Level.INFO, "The key proxy.use is not set, default param applied");
+            }
+            InputStream stream = new ByteArrayInputStream(result.getBytes(StandardCharsets.UTF_8));
+            DoiSettings.getInstance().setPropertiesFile(stream);
+
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error during initialisation of the settings", e);
         }
@@ -90,7 +88,9 @@ public class InitSettingsForTest {
         p.setProperty("org.eclipse.jetty.LEVEL", "OFF");
         org.eclipse.jetty.util.log.StdErrLog.setProperties(p);
         Logger globalLogger = Logger.getLogger(java.util.logging.Logger.GLOBAL_LOGGER_NAME);
-        globalLogger.setLevel(java.util.logging.Level.OFF);
+        globalLogger.setLevel(java.util.logging.Level.OFF); 
+        Engine.setRestletLogLevel(Level.OFF);
+        Engine.setLogLevel(Level.OFF);
     }
 
 }

@@ -34,10 +34,7 @@ import org.restlet.security.Role;
  *
  * @author malapert
  */
-@Requirement(
-        reqId = Requirement.DOI_ARCHI_020,
-        reqName = Requirement.DOI_ARCHI_020_NAME
-)
+@Requirement(reqId = Requirement.DOI_ARCHI_020, reqName = Requirement.DOI_ARCHI_020_NAME)
 public class DoiSecurityLogFilter extends Filter {
 
     /**
@@ -55,9 +52,9 @@ public class DoiSecurityLogFilter extends Filter {
         this.loggerName = loggerName;
     }
 
-
     /**
      * Allows filtering after processing by the next Restlet. Does nothing by default.
+     *
      * @param request request
      * @param response response
      * @see org.restlet.routing.Filter#afterHandle(org.restlet.Request, org.restlet.Response)
@@ -72,7 +69,7 @@ public class DoiSecurityLogFilter extends Filter {
             String user = null;
             StringBuffer profile = new StringBuffer();
             if (clientInfo != null && clientInfo.getUser() != null) {
-                user = clientInfo.getUser().getIdentifier();                
+                user = clientInfo.getUser().getIdentifier();
                 final List<Role> roles = clientInfo.getRoles();
                 final Set<String> rolesStr = new HashSet<>();
                 for (final Role role : roles) {
@@ -83,7 +80,7 @@ public class DoiSecurityLogFilter extends Filter {
             }
 
             final LogRecord logRecord = (LogRecord) logRecordObj;
-            logRecord.setMessage("User: " + user + "\tProfile: " + profile + "\t" + logRecord.getMessage());            
+            logRecord.setMessage("User: " + user + "\tProfile: " + profile + "\t" + logRecord.getMessage());
             LogManager.getLogger(loggerName).info(logRecord);
             //final Logger logger = Engine.getLogger(loggerName);
             //logger.log(logRecord);

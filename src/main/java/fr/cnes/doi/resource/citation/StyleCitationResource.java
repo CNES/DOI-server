@@ -29,8 +29,6 @@ import org.restlet.resource.ResourceException;
 
 import fr.cnes.doi.exception.ClientCrossCiteException;
 import fr.cnes.doi.utils.spec.Requirement;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * The supported styles for citation.
@@ -62,14 +60,8 @@ public class StyleCitationResource extends BaseCitationResource {
      * @throws ResourceException - Will thrown an Exception when a problem happens 
      * during the request to Cross Cite
      */  
-    @Requirement(
-        reqId = Requirement.DOI_SRV_100,
-        reqName = Requirement.DOI_SRV_100_NAME
-        )   
-    @Requirement(
-        reqId = Requirement.DOI_MONIT_020,
-        reqName = Requirement.DOI_MONIT_020_NAME
-        )      
+    @Requirement(reqId = Requirement.DOI_SRV_100,reqName = Requirement.DOI_SRV_100_NAME)   
+    @Requirement(reqId = Requirement.DOI_MONIT_020,reqName = Requirement.DOI_MONIT_020_NAME)      
     @Get("json|xml")
     public List<String> getStyles() throws ResourceException{
         LOG.traceEntry();
@@ -88,10 +80,7 @@ public class StyleCitationResource extends BaseCitationResource {
      * Describes the Get Method.
      * @param info Wadl description
      */     
-    @Requirement(
-        reqId = Requirement.DOI_DOC_010,
-        reqName = Requirement.DOI_DOC_010_NAME
-        )      
+    @Requirement(reqId = Requirement.DOI_DOC_010,reqName = Requirement.DOI_DOC_010_NAME)      
     @Override
     protected final void describeGet(final MethodInfo info) {
         info.setName(Method.GET);

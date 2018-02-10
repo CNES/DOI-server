@@ -19,6 +19,7 @@
 package fr.cnes.doi.resource.citation;
 
 import fr.cnes.doi.InitServerForTest;
+import fr.cnes.doi.client.ClientCrossCiteCitation;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
@@ -37,11 +38,17 @@ import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
 import org.restlet.util.Series;
+import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
+import org.mockserver.integration.ClientAndServer;
+import org.mockserver.junit.MockServerRule;
+import org.mockserver.model.HttpRequest;
+import org.mockserver.model.HttpResponse;
+import org.mockserver.verify.VerificationTimes;
 
 /**
  * Test the citation format resource.
@@ -53,6 +60,7 @@ public class FormatCitationResourceTest {
     public ExpectedException exceptions = ExpectedException.none();     
 
     private static Client cl;
+    private ClientAndServer mockServer;    
 
     public FormatCitationResourceTest() {
     }
@@ -74,11 +82,16 @@ public class FormatCitationResourceTest {
 
     @Before
     public void setUp() {
+        mockServer = startClientAndServer(1080);        
     }
 
     @After
     public void tearDown() {
+        mockServer.stop();
     }
+    
+    @Rule
+    public MockServerRule mockServerRule = new MockServerRule(this);     
 
     /**
      * Test of getFormat method, of class FormatCitationResource.
@@ -86,7 +99,10 @@ public class FormatCitationResourceTest {
     @Test
     public void testGetFormatHttps() {
         System.out.println("getFormat through a HTTPS server");
-        String expResult = "Garza, K., Goble, C., Brooke, J., & Jay, C. 2015. Framing the community data system interface. Proceedings of the 2015 British HCI Conference on - British HCI ’15. Presented at the the 2015 British HCI Conference, ACM Press. https://doi.org/10.1145/2783446.2783605.\n";
+        
+        mockServer.when(HttpRequest.request(ClientCrossCiteCitation.FORMAT_URI).withMethod("GET")).respond(HttpResponse.response().withBody("Garza, K., Goble, C., Brooke, J., & Jay, C. 2015. Framing the community data system interface. Proceedings of the 2015 British HCI Conference on - British HCI '15. Presented at the the 2015 British HCI Conference, ACM Press. https://doi.org/10.1145/2783446.2783605.\n"));                
+        
+        String expResult = "Garza, K., Goble, C., Brooke, J., & Jay, C. 2015. Framing the community data system interface. Proceedings of the 2015 British HCI Conference on - British HCI '15. Presented at the the 2015 British HCI Conference, ACM Press. https://doi.org/10.1145/2783446.2783605.\n";
         String result = "";
         String doiName = "10.1145/2783446.2783605";
         String style = "academy-of-management-review";
@@ -104,6 +120,9 @@ public class FormatCitationResourceTest {
         }
         client.release();
         assertEquals("Test the citation format through a HTTPS server",expResult, result);
+        
+        mockServer.verify(HttpRequest.request(ClientCrossCiteCitation.FORMAT_URI), VerificationTimes.once());          
+        
     }
     
     /**
@@ -114,6 +133,8 @@ public class FormatCitationResourceTest {
     public void testGetFormatHttpsWithWrongParameters() {
         System.out.println("getFormat through a HTTPS server with wrong parameters");
         exceptions.expect(ResourceException.class);
+        
+        mockServer.when(HttpRequest.request(ClientCrossCiteCitation.FORMAT_URI).withMethod("GET")).respond(HttpResponse.response().withStatusCode(400));                
         
         String expResult = "Garza, K., Goble, C., Brooke, J., & Jay, C. 2015. Framing the community data system interface. Proceedings of the 2015 British HCI Conference on - British HCI ’15. Presented at the the 2015 British HCI Conference, ACM Press. https://doi.org/10.1145/2783446.2783605.\n";
         String result = "";
@@ -133,6 +154,9 @@ public class FormatCitationResourceTest {
         }
         client.release();
         assertEquals("Test the citation format through a HTTPS server",expResult, result);
+        
+        mockServer.verify(HttpRequest.request(ClientCrossCiteCitation.FORMAT_URI), VerificationTimes.once());          
+        
     }    
     
     /**
@@ -141,7 +165,10 @@ public class FormatCitationResourceTest {
     @Test
     public void testGetFormatHttp() {
         System.out.println("getFormat through a HTTP server");
-        String expResult = "Garza, K., Goble, C., Brooke, J., & Jay, C. 2015. Framing the community data system interface. Proceedings of the 2015 British HCI Conference on - British HCI ’15. Presented at the the 2015 British HCI Conference, ACM Press. https://doi.org/10.1145/2783446.2783605.\n";
+        
+        mockServer.when(HttpRequest.request(ClientCrossCiteCitation.FORMAT_URI).withMethod("GET")).respond(HttpResponse.response().withBody("Garza, K., Goble, C., Brooke, J., & Jay, C. 2015. Framing the community data system interface. Proceedings of the 2015 British HCI Conference on - British HCI '15. Presented at the the 2015 British HCI Conference, ACM Press. https://doi.org/10.1145/2783446.2783605.\n"));                
+
+        String expResult = "Garza, K., Goble, C., Brooke, J., & Jay, C. 2015. Framing the community data system interface. Proceedings of the 2015 British HCI Conference on - British HCI '15. Presented at the the 2015 British HCI Conference, ACM Press. https://doi.org/10.1145/2783446.2783605.\n";
         String result = "";
         String doiName = "10.1145/2783446.2783605";
         String style = "academy-of-management-review";
@@ -159,6 +186,9 @@ public class FormatCitationResourceTest {
         }
         client.release();
         assertEquals("Test the citation format through a HTTP server",expResult, result);
+        
+        mockServer.verify(HttpRequest.request(ClientCrossCiteCitation.FORMAT_URI), VerificationTimes.once());          
+        
     }    
 
     /**
@@ -169,6 +199,9 @@ public class FormatCitationResourceTest {
     @Test
     public void testGetFormatWithBadDOI() {
         System.out.println("getFormat with a wrong DOI");
+        
+        mockServer.when(HttpRequest.request(ClientCrossCiteCitation.FORMAT_URI).withMethod("GET")).respond(HttpResponse.response().withStatusCode(404));                
+
         int expResult = Status.CLIENT_ERROR_NOT_FOUND.getCode();
         int result;
 
@@ -190,6 +223,9 @@ public class FormatCitationResourceTest {
         }
         client.release();
         assertEquals("Test the response with a given wrong DOI",expResult, result);
+        
+        mockServer.verify(HttpRequest.request(ClientCrossCiteCitation.FORMAT_URI), VerificationTimes.once());          
+        
     }
 
     /**
@@ -200,6 +236,9 @@ public class FormatCitationResourceTest {
     @Test
     public void testGetFormatWithBadStyle() {
         System.out.println("getFormat with a wrong style");
+        
+        mockServer.when(HttpRequest.request(ClientCrossCiteCitation.FORMAT_URI).withMethod("GET")).respond(HttpResponse.response().withStatusCode(400));                
+
         int expResult = Status.CLIENT_ERROR_BAD_REQUEST.getCode();
         int result = -1;
 
@@ -221,6 +260,9 @@ public class FormatCitationResourceTest {
         }
         client.release();
         assertEquals("Test the response with a given wrong style", expResult, result);
+        
+        mockServer.verify(HttpRequest.request(ClientCrossCiteCitation.FORMAT_URI), VerificationTimes.once());          
+        
     }
 
     /**
@@ -231,6 +273,9 @@ public class FormatCitationResourceTest {
     @Test
     public void testGetFormatWithBadLang() {
         System.out.println("getFormat with a wrong language");
+        
+        mockServer.when(HttpRequest.request(ClientCrossCiteCitation.FORMAT_URI).withMethod("GET")).respond(HttpResponse.response().withStatusCode(400));                
+
         int expResult = Status.CLIENT_ERROR_BAD_REQUEST.getCode();
         int result = -1;
 
@@ -253,6 +298,9 @@ public class FormatCitationResourceTest {
         }
         client.release();
         assertEquals("Test the response with a given wrong style",expResult, result);
+        
+        mockServer.verify(HttpRequest.request(ClientCrossCiteCitation.FORMAT_URI), VerificationTimes.once());          
+        
     }
 
     /**
@@ -263,6 +311,9 @@ public class FormatCitationResourceTest {
     @Test
     public void testGetFormatWithBadLangAndBadDoi() {
         System.out.println("getFormat with a wrong DOI and language");
+        
+        mockServer.when(HttpRequest.request(ClientCrossCiteCitation.FORMAT_URI).withMethod("GET")).respond(HttpResponse.response().withStatusCode(404));                
+        
         int expResult = Status.CLIENT_ERROR_NOT_FOUND.getCode();
         int result = -1;
 
@@ -285,5 +336,8 @@ public class FormatCitationResourceTest {
         }
         client.release();
         assertEquals(expResult, result);
+        
+        mockServer.verify(HttpRequest.request(ClientCrossCiteCitation.FORMAT_URI), VerificationTimes.once());          
+        
     }
 }

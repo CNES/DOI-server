@@ -190,10 +190,7 @@ public class DoiServer extends Component {
     /**
      * Configures the Server in HTTP and HTTPS.
      */
-    @Requirement(
-            reqId = Requirement.DOI_ARCHI_010,
-            reqName = Requirement.DOI_ARCHI_010_NAME
-    )
+    @Requirement(reqId = Requirement.DOI_ARCHI_010,reqName = Requirement.DOI_ARCHI_010_NAME)
     private void configureServer() {
         LOG.traceEntry();
         initHttpServer();
@@ -276,7 +273,7 @@ public class DoiServer extends Component {
      */
     private void startWithProxy() {
         LOG.traceEntry();
-        initLogServices();
+        //initLogServices();
         ProxySettings.getInstance();
         EmailSettings.getInstance();
         configureServer();

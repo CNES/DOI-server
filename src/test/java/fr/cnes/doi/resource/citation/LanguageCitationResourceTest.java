@@ -19,6 +19,7 @@
 package fr.cnes.doi.resource.citation;
 
 import fr.cnes.doi.InitServerForTest;
+import fr.cnes.doi.client.ClientCrossCiteCitation;
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;
@@ -34,9 +35,16 @@ import org.restlet.data.Parameter;
 import org.restlet.data.Protocol;
 import org.restlet.resource.ClientResource;
 import org.restlet.util.Series;
+import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
+import org.junit.Rule;
+import org.mockserver.integration.ClientAndServer;
+import org.mockserver.junit.MockServerRule;
+import org.mockserver.model.HttpRequest;
+import org.mockserver.model.HttpResponse;
+import org.mockserver.verify.VerificationTimes;
 
 /**
  * Tests the language citation resource.
@@ -46,7 +54,8 @@ import fr.cnes.doi.settings.DoiSettings;
 public class LanguageCitationResourceTest {
 
     private static Client cl;
-
+    private ClientAndServer mockServer;    
+    
     public LanguageCitationResourceTest() {
     }
 
@@ -67,11 +76,16 @@ public class LanguageCitationResourceTest {
 
     @Before
     public void setUp() {
+        mockServer = startClientAndServer(1080);        
     }
 
     @After
     public void tearDown() {
+        mockServer.stop();
     }
+    
+    @Rule
+    public MockServerRule mockServerRule = new MockServerRule(this);     
 
     /**
      * Test of getLanguages method, of class LanguageCitationResource.
@@ -79,6 +93,9 @@ public class LanguageCitationResourceTest {
     @Test
     public void testGetLanguagesHttps() {
         System.out.println("getLanguages through a HTTPS server");
+        
+        mockServer.when(HttpRequest.request(ClientCrossCiteCitation.LOCALE_URI).withMethod("GET")).respond(HttpResponse.response().withBody("[\"af-ZA\",\"ar\",\"bg-BG\",\"ca-AD\",\"cs-CZ\",\"cy-GB\",\"da-DK\",\"de-AT\",\"de-CH\",\"de-DE\",\"el-GR\",\"en-GB\",\"en-US\",\"es-CL\",\"es-ES\",\"es-MX\",\"et-EE\",\"eu\",\"fa-IR\",\"fi-FI\",\"fr-CA\",\"fr-FR\",\"he-IL\",\"hr-HR\",\"hu-HU\",\"id-ID\",\"is-IS\",\"it-IT\",\"ja-JP\",\"km-KH\",\"ko-KR\",\"lt-LT\",\"lv-LV\",\"mn-MN\",\"nb-NO\",\"nl-NL\",\"nn-NO\",\"pl-PL\",\"pt-BR\",\"pt-PT\",\"ro-RO\",\"ru-RU\",\"sk-SK\",\"sl-SI\",\"sr-RS\",\"sv-SE\",\"th-TH\",\"tr-TR\",\"uk-UA\",\"vi-VN\",\"zh-CN\",\"zh-TW\"]"));                
+
         String expResult = "af-ZA";
         String result = "";
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
@@ -92,11 +109,17 @@ public class LanguageCitationResourceTest {
             client.release();
             assertEquals("Test if the server returns the right response", expResult, result);
         }
+        
+        mockServer.verify(HttpRequest.request(ClientCrossCiteCitation.STYLE_URI), VerificationTimes.once());        
+
     }
 
     @Test
     public void testGetLanguagesHttp() {
         System.out.println("getLanguages through a HTTP Server");
+        
+        mockServer.when(HttpRequest.request(ClientCrossCiteCitation.LOCALE_URI).withMethod("GET")).respond(HttpResponse.response().withBody("[\"af-ZA\",\"ar\",\"bg-BG\",\"ca-AD\",\"cs-CZ\",\"cy-GB\",\"da-DK\",\"de-AT\",\"de-CH\",\"de-DE\",\"el-GR\",\"en-GB\",\"en-US\",\"es-CL\",\"es-ES\",\"es-MX\",\"et-EE\",\"eu\",\"fa-IR\",\"fi-FI\",\"fr-CA\",\"fr-FR\",\"he-IL\",\"hr-HR\",\"hu-HU\",\"id-ID\",\"is-IS\",\"it-IT\",\"ja-JP\",\"km-KH\",\"ko-KR\",\"lt-LT\",\"lv-LV\",\"mn-MN\",\"nb-NO\",\"nl-NL\",\"nn-NO\",\"pl-PL\",\"pt-BR\",\"pt-PT\",\"ro-RO\",\"ru-RU\",\"sk-SK\",\"sl-SI\",\"sr-RS\",\"sv-SE\",\"th-TH\",\"tr-TR\",\"uk-UA\",\"vi-VN\",\"zh-CN\",\"zh-TW\"]"));                
+
         String expResult = "af-ZA";
         String result = "";
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);
@@ -110,6 +133,8 @@ public class LanguageCitationResourceTest {
             client.release();
             assertEquals("Test if the server returns the right response", expResult, result);
         }
+        
+        mockServer.verify(HttpRequest.request(ClientCrossCiteCitation.STYLE_URI), VerificationTimes.once());                
     }
 
 }

@@ -19,6 +19,7 @@
 package fr.cnes.doi.resource.mds;
 
 import fr.cnes.doi.InitServerForTest;
+import fr.cnes.doi.client.ClientMDS;
 import fr.cnes.doi.security.UtilsHeader;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
@@ -30,6 +31,11 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.mockserver.integration.ClientAndServer;
+import static org.mockserver.integration.ClientAndServer.startClientAndServer;
+import org.mockserver.model.HttpRequest;
+import org.mockserver.model.HttpResponse;
+import org.mockserver.verify.VerificationTimes;
 import org.restlet.Client;
 import org.restlet.Context;
 import org.restlet.data.ChallengeResponse;
@@ -51,6 +57,7 @@ import org.restlet.util.Series;
 public class DoisResourceTest {
 
     private static Client cl;
+    private ClientAndServer mockServer;
 
     public DoisResourceTest() {
     }
@@ -95,10 +102,12 @@ public class DoisResourceTest {
 
     @Before
     public void setUp() {
+        mockServer = startClientAndServer(1081);
     }
 
     @After
     public void tearDown() {
+        mockServer.stop();
     }
 
     /**
@@ -108,11 +117,18 @@ public class DoisResourceTest {
     @Test
     public void testGetDoisHttps() throws IOException {
         System.out.println("getDois though a HTTPS server");
+        
+        mockServer.when(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE)
+                .withMethod("GET")).respond(HttpResponse.response().withStatusCode(200).withBody("10.5072/EDU/TESTID"));
+        
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + "/mds/dois");
         client.setNext(cl);
         Representation rep = client.get();
         assertNotNull("Test if the response is not null", rep.getText());
+        
+        mockServer.verify(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE)
+                .withMethod("GET"), VerificationTimes.once());        
     }
 
     /**
@@ -122,10 +138,17 @@ public class DoisResourceTest {
     @Test
     public void testGetDoisHttp() throws IOException {
         System.out.println("getDois though a HTTP server");
+        
+        mockServer.when(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE)
+                .withMethod("GET")).respond(HttpResponse.response().withStatusCode(200).withBody("10.5072/EDU/TESTID"));
+        
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);
         ClientResource client = new ClientResource("http://localhost:" + port + "/mds/dois");
         Representation rep = client.get();
         assertNotNull("Test if the response is not null", rep.getText());
+        
+        mockServer.verify(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE)
+                .withMethod("GET"), VerificationTimes.once());           
     }
 
     /**
@@ -154,7 +177,7 @@ public class DoisResourceTest {
             code = ex.getStatus().getCode();
         }
         client.release();
-        assertEquals(Status.CLIENT_ERROR_CONFLICT.getCode(), code);
+        assertEquals("Test if the DOI is related to several accounts", Status.CLIENT_ERROR_CONFLICT.getCode(), code);
     }
 
     /**
@@ -166,6 +189,9 @@ public class DoisResourceTest {
     public void testCreateDoiHttps() throws IOException {
         System.out.println("createDoi through HTTPS server");
 
+        mockServer.when(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE)
+                .withMethod("POST")).respond(HttpResponse.response().withStatusCode(201).withBody("CREATED"));
+        
         Form doiForm = new Form();
         doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b"));
         doiForm.add(new Parameter(DoisResource.URL_PARAMETER, "http://www.cnes.fr"));
@@ -190,7 +216,10 @@ public class DoisResourceTest {
         } catch (ResourceException ex) {
             code = ex.getStatus().getCode();
         }
-        assertEquals(Status.SUCCESS_CREATED.getCode(), code);
+        assertEquals("Test if the DOI is related to several accounts with a specific account", Status.SUCCESS_CREATED.getCode(), code);
+        
+        mockServer.verify(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE)
+                .withMethod("POST"), VerificationTimes.once());        
     }
     
     /**
@@ -201,6 +230,9 @@ public class DoisResourceTest {
     @Test
     public void testCreateDoiHttp() throws IOException {
         System.out.println("createDoi through a HTTP server");
+        
+        mockServer.when(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE)
+                .withMethod("POST")).respond(HttpResponse.response().withStatusCode(201).withBody("CREATED"));        
 
         Form doiForm = new Form();
         doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b"));
@@ -225,7 +257,10 @@ public class DoisResourceTest {
         } catch (ResourceException ex) {
             code = ex.getStatus().getCode();
         }
-        assertEquals(Status.SUCCESS_CREATED.getCode(), code);
+        assertEquals("Test the creation of a DOI, related to several accounts with a specific account", Status.SUCCESS_CREATED.getCode(), code);
+        
+        mockServer.verify(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE)
+                .withMethod("POST"), VerificationTimes.once());        
     }  
     
     /**
@@ -237,6 +272,9 @@ public class DoisResourceTest {
     @Test
     public void testCreateFalseDoiHttps() throws IOException {
         System.out.println("createDoi with a not registered DOI");
+        
+        mockServer.when(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE)
+                .withMethod("POST")).respond(HttpResponse.response().withStatusCode(412).withBody("metadata must be uploaded first"));         
 
         Form doiForm = new Form();
         doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.5072/828606/8c3e91ad45ca855b477126bc073ae"));
@@ -262,41 +300,44 @@ public class DoisResourceTest {
         } catch (ResourceException ex) {
             code = ex.getStatus().getCode();
         }
-        assertEquals(Status.CLIENT_ERROR_PRECONDITION_FAILED.getCode(), code);
+        assertEquals("Test an error of the creation of a DOI when the metadata is not uploaded first",Status.CLIENT_ERROR_PRECONDITION_FAILED.getCode(), code);
+        
+        mockServer.verify(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE)
+                .withMethod("POST"), VerificationTimes.once());        
     }    
     
-//    /**
-//     * Test of createDoi method, of class DoisResource.
-//     */
-//    @Test
-//    public void testCreateDoiWithWrongPrefixHttps() throws IOException {
-//        System.out.println("createDoi");
-//
-//        Form doiForm = new Form();
-//        doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.4072/828606/8c3e91ad45ca855b477126bc073ae"));
-//        doiForm.add(new Parameter(DoisResource.URL_PARAMETER, "http://www.cnes.fr"));
-//
-//        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-//        ClientResource client = new ClientResource("https://localhost:" + port + "/mds/dois");
-//        client.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "malapert", "pwd"));
-//        final String RESTLET_HTTP_HEADERS = "org.restlet.http.headers";
-//
-//        Map<String, Object> reqAttribs = client.getRequestAttributes();
-//        Series headers = (Series) reqAttribs.get(RESTLET_HTTP_HEADERS);
-//        if (headers == null) {
-//            headers = new Series<>(Header.class);
-//            reqAttribs.put(RESTLET_HTTP_HEADERS, headers);
-//        }
-//        headers.add(UtilsHeader.SELECTED_ROLE_PARAMETER, "828606");
-//        client.setNext(cl);
-//        int code;
-//        try {
-//            Representation rep = client.post(doiForm);
-//            code = client.getStatus().getCode();
-//        } catch (ResourceException ex) {
-//            code = ex.getStatus().getCode();
-//        }
-//        assertEquals(Status.CLIENT_ERROR_FORBIDDEN.getCode(), code);
-//    }        
+    /**
+     * Test of createDoi method, of class DoisResource.
+     */
+    @Test
+    public void testCreateDoiWithWrongPrefixHttps() throws IOException {
+        System.out.println("createDoi");
+
+        Form doiForm = new Form();
+        doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.4072/828606/8c3e91ad45ca855b477126bc073ae"));
+        doiForm.add(new Parameter(DoisResource.URL_PARAMETER, "http://www.cnes.fr"));
+
+        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
+        ClientResource client = new ClientResource("https://localhost:" + port + "/mds/dois");
+        client.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "malapert", "pwd"));
+        final String RESTLET_HTTP_HEADERS = "org.restlet.http.headers";
+
+        Map<String, Object> reqAttribs = client.getRequestAttributes();
+        Series headers = (Series) reqAttribs.get(RESTLET_HTTP_HEADERS);
+        if (headers == null) {
+            headers = new Series<>(Header.class);
+            reqAttribs.put(RESTLET_HTTP_HEADERS, headers);
+        }
+        headers.add(UtilsHeader.SELECTED_ROLE_PARAMETER, "828606");
+        client.setNext(cl);
+        int code;
+        try {
+            Representation rep = client.post(doiForm);
+            code = client.getStatus().getCode();
+        } catch (ResourceException ex) {
+            code = ex.getStatus().getCode();
+        }
+        assertEquals("Test an error of the creation of a DOI when the prefix is wrong", Status.CLIENT_ERROR_FORBIDDEN.getCode(), code);
+    }        
 
 }

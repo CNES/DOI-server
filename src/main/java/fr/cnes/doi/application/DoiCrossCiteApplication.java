@@ -25,6 +25,7 @@ import fr.cnes.doi.client.ClientCrossCiteCitation;
 import fr.cnes.doi.resource.citation.FormatCitationResource;
 import fr.cnes.doi.resource.citation.LanguageCitationResource;
 import fr.cnes.doi.resource.citation.StyleCitationResource;
+import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.utils.spec.Requirement;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -54,22 +55,10 @@ import org.apache.logging.log4j.Logger;
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  * @see "http://citation.crosscite.org/"
  */
-@Requirement(
-    reqId = Requirement.DOI_SRV_100,
-    reqName = Requirement.DOI_SRV_100_NAME
-    )
-@Requirement(
-    reqId = Requirement.DOI_SRV_110,
-    reqName = Requirement.DOI_SRV_110_NAME
-    )
-@Requirement(
-    reqId = Requirement.DOI_SRV_120,
-    reqName = Requirement.DOI_SRV_120_NAME
-    )
-@Requirement(
-    reqId = Requirement.DOI_MONIT_020,
-    reqName = Requirement.DOI_MONIT_020_NAME
-    )
+@Requirement(reqId = Requirement.DOI_SRV_100,reqName = Requirement.DOI_SRV_100_NAME)
+@Requirement(reqId = Requirement.DOI_SRV_110,reqName = Requirement.DOI_SRV_110_NAME)
+@Requirement(reqId = Requirement.DOI_SRV_120,reqName = Requirement.DOI_SRV_120_NAME)
+@Requirement(reqId = Requirement.DOI_MONIT_020,reqName = Requirement.DOI_MONIT_020_NAME)
 public class DoiCrossCiteApplication extends AbstractApplication {       
 
     /**
@@ -97,12 +86,13 @@ public class DoiCrossCiteApplication extends AbstractApplication {
     /**
      * Client to query CrossCite.
      */
-    private final ClientCrossCiteCitation client = new ClientCrossCiteCitation();
+    private final ClientCrossCiteCitation client;
 
     /**
      * Constructs the application by setting the proxy authentication to the
-     * null null     {@link fr.cnes.doi.client.ClientCrossCiteCitation
-	 * ClientCrossCiteCitation} proxy when the configuration is set.
+     * null null     
+     * {@link fr.cnes.doi.client.ClientCrossCiteCitation
+     * ClientCrossCiteCitation} proxy when the configuration is set.
      */
     public DoiCrossCiteApplication() {
         super();
@@ -132,6 +122,8 @@ public class DoiCrossCiteApplication extends AbstractApplication {
                 + "Principles provide a guideline for the those that want to "
                 + "enhance reuse of their data (Wilkinson 2016).");
         setDescription(description.toString());
+        final String contextMode = this.getConfig().getString(Consts.CONTEXT_MODE);
+        this.client = new ClientCrossCiteCitation(ClientCrossCiteCitation.Context.valueOf(contextMode));
     }
 
     /**

@@ -44,7 +44,6 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.logging.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.slf4j.bridge.SLF4JBridgeHandler;
@@ -54,14 +53,8 @@ import org.slf4j.bridge.SLF4JBridgeHandler;
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-@Requirement(
-        reqId = Requirement.DOI_DEV_010,
-        reqName = Requirement.DOI_DEV_010_NAME
-)
-@Requirement(
-        reqId = Requirement.DOI_DEV_020,
-        reqName = Requirement.DOI_DEV_020_NAME
-)
+@Requirement(reqId = Requirement.DOI_DEV_010, reqName = Requirement.DOI_DEV_010_NAME)
+@Requirement(reqId = Requirement.DOI_DEV_020, reqName = Requirement.DOI_DEV_020_NAME)
 public class Starter {
 
     static {
@@ -95,7 +88,7 @@ public class Starter {
                 .append(settings.getString(Consts.VERSION)).append(".jar [--secret <key>] [OPTIONS] [-s]\n");
         help.append("\n\n");
         help.append("with :\n");
-        help.append("  --doi \"<INIST_prefix> <projectName> <landingPage>\" : Creates a DOI\n");                        
+        help.append("  --doi \"<INIST_prefix> <projectName> <landingPage>\" : Creates a DOI\n");
         help.append("  --secret <key>               : The 16 bits secret key to crypt/decrypt\n");
         help.append("  --key-sign-secret <key>      : The key to sign the token\n");
         help.append("                                 If not provided, a default one is used\n");
@@ -151,14 +144,13 @@ public class Starter {
      *
      * @param server the server
      */
-    @Requirement(
-            reqId = Requirement.DOI_ARCHI_040,
-            reqName = Requirement.DOI_ARCHI_040_NAME
-    )
+    @Requirement(reqId = Requirement.DOI_ARCHI_040, reqName = Requirement.DOI_ARCHI_040_NAME)
     private static void startServer(final DoiServer server) {
         LOG.trace("Entering in startServer");
         try {
-            fr.cnes.doi.plugin.Utils.addPath(DoiSettings.getInstance().getPathApp() + File.separatorChar + "plugins");
+            fr.cnes.doi.plugin.Utils.addPath(
+                    DoiSettings.getInstance().getPathApp() + File.separatorChar + "plugins"
+            );
             LOG.info("Starting server ...");
             server.start();
             LOG.info("Server started");
@@ -232,7 +224,6 @@ public class Starter {
         longopts[5] = new LongOpt("key-sign", LongOpt.NO_ARGUMENT, null, 'k');
         longopts[6] = new LongOpt("key-sign-secret", LongOpt.REQUIRED_ARGUMENT, null, 'a');
         longopts[7] = new LongOpt("doi", LongOpt.REQUIRED_ARGUMENT, null, 'b');
-        
 
         //
         Getopt g = new Getopt(progName, argv, "hvdske:c:f:y:z:a:b:", longopts);
@@ -246,18 +237,18 @@ public class Starter {
                     } else {
                         settings.setSecretKey(secretKey);
                     }
-                    break;                                                                                               
+                    break;
                 //
                 case 'a':
                     String secretSignToken = g.getOptarg();
-                    TokenSecurity.getInstance().setTokenKey(secretSignToken);                    
+                    TokenSecurity.getInstance().setTokenKey(secretSignToken);
                     break;
                 case 'b':
                     String[] arguments = g.getOptarg().split(" ");
                     String prefix = arguments[0];
                     String projectName = arguments[1];
                     String landingPage = arguments[2];
-                    {
+                     {
                         try {
                             String doi = UniqueDoi.getInstance().createDOI(prefix, projectName, new URL(landingPage), SuffixProjectsResource.NB_DIGITS);
                             LOG.info(doi);
@@ -287,7 +278,7 @@ public class Starter {
                     try {
                         LOG.info(UtilsCryptography.decrypt(arg, settings.getSecretKey()));
                     } catch (DoiRuntimeException ex) {
-                        LOG.fatal("Unable to decrypt {} : {}",arg,ex.getMessage());
+                        LOG.fatal("Unable to decrypt {} : {}", arg, ex.getMessage());
                     }
                     break;
                 //
@@ -296,8 +287,8 @@ public class Starter {
                     arg = g.getOptarg();
                     try {
                         LOG.info(UtilsCryptography.encrypt(arg, settings.getSecretKey()));
-                    } catch(DoiRuntimeException ex) {
-                        LOG.fatal("Unable to encrypt {} : {}",arg, ex.getMessage());
+                    } catch (DoiRuntimeException ex) {
+                        LOG.fatal("Unable to encrypt {} : {}", arg, ex.getMessage());
                     }
                     break;
                 //

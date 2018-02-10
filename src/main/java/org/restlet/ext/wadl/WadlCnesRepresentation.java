@@ -36,10 +36,7 @@ import org.restlet.representation.InputRepresentation;
  *
  * @author Jean-Christoph Malapert
  */
-@Requirement(
-        reqId = Requirement.DOI_DOC_010,
-        reqName = Requirement.DOI_DOC_010_NAME
-)
+@Requirement(reqId = Requirement.DOI_DOC_010,reqName = Requirement.DOI_DOC_010_NAME)
 public class WadlCnesRepresentation extends WadlRepresentation {
 
     /**
