@@ -91,8 +91,6 @@ public class DoiMonitoring {
     public boolean isRegistered(final Method name, final String path) {
         LOG.traceEntry("Parameters : {} and {}", name.getName(), path);
         final String identifier = name.getName() + path;
-        //TODO : a bug here - applications contain the template where as path has
-        //the value of the template
         final boolean isRegistered = this.applications.containsKey(identifier);
         LOG.debug(name+" "+path+" is registered : " + isRegistered);       
         return LOG.traceExit(isRegistered);

@@ -123,7 +123,9 @@ public class DoiMdsApplication extends AbstractApplication {
     /**
      * Schema.
      */
-    private final SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+    private final SchemaFactory schemaFactory = SchemaFactory.newInstance(
+            XMLConstants.W3C_XML_SCHEMA_NS_URI
+    );
     
     /**
      * Logger.
@@ -225,10 +227,13 @@ public class DoiMdsApplication extends AbstractApplication {
         
         final Router router = new Router(getContext());        
         router.attach(DOI_URI, DoisResource.class);
-        router.attach(DOI_URI + DOI_NAME_URI, DoiResource.class).getTemplate().setMatchingMode(Template.MODE_STARTS_WITH);
+        router.attach(DOI_URI + DOI_NAME_URI, DoiResource.class)
+                .getTemplate().setMatchingMode(Template.MODE_STARTS_WITH);
         router.attach(METADATAS_URI, MetadatasResource.class);
-        router.attach(METADATAS_URI + DOI_NAME_URI, MetadataResource.class).getTemplate().setMatchingMode(Template.MODE_STARTS_WITH);
-        router.attach(MEDIA_URI + DOI_NAME_URI, MediaResource.class).getTemplate().setMatchingMode(Template.MODE_STARTS_WITH);
+        router.attach(METADATAS_URI + DOI_NAME_URI, MetadataResource.class)
+                .getTemplate().setMatchingMode(Template.MODE_STARTS_WITH);
+        router.attach(MEDIA_URI + DOI_NAME_URI, MediaResource.class)
+                .getTemplate().setMatchingMode(Template.MODE_STARTS_WITH);
 
         return LOG.traceExit(router);
     }
@@ -347,18 +352,25 @@ public class DoiMdsApplication extends AbstractApplication {
      * @return the application description for WADL
      */
     @Override
-    public final ApplicationInfo getApplicationInfo(final Request request, final Response response) {
+    public final ApplicationInfo getApplicationInfo(final Request request, final Response response){
         final ApplicationInfo result = super.getApplicationInfo(request, response);
         final DocumentationInfo docInfo = new DocumentationInfo(
-                "DOI server application provides is central service that registers DOI at DataCite");
+                "DOI server application provides is central service that registers DOI at DataCite"
+        );
         docInfo.setTitle(this.getName());
         docInfo.setTextContent(this.getDescription());
         result.setDocumentation(docInfo);
-        result.getNamespaces().put("https://schema.datacite.org/meta/kernel-4.0/metadata.xsd", "default");
-        result.getNamespaces().put("http://www.w3.org/2001/XMLSchema", "xsi");
+        result.getNamespaces().put(
+                "https://schema.datacite.org/meta/kernel-4.0/metadata.xsd", "default"
+        );
+        result.getNamespaces().put(
+                "http://www.w3.org/2001/XMLSchema", "xsi"
+        );
         final GrammarsInfo grammar = new GrammarsInfo();
         final IncludeInfo include = new IncludeInfo();
-        include.setTargetRef(new Reference("https://schema.datacite.org/meta/kernel-4.0/metadata.xsd"));
+        include.setTargetRef(
+                new Reference("https://schema.datacite.org/meta/kernel-4.0/metadata.xsd")
+        );
         grammar.getIncludes().add(include);
         result.setGrammars(grammar);
         return result;

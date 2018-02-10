@@ -57,7 +57,8 @@ import org.restlet.routing.Redirector;
 @Requirement(reqId = Requirement.DOI_SRV_140, reqName = Requirement.DOI_SRV_140_NAME)
 @Requirement(reqId = Requirement.DOI_SRV_150, reqName = Requirement.DOI_SRV_150_NAME)
 @Requirement(reqId = Requirement.DOI_SRV_160, reqName = Requirement.DOI_SRV_160_NAME)
-@Requirement(reqId = Requirement.DOI_SRV_170, reqName = Requirement.DOI_SRV_170_NAME, coverage = CoverageAnnotation.NONE)
+@Requirement(reqId = Requirement.DOI_SRV_170, reqName = Requirement.DOI_SRV_170_NAME,
+        coverage = CoverageAnnotation.NONE)
 @Requirement(reqId = Requirement.DOI_DISPO_020, reqName = Requirement.DOI_DISPO_020_NAME)
 public class AdminApplication extends AbstractApplication {
 
@@ -163,10 +164,10 @@ public class AdminApplication extends AbstractApplication {
      *
      * @return A task
      */
-    @Requirement(reqId = Requirement.DOI_DISPO_020,reqName = Requirement.DOI_DISPO_020_NAME)
+    @Requirement(reqId = Requirement.DOI_DISPO_020, reqName = Requirement.DOI_DISPO_020_NAME)
     private TaskService createTaskService() {
         LOG.traceEntry();
-        final TaskService checkLandingPageTask = new TaskService(true, true);
+        final TaskService checkLandingPageTask = new TaskService(true);
         LOG.info("Sets CheckLandingPage running at each {} {}", PERIOD_SCHEDULER, PERIOD_UNIT);
         checkLandingPageTask.scheduleAtFixedRate(
                 new LandingPageMonitoring(), 0,
@@ -280,7 +281,10 @@ public class AdminApplication extends AbstractApplication {
     private void addStatusPage(final Router router) {
         LOG.traceEntry("Parameter : {}", new JsonMessage(router));
 
-        final Directory directory = new Directory(getContext(), LocalReference.createClapReference(STATUS_PAGE_CLASSPATH));
+        final Directory directory = new Directory(
+                getContext(), 
+                LocalReference.createClapReference(STATUS_PAGE_CLASSPATH)
+        );
         directory.setDeeplyAccessible(true);
         router.attach(RESOURCE_URI, directory);
 

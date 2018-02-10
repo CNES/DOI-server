@@ -123,33 +123,16 @@ public class Consts {
 
     /**
      * Set of hostname on which the authentication to the proxy is disabled.
-     * //TODO To be done
      */
     public static final String SERVER_NONPROXY_HOSTS = "Starter.NoProxy.hosts";
 
     /**
-     * //TODO useless ?
-     */
-    public static final String LOGSERVICE_LOGNAME = "Starter.LogService.logName";
-
-    /**
-     *
-     */
-    public static final String LOGSERVICE_ACTIVE = "Starter.LogService.active";
-
-    /**
-     *
+     * LOG format.
      */
     public static final String LOG_FORMAT = "Starter.Server.Log.format";
 
-    // TODO useless ?
     /**
-     *
-     */
-    public static final String SERVER_MAX_CONNECTIONS = "Starter.Server.maxConnections";
-
-    /**
-     *
+     * Email of the administrator.
      */
     public static final String SERVER_CONTACT_ADMIN = "Starter.Server.contactAdmin";
 
@@ -162,7 +145,7 @@ public class Consts {
      */
     public static final String SMTP_URL = "Starter.mail.send.server";
     /**
-     * TLS. TODO : TBD
+     * TLS.
      */
     public static final String SMTP_STARTTLS_ENABLE = "Starter.mail.send.tls";
 

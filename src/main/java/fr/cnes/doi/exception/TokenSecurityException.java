@@ -69,7 +69,7 @@ public class TokenSecurityException extends Exception {
      * @param message message
      * @param cause cause
      */
-    public TokenSecurityException(final Status status, final String message, final Throwable cause) {
+    public TokenSecurityException(final Status status, final String message, final Throwable cause){
         super(message, cause);
         this.status = status;
     }

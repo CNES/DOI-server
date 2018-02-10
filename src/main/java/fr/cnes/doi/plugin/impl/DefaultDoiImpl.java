@@ -23,13 +23,15 @@ import fr.cnes.doi.security.RoleAuthorizer;
 import fr.cnes.doi.settings.DoiSettings;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -64,11 +66,11 @@ public class DefaultDoiImpl extends AbstractDoiDBPluginHelper {
     /**
      * Mapping between the DOI and the landing page
      */
-    private final Map<String, URL> doiLandingPageMap = new ConcurrentHashMap<>();
+    private final Map<String, URI> doiLandingPageMap = new ConcurrentHashMap<>();
     /**
      * Mapping between the landing page and the DOI
      */
-    private final Map<URL, String> landingPageDoiMap = new ConcurrentHashMap<>();
+    private final Map<URI, String> landingPageDoiMap = new ConcurrentHashMap<>();
 
     public DefaultDoiImpl() {
         super();
@@ -99,6 +101,8 @@ public class DefaultDoiImpl extends AbstractDoiDBPluginHelper {
             this.addObserver(RoleAuthorizer.getInstance());
         } catch (IOException e) {
             LOG.fatal("Cannot access the cache file for the mapping lading page/DOI " + dbConf, e);
+        } catch (URISyntaxException ex) {
+            LOG.fatal(ex);
         }
 
     }
@@ -109,7 +113,7 @@ public class DefaultDoiImpl extends AbstractDoiDBPluginHelper {
      * @param dbConfFile File that contains the project configuration
      * @throws IOException Exception when trying to load the file
      */
-    private void loadDBConf(File dbConfFile) throws IOException {
+    private void loadDBConf(File dbConfFile) throws IOException, URISyntaxException {
         LOG.debug("Cache file exists : {}", dbConfFile.getAbsolutePath());
 
         List<String> lines = Files.readAllLines(dbConfFile.toPath());
@@ -125,7 +129,7 @@ public class DefaultDoiImpl extends AbstractDoiDBPluginHelper {
                     if (split.length != 2) {
                         LOG.debug("The line {} is not formatted in the expected way", line);
                     } else {
-                        URL landingPage = new URL(split[0]);
+                        URI landingPage = new URI(split[0]);
                         String doi = split[1];
                         this.doiLandingPageMap.put(doi, landingPage);
                         this.landingPageDoiMap.put(landingPage, doi);
@@ -151,18 +155,23 @@ public class DefaultDoiImpl extends AbstractDoiDBPluginHelper {
     }
 
     @Override
-    public synchronized boolean addDoi(String doi, URL landingPage) {
+    public synchronized boolean addDoi(String doi, URI landingPage) {
         boolean isAdded = false;
         try {
             String line = landingPage.toString() + ";" + doi + "\n";
-            Files.write(new File(this.dbConf).toPath(), line.getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+            Files.write(
+                    new File(this.dbConf).toPath(), 
+                    line.getBytes(StandardCharsets.UTF_8), 
+                    StandardOpenOption.APPEND
+            );
             this.landingPageDoiMap.put(landingPage, doi);
             this.doiLandingPageMap.put(doi, landingPage);
             isAdded = true;
             setChanged();
             notifyObservers(new String[]{ADD_RECORD, doi});
         } catch (IOException e) {
-            LOG.fatal("The doi " + doi + " related to the landing page " + landingPage + "cannot be saved in the file", e);
+            LOG.fatal("The doi " + doi + " related to the landing page " + landingPage + 
+                    "cannot be saved in the file", e);
         }
         return isAdded;    
     }
@@ -173,22 +182,22 @@ public class DefaultDoiImpl extends AbstractDoiDBPluginHelper {
     }
 
     @Override
-    public boolean isExistLandingPage(URL landingPage) {
+    public boolean isExistLandingPage(URI landingPage) {
         return this.landingPageDoiMap.containsKey(landingPage);
     }
 
     @Override
-    public URL getLandingPageFrom(String doi) {
+    public URI getLandingPageFrom(String doi) {
         return this.doiLandingPageMap.get(doi);
     }
 
     @Override
-    public String getDOIFrom(URL landingPage) {
+    public String getDOIFrom(URI landingPage) {
         return this.landingPageDoiMap.get(landingPage);
     }
 
     @Override
-    public Map<URL, String> getRecords() {
+    public Map<URI, String> getRecords() {
         return this.landingPageDoiMap;
     }
     

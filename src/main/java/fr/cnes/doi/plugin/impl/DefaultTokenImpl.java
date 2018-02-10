@@ -108,7 +108,10 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
                 } else {
                     String[] split = line.split(";");
                     if (split.length != 3) {
-                        LOG.fatal(String.format("The line %s is not formatted in the expected way", line));
+                        LOG.fatal(String.format(
+                                "The line %s is not formatted in the expected way", 
+                                line)
+                        );
                     } else {
                         this.db.put(split[0], new ConcurrentHashMap<String, Object>() {
                             private static final long serialVersionUID = 3109256773218160485L;
@@ -135,7 +138,11 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
         File directory = new File(tokenConfFile.getParent());
         Files.createDirectories(directory.toPath());
         Files.createFile(tokenConfFile.toPath());
-        Files.write(tokenConfFile.toPath(), "#Token;Project suffix;Expiration date\n".getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+        Files.write(
+                tokenConfFile.toPath(), 
+                "#Token;Project suffix;Expiration date\n".getBytes(StandardCharsets.UTF_8), 
+                StandardOpenOption.APPEND
+        );
     }
 
     @Override
@@ -145,13 +152,18 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
         try {
             Jws<Claims> jws = TokenSecurity.getInstance().getTokenInformation(jwt);
 
-            String projectSuffix = String.valueOf(jws.getBody().get(TokenSecurity.PROJECT_ID, Integer.class));
+            String projectSuffix = String.valueOf(jws.getBody()
+                    .get(TokenSecurity.PROJECT_ID, Integer.class));
             String expirationDate = jws.getBody().getExpiration().toString();
 
             // should be fine, the JWT representation does not contain ;
             String line = jwt + ";" + projectSuffix + ";" + expirationDate + "\n";
             LOG.info("token inserted : "+ line);
-            Files.write(new File(this.tokenConf).toPath(), line.getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+            Files.write(
+                    new File(this.tokenConf).toPath(), 
+                    line.getBytes(StandardCharsets.UTF_8), 
+                    StandardOpenOption.APPEND
+            );
             this.db.put(jwt, new ConcurrentHashMap<String, Object>() {
                 private static final long serialVersionUID = 3109256773218160485L;
 

@@ -93,7 +93,9 @@ public class MediaResource extends BaseMdsResource {
                 throw LOG.throwing(new ResourceException(ex.getStatus(), ex.getMessage(), ex));
             } else {
                 ((AbstractApplication)getApplication()).sendAlertWhenDataCiteFailed(ex);
-                throw LOG.throwing(new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex));
+                throw LOG.throwing(
+                        new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex)
+                );
             }
         }
         

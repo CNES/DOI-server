@@ -47,9 +47,8 @@ import org.apache.logging.log4j.Logger;
  *
  * @author Jean-Christophe (jean-christophe.malapert@cnes.fr)
  */
-@Requirement(reqId = Requirement.DOI_CONFIG_010,reqName = Requirement.DOI_CONFIG_010_NAME)
+@Requirement(reqId = Requirement.DOI_CONFIG_010, reqName = Requirement.DOI_CONFIG_010_NAME)
 public final class DoiSettings {
-    
 
     /**
      * Configuration files in JAR.
@@ -60,7 +59,7 @@ public final class DoiSettings {
      * Logger.
      */
     private static final Logger LOG = LogManager.getLogger(DoiSettings.class.getName());
-    
+
     /**
      * Test DOI : {@value #INIST_TEST_DOI}.
      */
@@ -91,16 +90,17 @@ public final class DoiSettings {
 
     /**
      * Loads configuration file and set it in memory.
+     *
      * @param properties Configuration file
      */
     private void init(final Properties properties) {
-        LOG.traceEntry("Parameter : {}", properties);    
-        LOG.info("----- DOI parameters ----");    
+        LOG.traceEntry("Parameter : {}", properties);
+        LOG.info("----- DOI parameters ----");
         fillConcurrentMap(properties);
         computePathOfTheApplication();
         PluginFactory.init(this.map);
-        LOG.info("DOI settings have been loaded");        
-        LOG.info("-------------------------");        
+        LOG.info("DOI settings have been loaded");
+        LOG.info("-------------------------");
         LOG.traceExit();
     }
 
@@ -138,7 +138,7 @@ public final class DoiSettings {
         }
         return LOG.traceExit(properties);
     }
-    
+
     /**
      * Validates the configuration file.
      */
@@ -146,52 +146,54 @@ public final class DoiSettings {
         LOG.traceEntry();
         final StringBuilder validation = new StringBuilder();
         final String message = "Sets ";
-        if(isNotExist(this.map, Consts.INIST_DOI)) {
+        if (isNotExist(this.map, Consts.INIST_DOI)) {
             validation.append(message).append(Consts.INIST_DOI).append("\n");
         }
-        if(isNotExist(this.map, Consts.INIST_LOGIN)) {
+        if (isNotExist(this.map, Consts.INIST_LOGIN)) {
             validation.append(message).append(Consts.INIST_LOGIN).append("\n");
         }
-        if(isNotExist(this.map, Consts.INIST_PWD)) {
+        if (isNotExist(this.map, Consts.INIST_PWD)) {
             validation.append(message).append(Consts.INIST_PWD).append("\n");
-        }    
-        if(isNotExist(this.map, Consts.SERVER_PROXY_USED)) {
+        }
+        if (isNotExist(this.map, Consts.SERVER_PROXY_USED)) {
             validation.append(message).append(Consts.SERVER_PROXY_USED).append("\n");
         }
-        if(isNotExist(this.map, Consts.PLUGIN_PROJECT_SUFFIX)){
+        if (isNotExist(this.map, Consts.PLUGIN_PROJECT_SUFFIX)) {
             validation.append(message).append(Consts.PLUGIN_PROJECT_SUFFIX).append("\n");
         }
-        if(isNotExist(this.map, Consts.PLUGIN_TOKEN)){
+        if (isNotExist(this.map, Consts.PLUGIN_TOKEN)) {
             validation.append(message).append(Consts.PLUGIN_TOKEN).append("\n");
-        } 
-        if(isNotExist(this.map, Consts.PLUGIN_USER_GROUP_MGT)){
+        }
+        if (isNotExist(this.map, Consts.PLUGIN_USER_GROUP_MGT)) {
             validation.append(message).append(Consts.PLUGIN_USER_GROUP_MGT).append("\n");
-        }         
-        if(validation.length()!=0) {
+        }
+        if (validation.length() != 0) {
             throw LOG.traceExit(new DoiRuntimeException(validation.toString()));
         }
-        LOG.traceExit();        
+        LOG.traceExit();
     }
-    
+
     /**
      * Tests if the keyword exists in properties.
+     *
      * @param properties configuration
      * @param keyword keyword to test
      * @return True when the keyword exists in configuration otherwise False
      */
-    private boolean isExist(final  ConcurrentHashMap<String,String> properties, final String keyword) {
+    private boolean isExist(final ConcurrentHashMap<String, String> properties, final String keyword) {
         LOG.traceEntry("Parameters : {} and {}", properties, keyword);
         return LOG.traceExit(properties.containsKey(keyword) && !properties.get(keyword).isEmpty());
     }
-    
+
     /**
      * Test if the keyword does not exist in properties
+     *
      * @param properties configuration
      * @param keyword keyword to test
      * @return True when the keyword does not exist in configuration otherwise False
      */
-    private boolean isNotExist(final  ConcurrentHashMap<String,String> properties, final String keyword) {
-        LOG.traceEntry("Parameters : {} and {}", properties, keyword);        
+    private boolean isNotExist(final ConcurrentHashMap<String, String> properties, final String keyword) {
+        LOG.traceEntry("Parameters : {} and {}", properties, keyword);
         return LOG.traceExit(!isExist(properties, keyword));
     }
 
@@ -204,7 +206,7 @@ public final class DoiSettings {
         LOG.traceEntry("Paramete : {}", properties);
         for (final Entry<Object, Object> entry : properties.entrySet()) {
             map.put((String) entry.getKey(), (String) entry.getValue());
-            LOG.info("{} = {}",entry.getKey(), entry.getValue());
+            LOG.info("{} = {}", entry.getKey(), entry.getValue());
         }
         LOG.traceExit();
     }
@@ -257,8 +259,8 @@ public final class DoiSettings {
      * @param secretKey the secret key.
      */
     public void setSecretKey(final String secretKey) {
-        LOG.traceEntry("Parameter : {}", secretKey);        
-        this.secretKey = secretKey;        
+        LOG.traceEntry("Parameter : {}", secretKey);
+        this.secretKey = secretKey;
         LOG.traceExit();
     }
 
@@ -270,16 +272,17 @@ public final class DoiSettings {
      * @return the value of the key
      */
     public String getString(final String key, final String defaultValue) {
-        LOG.traceEntry("Parameters : {} and {}", key, defaultValue); 
+        LOG.traceEntry("Parameters : {} and {}", key, defaultValue);
         return LOG.traceExit(map.getOrDefault(key, defaultValue));
     }
 
     /**
-     * Returns the value of the key or null if no mapping for the key.
-     * A special processing inputStream done for the key {@value fr.cnes.doi.settings.Consts#INIST_DOI}. 
- When this key inputStream called the value changes in respect of {@value fr.cnes.doi.settings.Consts#CONTEXT_MODE}.
-     * When {@value fr.cnes.doi.settings.Consts#CONTEXT_MODE} inputStream set to PRE_PROD, {@value fr.cnes.doi.settings.Consts#INIST_DOI}
- inputStream set to {@value #INIST_TEST_DOI}.
+     * Returns the value of the key or null if no mapping for the key. A special processing
+     * inputStream done for the key {@value fr.cnes.doi.settings.Consts#INIST_DOI}. When this key
+     * inputStream called the value changes in respect of
+     * {@value fr.cnes.doi.settings.Consts#CONTEXT_MODE}. When
+     * {@value fr.cnes.doi.settings.Consts#CONTEXT_MODE} inputStream set to PRE_PROD,
+     * {@value fr.cnes.doi.settings.Consts#INIST_DOI} inputStream set to {@value #INIST_TEST_DOI}.
      *
      * @param key key to search
      * @return the value of the key
@@ -287,7 +290,7 @@ public final class DoiSettings {
     public String getString(final String key) {
         LOG.traceEntry("Parameter : {}", key);
         final String value;
-        if(Consts.INIST_DOI.equals(key)) {
+        if (Consts.INIST_DOI.equals(key)) {
             final String context = this.getString(Consts.CONTEXT_MODE, "DEV");
             value = "PRE_PROD".equals(context) ? INIST_TEST_DOI : this.getString(Consts.INIST_DOI, null);
         } else {
@@ -298,7 +301,7 @@ public final class DoiSettings {
 
     /**
      * Returns the decoded value of the sky. An exception inputStream raised when the key
- inputStream not encoded on 16bits.
+     * inputStream not encoded on 16bits.
      *
      * @param key key to search
      * @return the decoded vale
@@ -310,18 +313,17 @@ public final class DoiSettings {
             result = value;
         } else {
             result = UtilsCryptography.decrypt(value, getSecretKey());
-        }        
+        }
         return result;
     }
 
     /**
-     * Returns the value of the key as an integer. 
-     * NumberFormatException inputStream raisen when the value of the key in not 
-     * compatible with an integer.     
+     * Returns the value of the key as an integer. NumberFormatException inputStream raisen when the
+     * value of the key in not compatible with an integer.
+     *
      * @param key key to search
      * @return the value
-     * @exception NumberFormatException if the string does not contain a
-     * parsable integer.
+     * @exception NumberFormatException if the string does not contain a parsable integer.
      */
     public int getInt(final String key) {
         LOG.traceEntry("Parameter : {}", key);
@@ -329,30 +331,29 @@ public final class DoiSettings {
     }
 
     /**
-     * Returns the value of the key as an integer. NumberFormatException inputStream
- raisen when the value of the key in not compatible
+     * Returns the value of the key as an integer. NumberFormatException inputStream raisen when the
+     * value of the key in not compatible
      *
      * @param key key to search
      * @param defaultValue default value
      * @return the value
-     * @exception NumberFormatException if the string does not contain a
-     * parsable integer.
+     * @exception NumberFormatException if the string does not contain a parsable integer.
      */
     public int getInt(final String key, final String defaultValue) {
-        LOG.traceEntry("Parameters : {} and {}", key, defaultValue);         
+        LOG.traceEntry("Parameters : {} and {}", key, defaultValue);
         return LOG.traceExit(Integer.parseInt(getString(key, defaultValue)));
     }
 
     /**
-     * Returns the value of the key as a boolean. An exception inputStream raisen when
- the value of the key in not compatible with a boolean
+     * Returns the value of the key as a boolean. An exception inputStream raisen when the value of
+     * the key in not compatible with a boolean
      *
      * @param key key to search
      * @return the value
      * @exception IllegalArgumentException - if key not found
      */
     public boolean getBoolean(final String key) {
-        LOG.traceEntry("Parameter : {}", key);        
+        LOG.traceEntry("Parameter : {}", key);
         if (getString(key) == null) {
             throw LOG.throwing(new IllegalArgumentException("Key not found : " + key));
         } else {
@@ -361,31 +362,29 @@ public final class DoiSettings {
     }
 
     /**
-     * Returns the value of the key as a long. NumberFormatException inputStream raisen
- when the value of the key in not compatible
+     * Returns the value of the key as a long. NumberFormatException inputStream raisen when the
+     * value of the key in not compatible
      *
      * @param key key to search
      * @return the value
-     * @exception NumberFormatException - if the string does not contain a
-     * parsable long
+     * @exception NumberFormatException - if the string does not contain a parsable long
      */
     public Long getLong(final String key) {
-        LOG.traceEntry("Parameter : {}", key);                
+        LOG.traceEntry("Parameter : {}", key);
         return LOG.traceExit(Long.parseLong(getString(key)));
     }
 
     /**
-     * Returns the value of the key as a long. NumberFormatException inputStream raisen
- when the value of the key in not compatible
+     * Returns the value of the key as a long. NumberFormatException inputStream raisen when the
+     * value of the key in not compatible
      *
      * @param key key to search
      * @param defaultValue default value
      * @return the value
-     * @exception NumberFormatException - if the string does not contain a
-     * parsable long
+     * @exception NumberFormatException - if the string does not contain a parsable long
      */
     public Long getLong(final String key, final String defaultValue) {
-        LOG.traceEntry("Parameters : {} and {}", key, defaultValue);         
+        LOG.traceEntry("Parameters : {} and {}", key, defaultValue);
         return LOG.traceExit(Long.parseLong(getString(key, defaultValue)));
     }
 
@@ -414,15 +413,16 @@ public final class DoiSettings {
      */
     public void setPropertiesFile(final String path) throws IOException {
         LOG.traceEntry("Parameter : {}", path);
-        final InputStream inputStream = new FileInputStream(new File(path));
-        setPropertiesFile(inputStream);
+        try (InputStream inputStream = new FileInputStream(new File(path))) {
+            setPropertiesFile(inputStream);
+        } 
         LOG.traceExit();
     }
 
     /**
      * Sets a custom properties file.
      *
-     * @param inputStream Input stream 
+     * @param inputStream Input stream
      * @throws java.io.IOException - if an error occurred when reading from the input stream.
      */
     public void setPropertiesFile(final InputStream inputStream) throws IOException {
@@ -430,9 +430,8 @@ public final class DoiSettings {
         final Properties properties = new Properties();
         properties.load(inputStream);
         init(properties);
-        inputStream.close();
         LOG.traceExit();
-    }        
+    }
 
     /**
      * Returns the path of the application on the file system.
@@ -443,7 +442,7 @@ public final class DoiSettings {
         LOG.traceEntry();
         return LOG.traceExit(this.pathApp);
     }
-    
+
     /**
      * Copy input stream to output stream.
      *
@@ -469,5 +468,5 @@ public final class DoiSettings {
             LOG.fatal("error when displaying the configuraiton file on the standard output", ex);
         }
         LOG.traceExit();
-    }    
+    }
 }

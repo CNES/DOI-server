@@ -139,7 +139,8 @@ public class TokenResource extends AbstractResource {
                     unit,
                     amount
             );
-            LOG.info("Token created {} for project {} during {} {}", tokenJwt, projectID, amount, unit.name());
+            LOG.info("Token created {} for project {} during {} {}", 
+                    tokenJwt, projectID, amount, unit.name());
 
             this.tokenDB.addToken(tokenJwt);
 

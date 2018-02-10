@@ -1,11 +1,24 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2018 Centre National d'Etudes Spatiales (CNES).
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3.0 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301  USA
  */
 package fr.cnes.doi.db;
 
-import java.net.URL;
+import java.net.URI;
 import java.util.Map;
 import java.util.Observable;
 
@@ -37,7 +50,7 @@ public abstract class AbstractDoiDBHelper extends Observable {
      * @param landingPage the landing page
      * @return True when the DOI is added otherwise False
      */
-    public abstract boolean addDoi(String doi, URL landingPage);    
+    public abstract boolean addDoi(String doi, URI landingPage);    
     
     /**
      * Tests if the DOI exists in the database.
@@ -51,26 +64,26 @@ public abstract class AbstractDoiDBHelper extends Observable {
      * @param landingPage the landing page
      * @return True when the landing page exists otherwise False.
      */
-    public abstract boolean isExistLandingPage(URL landingPage);
+    public abstract boolean isExistLandingPage(URI landingPage);
 
     /**
      * Returns the landing page from DOI.
      * @param doi the DOI
      * @return the project name
      */
-    public abstract URL getLandingPageFrom(String doi);
+    public abstract URI getLandingPageFrom(String doi);
 
     /**
      * Returns the DOI from the landing page.
      * @param landingPage the landing page
      * @return the DOI
      */
-    public abstract String getDOIFrom(URL landingPage);
+    public abstract String getDOIFrom(URI landingPage);
             
     /**
      * Returns the database records.
      * @return the database records
      */
-    public abstract Map<URL, String> getRecords();                
+    public abstract Map<URI, String> getRecords();                
     
 }

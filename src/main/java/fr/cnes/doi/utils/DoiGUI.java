@@ -25,31 +25,58 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.net.URI;
+import java.net.URISyntaxException;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.filechooser.FileFilter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
- *
- * @author Jean-Christophe Malapert
+ * General User Interface for EDU project.
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class DoiGUI extends javax.swing.JDialog {
 
+    /**
+     * serialization UID.
+     */
     private static final long serialVersionUID = 3081000511267620881L;
+    
+    /**
+     * DOI TEMPLATE for DOI variable.
+     */
     private static final String DOI_TPL = "%DOI%";
+    
+    /**
+     * CREATOR TEMPLATE for Creator variable.
+     */
     private static final String CREATOR_TPL = "%CREATOR%";
+    
+    /**
+     * TITLE TEMPLATE for Title variable.
+     */
     private static final String TITLE_TPL = "%TITLE%";
+    
+    /**
+     * PUBLISHER TEMPLATE for Publisher variable.
+     */
     private static final String PUBLISHER_TPL = "%PUBLISHER%";
+    
+    /**
+     * YEAR TEMPLATE for Year publication variable.
+     */
     private static final String YEAR_TPL = "%YEAR%";
+    
+    /**
+     * RESOURCE_TYPE TEMPLATE for Resource type variable.
+     */
     private static final String RESOURCE_TYPE_TPL = "%RESOURCE_TYPE%";
 
-    private File directoryToSave = null;
-    private String doi;
-    private String xml;
+    /**
+     * XML TEMPLATE of the DOI metadata representation.
+     */
     private static final String TEMPLATE_XML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
             + "<resource xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://datacite.org/schema/kernel-4\" xsi:schemaLocation=\"http://datacite.org/schema/kernel-4 http://schema.datacite.org/meta/kernel-4.1/metadata.xsd\">\n"
             + "    <identifier identifierType=\"DOI\">" + DOI_TPL + "</identifier>\n"
@@ -64,13 +91,35 @@ public class DoiGUI extends javax.swing.JDialog {
             + "    <publisher>" + PUBLISHER_TPL + "</publisher>\n"
             + "    <publicationYear>" + YEAR_TPL + "</publicationYear>\n"
             + "    <resourceType resourceTypeGeneral=\"Other\">" + RESOURCE_TYPE_TPL + "</resourceType>\n"
-            + "</resource>";
+            + "</resource>";    
+    
+    /**
+     * Directory where the DOI Metadata is downloaded.
+     */
+    private File directoryToSave = null;
+    
+    /**
+     * DOI.
+     */
+    private String doi;
+    
+    /**
+     * Xml Representation of the DOI metadata
+     */
+    private String xml;
 
     /**
-     * Creates new form DoiGUI
+     * Logger.
+     */
+    private static final Logger LOG = LogManager.getLogger(DoiGUI.class.getName());    
+
+    /**
+     * Creates new form DoiGUI.
      *
-     * @param parent
-     * @param modal
+     * @param parent the Frame from which the dialog is displayed
+     * @param modal specifies whether dialog blocks user input to other top-level 
+     * windows when shown. If true, the modality type property is set to DEFAULT_MODALITY_TYPE, 
+     * otherwise the dialog is modeless
      */
     public DoiGUI(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -340,11 +389,9 @@ public class DoiGUI extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void landingPageFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_landingPageFieldActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_landingPageFieldActionPerformed
 
     private void creatorFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_creatorFieldActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_creatorFieldActionPerformed
 
     private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
@@ -352,21 +399,21 @@ public class DoiGUI extends javax.swing.JDialog {
     }//GEN-LAST:event_resetButtonActionPerformed
 
     private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
-        String landingPage = this.landingPageField.getText();
-        String creator = this.creatorField.getText();
-        String publisher = this.publisherField.getText();
-        String publicationYear = this.yearField.getText();
-        String resourceType = this.resourceTypeField.getText();
-        String title = this.titleField.getText();
-        StringBuilder errorMsg = new StringBuilder();
+        final String landingPage = this.landingPageField.getText();
+        final String creator = this.creatorField.getText();
+        final String publisher = this.publisherField.getText();
+        final String publicationYear = this.yearField.getText();
+        final String resourceType = this.resourceTypeField.getText();
+        final String title = this.titleField.getText();
+        final StringBuilder errorMsg = new StringBuilder();
         if (landingPage.isEmpty()) {
             this.landingPageField.setBackground(Color.red);
             errorMsg.append("Landing page cannot be empty\n");
         }
 
         try {
-            URL url = new URL(landingPage);
-        } catch (MalformedURLException ex) {
+            new URI(landingPage);
+        } catch (URISyntaxException ex) {
             this.landingPageField.setBackground(Color.red);
             errorMsg.append(ex.getMessage());
         }
@@ -414,18 +461,17 @@ public class DoiGUI extends javax.swing.JDialog {
             this.msgLabel.setVisible(true);
         } else {
             this.msgLabel.setVisible(false);
-            String doi;
             try {
-                doi = UniqueDoi.getInstance().createDOI(this.inistPrefixLabel.getText(), this.projectNameLabel.getText(), new URL(landingPage), SuffixProjectsResource.NB_DIGITS);
+                final String createdDOI = UniqueDoi.getInstance().createDOI(this.inistPrefixLabel.getText(), this.projectNameLabel.getText(), new URI(landingPage), SuffixProjectsResource.NB_DIGITS);
                 initForm();
-                this.msgLabel.setText("doi://" + doi + " created for the landing page " + landingPage);
+                this.msgLabel.setText("doi://" + createdDOI + " created for the landing page " + landingPage);
                 this.msgLabel.setBackground(Color.GREEN);
                 this.msgLabel.setVisible(true);
                 this.saveButton.setEnabled(true);
-                this.doi = doi;
-                this.xml = createXMLFile(landingPage, creator, publisher, doi, title, resourceType, publicationYear);
-            } catch (MalformedURLException ex) {
-                Logger.getLogger(DoiGUI.class.getName()).log(Level.SEVERE, null, ex);
+                this.doi = createdDOI;
+                this.xml = createXMLFile(landingPage, creator, publisher, createdDOI, title, resourceType, publicationYear);
+            } catch (URISyntaxException ex) {
+                LOG.fatal(ex);
                 this.msgLabel.setText("Unable to create the DOI: " + ex.getMessage());
                 this.msgLabel.setBackground(Color.RED);
                 this.msgLabel.setVisible(true);
@@ -436,6 +482,17 @@ public class DoiGUI extends javax.swing.JDialog {
 
     }//GEN-LAST:event_submitButtonActionPerformed
 
+    /**
+     * Creates the XML representation of the DOI metadata.
+     * @param landingPage landing page
+     * @param creator creator
+     * @param publisher publisher
+     * @param doi doi
+     * @param title title
+     * @param resourceType resource type
+     * @param publicationYear publication year
+     * @return the XML representation of the DOI metadata
+     */
     private String createXMLFile(final String landingPage, final String creator,
             final String publisher, final String doi, final String title,
             final String resourceType, final String publicationYear) {
@@ -450,8 +507,8 @@ public class DoiGUI extends javax.swing.JDialog {
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
         if (this.directoryToSave == null) {
-            JFrame parentFrame = new JFrame();
-            JFileChooser chooser = new JFileChooser();
+            final JFrame parentFrame = new JFrame();
+            final JFileChooser chooser = new JFileChooser();
             chooser.setCurrentDirectory(new java.io.File("."));
             chooser.setFileFilter(new FileFilter() {
 
@@ -468,7 +525,7 @@ public class DoiGUI extends javax.swing.JDialog {
             chooser.setDialogTitle("Directory to save DOI metadata");
             chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             chooser.setAcceptAllFileFilterUsed(false);
-            int userSelection = chooser.showSaveDialog(parentFrame);
+            final int userSelection = chooser.showSaveDialog(parentFrame);
 
             if (userSelection == JFileChooser.APPROVE_OPTION) {
                 this.directoryToSave = chooser.getSelectedFile();
@@ -476,21 +533,28 @@ public class DoiGUI extends javax.swing.JDialog {
             }
         }
 
-        String doiFilename = this.doi.replaceAll("/", "_");
-        File fileToSave = new File(this.directoryToSave.getAbsolutePath() + File.separator + doiFilename + ".xml");
-        try (PrintWriter writer = new PrintWriter(fileToSave, "UTF-8")) {
-            writer.println(this.xml);
-            writer.close();
-            this.msgLabel.setBackground(Color.GREEN);
-            this.msgLabel.setText("XML file saved in " + fileToSave.getAbsolutePath());
-        } catch (FileNotFoundException | UnsupportedEncodingException ex) {
-            Logger.getLogger(DoiGUI.class.getName()).log(Level.SEVERE, null, ex);
-            this.msgLabel.setBackground(Color.red);
-            this.msgLabel.setText(ex.getMessage());
+        final String doiFilename = this.doi.replaceAll("/", "_");
+        if (this.directoryToSave == null || doiFilename == null || doiFilename.isEmpty()) {
+            LOG.debug("No selected file to save");
+        } else {
+            final File fileToSave = new File(
+                    this.directoryToSave.getAbsolutePath() + File.separator + doiFilename + ".xml"
+            );
+            try (PrintWriter writer = new PrintWriter(fileToSave, "UTF-8")) {
+                writer.println(this.xml);
+                writer.close();
+                this.msgLabel.setBackground(Color.GREEN);
+                this.msgLabel.setText("XML file saved in " + fileToSave.getAbsolutePath());
+            } catch (FileNotFoundException | UnsupportedEncodingException ex) {
+                LOG.fatal(ex);
+                this.msgLabel.setBackground(Color.red);
+                this.msgLabel.setText(ex.getMessage());
+            }
         }
     }//GEN-LAST:event_saveButtonActionPerformed
 
     /**
+     * Starts the GUI
      * @param args the command line arguments
      */
     public static void main(String args[]) {
@@ -506,22 +570,18 @@ public class DoiGUI extends javax.swing.JDialog {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(DoiGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(DoiGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(DoiGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(DoiGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                DoiGUI dialog = new DoiGUI(new javax.swing.JFrame(), true);
+                final DoiGUI dialog = new DoiGUI(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -533,6 +593,9 @@ public class DoiGUI extends javax.swing.JDialog {
         });
     }
 
+    /**
+     * Reset the form values.
+     */
     private void initForm() {
         this.yearField.setText("");
         this.yearField.setBackground(Color.WHITE);

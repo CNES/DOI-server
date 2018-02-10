@@ -28,7 +28,7 @@ import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.resource.admin.SuffixProjectsResource;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
-import java.net.URL;
+import java.net.URI;
 import java.util.Map;
 
 /**
@@ -88,7 +88,7 @@ public class UniqueDoi {
      * Returns the projects from the database.
      * @return the projects
      */
-    public Map<URL, String> getRecords() {
+    public Map<URI, String> getRecords() {
         LOGGER.log(Level.CONFIG, "getProjects : {0}", this.doiDB.getRecords());
         return this.doiDB.getRecords();
     }    
@@ -117,11 +117,12 @@ public class UniqueDoi {
      * @param maxNumber Number max to generate
      * @return the DOI
      */
-    private String convert(final String inistPrefix, final int projectID, final long input, final URL landingPage, final int maxNumber) {
+    private String convert(final String inistPrefix, final int projectID, 
+            final long input, final URI landingPage, final int maxNumber) {
         LOGGER.entering(CLASS_NAME, "convert", new Object[]{input, landingPage, maxNumber});
         String doi = null;
         do {
-            int result = Math.abs((int) (input ^ (landingPage.hashCode() % maxNumber)));
+            final int result = Math.abs((int) (input ^ (landingPage.hashCode() % maxNumber)));
             doi = inistPrefix+"/"+projectID+"/"+result;
         } while (!isIdUnique(doi, landingPage));
         LOGGER.exiting(CLASS_NAME, "convert", doi);
@@ -138,21 +139,28 @@ public class UniqueDoi {
      * be an int to the length cannot be up to 9)
      * @return the DOI
      */
-    public String createDOI(final String inist_prefix, final String projectName, final URL landingPage, final int length) {
+    public String createDOI(final String inist_prefix, final String projectName, 
+            final URI landingPage, final int length) {
         LOGGER.entering(CLASS_NAME, "getShortName", new Object[]{projectName, landingPage, length});       
         final String doi;
         if (length > 9) {
-            final DoiRuntimeException doiEx = new DoiRuntimeException("The short name cannot be build because the length requested is too big");
+            final DoiRuntimeException doiEx = new DoiRuntimeException(
+                    "The short name cannot be build because the length requested is too big");
             LOGGER.throwing(CLASS_NAME, "getShortName", doiEx);            
             throw doiEx;
         } else if (this.doiDB.isExistLandingPage(landingPage)) {
             // Si le projet a déjà un identifiant on ne le recalcule pas
             doi = this.doiDB.getDOIFrom(landingPage);
-            LOGGER.log(Level.FINE, "The landingPage {0} has already a DOI : {1}", new Object[]{landingPage, doi});
+            LOGGER.log(
+                    Level.FINE, 
+                    "The landingPage {0} has already a DOI : {1}", 
+                    new Object[]{landingPage, doi}
+            );
         } else {
             final int maxNumber = (int) Math.pow(10.0, length);
             final long idRandom = generateId(maxNumber);
-            int projectID = UniqueProjectName.getInstance().getShortName(projectName, SuffixProjectsResource.NB_DIGITS);
+            final int projectID = UniqueProjectName.getInstance()
+                    .getShortName(projectName, SuffixProjectsResource.NB_DIGITS);
             doi = convert(inist_prefix, projectID, idRandom, landingPage, maxNumber);
             LOGGER.log(Level.FINE, "The landing page {0} has a doi : {1}", new Object[]{landingPage, doi});
         }
@@ -168,7 +176,7 @@ public class UniqueDoi {
      * @param landingPage LAnding page related to the DOI
      * @return true if the Id is OK, false otherwise
      */
-    private synchronized boolean isIdUnique(final String doiToCheck, final URL landingPage) {
+    private synchronized boolean isIdUnique(final String doiToCheck, final URI landingPage) {
         LOGGER.entering(CLASS_NAME, "isIdUnique", new Object[]{doiToCheck, landingPage});
         final boolean result;
         if (this.doiDB.isExistDOI(doiToCheck)) {

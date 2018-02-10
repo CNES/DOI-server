@@ -96,7 +96,8 @@ public class MetadataResource extends BaseMdsResource {
             setStatus(Status.SUCCESS_OK);
             resource = this.getDoiApp().getClient().getMetadataAsObject(this.doiName);
         } catch (ClientMdsException ex) {
-            if (ex.getStatus().getCode() == Status.CLIENT_ERROR_NOT_FOUND.getCode() || ex.getStatus().getCode() == Status.CLIENT_ERROR_GONE.getCode()) {
+            if (ex.getStatus().getCode() == Status.CLIENT_ERROR_NOT_FOUND.getCode() 
+                    || ex.getStatus().getCode() == Status.CLIENT_ERROR_GONE.getCode()) {
                 throw LOG.throwing(new ResourceException(ex.getStatus(), ex.getMessage(), ex));
             } else {
                 ((AbstractApplication)getApplication()).sendAlertWhenDataCiteFailed(ex);

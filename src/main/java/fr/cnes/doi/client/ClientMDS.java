@@ -336,7 +336,9 @@ public class ClientMDS extends BaseClient {
         final String[] split = doiName.split("/");
         split[0] = TEST_DOI_PREFIX;
         final String testingPrefix = String.join("/", split);
-        final String message = String.format("DOI %s has been renamed as %s for testing", doiName, testingPrefix);
+        final String message = String.format(
+                "DOI %s has been renamed as %s for testing", doiName, testingPrefix
+        );
         this.getClient().getLogger().log(Level.INFO, message);
         return testingPrefix;
     }
@@ -492,7 +494,7 @@ public class ClientMDS extends BaseClient {
             result = this.getText(rep);
             return result;
         } catch (ResourceException ex) {
-            throw new ClientMdsException(ex.getStatus(), ex.getResponse().getEntityAsText(), ex);
+            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), ex);
         } finally {
             this.getClient().release();
         }
@@ -519,7 +521,7 @@ public class ClientMDS extends BaseClient {
             result = this.getText(rep);
             return result;
         } catch (ResourceException ex) {
-            throw new ClientMdsException(ex.getStatus(), ex.getResponse().getEntityAsText(), ex);
+            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), ex);
         } finally {
             this.getClient().release();
         }
@@ -566,12 +568,14 @@ public class ClientMDS extends BaseClient {
             final Map<String, Object> requestAttributes = this.getClient().getRequestAttributes();
             requestAttributes.put("charset", StandardCharsets.UTF_8);
             requestAttributes.put("Content-Type", "text/plain");
-            this.getClient().getLogger().log(Level.INFO, "POST {0} with parameters {1}", new Object[]{url, requestBody});
+            this.getClient().getLogger().log(
+                    Level.INFO, "POST {0} with parameters {1}", new Object[]{url, requestBody}
+            );
             final Representation rep = this.getClient().post(requestBody, MediaType.TEXT_PLAIN);
             result = getText(rep);
             return result;
         } catch (ResourceException ex) {
-            throw new ClientMdsException(ex.getStatus(), ex.getResponse().getEntityAsText(), ex);
+            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), ex);
         } finally {
             this.getClient().release();
         }
@@ -648,7 +652,7 @@ public class ClientMDS extends BaseClient {
         try {
             return this.getClient().get(MediaType.APPLICATION_XML);
         } catch (ResourceException ex) {
-            throw new ClientMdsException(ex.getStatus(), ex.getResponse().getEntityAsText(), ex);
+            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), ex);
         } finally {
             this.getClient().release();
         }
@@ -744,7 +748,7 @@ public class ClientMDS extends BaseClient {
             result = getText(response);
             return result;
         } catch (ResourceException ex) {
-            throw new ClientMdsException(ex.getStatus(), ex.getResponse().getEntityAsText(), ex);
+            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), ex);
         } catch (JAXBException | SAXException | MalformedURLException ex) {
             throw new ClientMdsException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex);
         } finally {
@@ -837,7 +841,7 @@ public class ClientMDS extends BaseClient {
             result = this.getText(response);
             return result;
         } catch (ResourceException ex) {
-            throw new ClientMdsException(ex.getStatus(), ex.getResponse().getEntityAsText(), ex);
+            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), ex);
         } finally {
             this.getClient().release();
         }
@@ -875,7 +879,7 @@ public class ClientMDS extends BaseClient {
             result = this.getText(response);
             return result;
         } catch (ResourceException ex) {
-            throw new ClientMdsException(ex.getStatus(), ex.getResponse().getEntityAsText(), ex);
+            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), ex);
         } finally {
             this.getClient().release();
         }

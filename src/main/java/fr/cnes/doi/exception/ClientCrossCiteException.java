@@ -77,7 +77,8 @@ public class ClientCrossCiteException extends Exception {
      * @param message message
      * @param cause cause
      */
-    public ClientCrossCiteException(final Status status, final String message, final Throwable cause) {
+    public ClientCrossCiteException(
+            final Status status, final String message, final Throwable cause) {
         super(message, cause);
         this.detailMessage = computeDetailMessage(status);
         this.status = status;

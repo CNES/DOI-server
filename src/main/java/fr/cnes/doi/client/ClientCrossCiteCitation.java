@@ -158,7 +158,7 @@ public class ClientCrossCiteCitation extends BaseClient {
      * Constructor used for development purpose.
      * @param context Context dev
      */
-    public ClientCrossCiteCitation(Context context) {
+    public ClientCrossCiteCitation(final Context context) {
         super(context.getCrossCiteUrl());
         this.contextUse = context;
     }    

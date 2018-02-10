@@ -87,10 +87,10 @@ public class DoisResource extends BaseMdsResource {
         try {
             setStatus(Status.SUCCESS_OK);
             final String dois = this.getDoiApp().getClient().getDoiCollection();
-            if (dois != null && !dois.isEmpty()) {
-                setStatus(Status.SUCCESS_OK);
-            } else {
+            if (dois == null || dois.isEmpty()) {
                 setStatus(Status.SUCCESS_NO_CONTENT);
+            } else {
+                setStatus(Status.SUCCESS_OK);
             }            
             rep = new StringRepresentation(dois, MediaType.TEXT_URI_LIST);
         } catch (ClientMdsException ex) {
@@ -158,7 +158,8 @@ public class DoisResource extends BaseMdsResource {
                 throw LOG.throwing(new ResourceException(ex.getStatus(), ex.getMessage(), ex));
             } else {
                 ((AbstractApplication) getApplication()).sendAlertWhenDataCiteFailed(ex);
-                throw LOG.throwing(new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex));
+                throw LOG.throwing(new ResourceException(
+                        Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex));
             }
         }
 

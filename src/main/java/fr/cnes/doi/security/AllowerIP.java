@@ -83,7 +83,8 @@ public class AllowerIP extends org.restlet.routing.Filter {
             final StringTokenizer tokenizer = new StringTokenizer(ips, "|");
             while (tokenizer.hasMoreTokens()) {
                 final String newIP = tokenizer.nextToken();
-                LOG.info("Adds this IP {} for allowing the access to the amdinistration application", newIP);
+                LOG.info("Adds this IP {} for allowing the access "
+                        + "to the amdinistration application", newIP);
                 allowedAddresses.add(newIP);
             }
         }

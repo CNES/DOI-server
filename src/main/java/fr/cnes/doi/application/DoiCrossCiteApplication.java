@@ -123,7 +123,9 @@ public class DoiCrossCiteApplication extends AbstractApplication {
                 + "enhance reuse of their data (Wilkinson 2016).");
         setDescription(description.toString());
         final String contextMode = this.getConfig().getString(Consts.CONTEXT_MODE);
-        this.client = new ClientCrossCiteCitation(ClientCrossCiteCitation.Context.valueOf(contextMode));
+        this.client = new ClientCrossCiteCitation(
+                ClientCrossCiteCitation.Context.valueOf(contextMode)
+        );
     }
 
     /**

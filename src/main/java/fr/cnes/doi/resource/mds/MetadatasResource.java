@@ -110,7 +110,9 @@ public class MetadatasResource extends BaseMdsResource {
             result = this.getDoiApp().getClient().createMetadata(resource);
         } catch (ClientMdsException ex) {
             ((AbstractApplication) getApplication()).sendAlertWhenDataCiteFailed(ex);
-            throw LOG.traceExit(new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex));
+            throw LOG.traceExit(
+                    new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex)
+            );
         } catch (ValidationException ex) {
             throw LOG.traceExit(new ResourceException(
                     Status.CLIENT_ERROR_BAD_REQUEST,
@@ -168,7 +170,8 @@ public class MetadatasResource extends BaseMdsResource {
      */
     @Requirement(reqId = Requirement.DOI_INTER_060, reqName = Requirement.DOI_INTER_060_NAME)
     @Requirement(reqId = Requirement.DOI_INTER_070, reqName = Requirement.DOI_INTER_070_NAME)
-    private Resource createDataCiteResourceObject(final Representation entity) throws JAXBException, SAXException, ValidationException, IOException {
+    private Resource createDataCiteResourceObject(final Representation entity) 
+            throws JAXBException, SAXException, ValidationException, IOException {
         LOG.traceEntry("Parameter : " + entity);
         final JAXBContext ctx = JAXBContext.newInstance(new Class[]{Resource.class});
         final Unmarshaller unMarshal = ctx.createUnmarshaller();

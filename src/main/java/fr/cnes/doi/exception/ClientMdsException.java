@@ -99,7 +99,8 @@ public class ClientMdsException extends Exception {
                 result = "no DOIs founds";
                 break;
             case 400:
-                result = "invalid XML, wrong prefix or request body must be exactly two lines: DOI and URL; wrong domain, wrong prefix";
+                result = "invalid XML, wrong prefix or request body must be exactly two lines: "
+                        + "DOI and URL; wrong domain, wrong prefix";
                 break;
             case 401:
                 result = "no login";

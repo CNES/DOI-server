@@ -80,7 +80,9 @@ public class DoiSecurityLogFilter extends Filter {
             }
 
             final LogRecord logRecord = (LogRecord) logRecordObj;
-            logRecord.setMessage("User: " + user + "\tProfile: " + profile + "\t" + logRecord.getMessage());
+            logRecord.setMessage(
+                    "User: " + user + "\tProfile: " + profile + "\t" + logRecord.getMessage()
+            );
             LogManager.getLogger(loggerName).info(logRecord);
             //final Logger logger = Engine.getLogger(loggerName);
             //logger.log(logRecord);

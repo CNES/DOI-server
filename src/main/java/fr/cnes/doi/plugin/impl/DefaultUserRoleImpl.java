@@ -52,7 +52,7 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
     @Override
     public void init(Object configuration) {
         User admin = new User("admin", "admin");
-        User jcm = new User("malapert", "pwd", "Jean-Christophe", "Malapert", "jcmalapert@gmail.com");
+        User jcm = new User("malapert", "pwd", "Jean-Christophe","Malapert","jcmalapert@gmail.com");
         User cc = new User("caillet", "pppp", "Claire", "Caillet", "claire.caillet@cnes.fr");
         User test1 = new User("test1", "test1");
         User test2 = new User("test2", "test2");

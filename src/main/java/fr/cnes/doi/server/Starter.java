@@ -41,8 +41,8 @@ import fr.cnes.doi.utils.spec.Requirement;
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -250,9 +250,9 @@ public class Starter {
                     String landingPage = arguments[2];
                      {
                         try {
-                            String doi = UniqueDoi.getInstance().createDOI(prefix, projectName, new URL(landingPage), SuffixProjectsResource.NB_DIGITS);
+                            String doi = UniqueDoi.getInstance().createDOI(prefix, projectName, new URI(landingPage), SuffixProjectsResource.NB_DIGITS);
                             LOG.info(doi);
-                        } catch (MalformedURLException ex) {
+                        } catch (URISyntaxException ex) {
                             throw new IllegalArgumentException(ex.getMessage());
                         }
                     }

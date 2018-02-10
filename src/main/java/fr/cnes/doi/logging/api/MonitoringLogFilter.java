@@ -62,7 +62,8 @@ public class MonitoringLogFilter extends LogFilter {
      * @param doiMonitoring DOI monitoring
      * @param logService the {@link LogService}
      */
-    public MonitoringLogFilter(final Context context, final DoiMonitoring doiMonitoring, final LogService logService) {
+    public MonitoringLogFilter(
+            final Context context, final DoiMonitoring doiMonitoring, final LogService logService) {
         super(context, logService);
         this.monitoring = doiMonitoring;
 
@@ -93,8 +94,18 @@ public class MonitoringLogFilter extends LogFilter {
             final int duration = (int) (System.currentTimeMillis() - startTime);
             if (monitoring.isRegistered(method, path)) {
                 monitoring.addMeasurement(method, path, duration);
-                LogManager.getLogger(this.logService.getLoggerName()).info(MessageFormat.format("{0}({1} {2}) - current speed average : {3} ms / current measure: {4} ms", monitoring.getDescription(method, path), method.getName(), path, monitoring.getCurrentAverage(method, path), duration));
-                sendAlertIfNeeded(monitoring.getCurrentAverage(method, path), duration, path, method);
+                LogManager.getLogger(this.logService.getLoggerName())
+                        .info(MessageFormat.format(
+                                "{0}({1} {2}) - current speed average : {3} ms / "
+                                        + "current measure: {4} ms", 
+                                monitoring.getDescription(method, path), 
+                                method.getName(), path, 
+                                monitoring.getCurrentAverage(method, path), 
+                                duration)
+                        );
+                sendAlertIfNeeded(
+                        monitoring.getCurrentAverage(method, path), duration, path, method
+                );
             }
         }
     }
@@ -107,7 +118,9 @@ public class MonitoringLogFilter extends LogFilter {
      * @param path resource name
      * @param method method name
      */
-    private void sendAlertIfNeeded(final double average, final double currentDuration, final String path, final Method method) {
+    private void sendAlertIfNeeded(
+            final double average, final double currentDuration, 
+            final String path, final Method method) {
         final double elevation = currentDuration * 100.0 / average;
         if (elevation > THRESHOLD_SPEED_PERCENT) {
             final EmailSettings email = EmailSettings.getInstance();

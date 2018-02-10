@@ -83,7 +83,8 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
     @Override
     public void init(Object configuration) {
         if(configuration == null) {
-            this.projectConf = DoiSettings.getInstance().getPathApp()+File.separatorChar+DEFAULT_CACHE_FILE;
+            this.projectConf = DoiSettings.getInstance().getPathApp()
+                    +File.separatorChar+DEFAULT_CACHE_FILE;
         } else {
             this.projectConf = String.valueOf(configuration);   
         }        
@@ -146,7 +147,11 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
         File directory = new File(projConfFile.getParent());
         Files.createDirectories(directory.toPath());
         Files.createFile(projConfFile.toPath());
-        Files.write(projConfFile.toPath(), "Project Name;Id\n".getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+        Files.write(
+                projConfFile.toPath(), 
+                "Project Name;Id\n".getBytes(StandardCharsets.UTF_8), 
+                StandardOpenOption.APPEND
+        );
     }
 
     @Override
@@ -154,14 +159,19 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
         boolean isAdded = false;
         try {
             String line = projectName + ";" + projectID + "\n";
-            Files.write(new File(this.projectConf).toPath(), line.getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+            Files.write(
+                    new File(this.projectConf).toPath(), 
+                    line.getBytes(StandardCharsets.UTF_8), 
+                    StandardOpenOption.APPEND
+            );
             this.projIdMap.put(projectName, projectID);
             this.idProjMap.put(projectID, projectName);
             isAdded = true;
             setChanged();
             notifyObservers(new String[]{ADD_RECORD, String.valueOf(projectID)});
         } catch (IOException e) {
-            LOG.fatal("The id " + projectID + " of the project " + projectName + "cannot be saved in the file", e);
+            LOG.fatal("The id " + projectID + " of the project " + projectName 
+                    + "cannot be saved in the file", e);
         }
         return isAdded;
     }

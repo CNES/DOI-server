@@ -96,10 +96,10 @@ public class DoiResource extends BaseMdsResource {
         checkInput(this.doiName);
         try {
             final String doi = this.getDoiApp().getClient().getDoi(this.doiName);
-            if (doi != null && !doi.isEmpty()) {
-                setStatus(Status.SUCCESS_OK);
-            } else {
+            if (doi == null || doi.isEmpty()) {
                 setStatus(Status.SUCCESS_NO_CONTENT);
+            } else {
+                setStatus(Status.SUCCESS_OK);
             }
             result = new StringRepresentation(doi, MediaType.TEXT_PLAIN);
         } catch (ClientMdsException ex) {
@@ -107,7 +107,8 @@ public class DoiResource extends BaseMdsResource {
                 throw LOG.throwing(new ResourceException(ex.getStatus(), ex.getMessage(), ex));
             } else {
                 ((AbstractApplication) getApplication()).sendAlertWhenDataCiteFailed(ex);
-                throw LOG.throwing(new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex));
+                throw LOG.throwing(new ResourceException(Status.SERVER_ERROR_INTERNAL, 
+                        ex.getMessage(), ex));
             }
         }
         return LOG.traceExit(result);
@@ -127,15 +128,15 @@ public class DoiResource extends BaseMdsResource {
                     Status.CLIENT_ERROR_BAD_REQUEST,
                     "doiName cannot be null or empty"
             ));
-        } else if (!doiName.startsWith(DoiSettings.getInstance().getString(Consts.INIST_DOI))) {
-            throw LOG.throwing(new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "the DOI"
-                    + " prefix must contains the prefix of the institution"));
-        } else {
+        } else if (doiName.startsWith(DoiSettings.getInstance().getString(Consts.INIST_DOI))) {
             try {
                 ClientMDS.checkIfAllCharsAreValid(doiName);
             } catch (IllegalArgumentException ex) {
                 throw LOG.throwing(new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, ex));
             }
+        } else {
+            throw LOG.throwing(new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "the DOI"
+                    + " prefix must contains the prefix of the institution"));
         }
         LOG.traceExit();
     }
