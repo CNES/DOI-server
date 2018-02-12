@@ -56,8 +56,8 @@ import org.restlet.routing.Redirector;
 @Requirement(reqId = Requirement.DOI_SRV_130, reqName = Requirement.DOI_SRV_130_NAME)
 @Requirement(reqId = Requirement.DOI_SRV_140, reqName = Requirement.DOI_SRV_140_NAME)
 @Requirement(reqId = Requirement.DOI_SRV_150, reqName = Requirement.DOI_SRV_150_NAME)
-@Requirement(reqId = Requirement.DOI_SRV_160, reqName = Requirement.DOI_SRV_160_NAME)
-@Requirement(reqId = Requirement.DOI_SRV_170, reqName = Requirement.DOI_SRV_170_NAME,
+@Requirement(reqId = Requirement.DOI_SRV_180, reqName = Requirement.DOI_SRV_180_NAME)
+@Requirement(reqId = Requirement.DOI_SRV_190, reqName = Requirement.DOI_SRV_190_NAME,
         coverage = CoverageAnnotation.NONE)
 @Requirement(reqId = Requirement.DOI_DISPO_020, reqName = Requirement.DOI_DISPO_020_NAME)
 public class AdminApplication extends AbstractApplication {
@@ -68,32 +68,32 @@ public class AdminApplication extends AbstractApplication {
     public static final String NAME = "Admin Application";
 
     /**
-     * URI to access to the resources of the system administration.
+     * URI {@value #ADMIN_URI} to access to the resources of the system administration.
      */
     public static final String ADMIN_URI = "/admin";
 
     /**
-     * URI to access to the resources of the status page.
+     * URI {@value #RESOURCE_URI} to access to the resources of the status page.
      */
     public static final String RESOURCE_URI = "/resources";
 
     /**
-     * Status page.
+     * URI {@value #STATUS_URI} to access to the status page.
      */
     public static final String STATUS_URI = "/status";
 
     /**
-     * Stats page.
+     * URI {@value #STATS_URI} to access to Stats page.
      */
     public static final String STATS_URI = "/stats";
 
     /**
-     * URI to create a project suffix.
+     * URI {@value #SUFFIX_PROJECT_URI} to create a project suffix.
      */
     public static final String SUFFIX_PROJECT_URI = "/suffixProject";
 
     /**
-     * URI to create a token.
+     * URI {@value #TOKEN_URI} to create a token.
      */
     public static final String TOKEN_URI = "/token";
 
@@ -103,7 +103,7 @@ public class AdminApplication extends AbstractApplication {
     public static final String TOKEN_TEMPLATE = "tokenID";
 
     /**
-     * URI to handle to get information from a token.
+     * URI {@value #TOKEN_NAME_URI} to handle to get information from a token.
      */
     public static final String TOKEN_NAME_URI = "/{" + TOKEN_TEMPLATE + "}";
 
@@ -113,7 +113,7 @@ public class AdminApplication extends AbstractApplication {
     private static final Logger LOG = LogManager.getLogger(AdminApplication.class.getName());
 
     /**
-     * Default directory where the web site is located.
+     * Default directory {@value #JS_DIR} where the web site is located.
      */
     private static final String JS_DIR = "js";
 
@@ -123,7 +123,7 @@ public class AdminApplication extends AbstractApplication {
     private static final String STATUS_PAGE_CLASSPATH = "class/website";
 
     /**
-     * The period between successive executions.
+     * The period between successive executions : {@value #PERIOD_SCHEDULER}.
      */
     private static final int PERIOD_SCHEDULER = 30;
 
@@ -133,12 +133,12 @@ public class AdminApplication extends AbstractApplication {
     private static final TimeUnit PERIOD_UNIT = TimeUnit.DAYS;
 
     /**
-     * DataCite Status page.
+     * DataCite Status page {@value #TARGET_URL}.
      */
     private static final String TARGET_URL = "http://status.datacite.org";
 
     /**
-     * DataCite Stats page.
+     * DataCite Stats page {@value #TARGET_STATS_URL}.
      */
     private static final String TARGET_STATS_URL = "https://stats.datacite.org/#tab-prefixes";
 
@@ -160,7 +160,7 @@ public class AdminApplication extends AbstractApplication {
     }
 
     /**
-     * A task checking status of landing pages each 15 days.
+     * A task checking status of landing pages each 30 days.
      *
      * @return A task
      */
@@ -177,7 +177,8 @@ public class AdminApplication extends AbstractApplication {
     }
 
     /**
-     * Creates a router for the AdminApplication. This router routes :
+     * Creates a router for the AdminApplication. 
+     * This router routes :
      * <ul>
      * <li>the web resources for the website with no authentication</li>
      * <li>the REST resources for the system administration with authentication/authorization</li>
@@ -222,8 +223,8 @@ public class AdminApplication extends AbstractApplication {
     }
 
     /**
-     * Creates a router for REST services for the system administration. This router contains the
-     * following resources :
+     * Creates a router for REST services for the system administration. 
+     * This router contains the following resources :
      * <ul>
      * <li>{@link AdminApplication#SUFFIX_PROJECT_URI} resource to handle the project suffix, which
      * is used in the Digital Object Identifier</li>
@@ -232,7 +233,7 @@ public class AdminApplication extends AbstractApplication {
      * </ul>
      *
      * @see SuffixProjectsResource Resource to handle the the project suffix
-     * @see TokenResource Resource to hnadle the token resource
+     * @see TokenResource Resource to handle the token resource
      * @return the router
      */
     private Router createAdminRouter() {
@@ -247,7 +248,8 @@ public class AdminApplication extends AbstractApplication {
     }
 
     /**
-     * Creates a router for the web site resources. This router contains the following resources:
+     * Creates a router for the web site resources. 
+     * This router contains the following resources:
      * <ul>
      * <li>{@link AdminApplication#RESOURCE_URI} to distribute the web resources for the status
      * page</li>

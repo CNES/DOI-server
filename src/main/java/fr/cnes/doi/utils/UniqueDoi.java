@@ -110,7 +110,7 @@ public class UniqueDoi {
 
     /**
      * Convert the project name into unique long
-     *
+     * @param inistPrefix INIST prefix
      * @param projectID project ID     
      * @param input Identifier to convert
      * @param landingPage  the project name to convert

@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.restlet.data.Status;
 import org.restlet.resource.ResourceException;
-//TODO : Utiliser getDoi de Mds à la place
 
 
 /**

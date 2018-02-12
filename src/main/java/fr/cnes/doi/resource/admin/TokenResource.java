@@ -179,7 +179,7 @@ public class TokenResource extends AbstractResource {
      *
      * @return the included information in the token
      */
-    @Requirement(reqId = Requirement.DOI_SRV_160, reqName = Requirement.DOI_SRV_160_NAME)
+    @Requirement(reqId = Requirement.DOI_SRV_180, reqName = Requirement.DOI_SRV_180_NAME)
     @Get
     public Representation getTokenInformation() {
         LOG.traceEntry();

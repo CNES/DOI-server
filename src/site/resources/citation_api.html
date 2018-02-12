@@ -1,0 +1,322 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Cross Cite Application</title>
+<style type="text/css">
+                    body {
+                        font-family: sans-serif;
+                        font-size: 0.85em;
+                        margin: 2em 8em;
+                    }
+                    .methods {
+                        background-color: #eef;
+                        padding: 1em;
+                    }
+                    h1 {
+                        font-size: 2.5em;
+                    }
+                    h2 {
+                        border-bottom: 1px solid black;
+                        margin-top: 1em;
+                        margin-bottom: 0.5em;
+                        font-size: 2em;
+                       }
+                    h3 {
+                        color: orange;
+                        font-size: 1.75em;
+                        margin-top: 1.25em;
+                        margin-bottom: 0em;
+                    }
+                    h4 {
+                        margin: 0em;
+                        padding: 0em;
+                        border-bottom: 2px solid white;
+                    }
+                    h6 {
+                        font-size: 1.1em;
+                        color: #99a;
+                        margin: 0.5em 0em 0.25em 0em;
+                    }
+                    dd {
+                        margin-left: 1em;
+                    }
+                    tt {
+                        font-size: 1.2em;
+                    }
+                    table {
+                        margin-bottom: 0.5em;
+                    }
+                    th {
+                        text-align: left;
+                        font-weight: normal;
+                        color: black;
+                        border-bottom: 1px solid black;
+                        padding: 3px 6px;
+                    }
+                    td {
+                        padding: 3px 6px;
+                        vertical-align: top;
+                        background-color: f6f6ff;
+                        font-size: 0.85em;
+                    }
+                    td p {
+                        margin: 0px;
+                    }
+                    ul {
+                        padding-left: 1.75em;
+                    }
+                    p + ul, p + ol, p + dl {
+                        margin-top: 0em;
+                    }
+                    .optional {
+                        font-weight: normal;
+                        opacity: 0.75;
+                    }
+                </style>
+</head>
+<body>
+<h1>Cross Cite Application</h1>
+<p>Books and journal articles have long benefited from an infrastructure that makes them easy to cite, a key element in the process of research and academic discourse. We believe that you should cite data in just the same way that you can cite other sources of information, such as articles and books.DataCite DOIs help further research and assures reliable, predictable, and unambiguous access to research data in order to:<ul xmlns="http://wadl.dev.java.net/2009/02">
+<li>support proper attribution and credit</li>
+<li>support collaboration and reuse of data</li>
+<li>enable reproducibility of findings</li>
+<li>foster faster and more efficient research progress, and</li>
+<li>provide the means to share data with future researchers</li>
+</ul>DataCite also looks to community practices that provide data citation guidance. The Joint Declaration of Data Citation Principles is a set of guiding principles for data within scholarly literature, another dataset, or any other research object (Data Citation Synthesis Group 2014). The FAIR Guiding Principles provide a guideline for the those that want to enhance reuse of their data (Wilkinson 2016).</p>
+<ul>
+<li>
+<a href="#resources">Resources</a>
+<ul>
+<li>
+<a href="#N20008">http://localhost:8182/citation/style</a>
+</li>
+<li>
+<a href="#N20038">http://localhost:8182/citation/language</a>
+</li>
+<li>
+<a href="#N20068">http://localhost:8182/citation/format</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="#representations">Representations</a>
+<ul>
+<li>
+<a href="#N20017">Style representation (text/xml)</a>
+</li>
+<li>
+<a href="#N20026">Style representation (application/json)</a>
+</li>
+<li>
+<a href="#N20047">Language representation (text/xml)</a>
+</li>
+<li>
+<a href="#N20056">Language representation (application/json)</a>
+</li>
+<li>
+<a href="#N20098">Format representation (text/plain)</a>
+</li>
+<li>
+<a href="#N200A7">Error representation (text/html)</a>
+</li>
+<li>
+<a href="#N200B6">Error representation (text/html)</a>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="resources">Resources</h2>
+<div class="resource">
+<h3 id="N20008">/style</h3>
+<h6>Methods</h6>
+<div class="methods">
+<div class="method">
+<h4 id="N2000B">GET</h4>
+<p>Retrieves the list of supported styles</p>
+<p>
+<em>available response status and representations:</em>
+</p>
+<ul>
+        	STATUS <b>200</b> : <i>Operation successful</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#N20017">Style representation (text/xml)</a>
+</li>
+</ul>
+</ul>
+<ul>
+        	STATUS <b>200</b> : <i>Operation successful</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#N20026">Style representation (application/json)</a>
+</li>
+</ul>
+</ul>
+<ul>
+        	STATUS <b>500</b> : <i>server internal error, try later and if problem persists please contact us</i>
+</ul>
+</div>
+</div>
+</div>
+<div class="resource">
+<h3 id="N20038">/language</h3>
+<h6>Methods</h6>
+<div class="methods">
+<div class="method">
+<h4 id="N2003B">GET</h4>
+<p>Retrieves the supported languages</p>
+<p>
+<em>available response status and representations:</em>
+</p>
+<ul>
+        	STATUS <b>200</b> : <i>Operation successful</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#N20047">Language representation (text/xml)</a>
+</li>
+</ul>
+</ul>
+<ul>
+        	STATUS <b>200</b> : <i>Operation successful</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#N20056">Language representation (application/json)</a>
+</li>
+</ul>
+</ul>
+<ul>
+        	STATUS <b>500</b> : <i>server internal error, try later and if problem persists please contact us</i>
+</ul>
+</div>
+</div>
+</div>
+<div class="resource">
+<h3 id="N20068">/format</h3>
+<h6>Methods</h6>
+<div class="methods">
+<div class="method">
+<h4 id="N2006B">GET</h4>
+<p>Select Formatting Style</p>
+<h6>request query parameters</h6>
+<table>
+<tr>
+<th>parameter</th>
+<th>value</th>
+<th>description</th>
+</tr>
+<tr>
+<td>
+<p>
+<strong>doi</strong>
+</p>
+</td>
+<td>
+<p>
+<em>
+<a title="" href="">string</a>
+</em>
+<small> (required)</small>
+</p>
+</td>
+<td>
+<p>doi to format for the citation</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>
+<strong>lang</strong>
+</p>
+</td>
+<td>
+<p>
+<em>
+<a title="" href="">string</a>
+</em>
+<small> (required)</small>
+</p>
+</td>
+<td>
+<p>language for the citation formating</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>
+<strong>style</strong>
+</p>
+</td>
+<td>
+<p>
+<em>
+<a title="" href="">string</a>
+</em>
+<small> (required)</small>
+</p>
+</td>
+<td>
+<p>style fot the citation formating</p>
+</td>
+</tr>
+</table>
+<p>
+<em>available response status and representations:</em>
+</p>
+<ul>
+        	STATUS <b>200</b> : <i>Operation successful</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#N20098">Format representation (text/plain)</a>
+</li>
+</ul>
+</ul>
+<ul>
+        	STATUS <b>404</b> : <i>DOI not found</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#N200A7">Error representation (text/html)</a>
+</li>
+</ul>
+</ul>
+<ul>
+        	STATUS <b>400</b> : <i>Wrong input parameters</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#N200B6">Error representation (text/html)</a>
+</li>
+</ul>
+</ul>
+</div>
+</div>
+</div>
+<h2 id="representations">Representations</h2>
+<h3 id="N20017">Style representation (text/xml)</h3>
+<p>A List of String representing the possible styles</p>
+<h3 id="N20026">Style representation (application/json)</h3>
+<p>A JSON array representing the possible styles</p>
+<h3 id="N20047">Language representation (text/xml)</h3>
+<p>A List of String representing the possible languages</p>
+<h3 id="N20056">Language representation (application/json)</h3>
+<p>A JSON array representing the possible languages</p>
+<h3 id="N20098">Format representation (text/plain)</h3>
+<p>The formatted citation</p>
+<h3 id="N200A7">Error representation (text/html)</h3>
+<p>Error</p>
+<h3 id="N200B6">Error representation (text/html)</h3>
+<p>Error</p>
+</body>
+</html>

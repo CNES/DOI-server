@@ -54,7 +54,7 @@ import org.restlet.resource.ResourceException;
 import org.xml.sax.SAXException;
 
 /**
- * Client to query Metadata store service at Datacite.
+ * Client to query Metadata store service at <a href="https://support.datacite.org/docs/mds-2">Datacite</a>.
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  * @see "https://mds.datacite.org/static/apidoc"

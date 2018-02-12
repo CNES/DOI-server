@@ -17,20 +17,20 @@
  * MA 02110-1301  USA
  */
 /**
- * Provides the classes necessary to create applications for the Data Object
- * Identifier server.
+ * Data Object Identifier managing a coherent set of resources and services.
  * 
  * <p>
  * The applications package contains:
  * <ul>
  * <li>a  {@link fr.cnes.doi.application.DoiMdsApplication Meta Data Store application}
  * that is responsible to handle (create/update/
- * delete) DOIs.</li>
+ * delete) DOIs. This application wraps the <a href="https://support.datacite.org/docs/mds-2">
+ * DataCite Metadata Data Store</a></li>
  * <li>A {@link fr.cnes.doi.application.DoiCrossCiteApplication Cross Cite application}
- * that is responsible to get citation from 
- * a registered DOI</li>
+ * that is responsible to get citation from a registered DOI. This application wraps the 
+ * <a href="https://citation.crosscite.org/">Citation service</a></li>
  * <li>A {@link fr.cnes.doi.application.AdminApplication administation application}
- * that provides resources for the administration</li> 
+ * that provides resources for the administration of the Data Object Identifier service</li> 
  * </ul>
  * 
  * <h2>1 - Introduction</h2>

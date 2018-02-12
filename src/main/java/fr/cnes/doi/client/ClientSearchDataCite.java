@@ -32,7 +32,7 @@ import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 
 /**
- *
+ * Class to search DOI from metadata
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 @Requirement(reqId = Requirement.DOI_INTER_010,reqName = Requirement.DOI_INTER_010_NAME)

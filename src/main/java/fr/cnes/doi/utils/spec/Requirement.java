@@ -83,11 +83,11 @@ public @interface Requirement {
     String DOI_SRV_150 = "DOI_SRV_150";
     String DOI_SRV_150_NAME = "Création d'un token";          
     
-    String DOI_SRV_160 = "DOI_SRV_160";
-    String DOI_SRV_160_NAME = "Information sur le token";       
+    String DOI_SRV_180 = "DOI_SRV_180";
+    String DOI_SRV_180_NAME = "Information sur le token";       
     
-    String DOI_SRV_170 = "DOI_SRV_170";
-    String DOI_SRV_170_NAME = "Vidualisation des informations d'un DOI";       
+    String DOI_SRV_190 = "DOI_SRV_190";
+    String DOI_SRV_190_NAME = "Visualisation des informations d'un DOI";       
     
     
     String DOI_MONIT_010 = "DOI_MONIT_010";

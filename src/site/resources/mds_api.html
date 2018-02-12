@@ -1,0 +1,1041 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Metadata Store Application</title>
+<style type="text/css">
+                    body {
+                        font-family: sans-serif;
+                        font-size: 0.85em;
+                        margin: 2em 8em;
+                    }
+                    .methods {
+                        background-color: #eef;
+                        padding: 1em;
+                    }
+                    h1 {
+                        font-size: 2.5em;
+                    }
+                    h2 {
+                        border-bottom: 1px solid black;
+                        margin-top: 1em;
+                        margin-bottom: 0.5em;
+                        font-size: 2em;
+                       }
+                    h3 {
+                        color: orange;
+                        font-size: 1.75em;
+                        margin-top: 1.25em;
+                        margin-bottom: 0em;
+                    }
+                    h4 {
+                        margin: 0em;
+                        padding: 0em;
+                        border-bottom: 2px solid white;
+                    }
+                    h6 {
+                        font-size: 1.1em;
+                        color: #99a;
+                        margin: 0.5em 0em 0.25em 0em;
+                    }
+                    dd {
+                        margin-left: 1em;
+                    }
+                    tt {
+                        font-size: 1.2em;
+                    }
+                    table {
+                        margin-bottom: 0.5em;
+                    }
+                    th {
+                        text-align: left;
+                        font-weight: normal;
+                        color: black;
+                        border-bottom: 1px solid black;
+                        padding: 3px 6px;
+                    }
+                    td {
+                        padding: 3px 6px;
+                        vertical-align: top;
+                        background-color: f6f6ff;
+                        font-size: 0.85em;
+                    }
+                    td p {
+                        margin: 0px;
+                    }
+                    ul {
+                        padding-left: 1.75em;
+                    }
+                    p + ul, p + ol, p + dl {
+                        margin-top: 0em;
+                    }
+                    .optional {
+                        font-weight: normal;
+                        opacity: 0.75;
+                    }
+                </style>
+</head>
+<body>
+<h1>Metadata Store Application</h1>
+<p>Provides an application for handling Data Object Identifier at CNES<br xmlns="http://wadl.dev.java.net/2009/02" xmlns:default="https://schema.datacite.org/meta/kernel-4.0/metadata.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema" />This application provides 3 API:<ul xmlns="http://wadl.dev.java.net/2009/02" xmlns:default="https://schema.datacite.org/meta/kernel-4.0/metadata.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema">
+<li>dois : DOI minting</li>
+<li>metadata : Registration of the associated metadata</li>
+<li>media : Possbility to obtain metadata in various formats and/or get automatic, direct access to an object rather than via the "landing page"</li>
+</ul>
+</p>
+<ul>
+<li>
+<a href="#resources">Resources</a>
+<ul>
+<li>
+<a href="#N2000A">http://localhost:8182/mds/dois</a>
+</li>
+<li>
+<a href="#N200D1">http://localhost:8182/mds/dois/{doiName}</a>
+</li>
+<li>
+<a href="#N20136">http://localhost:8182/mds/metadata</a>
+</li>
+<li>
+<a href="#N201C1">http://localhost:8182/mds/metadata/{doiName}</a>
+</li>
+<li>
+<a href="#N2028C">http://localhost:8182/mds/media/{doiName}</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="#representations">Representations</a>
+<ul>
+<li>
+<a href="#N2001B">DOI collection representation (text/uri-list)</a>
+</li>
+<li>
+<a href="#N2002A">Empty representation (text/plain)</a>
+</li>
+<li>
+<a href="#N2004C">application/x-www-form-urlencoded<abbr title="{http://wadl.dev.java.net/2009/02} " />
+</a>
+</li>
+<li>
+<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain)</a>
+</li>
+<li>
+<a href="#N200EF">DOI Representation (text/plain)</a>
+</li>
+<li>
+<a href="#http://localhost:8182/mds#metadataRepresentation">application/xml (<abbr title="{https://schema.datacite.org/meta/kernel-4.0/metadata.xsd} Resource">default:Resource</abbr>)</a>
+</li>
+<li>
+<a href="#N202AA">Media representation (text/plain)</a>
+</li>
+<li>
+<a href="#N202E3">application/x-www-form-urlencoded<abbr title="{http://wadl.dev.java.net/2009/02} " />
+</a>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="resources">Resources</h2>
+<div class="resource">
+<h3 id="N2000A">/dois</h3>
+<h6>Methods</h6>
+<div class="methods">
+<div class="method">
+<h4 id="N2000F">GET</h4>
+<p>Retrieves the DOI collection</p>
+<p>
+<em>available response status and representations:</em>
+</p>
+<ul>
+        	STATUS <b>200</b> : <i>Operation successful</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#N2001B">DOI collection representation (text/uri-list)</a>
+</li>
+</ul>
+</ul>
+<ul>
+        	STATUS <b>204</b> : <i>no DOIs founds</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#N2002A">Empty representation (text/plain)</a>
+</li>
+</ul>
+</ul>
+<ul>
+        	STATUS <b>500</b> : <i>Unexpected error</i>
+</ul>
+</div>
+<div class="method">
+<h4 id="N2003B">POST</h4>
+<p>POST will mint new DOI if specified DOI doesn't exist. This method will attempt to update URL if you specify existing DOI. Standard domains and quota restrictions check will be performed. A Datacentre's doiQuotaUsed will be increased by 1. A new record in Datasets will be created.</p>
+<h6>request header parameters</h6>
+<table>
+<tr>
+<th>parameter</th>
+<th>value</th>
+<th>description</th>
+</tr>
+<tr>
+<td>
+<p>
+<strong>selectedRole</strong>
+</p>
+</td>
+<td>
+<p>
+<em>
+<a title="" href="">string</a>
+</em>
+</p>
+</td>
+<td>
+<p>A user can select one role when he is associated to several roles</p>
+</td>
+</tr>
+</table>
+<p>
+<em>acceptable request representations:</em>
+</p>
+<ul>
+<ul>
+<li>
+<a href="#N2004C">application/x-www-form-urlencoded<abbr title="{http://wadl.dev.java.net/2009/02} " />
+</a>
+</li>
+</ul>
+</ul>
+<p>
+<em>available response status and representations:</em>
+</p>
+<ul>
+        	STATUS <b>201</b> : <i>Operation successful</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain)</a>
+</li>
+</ul>
+</ul>
+<ul>
+        	STATUS <b>400</b> : <i>request body must be exactly two lines: DOI and URL; wrong domain, wrong prefix</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+</li>
+</ul>
+</ul>
+<ul>
+        	STATUS <b>401</b> : <i>this request need an authorization</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+</li>
+</ul>
+</ul>
+<ul>
+        	STATUS <b>403</b> : <i>Not allow to execute this request</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+</li>
+</ul>
+</ul>
+<ul>
+        	STATUS <b>412</b> : <i>metadata must be uploaded first</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+</li>
+</ul>
+</ul>
+<ul>
+        	STATUS <b>500</b> : <i>Error when requesting DataCite</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+</li>
+</ul>
+</ul>
+<ul>
+        	STATUS <b>409</b> : <i>Error when an user is associated to more than one role without setting selectedRole parameter</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+</li>
+</ul>
+</ul>
+</div>
+</div>
+</div>
+<div class="resource">
+<h3 id="N200D1">/dois/{doiName}</h3>
+<h6>Methods</h6>
+<div class="methods">
+<div class="method">
+<h4 id="N200D6">GET</h4>
+<p>Get the landing page related to a given DOI</p>
+<h6>request template parameters</h6>
+<table>
+<tr>
+<th>parameter</th>
+<th>value</th>
+<th>description</th>
+</tr>
+<tr>
+<td>
+<p>
+<strong>doiName</strong>
+</p>
+</td>
+<td>
+<p>
+<em>
+<a title="" href="">string</a>
+</em>
+<small> (required)</small>
+</p>
+</td>
+<td>
+<p>DOI name</p>
+</td>
+</tr>
+</table>
+<p>
+<em>available response status and representations:</em>
+</p>
+<ul>
+        	STATUS <b>200</b> : <i>Operation successful</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#N200EF">DOI Representation (text/plain)</a>
+</li>
+</ul>
+</ul>
+<ul>
+        	STATUS <b>204</b> : <i>DOI is known to MDS, but is not minted (or not resolvable e.g. due to handle's latency)</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+</li>
+</ul>
+</ul>
+<ul>
+        	STATUS <b>400</b> : <i>if the DOI does not contain the institution suffix</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+</li>
+</ul>
+</ul>
+<ul>
+        	STATUS <b>404</b> : <i>DOI does not exist in DataCite</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+</li>
+</ul>
+</ul>
+<ul>
+        	STATUS <b>500</b> : <i>server internal error, try later and if problem persists please contact us</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+</li>
+</ul>
+</ul>
+</div>
+</div>
+</div>
+<div class="resource">
+<h3 id="N20136">/metadata</h3>
+<h6>Methods</h6>
+<div class="methods">
+<div class="method">
+<h4 id="N2013B">POST</h4>
+<p>This request stores new version of metadata. The request body must contain valid XML.</p>
+<h6>request header parameters</h6>
+<table>
+<tr>
+<th>parameter</th>
+<th>value</th>
+<th>description</th>
+</tr>
+<tr>
+<td>
+<p>
+<strong>selectedRole</strong>
+</p>
+</td>
+<td>
+<p>
+<em>
+<a title="" href="">string</a>
+</em>
+</p>
+</td>
+<td>
+<p>A user can select one role when he is associated to several roles</p>
+</td>
+</tr>
+</table>
+<p>
+<em>acceptable request representations:</em>
+</p>
+<ul>
+<ul>
+<li>
+<a href="#http://localhost:8182/mds#metadataRepresentation">application/xml (<abbr title="{https://schema.datacite.org/meta/kernel-4.0/metadata.xsd} Resource">default:Resource</abbr>)</a>
+</li>
+</ul>
+</ul>
+<p>
+<em>available response status and representations:</em>
+</p>
+<ul>
+        	STATUS <b>201</b> : <i>Operation successful</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+</li>
+</ul>
+</ul>
+<ul>
+        	STATUS <b>400</b> : <i>invalid XML, wrong prefix in the metadata</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+</li>
+</ul>
+</ul>
+<ul>
+        	STATUS <b>401</b> : <i>this request needs authentication</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+</li>
+</ul>
+</ul>
+<ul>
+        	STATUS <b>403</b> : <i>Not allow to execute the request</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+</li>
+</ul>
+</ul>
+<ul>
+        	STATUS <b>500</b> : <i>DataCite Schema not available or problem when requesting DataCite</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+</li>
+</ul>
+</ul>
+<ul>
+        	STATUS <b>1001</b> : <i>Network problem</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+</li>
+</ul>
+</ul>
+<ul>
+        	STATUS <b>409</b> : <i>Error when an user is associated to more than one role without setting selectedRole parameter</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+</li>
+</ul>
+</ul>
+</div>
+</div>
+</div>
+<div class="resource">
+<h3 id="N201C1">/metadata/{doiName}</h3>
+<h6>Methods</h6>
+<div class="methods">
+<div class="method">
+<h4 id="N201C6">DELETE</h4>
+<p>Delete a specific metadata</p>
+<h6>request template parameters</h6>
+<table>
+<tr>
+<th>parameter</th>
+<th>value</th>
+<th>description</th>
+</tr>
+<tr>
+<td>
+<p>
+<strong>doiName</strong>
+</p>
+</td>
+<td>
+<p>
+<em>
+<a title="" href="">string</a>
+</em>
+<small> (required)</small>
+</p>
+</td>
+<td>
+<p>DOI name</p>
+</td>
+</tr>
+</table>
+<h6>request header parameters</h6>
+<table>
+<tr>
+<th>parameter</th>
+<th>value</th>
+<th>description</th>
+</tr>
+<tr>
+<td>
+<p>
+<strong>selectedRole</strong>
+</p>
+</td>
+<td>
+<p>
+<em>
+<a title="" href="">string</a>
+</em>
+</p>
+</td>
+<td>
+<p>A user can select one role when he is associated to several roles</p>
+</td>
+</tr>
+</table>
+<p>
+<em>available response status and representations:</em>
+</p>
+<ul>
+        	STATUS <b>200</b> : <i>Operation successful</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#http://localhost:8182/mds#metadataRepresentation">application/xml (<abbr title="{https://schema.datacite.org/meta/kernel-4.0/metadata.xsd} Resource">default:Resource</abbr>)</a>
+</li>
+</ul>
+</ul>
+<ul>
+        	STATUS <b>401</b> : <i>if no role is provided</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+</li>
+</ul>
+</ul>
+<ul>
+        	STATUS <b>403</b> : <i>if the role is not allowed to use this feature or the role is not allow to delete the DOI</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+</li>
+</ul>
+</ul>
+<ul>
+        	STATUS <b>404</b> : <i>DOI does not exist in our database</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+</li>
+</ul>
+</ul>
+<ul>
+        	STATUS <b>409</b> : <i>Error when a user is associated to more than one role without setting selectedRole parameter</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+</li>
+</ul>
+</ul>
+<ul>
+        	STATUS <b>500</b> : <i>server internal error, try later and if problem persists please contact us</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+</li>
+</ul>
+</ul>
+</div>
+<div class="method">
+<h4 id="N2023C">GET</h4>
+<p>Get a specific metadata</p>
+<h6>request template parameters</h6>
+<table>
+<tr>
+<th>parameter</th>
+<th>value</th>
+<th>description</th>
+</tr>
+<tr>
+<td>
+<p>
+<strong>doiName</strong>
+</p>
+</td>
+<td>
+<p>
+<em>
+<a title="" href="">string</a>
+</em>
+<small> (required)</small>
+</p>
+</td>
+<td>
+<p>DOI name</p>
+</td>
+</tr>
+</table>
+<p>
+<em>available response status and representations:</em>
+</p>
+<ul>
+        	STATUS <b>200</b> : <i>Operation successful</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#http://localhost:8182/mds#metadataRepresentation">application/xml (<abbr title="{https://schema.datacite.org/meta/kernel-4.0/metadata.xsd} Resource">default:Resource</abbr>)</a>
+</li>
+</ul>
+</ul>
+<ul>
+        	STATUS <b>404</b> : <i>DOI does not exist in DataCite</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+</li>
+</ul>
+</ul>
+<ul>
+        	STATUS <b>410</b> : <i>the requested dataset was marked inactive (using DELETE method)</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+</li>
+</ul>
+</ul>
+<ul>
+        	STATUS <b>500</b> : <i>server internal error, try later and if problem persists please contact us</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+</li>
+</ul>
+</ul>
+</div>
+</div>
+</div>
+<div class="resource">
+<h3 id="N2028C">/media/{doiName}</h3>
+<h6>Methods</h6>
+<div class="methods">
+<div class="method">
+<h4 id="N20291">GET</h4>
+<p>Get a specific media for a given DOI</p>
+<h6>request template parameters</h6>
+<table>
+<tr>
+<th>parameter</th>
+<th>value</th>
+<th>description</th>
+</tr>
+<tr>
+<td>
+<p>
+<strong>doiName</strong>
+</p>
+</td>
+<td>
+<p>
+<em>
+<a title="" href="">string</a>
+</em>
+<small> (required)</small>
+</p>
+</td>
+<td>
+<p>DOI name</p>
+</td>
+</tr>
+</table>
+<p>
+<em>available response status and representations:</em>
+</p>
+<ul>
+        	STATUS <b>200</b> : <i>Operation successful</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#N202AA">Media representation (text/plain)</a>
+</li>
+</ul>
+</ul>
+<ul>
+        	STATUS <b>404</b> : <i>DOI does not exist in our database</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+</li>
+</ul>
+</ul>
+<ul>
+        	STATUS <b>500</b> : <i>server internal error, try later and if problem persists please contact us</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+</li>
+</ul>
+</ul>
+</div>
+<div class="method">
+<h4 id="N202D2">POST</h4>
+<p>POST will add/update media type/urls pairs to a DOI. Standard domain restrictions check will be performed.</p>
+<h6>request header parameters</h6>
+<table>
+<tr>
+<th>parameter</th>
+<th>value</th>
+<th>description</th>
+</tr>
+<tr>
+<td>
+<p>
+<strong>selectedRole</strong>
+</p>
+</td>
+<td>
+<p>
+<em>
+<a title="" href="">string</a>
+</em>
+</p>
+</td>
+<td>
+<p>A user can select one role when he is associated to several roles</p>
+</td>
+</tr>
+</table>
+<p>
+<em>acceptable request representations:</em>
+</p>
+<ul>
+<ul>
+<li>
+<a href="#N202E3">application/x-www-form-urlencoded<abbr title="{http://wadl.dev.java.net/2009/02} " />
+</a>
+</li>
+</ul>
+</ul>
+<p>
+<em>available response status and representations:</em>
+</p>
+<ul>
+        	STATUS <b>200</b> : <i>Operation successful</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+</li>
+</ul>
+</ul>
+<ul>
+        	STATUS <b>400</b> : <i>doi not provided or one or more of the specified mime-types or urls are invalid (e.g. non supported mime-type, not allowed url domain, etc.)</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+</li>
+</ul>
+</ul>
+<ul>
+        	STATUS <b>401</b> : <i>if no role is provided</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+</li>
+</ul>
+</ul>
+<ul>
+        	STATUS <b>403</b> : <i>if the role is not allowed to use this feature or the user is not allow to create media</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+</li>
+</ul>
+</ul>
+<ul>
+        	STATUS <b>409</b> : <i>if a user is associated to more than one role without setting selectedRole parameter</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+</li>
+</ul>
+</ul>
+<ul>
+        	STATUS <b>500</b> : <i>server internal error, try later and if problem persists please contact us</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+</li>
+</ul>
+</ul>
+</div>
+</div>
+</div>
+<h2 id="representations">Representations</h2>
+<h3 id="N2001B">DOI collection representation (text/uri-list)</h3>
+<p>This request returns a list of all DOIs for the requesting datacentre. There is no guaranteed order.</p>
+<h3 id="N2002A">Empty representation (text/plain)</h3>
+<p>No contain</p>
+<h3 id="N2004C">application/x-www-form-urlencoded<abbr title="{http://wadl.dev.java.net/2009/02} " />
+</h3>
+<div class="representation">
+<h6> plain parameters</h6>
+<table>
+<tr>
+<th>parameter</th>
+<th>value</th>
+<th>description</th>
+</tr>
+<tr>
+<td>
+<p>
+<strong>doi</strong>
+</p>
+</td>
+<td>
+<p>
+<em>
+<a title="" href="">string</a>
+</em>
+<small> (required)</small>
+</p>
+</td>
+<td>
+<p>DOI name</p>
+</td>
+</tr>
+<tr>
+<td>
+<p>
+<strong>url</strong>
+</p>
+</td>
+<td>
+<p>
+<em>
+<a title="" href="">string</a>
+</em>
+<small> (required)</small>
+</p>
+</td>
+<td>
+<p>URL of the landing page</p>
+</td>
+</tr>
+</table>
+<h6> header parameters</h6>
+<table>
+<tr>
+<th>parameter</th>
+<th>value</th>
+<th>description</th>
+</tr>
+<tr>
+<td>
+<p>
+<strong>selectedRole</strong>
+</p>
+</td>
+<td>
+<p>
+<em>
+<a title="" href="">string</a>
+</em>
+</p>
+</td>
+<td>
+<p>A user can select one role when he is associated to several roles</p>
+</td>
+</tr>
+</table>
+</div>
+<h3 id="http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain)</h3>
+<p>short explanation of status code e.g. CREATED, HANDLE_ALREADY_EXISTS etc</p>
+<h3 id="N200EF">DOI Representation (text/plain)</h3>
+<p>This request returns an URL associated with a given DOI.</p>
+<h3 id="http://localhost:8182/mds#metadataRepresentation">application/xml (<abbr title="{https://schema.datacite.org/meta/kernel-4.0/metadata.xsd} Resource">default:Resource</abbr>)</h3>
+<p>DataCite metadata</p>
+<div class="representation">
+<h6>XML Schema</h6>
+<p>
+<em>Source: <a href="" />
+</em>
+</p>
+<pre />
+<h6> header parameters</h6>
+<table>
+<tr>
+<th>parameter</th>
+<th>value</th>
+<th>description</th>
+</tr>
+<tr>
+<td>
+<p>
+<strong>selectedRole</strong>
+</p>
+</td>
+<td>
+<p>
+<em>
+<a title="" href="">string</a>
+</em>
+</p>
+</td>
+<td>
+<p>A user can select one role when he is associated to several roles</p>
+</td>
+</tr>
+</table>
+</div>
+<h3 id="N202AA">Media representation (text/plain)</h3>
+<p>This request returns a key-value list of media types/urls for a given DOI name</p>
+<h3 id="N202E3">application/x-www-form-urlencoded<abbr title="{http://wadl.dev.java.net/2009/02} " />
+</h3>
+<div class="representation">
+<h6> plain parameters</h6>
+<table>
+<tr>
+<th>parameter</th>
+<th>value</th>
+<th>description</th>
+</tr>
+<tr>
+<td>
+<p>
+<strong>{mediaType}</strong>
+</p>
+</td>
+<td>
+<p>
+<em>
+<a title="" href="">string</a>
+</em>
+<small> (repeating)</small>
+</p>
+<p>Fixed: <tt>{url}</tt>
+</p>
+</td>
+<td>
+<p>(key/value) = (mediaType/url)</p>
+</td>
+</tr>
+</table>
+<h6> header parameters</h6>
+<table>
+<tr>
+<th>parameter</th>
+<th>value</th>
+<th>description</th>
+</tr>
+<tr>
+<td>
+<p>
+<strong>selectedRole</strong>
+</p>
+</td>
+<td>
+<p>
+<em>
+<a title="" href="">string</a>
+</em>
+</p>
+</td>
+<td>
+<p>A user can select one role when he is associated to several roles</p>
+</td>
+</tr>
+</table>
+</div>
+</body>
+</html>

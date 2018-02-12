@@ -91,7 +91,6 @@ public class BaseClient {
         params.add("proxyPort", port);
         this.getClient().setNext(proxy);
     }
-    //TODO check io on ne peut pas utiliser the challenge authentication depuis que j'ai corrigé des problèmes
 
     /**
      * Returns the client.

@@ -41,7 +41,7 @@ import org.restlet.ext.wadl.WadlCnesRepresentation;
 import org.restlet.representation.Representation;
 
 /**
- * Creates a base application by retrieving the proxy settings.
+ * Creates a base application by setting both the CORS, the DOI status page, the proxy and the DOI.
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
@@ -66,7 +66,7 @@ public abstract class AbstractApplication extends WadlApplication {
     private static final Logger LOG = LogManager.getLogger(AbstractApplication.class.getName());
 
     /**
-     * Instance of configuration settings.
+     * DOI settings.
      */
     private final DoiSettings config;
 
@@ -76,8 +76,8 @@ public abstract class AbstractApplication extends WadlApplication {
     private final ProxySettings proxySettings;
 
     /**
-     * This constructor creates an instance of proxySettings. By creating the
-     * instance, the constructor creates :
+     * This constructor creates an instance of proxySettings and doiSettings. 
+     * By creating the instance, the constructor creates :
      * <ul>
      * <li>the CORS service using the default value
      * {@link AbstractApplication#DEFAULT_CORS_ORIGIN} and
@@ -85,8 +85,7 @@ public abstract class AbstractApplication extends WadlApplication {
      * <li>the custom status page</li>
      * </ul>
      *
-     * @see
-     * <a href="https://en.wikipedia.org/wiki/Cross-origin_resource_sharing">CORS</a>
+     * @see <a href="https://en.wikipedia.org/wiki/Cross-origin_resource_sharing">CORS</a>
      * @see AbstractApplication#createCoreService
      */
     public AbstractApplication() {
@@ -119,7 +118,8 @@ public abstract class AbstractApplication extends WadlApplication {
     }
 
     /**
-     * Creates the authenticator. Creates the user, role and mapping user/role.
+     * Creates the authenticator based on a HTTP basic. 
+     * Creates the user, role and mapping user/role.
      *
      * @return Authenticator based on a challenge scheme
      */
@@ -149,7 +149,7 @@ public abstract class AbstractApplication extends WadlApplication {
     }
 
     /**
-     * Sends alert when DataCite failed.
+     * Sends alert as an email when DataCite failed.
      *
      * @param exception error message to send
      */
@@ -166,9 +166,9 @@ public abstract class AbstractApplication extends WadlApplication {
     }
 
     /**
-     * Returns the config.
+     * Returns the configuration of the DOI server.
      *
-     * @return the config
+     * @return the configuration of the DOI server.
      */
     protected DoiSettings getConfig() {
         LOG.traceEntry();
@@ -176,9 +176,9 @@ public abstract class AbstractApplication extends WadlApplication {
     }
 
     /**
-     * Returns the proxy settings.
+     * Returns the configuration of the proxy.
      *
-     * @return the proxySettings
+     * @return the proxy settings
      */
     protected ProxySettings getProxySettings() {
         LOG.traceEntry();

@@ -33,6 +33,7 @@ import org.restlet.resource.ResourceException;
 
 /**
  * Client to query the citation service.
+ * This class queries <a href="https://citation.crosscite.org/">CrossCite</a>.
  *
  * @author Jean-Christophe Malapert (Jean-Christophe.malapert@cnes.fr)
  */
@@ -40,49 +41,53 @@ import org.restlet.resource.ResourceException;
 public class ClientCrossCiteCitation extends BaseClient {
 
     /**
-     * Service end point.
+     * Service end point {@value #CROSS_CITE_URL}.
      */
     public static final String CROSS_CITE_URL = "http://citation.crosscite.org"; 
     
     /**
-     * Service end point.
+     * Service end point {@value #CROSS_CITE_MOCK_URL}.
      */
     public static final String CROSS_CITE_MOCK_URL = "http://localhost:1080";     
     
     /**
-     * Resource to get styles.
+     * URI to get styles {@value #STYLE_URI}.
      */
     public static final String STYLE_URI = "/styles";
 
     /**
-     * Resource to get locales.
+     * URI to get locales {@value #LOCALE_URI}.
      */
     public static final String LOCALE_URI = "/locales";
 
     /**
-     * Resource to get format.
+     * URI to get format {@value #FORMAT_URI}.
      */
     public static final String FORMAT_URI = "/format";
     
     /**
-     * Options for each context
+     * Options for each context.
      */
     public enum Context {
 
         /**
-         * Development context.
+         * Development context. This context uses the {@link #CROSS_CITE_MOCK_URL} end point with
+         * a log level sets to OFF.
          */
         DEV(CROSS_CITE_MOCK_URL, Level.OFF),
         /**
-         * Post development context.
+         * Post development context. This context uses the {@link #CROSS_CITE_URL} end point with
+         * a log level sets to ALL.
          */
         POST_DEV(CROSS_CITE_URL, Level.ALL),
         /**
-         * Pre production context.
+         * Pre production context. This context uses the {@link #CROSS_CITE_URL} end point with
+         * a log level sets to FINE.
          */
         PRE_PROD(CROSS_CITE_URL, Level.FINE),
         /**
-         * Production context.
+         * Production context.  This context uses the {@link #CROSS_CITE_URL} end point with
+         * a log level sets to INFO.
          */
         PROD(CROSS_CITE_URL, Level.INFO);
 
@@ -216,7 +221,7 @@ public class ClientCrossCiteCitation extends BaseClient {
     }
 
     /**
-     * Returns styles
+     * Returns styles by calling {@value #STYLE_URI}.
      *
      * @return list of possible styles
      * @throws fr.cnes.doi.exception.ClientCrossCiteException Will thrown an
@@ -228,7 +233,7 @@ public class ClientCrossCiteCitation extends BaseClient {
     }
 
     /**
-     * Returns languages
+     * Returns languages by calling {@value #LOCALE_URI}.
      *
      * @return List of possible languages
      * @throws fr.cnes.doi.exception.ClientCrossCiteException Will thrown an
