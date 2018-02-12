@@ -101,4 +101,22 @@ public class DoiMdsApplicationTest {
         client.release();
         assertTrue("API through HTTPS",txt!=null && !txt.isEmpty());
     } 
+    
+    /**
+     * Test of API generation in HTML.
+     * @throws Exception 
+     */
+    @Test
+    public void generateAPIWadl() throws Exception {
+        System.out.println("API Wadl");
+        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);        
+        ClientResource client = new ClientResource("http://localhost:"+port+"/mds?media=text/html");               Representation repApi = client.options();
+        String txt = repApi.getText();
+        client.release();
+        try (FileWriter writer = new FileWriter("mds_api.html")) {
+            writer.write(txt);
+            writer.flush();
+        }
+        assertTrue("API through HTTPS",txt!=null && !txt.isEmpty());
+    }
 }

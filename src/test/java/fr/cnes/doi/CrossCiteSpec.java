@@ -21,6 +21,7 @@ package fr.cnes.doi;
 import fr.cnes.doi.client.ClientCrossCiteCitation;
 import java.util.Arrays;
 import java.util.List;
+import org.mockserver.client.server.MockServerClient;
 import org.mortbay.jetty.HttpMethods;
 
 /**
@@ -85,7 +86,7 @@ public class CrossCiteSpec {
     public CrossCiteSpec() {
         this.mockServer = new MockupServer(PORT);
     }   
-    
+      
     public void createSpec(final Spec specification) {
         this.mockServer.createSpec(
                 specification.getHttpVerb(), specification.getPath(), 

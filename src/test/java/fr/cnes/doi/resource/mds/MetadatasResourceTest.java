@@ -104,7 +104,7 @@ public class MetadatasResourceTest {
         this.inputStreamFileError.close();
         mockServer.stop();
     }
-
+    
     /**
      * Test of createMetadata method through HTTPS server, of class MetadatasResource.
      * A Status.SUCCESS_CREATED is expected.

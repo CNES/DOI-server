@@ -20,7 +20,6 @@ package fr.cnes.doi.resource.citation;
 
 import fr.cnes.doi.CrossCiteSpec;
 import fr.cnes.doi.InitServerForTest;
-import fr.cnes.doi.client.ClientCrossCiteCitation;
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;
@@ -36,16 +35,9 @@ import org.restlet.data.Parameter;
 import org.restlet.data.Protocol;
 import org.restlet.resource.ClientResource;
 import org.restlet.util.Series;
-import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
-import org.junit.Rule;
-import org.mockserver.integration.ClientAndServer;
-import org.mockserver.junit.MockServerRule;
-import org.mockserver.model.HttpRequest;
-import org.mockserver.model.HttpResponse;
-import org.mockserver.verify.VerificationTimes;
 
 /**
  * Tests the language citation resource.
@@ -83,8 +75,8 @@ public class LanguageCitationResourceTest {
     @After
     public void tearDown() {
         this.spec.finish();
-    }        
-
+    }    
+    
     /**
      * Test of getLanguages method, of class LanguageCitationResource.
      */

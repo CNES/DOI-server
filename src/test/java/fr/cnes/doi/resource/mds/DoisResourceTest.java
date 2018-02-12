@@ -19,7 +19,7 @@
 package fr.cnes.doi.resource.mds;
 
 import fr.cnes.doi.InitServerForTest;
-import fr.cnes.doi.client.ClientMDS;
+import fr.cnes.doi.MdsSpec;
 import fr.cnes.doi.security.UtilsHeader;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
@@ -31,11 +31,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.mockserver.integration.ClientAndServer;
-import static org.mockserver.integration.ClientAndServer.startClientAndServer;
-import org.mockserver.model.HttpRequest;
-import org.mockserver.model.HttpResponse;
-import org.mockserver.verify.VerificationTimes;
 import org.restlet.Client;
 import org.restlet.Context;
 import org.restlet.data.ChallengeResponse;
@@ -57,8 +52,8 @@ import org.restlet.util.Series;
 public class DoisResourceTest {
 
     private static Client cl;
-    private ClientAndServer mockServer;
-
+    private MdsSpec spec;      
+    
     public DoisResourceTest() {
     }
 
@@ -102,13 +97,13 @@ public class DoisResourceTest {
 
     @Before
     public void setUp() {
-        mockServer = startClientAndServer(1081);
+        this.spec = new MdsSpec();
     }
 
     @After
     public void tearDown() {
-        mockServer.stop();
-    }
+        this.spec.finish();
+    }    
 
     /**
      * Test of getDois method through a HTTPS server, of class DoisResource.
@@ -118,8 +113,7 @@ public class DoisResourceTest {
     public void testGetDoisHttps() throws IOException {
         System.out.println("getDois though a HTTPS server");
         
-        mockServer.when(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE)
-                .withMethod("GET")).respond(HttpResponse.response().withStatusCode(200).withBody("10.5072/EDU/TESTID"));
+        this.spec.createSpec(MdsSpec.Spec.GET_COLLECTION_200);
         
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + "/mds/dois");
@@ -127,8 +121,7 @@ public class DoisResourceTest {
         Representation rep = client.get();
         assertNotNull("Test if the response is not null", rep.getText());
         
-        mockServer.verify(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE)
-                .withMethod("GET"), VerificationTimes.once());        
+        this.spec.verifySpec(MdsSpec.Spec.GET_COLLECTION_200);
     }
 
     /**
@@ -139,16 +132,14 @@ public class DoisResourceTest {
     public void testGetDoisHttp() throws IOException {
         System.out.println("getDois though a HTTP server");
         
-        mockServer.when(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE)
-                .withMethod("GET")).respond(HttpResponse.response().withStatusCode(200).withBody("10.5072/EDU/TESTID"));
+        this.spec.createSpec(MdsSpec.Spec.GET_COLLECTION_200);
         
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);
         ClientResource client = new ClientResource("http://localhost:" + port + "/mds/dois");
         Representation rep = client.get();
         assertNotNull("Test if the response is not null", rep.getText());
         
-        mockServer.verify(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE)
-                .withMethod("GET"), VerificationTimes.once());           
+        this.spec.verifySpec(MdsSpec.Spec.GET_COLLECTION_200);          
     }
 
     /**
@@ -189,8 +180,7 @@ public class DoisResourceTest {
     public void testCreateDoiHttps() throws IOException {
         System.out.println("createDoi through HTTPS server");
 
-        mockServer.when(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE)
-                .withMethod("POST")).respond(HttpResponse.response().withStatusCode(201).withBody("CREATED"));
+        this.spec.createSpec(MdsSpec.Spec.POST_DOI_201);
         
         Form doiForm = new Form();
         doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b"));
@@ -218,8 +208,7 @@ public class DoisResourceTest {
         }
         assertEquals("Test if the DOI is related to several accounts with a specific account", Status.SUCCESS_CREATED.getCode(), code);
         
-        mockServer.verify(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE)
-                .withMethod("POST"), VerificationTimes.once());        
+        this.spec.verifySpec(MdsSpec.Spec.POST_DOI_201);       
     }
     
     /**
@@ -231,8 +220,7 @@ public class DoisResourceTest {
     public void testCreateDoiHttp() throws IOException {
         System.out.println("createDoi through a HTTP server");
         
-        mockServer.when(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE)
-                .withMethod("POST")).respond(HttpResponse.response().withStatusCode(201).withBody("CREATED"));        
+        this.spec.createSpec(MdsSpec.Spec.POST_DOI_201);        
 
         Form doiForm = new Form();
         doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b"));
@@ -259,8 +247,7 @@ public class DoisResourceTest {
         }
         assertEquals("Test the creation of a DOI, related to several accounts with a specific account", Status.SUCCESS_CREATED.getCode(), code);
         
-        mockServer.verify(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE)
-                .withMethod("POST"), VerificationTimes.once());        
+        this.spec.verifySpec(MdsSpec.Spec.POST_DOI_201);              
     }  
     
     /**
@@ -273,8 +260,7 @@ public class DoisResourceTest {
     public void testCreateFalseDoiHttps() throws IOException {
         System.out.println("createDoi with a not registered DOI");
         
-        mockServer.when(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE)
-                .withMethod("POST")).respond(HttpResponse.response().withStatusCode(412).withBody("metadata must be uploaded first"));         
+        this.spec.createSpec(MdsSpec.Spec.POST_DOI_412);                        
 
         Form doiForm = new Form();
         doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.5072/828606/8c3e91ad45ca855b477126bc073ae"));
@@ -302,8 +288,7 @@ public class DoisResourceTest {
         }
         assertEquals("Test an error of the creation of a DOI when the metadata is not uploaded first",Status.CLIENT_ERROR_PRECONDITION_FAILED.getCode(), code);
         
-        mockServer.verify(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE)
-                .withMethod("POST"), VerificationTimes.once());        
+        this.spec.verifySpec(MdsSpec.Spec.POST_DOI_201);                     
     }    
     
     /**

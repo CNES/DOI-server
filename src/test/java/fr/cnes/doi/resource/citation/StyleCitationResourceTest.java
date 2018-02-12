@@ -81,8 +81,8 @@ public class StyleCitationResourceTest {
     @After
     public void tearDown() throws Exception {
         this.spec.finish();
-    }   
-
+    } 
+    
     /**
      * Test of getStyles method through a HTTPS server, of class
      * StyleCitationResource.

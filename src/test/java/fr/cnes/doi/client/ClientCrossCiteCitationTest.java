@@ -26,53 +26,57 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Rule;
+import org.mockserver.junit.MockServerRule;
 
 /**
  *
  * @author Jean-Christophe Malapert
  */
 public class ClientCrossCiteCitationTest {
-    
+
     private CrossCiteSpec spec;
-        
+
     public ClientCrossCiteCitationTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
         spec = new CrossCiteSpec();
     }
-    
+
     @After
     public void tearDown() {
         spec.finish();
-    }   
+    }
+
+    @Rule
+    public MockServerRule mockServerRule = new MockServerRule(this);
 
     /**
      * Test of getStyles method, of class ClientCrossCiteCitation.
      */
     @Test
-    public void testGetStyles() throws Exception {        
+    public void testGetStyles() throws Exception {
         System.out.println("getStyles");
-        
-        this.spec.createSpec(CrossCiteSpec.Spec.GET_STYLE_200);               
+
+        this.spec.createSpec(CrossCiteSpec.Spec.GET_STYLE_200);
 
         // create a GET request client API
         ClientCrossCiteCitation instance = new ClientCrossCiteCitation(ClientCrossCiteCitation.Context.DEV);
         List<String> expResult = CrossCiteSpec.Spec.GET_STYLE_200.getBodyAsList();
         List<String> result = instance.getStyles();
-        assertEquals("Test retrieving styles", expResult, result);        
+        assertEquals("Test retrieving styles", expResult, result);
 
-
-        this.spec.verifySpec(CrossCiteSpec.Spec.GET_STYLE_200);       
+        this.spec.verifySpec(CrossCiteSpec.Spec.GET_STYLE_200);
     }
 
     /**
@@ -82,8 +86,8 @@ public class ClientCrossCiteCitationTest {
     public void testGetLanguages() throws Exception {
         System.out.println("getLanguages");
 
-        this.spec.createSpec(CrossCiteSpec.Spec.GET_LANGUAGE_200);               
-        
+        this.spec.createSpec(CrossCiteSpec.Spec.GET_LANGUAGE_200);
+
         ClientCrossCiteCitation instance = new ClientCrossCiteCitation(ClientCrossCiteCitation.Context.DEV);
         List<String> expResult = CrossCiteSpec.Spec.GET_LANGUAGE_200.getBodyAsList();
         List<String> result = instance.getLanguages();
@@ -98,9 +102,9 @@ public class ClientCrossCiteCitationTest {
     @Test
     public void testGetFormat() throws Exception {
         System.out.println("getFormat");
-        
+
         this.spec.createSpec(CrossCiteSpec.Spec.GET_FORMAT_200);
-        
+
         String doiName = "10.1145/2783446.2783605";
         String style = "academy-of-management-review";
         String language = "af-ZA";
@@ -111,5 +115,5 @@ public class ClientCrossCiteCitationTest {
 
         this.spec.verifySpec(CrossCiteSpec.Spec.GET_FORMAT_200);
     }
-    
+
 }

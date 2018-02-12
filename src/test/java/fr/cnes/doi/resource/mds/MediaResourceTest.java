@@ -19,12 +19,11 @@
 package fr.cnes.doi.resource.mds;
 
 import fr.cnes.doi.InitServerForTest;
-import fr.cnes.doi.client.ClientMDS;
+import fr.cnes.doi.MdsSpec;
 import fr.cnes.doi.security.UtilsHeader;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -32,11 +31,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import static org.mockserver.integration.ClientAndServer.startClientAndServer;
-import org.mockserver.integration.ClientAndServer;
-import org.mockserver.model.HttpRequest;
-import org.mockserver.model.HttpResponse;
-import org.mockserver.verify.VerificationTimes;
 import org.restlet.Client;
 import org.restlet.Context;
 import org.restlet.data.ChallengeResponse;
@@ -57,8 +51,7 @@ import org.restlet.util.Series;
  */
 public class MediaResourceTest {
     
-    public static final String DOI = "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b";
-    private ClientAndServer mockServer;    
+    private MdsSpec spec;      
     private static Client cl;
     
     public MediaResourceTest() {
@@ -81,14 +74,14 @@ public class MediaResourceTest {
     
     @Before
     public void setUp() {
-        mockServer = startClientAndServer(1081);
+        this.spec = new MdsSpec();
     }
     
     @After
     public void tearDown() {
-        mockServer.stop();
+        this.spec.finish();
     }
-    
+      
     /**
      * Test of getMedias method, of class MediaResource.
      * @throws java.io.IOException - if OutOfMemoryErrors
@@ -96,12 +89,11 @@ public class MediaResourceTest {
     @Test
     public void testGetMediasHttps() throws IOException {
         System.out.println("getMedias");
-        
-        mockServer.when(HttpRequest.request("/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)
-                .withMethod("GET")).respond(HttpResponse.response().withStatusCode(200).withBody("application/fits=http://cnes.fr/test-data", StandardCharsets.UTF_8));
+
+        this.spec.createSpec(MdsSpec.Spec.GET_MEDIA_200);
         
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-        ClientResource client = new ClientResource("https://localhost:" + port + "/mds/media/"+DOI);
+        ClientResource client = new ClientResource("https://localhost:" + port + "/mds/media/"+MdsSpec.Spec.GET_MEDIA_200.getTemplatePath());
         client.setNext(cl);
         int code;
         try {
@@ -113,8 +105,7 @@ public class MediaResourceTest {
         client.release();
         assertEquals(Status.SUCCESS_OK.getCode(), code);
         
-        mockServer.verify(HttpRequest.request("/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)
-                .withMethod("GET"), VerificationTimes.once());         
+        this.spec.verifySpec(MdsSpec.Spec.GET_MEDIA_200);        
     }
     
     /**
@@ -125,11 +116,10 @@ public class MediaResourceTest {
     public void testGetMediasHttp() throws IOException {
         System.out.println("getMedias");
         
-        mockServer.when(HttpRequest.request("/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)
-                .withMethod("GET")).respond(HttpResponse.response().withStatusCode(200).withBody("application/fits=http://cnes.fr/test-data", StandardCharsets.UTF_8));
+        this.spec.createSpec(MdsSpec.Spec.GET_MEDIA_200);
         
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);
-        ClientResource client = new ClientResource("http://localhost:" + port + "/mds/media/"+DOI);        
+        ClientResource client = new ClientResource("http://localhost:" + port + "/mds/media/"+MdsSpec.Spec.GET_MEDIA_200.getTemplatePath());        
         int code;
         try {
             Representation rep = client.get();
@@ -140,8 +130,7 @@ public class MediaResourceTest {
         client.release();
         assertEquals(Status.SUCCESS_OK.getCode(), code);
         
-        mockServer.verify(HttpRequest.request("/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)
-                .withMethod("GET"), VerificationTimes.once());         
+        this.spec.verifySpec(MdsSpec.Spec.GET_MEDIA_200);                
     }        
 
     /**
@@ -154,11 +143,10 @@ public class MediaResourceTest {
     public void testGetMediasWithWrongDOIHttps() throws IOException {
         System.out.println("getMedias with wrong DOI through a HTTPS server");
         
-        mockServer.when(HttpRequest.request("/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)
-                .withMethod("GET")).respond(HttpResponse.response().withStatusCode(404).withBody("No media attached to the DOI or DOI does not exist in our database"));
+        this.spec.createSpec(MdsSpec.Spec.GET_MEDIA_404);
         
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-        ClientResource client = new ClientResource("https://localhost:" + port + "/mds/media/"+DOI);
+        ClientResource client = new ClientResource("https://localhost:" + port + "/mds/media/"+MdsSpec.Spec.GET_MEDIA_404.getTemplatePath());
         client.setNext(cl);
         int code;
         try {
@@ -170,8 +158,7 @@ public class MediaResourceTest {
         client.release();
         assertEquals(Status.CLIENT_ERROR_NOT_FOUND.getCode(), code);
         
-        mockServer.verify(HttpRequest.request("/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)
-                .withMethod("GET"), VerificationTimes.once());           
+        this.spec.verifySpec(MdsSpec.Spec.GET_MEDIA_404);                          
     }
     
     /**
@@ -184,11 +171,10 @@ public class MediaResourceTest {
     public void testGetMediasWithWrongDOIHttp() throws IOException {
         System.out.println("getMedias with wrong DOI through HTTP server");
         
-        mockServer.when(HttpRequest.request("/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)
-                .withMethod("GET")).respond(HttpResponse.response().withStatusCode(404).withBody("No media attached to the DOI or DOI does not exist in our database"));
+        this.spec.createSpec(MdsSpec.Spec.GET_MEDIA_404);
         
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);
-        ClientResource client = new ClientResource("http://localhost:" + port + "/mds/media/"+DOI);        
+        ClientResource client = new ClientResource("http://localhost:" + port + "/mds/media/"+MdsSpec.Spec.GET_MEDIA_404.getTemplatePath());        
         int code;
         try {
             Representation rep = client.get();
@@ -199,8 +185,7 @@ public class MediaResourceTest {
         client.release();
         assertEquals(Status.CLIENT_ERROR_NOT_FOUND.getCode(), code);
         
-        mockServer.verify(HttpRequest.request("/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)
-                .withMethod("GET"), VerificationTimes.once());         
+        this.spec.verifySpec(MdsSpec.Spec.GET_MEDIA_404);                                  
     }    
 
     /**
@@ -208,18 +193,15 @@ public class MediaResourceTest {
      * A Status.SUCCESS_OK is expected
      */
     @Test    
-    public void testCreateMedia() {
+    public void testCreateMediaForbidden() {
         System.out.println("createMedia");
-        
-        mockServer.when(HttpRequest.request("/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)
-                .withMethod("POST")).respond(HttpResponse.response().withStatusCode(200).withBody("operation successful"));
-        
+                
         Form mediaForm = new Form();
         mediaForm.add("image/fits", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
         mediaForm.add("image/jpeg", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
         mediaForm.add("image/png", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-        ClientResource client = new ClientResource("https://localhost:" + port + "/mds/media/"+DOI);
+        ClientResource client = new ClientResource("https://localhost:" + port + "/mds/media/"+MdsSpec.Spec.POST_MEDIA_200.getTemplatePath());
         client.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "malapert", "pwd"));
         final String RESTLET_HTTP_HEADERS = "org.restlet.http.headers";
         Map<String, Object> reqAttribs = client.getRequestAttributes();
@@ -239,10 +221,8 @@ public class MediaResourceTest {
             code = ex.getStatus().getCode();
         }
         client.release();
-        assertEquals(Status.SUCCESS_OK.getCode(), code);
+        assertEquals(Status.CLIENT_ERROR_FORBIDDEN.getCode(), code);
         
-        mockServer.verify(HttpRequest.request("/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)
-                .withMethod("POST"), VerificationTimes.once());         
     }
     
 }

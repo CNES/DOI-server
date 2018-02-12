@@ -17,6 +17,6 @@
  * MA 02110-1301  USA
  */
 /**
- * Provides classes to create a server and start it.
+ * Provides classes to create the server and start it.
  */
 package fr.cnes.doi.server;

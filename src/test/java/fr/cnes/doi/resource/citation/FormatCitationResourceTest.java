@@ -51,8 +51,8 @@ import org.junit.rules.ExpectedException;
 public class FormatCitationResourceTest {
     
     @Rule
-    public ExpectedException exceptions = ExpectedException.none();     
-
+    public ExpectedException exceptions = ExpectedException.none(); 
+    
     private static Client cl;
     private CrossCiteSpec spec;   
 

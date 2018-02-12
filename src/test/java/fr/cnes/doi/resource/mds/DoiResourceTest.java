@@ -19,7 +19,7 @@
 package fr.cnes.doi.resource.mds;
 
 import fr.cnes.doi.InitServerForTest;
-import fr.cnes.doi.client.ClientMDS;
+import fr.cnes.doi.MdsSpec;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import java.io.IOException;
@@ -29,11 +29,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.mockserver.integration.ClientAndServer;
-import static org.mockserver.integration.ClientAndServer.startClientAndServer;
-import org.mockserver.model.HttpRequest;
-import org.mockserver.model.HttpResponse;
-import org.mockserver.verify.VerificationTimes;
 import org.restlet.Client;
 import org.restlet.Context;
 import org.restlet.data.Parameter;
@@ -50,9 +45,8 @@ import org.restlet.util.Series;
  */
 public class DoiResourceTest {
     
-    public static final String DOI = "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b";
     private static Client cl;
-    private ClientAndServer mockServer;
+    private MdsSpec spec;         
     
     public DoiResourceTest() {
     }
@@ -74,14 +68,14 @@ public class DoiResourceTest {
     
     @Before
     public void setUp() {
-        mockServer = startClientAndServer(1081);        
+        this.spec = new MdsSpec();        
     }
     
     @After
     public void tearDown() {
-        mockServer.stop();
+        this.spec.finish();
     }
-
+    
     /**
      * Test of getDoi method through a HTTP server, of class DoiResource.
      * A Status.SUCCESS_OK is expected and the response <i>https://cfosat.cnes.fr/</i>
@@ -91,18 +85,17 @@ public class DoiResourceTest {
     public void testGetDoiHttp() throws IOException {
         System.out.println("getDoi http");
         
-        mockServer.when(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE + "/" + DOI)
-                .withMethod("GET")).respond(HttpResponse.response().withStatusCode(200).withBody("https://edutheque.cnes.fr/fr/web/CNES-fr/10884-edutheque.php"));
+        this.spec.createSpec(MdsSpec.Spec.GET_DOI_200);
         
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);
-        ClientResource client = new ClientResource("http://localhost:"+port+"/mds/dois/"+DOI);
+        ClientResource client = new ClientResource("http://localhost:"+port+"/mds/dois/"+MdsSpec.Spec.GET_DOI_200.getTemplatePath());
         Representation rep = client.get();
         Status status = client.getStatus();
-        assertEquals("Test the status code is the right one", status.getCode(), Status.SUCCESS_OK.getCode());
-        assertEquals("Test the landing page is the right one","https://edutheque.cnes.fr/fr/web/CNES-fr/10884-edutheque.php", rep.getText());
         
-        mockServer.verify(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE + "/" + DOI)
-                .withMethod("GET"), VerificationTimes.once());        
+        assertEquals("Test the status code is the right one", status.getCode(), Status.SUCCESS_OK.getCode());
+        assertEquals("Test the landing page is the right one", MdsSpec.Spec.GET_DOI_200.getBody(), rep.getText());
+        
+        this.spec.verifySpec(MdsSpec.Spec.GET_DOI_200);
     }
     
     /**
@@ -114,19 +107,19 @@ public class DoiResourceTest {
     public void testGetDoiHttps() throws IOException {
         System.out.println("getDoi https");
         
-        mockServer.when(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE + "/" + DOI)
-                .withMethod("GET")).respond(HttpResponse.response().withStatusCode(200).withBody("https://edutheque.cnes.fr/fr/web/CNES-fr/10884-edutheque.php"));
+        this.spec.createSpec(MdsSpec.Spec.GET_DOI_200);
         
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-        ClientResource client = new ClientResource("https://localhost:"+port+"/mds/dois/"+DOI);
+        ClientResource client = new ClientResource("https://localhost:"+port+"/mds/dois/"+MdsSpec.Spec.GET_DOI_200.getTemplatePath());
         client.setNext(cl);
         Representation rep = client.get();
         Status status = client.getStatus();
-        assertEquals("Test the status code is the right one", status.getCode(), Status.SUCCESS_OK.getCode());
-        assertEquals("Test the landing page is the right one","https://edutheque.cnes.fr/fr/web/CNES-fr/10884-edutheque.php", rep.getText());
         
-        mockServer.verify(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE + "/" + DOI)
-                .withMethod("GET"), VerificationTimes.once());         
+        assertEquals("Test the status code is the right one", status.getCode(), Status.SUCCESS_OK.getCode());
+        assertEquals("Test the landing page is the right one",MdsSpec.Spec.GET_DOI_200.getBody(), rep.getText());
+        
+        this.spec.verifySpec(MdsSpec.Spec.GET_DOI_200);
+         
     }    
     
     /**
@@ -139,11 +132,10 @@ public class DoiResourceTest {
     public void testGetDoiNotFoundHttps() throws IOException {        
         System.out.println("getDoi not found https");      
         
-        mockServer.when(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE + "/" + DOI)
-                .withMethod("GET")).respond(HttpResponse.response().withStatusCode(404));  
+        this.spec.createSpec(MdsSpec.Spec.GET_DOI_404);
         
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-        ClientResource client = new ClientResource("https://localhost:"+port+"/mds/dois/"+DOI);
+        ClientResource client = new ClientResource("https://localhost:"+port+"/mds/dois/"+MdsSpec.Spec.GET_DOI_404.getTemplatePath());
         client.setNext(cl);
         int code;
         try {
@@ -155,8 +147,8 @@ public class DoiResourceTest {
         client.release();
         assertEquals(code, Status.CLIENT_ERROR_NOT_FOUND.getCode());
         
-        mockServer.verify(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE + "/" + DOI)
-                .withMethod("GET"), VerificationTimes.once());        
+        this.spec.verifySpec(MdsSpec.Spec.GET_DOI_404);
+       
     }        
     
     /**

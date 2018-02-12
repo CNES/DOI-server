@@ -92,9 +92,9 @@ public class ClientCrossCiteCitation extends BaseClient {
         private Level levelLog;
 
         /**
-         * DataCite URL.
+         * CrossCite URL.
          */
-        private final String crossCiteUrl;
+        private String crossCiteUrl;
 
         Context(final String dataciteUrl, final Level levelLog) {
             this.crossCiteUrl = dataciteUrl;
@@ -128,7 +128,16 @@ public class ClientCrossCiteCitation extends BaseClient {
         private void setLevelLog(final Level levelLog) {
             this.levelLog = levelLog;
         }
-
+        
+        /**
+         * Sets the Cross Cite URL for the context.
+         *
+         * @param crossCiteUrl Cross Cite URL
+         */
+        private void setCrossCiteUrl(final String crossCiteUrl) {
+            this.crossCiteUrl = crossCiteUrl;
+        }
+        
         /**
          * Sets the level log for a given context
          *
@@ -138,6 +147,16 @@ public class ClientCrossCiteCitation extends BaseClient {
         public static void setLevelLog(final Context context, final Level levelLog) {
             context.setLevelLog(levelLog);
         }
+        
+        /**
+         * Sets the Cross Cite URL for a given context
+         *
+         * @param context the context
+         * @param crossCiteUrl Cross Cite URL
+         */
+        public static void setCrossCiteUrl(final Context context, final String crossCiteUrl) {
+            context.setCrossCiteUrl(crossCiteUrl);
+        }        
 
     }    
     

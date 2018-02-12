@@ -109,7 +109,7 @@ public class MetadataResourceTest {
     public void tearDown() {
         mockServer.stop();
     }
-
+    
     /**
      * Test of getMetadata method throw a HTTPS server, of class
      * MetadataResource. A Status.SUCCESS_OK is expected when the metadata is

@@ -21,6 +21,7 @@ package fr.cnes.doi;
 import fr.cnes.doi.client.ClientMDS;
 import java.util.Arrays;
 import java.util.List;
+import org.mockserver.client.server.MockServerClient;
 import org.mortbay.jetty.HttpMethods;
 
 /**

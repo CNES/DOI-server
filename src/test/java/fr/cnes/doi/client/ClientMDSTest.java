@@ -36,6 +36,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
+import org.mockserver.junit.MockServerRule;
 import org.restlet.data.CharacterSet;
 import org.restlet.data.Form;
 import org.restlet.data.Language;
@@ -68,7 +69,7 @@ public class ClientMDSTest {
 
     @Before
     public void setUp() {
-        spec = new MdsSpec();
+        spec = new MdsSpec();       
     }
 
     @After
@@ -78,12 +79,15 @@ public class ClientMDSTest {
 
     @Rule
     public ExpectedException exceptions = ExpectedException.none();
-
+    
+    @Rule
+    public MockServerRule mockServerRule = new MockServerRule(this);
+    
     /**
      * Test of checkIfAllCharsAreValid method, of class ClientMDS.
      */
     @Test
-    public void testCheckIfOneCharIsNotValid() {
+    public void testCheckIfOneCharIsNotValid() {        
         System.out.println("checkIfOneCharIsNotValid");
         exceptions.expect(IllegalArgumentException.class);
         String test = "10.5072/éabscd";

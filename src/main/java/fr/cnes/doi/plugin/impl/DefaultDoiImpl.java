@@ -112,6 +112,7 @@ public class DefaultDoiImpl extends AbstractDoiDBPluginHelper {
      *
      * @param dbConfFile File that contains the project configuration
      * @throws IOException Exception when trying to load the file
+     * @throws URISyntaxException Exception when the syntax of the landing page URL is not correct
      */
     private void loadDBConf(File dbConfFile) throws IOException, URISyntaxException {
         LOG.debug("Cache file exists : {}", dbConfFile.getAbsolutePath());

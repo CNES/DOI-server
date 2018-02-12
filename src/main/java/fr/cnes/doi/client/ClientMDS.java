@@ -159,7 +159,7 @@ public class ClientMDS extends BaseClient {
         /**
          * DataCite URL.
          */
-        private final String dataCiteUrl;
+        private String dataCiteUrl;
 
         Context(final boolean isTestMode, final boolean isDoiPrefix,
                 final String dataciteUrl, final Level levelLog) {
@@ -204,6 +204,15 @@ public class ClientMDS extends BaseClient {
         public String getDataCiteUrl() {
             return this.dataCiteUrl;
         }
+        
+        /**
+         * Sets the DataCite URL for the context
+         *
+         * @param dataCiteUrl DataCite URL
+         */
+        private void setDataCiteURl(final String dataCiteUrl) {
+            this.dataCiteUrl = dataCiteUrl;
+        }        
 
         /**
          * Sets the level log for the context
@@ -223,6 +232,16 @@ public class ClientMDS extends BaseClient {
         public static void setLevelLog(final Context context, final Level levelLog) {
             context.setLevelLog(levelLog);
         }
+        
+        /**
+         * Sets the DataCite URL for a given context
+         *
+         * @param context the context
+         * @param dataCiteUrl the DataCite URL
+         */
+        public static void setDataCiteUrl(final Context context, final String dataCiteUrl) {
+            context.setDataCiteURl(dataCiteUrl);
+        }        
 
     }
 
