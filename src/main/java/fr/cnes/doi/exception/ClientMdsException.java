@@ -18,7 +18,12 @@
  */
 package fr.cnes.doi.exception;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.restlet.data.Status;
+import org.restlet.representation.Representation;
+import org.restlet.resource.ClientResource;
 
 /**
  * Exception for Client Cross Cite.
@@ -81,6 +86,27 @@ public class ClientMdsException extends Exception {
         super(message, cause);
         this.detailMessage = computeDetailMessage(status);
         this.status = status;
+    }
+    
+    /**
+     * Constructs a new exception with the specified detail HTTP status, response
+     * and cause.
+     * @param status HTTP status
+     * @param message message
+     * @param responseEntity Representation of the response
+     * @param cause cause
+     */
+    public ClientMdsException(final Status status, final String message, 
+            final Representation responseEntity, final Throwable cause) {
+       super(message, cause);
+       this.status = status;
+       String txt;
+        try {
+            txt = responseEntity.getText();
+        } catch (IOException ex) {
+            txt = computeDetailMessage(status);
+        }
+        this.detailMessage = txt;
     }
     
     /**

@@ -18,11 +18,23 @@
  */
 package fr.cnes.doi.utils;
 
+import fr.cnes.doi.client.ClientMDS;
+import static fr.cnes.doi.client.ClientMDS.POST_DOI;
+import static fr.cnes.doi.client.ClientMDS.POST_URL;
+import java.io.IOException;
 import java.lang.reflect.Array;
+import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.restlet.Client;
+import org.restlet.data.MediaType;
+import org.restlet.representation.Representation;
+import org.restlet.resource.ClientResource;
+import org.restlet.resource.ResourceException;
 
 /**
  * Utility Class.

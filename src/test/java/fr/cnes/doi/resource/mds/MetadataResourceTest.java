@@ -37,7 +37,9 @@ import static org.junit.Assert.*;
 import org.mockserver.integration.ClientAndServer;
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import org.mockserver.model.HttpRequest;
+import static org.mockserver.model.HttpRequest.request;
 import org.mockserver.model.HttpResponse;
+import static org.mockserver.model.HttpResponse.response;
 import org.mockserver.verify.VerificationTimes;
 import org.restlet.Client;
 import org.restlet.Context;
@@ -196,8 +198,17 @@ public class MetadataResourceTest {
     public void testGetMetadataFromWrongDOI() throws IOException, JAXBException, SAXException {
         System.out.println("getMetadata");
         
-        mockServer.when(HttpRequest.request("/" + ClientMDS.METADATA_RESOURCE + "/" + DOI)
-                .withMethod("GET")).respond(HttpResponse.response().withStatusCode(404).withBody(XML, StandardCharsets.UTF_8));
+        mockServer
+                .when(
+                        request()
+                                .withPath("/" + ClientMDS.METADATA_RESOURCE + "/" + DOI)
+                                .withMethod("GET")
+                )
+                .respond(
+                        response()
+                                .withStatusCode(404)
+                                .withBody("DOI not found")
+                );
         
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + "/mds/metadata/"+DOI);

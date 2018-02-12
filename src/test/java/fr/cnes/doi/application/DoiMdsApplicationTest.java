@@ -21,6 +21,7 @@ package fr.cnes.doi.application;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
+import java.io.FileWriter;
 import java.io.IOException;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -99,5 +100,5 @@ public class DoiMdsApplicationTest {
         String txt = repApi.getText();
         client.release();
         assertTrue("API through HTTPS",txt!=null && !txt.isEmpty());
-    }    
+    } 
 }

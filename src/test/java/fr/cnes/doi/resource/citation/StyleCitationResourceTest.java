@@ -18,8 +18,8 @@
  */
 package fr.cnes.doi.resource.citation;
 
+import fr.cnes.doi.CrossCiteSpec;
 import fr.cnes.doi.InitServerForTest;
-import fr.cnes.doi.client.ClientCrossCiteCitation;
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;
@@ -40,16 +40,9 @@ import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import java.io.IOException;
 import org.junit.Assert;
-import org.junit.Rule;
-import org.mockserver.integration.ClientAndServer;
 import org.restlet.data.MediaType;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ResourceException;
-import static org.mockserver.integration.ClientAndServer.startClientAndServer;
-import org.mockserver.junit.MockServerRule;
-import org.mockserver.model.HttpRequest;
-import org.mockserver.model.HttpResponse;
-import org.mockserver.verify.VerificationTimes;
 
 
 /**
@@ -60,7 +53,7 @@ import org.mockserver.verify.VerificationTimes;
 public class StyleCitationResourceTest {
 
     private static Client cl;
-    private ClientAndServer mockServer;    
+    private CrossCiteSpec spec;   
 
     public StyleCitationResourceTest() throws InterruptedException, Exception {
     }
@@ -82,17 +75,13 @@ public class StyleCitationResourceTest {
 
     @Before
     public void setUp() {
-        mockServer = startClientAndServer(1080);
+        this.spec = new CrossCiteSpec();
     }
 
     @After
     public void tearDown() throws Exception {
-        mockServer.stop();
-
-    }
-    
-    @Rule
-    public MockServerRule mockServerRule = new MockServerRule(this);     
+        this.spec.finish();
+    }   
 
     /**
      * Test of getStyles method through a HTTPS server, of class
@@ -102,8 +91,7 @@ public class StyleCitationResourceTest {
     public void testGetStylesHttps() {
         System.out.println("getStyles through a HTTPS server");
         
-        // setting behaviour for test case
-        mockServer.when(HttpRequest.request(ClientCrossCiteCitation.STYLE_URI).withMethod("GET")).respond(HttpResponse.response().withBody("[\"academy-of-management-review\",\"accident-analysis-and-prevention\",\"acm-sig-proceedings-long-author-list\"]"));       
+        this.spec.createSpec(CrossCiteSpec.Spec.GET_STYLE_200);
         
         String expResult = "academy-of-management-review";
         String result = "";
@@ -119,8 +107,8 @@ public class StyleCitationResourceTest {
             assertEquals("Test if the server returns the right response", expResult, result);
         }
         
-        // verify server has received exactly one request
-        mockServer.verify(HttpRequest.request(ClientCrossCiteCitation.STYLE_URI), VerificationTimes.once());        
+        this.spec.verifySpec(CrossCiteSpec.Spec.GET_STYLE_200);
+        
     }
 
     /**
@@ -131,8 +119,7 @@ public class StyleCitationResourceTest {
     public void testGetStylesHttp() {
         System.out.println("getStyles through a HTTP server");
         
-        // setting behaviour for test case
-        mockServer.when(HttpRequest.request(ClientCrossCiteCitation.STYLE_URI).withMethod("GET")).respond(HttpResponse.response().withBody("[\"academy-of-management-review\",\"accident-analysis-and-prevention\",\"acm-sig-proceedings-long-author-list\"]"));       
+        this.spec.createSpec(CrossCiteSpec.Spec.GET_STYLE_200);      
         
         String expResult = "academy-of-management-review";
         String result = "";
@@ -148,8 +135,7 @@ public class StyleCitationResourceTest {
             assertEquals("Test if the server returns the right response", expResult, result);
         }
         
-        // verify server has received exactly one request
-        mockServer.verify(HttpRequest.request(ClientCrossCiteCitation.STYLE_URI), VerificationTimes.once());          
+        this.spec.verifySpec(CrossCiteSpec.Spec.GET_STYLE_200);
     }
 
     /**
@@ -160,10 +146,9 @@ public class StyleCitationResourceTest {
     public void testGetStylesHttpsAsJSON() {
         System.out.println("getStyles as a JSON response");
         
-        // setting behaviour for test case
-        mockServer.when(HttpRequest.request(ClientCrossCiteCitation.STYLE_URI).withMethod("GET")).respond(HttpResponse.response().withBody("[\"academy-of-management-review\",\"accident-analysis-and-prevention\",\"acm-sig-proceedings-long-author-list\"]"));       
+        this.spec.createSpec(CrossCiteSpec.Spec.GET_STYLE_200);     
           
-        String expResult = "academy-of-management-review";
+        String expResult = CrossCiteSpec.Spec.GET_STYLE_200.getBody();
         String result = "";
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + "/citation/style");
@@ -177,8 +162,7 @@ public class StyleCitationResourceTest {
             Assert.assertTrue("Test is the server returns a JSON response", result.contains("["));
         }
         
-        // verify server has received exactly one request
-        mockServer.verify(HttpRequest.request(ClientCrossCiteCitation.STYLE_URI), VerificationTimes.once());        
+        this.spec.verifySpec(CrossCiteSpec.Spec.GET_STYLE_200);
     }
 
     /**
@@ -189,10 +173,9 @@ public class StyleCitationResourceTest {
     public void testGetStylesHttpsAsXML() {
         System.out.println("getStyles as a XML response");
         
-        // setting behaviour for test case
-        mockServer.when(HttpRequest.request(ClientCrossCiteCitation.STYLE_URI).withMethod("GET")).respond(HttpResponse.response().withBody("[\"academy-of-management-review\",\"accident-analysis-and-prevention\",\"acm-sig-proceedings-long-author-list\"]"));       
+        this.spec.createSpec(CrossCiteSpec.Spec.GET_STYLE_200);
         
-        String expResult = "academy-of-management-review";
+        String expResult = CrossCiteSpec.Spec.GET_STYLE_200.getBody();
         String result = "";
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + "/citation/style");
@@ -207,7 +190,8 @@ public class StyleCitationResourceTest {
         }
         
         // verify server has received exactly one request
-        mockServer.verify(HttpRequest.request(ClientCrossCiteCitation.STYLE_URI), VerificationTimes.once());        
+        this.spec.verifySpec(CrossCiteSpec.Spec.GET_STYLE_200);
+        
     }
 
 }

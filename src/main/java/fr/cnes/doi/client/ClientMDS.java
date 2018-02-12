@@ -135,21 +135,19 @@ public class ClientMDS extends BaseClient {
         PROD(false, false, DATA_CITE_URL, Level.INFO);
 
         /**
-         * Each API call can have optional query parametertestMode. If set to
-         * "true" or "1" the request will not change the database nor will the
-         * DOI handle will be registered or updated, e.g. POST
-         * /doi?testMode=true and the testing prefix will be used instead of the
+         * Each API call can have optional query parametertestMode. If set to "true" or "1" the
+         * request will not change the database nor will the DOI handle will be registered or
+         * updated, e.g. POST /doi?testMode=true and the testing prefix will be used instead of the
          * provided prefix
          */
         private final boolean isTestMode;
 
         /**
-         * There is special test prefix 10.5072 available to all datacentres.
-         * Please use it for all your testing DOIs. Your real prefix should not
-         * be used for test DOIs. Note that DOIs with test prefix will behave
-         * like any other DOI, e.g. they can be normally resolved. They will not
-         * be exposed by upcoming services like search and OAI, though.
-         * Periodically we purge all 10.5072 datasets from the system.
+         * There is special test prefix 10.5072 available to all datacentres. Please use it for all
+         * your testing DOIs. Your real prefix should not be used for test DOIs. Note that DOIs with
+         * test prefix will behave like any other DOI, e.g. they can be normally resolved. They will
+         * not be exposed by upcoming services like search and OAI, though. Periodically we purge
+         * all 10.5072 datasets from the system.
          */
         private final boolean isDoiPrefix;
 
@@ -241,27 +239,23 @@ public class ClientMDS extends BaseClient {
     /**
      * Creates a client to handle DataCite server.
      *
-     * There is special test prefix 10.5072 available to all datacentres. Please
-     * use it for all your testing DOIs. Your real prefix should not be used for
-     * test DOIs. Note that DOIs with test prefix will behave like any other
-     * DOI, e.g. they can be normally resolved. They will not be exposed by
-     * upcoming services like search and OAI, though. Periodically we purge *
-     * all 10.5072 datasets from the system.
+     * There is special test prefix 10.5072 available to all datacentres. Please use it for all your
+     * testing DOIs. Your real prefix should not be used for test DOIs. Note that DOIs with test
+     * prefix will behave like any other DOI, e.g. they can be normally resolved. They will not be
+     * exposed by upcoming services like search and OAI, though. Periodically we purge * all 10.5072
+     * datasets from the system.
      *
      * <p>
-     * It is important to understand that the Handle System (the technical
-     * infrastructure for DOIs) is a distributed network system. The consequence
-     * of this manifests is its inherent latency. For example, DOIs have TTL
-     * (time to live) defaulted to 24 hours, so your changes will be visible to
-     * the resolution infrastructure only when the TTL expires. Also, if you
-     * create a DOI and then immediately try to update its URL, you might get
-     * the error message HANDLE NOT EXISTS. This is because it takes some time
-     * for the system to register a handle for a DOI.
+     * It is important to understand that the Handle System (the technical infrastructure for DOIs)
+     * is a distributed network system. The consequence of this manifests is its inherent latency.
+     * For example, DOIs have TTL (time to live) defaulted to 24 hours, so your changes will be
+     * visible to the resolution infrastructure only when the TTL expires. Also, if you create a DOI
+     * and then immediately try to update its URL, you might get the error message HANDLE NOT
+     * EXISTS. This is because it takes some time for the system to register a handle for a DOI.
      *
-     * Each API call can have optional query parametertestMode. If set to "true"
-     * or "1" the request will not change the database nor will the DOI handle
-     * will be registered or updated, e.g. POST /doi?testMode=true and the
-     * testing prefix will be used instead of the provided prefix
+     * Each API call can have optional query parametertestMode. If set to "true" or "1" the request
+     * will not change the database nor will the DOI handle will be registered or updated, e.g. POST
+     * /doi?testMode=true and the testing prefix will be used instead of the provided prefix
      *
      * @param context Context using
      */
@@ -277,22 +271,19 @@ public class ClientMDS extends BaseClient {
     /**
      * Creates a client to handle DataCite with a HTTP Basic authentication.
      *
-     * All the traffic goes via HTTPS - please remember we do not support bare
-     * HTTP. All the requests to this system require HTTP Basic authentication
-     * header. You will get your username and password from your local DataCite
-     * allocator. Each account have some constraints associated with it:
+     * All the traffic goes via HTTPS - please remember we do not support bare HTTP. All the
+     * requests to this system require HTTP Basic authentication header. You will get your username
+     * and password from your local DataCite allocator. Each account have some constraints
+     * associated with it:
      * <ul>
-     * <li>you will be allowed to mint DOIs only with prefix assigned to
-     * you</li>
-     * <li>you will be allowed to mint DOIs only with URLs in host domains
-     * assigned to you</li>
-     * <li>you might not be able to mint unlimited number of DOIs, there is a
-     * quota assigned to you by your allocator (the quota can be extended or
-     * lifted though)</li>
+     * <li>you will be allowed to mint DOIs only with prefix assigned to you</li>
+     * <li>you will be allowed to mint DOIs only with URLs in host domains assigned to you</li>
+     * <li>you might not be able to mint unlimited number of DOIs, there is a quota assigned to you
+     * by your allocator (the quota can be extended or lifted though)</li>
      * </ul>
-     * Each API call can have optional query parametertestMode. If set to "true"
-     * or "1" the request will not change the database nor will the DOI handle
-     * will be registered or updated, e.g. POST /doi?testMode=true.
+     * Each API call can have optional query parametertestMode. If set to "true" or "1" the request
+     * will not change the database nor will the DOI handle will be registered or updated, e.g. POST
+     * /doi?testMode=true.
      *
      * @param context Context using
      * @param login Login
@@ -344,8 +335,7 @@ public class ClientMDS extends BaseClient {
     }
 
     /**
-     * Init the client to the reference {@link DATA_CITE_URL} or
-     * {@link DATA_CITE_TEST_URL}
+     * Init the client to the reference {@link DATA_CITE_URL} or {@link DATA_CITE_TEST_URL}
      */
     private void initReference() {
         this.getClient().setReference(this.context.getDataCiteUrl());
@@ -384,9 +374,8 @@ public class ClientMDS extends BaseClient {
     }
 
     /**
-     * Returns the right DOI according to the context (DEV, POST_DEV, ...). When
-     * the context has a DOI test prefix, the real DOI prefix is replaced by the
-     * DOI test prefix.
+     * Returns the right DOI according to the context (DEV, POST_DEV, ...). When the context has a
+     * DOI test prefix, the real DOI prefix is replaced by the DOI test prefix.
      *
      * @param doiName DOI name
      * @return the right DOI
@@ -396,8 +385,7 @@ public class ClientMDS extends BaseClient {
     }
 
     /**
-     * DataCite recommends that only the following characters are used within a
-     * DOI name:
+     * DataCite recommends that only the following characters are used within a DOI name:
      * <ul>
      * <li>0-9</li>
      * <li>a-z</li>
@@ -411,8 +399,8 @@ public class ClientMDS extends BaseClient {
      * </ul>
      *
      * @param test DOI name to test
-     * @throws IllegalArgumentException An exception is thrown when at least one
-     * character is not part of 0-9a-zA-Z\\-._+:/ of a DOI name
+     * @throws IllegalArgumentException An exception is thrown when at least one character is not
+     * part of 0-9a-zA-Z\\-._+:/ of a DOI name
      */
     public static void checkIfAllCharsAreValid(final String test) {
         if (!test.matches("^[0-9a-zA-Z\\-._+:/\\s]+$")) {
@@ -422,15 +410,13 @@ public class ClientMDS extends BaseClient {
     }
 
     /**
-     * Checks the input parameters and specially the validity of the DOI name.
-     * The real prefix is replaced by the test prefix in DEV, POST_DEV and
-     * PRE_PROD context. The DOI prefix may replace according to the
-     * {@link ClientMDS#context}.
+     * Checks the input parameters and specially the validity of the DOI name. The real prefix is
+     * replaced by the test prefix in DEV, POST_DEV and PRE_PROD context. The DOI prefix may replace
+     * according to the {@link ClientMDS#context}.
      *
      * @param form query form
-     * @throws IllegalArgumentException An exception is thrown when doi and url
-     * are not provided or when one character at least in the DOI name is not
-     * valid
+     * @throws IllegalArgumentException An exception is thrown when doi and url are not provided or
+     * when one character at least in the DOI name is not valid
      */
     private void checkInputForm(final Form form) throws IllegalArgumentException {
         final Map<String, String> map = form.getValuesMap();
@@ -451,8 +437,8 @@ public class ClientMDS extends BaseClient {
      *
      * @param rep Response of the server
      * @return the text of the response
-     * @throws ClientMdsException An exception is thrown when cannot convert the
-     * Representation to text
+     * @throws ClientMdsException An exception is thrown when cannot convert the Representation to
+     * text
      */
     private String getText(final Representation rep) throws ClientMdsException {
         final String result;
@@ -465,52 +451,48 @@ public class ClientMDS extends BaseClient {
     }
 
     /**
-     * This request returns an URL associated with a given DOI. A 200 status is
-     * an operation successful. A 204 status means no content (DOI is known to
-     * MDS, but is not minted (or not resolvable e.g. due to handle's latency)
-     * The DOI prefix may replace according to the {@link ClientMDS#context}.
+     * This request returns an URL associated with a given DOI. A 200 status is an operation
+     * successful. A 204 status means no content (DOI is known to MDS, but is not minted (or not
+     * resolvable e.g. due to handle's latency) The DOI prefix may replace according to the
+     * {@link ClientMDS#context}.
      *
      * @param doiName DOI name
-     * @return an URL or no content (DOI is known to MDS, but is not minted (or
-     * not resolvable e.g. due to handle's latency))
+     * @return an URL or no content (DOI is known to MDS, but is not minted (or not resolvable e.g.
+     * due to handle's latency))
      * @throws ClientMdsException - if an error happens <ul>
      * <li>401 Unauthorized - no login</li>
      * <li>403 - login problem or dataset belongs to another party</li>
      * <li>404 Not Found - DOI does not exist in our database</li>
-     * <li>500 Internal Server Error - server internal error, try later and if
-     * problem persists please contact us</li>
+     * <li>500 Internal Server Error - server internal error, try later and if problem persists
+     * please contact us</li>
      * </ul>
      * @see "https://mds.datacite.org/static/apidoc#tocAnchor-13"
      */
     public String getDoi(final String doiName) throws ClientMdsException {
-        final String result;
         final Reference url = createReferenceWithDOI(DOI_RESOURCE, doiName);
         this.getClient().getLogger().log(Level.INFO, "GET {0}", url.toString());
 
         this.getClient().setReference(url);
-        final Representation rep;
+        Representation rep;
         try {
             rep = this.getClient().get();
-            result = this.getText(rep);
-            return result;
+            return (rep == null) ? "" : this.getText(rep);
         } catch (ResourceException ex) {
-            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), ex);
+            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), this.getClient().getResponseEntity(), ex);
         } finally {
             this.getClient().release();
         }
     }
 
     /**
-     * This request returns a list of all DOIs for the requesting datacentre.
-     * There is no guaranteed order. A 200 status is an operation successful. A
-     * 204 status means no Content (no DOIs found)
+     * This request returns a list of all DOIs for the requesting datacentre. There is no guaranteed
+     * order. A 200 status is an operation successful. A 204 status means no Content (no DOIs found)
      *
      * @return a list of all DOI or no content when no DOIs founds
      * @throws ClientMdsException 204 No Content - no DOIs founds
      * @see "https://mds.datacite.org/static/apidoc#tocAnchor-14"
      */
     public String getDoiCollection() throws ClientMdsException {
-        final String result;
         final Reference url = createReference(DOI_RESOURCE);
         this.getClient().getLogger().log(Level.INFO, "GET {0}", url.toString());
 
@@ -518,10 +500,9 @@ public class ClientMDS extends BaseClient {
         final Representation rep;
         try {
             rep = this.getClient().get();
-            result = this.getText(rep);
-            return result;
+            return (rep == null) ? "" : this.getText(rep);
         } catch (ResourceException ex) {
-            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), ex);
+            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), this.getClient().getResponseEntity(), ex);
         } finally {
             this.getClient().release();
         }
@@ -530,24 +511,22 @@ public class ClientMDS extends BaseClient {
     /**
      * Will mint new DOI if specified DOI doesn't exist.
      *
-     * This method will attempt to update URL if you specify existing DOI.
-     * Standard domains and quota restrictions check will be performed. A
-     * Datacentre's doiQuotaUsed will be increased by 1. A new record in
-     * Datasets will be created when 201 Created status is returned.
+     * This method will attempt to update URL if you specify existing DOI. Standard domains and
+     * quota restrictions check will be performed. A Datacentre's doiQuotaUsed will be increased by
+     * 1. A new record in Datasets will be created when 201 Created status is returned.
      *
      * The DOI prefix may replace according to the {@link ClientMDS#context}.
      *
      * @param form A form with the following attributes doi and url
-     * @return short explanation of status code e.g. CREATED,
-     * HANDLE_ALREADY_EXISTS etc
+     * @return short explanation of status code e.g. CREATED, HANDLE_ALREADY_EXISTS etc
      * @throws ClientMdsException - if an error happens <ul>
-     * <li>400 Bad Request - request body must be exactly two lines: DOI and
-     * URL; wrong domain, wrong prefix</li>
+     * <li>400 Bad Request - request body must be exactly two lines: DOI and URL; wrong domain,
+     * wrong prefix</li>
      * <li>401 Unauthorized - no login</li>
      * <li>403 Forbidden - login problem, quota exceeded</li>
      * <li>412 Precondition failed - metadata must be uploaded first</li>
-     * <li>500 Internal Server Error - server internal error, try later and if
-     * problem persists please contact us</li>
+     * <li>500 Internal Server Error - server internal error, try later and if problem persists
+     * please contact us</li>
      * </ul>
      * @see "https://mds.datacite.org/static/apidoc#tocAnchor-15"
      */
@@ -575,7 +554,7 @@ public class ClientMDS extends BaseClient {
             result = getText(rep);
             return result;
         } catch (ResourceException ex) {
-            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), ex);
+            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), this.getClient().getResponseEntity(), ex);
         } finally {
             this.getClient().release();
         }
@@ -586,8 +565,7 @@ public class ClientMDS extends BaseClient {
      *
      * @param rep XML representation
      * @return the Resource object
-     * @throws ClientMdsException Will throw when a problem happens during the
-     * parsing
+     * @throws ClientMdsException Will throw when a problem happens during the parsing
      */
     private Resource parseDataciteResource(final Representation rep) throws ClientMdsException {
         final Resource resource;
@@ -602,21 +580,19 @@ public class ClientMDS extends BaseClient {
     }
 
     /**
-     * This request returns the most recent version of metadata associated with
-     * a given DOI. A status of 200 is an operation successful. The DOI prefix
-     * may replace according to the {@link ClientMDS#context}.
+     * This request returns the most recent version of metadata associated with a given DOI. A
+     * status of 200 is an operation successful. The DOI prefix may replace according to the
+     * {@link ClientMDS#context}.
      *
      * @param doiName DOI name
      * @return XML representing a dataset
      * @throws ClientMdsException - if an error happens <ul>
      * <li>401 Unauthorized - no login</li>
-     * <li>403 Forbidden - login problem or dataset belongs to another
-     * party</li>
+     * <li>403 Forbidden - login problem or dataset belongs to another party</li>
      * <li>404 Not Found - DOI does not exist in our database</li>
-     * <li>410 Gone - the requested dataset was marked inactive (using DELETE
-     * method)</li>
-     * <li>500 Internal Server Error - server internal error, try later and if
-     * problem persists please contact us</li>
+     * <li>410 Gone - the requested dataset was marked inactive (using DELETE method)</li>
+     * <li>500 Internal Server Error - server internal error, try later and if problem persists
+     * please contact us</li>
      * </ul>
      */
     public Resource getMetadataAsObject(final String doiName) throws ClientMdsException {
@@ -625,22 +601,19 @@ public class ClientMDS extends BaseClient {
     }
 
     /**
-     * Returns the metadata based on its DOI name. A status of 200 is an
-     * operation successful. The DOI prefix may replace according to the
-     * {@link ClientMDS#context}.
+     * Returns the metadata based on its DOI name. A status of 200 is an operation successful. The
+     * DOI prefix may replace according to the {@link ClientMDS#context}.
      *
      * @param doiName DOI name
      * @return the metadata as XML
      * @throws ClientMdsException - if an error happens <ul>
      * <li>200 OK - operation successful</li>
      * <li>401 Unauthorized - no login</li>
-     * <li>403 Forbidden - login problem or dataset belongs to another
-     * party</li>
+     * <li>403 Forbidden - login problem or dataset belongs to another party</li>
      * <li>404 Not Found - DOI does not exist in our database</li>
-     * <li>410 Gone - the requested dataset was marked inactive (using DELETE
-     * method)</li>
-     * <li>500 Internal Server Error - server internal error, try later and if
-     * problem persists please contact us</li>
+     * <li>410 Gone - the requested dataset was marked inactive (using DELETE method)</li>
+     * <li>500 Internal Server Error - server internal error, try later and if problem persists
+     * please contact us</li>
      * </ul>
      * @see "https://mds.datacite.org/static/apidoc#tocAnchor-15"
      */
@@ -652,26 +625,24 @@ public class ClientMDS extends BaseClient {
         try {
             return this.getClient().get(MediaType.APPLICATION_XML);
         } catch (ResourceException ex) {
-            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), ex);
+            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), this.getClient().getResponseEntity(), ex);
         } finally {
             this.getClient().release();
         }
     }
 
     /**
-     * This request stores new version of metadata. Creates metadata with 201
-     * status when operation successful. The DOI prefix may replace according to
-     * the {@link ClientMDS#context}.
+     * This request stores new version of metadata. Creates metadata with 201 status when operation
+     * successful. The DOI prefix may replace according to the {@link ClientMDS#context}.
      *
      * @param entity A valid XML
-     * @return short explanation of status code e.g.
-     * CREATED,HANDLE_ALREADY_EXISTS etc
+     * @return short explanation of status code e.g. CREATED,HANDLE_ALREADY_EXISTS etc
      * @throws ClientMdsException - if an error happens <ul>
      * <li>400 Bad Request - invalid XML, wrong prefix</li>
      * <li>401 Unauthorized - no login</li>
      * <li>403 Forbidden - login problem, quota exceeded</li>
-     * <li>500 Internal Server Error - server internal error, try later and if
-     * problem persists please contact us</li>
+     * <li>500 Internal Server Error - server internal error, try later and if problem persists
+     * please contact us</li>
      * </ul>
      * @see "https://mds.datacite.org/static/apidoc#tocAnchor-18"
      */
@@ -681,18 +652,17 @@ public class ClientMDS extends BaseClient {
     }
 
     /**
-     * Creates metadata with 201 status when operation successful. The DOI
-     * prefix may replace according to the {@link ClientMDS#context}.
+     * Creates metadata with 201 status when operation successful. The DOI prefix may replace
+     * according to the {@link ClientMDS#context}.
      *
      * @param entity Metadata
-     * @return short explanation of status code e.g. CREATED,
-     * HANDLE_ALREADY_EXISTS etc
+     * @return short explanation of status code e.g. CREATED, HANDLE_ALREADY_EXISTS etc
      * @throws ClientMdsException - if an error happens <ul>
      * <li>400 Bad Request - invalid XML, wrong prefix</li>
      * <li>401 Unauthorized - no login</li>
      * <li>403 Forbidden - login problem, quota exceeded</li>
-     * <li>500 Internal Server Error - server internal error, try later and if
-     * problem persists please contact us</li>
+     * <li>500 Internal Server Error - server internal error, try later and if problem persists
+     * please contact us</li>
      * </ul>
      * @see "https://mds.datacite.org/static/apidoc#tocAnchor-18"
      */
@@ -743,12 +713,17 @@ public class ClientMDS extends BaseClient {
             this.getClient().setReference(url);
             this.getClient().getRequestAttributes().put("charset", "UTF-8");
             final Representation response = this.getClient().post(
-                    new StringRepresentation(output.toString(), MediaType.APPLICATION_XML)
+                    new StringRepresentation(
+                            output.toString(),
+                            MediaType.APPLICATION_XML,
+                            Language.ALL,
+                            CharacterSet.UTF_8
+                    )
             );
             result = getText(response);
             return result;
         } catch (ResourceException ex) {
-            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), ex);
+            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), this.getClient().getResponseEntity(), ex);
         } catch (JAXBException | SAXException | MalformedURLException ex) {
             throw new ClientMdsException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex);
         } finally {
@@ -760,19 +735,18 @@ public class ClientMDS extends BaseClient {
     /**
      * This request marks a dataset as 'inactive'.
      *
-     * To activate it again, POST new metadata or set the isActive-flag in the
-     * user interface. A status of 200 is an operation successful. The DOI
-     * prefix may replace according to the {@link ClientMDS#context}.
+     * To activate it again, POST new metadata or set the isActive-flag in the user interface. A
+     * status of 200 is an operation successful. The DOI prefix may replace according to the
+     * {@link ClientMDS#context}.
      *
      * @param doiName DOI name
      * @return XML representing a dataset
      * @throws ClientMdsException - if an error happens <ul>
      * <li>401 Unauthorized - no login</li>
-     * <li>403 Forbidden - login problem or dataset belongs to another
-     * party</li>
+     * <li>403 Forbidden - login problem or dataset belongs to another party</li>
      * <li>404 Not Found - DOI does not exist in our database</li>
-     * <li>500 Internal Server Error - server internal error, try later and if
-     * problem persists please contact us</li>
+     * <li>500 Internal Server Error - server internal error, try later and if problem persists
+     * please contact us</li>
      * </ul>
      * @see "https://mds.datacite.org/static/apidoc#tocAnchor-19"
      */
@@ -784,19 +758,18 @@ public class ClientMDS extends BaseClient {
     /**
      * This request marks a dataset as 'inactive'.
      *
-     * To activate it again, POST new metadata or set the isActive-flag in the
-     * user interface. A status of 200 is an operation successful The DOI prefix
-     * may replace according to the {@link ClientMDS#context}.
+     * To activate it again, POST new metadata or set the isActive-flag in the user interface. A
+     * status of 200 is an operation successful The DOI prefix may replace according to the
+     * {@link ClientMDS#context}.
      *
      * @param doiName DOI name
      * @return the deleted metadata
      * @throws ClientMdsException - if an error happens <ul>
      * <li>401 Unauthorized - no login</li>
-     * <li>403 Forbidden - login problem or dataset belongs to another
-     * party</li>
+     * <li>403 Forbidden - login problem or dataset belongs to another party</li>
      * <li>404 Not Found - DOI does not exist in our database</li>
-     * <li>500 Internal Server Error - server internal error, try later and if
-     * problem persists please contact us</li>
+     * <li>500 Internal Server Error - server internal error, try later and if problem persists
+     * please contact us</li>
      * </ul>
      * @see "https://mds.datacite.org/static/apidoc#tocAnchor-19"
      */
@@ -804,30 +777,28 @@ public class ClientMDS extends BaseClient {
         final Reference url = createReferenceWithDOI(METADATA_RESOURCE, doiName);
         Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "DELETE {0}", url.toString());
         this.getClient().setReference(url);
-        final Representation response = this.getClient().delete();
-        final Status status = this.getClient().getStatus();
-        this.getClient().release();
-        if (status.isSuccess()) {
-            return response;
-        } else {
-            throw new ClientMdsException(status, status.getDescription());
+        try {
+            return this.getClient().delete();
+        } catch (ResourceException ex) {
+            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), this.getClient().getResponseEntity(), ex);
+        } finally {
+            this.getClient().release();
         }
     }
 
     /**
-     * This request returns list of pairs of media type and URLs associated with
-     * a given DOI. A status of 200 is an operation successful. The DOI prefix
-     * may replace according to the {@link ClientMDS#context}.
+     * This request returns list of pairs of media type and URLs associated with a given DOI. A
+     * status of 200 is an operation successful. The DOI prefix may replace according to the
+     * {@link ClientMDS#context}.
      *
      * @param doiName DOI name
      * @return list of pairs of media type and URLs
      * @throws ClientMdsException - if an error happens <ul>
      * <li>401 Unauthorized - no login</li>
      * <li>403 login problem or dataset belongs to another party</li>
-     * <li>404 Not Found - No media attached to the DOI or DOI does not exist in
-     * our database</li>
-     * <li>500 Internal Server Error - server internal error, try later and if
-     * problem persists please contact us</li>
+     * <li>404 Not Found - No media attached to the DOI or DOI does not exist in our database</li>
+     * <li>500 Internal Server Error - server internal error, try later and if problem persists
+     * please contact us</li>
      * </ul>
      * @see "https://mds.datacite.org/static/apidoc#tocAnchor-21"
      */
@@ -841,30 +812,28 @@ public class ClientMDS extends BaseClient {
             result = this.getText(response);
             return result;
         } catch (ResourceException ex) {
-            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), ex);
+            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), this.getClient().getResponseEntity(), ex);
         } finally {
             this.getClient().release();
         }
     }
 
     /**
-     * Will add/update media type/urls pairs to a DOI. A status of 200 is an
-     * operation successful.Standard domain restrictions check will be
-     * performed. The DOI prefix may replace according to the
-     * {@link ClientMDS#context}.
+     * Will add/update media type/urls pairs to a DOI. A status of 200 is an operation
+     * successful.Standard domain restrictions check will be performed. The DOI prefix may replace
+     * according to the {@link ClientMDS#context}.
      *
      * @param doiName DOI identifier
-     * @param form Multiple lines in the following format{mime-type}={url} where
-     * {mime-type} and {url} have to be replaced by your mime type and URL,
-     * UFT-8 encoded.
+     * @param form Multiple lines in the following format{mime-type}={url} where {mime-type} and
+     * {url} have to be replaced by your mime type and URL, UFT-8 encoded.
      * @return short explanation of status code
      * @throws ClientMdsException - if an error happens <ul>
-     * <li>400 Bad Request - one or more of the specified mime-types or urls are
-     * invalid (e.g. non supported mime-type, not allowed url domain, etc.)</li>
+     * <li>400 Bad Request - one or more of the specified mime-types or urls are invalid (e.g. non
+     * supported mime-type, not allowed url domain, etc.)</li>
      * <li>401 Unauthorized - no login</li>
      * <li>403 Forbidden - login problem</li>
-     * <li>500 Internal Server Error - server internal error, try later and if
-     * problem persists please contact us</li>
+     * <li>500 Internal Server Error - server internal error, try later and if problem persists
+     * please contact us</li>
      * </ul>
      * @see "https://mds.datacite.org/static/apidoc#tocAnchor-22"
      */
@@ -879,15 +848,14 @@ public class ClientMDS extends BaseClient {
             result = this.getText(response);
             return result;
         } catch (ResourceException ex) {
-            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), ex);
+            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), this.getClient().getResponseEntity(), ex);
         } finally {
             this.getClient().release();
         }
     }
 
     /**
-     * Creates an entity based on the form. The form contains a set of
-     * mime-type/url
+     * Creates an entity based on the form. The form contains a set of mime-type/url
      *
      * @param mediaForm form
      * @return Text entity

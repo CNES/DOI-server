@@ -18,6 +18,7 @@
  */
 package fr.cnes.doi.resource.citation;
 
+import fr.cnes.doi.CrossCiteSpec;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.client.ClientCrossCiteCitation;
 import static org.junit.Assert.assertEquals;
@@ -54,7 +55,7 @@ import org.mockserver.verify.VerificationTimes;
 public class LanguageCitationResourceTest {
 
     private static Client cl;
-    private ClientAndServer mockServer;    
+    private CrossCiteSpec spec;   
     
     public LanguageCitationResourceTest() {
     }
@@ -76,16 +77,13 @@ public class LanguageCitationResourceTest {
 
     @Before
     public void setUp() {
-        mockServer = startClientAndServer(1080);        
+        this.spec = new CrossCiteSpec();
     }
 
     @After
     public void tearDown() {
-        mockServer.stop();
-    }
-    
-    @Rule
-    public MockServerRule mockServerRule = new MockServerRule(this);     
+        this.spec.finish();
+    }        
 
     /**
      * Test of getLanguages method, of class LanguageCitationResource.
@@ -94,7 +92,7 @@ public class LanguageCitationResourceTest {
     public void testGetLanguagesHttps() {
         System.out.println("getLanguages through a HTTPS server");
         
-        mockServer.when(HttpRequest.request(ClientCrossCiteCitation.LOCALE_URI).withMethod("GET")).respond(HttpResponse.response().withBody("[\"af-ZA\",\"ar\",\"bg-BG\",\"ca-AD\",\"cs-CZ\",\"cy-GB\",\"da-DK\",\"de-AT\",\"de-CH\",\"de-DE\",\"el-GR\",\"en-GB\",\"en-US\",\"es-CL\",\"es-ES\",\"es-MX\",\"et-EE\",\"eu\",\"fa-IR\",\"fi-FI\",\"fr-CA\",\"fr-FR\",\"he-IL\",\"hr-HR\",\"hu-HU\",\"id-ID\",\"is-IS\",\"it-IT\",\"ja-JP\",\"km-KH\",\"ko-KR\",\"lt-LT\",\"lv-LV\",\"mn-MN\",\"nb-NO\",\"nl-NL\",\"nn-NO\",\"pl-PL\",\"pt-BR\",\"pt-PT\",\"ro-RO\",\"ru-RU\",\"sk-SK\",\"sl-SI\",\"sr-RS\",\"sv-SE\",\"th-TH\",\"tr-TR\",\"uk-UA\",\"vi-VN\",\"zh-CN\",\"zh-TW\"]"));                
+        this.spec.createSpec(CrossCiteSpec.Spec.GET_LANGUAGE_200);
 
         String expResult = "af-ZA";
         String result = "";
@@ -110,7 +108,7 @@ public class LanguageCitationResourceTest {
             assertEquals("Test if the server returns the right response", expResult, result);
         }
         
-        mockServer.verify(HttpRequest.request(ClientCrossCiteCitation.STYLE_URI), VerificationTimes.once());        
+        this.spec.verifySpec(CrossCiteSpec.Spec.GET_LANGUAGE_200);
 
     }
 
@@ -118,7 +116,7 @@ public class LanguageCitationResourceTest {
     public void testGetLanguagesHttp() {
         System.out.println("getLanguages through a HTTP Server");
         
-        mockServer.when(HttpRequest.request(ClientCrossCiteCitation.LOCALE_URI).withMethod("GET")).respond(HttpResponse.response().withBody("[\"af-ZA\",\"ar\",\"bg-BG\",\"ca-AD\",\"cs-CZ\",\"cy-GB\",\"da-DK\",\"de-AT\",\"de-CH\",\"de-DE\",\"el-GR\",\"en-GB\",\"en-US\",\"es-CL\",\"es-ES\",\"es-MX\",\"et-EE\",\"eu\",\"fa-IR\",\"fi-FI\",\"fr-CA\",\"fr-FR\",\"he-IL\",\"hr-HR\",\"hu-HU\",\"id-ID\",\"is-IS\",\"it-IT\",\"ja-JP\",\"km-KH\",\"ko-KR\",\"lt-LT\",\"lv-LV\",\"mn-MN\",\"nb-NO\",\"nl-NL\",\"nn-NO\",\"pl-PL\",\"pt-BR\",\"pt-PT\",\"ro-RO\",\"ru-RU\",\"sk-SK\",\"sl-SI\",\"sr-RS\",\"sv-SE\",\"th-TH\",\"tr-TR\",\"uk-UA\",\"vi-VN\",\"zh-CN\",\"zh-TW\"]"));                
+        this.spec.createSpec(CrossCiteSpec.Spec.GET_LANGUAGE_200);             
 
         String expResult = "af-ZA";
         String result = "";
@@ -134,7 +132,8 @@ public class LanguageCitationResourceTest {
             assertEquals("Test if the server returns the right response", expResult, result);
         }
         
-        mockServer.verify(HttpRequest.request(ClientCrossCiteCitation.STYLE_URI), VerificationTimes.once());                
+        this.spec.verifySpec(CrossCiteSpec.Spec.GET_LANGUAGE_200);
+        
     }
 
 }

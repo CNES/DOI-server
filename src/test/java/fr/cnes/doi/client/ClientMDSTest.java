@@ -18,12 +18,14 @@
  */
 package fr.cnes.doi.client;
 
+import fr.cnes.doi.MdsSpec;
 import fr.cnes.doi.exception.ClientMdsException;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import org.datacite.schema.kernel_4.Resource;
 import org.junit.After;
@@ -32,14 +34,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
-import org.mockserver.integration.ClientAndServer;
-import org.mockserver.junit.MockServerRule;
-import org.mockserver.model.HttpRequest;
-import org.mockserver.model.HttpResponse;
-import org.mockserver.verify.VerificationTimes;
 import org.restlet.data.CharacterSet;
 import org.restlet.data.Form;
 import org.restlet.data.Language;
@@ -47,34 +43,19 @@ import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 
 /**
+ * Test of the ClientMDS
  *
- * @author Jean-Christophe Malapert
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class ClientMDSTest {
-    
-    private static final String XML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-                + "<resource xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://datacite.org/schema/kernel-4\" xsi:schemaLocation=\"http://datacite.org/schema/kernel-4 http://schema.datacite.org/meta/kernel-4.1/metadata.xsd\">\n"
-                + "    <identifier identifierType=\"DOI\">10.5072/EDU/TESTID</identifier>\n"
-                + "    <creators>\n"
-                + "        <creator>\n"
-                + "            <creatorName>CNES</creatorName>\n"
-                + "        </creator>\n"
-                + "    </creators>\n"
-                + "    <titles>\n"
-                + "        <title>Le portail Éduthèque</title>\n"
-                + "    </titles>\n"
-                + "    <publisher>CNES</publisher>\n"
-                + "    <publicationYear>2015</publicationYear>\n"
-                + "    <resourceType resourceTypeGeneral=\"Other\">Portail Éduthèque</resourceType>\n"
-                + "</resource>";
 
-    private ClientAndServer mockServer;
+    private MdsSpec spec;
     private final String login;
     private final String pwd;
 
     public ClientMDSTest() {
         this.login = DoiSettings.getInstance().getSecret(Consts.INIST_LOGIN);
-        this.pwd = DoiSettings.getInstance().getSecret(Consts.INIST_PWD);        
+        this.pwd = DoiSettings.getInstance().getSecret(Consts.INIST_PWD);
     }
 
     @BeforeClass
@@ -87,17 +68,16 @@ public class ClientMDSTest {
 
     @Before
     public void setUp() {
-        mockServer = startClientAndServer(1081);
+        spec = new MdsSpec();
     }
 
     @After
     public void tearDown() {
-        mockServer.stop();
+        spec.finish();
     }
 
     @Rule
     public ExpectedException exceptions = ExpectedException.none();
-    public MockServerRule mockServerRule = new MockServerRule(this);
 
     /**
      * Test of checkIfAllCharsAreValid method, of class ClientMDS.
@@ -118,443 +98,743 @@ public class ClientMDSTest {
         assertTrue("Test the DOI chars are valid", true);
     }
 
-    /**
-     * Test of getDoi method, of class ClientMDS.
-     */
-    @Test
-    public void testGetDoiWithWrongDoi() throws Exception {
-        System.out.println("getDoi");
-        
-        String doiName = "10.5072/2783446.2783605";
-        mockServer.when(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE + "/" + doiName)
-                .withMethod("GET")).respond(HttpResponse.response().withStatusCode(404));
-        ClientMDS instance = new ClientMDS(ClientMDS.Context.DEV, login, pwd);
-        int expResult = 404;
-        int result;
-        try {
-            String doi = instance.getDoi(doiName);
-            result = 200;
-        } catch (ClientMdsException ex) {
-            result = ex.getStatus().getCode();
-        }
-        assertEquals("Test the response with a given wrong DOI", expResult, result);
+    private void testSpecGetDoi(MdsSpec.Spec spec) {
+        System.out.println(spec.getDescription());
 
-        mockServer.verify(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE + "/" + doiName)
-                .withMethod("GET"), VerificationTimes.once());
-
-    }
-
-    /**
-     * Test of getDoi method, of class ClientMDS.
-     */
-    @Test
-    public void testGetDoiWithWrongAuthentication() throws Exception {
-        System.out.println("getDoi");
-
-        String doiName = "10.5072/2783446.2783605";
-        mockServer.when(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE + "/" + doiName)
-                .withMethod("GET")).respond(HttpResponse.response().withStatusCode(403));
+        this.spec.createSpec(spec);
 
         ClientMDS instance = new ClientMDS(ClientMDS.Context.DEV, login, pwd);
-        int expResult = 403;
+        int expResult = spec.getStatus();
+        String expMessage = spec.getBody();
         int result;
+        String message;
         try {
-            String doi = instance.getDoi(doiName);
-            result = 200;
+            message = instance.getDoi(spec.getTemplatePath());
+            result = spec.getStatus();
         } catch (ClientMdsException ex) {
             result = ex.getStatus().getCode();
+            message = ex.getDetailMessage();
         }
-        assertEquals("Test the response with a given wrong DOI", expResult, result);
+        assertEquals("Test the status code", expResult, result);
+        if(message != null) {
+            assertEquals("Test the response", expMessage, message);
+        }
 
-        mockServer.verify(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE + "/" + doiName)
-                .withMethod("GET"), VerificationTimes.once());
-
+        this.spec.verifySpec(spec);
     }
-
-//    /**
-//     * Test of getDoi method, of class ClientMDS.
-//     */
-// Bug in Mocker Server => canoot test this case
-//    @Test
-//    public void testGetDoiWithNoContent() throws Exception {
-//        System.out.println("getDoi");
-//
-//        String doiName = "10.5072/2783446.2783605";
-//        mockServer.when(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE + "/" + doiName)
-//                .withMethod("GET")).respond(HttpResponse.response().withStatusCode(204).withBody(""));
-//
-//        ClientMDS instance = new ClientMDS(ClientMDS.Context.DEV, login, pwd);
-//        int expResult = 204;
-//        int result;
-//        try {
-//            String doi = instance.getDoi(doiName);
-//            result = 200;
-//        } catch (ClientMdsException ex) {
-//            result = ex.getStatus().getCode();
-//        }
-//        assertEquals("Test the response with no content", expResult, result);
-//
-//        mockServer.verify(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE + "/" + doiName)
-//                .withMethod("GET"), VerificationTimes.once());
-//
-//    } 
     
-    
-    /**
-     * Test of getDoi method, of class ClientMDS.
-     */
-    @Test
-    public void testGetDoiWithUnautorized() throws Exception {
-        System.out.println("getDoi");
+    private void testSpecGetDoiCollection(MdsSpec.Spec spec) {
+        System.out.println(spec.getDescription());
 
-        String doiName = "10.5072/2783446.2783605";
-        mockServer.when(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE + "/" + doiName)
-                .withMethod("GET")).respond(HttpResponse.response().withStatusCode(401));
+        this.spec.createSpec(spec);
 
         ClientMDS instance = new ClientMDS(ClientMDS.Context.DEV, login, pwd);
-        int expResult = 401;
+        int expResult = spec.getStatus();
+        String expMessage = spec.getBody();
         int result;
+        String message;
         try {
-            String doi = instance.getDoi(doiName);
-            result = 200;
+            message = instance.getDoiCollection();
+            result = spec.getStatus();
         } catch (ClientMdsException ex) {
             result = ex.getStatus().getCode();
+            message = ex.getDetailMessage();
         }
-        assertEquals("Test the response with unauthorized", expResult, result);
+        assertEquals("Test the status code", expResult, result);
+        assertEquals("Test the response", expMessage, message);
 
-        mockServer.verify(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE + "/" + doiName)
-                .withMethod("GET"), VerificationTimes.once());
+        this.spec.verifySpec(spec);
+    }    
 
+    private void testSpecCreateDoi(MdsSpec.Spec spec) {
+        System.out.println(spec.getDescription());
+
+        this.spec.createSpec(spec);
+
+        Form form = new Form();
+        form.add("doi", "10.5072/EDU/TESTID");
+        form.add("url", "https://edutheque.cnes.fr/fr/web/CNES-fr/10884-edutheque.php");
+
+        ClientMDS instance = new ClientMDS(ClientMDS.Context.DEV, login, pwd);
+        int expCode = spec.getStatus();
+        String expMessage = spec.getBody();
+
+        int code;
+        String message;
+        try {
+            message = instance.createDoi(form);
+            code = spec.getStatus();
+        } catch (ClientMdsException ex) {
+            code = ex.getStatus().getCode();
+            message = ex.getDetailMessage();
+        }
+        assertEquals("Test the status code", expCode, code);
+        if(message != null) {        
+            assertEquals("Test the response", expMessage, message);
+        }
+
+        this.spec.verifySpec(spec);
+    }
+
+    private void testSpectGetMetadataAsObj(MdsSpec.Spec spec) throws JAXBException, ClientMdsException {
+        System.out.println(spec.getDescription());
+
+        this.spec.createSpec(spec);
+
+        ClientMDS instance = new ClientMDS(ClientMDS.Context.DEV, login, pwd);
+
+        final JAXBContext ctx = JAXBContext.newInstance(new Class[]{Resource.class});
+        final Unmarshaller unMarshaller = ctx.createUnmarshaller();
+        final Resource expResult = (Resource) unMarshaller.unmarshal(new ByteArrayInputStream(spec.getBody().getBytes(StandardCharsets.UTF_8)));
+
+        Resource result = instance.getMetadataAsObject(spec.getTemplatePath());
+        assertEquals("Test the response", expResult.getIdentifier().getValue(), result.getIdentifier().getValue());
+
+        this.spec.verifySpec(spec);
+    }
+
+    private void testSpectGetMetadata(MdsSpec.Spec spec) throws Exception {
+        System.out.println(spec.getDescription());
+
+        this.spec.createSpec(spec);
+
+        ClientMDS instance = new ClientMDS(ClientMDS.Context.DEV, login, pwd);
+        String expMessage = spec.getBody();
+        int expCode = spec.getStatus();
+        String message;
+        int code;
+        try {
+            Representation result = instance.getMetadata(spec.getTemplatePath());
+            message = result.getText();
+            code = spec.getStatus();
+        } catch (ClientMdsException ex) {
+            message = ex.getDetailMessage();
+            code = ex.getStatus().getCode();
+        }
+
+        assertEquals("Test the status code", expCode, code);
+        if(message != null) {        
+            assertEquals("Test the response", expMessage, message);
+        }
+
+        this.spec.verifySpec(spec);
     }
 
     /**
-     * Test of getDoi method, of class ClientMDS.
+     * Test of getDoi method, of class ClientMDS with a wrong DOI. A mock server is set for this
+     * test in order to emulate the response of the server on a path:
+     * <ul>
+     * <li>GET /doi/10.5072/2783446.2783605</li>
+     * <li>404 : DOI not found</li>
+     * </ul>
      */
     @Test
-    public void testGetDoiWithInternalError() throws Exception {
-        System.out.println("getDoi");
-
-        String doiName = "10.5072/2783446.2783605";
-        mockServer.when(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE + "/" + doiName)
-                .withMethod("GET")).respond(HttpResponse.response().withStatusCode(500));
-
-        ClientMDS instance = new ClientMDS(ClientMDS.Context.DEV, login, pwd);
-        int expResult = 500;
-        int result;
-        try {
-            String doi = instance.getDoi(doiName);
-            result = 200;
-        } catch (ClientMdsException ex) {
-            result = ex.getStatus().getCode();
-        }
-        assertEquals("Test the response with internal error server", expResult, result);
-
-        mockServer.verify(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE + "/" + doiName)
-                .withMethod("GET"), VerificationTimes.once());
-
+    public void testGetDoi404() throws Exception {
+        testSpecGetDoi(MdsSpec.Spec.GET_DOI_404);
     }
 
     /**
-     * Test of getDoi method, of class ClientMDS.
+     * Test of getDoi method, of class ClientMDS with a wrong authentication. A mock server is set
+     * for this test in order to emulate the response of the server on a path:
+     * <ul>
+     * <li>GET /doi/10.5072/2783446.2783605</li>
+     * <li>401 : Bad credentials</li>
+     * </ul>
      */
     @Test
-    public void testGetDoi() throws Exception {
-        System.out.println("getDoi");
+    public void testGetDoi401() throws Exception {
+        testSpecGetDoi(MdsSpec.Spec.GET_DOI_401);
+    }
 
-        String doiName = "10.5072/2783446.2783605";
-        mockServer.when(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE + "/" + doiName)
-                .withMethod("GET")).respond(HttpResponse.response().withStatusCode(200).withBody("https://edutheque.cnes.fr/fr/web/CNES-fr/10884-edutheque.php"));
+    /**
+     * Test of getDoi method, of class ClientMDS with no content as result. A mock server is set for
+     * this test in order to emulate the response of the server on a path:
+     * <ul>
+     * <li>GET /doi/10.5072/2783446.2783605</li>
+     * <li>204 : ""</li>
+     * </ul>
+     */
+    @Test
+    public void testGetDoi204() throws Exception {
+        testSpecGetDoi(MdsSpec.Spec.GET_DOI_204);
+    }
 
-        ClientMDS instance = new ClientMDS(ClientMDS.Context.DEV, login, pwd);
-        int expResult = 200;
-        String expResultOutput = "https://edutheque.cnes.fr/fr/web/CNES-fr/10884-edutheque.php";
-        int result;
-        String doi;
-        try {
-            doi = instance.getDoi(doiName);
-            result = 200;
-        } catch (ClientMdsException ex) {
-            result = ex.getStatus().getCode();
-            doi = "";
-        }
-        assertEquals("Test the response with a specfic DOI", expResult, result);
-        assertEquals("Test the response with a secific DOI", expResultOutput, doi);
+    /**
+     * Test of getDoi method, of class ClientMDS with a login problem. A mock server is set for this
+     * test in order to emulate the response of the server on a path:
+     * <ul>
+     * <li>GET /doi/10.5072/2783446.2783605</li>
+     * <li>403 : ""</li>
+     * </ul>
+     */
+    @Test
+    public void testGetDoi403() throws Exception {
+        testSpecGetDoi(MdsSpec.Spec.GET_DOI_403);
+    }
 
-        mockServer.verify(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE + "/" + doiName)
-                .withMethod("GET"), VerificationTimes.once());
+    /**
+     * Test of getDoi method, of class ClientMDS with an internal error. A mock server is set for
+     * this test in order to emulate the response of the server on a path:
+     * <ul>
+     * <li>GET /doi/10.5072/2783446.2783605</li>
+     * <li>500 : "server internal error, try later and if problem persists please contact us"</li>
+     * </ul>
+     */
+    @Test
+    public void testGetDoi500() throws Exception {
+        testSpecGetDoi(MdsSpec.Spec.GET_DOI_500);
+    }
 
+    /**
+     * Test of getDoi method, of class ClientMDS, with a right DOI. A mock server is set for this
+     * test in order to emulate the response of the server on a path:
+     * <ul>
+     * <li>GET /doi/10.5072/2783446.2783605</li>
+     * <li>200 : "https://edutheque.cnes.fr/fr/web/CNES-fr/10884-edutheque.php"</li>
+     * </ul>
+     */
+    @Test
+    public void testGetDoi200() throws Exception {
+        testSpecGetDoi(MdsSpec.Spec.GET_DOI_200);
     }
 
     /**
      * Test of getDoiCollection method, of class ClientMDS.
      */
     @Test
-    public void testGetDoiCollection() throws Exception {
-        System.out.println("getDoiCollection");
-
-        mockServer.when(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE)
-                .withMethod("GET")).respond(HttpResponse.response().withStatusCode(200).withBody("10.5072/EDU/TESTID"));
-
-        String expResult = "10.5072/EDU/TESTID";
-        ClientMDS instance = new ClientMDS(ClientMDS.Context.DEV, login, pwd);
-        String result = instance.getDoiCollection();
-
-        assertEquals("Test the collection", expResult, result);
-
-        mockServer.verify(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE)
-                .withMethod("GET"), VerificationTimes.once());
-
+    public void testGetDoiCollection200() throws Exception {
+        testSpecGetDoiCollection(MdsSpec.Spec.GET_COLLECTION_200);
     }
 
-//Bug in MockerServer => cannot test 204
-//    @Test
-//    public void testGetDoiCollectionNoDoiFound() throws Exception {
-//        System.out.println("getDoiCollection");
-//        
-//        String login = DoiSettings.getInstance().getSecret(Consts.INIST_LOGIN);
-//        String pwd = DoiSettings.getInstance().getSecret(Consts.INIST_PWD);
-//        mockServer.when(HttpRequest.request(ClientMDS.DOI_RESOURCE)
-//                .withPath("/" + ClientMDS.DOI_RESOURCE)
-//                .withMethod("GET")).respond(HttpResponse.response().withStatusCode(204).withBody(""));
-//        
-//        String expResult = "";
-//        ClientMDS instance = new ClientMDS(ClientMDS.Context.DEV, login, pwd);        
-//        String result = instance.getDoiCollection();
-//        
-//        assertEquals(expResult, result);
-//
-//        mockServer.verify(HttpRequest.request(ClientMDS.DOI_RESOURCE)
-//                .withPath("/" + ClientMDS.DOI_RESOURCE)
-//                .withMethod("GET"), VerificationTimes.once());        
-//        
-//    }    
+    @Test
+    public void testGetDoiCollection204() throws Exception {
+        testSpecGetDoiCollection(MdsSpec.Spec.GET_COLLECTION_204);
+    }
+
     /**
      * Test of createDoi method, of class ClientMDS.
      */
     @Test
-    public void testCreateDoi() throws Exception {
-        System.out.println("createDoi");
-
-        mockServer.when(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE)
-                .withMethod("POST")).respond(HttpResponse.response().withStatusCode(201).withBody("CREATED"));
-
-        Form form = new Form();
-        form.add("doi", "10.5072/EDU/TESTID");
-        form.add("url", "https://edutheque.cnes.fr/fr/web/CNES-fr/10884-edutheque.php");
-        ClientMDS instance = new ClientMDS(ClientMDS.Context.DEV, login, pwd);
-        int expResult = 201;
-        int resultCode;
-        try {
-            String result = instance.createDoi(form);
-            resultCode = 201;
-        } catch (ClientMdsException ex) {
-            resultCode = ex.getStatus().getCode();
-        }
-        assertEquals("Test the creation of a DOI", expResult, resultCode);
-
-        mockServer.verify(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE)
-                .withMethod("POST"), VerificationTimes.once());
+    public void testCreateDoi201() throws Exception {
+        testSpecCreateDoi(MdsSpec.Spec.POST_DOI_201);
     }
-    
+
     /**
      * Test of createDoi method, of class ClientMDS.
      */
     @Test
-    public void testCreateDoiWithBadRequest() throws Exception {
-        System.out.println("createDoi");
+    public void testCreateDoi400() throws Exception {
+        testSpecCreateDoi(MdsSpec.Spec.POST_DOI_400);
+    }
 
-        mockServer.when(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE)
-                .withMethod("POST")).respond(HttpResponse.response().withStatusCode(400).withBody("request body must be exactly two lines: DOI and URL; wrong domain, wrong prefix"));
+    /**
+     * Test of createDoi method, of class ClientMDS.
+     */
+    @Test
+    public void testCreateDoi401() throws Exception {
+        testSpecCreateDoi(MdsSpec.Spec.POST_DOI_401);
+    }
 
-        Form form = new Form();
-        form.add("doi", "10.5072/EDU/TESTID");
-        form.add("url", "https://edutheque.toto.fr/fr/web/CNES-fr/10884-edutheque.php");
-        ClientMDS instance = new ClientMDS(ClientMDS.Context.DEV, login, pwd);
-        int expResult = 400;
-        int resultCode;
-        try {
-            String result = instance.createDoi(form);
-            resultCode = 201;
-        } catch (ClientMdsException ex) {
-            resultCode = ex.getStatus().getCode();
-        }
-        assertEquals("Test the creation of a DOI with a bad Request", expResult, resultCode);
+    /**
+     * Test of createDoi method, of class ClientMDS.
+     */
+    @Test
+    public void testCreateDoi403() throws Exception {
+        testSpecCreateDoi(MdsSpec.Spec.POST_DOI_403);
+    }
 
-        mockServer.verify(HttpRequest.request("/" + ClientMDS.DOI_RESOURCE)
-                .withMethod("POST"), VerificationTimes.once());
-    }    
-    
-    
+    /**
+     * Test of createDoi method, of class ClientMDS.
+     */
+    @Test
+    public void testCreateDoi412() throws Exception {
+        testSpecCreateDoi(MdsSpec.Spec.POST_DOI_412);
+    }
+
+    /**
+     * Test of createDoi method, of class ClientMDS.
+     */
+    @Test
+    public void testCreateDoi500() throws Exception {
+        testSpecCreateDoi(MdsSpec.Spec.POST_DOI_500);
+    }
 
     /**
      * Test of getMetadataAsObject method, of class ClientMDS.
      */
     @Test
     public void testGetMetadataAsObject() throws Exception {
-        System.out.println("getMetadataAsObject");
-
-        String doiName = "10.5072/EDU/TESTID";
-        mockServer.when(HttpRequest.request("/" + ClientMDS.METADATA_RESOURCE + "/" + doiName)
-                .withMethod("GET")).respond(HttpResponse.response().withStatusCode(200).withBody(XML, StandardCharsets.UTF_8));
-
-        ClientMDS instance = new ClientMDS(ClientMDS.Context.DEV, login, pwd);
-
-        final JAXBContext ctx = JAXBContext.newInstance(new Class[]{Resource.class});
-        final Unmarshaller unMarshaller = ctx.createUnmarshaller();
-        final Resource expResult = (Resource) unMarshaller.unmarshal(new ByteArrayInputStream(XML.getBytes(StandardCharsets.UTF_8)));
-        
-        Resource result = instance.getMetadataAsObject(doiName);
-        assertEquals(expResult.getIdentifier().getValue(), result.getIdentifier().getValue());
-
-        mockServer.verify(HttpRequest.request("/" + ClientMDS.METADATA_RESOURCE + "/" + doiName)
-                .withMethod("GET"), VerificationTimes.once());
+        testSpectGetMetadataAsObj(MdsSpec.Spec.GET_METADATA_200);
     }
 
     /**
      * Test of getMetadata method, of class ClientMDS.
      */
     @Test
-    public void testGetMetadata() throws Exception {
-        System.out.println("getMetadata");
+    public void testGetMetadata200() throws Exception {
+        testSpectGetMetadata(MdsSpec.Spec.GET_METADATA_200);
+    }
 
-        String doiName = "10.5072/EDU/TESTID";
-        mockServer.when(HttpRequest.request("/" + ClientMDS.METADATA_RESOURCE + "/" + doiName)
-                .withMethod("GET")).respond(HttpResponse.response().withStatusCode(200).withBody(XML, StandardCharsets.UTF_8));
+    /**
+     * Test of getMetadata method, of class ClientMDS.
+     */
+    @Test
+    public void testGetMetadata401() throws Exception {
+        testSpectGetMetadata(MdsSpec.Spec.GET_METADATA_401);
+    }
+
+    /**
+     * Test of getMetadata method, of class ClientMDS.
+     */
+    @Test
+    public void testGetMetadata403() throws Exception {
+        testSpectGetMetadata(MdsSpec.Spec.GET_METADATA_403);
+    }
+
+    /**
+     * Test of getMetadata method, of class ClientMDS.
+     */
+    @Test
+    public void testGetMetadata404() throws Exception {
+        testSpectGetMetadata(MdsSpec.Spec.GET_METADATA_404);
+    }
+
+    /**
+     * Test of getMetadata method, of class ClientMDS.
+     */
+    @Test
+    public void testGetMetadata410() throws Exception {
+        testSpectGetMetadata(MdsSpec.Spec.GET_METADATA_410);
+    }
+
+    /**
+     * Test of getMetadata method, of class ClientMDS.
+     */
+    @Test
+    public void testGetMetadata500() throws Exception {
+        testSpectGetMetadata(MdsSpec.Spec.GET_METADATA_500);
+    }
+
+    private void testSpecCreateMetadata(MdsSpec.Spec spec) {
+        System.out.println(spec.getDescription());
+
+        this.spec.createSpec(spec);
+        Representation entity = new StringRepresentation(
+                MdsSpec.XML, org.restlet.data.MediaType.TEXT_XML, Language.ALL, CharacterSet.UTF_8
+        );
         ClientMDS instance = new ClientMDS(ClientMDS.Context.DEV, login, pwd);
-        String expResult = XML;
-        Representation result = instance.getMetadata(doiName);
+        String expResult = spec.getBody();
+        int expCode = spec.getStatus();
+        String result;
+        int code;
+        try {
+            result = instance.createMetadata(entity);
+            code = spec.getStatus();
+        } catch (ClientMdsException ex) {
+            result = ex.getDetailMessage();
+            code = ex.getStatus().getCode();
+        }
+        assertEquals("Test the status code", expCode, code);
+        if(result != null) {
+            assertEquals("Test the response", expResult, result);
+        }
 
-        assertEquals(expResult, result.getText());
+        this.spec.verifySpec(spec);
+    }
 
-        mockServer.verify(HttpRequest.request("/" + ClientMDS.METADATA_RESOURCE + "/" + doiName)
-                .withMethod("GET"), VerificationTimes.once());
+    private void testSpecCreateMetadataAsObj(MdsSpec.Spec spec) throws Exception {
+        System.out.println(spec.getDescription());
+
+        this.spec.createSpec(spec);
+
+        ClientMDS instance = new ClientMDS(ClientMDS.Context.DEV, login, pwd);
+        String expResult = spec.getBody();
+        int expCode = spec.getStatus();
+        String result;
+        int code;
+
+        final JAXBContext ctx = JAXBContext.newInstance(new Class[]{Resource.class});
+        final Unmarshaller unMarshaller = ctx.createUnmarshaller();
+        final Resource entity = (Resource) unMarshaller.unmarshal(
+                new ByteArrayInputStream(MdsSpec.XML.getBytes(StandardCharsets.UTF_8))
+        );
+        try {
+            result = instance.createMetadata(entity);
+            code = spec.getStatus();
+        } catch (ClientMdsException ex) {
+            result = ex.getDetailMessage();
+            code = ex.getStatus().getCode();
+        }
+        assertEquals("Test the status code", expCode, code);
+        if(result != null) {        
+            assertEquals("Test the response", expResult, result);
+        }
+
+        this.spec.verifySpec(spec);
     }
 
     /**
      * Test of createMetadata method, of class ClientMDS.
      */
     @Test
-    public void testCreateMetadata_Representation() throws Exception {
-        System.out.println("createMetadata");
-
-        mockServer.when(HttpRequest.request("/" + ClientMDS.METADATA_RESOURCE)
-                .withMethod("POST")).respond(HttpResponse.response().withStatusCode(201).withBody("CREATED"));
-
-        Representation entity = new StringRepresentation(XML, org.restlet.data.MediaType.TEXT_XML, Language.ALL, CharacterSet.UTF_8);
-        ClientMDS instance = new ClientMDS(ClientMDS.Context.DEV, login, pwd);
-        String expResult = "CREATED";
-        String result = instance.createMetadata(entity);
-        assertEquals(expResult, result);
-
-        mockServer.verify(HttpRequest.request("/" + ClientMDS.METADATA_RESOURCE)
-                .withMethod("POST"), VerificationTimes.once());
+    public void testCreateMetadata201() throws Exception {
+        testSpecCreateMetadata(MdsSpec.Spec.POST_METADATA_201);
     }
 
     /**
      * Test of createMetadata method, of class ClientMDS.
      */
     @Test
-    public void testCreateMetadata_Resource() throws Exception {
-        System.out.println("createMetadata");
-
-        mockServer.when(HttpRequest.request("/" + ClientMDS.METADATA_RESOURCE)
-                .withMethod("POST")).respond(HttpResponse.response().withStatusCode(201).withBody("CREATED"));
-
-        ClientMDS instance = new ClientMDS(ClientMDS.Context.DEV, login, pwd);
-        String expResult = "CREATED";
-
-        final JAXBContext ctx = JAXBContext.newInstance(new Class[]{Resource.class});
-        final Unmarshaller unMarshaller = ctx.createUnmarshaller();
-        final Resource entity = (Resource) unMarshaller.unmarshal(new ByteArrayInputStream(XML.getBytes(StandardCharsets.UTF_8)));
-        String result = instance.createMetadata(entity);
-        assertEquals(expResult, result);
-
-        mockServer.verify(HttpRequest.request("/" + ClientMDS.METADATA_RESOURCE)
-                .withMethod("POST"), VerificationTimes.once());
+    public void testCreateMetadata400() throws Exception {
+        testSpecCreateMetadata(MdsSpec.Spec.POST_METADATA_400);
     }
 
     /**
-     * Test of deleteMetadataDoiAsObject method, of class ClientMDS.
+     * Test of createMetadata method, of class ClientMDS.
      */
     @Test
-    public void testDeleteMetadataDoiAsObject() throws Exception {
-        System.out.println("deleteMetadataDoiAsObject");
-        String doiName = "10.5072/EDU/TESTID";
-        
-        mockServer.when(HttpRequest.request("/" + ClientMDS.METADATA_RESOURCE+"/"+doiName)
-                .withMethod("DELETE")).respond(HttpResponse.response().withStatusCode(200).withBody(XML, StandardCharsets.UTF_8));
-        
+    public void testCreateMetadata401() throws Exception {
+        testSpecCreateMetadata(MdsSpec.Spec.POST_METADATA_401);
+    }
+
+    /**
+     * Test of createMetadata method, of class ClientMDS.
+     */
+    @Test
+    public void testCreateMetadata403() throws Exception {
+        testSpecCreateMetadata(MdsSpec.Spec.POST_METADATA_403);
+    }
+
+    /**
+     * Test of createMetadata method, of class ClientMDS.
+     */
+    @Test
+    public void testCreateMetadata500() throws Exception {
+        testSpecCreateMetadata(MdsSpec.Spec.POST_METADATA_500);
+    }
+    
+    /**
+     * Test of createMetadata method, of class ClientMDS.
+     */
+    @Test
+    public void testCreateMetadataObj201() throws Exception {
+        testSpecCreateMetadataAsObj(MdsSpec.Spec.POST_METADATA_201);
+    }
+
+    /**
+     * Test of createMetadata method, of class ClientMDS.
+     */
+    @Test
+    public void testCreateMetadataObj400() throws Exception {
+        testSpecCreateMetadataAsObj(MdsSpec.Spec.POST_METADATA_400);
+    }
+
+    /**
+     * Test of createMetadata method, of class ClientMDS.
+     */
+    @Test
+    public void testCreateMetadataObj401() throws Exception {
+        testSpecCreateMetadataAsObj(MdsSpec.Spec.POST_METADATA_401);
+    }
+
+    /**
+     * Test of createMetadata method, of class ClientMDS.
+     */
+    @Test
+    public void testCreateMetadataObj403() throws Exception {
+        testSpecCreateMetadataAsObj(MdsSpec.Spec.POST_METADATA_403);
+    }
+
+    /**
+     * Test of createMetadata method, of class ClientMDS.
+     */
+    @Test
+    public void testCreateMetadataObj500() throws Exception {
+        testSpecCreateMetadataAsObj(MdsSpec.Spec.POST_METADATA_500);
+    }    
+
+
+    private void testSpecDeleteMetadata(MdsSpec.Spec spec) throws Exception {
+        System.out.println(spec.getDescription());
+
+        this.spec.createSpec(spec);
+
         ClientMDS instance = new ClientMDS(ClientMDS.Context.DEV, login, pwd);
+        
+        final String expResult = spec.getBody();
+        final int expCode = spec.getStatus();
+        
+        String result;
+        int code;
+        try {
+            Representation rep = instance.deleteMetadata(spec.getTemplatePath());
+            result = rep.getText();
+            code = spec.getStatus();
+        } catch (ClientMdsException ex) {
+            code = ex.getStatus().getCode();
+            result = ex.getDetailMessage();
+        }        
+        
+        assertEquals("Test the status code", expCode, code);
+        if(result != null) {
+            assertEquals("Test the response", expResult, result);
+        }
+
+        this.spec.verifySpec(spec);
+    }
+    
+    private void testSpecDeleteMetadataAsObj(MdsSpec.Spec spec) throws Exception{
+        System.out.println(spec.getDescription());
+
+        this.spec.createSpec(spec);
+
+        ClientMDS instance = new ClientMDS(ClientMDS.Context.DEV, login, pwd);
+
         final JAXBContext ctx = JAXBContext.newInstance(new Class[]{Resource.class});
         final Unmarshaller unMarshaller = ctx.createUnmarshaller();
-        final Resource expResult = (Resource) unMarshaller.unmarshal(new ByteArrayInputStream(XML.getBytes(StandardCharsets.UTF_8)));
+        final Resource entity = (Resource) unMarshaller.unmarshal(
+                new ByteArrayInputStream(MdsSpec.XML.getBytes(StandardCharsets.UTF_8))
+        );
         
-        Resource result = instance.deleteMetadataDoiAsObject(doiName);
-        assertEquals(expResult.getIdentifier().getValue(), result.getIdentifier().getValue());
+        String expResult;
+        final int expCode = spec.getStatus();
+        String result;
+        int code;
+        try {
+            expResult = entity.getIdentifier().getValue();
+            Resource rep = instance.deleteMetadataDoiAsObject(spec.getTemplatePath());
+            result = rep.getIdentifier().getValue();
+            code = spec.getStatus();
+        } catch (ClientMdsException ex) {
+            expResult = spec.getBody();
+            code = ex.getStatus().getCode();
+            result = ex.getDetailMessage();
+        }        
+        
+        assertEquals("Test the status code", expCode, code);
+        if(result != null) {        
+            assertEquals("Test the response", expResult, result);
+        }
 
-        mockServer.verify(HttpRequest.request("/" + ClientMDS.METADATA_RESOURCE+"/"+doiName)
-                .withMethod("DELETE"), VerificationTimes.once());        
+       this.spec.verifySpec(spec);
     }
 
     /**
      * Test of deleteMetadata method, of class ClientMDS.
      */
     @Test
-    public void testDeleteMetadata() throws Exception {
-        System.out.println("deleteMetadata");
-        String doiName = "10.5072/EDU/TESTID";
-        
-        mockServer.when(HttpRequest.request("/" + ClientMDS.METADATA_RESOURCE+"/"+doiName)
-                .withMethod("DELETE")).respond(HttpResponse.response().withStatusCode(200).withBody(XML, StandardCharsets.UTF_8));
-        
-        ClientMDS instance = new ClientMDS(ClientMDS.Context.DEV, login, pwd);
-        Representation expResult = new StringRepresentation(XML, org.restlet.data.MediaType.TEXT_XML, Language.ALL, CharacterSet.UTF_8);
-        Representation result = instance.deleteMetadata(doiName);
-        assertEquals(expResult.getText(), result.getText());
+    public void testDeleteMetadata200() throws Exception {
+        testSpecDeleteMetadata(MdsSpec.Spec.DELETE_METADATA_200);
+    }
+    
+    /**
+     * Test of deleteMetadata method, of class ClientMDS.
+     */
+    @Test
+    public void testDeleteMetadata401() throws Exception {
+        testSpecDeleteMetadata(MdsSpec.Spec.DELETE_METADATA_401);
+    }
+    
+    /**
+     * Test of deleteMetadata method, of class ClientMDS.
+     */
+    @Test
+    public void testDeleteMetadata403() throws Exception {
+        testSpecDeleteMetadata(MdsSpec.Spec.DELETE_METADATA_403);
+    }   
+    
+    /**
+     * Test of deleteMetadata method, of class ClientMDS.
+     */
+    @Test
+    public void testDeleteMetadata404() throws Exception {
+        testSpecDeleteMetadata(MdsSpec.Spec.DELETE_METADATA_404);
+    }   
+    
+    /**
+     * Test of deleteMetadata method, of class ClientMDS.
+     */
+    @Test
+    public void testDeleteMetadata500() throws Exception {
+        testSpecDeleteMetadata(MdsSpec.Spec.DELETE_METADATA_500);
+    }
+    
+    /**
+     * Test of deleteMetadata method, of class ClientMDS.
+     */
+    @Test
+    public void testDeleteMetadataObj200() throws Exception {
+        testSpecDeleteMetadataAsObj(MdsSpec.Spec.DELETE_METADATA_200);
+    }
+    
+    /**
+     * Test of deleteMetadata method, of class ClientMDS.
+     */
+    @Test
+    public void testDeleteMetadataObj401() throws Exception {
+        testSpecDeleteMetadataAsObj(MdsSpec.Spec.DELETE_METADATA_401);
+    }
+    
+    /**
+     * Test of deleteMetadata method, of class ClientMDS.
+     */
+    @Test
+    public void testDeleteMetadataObj403() throws Exception {
+        testSpecDeleteMetadataAsObj(MdsSpec.Spec.DELETE_METADATA_403);
+    }   
+    
+    /**
+     * Test of deleteMetadata method, of class ClientMDS.
+     */
+    @Test
+    public void testDeleteMetadataObj404() throws Exception {
+        testSpecDeleteMetadataAsObj(MdsSpec.Spec.DELETE_METADATA_404);
+    }   
+    
+    /**
+     * Test of deleteMetadata method, of class ClientMDS.
+     */
+    @Test
+    public void testDeleteMetadataObj500() throws Exception {
+        testSpecDeleteMetadataAsObj(MdsSpec.Spec.DELETE_METADATA_500);
+    }   
+    
+    private void testSpecGetMedia(MdsSpec.Spec spec) {
+        System.out.println(spec.getDescription());
 
-        mockServer.verify(HttpRequest.request("/" + ClientMDS.METADATA_RESOURCE+"/"+doiName)
-                .withMethod("DELETE"), VerificationTimes.once());        
+        this.spec.createSpec(spec);
+
+        ClientMDS instance = new ClientMDS(ClientMDS.Context.DEV, login, pwd);
+
+        final int expCode = spec.getStatus();
+        final String expMessage = spec.getBody();
+        int code;
+        String message;
+        try {
+            message = instance.getMedia(spec.getTemplatePath());
+            code = spec.getStatus();
+        } catch (ClientMdsException ex) {
+            code = ex.getStatus().getCode();
+            message = ex.getDetailMessage();
+        }
+        
+        assertEquals("Test the status code", expCode, code);
+        if(message != null) {
+            assertEquals("Test the response", expMessage, message);        
+        }
+
+        this.spec.verifySpec(spec);
     }
 
     /**
      * Test of getMedia method, of class ClientMDS.
      */
     @Test
-    public void testGetMedia() throws Exception {
-        System.out.println("getMedia");
-        String doiName = "10.5072/EDU/TESTID";
-        
-        mockServer.when(HttpRequest.request("/" + ClientMDS.MEDIA_RESOURCE+"/"+doiName)
-                .withMethod("GET")).respond(HttpResponse.response().withStatusCode(200).withBody("application/fits=http://cnes.fr/test-data", StandardCharsets.UTF_8));
-        
-        ClientMDS instance = new ClientMDS(ClientMDS.Context.DEV, login, pwd);
-        String expResult = "application/fits=http://cnes.fr/test-data";
-        String result = instance.getMedia(doiName);
-        assertEquals(expResult, result);
-
-        mockServer.verify(HttpRequest.request("/" + ClientMDS.MEDIA_RESOURCE+"/"+doiName)
-                .withMethod("GET"), VerificationTimes.once());         
+    public void testGetMedia200() throws Exception {
+        testSpecGetMedia(MdsSpec.Spec.GET_MEDIA_200);
     }
+    
+    /**
+     * Test of getMedia method, of class ClientMDS.
+     */
+    @Test
+    public void testGetMedia401() throws Exception {
+        testSpecGetMedia(MdsSpec.Spec.GET_MEDIA_401);
+    } 
+    
+    /**
+     * Test of getMedia method, of class ClientMDS.
+     */
+    @Test
+    public void testGetMedia403() throws Exception {
+        testSpecGetMedia(MdsSpec.Spec.GET_MEDIA_403);
+    }    
 
+    /**
+     * Test of getMedia method, of class ClientMDS.
+     */
+    @Test
+    public void testGetMedia404() throws Exception {
+        testSpecGetMedia(MdsSpec.Spec.GET_MEDIA_404);
+    }
+    
+    /**
+     * Test of getMedia method, of class ClientMDS.
+     */
+    @Test
+    public void testGetMedia500() throws Exception {
+        testSpecGetMedia(MdsSpec.Spec.GET_MEDIA_500);
+    }    
+    
+    private void testSpecCreateMedia(MdsSpec.Spec spec) {
+        System.out.println(spec.getDescription());
+        
+        this.spec.createSpec(spec);
+
+        Form form = new Form();
+        form.add("application/fits", "http://cnes.fr/test-data");
+        ClientMDS instance = new ClientMDS(ClientMDS.Context.DEV, login, pwd);
+
+        final String expMessage = spec.getBody();
+        final int expCode = spec.getStatus();
+        
+        String message;
+        int code;
+        try {
+            message = instance.createMedia(spec.getTemplatePath(), form);
+            code = spec.getStatus();
+        } catch (ClientMdsException ex) {
+            message = ex.getDetailMessage();
+            code = ex.getStatus().getCode();
+        }
+
+        assertEquals("Test the status code", expCode, code);
+        if(message != null) {
+            assertEquals("Test the response", expMessage, message); 
+        }
+        
+        this.spec.verifySpec(spec);
+    }
+    
+    
     /**
      * Test of createMedia method, of class ClientMDS.
      */
     @Test
-    public void testCreateMedia() throws Exception {
-        System.out.println("createMedia");
-        String doiName = "10.5072/EDU/TESTID";
-        
-        mockServer.when(HttpRequest.request("/" + ClientMDS.MEDIA_RESOURCE+"/"+doiName)
-                .withMethod("POST")).respond(HttpResponse.response().withStatusCode(200).withBody("operation successful"));
-        
-        Form form = new Form();
-        form.add("application/fits","http://cnes.fr/test-data");
-        ClientMDS instance = new ClientMDS(ClientMDS.Context.DEV, login, pwd);
-        String expResult = "operation successful";
-        String result = instance.createMedia(doiName, form);
-        assertEquals(expResult, result);
-
-        mockServer.verify(HttpRequest.request("/" + ClientMDS.MEDIA_RESOURCE+"/"+doiName)
-                .withMethod("POST"), VerificationTimes.once());          
+    public void testCreateMedia200() throws Exception {
+        testSpecCreateMedia(MdsSpec.Spec.POST_MEDIA_200);
     }
+    
+    /**
+     * Test of createMedia method, of class ClientMDS.
+     */
+    @Test
+    public void testCreateMedia400() throws Exception {
+        testSpecCreateMedia(MdsSpec.Spec.POST_MEDIA_400);
+    }  
+    
+    /**
+     * Test of createMedia method, of class ClientMDS.
+     */
+    @Test
+    public void testCreateMedia401() throws Exception {
+        testSpecCreateMedia(MdsSpec.Spec.POST_MEDIA_401);
+    }  
+    
+    /**
+     * Test of createMedia method, of class ClientMDS.
+     */
+    @Test
+    public void testCreateMedia403() throws Exception {
+        testSpecCreateMedia(MdsSpec.Spec.POST_MEDIA_403);
+    }
+    
+    /**
+     * Test of createMedia method, of class ClientMDS.
+     */
+    @Test
+    public void testCreateMedia500() throws Exception {
+        testSpecCreateMedia(MdsSpec.Spec.POST_MEDIA_500);
+    }    
+
 }
