@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Reflow Maven Skin"
+  xmlns="http://maven.apache.org/DECORATION/1.3.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/DECORATION/1.3.0 http://maven.apache.org/xsd/decoration-1.3.0.xsd">
+
+  <bannerLeft>
+    <name><![CDATA[
+      <span class="color-highlight">Digital Object Identifier</span> Server
+      ]]>
+    </name>
+    <href>http://cnes.fr</href>
+  </bannerLeft>
+  
+  <skin>
+    <groupId>org.apache.maven.skins</groupId>
+    <artifactId>maven-fluido-skin</artifactId>
+    <version>1.3.0</version>
+  </skin>
+    
+  <publishDate position="bottom" format="yyyy-MM-dd" />
+  <version position="bottom" />
+  <body>
+  
+    <links>
+      <item name="Download" href="" />
+      <item name="GitHub project" href="http://github.com/J-Christophe/DOI" />
+    </links>
+
+    <breadcrumbs>
+      <item name="Home" href="/index.html" />
+    </breadcrumbs>
+  
+    <menu name="Main" inherit="top">
+      <item name="Home" href="index.html" />
+      <item name="GitHub project" href="http://github.com/J-Christophe/DOI" />
+      <item name="Release notes" href="http://github.com/J-Christophe/DOI/release-notes.html" />
+    </menu>
+    <menu name="Download" inherit="top">
+      <item name="Download" href="" />
+      <item name="License" href="http://github.com/J-Christophe/DOI/license.html" />
+    </menu>
+    <menu name="Documentation" inherit="bottom">
+      <item name="Usage" href="skin/" />
+      <item name="Configuration" href="skin/config.html" />
+      <item name="Javadoc" href="apidocs/" />
+    </menu>
+    <menu name="Contribute" inherit="bottom">
+      <item name="Contribute" href="contribute.html" />
+      <item name="Issues" href="http://github.com/J-Christophe/DOI/issues/" />
+      <item name="Fork on GitHub" href="http://github.com/J-Christophe/DOI" />
+    </menu>
+    <menu name="Maven documentation" ref="reports" inherit="bottom"/>
+  </body>
+</project>
