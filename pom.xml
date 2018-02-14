@@ -371,7 +371,7 @@
     <name>Digital Object Identifier Server</name>
     <description>A Digital Object Identifier (DOI) is an alphanumeric string assigned to uniquely identify an object. It is tied to a metadata description of the object as well as to a digital location, such as a URL, where all the details about the object are accessible.
         DOI server handles DOI number within an organisation, which is composed of several projects.</description>
-    <url>https://github.com/J-Christophe/DOI</url>
+    <url>http://github.com/J-Christophe/DOI</url>
     <inceptionYear>2017</inceptionYear>
     <organization>
         <name>Centre National d'Etudes Spatiales (CNES)</name>

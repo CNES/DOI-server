@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Centre National d'Etudes Spatiales (CNES).
+ * Copyright (C) 2017-2018 Centre National d'Etudes Spatiales (CNES).
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -273,7 +273,7 @@ public class DoiServer extends Component {
      */
     private void startWithProxy() {
         LOG.traceEntry();
-        //initLogServices();
+        initLogServices();
         ProxySettings.getInstance();
         EmailSettings.getInstance();
         configureServer();

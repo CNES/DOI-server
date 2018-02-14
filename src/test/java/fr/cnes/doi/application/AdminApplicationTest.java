@@ -21,6 +21,7 @@ package fr.cnes.doi.application;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
+import java.io.FileWriter;
 import java.io.IOException;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -101,6 +102,24 @@ public class AdminApplicationTest {
         Representation repApi = client.options();
         String txt = repApi.getText();
         client.release();
+        assertTrue("API through HTTPS",txt!=null && !txt.isEmpty());
+    }    
+    
+    /**
+     * Test of API generation in HTML.
+     * @throws Exception 
+     */
+    @Test
+    public void generateAPIWadl() throws Exception {
+        System.out.println("API Wadl");
+        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);        
+        ClientResource client = new ClientResource("http://localhost:"+port+"/admin?media=text/html");               Representation repApi = client.options();
+        String txt = repApi.getText();
+        client.release();
+        try (FileWriter writer = new FileWriter("admin_api.html")) {
+            writer.write(txt);
+            writer.flush();
+        }
         assertTrue("API through HTTPS",txt!=null && !txt.isEmpty());
     }    
 }
