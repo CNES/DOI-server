@@ -113,7 +113,9 @@ public class AdminApplicationTest {
     public void generateAPIWadl() throws Exception {
         System.out.println("API Wadl");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);        
-        ClientResource client = new ClientResource("http://localhost:"+port+"/admin?media=text/html");               Representation repApi = client.options();
+        ClientResource client = new ClientResource("http://localhost:"+port+"/?media=text/html"); 
+	client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");              
+	Representation repApi = client.options();
         String txt = repApi.getText();
         client.release();
         try (FileWriter writer = new FileWriter("admin_api.html")) {

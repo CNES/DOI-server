@@ -75,7 +75,7 @@ public class DoiSettingsTest {
 	public void testGetString_String() {
 		System.out.println("getString");
 		String key = Consts.COPYRIGHT;
-		String expResult = "Copyright 2017 CNES";
+		String expResult = "Copyright 2017-2018 CNES";
 		String result = instance.getString(key);
 		assertEquals(expResult, result);
 	}
