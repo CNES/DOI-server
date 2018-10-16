@@ -19,8 +19,11 @@
 package fr.cnes.doi.application;
 
 import fr.cnes.doi.InitServerForTest;
+import static fr.cnes.doi.server.DoiServer.JKS_DIRECTORY;
+import static fr.cnes.doi.server.DoiServer.JKS_FILE;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import org.junit.After;
@@ -53,7 +56,7 @@ public class DoiMdsApplicationTest {
         InitServerForTest.init();
         cl = new Client(new Context(), Protocol.HTTPS);
         Series<Parameter> parameters = cl.getContext().getParameters();
-        parameters.add("truststorePath", "jks/doiServerKey.jks");
+        parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);        
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS");        
     }

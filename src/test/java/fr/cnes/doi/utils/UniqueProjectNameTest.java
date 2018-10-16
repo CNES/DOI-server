@@ -46,7 +46,7 @@ public class UniqueProjectNameTest {
     /**
      * Cache file for tests
      */
-    private static final String cacheFile = "src/test/resources/projects.conf";
+    private static final String cacheFile = "src"+File.separatorChar+"test"+File.separatorChar+"resources"+File.separatorChar+"projects.conf";
 
     /**
      * Init the settings

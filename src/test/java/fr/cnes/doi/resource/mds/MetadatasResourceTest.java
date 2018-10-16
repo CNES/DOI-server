@@ -22,9 +22,12 @@ import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.client.ClientMDS;
 import fr.cnes.doi.client.ClientProxyTest;
 import fr.cnes.doi.security.UtilsHeader;
+import static fr.cnes.doi.server.DoiServer.JKS_DIRECTORY;
+import static fr.cnes.doi.server.DoiServer.JKS_FILE;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -81,7 +84,7 @@ public class MetadatasResourceTest {
         InitServerForTest.init();
         cl = new Client(new Context(), Protocol.HTTPS);
         Series<Parameter> parameters = cl.getContext().getParameters();
-        parameters.add("truststorePath", "jks/doiServerKey.jks");
+        parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS");
     }

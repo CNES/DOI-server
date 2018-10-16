@@ -19,6 +19,8 @@
 package fr.cnes.doi.resource.admin;
 
 import fr.cnes.doi.InitServerForTest;
+import static fr.cnes.doi.server.DoiServer.JKS_DIRECTORY;
+import static fr.cnes.doi.server.DoiServer.JKS_FILE;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import java.io.File;
@@ -57,7 +59,7 @@ public class SuffixProjectsResourceTest {
     /**
      * Cache file for tests.
      */
-    private static final String cacheFile = "src/test/resources/projects.conf";
+    private static final String cacheFile = "src"+File.separatorChar+"test"+File.separatorChar+"resources"+File.separatorChar+"projects.conf";
     
     private static Client cl;        
 
@@ -69,7 +71,7 @@ public class SuffixProjectsResourceTest {
         InitServerForTest.init();
         cl = new Client(new Context(), Protocol.HTTPS);
         Series<Parameter> parameters = cl.getContext().getParameters();
-        parameters.add("truststorePath", "jks/doiServerKey.jks");
+        parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS"); 
     }

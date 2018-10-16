@@ -103,6 +103,11 @@ public class DoiServer extends Component {
      * JKS file, which is stored in the JAR.
      */
     public static final String JKS_FILE = "doiServerKey.jks";
+    
+    /**
+     * Directory {@value #JKS_DIRECTORY}. where JKS_FILE is located.
+     */
+    public static final String JKS_DIRECTORY = "jks";
 
     /**
      * URI of the Meta Data Store application.
@@ -366,7 +371,7 @@ public class DoiServer extends Component {
                 LocalReference.createClapReference("class/"+JKS_FILE)
         ).get();
         try {
-            final Path outputDirectory = new File("jks").toPath();
+            final Path outputDirectory = new File(JKS_DIRECTORY).toPath();
             if (Files.notExists(outputDirectory)) {
                 Files.createDirectory(outputDirectory);
                 LOG.info("Creates {} directory to extract {} in it", outputDirectory, JKS_FILE);
