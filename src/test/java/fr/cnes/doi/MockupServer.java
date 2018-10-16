@@ -37,11 +37,15 @@ public class MockupServer {
     
     private static ClientAndServer mockServer; 
     
-    public MockupServer(int port) throws InterruptedException {
+    public MockupServer(int port) {
         mockServer = startClientAndServer(port);        
         while (!mockServer.isRunning()) {
-            // wait the server starts.
-            sleep(1000);
+            try {
+                // wait the server starts.
+                sleep(1000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(MockupServer.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
     
