@@ -19,6 +19,7 @@
 package fr.cnes.doi;
 
 import java.io.IOException;
+import static java.lang.Thread.sleep;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,8 +37,12 @@ public class MockupServer {
     
     private static ClientAndServer mockServer; 
     
-    public MockupServer(int port) {
-        mockServer = startClientAndServer(port);
+    public MockupServer(int port) throws InterruptedException {
+        mockServer = startClientAndServer(port);        
+        while (!mockServer.isRunning()) {
+            // wait the server starts.
+            sleep(1000);
+        }
     }
     
     public void createSpec(String verb, String path, int statusCode, String body) {
