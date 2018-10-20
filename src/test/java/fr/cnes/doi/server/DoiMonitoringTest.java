@@ -42,6 +42,7 @@ public class DoiMonitoringTest {
     
     @BeforeClass
     public static void setUpClass() {
+        System.out.println("------ TEST DoiMonitoring ------");        
     }
     
     @AfterClass
@@ -61,7 +62,7 @@ public class DoiMonitoringTest {
      */
     @Test
     public void testRegister() {
-        System.out.println("register");
+        System.out.println("TEST: Register");
         Method name = Method.GET;
         String path = "/test";
         String description = "myTest";        
@@ -74,7 +75,7 @@ public class DoiMonitoringTest {
      */
     @Test
     public void testAddMeasurement() {
-        System.out.println("addMeasurement");
+        System.out.println("TEST: AddMeasurement");
         Method name = Method.GET;
         String path = "/test";
         float duration = 10.0F;
@@ -87,7 +88,7 @@ public class DoiMonitoringTest {
      */
     @Test
     public void testIsRegistered() {
-        System.out.println("isRegistered");
+        System.out.println("TEST: IsRegistered");
         Method name = Method.POST;
         String path = "/registered";
         instance.register(name, path, "my description");
@@ -101,7 +102,7 @@ public class DoiMonitoringTest {
      */
     @Test
     public void testGetCurrentMean() {
-        System.out.println("getCurrentMean");
+        System.out.println("TEST: GetCurrentMean");
         Method name = Method.POST;
         String path = "/mean";
         float expResult = 9.0F;
@@ -117,7 +118,7 @@ public class DoiMonitoringTest {
      */
     @Test
     public void testGetDescription() {
-        System.out.println("getDescription");
+        System.out.println("TEST: GetDescription");
         Method name = Method.HEAD;
         String path = "/test";
         instance.register(name, path, "description");

@@ -29,6 +29,7 @@ import org.restlet.resource.ClientResource;
 
 import fr.cnes.doi.settings.ProxySettings;
 import java.util.List;
+import java.util.logging.Level;
 import org.restlet.data.Parameter;
 import org.restlet.engine.connector.ConnectorHelper;
 import org.restlet.util.Series;
@@ -51,12 +52,16 @@ public class BaseClient {
      * @param uri URI of the client's end point
      */
     public BaseClient(final String uri) {
+        org.restlet.engine.Engine.setLogLevel(Level.WARNING);
         final  List<ConnectorHelper<Client>> registeredClients = 
                 Engine.getInstance().getRegisteredClients();
         //Engine.getInstance().getRegisteredClients().clear();
         registeredClients.add(new HttpClientHelperPatch(null));
         this.client = new ClientResource(uri);
         this.client.setLoggable(false);
+        this.client.setRetryOnError(true);
+        this.client.setRetryAttempts(10);
+        this.client.setRetryDelay(1000);
         configureProxyIfNeeded();
     }
 

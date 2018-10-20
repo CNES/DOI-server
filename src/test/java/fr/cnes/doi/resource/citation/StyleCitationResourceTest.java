@@ -69,6 +69,7 @@ public class StyleCitationResourceTest {
         parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS");
+        System.out.println("------ TEST StyleCitationResource ------");        
     }
 
     @AfterClass
@@ -92,7 +93,7 @@ public class StyleCitationResourceTest {
      */
     @Test
     public void testGetStylesHttps() {
-        System.out.println("getStyles through a HTTPS server");
+        System.out.println("TEST: GetStyles through a HTTPS server");
         
         this.spec.createSpec(CrossCiteSpec.Spec.GET_STYLE_200);
         
@@ -120,7 +121,7 @@ public class StyleCitationResourceTest {
      */
     @Test
     public void testGetStylesHttp() {
-        System.out.println("getStyles through a HTTP server");
+        System.out.println("TEST: GetStyles through a HTTP server");
         
         this.spec.createSpec(CrossCiteSpec.Spec.GET_STYLE_200);      
         
@@ -147,7 +148,7 @@ public class StyleCitationResourceTest {
      */
     @Test
     public void testGetStylesHttpsAsJSON() {
-        System.out.println("getStyles as a JSON response");
+        System.out.println("TEST: GetStyles as a JSON response");
         
         this.spec.createSpec(CrossCiteSpec.Spec.GET_STYLE_200);     
           
@@ -174,7 +175,7 @@ public class StyleCitationResourceTest {
      */
     @Test
     public void testGetStylesHttpsAsXML() {
-        System.out.println("getStyles as a XML response");
+        System.out.println("TEST: GetStyles as a XML response");
         
         this.spec.createSpec(CrossCiteSpec.Spec.GET_STYLE_200);
         

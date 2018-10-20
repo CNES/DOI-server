@@ -48,6 +48,7 @@ public class EmailSettingsTest {
     public static void setUpClass() {
         InitSettingsForTest.init();
         instance = EmailSettings.getInstance();
+        System.out.println("------ TEST EmailSettings ------");        
     }
 
     @AfterClass
@@ -67,7 +68,7 @@ public class EmailSettingsTest {
      */
     @Test
     public void testGetTlsEnable() {
-        System.out.println("getTlsEnable");
+        System.out.println("TEST: GetTlsEnable");
         String expResult = "false";
         String result = instance.getTlsEnable();
         assertEquals(expResult, result);
@@ -78,7 +79,7 @@ public class EmailSettingsTest {
      */
     @Test
     public void testGetAuthUser() {
-        System.out.println("getAuthUser");
+        System.out.println("TEST: GetAuthUser");
         String result = instance.getAuthUser();
         assertNotNull(result);
     }
@@ -88,7 +89,7 @@ public class EmailSettingsTest {
      */
     @Test
     public void testGetAuthPwd() {
-        System.out.println("getAuthPwd");
+        System.out.println("TEST: GetAuthPwd");
         String result = instance.getAuthPwd();
         assertNotNull(result);
     }
@@ -98,7 +99,7 @@ public class EmailSettingsTest {
      */
     @Test
     public void testGetContactAdmin() {
-        System.out.println("getContactAdmin");
+        System.out.println("TEST: GetContactAdmin");
         String expResult = "L-doi-support@cnes.fr";
         String result = instance.getContactAdmin();
         assertEquals(expResult, result);
@@ -109,7 +110,7 @@ public class EmailSettingsTest {
      */
     @Test
     public void testGetInstance() {
-        System.out.println("getInstance");
+        System.out.println("TEST: GetInstance");
         EmailSettings result = EmailSettings.getInstance();
         assertNotNull(result);
     }
@@ -119,7 +120,7 @@ public class EmailSettingsTest {
      */
     @Test
     public void testSetDebug() {
-        System.out.println("setDebug");
+        System.out.println("TEST: SetDebug");
         boolean isEnabled = false;
         instance.setDebug(isEnabled);
         assertTrue(true);
@@ -130,7 +131,7 @@ public class EmailSettingsTest {
      */
     @Test
     public void testGetDebug() {
-        System.out.println("getDebug");
+        System.out.println("TEST: GetDebug");
         boolean expResult = false;
         boolean result = instance.isDebug();
         assertEquals(expResult, result);
@@ -142,7 +143,7 @@ public class EmailSettingsTest {
      */
     @Test
     public void testSendMessage() throws MailingException {
-        System.out.println("sendMessage");
+        System.out.println("TEST: SendMessage");
         exceptions.expect(MailingException.class);
         exceptions.expectMessage("The SMTP server cannot be reached");
         String subject = "Test";
@@ -156,7 +157,7 @@ public class EmailSettingsTest {
      */
     @Test
     public void testGetSmtpURL() {
-        System.out.println("getSmtpURL");
+        System.out.println("TEST: GetSmtpURL");
         String expResult = "smtp://smtp-relay.gmail.com";
         String result = instance.getSmtpURL();
         assertEquals(expResult, result);
@@ -167,7 +168,7 @@ public class EmailSettingsTest {
      */
     @Test
     public void testGetSmtpProtocol() {
-        System.out.println("getSmtpProtocol");
+        System.out.println("TEST: GetSmtpProtocol");
         String expResult = "SMTP";
         String result = instance.getSmtpProtocol();
         assertEquals(expResult, result);

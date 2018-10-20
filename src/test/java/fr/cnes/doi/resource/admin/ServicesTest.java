@@ -60,6 +60,7 @@ public class ServicesTest {
         parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS");
+        System.out.println("------ TEST Services ------");        
     }
 
     @AfterClass
@@ -80,7 +81,7 @@ public class ServicesTest {
      */
     @Test
     public void getStatus()  {
-        System.out.println("getStatus service through a HTTPS server");
+        System.out.println("TEST: getStatus service through a HTTPS server");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:"+port+"/status");        
         client.setNext(cl);    
@@ -101,7 +102,7 @@ public class ServicesTest {
     @Test
     @Ignore
     public void getStats()  {
-        System.out.println("getStats service through a HTTPS server");
+        System.out.println("TEST: getStats service through a HTTPS server");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:"+port+"/stats");        
         client.setNext(cl);    

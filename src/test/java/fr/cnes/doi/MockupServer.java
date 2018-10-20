@@ -67,7 +67,7 @@ public class MockupServer {
         mockServer.verify(
                 request()
                         .withMethod(verb)
-                        .withPath(path), VerificationTimes.once()
+                        .withPath(path), VerificationTimes.atLeast(1)
         );         
     }
     

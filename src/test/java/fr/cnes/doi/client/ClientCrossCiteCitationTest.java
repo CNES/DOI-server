@@ -42,6 +42,7 @@ public class ClientCrossCiteCitationTest {
 
     @BeforeClass
     public static void setUpClass() {
+        System.out.println("------ TEST ClientCrossCiteCitation ------");        
     }
 
     @AfterClass
@@ -66,7 +67,7 @@ public class ClientCrossCiteCitationTest {
      */
     @Test
     public void testGetStyles() throws Exception {
-        System.out.println("getStyles");
+        System.out.println("TEST getStyles");
 
         this.spec.createSpec(CrossCiteSpec.Spec.GET_STYLE_200);
 
@@ -84,7 +85,7 @@ public class ClientCrossCiteCitationTest {
      */
     @Test
     public void testGetLanguages() throws Exception {
-        System.out.println("getLanguages");
+        System.out.println("TEST getLanguages");
 
         this.spec.createSpec(CrossCiteSpec.Spec.GET_LANGUAGE_200);
 
@@ -101,7 +102,7 @@ public class ClientCrossCiteCitationTest {
      */
     @Test
     public void testGetFormat() throws Exception {
-        System.out.println("getFormat");
+        System.out.println("TEST getFormat");
 
         this.spec.createSpec(CrossCiteSpec.Spec.GET_FORMAT_200);
 

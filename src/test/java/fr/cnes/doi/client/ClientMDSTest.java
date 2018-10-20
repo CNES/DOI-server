@@ -61,6 +61,7 @@ public class ClientMDSTest {
 
     @BeforeClass
     public static void setUpClass() {
+        System.out.println("------ TEST ClientMDS ------");    
     }
 
     @AfterClass
@@ -88,7 +89,7 @@ public class ClientMDSTest {
      */
     @Test
     public void testCheckIfOneCharIsNotValid() {        
-        System.out.println("checkIfOneCharIsNotValid");
+        System.out.println("TEST: CheckIfOneCharIsNotValid");
         exceptions.expect(IllegalArgumentException.class);
         String test = "10.5072/éabscd";
         ClientMDS.checkIfAllCharsAreValid(test);
@@ -96,14 +97,14 @@ public class ClientMDSTest {
 
     @Test
     public void testCheckIfAllCharsAreValid() {
-        System.out.println("checkIfAllCharsAreValid");
+        System.out.println("TEST: CheckIfAllCharsAreValid");
         String test = "10.5072/eabscd";
         ClientMDS.checkIfAllCharsAreValid(test);
         assertTrue("Test the DOI chars are valid", true);
     }
 
     private void testSpecGetDoi(MdsSpec.Spec spec) {
-        System.out.println(spec.getDescription());
+        System.out.println("TEST: "+spec.getDescription());
 
         this.spec.createSpec(spec);
 
@@ -128,7 +129,7 @@ public class ClientMDSTest {
     }
     
     private void testSpecGetDoiCollection(MdsSpec.Spec spec) {
-        System.out.println(spec.getDescription());
+        System.out.println("TEST: "+spec.getDescription());
 
         this.spec.createSpec(spec);
 
@@ -151,7 +152,7 @@ public class ClientMDSTest {
     }    
 
     private void testSpecCreateDoi(MdsSpec.Spec spec) {
-        System.out.println(spec.getDescription());
+        System.out.println("TEST: "+spec.getDescription());
 
         this.spec.createSpec(spec);
 
@@ -181,7 +182,7 @@ public class ClientMDSTest {
     }
 
     private void testSpectGetMetadataAsObj(MdsSpec.Spec spec) throws JAXBException, ClientMdsException {
-        System.out.println(spec.getDescription());
+        System.out.println("TEST: "+spec.getDescription());
 
         this.spec.createSpec(spec);
 
@@ -198,7 +199,7 @@ public class ClientMDSTest {
     }
 
     private void testSpectGetMetadata(MdsSpec.Spec spec) throws Exception {
-        System.out.println(spec.getDescription());
+        System.out.println("TEST: "+spec.getDescription());
 
         this.spec.createSpec(spec);
 
@@ -420,7 +421,7 @@ public class ClientMDSTest {
     }
 
     private void testSpecCreateMetadata(MdsSpec.Spec spec) {
-        System.out.println(spec.getDescription());
+        System.out.println("TEST: "+spec.getDescription());
 
         this.spec.createSpec(spec);
         Representation entity = new StringRepresentation(
@@ -447,7 +448,7 @@ public class ClientMDSTest {
     }
 
     private void testSpecCreateMetadataAsObj(MdsSpec.Spec spec) throws Exception {
-        System.out.println(spec.getDescription());
+        System.out.println("TEST: "+spec.getDescription());
 
         this.spec.createSpec(spec);
 
@@ -468,7 +469,10 @@ public class ClientMDSTest {
         } catch (ClientMdsException ex) {
             result = ex.getDetailMessage();
             code = ex.getStatus().getCode();
-        }
+            System.out.println(code);
+            //ex.getStatus().getThrowable().getCause()
+            System.out.println(code);
+        }        
         assertEquals("Test the status code", expCode, code);
         if(result != null) {        
             assertEquals("Test the response", expResult, result);
@@ -559,7 +563,7 @@ public class ClientMDSTest {
 
 
     private void testSpecDeleteMetadata(MdsSpec.Spec spec) throws Exception {
-        System.out.println(spec.getDescription());
+        System.out.println("TEST: "+spec.getDescription());
 
         this.spec.createSpec(spec);
 
@@ -588,7 +592,7 @@ public class ClientMDSTest {
     }
     
     private void testSpecDeleteMetadataAsObj(MdsSpec.Spec spec) throws Exception{
-        System.out.println(spec.getDescription());
+        System.out.println("TEST: "+spec.getDescription());
 
         this.spec.createSpec(spec);
 
@@ -704,7 +708,7 @@ public class ClientMDSTest {
     }   
     
     private void testSpecGetMedia(MdsSpec.Spec spec) {
-        System.out.println(spec.getDescription());
+        System.out.println("TEST: "+spec.getDescription());
 
         this.spec.createSpec(spec);
 
@@ -771,7 +775,7 @@ public class ClientMDSTest {
     }    
     
     private void testSpecCreateMedia(MdsSpec.Spec spec) {
-        System.out.println(spec.getDescription());
+        System.out.println("TEST: "+spec.getDescription());
         
         this.spec.createSpec(spec);
 

@@ -69,7 +69,8 @@ public class FormatCitationResourceTest {
         Series<Parameter> parameters = cl.getContext().getParameters();
         parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
-        parameters.add("truststoreType", "JKS");        
+        parameters.add("truststoreType", "JKS");    
+        System.out.println("------ TEST FormatCitationResource ------");        
     }
 
     @AfterClass
@@ -92,7 +93,7 @@ public class FormatCitationResourceTest {
      */
     @Test
     public void testGetFormatHttps() {
-        System.out.println("getFormat through a HTTPS server");
+        System.out.println("TEST: GetFormat through a HTTPS server");
         
         spec.createSpec(CrossCiteSpec.Spec.GET_FORMAT_200);               
         
@@ -125,7 +126,7 @@ public class FormatCitationResourceTest {
      */
     @Test
     public void testGetFormatHttpsWithWrongParameters() {
-        System.out.println("getFormat through a HTTPS server with wrong parameters");
+        System.out.println("TEST: GetFormat through a HTTPS server with wrong parameters");
         exceptions.expect(ResourceException.class);
         
         this.spec.createSpec(CrossCiteSpec.Spec.GET_FORMAT_400);               
@@ -157,7 +158,7 @@ public class FormatCitationResourceTest {
      */
     @Test
     public void testGetFormatHttp() {
-        System.out.println("getFormat through a HTTP server");
+        System.out.println("TEST GetFormat through a HTTP server");
         
         spec.createSpec(CrossCiteSpec.Spec.GET_FORMAT_200);               
         
@@ -191,7 +192,7 @@ public class FormatCitationResourceTest {
      */
     @Test
     public void testGetFormatWithBadDOI() {
-        System.out.println("getFormat with a wrong DOI");
+        System.out.println("TEST: GetFormat with a wrong DOI");
 
         this.spec.createSpec(CrossCiteSpec.Spec.GET_FORMAT_404);
 
@@ -228,7 +229,7 @@ public class FormatCitationResourceTest {
      */
     @Test
     public void testGetFormatWithBadStyle() {
-        System.out.println("getFormat with a wrong style");
+        System.out.println("TEST: GetFormat with a wrong style");
         
         this.spec.createSpec(CrossCiteSpec.Spec.GET_FORMAT_400);
 
@@ -265,7 +266,7 @@ public class FormatCitationResourceTest {
      */
     @Test
     public void testGetFormatWithBadLang() {
-        System.out.println("getFormat with a wrong language");
+        System.out.println("TEST: GetFormat with a wrong language");
         
         this.spec.createSpec(CrossCiteSpec.Spec.GET_FORMAT_400);                
 
@@ -303,7 +304,7 @@ public class FormatCitationResourceTest {
      */
     @Test
     public void testGetFormatWithBadLangAndBadDoi() {
-        System.out.println("getFormat with a wrong DOI and language");
+        System.out.println("TEST: GetFormat with a wrong DOI and language");
         
         this.spec.createSpec(CrossCiteSpec.Spec.GET_FORMAT_404);                               
         

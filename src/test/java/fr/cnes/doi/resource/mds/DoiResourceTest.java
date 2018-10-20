@@ -61,7 +61,8 @@ public class DoiResourceTest {
         Series<Parameter> parameters = cl.getContext().getParameters();
         parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
-        parameters.add("truststoreType", "JKS");        
+        parameters.add("truststoreType", "JKS"); 
+        System.out.println("------ TEST DoiResource ------");        
     }
     
     @AfterClass
@@ -86,7 +87,7 @@ public class DoiResourceTest {
      */
     @Test
     public void testGetDoiHttp() throws IOException {
-        System.out.println("getDoi http");
+        System.out.println("TEST: GetDoi http");
         
         this.spec.createSpec(MdsSpec.Spec.GET_DOI_200);
         
@@ -108,7 +109,7 @@ public class DoiResourceTest {
      */
     @Test
     public void testGetDoiHttps() throws IOException {
-        System.out.println("getDoi https");
+        System.out.println("TEST: GetDoi https");
         
         this.spec.createSpec(MdsSpec.Spec.GET_DOI_200);
         
@@ -133,7 +134,7 @@ public class DoiResourceTest {
      */
     @Test
     public void testGetDoiNotFoundHttps() throws IOException {        
-        System.out.println("getDoi not found https");      
+        System.out.println("TEST: GetDoi not found https");      
         
         this.spec.createSpec(MdsSpec.Spec.GET_DOI_404);
         
@@ -160,7 +161,7 @@ public class DoiResourceTest {
      */
     @Test
     public void testGetDoiNotAllowedHttps() throws IOException {        
-        System.out.println("getDoi not allowed https");      
+        System.out.println("TEST: GetDoi not allowed https");      
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:"+port+"/mds/dois/10.xxxx/828606");
         client.setNext(cl);

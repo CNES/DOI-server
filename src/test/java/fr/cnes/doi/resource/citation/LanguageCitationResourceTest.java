@@ -63,6 +63,7 @@ public class LanguageCitationResourceTest {
         parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS");
+        System.out.println("------ TEST LanguageCitationResource ------");        
     }
 
     @AfterClass
@@ -85,7 +86,7 @@ public class LanguageCitationResourceTest {
      */
     @Test
     public void testGetLanguagesHttps() {
-        System.out.println("getLanguages through a HTTPS server");
+        System.out.println("TEST: GetLanguages through a HTTPS server");
         
         this.spec.createSpec(CrossCiteSpec.Spec.GET_LANGUAGE_200);
 
@@ -109,7 +110,7 @@ public class LanguageCitationResourceTest {
 
     @Test
     public void testGetLanguagesHttp() {
-        System.out.println("getLanguages through a HTTP Server");
+        System.out.println("TEST: GetLanguages through a HTTP Server");
         
         this.spec.createSpec(CrossCiteSpec.Spec.GET_LANGUAGE_200);             
 

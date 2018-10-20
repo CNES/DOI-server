@@ -62,6 +62,7 @@ public class ClientProxyTest {
     @BeforeClass
     public static void setUpClass() {
         InitSettingsForTest.init();
+        System.out.println("------ TEST ClientProxy ------");        
     }
 
     /**

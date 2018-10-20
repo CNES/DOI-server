@@ -74,6 +74,7 @@ public class SuffixProjectsResourceTest {
         parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS"); 
+        System.out.println("------ TEST SuffixProjectsResource ------");        
     }
 
     @AfterClass
@@ -110,7 +111,7 @@ public class SuffixProjectsResourceTest {
      */
     @Test
     public void testGetProjectsNameAsJson() throws IOException {
-        System.out.println("getProjectsNameAsJson throw a HTTPS server");
+        System.out.println("TEST: getProjectsNameAsJson throw a HTTPS server");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:"+port+"/admin/suffixProject");
         client.setNext(cl);
@@ -128,7 +129,7 @@ public class SuffixProjectsResourceTest {
      */
     @Test
     public void testGetProjectsNameAsXml() throws IOException {
-        System.out.println("getProjectsNameAsXml through a HTTPS server");
+        System.out.println("TEST: getProjectsNameAsXml through a HTTPS server");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:"+port+"/admin/suffixProject");
         client.setNext(cl);
@@ -147,7 +148,7 @@ public class SuffixProjectsResourceTest {
      */
     @Test
     public void testCreateProject() throws IOException {
-        System.out.println("createProject");
+        System.out.println("TEST: createProject");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:"+port+"/admin/suffixProject");
         client.setNext(cl);
@@ -167,7 +168,7 @@ public class SuffixProjectsResourceTest {
      */
     @Test
     public void testCreateProjectWithWrongParameter() {
-        System.out.println("createProject with wrong parameters");
+        System.out.println("TEST: createProject with wrong parameters");
         
         exceptions.expect(ResourceException.class);
         

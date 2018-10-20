@@ -54,6 +54,7 @@ public class UniqueProjectNameTest {
     @BeforeClass
     public static void setUpClass() {
         InitSettingsForTest.init();
+        System.out.println("------ TEST UniqueProjectName ------");        
     }
 
     /**
@@ -91,6 +92,7 @@ public class UniqueProjectNameTest {
      */
     @Test
     public void testGetShortName() {
+        System.out.println("TEST: GetShortName");
 
         // New id
         int idSWOT = UniqueProjectName.getInstance().getShortName("SWOT", 6);
@@ -107,6 +109,7 @@ public class UniqueProjectNameTest {
      */
     @Test
     public void testGetShortNameWithLongName() {
+        System.out.println("TEST: GetShortNameWithLongName");
 
         exceptions.expect(DoiRuntimeException.class);
         exceptions.expectMessage("The short name cannot be build because the length requested is too big");

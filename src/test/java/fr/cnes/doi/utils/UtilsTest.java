@@ -37,6 +37,7 @@ public class UtilsTest {
     
     @BeforeClass
     public static void setUpClass() {
+        System.out.println("------ TEST Utils ------");        
     }
     
     @AfterClass
@@ -56,7 +57,7 @@ public class UtilsTest {
      */
     @Test
     public void testIsEmpty() {
-        System.out.println("isEmpty");
+        System.out.println("TEST: IsEmpty");
         CharSequence cs = null;
         boolean expResult = true;
         boolean result = Utils.isEmpty(cs);
@@ -68,7 +69,7 @@ public class UtilsTest {
      */
     @Test
     public void testDecrypt() {
-        System.out.println("decrypt");
+        System.out.println("TEST: Decrypt");
         String encryptedInput = "6YTGxcaZ3b/qFbzECfnvjw==";
         String expResult = "Hello World !";
         String result = UtilsCryptography.decrypt(encryptedInput);
@@ -80,7 +81,7 @@ public class UtilsTest {
      */
     @Test
     public void testEncrypt() {
-        System.out.println("encrypt");
+        System.out.println("TEST: Encrypt");
         String str = "Hello World !";
         String expResult = "6YTGxcaZ3b/qFbzECfnvjw==";
         String result = UtilsCryptography.encrypt(str);

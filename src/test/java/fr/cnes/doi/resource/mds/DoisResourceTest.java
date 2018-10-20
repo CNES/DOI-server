@@ -68,6 +68,7 @@ public class DoisResourceTest {
         parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS");
+        System.out.println("------ TEST DoisResource ------");        
     }
 
     @AfterClass
@@ -114,7 +115,7 @@ public class DoisResourceTest {
      */
     @Test
     public void testGetDoisHttps() throws IOException {
-        System.out.println("getDois though a HTTPS server");
+        System.out.println("TEST: GetDois though a HTTPS server");
         
         this.spec.createSpec(MdsSpec.Spec.GET_COLLECTION_200);
         
@@ -133,7 +134,7 @@ public class DoisResourceTest {
      */
     @Test
     public void testGetDoisHttp() throws IOException {
-        System.out.println("getDois though a HTTP server");
+        System.out.println("TEST: GetDois though a HTTP server");
         
         this.spec.createSpec(MdsSpec.Spec.GET_COLLECTION_200);
         
@@ -154,7 +155,7 @@ public class DoisResourceTest {
      */
     @Test
     public void testCreateDoiConflictHttps() throws IOException {
-        System.out.println("createDoi without a selected role");
+        System.out.println("TEST: CreateDoi without a selected role");
         Form doiForm = new Form();
         doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b"));
         doiForm.add(new Parameter(DoisResource.URL_PARAMETER, "http://www.cnes.fr"));
@@ -181,7 +182,7 @@ public class DoisResourceTest {
      */
     @Test
     public void testCreateDoiHttps() throws IOException {
-        System.out.println("createDoi through HTTPS server");
+        System.out.println("TEST: CreateDoi through HTTPS server");
 
         this.spec.createSpec(MdsSpec.Spec.POST_DOI_201);
         
@@ -221,7 +222,7 @@ public class DoisResourceTest {
      */
     @Test
     public void testCreateDoiHttp() throws IOException {
-        System.out.println("createDoi through a HTTP server");
+        System.out.println("TEST: CreateDoi through a HTTP server");
         
         this.spec.createSpec(MdsSpec.Spec.POST_DOI_201);        
 
@@ -261,7 +262,7 @@ public class DoisResourceTest {
      */
     @Test
     public void testCreateFalseDoiHttps() throws IOException {
-        System.out.println("createDoi with a not registered DOI");
+        System.out.println("TEST: CreateDoi with a not registered DOI");
         
         this.spec.createSpec(MdsSpec.Spec.POST_DOI_412);                        
 
@@ -299,7 +300,7 @@ public class DoisResourceTest {
      */
     @Test
     public void testCreateDoiWithWrongPrefixHttps() throws IOException {
-        System.out.println("createDoi");
+        System.out.println("TEST: CreateDoi");
 
         Form doiForm = new Form();
         doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.4072/828606/8c3e91ad45ca855b477126bc073ae"));

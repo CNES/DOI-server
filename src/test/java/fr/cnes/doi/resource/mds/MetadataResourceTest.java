@@ -96,6 +96,7 @@ public class MetadataResourceTest {
         parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS");
+        System.out.println("------ TEST MetadataResource ------");        
     }
 
     @AfterClass
@@ -125,7 +126,7 @@ public class MetadataResourceTest {
      */
     @Test
     public void testGetMetadata() throws IOException, JAXBException, SAXException {
-        System.out.println("getMetadata");
+        System.out.println("TEST: GetMetadata");
 
         mockServer.when(HttpRequest.request("/" + ClientMDS.METADATA_RESOURCE + "/" + DOI)
                 .withMethod("GET")).respond(HttpResponse.response().withStatusCode(200).withBody(XML, StandardCharsets.UTF_8));
@@ -148,7 +149,7 @@ public class MetadataResourceTest {
         assertTrue(DOI.equals(doi) || doi.isEmpty());
 
         mockServer.verify(HttpRequest.request("/" + ClientMDS.METADATA_RESOURCE + "/" + DOI)
-                .withMethod("GET"), VerificationTimes.once());
+                .withMethod("GET"), VerificationTimes.atLeast(1));
     }
 
     /**
@@ -163,7 +164,7 @@ public class MetadataResourceTest {
      */
     @Test
     public void testGetMetadataAsJson() throws IOException, JAXBException, SAXException {
-        System.out.println("getMetadata as Json");
+        System.out.println("TEST: getMetadata as Json");
 
         mockServer.when(HttpRequest.request("/" + ClientMDS.METADATA_RESOURCE + "/" + DOI)
                 .withMethod("GET")).respond(HttpResponse.response().withStatusCode(200).withBody(XML, StandardCharsets.UTF_8));
@@ -186,7 +187,7 @@ public class MetadataResourceTest {
         assertTrue(result.contains("{") || result.isEmpty());
         
         mockServer.verify(HttpRequest.request("/" + ClientMDS.METADATA_RESOURCE + "/" + DOI)
-                .withMethod("GET"), VerificationTimes.once());        
+                .withMethod("GET"), VerificationTimes.atLeast(1));        
     }
 
     /**
@@ -199,7 +200,7 @@ public class MetadataResourceTest {
      */
     @Test
     public void testGetMetadataFromWrongDOI() throws IOException, JAXBException, SAXException {
-        System.out.println("getMetadata");
+        System.out.println("TEST: GetMetadata");
         
         mockServer
                 .when(
@@ -230,7 +231,7 @@ public class MetadataResourceTest {
         assertEquals(Status.CLIENT_ERROR_NOT_FOUND.getCode(), code);
         
         mockServer.verify(HttpRequest.request("/" + ClientMDS.METADATA_RESOURCE + "/" + DOI)
-                .withMethod("GET"), VerificationTimes.once());        
+                .withMethod("GET"), VerificationTimes.atLeast(1));        
 
     }
 
@@ -239,7 +240,7 @@ public class MetadataResourceTest {
      */
     @Test
     public void testGetMetadataFromWrongPrefix() throws IOException, JAXBException, SAXException {
-        System.out.println("getMetadata");
+        System.out.println("TEST: GetMetadata");
         
         mockServer.when(HttpRequest.request("/" + ClientMDS.METADATA_RESOURCE + "/" + DOI)
                 .withMethod("GET")).respond(HttpResponse.response().withStatusCode(404).withBody(XML, StandardCharsets.UTF_8));
@@ -260,7 +261,7 @@ public class MetadataResourceTest {
         assertEquals(Status.CLIENT_ERROR_NOT_FOUND.getCode(), code);
         
         mockServer.verify(HttpRequest.request("/" + ClientMDS.METADATA_RESOURCE + "/" + DOI)
-                .withMethod("GET"), VerificationTimes.once());          
+                .withMethod("GET"), VerificationTimes.atLeast(1));          
 
     }      
     /**
@@ -273,7 +274,7 @@ public class MetadataResourceTest {
      */
     @Test
     public void testDeleteMetadata() throws JAXBException, SAXException, IOException {
-        System.out.println("deleteMetadata");
+        System.out.println("TEST: DeleteMetadata");
         
         mockServer.when(HttpRequest.request("/" + ClientMDS.METADATA_RESOURCE+"/"+DOI)
                 .withMethod("DELETE")).respond(HttpResponse.response().withStatusCode(200).withBody(XML, StandardCharsets.UTF_8));
@@ -301,6 +302,6 @@ public class MetadataResourceTest {
         assertEquals(Status.SUCCESS_OK.getCode(), code);
         
         mockServer.verify(HttpRequest.request("/" + ClientMDS.METADATA_RESOURCE+"/"+DOI)
-                .withMethod("DELETE"), VerificationTimes.once());         
+                .withMethod("DELETE"), VerificationTimes.atLeast(1));         
     }
 }

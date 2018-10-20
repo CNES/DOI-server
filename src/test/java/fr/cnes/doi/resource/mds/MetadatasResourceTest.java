@@ -87,6 +87,7 @@ public class MetadatasResourceTest {
         parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS");
+        System.out.println("------ TEST MetadatasResource ------");        
     }
 
     @AfterClass
@@ -114,7 +115,7 @@ public class MetadatasResourceTest {
      */
     @Test
     public void testCreateMetadataHttps() {
-        System.out.println("createMetadata");
+        System.out.println("TEST: createMetadata");
         
         mockServer.when(HttpRequest.request("/" + ClientMDS.METADATA_RESOURCE)
                 .withMethod("POST")).respond(HttpResponse.response().withStatusCode(201).withBody("CREATED"));
@@ -144,7 +145,7 @@ public class MetadatasResourceTest {
         assertEquals(Status.SUCCESS_CREATED.getCode(), code);
         
         mockServer.verify(HttpRequest.request("/" + ClientMDS.METADATA_RESOURCE)
-                .withMethod("POST"), VerificationTimes.once());        
+                .withMethod("POST"), VerificationTimes.atLeast(1));        
     }
     
     /**
@@ -153,7 +154,7 @@ public class MetadatasResourceTest {
      */
     @Test
     public void testCreateMetadataHttpsWithWrongFile() {
-        System.out.println("createMetadata with Wrong File");
+        System.out.println("TEST: createMetadata with Wrong File");
         exceptions.expect(ResourceException.class);
         result = new BufferedReader(new InputStreamReader(inputStreamFileError)).lines()
                 .collect(Collectors.joining("\n"));
@@ -182,7 +183,7 @@ public class MetadatasResourceTest {
      */
     @Test
     public void testCreateMetadataHttpsWithNoRole() {
-        System.out.println("createMetadata with not role");
+        System.out.println("TEST: CreateMetadata with not role");
         exceptions.expect(ResourceException.class);        
         
         result = new BufferedReader(new InputStreamReader(inputStream)).lines()

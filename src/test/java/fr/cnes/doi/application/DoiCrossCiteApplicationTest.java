@@ -58,7 +58,8 @@ public class DoiCrossCiteApplicationTest {
         Series<Parameter> parameters = cl.getContext().getParameters();
         parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
-        parameters.add("truststoreType", "JKS");        
+        parameters.add("truststoreType", "JKS"); 
+        System.out.println("------ TEST DoiCrossCiteApplication ------");
     }
     
     @AfterClass
@@ -80,7 +81,7 @@ public class DoiCrossCiteApplicationTest {
      */
     @Test
     public void testApiWithHttp() throws IOException {
-        System.out.println("API through HTTP");
+        System.out.println("TEST: API through HTTP");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);        
         ClientResource client = new ClientResource("http://localhost:"+port+"/citation/");
         Representation repApi = client.options();
@@ -95,7 +96,7 @@ public class DoiCrossCiteApplicationTest {
      */
     @Test
     public void testApiWithHttps() throws IOException {
-        System.out.println("API through HTTPS");
+        System.out.println("TEST: API through HTTPS");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);        
         ClientResource client = new ClientResource("https://localhost:"+port+"/citation/");
         client.setNext(cl);
@@ -111,7 +112,7 @@ public class DoiCrossCiteApplicationTest {
      */
     @Test
     public void generateAPIWadl() throws Exception {
-        System.out.println("API Wadl");
+        System.out.println("TEST: API Wadl");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);        
         ClientResource client = new ClientResource("http://localhost:"+port+"/citation?media=text/html");               Representation repApi = client.options();
         String txt = repApi.getText();

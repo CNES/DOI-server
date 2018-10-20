@@ -67,7 +67,8 @@ public class MediaResourceTest {
         Series<Parameter> parameters = cl.getContext().getParameters();
         parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
-        parameters.add("truststoreType", "JKS");        
+        parameters.add("truststoreType", "JKS");      
+        System.out.println("------ TEST MediaResource ------");        
     }
     
     @AfterClass
@@ -91,7 +92,7 @@ public class MediaResourceTest {
      */
     @Test
     public void testGetMediasHttps() throws IOException {
-        System.out.println("getMedias");
+        System.out.println("TEST: GetMedias");
 
         this.spec.createSpec(MdsSpec.Spec.GET_MEDIA_200);
         
@@ -117,7 +118,7 @@ public class MediaResourceTest {
      */    
     @Test
     public void testGetMediasHttp() throws IOException {
-        System.out.println("getMedias");
+        System.out.println("TEST: GetMedias");
         
         this.spec.createSpec(MdsSpec.Spec.GET_MEDIA_200);
         
@@ -144,7 +145,7 @@ public class MediaResourceTest {
      */
     @Test
     public void testGetMediasWithWrongDOIHttps() throws IOException {
-        System.out.println("getMedias with wrong DOI through a HTTPS server");
+        System.out.println("TEST: GetMedias with wrong DOI through a HTTPS server");
         
         this.spec.createSpec(MdsSpec.Spec.GET_MEDIA_404);
         
@@ -172,7 +173,7 @@ public class MediaResourceTest {
      */    
     @Test
     public void testGetMediasWithWrongDOIHttp() throws IOException {
-        System.out.println("getMedias with wrong DOI through HTTP server");
+        System.out.println("TEST: GetMedias with wrong DOI through HTTP server");
         
         this.spec.createSpec(MdsSpec.Spec.GET_MEDIA_404);
         
@@ -197,7 +198,7 @@ public class MediaResourceTest {
      */
     @Test    
     public void testCreateMediaForbidden() {
-        System.out.println("createMedia");
+        System.out.println("TEST: CreateMedia");
                 
         Form mediaForm = new Form();
         mediaForm.add("image/fits", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
