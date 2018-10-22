@@ -19,18 +19,85 @@
 package fr.cnes.doi.exception;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
-import org.restlet.resource.ClientResource;
 
 /**
  * Exception for Client Cross Cite.
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class ClientMdsException extends Exception {
+    
+    /**
+     * Operation successful.
+     * 201
+     */
+    public static final int SUCCESS_CREATED = 201;
 
+    /**
+     * Operation successful.
+     * 200
+     */
+    public static final int SUCCESS_OK = 200;
+
+    /**
+     * no DOIs founds.
+     * 204
+     */
+    public static final int SUCCESS_NO_CONTENT = 204;
+
+    /**
+     * invalid XML, wrong prefix or request body must be exactly two lines:
+     * "DOI and URL; wrong domain, wrong prefix".
+     * 400   
+     */
+    public static final int CLIENT_BAD_REQUEST = 400;
+
+    /**
+     * no login.
+     * 401
+     */
+    public static final int CLIENT_ERROR_UNAUTHORIZED = 401;
+
+    /**
+     * no login.
+     * 1001
+     */
+    public static final int CONNECTOR_ERROR_COMMUNICATION = 1001;
+
+    /**
+     * login problem, quota exceeded or dataset belongs to another party.
+     * 403
+     */
+    public static final int CLIENT_ERROR_FORBIDDEN = 403;    
+
+    /**
+     * DOI does not exist in our database.
+     * 404
+     */
+    public static final int CLIENT_ERROR_NOT_FOUND = 404;    
+    
+    /**
+     * DOIServer : Cannot know which role must be applied.
+     * 409
+     */
+    public static final int CLIENT_ERROR_CONFLICT = 409;     
+
+    /**
+     * the requested dataset was marked inactive (using DELETE method).
+     * 410
+     */
+    public static final int CLIENT_ERROR_GONE = 410;    
+
+    /**
+     * metadata must be uploaded first.
+     * 412
+     */
+    public static final int CLIENT_ERROR_PRECONDITION_FAILED = 412;    
+    
+    /**
+     * SeralVersionUID
+     */
     private static final long serialVersionUID = -5061913391706889102L;
 
     /**
@@ -50,7 +117,7 @@ public class ClientMdsException extends Exception {
     public ClientMdsException(final Status status) {
         super();
         this.detailMessage = computeDetailMessage(status);
-        this.status = status;
+        this.status = computeStatus(status);
     }
     
     /**
@@ -61,7 +128,7 @@ public class ClientMdsException extends Exception {
     public ClientMdsException(final Status status, final String message) {
         super(message);
         this.detailMessage = computeDetailMessage(status);
-        this.status = status;
+        this.status = computeStatus(status);
     }    
     
     /**
@@ -72,7 +139,7 @@ public class ClientMdsException extends Exception {
     public ClientMdsException(final Status status,final Throwable cause) {
         super(cause);
         this.detailMessage = computeDetailMessage(status);
-        this.status = status;
+        this.status = computeStatus(status);
     }    
     
     /**
@@ -85,7 +152,7 @@ public class ClientMdsException extends Exception {
     public ClientMdsException(final Status status, final String message, final Throwable cause) {
         super(message, cause);
         this.detailMessage = computeDetailMessage(status);
-        this.status = status;
+        this.status = computeStatus(status);
     }
     
     /**
@@ -99,7 +166,7 @@ public class ClientMdsException extends Exception {
     public ClientMdsException(final Status status, final String message, 
             final Representation responseEntity, final Throwable cause) {
        super(message, cause);
-       this.status = status;
+       this.status = computeStatus(status);
        String txt;
         try {
             txt = responseEntity.getText();
@@ -110,6 +177,15 @@ public class ClientMdsException extends Exception {
     }
     
     /**
+     * Computes status     
+     * @param status status
+     * @return status
+     */
+    private Status computeStatus(final Status status) {
+        return (status.getCode() == CONNECTOR_ERROR_COMMUNICATION) ? new Status(CLIENT_ERROR_UNAUTHORIZED) : status;
+    }
+    
+    /**
      * Returns the detail message according to the status.
      * @param status HTTP status
      * @return the detail message
@@ -117,30 +193,34 @@ public class ClientMdsException extends Exception {
     private String computeDetailMessage(final Status status) {
         final String result;
         switch(status.getCode()) {
-            case 201:
-            case 200:
+            case SUCCESS_CREATED:
+            case SUCCESS_OK:
                 result = "Operation successful";
                 break;
-            case 204:
+            case SUCCESS_NO_CONTENT:
                 result = "no DOIs founds";
                 break;
-            case 400:
+            case CLIENT_BAD_REQUEST:
                 result = "invalid XML, wrong prefix or request body must be exactly two lines: "
                         + "DOI and URL; wrong domain, wrong prefix";
                 break;
-            case 401:
+            case CONNECTOR_ERROR_COMMUNICATION:
+            case CLIENT_ERROR_UNAUTHORIZED:
                 result = "no login";
                 break;
-            case 403:
-                result = "login problem, quota exceeded or dataset belongs to another party ";
+            case CLIENT_ERROR_FORBIDDEN:
+                result = "login problem, quota exceeded or dataset belongs to another party";
                 break;
-            case 404:
+            case CLIENT_ERROR_NOT_FOUND:
                 result = "DOI does not exist in our database";
                 break;
-            case 410:
+            case CLIENT_ERROR_CONFLICT:
+                result = "DOIServer : Cannot know which role must be applied";
+                break;
+            case CLIENT_ERROR_GONE:
                 result = "the requested dataset was marked inactive (using DELETE method)";
                 break;
-            case 412:
+            case CLIENT_ERROR_PRECONDITION_FAILED:
                 result = "metadata must be uploaded first";
                 break;
             default:
