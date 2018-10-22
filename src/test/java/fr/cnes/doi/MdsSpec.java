@@ -21,17 +21,14 @@ package fr.cnes.doi;
 import fr.cnes.doi.client.ClientMDS;
 import java.util.Arrays;
 import java.util.List;
-import org.mockserver.client.server.MockServerClient;
 import org.mortbay.jetty.HttpMethods;
 
 /**
  *
  * @author Jean-Christophe Malapert
  */
-public class MdsSpec {
-    
-    final int PORT = 1081;
-    
+public class MdsSpec extends AbstractSpec {
+        
     public enum Spec {
   
         GET_DOI_200("Get DOI", HttpMethods.GET, "/" + ClientMDS.DOI_RESOURCE, "10.5072/2783446.2783605", 200, "https://edutheque.cnes.fr/fr/web/CNES-fr/10884-edutheque.php"), 
@@ -48,9 +45,10 @@ public class MdsSpec {
         POST_DOI_403("Create forbidden DOI", HttpMethods.POST, "/" + ClientMDS.DOI_RESOURCE, "", 403, "login problem, quota exceeded"),  
         POST_DOI_412("Create DOI with precondition", HttpMethods.POST, "/" + ClientMDS.DOI_RESOURCE, "", 412, "metadata must be uploaded first"),
         POST_DOI_500("Create DOI with internal server error", HttpMethods.POST, "/" + ClientMDS.DOI_RESOURCE, "", 500, "server internal error, try later and if problem persists please contact us"),  
-        GET_METADATA_200("Get successfull DOI metadata", HttpMethods.GET, "/" + ClientMDS.METADATA_RESOURCE, "10.5072/EDU/TESTID", 200, XML), 
+        GET_METADATA_200("Get successfull DOI metadata", HttpMethods.GET, "/" + ClientMDS.METADATA_RESOURCE, "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b", 200, XML), 
         GET_METADATA_401("Fail to get DOI metadata due to an unauthorized request", HttpMethods.GET, "/" + ClientMDS.METADATA_RESOURCE, "10.5072/EDU/TESTID", 401, "no login"), 
-        GET_METADATA_403("Fail to get DOI metadata due to a forbidden request", HttpMethods.GET, "/" + ClientMDS.METADATA_RESOURCE, "10.5072/EDU/TESTID", 403, "login problem or dataset belongs to another party"),          GET_METADATA_404("Fail to get DOI metadata due to an unknown DOI", HttpMethods.GET, "/" + ClientMDS.METADATA_RESOURCE, "10.5072/EDU/TESTID", 404, "DOI does not exist in our database"),  
+        GET_METADATA_403("Fail to get DOI metadata due to a forbidden request", HttpMethods.GET, "/" + ClientMDS.METADATA_RESOURCE, "10.5072/EDU/TESTID", 403, "login problem or dataset belongs to another party"),          
+        GET_METADATA_404("Fail to get DOI metadata due to an unknown DOI", HttpMethods.GET, "/" + ClientMDS.METADATA_RESOURCE, "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b", 404, "DOI does not exist in our database"),  
         GET_METADATA_410("Fail to get DOI metadata due to an inactive DOI", HttpMethods.GET, "/" + ClientMDS.METADATA_RESOURCE, "10.5072/EDU/TESTID", 410, "the requested dataset was marked inactive"), 
         GET_METADATA_500("Fail to get DOI metadata due to an internal serer error", HttpMethods.GET, "/" + ClientMDS.METADATA_RESOURCE, "10.5072/EDU/TESTID", 500, "server internal error, try later and if problem persists please contact us"),  
         POST_METADATA_201("Create DOI metadata", HttpMethods.POST, "/" + ClientMDS.METADATA_RESOURCE, "", 201, "CREATED"),
@@ -58,7 +56,7 @@ public class MdsSpec {
         POST_METADATA_401("Fail to create DOI metadata due to an unauthorized request", HttpMethods.POST, "/" + ClientMDS.METADATA_RESOURCE, "", 401, "no login"),
         POST_METADATA_403("Fail to create DOI metadata due to a forbidden request", HttpMethods.POST, "/" + ClientMDS.METADATA_RESOURCE, "", 403, "login problem, quota exceeded"),
         POST_METADATA_500("Fail to create DOI metadata due to a forbidden request", HttpMethods.POST, "/" + ClientMDS.METADATA_RESOURCE, "", 500, "server internal error, try later and if problem persists please contact us"),
-        DELETE_METADATA_200("Delete DOI metadata", HttpMethods.DELETE, "/" + ClientMDS.METADATA_RESOURCE, "10.5072/EDU/TESTID", 200, XML),
+        DELETE_METADATA_200("Delete DOI metadata", HttpMethods.DELETE, "/" + ClientMDS.METADATA_RESOURCE, "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b", 200, XML),
         DELETE_METADATA_401("Fail to delete DOI metadata due to an unauthorized request", HttpMethods.DELETE, "/" + ClientMDS.METADATA_RESOURCE, "10.5072/EDU/TESTID", 401, "no login"),        
         DELETE_METADATA_403("Fail to delete DOI metadata due to a forbidden request", HttpMethods.DELETE, "/" + ClientMDS.METADATA_RESOURCE, "10.5072/EDU/TESTID", 403, "login problem or dataset belongs to another party"), 
         DELETE_METADATA_404("Fail to delete DOI metadata due to an unknown DOI", HttpMethods.DELETE, "/" + ClientMDS.METADATA_RESOURCE, "10.5072/EDU/TESTID", 404, "DOI does not exist in our database"),  
@@ -121,25 +119,25 @@ public class MdsSpec {
     }
     
     public static final String XML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-                + "<resource xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://datacite.org/schema/kernel-4\" xsi:schemaLocation=\"http://datacite.org/schema/kernel-4 http://schema.datacite.org/meta/kernel-4.1/metadata.xsd\">\n"
-                + "    <identifier identifierType=\"DOI\">10.5072/EDU/TESTID</identifier>\n"
-                + "    <creators>\n"
-                + "        <creator>\n"
-                + "            <creatorName>CNES</creatorName>\n"
-                + "        </creator>\n"
-                + "    </creators>\n"
-                + "    <titles>\n"
-                + "        <title>Le portail Éduthèque</title>\n"
-                + "    </titles>\n"
-                + "    <publisher>CNES</publisher>\n"
-                + "    <publicationYear>2015</publicationYear>\n"
-                + "    <resourceType resourceTypeGeneral=\"Other\">Portail Éduthèque</resourceType>\n"
-                + "</resource>";
+            + "<resource xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://datacite.org/schema/kernel-4\" xsi:schemaLocation=\"http://datacite.org/schema/kernel-4 http://schema.datacite.org/meta/kernel-4.1/metadata.xsd\">\n"
+            + "    <identifier identifierType=\"DOI\">10.5072/828606/8c3e91ad45ca855b477126bc073ae44b</identifier>\n"
+            + "    <creators>\n"
+            + "        <creator>\n"
+            + "            <creatorName>CNES</creatorName>\n"
+            + "        </creator>\n"
+            + "    </creators>\n"
+            + "    <titles>\n"
+            + "        <title>Le portail Éduthèque</title>\n"
+            + "    </titles>\n"
+            + "    <publisher>CNES</publisher>\n"
+            + "    <publicationYear>2015</publicationYear>\n"
+            + "    <resourceType resourceTypeGeneral=\"Other\">Portail Éduthèque</resourceType>\n"
+            + "</resource>";    
     
     private final MockupServer mockServer;
     
-    public MdsSpec() {
-        this.mockServer = new MockupServer(PORT);
+    public MdsSpec(int port) {
+        this.mockServer = new MockupServer(port);
     }   
     
     public void createSpec(final Spec specification) {
@@ -159,6 +157,13 @@ public class MdsSpec {
         this.mockServer.verifySpec(specification.getHttpVerb(), path);
     }
     
+    public void verifySpec(final Spec specification, int exactly) {
+        final String path = specification.getTemplatePath().isEmpty() 
+                ? specification.getPath() 
+                : specification.getPath()+"/"+specification.getTemplatePath();
+        this.mockServer.verifySpec(specification.getHttpVerb(), path, exactly);
+    }    
+
     public void finish() {
         this.mockServer.close();
     }

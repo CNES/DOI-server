@@ -31,8 +31,8 @@ import org.restlet.data.ChallengeResponse;
 import fr.cnes.doi.InitSettingsForTest;
 
 /**
- *
- * @author malapert
+ * Test class for {@link fr.cnes.doi.settings.ProxySettings}
+ * @author Jean-Christophe Malapert
  */
 public class ProxySettingsTest {
 

@@ -34,8 +34,8 @@ import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 
 /**
- *
- * @author malapert
+ * Test class for {@link fr.cnes.doi.settings.EmailSettings}
+ * @author Jean-Christophe Malapert
  */
 public class EmailSettingsTest {
 

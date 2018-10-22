@@ -19,8 +19,12 @@
 package fr.cnes.doi.application;
 
 import fr.cnes.doi.InitServerForTest;
+import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_CONNECTIONS_PER_HOST;
+import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_TOTAL_CONNECTIONS;
 import static fr.cnes.doi.server.DoiServer.JKS_DIRECTORY;
 import static fr.cnes.doi.server.DoiServer.JKS_FILE;
+import static fr.cnes.doi.server.DoiServer.RESTLET_MAX_CONNECTIONS_PER_HOST;
+import static fr.cnes.doi.server.DoiServer.RESTLET_MAX_TOTAL_CONNECTIONS;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import java.io.File;
@@ -53,9 +57,11 @@ public class DoiCrossCiteApplicationTest {
     
     @BeforeClass
     public static void setUpClass() {
-        InitServerForTest.init();
+        InitServerForTest.init();       
         cl = new Client(new Context(), Protocol.HTTPS);
         Series<Parameter> parameters = cl.getContext().getParameters();
+        parameters.set(RESTLET_MAX_TOTAL_CONNECTIONS, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_TOTAL_CONNECTIONS, DEFAULT_MAX_TOTAL_CONNECTIONS));        
+        parameters.set(RESTLET_MAX_CONNECTIONS_PER_HOST, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_CONNECTIONS_PER_HOST, DEFAULT_MAX_CONNECTIONS_PER_HOST));
         parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS"); 
@@ -81,13 +87,13 @@ public class DoiCrossCiteApplicationTest {
      */
     @Test
     public void testApiWithHttp() throws IOException {
-        System.out.println("TEST: API through HTTP");
+        System.out.println("TEST: WADL API through HTTP");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);        
         ClientResource client = new ClientResource("http://localhost:"+port+"/citation/");
         Representation repApi = client.options();
         String txt = repApi.getText();
         client.release();
-        assertTrue("API through HTTP",txt!=null && !txt.isEmpty());
+        assertTrue("WADL API through HTTP",txt!=null && !txt.isEmpty() && txt.contains("wadl"));
     }
 
     /**
@@ -96,14 +102,14 @@ public class DoiCrossCiteApplicationTest {
      */
     @Test
     public void testApiWithHttps() throws IOException {
-        System.out.println("TEST: API through HTTPS");
+        System.out.println("TEST: WADL API through HTTPS");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);        
         ClientResource client = new ClientResource("https://localhost:"+port+"/citation/");
         client.setNext(cl);
         Representation repApi = client.options();
         String txt = repApi.getText();
         client.release();
-        assertTrue("API through HTTPS",txt!=null && !txt.isEmpty());
+        assertTrue("WADL API through HTTPS",txt!=null && !txt.isEmpty() && txt.contains("wadl"));
     }   
     
     /**
@@ -112,15 +118,16 @@ public class DoiCrossCiteApplicationTest {
      */
     @Test
     public void generateAPIWadl() throws Exception {
-        System.out.println("TEST: API Wadl");
+        System.out.println("TEST: HTML API");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);        
-        ClientResource client = new ClientResource("http://localhost:"+port+"/citation?media=text/html");               Representation repApi = client.options();
+        ClientResource client = new ClientResource("http://localhost:"+port+"/citation?media=text/html");
+        Representation repApi = client.options();
         String txt = repApi.getText();
         client.release();
         try (FileWriter writer = new FileWriter("citation_api.html")) {
             writer.write(txt);
             writer.flush();
         }
-        assertTrue("API through HTTPS",txt!=null && !txt.isEmpty());
+        assertTrue("HTML API through HTTPS",txt!=null && !txt.isEmpty() && txt.contains("html"));
     }    
 }

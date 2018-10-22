@@ -20,8 +20,13 @@ package fr.cnes.doi.resource.mds;
 
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.MdsSpec;
+import static fr.cnes.doi.client.BaseClient.DATACITE_MOCKSERVER_PORT;
+import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_CONNECTIONS_PER_HOST;
+import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_TOTAL_CONNECTIONS;
 import static fr.cnes.doi.server.DoiServer.JKS_DIRECTORY;
 import static fr.cnes.doi.server.DoiServer.JKS_FILE;
+import static fr.cnes.doi.server.DoiServer.RESTLET_MAX_CONNECTIONS_PER_HOST;
+import static fr.cnes.doi.server.DoiServer.RESTLET_MAX_TOTAL_CONNECTIONS;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import java.io.File;
@@ -49,7 +54,9 @@ import org.restlet.util.Series;
 public class DoiResourceTest {
     
     private static Client cl;
-    private MdsSpec spec;         
+    private MdsSpec mdsServerStub;     
+
+    private static final String DOIS_SERVICE = "/mds/dois/";
     
     public DoiResourceTest() {
     }
@@ -59,6 +66,8 @@ public class DoiResourceTest {
         InitServerForTest.init();
         cl = new Client(new Context(), Protocol.HTTPS);
         Series<Parameter> parameters = cl.getContext().getParameters();
+        parameters.set(RESTLET_MAX_TOTAL_CONNECTIONS, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_TOTAL_CONNECTIONS, DEFAULT_MAX_TOTAL_CONNECTIONS));        
+        parameters.set(RESTLET_MAX_CONNECTIONS_PER_HOST, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_CONNECTIONS_PER_HOST, DEFAULT_MAX_CONNECTIONS_PER_HOST));
         parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS"); 
@@ -72,74 +81,73 @@ public class DoiResourceTest {
     
     @Before
     public void setUp() {
-        this.spec = new MdsSpec();        
+        this.mdsServerStub = new MdsSpec(DATACITE_MOCKSERVER_PORT);        
     }
     
     @After
     public void tearDown() {
-        this.spec.finish();
+        this.mdsServerStub.finish();
     }
     
     /**
      * Test of getDoi method through a HTTP server, of class DoiResource.
-     * A Status.SUCCESS_OK is expected and the response <i>https://cfosat.cnes.fr/</i>
+     * A SUCCESS_OK status is expected and the exptected response is <i>https://cfosat.cnes.fr/</i>
      * @throws java.io.IOException - if OutOfMemoryErrors
      */
     @Test
     public void testGetDoiHttp() throws IOException {
-        System.out.println("TEST: GetDoi http");
+        System.out.println("TEST: "+MdsSpec.Spec.GET_DOI_200.getDescription()+" through HTTP server");
         
-        this.spec.createSpec(MdsSpec.Spec.GET_DOI_200);
+        this.mdsServerStub.createSpec(MdsSpec.Spec.GET_DOI_200);
         
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);
-        ClientResource client = new ClientResource("http://localhost:"+port+"/mds/dois/"+MdsSpec.Spec.GET_DOI_200.getTemplatePath());
+        ClientResource client = new ClientResource("http://localhost:"+port+DOIS_SERVICE+MdsSpec.Spec.GET_DOI_200.getTemplatePath());
         Representation rep = client.get();
         Status status = client.getStatus();
         
-        assertEquals("Test the status code is the right one", status.getCode(), Status.SUCCESS_OK.getCode());
+        assertEquals("Test the status code is the right one", MdsSpec.Spec.GET_DOI_200.getStatus(), status.getCode());
         assertEquals("Test the landing page is the right one", MdsSpec.Spec.GET_DOI_200.getBody(), rep.getText());
         
-        this.spec.verifySpec(MdsSpec.Spec.GET_DOI_200);
+        this.mdsServerStub.verifySpec(MdsSpec.Spec.GET_DOI_200);
     }
     
     /**
      * Test of getDoi method through a HTTP server, of class DoiResource.
-     * A Status.SUCCESS_OK is expected and the response <i>https://cfosat.cnes.fr/</i>
+     * A SUCCESS_OK status is expected and the expected response is <i>https://cfosat.cnes.fr/</i>
      * @throws java.io.IOException - if OutOfMemoryErrors
      */
     @Test
     public void testGetDoiHttps() throws IOException {
-        System.out.println("TEST: GetDoi https");
+        System.out.println("TEST: "+MdsSpec.Spec.GET_DOI_200.getDescription()+" through HTTPS server");
         
-        this.spec.createSpec(MdsSpec.Spec.GET_DOI_200);
+        this.mdsServerStub.createSpec(MdsSpec.Spec.GET_DOI_200);
         
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-        ClientResource client = new ClientResource("https://localhost:"+port+"/mds/dois/"+MdsSpec.Spec.GET_DOI_200.getTemplatePath());
+        ClientResource client = new ClientResource("https://localhost:"+port+DOIS_SERVICE+MdsSpec.Spec.GET_DOI_200.getTemplatePath());
         client.setNext(cl);
         Representation rep = client.get();
         Status status = client.getStatus();
         
-        assertEquals("Test the status code is the right one", status.getCode(), Status.SUCCESS_OK.getCode());
+        assertEquals("Test the status code is the right one", MdsSpec.Spec.GET_DOI_200.getStatus(), status.getCode());
         assertEquals("Test the landing page is the right one",MdsSpec.Spec.GET_DOI_200.getBody(), rep.getText());
         
-        this.spec.verifySpec(MdsSpec.Spec.GET_DOI_200);
+        this.mdsServerStub.verifySpec(MdsSpec.Spec.GET_DOI_200);
          
     }    
     
     /**
      * Test of getDoi method when the DOI is not found through a HTTPS server, of class DoiResource.
-     * A Status.CLIENT_ERROR_NOT_FOUND is expected because the 
-     * DOI does not exist.
+     * A CLIENT_ERROR_NOT_FOUND status is expected because the DOI does not exist.
      * @throws java.io.IOException - if OutOfMemoryErrors
      */
     @Test
     public void testGetDoiNotFoundHttps() throws IOException {        
-        System.out.println("TEST: GetDoi not found https");      
+        System.out.println("TEST: "+MdsSpec.Spec.GET_DOI_404.getDescription()+" through HTTPS server");      
         
-        this.spec.createSpec(MdsSpec.Spec.GET_DOI_404);
+        this.mdsServerStub.createSpec(MdsSpec.Spec.GET_DOI_404);
         
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-        ClientResource client = new ClientResource("https://localhost:"+port+"/mds/dois/"+MdsSpec.Spec.GET_DOI_404.getTemplatePath());
+        ClientResource client = new ClientResource("https://localhost:"+port+DOIS_SERVICE+MdsSpec.Spec.GET_DOI_404.getTemplatePath());
         client.setNext(cl);
         int code;
         try {
@@ -149,9 +157,9 @@ public class DoiResourceTest {
             code = ex.getStatus().getCode();
         } 
         client.release();
-        assertEquals(code, Status.CLIENT_ERROR_NOT_FOUND.getCode());
+        assertEquals(MdsSpec.Spec.GET_DOI_404.getStatus(), code);
         
-        this.spec.verifySpec(MdsSpec.Spec.GET_DOI_404);
+        this.mdsServerStub.verifySpec(MdsSpec.Spec.GET_DOI_404);
        
     }        
     
@@ -161,9 +169,9 @@ public class DoiResourceTest {
      */
     @Test
     public void testGetDoiNotAllowedHttps() throws IOException {        
-        System.out.println("TEST: GetDoi not allowed https");      
+        System.out.println("TEST: Failed to create a DOI due to a wrong prefix through a HTTPS server");      
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-        ClientResource client = new ClientResource("https://localhost:"+port+"/mds/dois/10.xxxx/828606");
+        ClientResource client = new ClientResource("https://localhost:"+port+DOIS_SERVICE+"10.xxxx/828606");
         client.setNext(cl);
         int code;
         try {

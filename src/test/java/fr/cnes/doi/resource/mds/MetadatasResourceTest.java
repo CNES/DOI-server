@@ -19,11 +19,15 @@
 package fr.cnes.doi.resource.mds;
 
 import fr.cnes.doi.InitServerForTest;
-import fr.cnes.doi.client.ClientMDS;
+import fr.cnes.doi.MdsSpec;
 import fr.cnes.doi.client.ClientProxyTest;
 import fr.cnes.doi.security.UtilsHeader;
+import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_CONNECTIONS_PER_HOST;
+import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_TOTAL_CONNECTIONS;
 import static fr.cnes.doi.server.DoiServer.JKS_DIRECTORY;
 import static fr.cnes.doi.server.DoiServer.JKS_FILE;
+import static fr.cnes.doi.server.DoiServer.RESTLET_MAX_CONNECTIONS_PER_HOST;
+import static fr.cnes.doi.server.DoiServer.RESTLET_MAX_TOTAL_CONNECTIONS;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import java.io.BufferedReader;
@@ -39,13 +43,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
-import org.mockserver.integration.ClientAndServer;
-import org.mockserver.model.HttpRequest;
-import org.mockserver.model.HttpResponse;
-import org.mockserver.verify.VerificationTimes;
 import org.restlet.Client;
 import org.restlet.Context;
 import org.restlet.data.ChallengeResponse;
@@ -54,15 +53,15 @@ import org.restlet.data.Header;
 import org.restlet.data.MediaType;
 import org.restlet.data.Parameter;
 import org.restlet.data.Protocol;
-import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
 import org.restlet.util.Series;
+import static fr.cnes.doi.client.BaseClient.DATACITE_MOCKSERVER_PORT;
 
 /**
- * Tests MetadatasResource.
+ * Test class for {@link fr.cnes.doi.resource.mds.MetadatasResource}
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class MetadatasResourceTest {
@@ -74,7 +73,9 @@ public class MetadatasResourceTest {
     private String result;
     private InputStream inputStream;
     private InputStream inputStreamFileError; 
-    private ClientAndServer mockServer;    
+    private MdsSpec mdsServerStub;
+    
+    private static final String METADATA_SERVICE = "/mds/metadata";
 
     public MetadatasResourceTest() {
     }
@@ -84,6 +85,8 @@ public class MetadatasResourceTest {
         InitServerForTest.init();
         cl = new Client(new Context(), Protocol.HTTPS);
         Series<Parameter> parameters = cl.getContext().getParameters();
+        parameters.set(RESTLET_MAX_TOTAL_CONNECTIONS, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_TOTAL_CONNECTIONS, DEFAULT_MAX_TOTAL_CONNECTIONS));        
+        parameters.set(RESTLET_MAX_CONNECTIONS_PER_HOST, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_CONNECTIONS_PER_HOST, DEFAULT_MAX_CONNECTIONS_PER_HOST));
         parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS");
@@ -99,33 +102,79 @@ public class MetadatasResourceTest {
     public void setUp() throws IOException {
         this.inputStream = ClientProxyTest.class.getResourceAsStream("/test.xml");
         this.inputStreamFileError = ClientProxyTest.class.getResourceAsStream("/wrongFileTest.xml");
-        mockServer = startClientAndServer(1081);
+        mdsServerStub = new MdsSpec(DATACITE_MOCKSERVER_PORT);
     }
 
     @After
     public void tearDown() throws IOException {
         this.inputStream.close();
         this.inputStreamFileError.close();
-        mockServer.stop();
+        mdsServerStub.finish();
     }
     
     /**
      * Test of createMetadata method through HTTPS server, of class MetadatasResource.
-     * A Status.SUCCESS_CREATED is expected.
+     * A SUCCESS_CREATED status is expected.
      */
     @Test
     public void testCreateMetadataHttps() {
-        System.out.println("TEST: createMetadata");
+        testSpecCreateMetadataAsObj(MdsSpec.Spec.POST_METADATA_201, inputStream, "malapert", "pwd", "828606", 1);        
+    }
+    
+    /**
+     * Test of createMetadata method through HTTPS server, of class MetadatasResource.
+     * A CLIENT_ERROR_BAD_REQUEST status is expected because the metadata file is not valid.
+     * The file is validated at the DOIServer level then DataCite is not requested.
+     */    
+    @Test
+    public void testCreateMetadataHttpsWithWrongFile() {
+        testSpecCreateMetadataAsObj(MdsSpec.Spec.POST_METADATA_400, inputStreamFileError, "malapert", "pwd", "828606", 0);
+    }  
+    
+    
+    /**
+     * Test of createMetadata method through HTTPS server with no role, of class MetadatasResource.
+     * A CLIENT_ERROR_UNAUTHORIZED is expected because the user is not related to a project then he
+     * is not allowed to create a metadata.
+     */
+    @Test
+    public void testCreateMetadataHttpsWithNoRole() {
+        testSpecCreateMetadataAsObj(MdsSpec.Spec.POST_METADATA_401, inputStream, "norole", "norole", null, 0);        
+    }
+    
+    /**
+     * Test of createMetadata method through HTTPS server with a user related to two projets with no
+     * role provided, of class MetadatasResource.
+     * A CLIENT_ERROR_CONFLICT is expected because the user is related to several project and no 
+     * role is provided then the DOIServer does not know which role must be applied. No request is 
+     * done to DataCite
+     */    
+    @Test
+    public void testCreateMetadataHttpsWithConflict() {
+        testSpecCreateMetadataAsObjWithConflict(MdsSpec.Spec.POST_METADATA_401, inputStream, "malapert", "pwd", null, 0);        
+    }
+    
+    /**
+     * The test
+     * @param spec the spec
+     * @param is the file to register
+     * @param login login
+     * @param pwd password
+     * @param role the role to set (when no role, set to null)
+     * @param exactly the number of expected requests to Datacite (-1 when at least 1 request is done)
+     */
+    private void testSpecCreateMetadataAsObj(MdsSpec.Spec spec, InputStream is, String login, String pwd, String role, int exactly) {
+        System.out.println("TEST: "+spec.getDescription());
         
-        mockServer.when(HttpRequest.request("/" + ClientMDS.METADATA_RESOURCE)
-                .withMethod("POST")).respond(HttpResponse.response().withStatusCode(201).withBody("CREATED"));
-        
-        result = new BufferedReader(new InputStreamReader(inputStream)).lines()
+        // Creates the MetadataStoreService stub        
+        this.mdsServerStub.createSpec(spec);
+
+        result = new BufferedReader(new InputStreamReader(is)).lines()
                 .collect(Collectors.joining("\n"));
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-        ClientResource client = new ClientResource("https://localhost:" + port + "/mds/metadata");
+        ClientResource client = new ClientResource("https://localhost:" + port + METADATA_SERVICE);
         client.setNext(cl);
-        client.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "malapert", "pwd"));
+        client.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, login, pwd));
         final String RESTLET_HTTP_HEADERS = "org.restlet.http.headers";
         Map<String, Object> reqAttribs = client.getRequestAttributes();
         Series headers = (Series) reqAttribs.get(RESTLET_HTTP_HEADERS);
@@ -133,7 +182,9 @@ public class MetadatasResourceTest {
             headers = new Series<>(Header.class);
             reqAttribs.put(RESTLET_HTTP_HEADERS, headers);
         }
-        headers.add(UtilsHeader.SELECTED_ROLE_PARAMETER, "828606");
+        if (role != null) {
+            headers.add(UtilsHeader.SELECTED_ROLE_PARAMETER, "828606");
+        }
         int code;
         try {
             Representation rep = client.post(new StringRepresentation(result, MediaType.APPLICATION_XML));
@@ -142,26 +193,38 @@ public class MetadatasResourceTest {
             code = ex.getStatus().getCode();
         }
         client.release();
-        assertEquals(Status.SUCCESS_CREATED.getCode(), code);
+        assertEquals(spec.getStatus(), code);        
         
-        mockServer.verify(HttpRequest.request("/" + ClientMDS.METADATA_RESOURCE)
-                .withMethod("POST"), VerificationTimes.atLeast(1));        
-    }
-    
+        // Checks the stub.        
+        if (exactly == -1) {
+            this.mdsServerStub.verifySpec(spec);       
+        } else {
+            this.mdsServerStub.verifySpec(spec, exactly);   
+        }
+             
+    }      
+
     /**
-     * Test of createMetadata method through HTTPS server, of class MetadatasResource.
-     * A Status.CLIENT_ERROR_BAD_REQUEST is thrown because the metadata file is not valid.
-     */
-    @Test
-    public void testCreateMetadataHttpsWithWrongFile() {
-        System.out.println("TEST: createMetadata with Wrong File");
-        exceptions.expect(ResourceException.class);
-        result = new BufferedReader(new InputStreamReader(inputStreamFileError)).lines()
+     * The test for which a status of 40 is expected.
+     * @param spec Ignore it
+     * @param is the file to register
+     * @param login login
+     * @param pwd password
+     * @param role the role to set (when no role, set to null)
+     * @param exactly the number of expected requests to Datacite (-1 when at least 1 request is done)
+     */    
+    private void testSpecCreateMetadataAsObjWithConflict(MdsSpec.Spec spec, InputStream is, String login, String pwd, String role, int exactly) {
+        System.out.println("TEST: Failed to create metadata due to a conflit - Do not know which role to apply");
+        
+        // Creates the MetadataStoreService stub        
+        this.mdsServerStub.createSpec(spec);
+
+        result = new BufferedReader(new InputStreamReader(is)).lines()
                 .collect(Collectors.joining("\n"));
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-        ClientResource client = new ClientResource("https://localhost:" + port + "/mds/metadata");
+        ClientResource client = new ClientResource("https://localhost:" + port + METADATA_SERVICE);
         client.setNext(cl);
-        client.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "malapert", "pwd"));
+        client.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, login, pwd));
         final String RESTLET_HTTP_HEADERS = "org.restlet.http.headers";
         Map<String, Object> reqAttribs = client.getRequestAttributes();
         Series headers = (Series) reqAttribs.get(RESTLET_HTTP_HEADERS);
@@ -169,35 +232,24 @@ public class MetadatasResourceTest {
             headers = new Series<>(Header.class);
             reqAttribs.put(RESTLET_HTTP_HEADERS, headers);
         }
-        headers.add(UtilsHeader.SELECTED_ROLE_PARAMETER, "828606");
-        try {
-            Representation rep = client.post(new StringRepresentation(result, MediaType.APPLICATION_XML));
-        } finally {
-            client.release();
+        if (role != null) {
+            headers.add(UtilsHeader.SELECTED_ROLE_PARAMETER, "828606");
         }
-    }    
-    
-    /**
-     * Test of createMetadata method through HTTPS server with no role, of class MetadatasResource.
-     * A ResourceException CLIENT_ERROR_UNAUTHORIZED is thrown.
-     */
-    @Test
-    public void testCreateMetadataHttpsWithNoRole() {
-        System.out.println("TEST: CreateMetadata with not role");
-        exceptions.expect(ResourceException.class);        
-        
-        result = new BufferedReader(new InputStreamReader(inputStream)).lines()
-                .collect(Collectors.joining("\n"));
-        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-        ClientResource client = new ClientResource("https://localhost:" + port + "/mds/metadata");
-        client.setNext(cl);
-        client.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "norole", "norole"));
         int code;
         try {
             Representation rep = client.post(new StringRepresentation(result, MediaType.APPLICATION_XML));
-        } finally {
-            client.release();
+            code = client.getStatus().getCode();
+        } catch (ResourceException ex) {
+            code = ex.getStatus().getCode();
         }
-    }    
-
+        client.release();
+        assertEquals(409, code);        
+        
+        // Checks the stub.        
+        if (exactly == -1) {
+            this.mdsServerStub.verifySpec(spec);       
+        } else {
+            this.mdsServerStub.verifySpec(spec, exactly);   
+        }                       
+    }      
 }

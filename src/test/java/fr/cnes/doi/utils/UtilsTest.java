@@ -27,8 +27,8 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- *
- * @author malapert
+ * Test class for {@link fr.cnes.doi.utils.Utils}
+ * @author Jean-Christophe Malapert
  */
 public class UtilsTest {
     
@@ -86,6 +86,5 @@ public class UtilsTest {
         String expResult = "6YTGxcaZ3b/qFbzECfnvjw==";
         String result = UtilsCryptography.encrypt(str);
         assertEquals(expResult, result);
-    }
-    
+    }    
 }

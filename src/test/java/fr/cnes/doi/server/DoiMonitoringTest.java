@@ -29,12 +29,12 @@ import org.restlet.data.Method;
 import fr.cnes.doi.services.DoiMonitoring;
 
 /**
- *
- * @author malapert
+ * Test class for {@link fr.cnes.doi.services.DoiMonitoring}
+ * @author Jean-Christophe Malapert
  */
 public class DoiMonitoringTest {
     
-    private DoiMonitoring instance;
+    private final DoiMonitoring instance;
     
     public DoiMonitoringTest() {
         instance = new DoiMonitoring();

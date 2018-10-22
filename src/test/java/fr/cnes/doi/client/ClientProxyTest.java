@@ -34,6 +34,8 @@ import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 
 import fr.cnes.doi.InitSettingsForTest;
+import static fr.cnes.doi.server.DoiServer.RESTLET_MAX_CONNECTIONS_PER_HOST;
+import static fr.cnes.doi.server.DoiServer.RESTLET_MAX_TOTAL_CONNECTIONS;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.utils.HttpClientHelperPatch;
@@ -49,6 +51,8 @@ import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.junit.Ignore;
+import org.restlet.data.Parameter;
+import org.restlet.util.Series;
 
 /**
  *
@@ -62,7 +66,7 @@ public class ClientProxyTest {
     @BeforeClass
     public static void setUpClass() {
         InitSettingsForTest.init();
-        System.out.println("------ TEST ClientProxy ------");        
+        System.out.println("------ TEST ClientProxy ------");
     }
 
     /**
@@ -100,12 +104,12 @@ public class ClientProxyTest {
         if (DoiSettings.getInstance().getBoolean(Consts.SERVER_PROXY_USED)) {
             Engine.getInstance().getRegisteredClients().clear();
             Engine.getInstance().getRegisteredClients().add(new HttpClientHelperPatch(null));
-
             Client proxy = new Client(new Context(), Protocol.HTTP);
-            proxy.getContext().getParameters().add("proxyHost",
-                    DoiSettings.getInstance().getString(Consts.SERVER_PROXY_HOST));
-            proxy.getContext().getParameters().add("proxyPort",
-                    DoiSettings.getInstance().getString(Consts.SERVER_PROXY_PORT));
+            Series<Parameter> parameters = proxy.getContext().getParameters();            
+            parameters.set(RESTLET_MAX_TOTAL_CONNECTIONS, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_TOTAL_CONNECTIONS, "-1"));
+            parameters.set(RESTLET_MAX_CONNECTIONS_PER_HOST, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_CONNECTIONS_PER_HOST, "-1"));            
+            parameters.add("proxyHost",DoiSettings.getInstance().getString(Consts.SERVER_PROXY_HOST));
+            parameters.add("proxyPort",DoiSettings.getInstance().getString(Consts.SERVER_PROXY_PORT));
 
             ClientResource client = new ClientResource("http://www.google.fr");
             client.setProxyChallengeResponse(ChallengeScheme.HTTP_BASIC,
@@ -170,7 +174,6 @@ public class ClientProxyTest {
         Representation rep = baseClient.getClient().get();
         Status status = baseClient.getClient().getStatus();
         Assert.assertTrue("Test si la requete est OK", status.isSuccess());
-
     }
 
     @Test
@@ -215,6 +218,5 @@ public class ClientProxyTest {
         }
 
     }
-
 
 }

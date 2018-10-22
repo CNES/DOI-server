@@ -30,8 +30,8 @@ import org.junit.Test;
 import fr.cnes.doi.InitSettingsForTest;
 
 /**
- *
- * @author malapert
+ * Test class for {@link fr.cnes.doi.settings.DoiSettings}
+ * @author Jean-Christophe Malapert
  */
 public class DoiSettingsTest {
 
@@ -153,5 +153,4 @@ public class DoiSettingsTest {
         Long result = instance.getLong(key, defaultValue);
         assertEquals(expResult, result);
     }
-
 }

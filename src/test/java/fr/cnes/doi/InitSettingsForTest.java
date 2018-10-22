@@ -53,7 +53,6 @@ public class InitSettingsForTest {
      *
      */
     public static void init() {
-        initLogging();
         try {
             String secretKey = System.getProperty("private.key");
             String result;
@@ -80,17 +79,6 @@ public class InitSettingsForTest {
             LOGGER.log(Level.SEVERE, "Error during initialisation of the settings", e);
         }
 
-    }
-
-    private static void initLogging() {
-        LogManager.getLogManager().reset();
-        Properties p = new Properties();
-        p.setProperty("org.eclipse.jetty.LEVEL", "OFF");
-        org.eclipse.jetty.util.log.StdErrLog.setProperties(p);
-        Logger globalLogger = Logger.getLogger(java.util.logging.Logger.GLOBAL_LOGGER_NAME);
-        globalLogger.setLevel(java.util.logging.Level.OFF); 
-        Engine.setRestletLogLevel(Level.OFF);
-        Engine.setLogLevel(Level.OFF);
     }
 
 }

@@ -35,8 +35,8 @@ import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 
 /**
- * @author Claire
- *
+ * Test class for {@link fr.cnes.doi.utils.UniqueProjectName}
+ * @author Claire Caillet 
  */
 public class UniqueProjectNameTest {
 
@@ -46,7 +46,7 @@ public class UniqueProjectNameTest {
     /**
      * Cache file for tests
      */
-    private static final String cacheFile = "src"+File.separatorChar+"test"+File.separatorChar+"resources"+File.separatorChar+"projects.conf";
+    private static final String CACHE_FILE = "src"+File.separatorChar+"test"+File.separatorChar+"resources"+File.separatorChar+"projects.conf";
 
     /**
      * Init the settings
@@ -64,10 +64,9 @@ public class UniqueProjectNameTest {
     public void setUp() {
         // Save the projects.conf file
         try {
-            Files.copy(new File(UniqueProjectNameTest.cacheFile).toPath(),
-                    new File(UniqueProjectNameTest.cacheFile + ".bak").toPath(), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(new File(UniqueProjectNameTest.CACHE_FILE).toPath(),
+                    new File(UniqueProjectNameTest.CACHE_FILE + ".bak").toPath(), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
@@ -78,17 +77,16 @@ public class UniqueProjectNameTest {
     public void tearDown() {
         // restore the cache file
         try {
-            Files.copy(new File(UniqueProjectNameTest.cacheFile + ".bak").toPath(),
-                    new File(UniqueProjectNameTest.cacheFile).toPath(), StandardCopyOption.REPLACE_EXISTING);
-            Files.delete(new File(UniqueProjectNameTest.cacheFile + ".bak").toPath());
+            Files.copy(new File(UniqueProjectNameTest.CACHE_FILE + ".bak").toPath(),
+                    new File(UniqueProjectNameTest.CACHE_FILE).toPath(), StandardCopyOption.REPLACE_EXISTING);
+            Files.delete(new File(UniqueProjectNameTest.CACHE_FILE + ".bak").toPath());
         } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
     /**
      * Test method for
-     * {@link fr.cnes.doi.utils.UniqueProjectName#getShortName(String, int)}
+     * {@link fr.cnes.doi.utils.UniqueProjectName#getShortName}
      */
     @Test
     public void testGetShortName() {
@@ -105,7 +103,7 @@ public class UniqueProjectNameTest {
 
     /**
      * Test method for
-     * {@link fr.cnes.doi.utils.UniqueProjectName#getShortName(String, int)}
+     * {@link fr.cnes.doi.utils.UniqueProjectName#getShortName}
      */
     @Test
     public void testGetShortNameWithLongName() {
@@ -116,7 +114,6 @@ public class UniqueProjectNameTest {
 
         // lenght requested out of range
         UniqueProjectName.getInstance().getShortName("CFOSAT", 10);
-
     }
 
 }

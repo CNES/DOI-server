@@ -27,13 +27,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- *
- * @author malapert
+ * Test class for {@link fr.cnes.doi.settings.JettySettings}
+ * @author Jean-Christophe Malapert
  */
 public class JettySettingsTest {
 
-    private DoiSettings doiSettings = DoiSettings.getInstance();
-    private JettySettings instance;
+    private final DoiSettings doiSettings = DoiSettings.getInstance();
+    private final JettySettings instance;
 
     public JettySettingsTest() {
         instance = new JettySettings(null, doiSettings);
@@ -288,5 +288,4 @@ public class JettySettingsTest {
         long result = instance.getLowResourceMonitorStopTimeout();
         assertEquals(expResult, result);
     }
-
 }

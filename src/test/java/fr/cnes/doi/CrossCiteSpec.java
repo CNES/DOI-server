@@ -21,17 +21,15 @@ package fr.cnes.doi;
 import fr.cnes.doi.client.ClientCrossCiteCitation;
 import java.util.Arrays;
 import java.util.List;
-import org.mockserver.client.server.MockServerClient;
 import org.mortbay.jetty.HttpMethods;
+import static fr.cnes.doi.client.BaseClient.DATACITE_MOCKSERVER_PORT;
 
 /**
  *
  * @author Jean-Christophe Malapert
  */
-public class CrossCiteSpec {
-    
-    final int PORT = 1080;
-    
+public class CrossCiteSpec extends AbstractSpec {
+        
     public enum Spec {
         
         GET_STYLE_200("Get styles", HttpMethods.GET, ClientCrossCiteCitation.STYLE_URI, 200, "[\"academy-of-management-review\",\"accident-analysis-and-prevention\",\"acm-sig-proceedings-long-author-list\"]"),
@@ -83,8 +81,8 @@ public class CrossCiteSpec {
     
     private final MockupServer mockServer;
     
-    public CrossCiteSpec() {
-        this.mockServer = new MockupServer(PORT);
+    public CrossCiteSpec(int port) {
+        this.mockServer = new MockupServer(port);
     }   
       
     public void createSpec(final Spec specification) {

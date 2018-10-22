@@ -19,15 +19,18 @@
 package fr.cnes.doi.resource.mds;
 
 import fr.cnes.doi.InitServerForTest;
-import fr.cnes.doi.client.ClientMDS;
+import fr.cnes.doi.MdsSpec;
 import fr.cnes.doi.security.UtilsHeader;
+import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_CONNECTIONS_PER_HOST;
+import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_TOTAL_CONNECTIONS;
 import static fr.cnes.doi.server.DoiServer.JKS_DIRECTORY;
 import static fr.cnes.doi.server.DoiServer.JKS_FILE;
+import static fr.cnes.doi.server.DoiServer.RESTLET_MAX_CONNECTIONS_PER_HOST;
+import static fr.cnes.doi.server.DoiServer.RESTLET_MAX_TOTAL_CONNECTIONS;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import javax.xml.bind.JAXBException;
 import org.datacite.schema.kernel_4.Resource;
@@ -37,13 +40,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.mockserver.integration.ClientAndServer;
-import static org.mockserver.integration.ClientAndServer.startClientAndServer;
-import org.mockserver.model.HttpRequest;
-import static org.mockserver.model.HttpRequest.request;
-import org.mockserver.model.HttpResponse;
-import static org.mockserver.model.HttpResponse.response;
-import org.mockserver.verify.VerificationTimes;
 import org.restlet.Client;
 import org.restlet.Context;
 import org.restlet.data.ChallengeResponse;
@@ -52,12 +48,12 @@ import org.restlet.data.Header;
 import org.restlet.data.MediaType;
 import org.restlet.data.Parameter;
 import org.restlet.data.Protocol;
-import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
 import org.restlet.util.Series;
 import org.xml.sax.SAXException;
+import static fr.cnes.doi.client.BaseClient.DATACITE_MOCKSERVER_PORT;
 
 /**
  * Tests the metadataResource.
@@ -66,24 +62,10 @@ import org.xml.sax.SAXException;
  */
 public class MetadataResourceTest {
 
-    public static final String DOI = "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b";
-    private static final String XML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-            + "<resource xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://datacite.org/schema/kernel-4\" xsi:schemaLocation=\"http://datacite.org/schema/kernel-4 http://schema.datacite.org/meta/kernel-4.1/metadata.xsd\">\n"
-            + "    <identifier identifierType=\"DOI\">" + DOI + "</identifier>\n"
-            + "    <creators>\n"
-            + "        <creator>\n"
-            + "            <creatorName>CNES</creatorName>\n"
-            + "        </creator>\n"
-            + "    </creators>\n"
-            + "    <titles>\n"
-            + "        <title>Le portail Éduthèque</title>\n"
-            + "    </titles>\n"
-            + "    <publisher>CNES</publisher>\n"
-            + "    <publicationYear>2015</publicationYear>\n"
-            + "    <resourceType resourceTypeGeneral=\"Other\">Portail Éduthèque</resourceType>\n"
-            + "</resource>";
-    private ClientAndServer mockServer;
     private static Client cl;
+    private MdsSpec mdsServerStub;
+    
+    private static final String METADATA_SERVICE = "/mds/metadata/";
 
     public MetadataResourceTest() {
     }
@@ -93,6 +75,8 @@ public class MetadataResourceTest {
         InitServerForTest.init();
         cl = new Client(new Context(), Protocol.HTTPS);
         Series<Parameter> parameters = cl.getContext().getParameters();
+        parameters.set(RESTLET_MAX_TOTAL_CONNECTIONS, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_TOTAL_CONNECTIONS, DEFAULT_MAX_TOTAL_CONNECTIONS));        
+        parameters.set(RESTLET_MAX_CONNECTIONS_PER_HOST, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_CONNECTIONS_PER_HOST, DEFAULT_MAX_CONNECTIONS_PER_HOST));
         parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS");
@@ -106,12 +90,12 @@ public class MetadataResourceTest {
 
     @Before
     public void setUp() {
-        mockServer = startClientAndServer(1081);
+        mdsServerStub = new MdsSpec(DATACITE_MOCKSERVER_PORT);
     }
 
     @After
     public void tearDown() {
-        mockServer.stop();
+        mdsServerStub.finish();
     }
     
     /**
@@ -126,13 +110,12 @@ public class MetadataResourceTest {
      */
     @Test
     public void testGetMetadata() throws IOException, JAXBException, SAXException {
-        System.out.println("TEST: GetMetadata");
+        System.out.println("TEST: "+MdsSpec.Spec.GET_METADATA_200.getDescription()+" through HTTPS server");
 
-        mockServer.when(HttpRequest.request("/" + ClientMDS.METADATA_RESOURCE + "/" + DOI)
-                .withMethod("GET")).respond(HttpResponse.response().withStatusCode(200).withBody(XML, StandardCharsets.UTF_8));
+        mdsServerStub.createSpec(MdsSpec.Spec.GET_METADATA_200);
 
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-        ClientResource client = new ClientResource("https://localhost:" + port + "/mds/metadata/" + DOI);
+        ClientResource client = new ClientResource("https://localhost:" + port + METADATA_SERVICE + MdsSpec.Spec.GET_METADATA_200.getTemplatePath());
         client.setNext(cl);
         int code;
         String doi;
@@ -145,12 +128,13 @@ public class MetadataResourceTest {
             doi = "";
         }
         client.release();
-        assertTrue(Status.SUCCESS_OK.getCode() == code || Status.CLIENT_ERROR_GONE.getCode() == code);
-        assertTrue(DOI.equals(doi) || doi.isEmpty());
+        assertTrue(MdsSpec.Spec.GET_METADATA_200.getStatus() == code);
+        assertTrue(MdsSpec.Spec.GET_METADATA_200.getTemplatePath().equals(doi) || doi.isEmpty());
 
-        mockServer.verify(HttpRequest.request("/" + ClientMDS.METADATA_RESOURCE + "/" + DOI)
-                .withMethod("GET"), VerificationTimes.atLeast(1));
+        mdsServerStub.verifySpec(MdsSpec.Spec.GET_METADATA_200);
     }
+    
+    
 
     /**
      * Test of getMetadata method throw a HTTPS server with a Json response, of
@@ -164,13 +148,12 @@ public class MetadataResourceTest {
      */
     @Test
     public void testGetMetadataAsJson() throws IOException, JAXBException, SAXException {
-        System.out.println("TEST: getMetadata as Json");
+        System.out.println("TEST: "+MdsSpec.Spec.GET_METADATA_200.getDescription()+" through HTTPS server");
 
-        mockServer.when(HttpRequest.request("/" + ClientMDS.METADATA_RESOURCE + "/" + DOI)
-                .withMethod("GET")).respond(HttpResponse.response().withStatusCode(200).withBody(XML, StandardCharsets.UTF_8));
+        mdsServerStub.createSpec(MdsSpec.Spec.GET_METADATA_200);
 
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-        ClientResource client = new ClientResource("https://localhost:" + port + "/mds/metadata/" + DOI);
+        ClientResource client = new ClientResource("https://localhost:" + port + METADATA_SERVICE + MdsSpec.Spec.GET_METADATA_200.getTemplatePath());
         client.setNext(cl);
         int code;
         String result;
@@ -183,11 +166,10 @@ public class MetadataResourceTest {
             result = "";
         }
         client.release();
-        assertTrue(Status.SUCCESS_OK.getCode() == code || Status.CLIENT_ERROR_GONE.getCode() == code);
+        assertTrue(MdsSpec.Spec.GET_METADATA_200.getStatus() == code);
         assertTrue(result.contains("{") || result.isEmpty());
         
-        mockServer.verify(HttpRequest.request("/" + ClientMDS.METADATA_RESOURCE + "/" + DOI)
-                .withMethod("GET"), VerificationTimes.atLeast(1));        
+        mdsServerStub.verifySpec(MdsSpec.Spec.GET_METADATA_200);
     }
 
     /**
@@ -200,22 +182,12 @@ public class MetadataResourceTest {
      */
     @Test
     public void testGetMetadataFromWrongDOI() throws IOException, JAXBException, SAXException {
-        System.out.println("TEST: GetMetadata");
+        System.out.println("TEST: "+MdsSpec.Spec.GET_METADATA_404.getDescription()+" through HTTPS server");
         
-        mockServer
-                .when(
-                        request()
-                                .withPath("/" + ClientMDS.METADATA_RESOURCE + "/" + DOI)
-                                .withMethod("GET")
-                )
-                .respond(
-                        response()
-                                .withStatusCode(404)
-                                .withBody("DOI not found")
-                );
+        mdsServerStub.createSpec(MdsSpec.Spec.GET_METADATA_404);
         
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-        ClientResource client = new ClientResource("https://localhost:" + port + "/mds/metadata/"+DOI);
+        ClientResource client = new ClientResource("https://localhost:" + port + METADATA_SERVICE + MdsSpec.Spec.GET_METADATA_404.getTemplatePath());
         client.setNext(cl);
         int code;
         String doi;
@@ -228,25 +200,26 @@ public class MetadataResourceTest {
             doi = "";
         }
         client.release();
-        assertEquals(Status.CLIENT_ERROR_NOT_FOUND.getCode(), code);
+        assertEquals(MdsSpec.Spec.GET_METADATA_404.getStatus(), code);
         
-        mockServer.verify(HttpRequest.request("/" + ClientMDS.METADATA_RESOURCE + "/" + DOI)
-                .withMethod("GET"), VerificationTimes.atLeast(1));        
+        mdsServerStub.verifySpec(MdsSpec.Spec.GET_METADATA_404);
 
     }
 
     /**
      * Test of getMetadata method, of class MetadataResource.
+     * @throws java.io.IOException
+     * @throws javax.xml.bind.JAXBException
+     * @throws org.xml.sax.SAXException
      */
     @Test
     public void testGetMetadataFromWrongPrefix() throws IOException, JAXBException, SAXException {
-        System.out.println("TEST: GetMetadata");
+        System.out.println("TEST: "+MdsSpec.Spec.GET_METADATA_404.getDescription()+" through HTTPS server");
         
-        mockServer.when(HttpRequest.request("/" + ClientMDS.METADATA_RESOURCE + "/" + DOI)
-                .withMethod("GET")).respond(HttpResponse.response().withStatusCode(404).withBody(XML, StandardCharsets.UTF_8));
+        mdsServerStub.createSpec(MdsSpec.Spec.GET_METADATA_404);
         
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-        ClientResource client = new ClientResource("https://localhost:" + port + "/mds/metadata/"+DOI);
+        ClientResource client = new ClientResource("https://localhost:" + port + METADATA_SERVICE + MdsSpec.Spec.GET_METADATA_404.getTemplatePath());
         client.setNext(cl);
         int code;
         String doi;
@@ -258,10 +231,9 @@ public class MetadataResourceTest {
             code = ex.getStatus().getCode();
             doi = "";
         }
-        assertEquals(Status.CLIENT_ERROR_NOT_FOUND.getCode(), code);
+        assertEquals(MdsSpec.Spec.GET_METADATA_404.getStatus(), code);
         
-        mockServer.verify(HttpRequest.request("/" + ClientMDS.METADATA_RESOURCE + "/" + DOI)
-                .withMethod("GET"), VerificationTimes.atLeast(1));          
+        mdsServerStub.verifySpec(MdsSpec.Spec.GET_METADATA_404);
 
     }      
     /**
@@ -274,13 +246,12 @@ public class MetadataResourceTest {
      */
     @Test
     public void testDeleteMetadata() throws JAXBException, SAXException, IOException {
-        System.out.println("TEST: DeleteMetadata");
+        System.out.println("TEST: "+MdsSpec.Spec.DELETE_METADATA_200.getDescription()+" through HTTPS server");
         
-        mockServer.when(HttpRequest.request("/" + ClientMDS.METADATA_RESOURCE+"/"+DOI)
-                .withMethod("DELETE")).respond(HttpResponse.response().withStatusCode(200).withBody(XML, StandardCharsets.UTF_8));
+        mdsServerStub.createSpec(MdsSpec.Spec.DELETE_METADATA_200);
         
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-        ClientResource client = new ClientResource("https://localhost:" + port + "/mds/metadata/" + DOI);
+        ClientResource client = new ClientResource("https://localhost:" + port + METADATA_SERVICE +MdsSpec.Spec.DELETE_METADATA_200.getTemplatePath());
         client.setNext(cl);
         client.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "malapert", "pwd"));
         final String RESTLET_HTTP_HEADERS = "org.restlet.http.headers";
@@ -299,9 +270,8 @@ public class MetadataResourceTest {
             code = ex.getStatus().getCode();
         }
         client.release();
-        assertEquals(Status.SUCCESS_OK.getCode(), code);
+        assertEquals(MdsSpec.Spec.DELETE_METADATA_200.getStatus(), code);
         
-        mockServer.verify(HttpRequest.request("/" + ClientMDS.METADATA_RESOURCE+"/"+DOI)
-                .withMethod("DELETE"), VerificationTimes.atLeast(1));         
+        mdsServerStub.createSpec(MdsSpec.Spec.DELETE_METADATA_200);       
     }
 }

@@ -20,8 +20,13 @@ package fr.cnes.doi.resource.citation;
 
 import fr.cnes.doi.CrossCiteSpec;
 import fr.cnes.doi.InitServerForTest;
+import static fr.cnes.doi.client.BaseClient.DATACITE_MOCKSERVER_PORT;
+import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_CONNECTIONS_PER_HOST;
+import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_TOTAL_CONNECTIONS;
 import static fr.cnes.doi.server.DoiServer.JKS_DIRECTORY;
 import static fr.cnes.doi.server.DoiServer.JKS_FILE;
+import static fr.cnes.doi.server.DoiServer.RESTLET_MAX_CONNECTIONS_PER_HOST;
+import static fr.cnes.doi.server.DoiServer.RESTLET_MAX_TOTAL_CONNECTIONS;
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;
@@ -60,6 +65,8 @@ public class LanguageCitationResourceTest {
         InitServerForTest.init();
         cl = new Client(new Context(), Protocol.HTTPS);
         Series<Parameter> parameters = cl.getContext().getParameters();
+        parameters.set(RESTLET_MAX_TOTAL_CONNECTIONS, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_TOTAL_CONNECTIONS, DEFAULT_MAX_TOTAL_CONNECTIONS));        
+        parameters.set(RESTLET_MAX_CONNECTIONS_PER_HOST, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_CONNECTIONS_PER_HOST, DEFAULT_MAX_CONNECTIONS_PER_HOST));
         parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS");
@@ -73,7 +80,7 @@ public class LanguageCitationResourceTest {
 
     @Before
     public void setUp() {
-        this.spec = new CrossCiteSpec();
+        this.spec = new CrossCiteSpec(DATACITE_MOCKSERVER_PORT);
     }
 
     @After
