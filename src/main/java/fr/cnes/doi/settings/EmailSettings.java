@@ -19,6 +19,10 @@
 package fr.cnes.doi.settings;
 
 import fr.cnes.doi.exception.MailingException;
+import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_CONNECTIONS_PER_HOST;
+import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_TOTAL_CONNECTIONS;
+import static fr.cnes.doi.server.DoiServer.RESTLET_MAX_CONNECTIONS_PER_HOST;
+import static fr.cnes.doi.server.DoiServer.RESTLET_MAX_TOTAL_CONNECTIONS;
 import fr.cnes.doi.utils.spec.Requirement;
 import java.util.Locale;
 import java.util.Map;
@@ -33,11 +37,13 @@ import org.restlet.data.ChallengeScheme;
 import org.restlet.data.LocalReference;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
+import org.restlet.data.Parameter;
 import org.restlet.data.Protocol;
 import org.restlet.data.Status;
 import org.restlet.ext.freemarker.TemplateRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
+import org.restlet.util.Series;
 
 /**
  * Singleton to load and use Email settings.
@@ -222,11 +228,13 @@ public final class EmailSettings {
         final Representation mailFtl = new ClientResource(LocalReference.createClapReference("class/email.ftl")).get();
         final Representation mail = new TemplateRepresentation(mailFtl, dataModel, MediaType.TEXT_XML);
         request.setEntity(mail);
-        final Context context = new Context();
-        final ClientResource client = new ClientResource(context, request);
+        final ClientResource client = new ClientResource(new Context(), request);
         client.setProtocol(protocol);
-        client.getContext().getParameters().add("debug", String.valueOf(isDebug()));
-        client.getContext().getParameters().add("startTls", Boolean.toString(startTls).toLowerCase(Locale.ENGLISH));
+        final Series<Parameter> params = client.getContext().getParameters(); 
+        params.set(RESTLET_MAX_TOTAL_CONNECTIONS, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_TOTAL_CONNECTIONS, DEFAULT_MAX_TOTAL_CONNECTIONS));        
+        params.set(RESTLET_MAX_CONNECTIONS_PER_HOST, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_CONNECTIONS_PER_HOST, DEFAULT_MAX_CONNECTIONS_PER_HOST));
+        params.add("debug", String.valueOf(isDebug()));
+        params.add("startTls", Boolean.toString(startTls).toLowerCase(Locale.ENGLISH));
         client.get();
         final Status status = client.getStatus();
         if (status.isError()) {

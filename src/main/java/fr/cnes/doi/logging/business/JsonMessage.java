@@ -44,12 +44,14 @@ public class JsonMessage implements Message {
 
     @Override
     public String getFormattedMessage() {
+        String result;
         try {
-            return mapper.writeValueAsString(object);
+            result = mapper.writeValueAsString(object);
         } catch (final JsonProcessingException e) {
             StatusLogger.getLogger().catching(e);
-            return object.toString();
+            result = object.toString();
         }
+        return result;
     }
 
     @Override

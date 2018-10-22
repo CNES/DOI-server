@@ -45,7 +45,7 @@ import fr.cnes.doi.logging.api.DoiLogDataServer;
 import fr.cnes.doi.logging.business.JsonMessage;
 import fr.cnes.doi.logging.security.DoiSecurityLogFilter;
 import fr.cnes.doi.security.RoleAuthorizer;
-import fr.cnes.doi.settings.Consts;
+import fr.cnes.doi.settings.Consts;;
 import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.settings.EmailSettings;
 import fr.cnes.doi.settings.JettySettings;
@@ -133,6 +133,26 @@ public class DoiServer extends Component {
      * Default port for HTTPS server.
      */
     public static final String DEFAULT_HTTPS_PORT = "8183";
+    
+    /**
+     * Number total connections.
+     */
+    public static final String RESTLET_MAX_TOTAL_CONNECTIONS = "maxTotalConnections";
+    
+    /**
+     * Number connections per host.
+     */
+    public static final String RESTLET_MAX_CONNECTIONS_PER_HOST = "maxConnectionsPerHost";  
+    
+    /**
+     * Default number for RESTLET_MAX_TOTAL_CONNECTIONS.
+     */
+    public static final String DEFAULT_MAX_TOTAL_CONNECTIONS = "-1";
+    
+    /**
+     * Default number for RESTLET_MAX_CONNECTIONS_PER_HOST.
+     */
+    public static final String DEFAULT_MAX_CONNECTIONS_PER_HOST = "-1";
 
     /**
      * Logger.
@@ -320,10 +340,16 @@ public class DoiServer extends Component {
         } else {
             pathKeyTrustStore = extractKeyStoreToPath();
         }
-
+        
         // create embedding https jetty server
         final Server server = new Server(new Context(), Protocol.HTTPS, port, this);
         final Series<Parameter> parameters = server.getContext().getParameters();
+        
+        LOG.debug(MESSAGE_TPL,RESTLET_MAX_TOTAL_CONNECTIONS, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_TOTAL_CONNECTIONS, DEFAULT_MAX_TOTAL_CONNECTIONS));        
+        parameters.set(RESTLET_MAX_TOTAL_CONNECTIONS, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_TOTAL_CONNECTIONS, DEFAULT_MAX_TOTAL_CONNECTIONS));        
+
+        LOG.debug(MESSAGE_TPL,RESTLET_MAX_CONNECTIONS_PER_HOST, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_CONNECTIONS_PER_HOST, DEFAULT_MAX_CONNECTIONS_PER_HOST));                
+        parameters.set(RESTLET_MAX_CONNECTIONS_PER_HOST, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_CONNECTIONS_PER_HOST, DEFAULT_MAX_CONNECTIONS_PER_HOST));
 
         LOG.debug(MESSAGE_TPL,SSL_CTX_FACTORY, DEFAULT_SSL_CTX);
         parameters.add(SSL_CTX_FACTORY, DEFAULT_SSL_CTX);

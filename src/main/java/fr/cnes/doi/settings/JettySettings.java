@@ -78,7 +78,7 @@ public final class JettySettings extends JettyServerHelper {
         try {
             result = settings.getInt(Consts.JETTY_REQUEST_HEADER_SIZE);
             LOG.debug("getHttpRequestHeaderSize : default value from configuration file loaded");            
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             result = super.getHttpRequestHeaderSize();
             LOG.debug("getHttpRequestHeaderSize : default value loaded");            
         }
@@ -100,7 +100,7 @@ public final class JettySettings extends JettyServerHelper {
         try {
             result = settings.getInt(Consts.JETTY_RESPONSE_HEADER_SIZE);
             LOG.debug("getHttpResponseHeaderSize : default value from configuration file loaded");            
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             result = super.getHttpResponseHeaderSize();
             LOG.debug("getHttpResponseHeaderSize : default value loaded");                        
         }
@@ -121,7 +121,7 @@ public final class JettySettings extends JettyServerHelper {
         try {
             result =  settings.getInt(Consts.JETTY_MIN_THREADS);
             LOG.debug("getThreadPoolMinThreads : default value from configuration file loaded");                        
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             result = super.getThreadPoolMinThreads();
             LOG.debug("getThreadPoolMinThreads : default value loaded");                                    
         }
@@ -141,7 +141,7 @@ public final class JettySettings extends JettyServerHelper {
         try {
             result = settings.getInt(Consts.JETTY_MAX_THREADS);
             LOG.debug("getThreadPoolMaxThreads : default value from configuration file loaded");                                    
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             result = super.getThreadPoolMaxThreads();
             LOG.debug("getThreadPoolMaxThreads : default value loaded");                                                
         }
@@ -161,7 +161,7 @@ public final class JettySettings extends JettyServerHelper {
         try {
             result = settings.getInt(Consts.JETTY_THREADS_PRIORITY);
             LOG.debug("getThreadPoolThreadsPriority : default value from configuration file loaded");                                                
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             result = super.getThreadPoolThreadsPriority();
             LOG.debug("getThreadPoolThreadsPriority : default value loaded");                                                            
         }
@@ -182,7 +182,7 @@ public final class JettySettings extends JettyServerHelper {
         try {
             result = settings.getInt(Consts.JETTY_THREAD_MAX_IDLE_TIME_MS);
             LOG.debug("getThreadPoolIdleTimeout : default value from configuration file loaded");                                                            
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             result = super.getThreadPoolIdleTimeout();
             LOG.debug("getThreadPoolIdleTimeout : default value loaded");                                                                        
         }
@@ -203,7 +203,7 @@ public final class JettySettings extends JettyServerHelper {
         try {
             result = settings.getLong(Consts.JETTY_THREAD_STOP_TIME_MS);
             LOG.debug("getThreadPoolStopTimeout : default value from configuration file loaded");                                                                        
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             result = super.getThreadPoolStopTimeout();
             LOG.debug("getThreadPoolStopTimeout : default value loaded");                                                                                    
         }
@@ -224,7 +224,7 @@ public final class JettySettings extends JettyServerHelper {
         try {
             result = settings.getInt(Consts.JETTY_ACCEPTOR_THREADS);
             LOG.debug("getConnectorAcceptors : default value from configuration file loaded");                                                                                    
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             result = super.getConnectorAcceptors();
             LOG.debug("getConnectorAcceptors : default value loaded");                                                                                                
         }
@@ -245,7 +245,7 @@ public final class JettySettings extends JettyServerHelper {
         try {
             result = settings.getInt(Consts.JETTY_SELECTOR_THREADS);
             LOG.debug("getConnectorSelectors : default value from configuration file loaded");                                                                                                
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             result = super.getConnectorSelectors();
             LOG.debug("getConnectorSelectors : default value loaded");                                                                                                            
         }
@@ -266,7 +266,7 @@ public final class JettySettings extends JettyServerHelper {
         try {
             result = settings.getInt(Consts.JETTY_LOW_RESOURCES_MAX_IDLE_TIME_MS);
             LOG.debug("getLowResourceMonitorIdleTimeout : default value from configuration file loaded");                                                                                                            
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             result = super.getLowResourceMonitorIdleTimeout();
             LOG.debug("getLowResourceMonitorIdleTimeout : default value loaded");                                                                                                                        
         }
@@ -287,7 +287,7 @@ public final class JettySettings extends JettyServerHelper {
         try {
             result = settings.getInt(Consts.JETTY_LOW_RESOURCES_PERIOD);
             LOG.debug("getLowResourceMonitorPeriod : default value from configuration file loaded");                                                                                                                        
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             result = super.getLowResourceMonitorPeriod();
             LOG.debug("getLowResourceMonitorPeriod : default value loaded");                                                                                                                                    
         }
@@ -308,7 +308,7 @@ public final class JettySettings extends JettyServerHelper {
         try {
             result = settings.getLong(Consts.JETTY_LOW_RESOURCES_MAX_MEMORY);
             LOG.debug("getLowResourceMonitorMaxMemory : default value from configuration file loaded");                                                                                                                                    
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             result = super.getLowResourceMonitorMaxMemory();
             LOG.debug("getLowResourceMonitorMaxMemory : default value loaded");                                                                                                                                                
         }
@@ -329,7 +329,7 @@ public final class JettySettings extends JettyServerHelper {
         try {
             result = settings.getInt(Consts.JETTY_LOW_RESOURCES_MAX_MEMORY);
             LOG.debug("getLowResourceMonitorMaxConnections : default value from configuration file loaded");                                                                                                                                                
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             result = super.getLowResourceMonitorMaxConnections();
             LOG.debug("getLowResourceMonitorMaxConnections : default value loaded");                                                                                                                                                            
         }
@@ -350,7 +350,7 @@ public final class JettySettings extends JettyServerHelper {
         try {
             result = settings.getBoolean(Consts.JETTY_LOW_RESOURCES_THREADS);
             LOG.debug("getLowResourceMonitorThreads : default value from configuration file loaded");                                                                                                                                                            
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             result =  super.getLowResourceMonitorThreads();
             LOG.debug("getLowResourceMonitorThreads : default value loaded");                                                                                                                                                                        
         }
@@ -370,7 +370,7 @@ public final class JettySettings extends JettyServerHelper {
         try {
             result = settings.getInt(Consts.JETTY_ACCEPT_QUEUE_SIZE);
             LOG.debug("getConnectorAcceptQueueSize : default value from configuration file loaded");                                                                                                                                                                        
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             result = super.getConnectorAcceptQueueSize();
             LOG.debug("getConnectorAcceptQueueSize : default value loaded");                                                                                                                                                                                    
         }
@@ -391,7 +391,7 @@ public final class JettySettings extends JettyServerHelper {
         try {
             result = settings.getInt(Consts.JETTY_SO_LINGER_TIME);
             LOG.debug("getConnectorSoLingerTime : default value from configuration file loaded");                                                                                                                                                                                    
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             result = super.getConnectorSoLingerTime();
             LOG.debug("getConnectorSoLingerTime : default value loaded");                                                                                                                                                                                                
         }
@@ -414,7 +414,7 @@ public final class JettySettings extends JettyServerHelper {
         try {
             result = settings.getInt(Consts.JETTY_IO_MAX_IDLE_TIME_MS);
             LOG.debug("getConnectorIdleTimeout : default value from configuration file loaded");                                                                                                                                                                                                
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             result = super.getConnectorIdleTimeout();
             LOG.debug("getConnectorIdleTimeout : default value loaded");                                                                                                                                                                                                            
         }
@@ -437,7 +437,7 @@ public final class JettySettings extends JettyServerHelper {
         try {
             result = settings.getInt(Consts.JETTY_RESPONSE_BUFFER_SIZE);
             LOG.debug("getHttpOutputBufferSize : default value from configuration file loaded");                                                                                                                                                                                                            
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             result = super.getHttpOutputBufferSize();
             LOG.debug("getHttpOutputBufferSize : default value loaded");                                                                                                                                                                                                                        
         }
@@ -457,7 +457,7 @@ public final class JettySettings extends JettyServerHelper {
         try {
             result = settings.getInt(Consts.JETTY_REQUEST_BUFFER_SIZE);
             LOG.debug("getHttpHeaderCacheSize : default value from configuration file loaded");                                                                                                                                                                                                                        
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             result = super.getHttpHeaderCacheSize();
             LOG.debug("getHttpHeaderCacheSize : default value loaded");                                                                                                                                                                                                                                    
         }
@@ -478,7 +478,7 @@ public final class JettySettings extends JettyServerHelper {
         try {
             result = settings.getInt(Consts.JETTY_GRACEFUL_SHUTDOWN);
             LOG.debug("getConnectorStopTimeout : default value from configuration file loaded");                                                                                                                                                                                                                                    
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             result = super.getConnectorStopTimeout();
             LOG.debug("getConnectorStopTimeout : default value loaded");                                                                                                                                                                                                                                                
         }
@@ -499,7 +499,7 @@ public final class JettySettings extends JettyServerHelper {
         try {
             result = settings.getLong(Consts.JETTY_GRACEFUL_SHUTDOWN);
             LOG.debug("getLowResourceMonitorStopTimeout : default value from configuration file loaded");                                                                                                                                                                                                                                                
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             result = super.getLowResourceMonitorStopTimeout();
             LOG.debug("getLowResourceMonitorStopTimeout : default value loaded");                                                                                                                                                                                                                                                            
         }

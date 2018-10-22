@@ -48,7 +48,7 @@ public class ClientCrossCiteCitation extends BaseClient {
     /**
      * Service end point {@value #CROSS_CITE_MOCK_URL}.
      */
-    public static final String CROSS_CITE_MOCK_URL = "http://localhost:1080";     
+    public static final String CROSS_CITE_MOCK_URL = "http://localhost:"+DATACITE_MOCKSERVER_PORT;     
     
     /**
      * URI to get styles {@value #STYLE_URI}.

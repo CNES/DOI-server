@@ -70,7 +70,7 @@ public class ClientMDS extends BaseClient {
     /**
      * Metadata store mock service endpoint {@value #DATA_CITE_MOCK_URL}.
      */
-    public static final String DATA_CITE_MOCK_URL = "http://localhost:1081";
+    public static final String DATA_CITE_MOCK_URL = "http://localhost:"+DATACITE_MOCKSERVER_PORT;
 
     /**
      * Metadata store test service endpoint {@value #DATA_CITE_TEST_URL}.
@@ -741,8 +741,8 @@ public class ClientMDS extends BaseClient {
             );
             result = getText(response);
             return result;
-        } catch (ResourceException ex) {
-            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), this.getClient().getResponseEntity(), ex);
+        } catch (ResourceException ex) {           
+            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), this.getClient().getResponseEntity(), ex);            
         } catch (JAXBException | SAXException | MalformedURLException ex) {
             throw new ClientMdsException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex);
         } finally {

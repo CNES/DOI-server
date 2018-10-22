@@ -312,5 +312,16 @@ public class Consts {
      * Level for which an alert must be send.
      */
     public static final String THRESHOLD_SPEED_PERCENT = "Starter.Monitoring.Threshold_speed";
+    
+    /**
+     * Tunning connection for Restlet.
+     */
+    public static final String RESTLET_MAX_TOTAL_CONNECTIONS = "Starter.maxTotalConnections";
+    
+    /**
+     * Tunning Connection for Restlet
+     */
+    public static final String RESTLET_MAX_CONNECTIONS_PER_HOST = "Starter.maxConnectionsPerHost";
+    
 
 }
