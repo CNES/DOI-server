@@ -12,7 +12,6 @@ import fr.cnes.doi.settings.DoiSettings;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
-import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import org.datacite.schema.kernel_4.Resource;
 import org.junit.After;
@@ -20,9 +19,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 import org.restlet.resource.ClientResource;
 
 /**
@@ -56,9 +53,8 @@ public class ITperformance {
     }
 
     @Test
-    @Ignore
     public void test() {        
-        LOG.info("Start testing");
+        LOG.info("TEST : Performance");
         ConcurrentHashMap map = new ConcurrentHashMap();
         map.put("nbErrors", 0);
         int nbIter = 0;
@@ -73,7 +69,7 @@ public class ITperformance {
             System.out.println("nbErrors = " + map.get("nbErrors"));
             System.out.println("nbIters = "+nbIter);
         }
-        //Assert.assertTrue(map.get("nbErrors").equals(0) && nbIter == 50);
+        Assert.assertTrue("Test the performances", map.get("nbErrors").equals(0) && nbIter == 50);
         LOG.info("All working fine");
         clientExec.shutdown();
     }
@@ -94,6 +90,7 @@ public class ITperformance {
             ClientResource client = new ClientResource("http://localhost:" + port + "/mds?method=options");
             try {
                 Resource resource = client.get(Resource.class);
+                System.out.println("ID="+resource.getIdentifier());
                 LOG.log(Level.INFO, "OK for the {0} tests", new Object[]{this.i});
             } catch (RuntimeException ex) {
                 int nbErrors = ((int) this.map.get("nbErrors")) + 1;
