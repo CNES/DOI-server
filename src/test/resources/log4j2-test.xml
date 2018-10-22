@@ -20,6 +20,14 @@
     </Appenders>
 
     <Loggers>
+        <Logger name="fr.cnes.doi.logging.app">
+            <AppenderRef ref="PERFO"/>                        
+        </Logger>
+                
+        <Logger name="fr.cnes.doi.logging.api">
+            <AppenderRef ref="API"/>                        
+        </Logger>
+                
         <Logger name="fr.cnes.doi.application" level="info">
             <AppenderRef ref="CONSOLE"/>
         </Logger>
