@@ -68,7 +68,7 @@
           <plugin>    
               <groupId>org.apache.maven.plugins</groupId>
               <artifactId>maven-site-plugin</artifactId>
-              <version>3.3</version>
+              <version>3.4</version>
               <dependencies>
                 <dependency>
                   <groupId>org.apache.maven.doxia</groupId>
@@ -106,7 +106,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.20.1</version>
+                <version>2.21.0</version>
                 <executions>
                     <execution>
                         <goals>
@@ -160,7 +160,7 @@
             </plugin>            
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.7.0</version>
+                <version>3.8.0</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
@@ -214,7 +214,7 @@
             <plugin> 
                 <groupId>org.apache.maven.plugins</groupId> 
                 <artifactId>maven-javadoc-plugin</artifactId> 
-                <version>3.0.0</version> 
+                <version>3.0.1</version> 
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
@@ -308,7 +308,7 @@
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
-            <version>0.9.0</version>
+            <version>0.9.1</version>
         </dependency>        
         <dependency>
             <groupId>gnu.getopt</groupId>
@@ -318,7 +318,7 @@
         <dependency>
             <groupId>xalan</groupId>
             <artifactId>xalan</artifactId>
-            <version>2.7.1</version>
+            <version>2.7.2</version>
         </dependency>   
         <!-- needs that to avoid this error java.lang.NoClassDefFoundError: org/w3c/dom/ElementTraversal -->
         <dependency>
@@ -330,19 +330,19 @@
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
-            <version>2.10.0</version>
+            <version>2.11.1</version>
         </dependency>         
         <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
-            <version>2.10.0</version>
+            <version>2.11.1</version>
         </dependency>  
         <!-- https://mvnrepository.com/artifact/org.slf4j/jul-to-slf4j -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jul-to-slf4j</artifactId>
-            <version>1.7.25</version>
+            <version>1.8.0-beta2</version>
         </dependency>
         
         <!-- https://mvnrepository.com/artifact/org.restlet.jee/org.restlet.ext.slf4j -->
@@ -356,7 +356,7 @@
         <dependency>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-report-plugin</artifactId>
-            <version>2.20.1</version>
+            <version>2.22.1</version>
             <scope>test</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.codehaus.mojo/cobertura-maven-plugin -->        
@@ -438,6 +438,7 @@
                         <exclude>org/datacite/**/*.java</exclude>
                         <exclude>fr/cnes/doi/plugin/impl/*.java</exclude>
                         <exclude>fr/cnes/doi/utils/spec/*.java</exclude>
+                        <exclude>fr/cnes/doi/utils/DoiGUI.java</exclude>
                     </excludes>                    
                 </configuration>
             </plugin>    
