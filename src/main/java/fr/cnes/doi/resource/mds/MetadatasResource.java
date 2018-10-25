@@ -112,16 +112,15 @@ public class MetadatasResource extends BaseMdsResource {
             setStatus(Status.SUCCESS_CREATED);
             final Schema schema;
             if (this.cache.isStored()) {
-                schema = this.cache.getCache();          
-            } else {
-                schema = this.getDoiApp().getSchemaFactory().newSchema(new URL(SCHEMA_DATACITE));
-                this.cache.store(schema);            
-            }             
-            final Resource resource = createDataCiteResourceObject(entity, schema);
+                schema = this.cache.getCache();
+            } else {                  
+                this.cache.store(SCHEMA_DATACITE);                 
+            }                         
+            final Resource resource = createDataCiteResourceObject(entity, this.cache.getCache());
             final String selectedRole = extractSelectedRoleFromRequestIfExists();
             checkPermission(resource.getIdentifier().getValue(), selectedRole);
             resource.setPublisher("CNES");
-            result = this.getDoiApp().getClient().createMetadata(resource, schema);
+            result = this.getDoiApp().getClient().createMetadata(resource, this.cache.getCache());
         } catch (ClientMdsException ex) {
             ((AbstractApplication) getApplication()).sendAlertWhenDataCiteFailed(ex);
             throw LOG.throwing(Level.DEBUG, 

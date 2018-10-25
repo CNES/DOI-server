@@ -31,14 +31,17 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import fr.cnes.doi.InitSettingsForTest;
+import fr.cnes.doi.UnitTest;
 import fr.cnes.doi.exception.DoiRuntimeException;
 import org.junit.Rule;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 
 /**
  * Test class for {@link fr.cnes.doi.utils.UniqueProjectName}
  * @author Claire Caillet 
  */
+@Category(UnitTest.class)
 public class UniqueProjectNameTest {
 
     @Rule

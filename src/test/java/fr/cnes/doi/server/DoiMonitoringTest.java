@@ -19,6 +19,7 @@
 package fr.cnes.doi.server;
 
 import static fr.cnes.doi.AbstractSpec.classTitle;
+import fr.cnes.doi.UnitTest;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -28,11 +29,13 @@ import static org.junit.Assert.*;
 import org.restlet.data.Method;
 
 import fr.cnes.doi.services.DoiMonitoring;
+import org.junit.experimental.categories.Category;
 
 /**
  * Test class for {@link fr.cnes.doi.services.DoiMonitoring}
  * @author Jean-Christophe Malapert
  */
+@Category(UnitTest.class)
 public class DoiMonitoringTest {
     
     private final DoiMonitoring instance;

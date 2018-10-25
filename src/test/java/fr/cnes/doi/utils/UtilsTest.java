@@ -19,6 +19,7 @@
 package fr.cnes.doi.utils;
 
 import static fr.cnes.doi.AbstractSpec.classTitle;
+import fr.cnes.doi.UnitTest;
 import fr.cnes.doi.security.UtilsCryptography;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -26,11 +27,13 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.experimental.categories.Category;
 
 /**
  * Test class for {@link fr.cnes.doi.utils.Utils}
  * @author Jean-Christophe Malapert
  */
+@Category(UnitTest.class)
 public class UtilsTest {
     
     public UtilsTest() {

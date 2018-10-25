@@ -21,6 +21,7 @@ package fr.cnes.doi.resource.citation;
 import static fr.cnes.doi.AbstractSpec.classTitle;
 import fr.cnes.doi.CrossCiteSpec;
 import fr.cnes.doi.InitServerForTest;
+import fr.cnes.doi.UnitTest;
 import static fr.cnes.doi.client.BaseClient.DATACITE_MOCKSERVER_PORT;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_CONNECTIONS_PER_HOST;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_TOTAL_CONNECTIONS;
@@ -49,6 +50,7 @@ import fr.cnes.doi.settings.DoiSettings;
 import java.io.File;
 import java.io.IOException;
 import org.junit.Assert;
+import org.junit.experimental.categories.Category;
 import org.restlet.data.MediaType;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ResourceException;
@@ -59,6 +61,7 @@ import org.restlet.resource.ResourceException;
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
+@Category(UnitTest.class)
 public class StyleCitationResourceTest {
 
     private static Client cl;

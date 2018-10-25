@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package fr.cnes.doi.settings;
+package fr.cnes.doi.integration;
 
 import static fr.cnes.doi.AbstractSpec.classTitle;
 import static org.junit.Assert.assertEquals;
@@ -30,13 +30,16 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import fr.cnes.doi.InitSettingsForTest;
+import fr.cnes.doi.settings.EmailSettings;
 import org.junit.Rule;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 
 /**
  * Test class for {@link fr.cnes.doi.settings.EmailSettings}
  * @author Jean-Christophe Malapert
  */
+@Category(IntegrationTest.class)
 public class ITemailSettings {
 
     private static EmailSettings instance;

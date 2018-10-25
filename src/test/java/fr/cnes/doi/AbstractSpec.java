@@ -137,7 +137,7 @@ public class AbstractSpec {
                             .withMethod(verb)
                             .withPath(path), VerificationTimes.atLeast(1)
             );
-        }
+        }        
         
         public void verifySpec(String verb, String path, int exactly) {
             mockServer.verify(

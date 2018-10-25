@@ -35,6 +35,7 @@ import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 
 import fr.cnes.doi.InitSettingsForTest;
+import fr.cnes.doi.UnitTest;
 import static fr.cnes.doi.server.DoiServer.RESTLET_MAX_CONNECTIONS_PER_HOST;
 import static fr.cnes.doi.server.DoiServer.RESTLET_MAX_TOTAL_CONNECTIONS;
 import fr.cnes.doi.settings.Consts;
@@ -52,6 +53,7 @@ import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.junit.Ignore;
+import org.junit.experimental.categories.Category;
 import org.restlet.data.Parameter;
 import org.restlet.util.Series;
 
@@ -59,6 +61,7 @@ import org.restlet.util.Series;
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
+@Category(UnitTest.class)
 public class ClientProxyTest {
 
     /**

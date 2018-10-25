@@ -30,11 +30,14 @@ import org.junit.Test;
 import org.restlet.data.ChallengeResponse;
 
 import fr.cnes.doi.InitSettingsForTest;
+import fr.cnes.doi.UnitTest;
+import org.junit.experimental.categories.Category;
 
 /**
  * Test class for {@link fr.cnes.doi.settings.ProxySettings}
  * @author Jean-Christophe Malapert
  */
+@Category(UnitTest.class)
 public class ProxySettingsTest {
 
     private static ProxySettings instance;

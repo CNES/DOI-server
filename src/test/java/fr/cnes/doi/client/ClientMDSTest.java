@@ -20,6 +20,7 @@ package fr.cnes.doi.client;
 
 import static fr.cnes.doi.AbstractSpec.classTitle;
 import fr.cnes.doi.MdsSpec;
+import fr.cnes.doi.UnitTest;
 import static fr.cnes.doi.client.BaseClient.DATACITE_MOCKSERVER_PORT;
 import fr.cnes.doi.exception.ClientMdsException;
 import fr.cnes.doi.settings.Consts;
@@ -37,6 +38,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Rule;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.mockserver.junit.MockServerRule;
 import org.restlet.data.CharacterSet;
@@ -51,6 +53,7 @@ import org.restlet.representation.StringRepresentation;
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  * @see fr.cnes.doi.resource.mds
  */
+@Category(UnitTest.class)
 public class ClientMDSTest {
 
     private MdsSpec mdsServerStub;

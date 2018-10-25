@@ -20,6 +20,7 @@ package fr.cnes.doi.application;
 
 import static fr.cnes.doi.AbstractSpec.classTitle;
 import fr.cnes.doi.InitServerForTest;
+import fr.cnes.doi.UnitTest;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_CONNECTIONS_PER_HOST;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_TOTAL_CONNECTIONS;
 import static fr.cnes.doi.server.DoiServer.JKS_DIRECTORY;
@@ -37,6 +38,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.experimental.categories.Category;
 import org.restlet.Client;
 import org.restlet.Context;
 import org.restlet.data.Parameter;
@@ -49,6 +51,7 @@ import org.restlet.util.Series;
  * Tests the API description for the DoiCrossCite application.
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
+@Category(UnitTest.class)
 public class DoiCrossCiteApplicationTest {
     
     private static Client cl;

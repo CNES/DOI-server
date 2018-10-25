@@ -20,6 +20,7 @@ package fr.cnes.doi.client;
 
 import static fr.cnes.doi.AbstractSpec.classTitle;
 import fr.cnes.doi.CrossCiteSpec;
+import fr.cnes.doi.UnitTest;
 import static fr.cnes.doi.client.BaseClient.DATACITE_MOCKSERVER_PORT;
 import java.util.List;
 import org.junit.After;
@@ -29,6 +30,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Rule;
+import org.junit.experimental.categories.Category;
 import org.mockserver.junit.MockServerRule;
 
 /**
@@ -36,6 +38,7 @@ import org.mockserver.junit.MockServerRule;
  * @author Jean-Christophe Malapert
  * @see fr.cnes.doi.resource.citation
  */
+@Category(UnitTest.class)
 public class ClientCrossCiteCitationTest {
 
     /**

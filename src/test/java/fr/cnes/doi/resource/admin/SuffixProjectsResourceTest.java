@@ -20,6 +20,7 @@ package fr.cnes.doi.resource.admin;
 
 import static fr.cnes.doi.AbstractSpec.classTitle;
 import fr.cnes.doi.InitServerForTest;
+import fr.cnes.doi.UnitTest;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_CONNECTIONS_PER_HOST;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_TOTAL_CONNECTIONS;
 import static fr.cnes.doi.server.DoiServer.JKS_DIRECTORY;
@@ -39,6 +40,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Rule;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.restlet.Client;
 import org.restlet.Context;
@@ -56,6 +58,7 @@ import org.restlet.util.Series;
  * Tests the suffixProjects resource of the AdminisrationApplication.
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
+@Category(UnitTest.class)
 public class SuffixProjectsResourceTest {
 
     @Rule

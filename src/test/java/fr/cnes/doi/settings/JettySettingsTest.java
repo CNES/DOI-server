@@ -19,6 +19,7 @@
 package fr.cnes.doi.settings;
 
 import static fr.cnes.doi.AbstractSpec.classTitle;
+import fr.cnes.doi.UnitTest;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
@@ -26,11 +27,13 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 /**
  * Test class for {@link fr.cnes.doi.settings.JettySettings}
  * @author Jean-Christophe Malapert
  */
+@Category(UnitTest.class)
 public class JettySettingsTest {
 
     private final DoiSettings doiSettings = DoiSettings.getInstance();

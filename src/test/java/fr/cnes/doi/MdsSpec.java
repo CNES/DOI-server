@@ -155,7 +155,7 @@ public class MdsSpec extends AbstractSpec {
                 ? specification.getPath() 
                 : specification.getPath()+"/"+specification.getTemplatePath();
         this.mockServer.verifySpec(specification.getHttpVerb(), path);
-    }
+    }    
     
     public void verifySpec(final Spec specification, int exactly) {
         final String path = specification.getTemplatePath().isEmpty() 

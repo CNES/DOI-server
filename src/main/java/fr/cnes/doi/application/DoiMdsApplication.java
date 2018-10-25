@@ -46,25 +46,25 @@ import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.security.TokenBasedVerifier;
 import fr.cnes.doi.security.TokenSecurity;
 import fr.cnes.doi.utils.spec.Requirement;
+import java.net.MalformedURLException;
+import java.net.URL;
 import javax.xml.validation.Schema;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.restlet.routing.Template;
+import org.xml.sax.SAXException;
 
 /**
- * Provides an application to handle Data Object Identifier within an
- * organization. A Digital Object Identifier (DOI) is a persistent identifier or
- * handle used to uniquely identify objects, standardized by the International
- * Organization. A DOI aims to be "resolvable", usually to some form of access
- * to the information object to which the DOI refers. This is achieved by
- * binding the DOI to metadata about the object, such as a URL, where all the
- * details about the object are accessible. Everytime a URL changes, the
- * publisher has to update the metadata for the DOI to link to the new URL. It
- * is the publisher's responsibility to update the DOI database. If he fails to
+ * Provides an application to handle Data Object Identifier within an organization. A Digital Object
+ * Identifier (DOI) is a persistent identifier or handle used to uniquely identify objects,
+ * standardized by the International Organization. A DOI aims to be "resolvable", usually to some
+ * form of access to the information object to which the DOI refers. This is achieved by binding the
+ * DOI to metadata about the object, such as a URL, where all the details about the object are
+ * accessible. Everytime a URL changes, the publisher has to update the metadata for the DOI to link
+ * to the new URL. It is the publisher's responsibility to update the DOI database. If he fails to
  * do so, the DOI resolves to a dead link leaving the DOI useless.
  * <p>
- * Two methods of authentication are defined in this application and both is
- * optional:
+ * Two methods of authentication are defined in this application and both is optional:
  * <ul>
  * <li>{@link #createAuthenticator authenticator} by login/password</li>
  * <li>{@link #createTokenAuthenticator authenticator} by
@@ -72,25 +72,26 @@ import org.restlet.routing.Template;
  * </ul>
  * Only the GET can be anonymous whereas POST, PUT, DELETE
  * {@link #createMethodAuthorizer methods need to be authenticated}.
- * 
+ *
  * <p>
  * <b>Security</b><br>
  * --------------<br>
  * The authentication is done by the following pipeline:<br>
  * |Method authorization|-->|Authentication login/pwd|-->|Authentication token|<br>
- * Method authorization : Only GET method does not need an authorization 
- * 
+ * Method authorization : Only GET method does not need an authorization
+ *
  * <p>
  * <b>Routing</b><br>
- *  --------------<br>
+ * --------------<br>
  * <br>
  * root<br>
- *  |<br>
- *  |__ dois (authorization)<br>
- *  |__ dois/{doiName} (authorization)<br>
- *  |__ metadata (authorization)<br>
- *  |__ metadata/{doiName} (authorization)<br>
- *  |__ media/{doiName} (authorization)<br> 
+ * |<br>
+ * |__ dois (authorization)<br>
+ * |__ dois/{doiName} (authorization)<br>
+ * |__ metadata (authorization)<br>
+ * |__ metadata/{doiName} (authorization)<br>
+ * |__ media/{doiName} (authorization)<br>
+ *
  * @see #createInboundRoot the resources related to this application
  * @see <a href="http://www.doi.org/hb.html">DOI Handbook</a>
  * @see <a href="https://mds.datacite.org/static/apidoc">API Documentation</a>
@@ -99,21 +100,21 @@ import org.restlet.routing.Template;
  * @see MetadatasResource Create metadata
  * @see MetadataResource Handle DOI metadata
  * @see MediaResource Handle media related to metadata
- * 
- * @author Jean-Christophe Malapert (jean-Christophe Malapert@cnes.fr) 
+ *
+ * @author Jean-Christophe Malapert (jean-Christophe Malapert@cnes.fr)
  */
-@Requirement(reqId = Requirement.DOI_SRV_010,reqName = Requirement.DOI_SRV_010_NAME)
-@Requirement(reqId = Requirement.DOI_SRV_020,reqName = Requirement.DOI_SRV_020_NAME)
-@Requirement(reqId = Requirement.DOI_SRV_030,reqName = Requirement.DOI_SRV_030_NAME)
-@Requirement(reqId = Requirement.DOI_SRV_040,reqName = Requirement.DOI_SRV_040_NAME)
-@Requirement(reqId = Requirement.DOI_SRV_050,reqName = Requirement.DOI_SRV_050_NAME)
-@Requirement(reqId = Requirement.DOI_SRV_060,reqName = Requirement.DOI_SRV_060_NAME)
-@Requirement(reqId = Requirement.DOI_SRV_070,reqName = Requirement.DOI_SRV_070_NAME)
-@Requirement(reqId = Requirement.DOI_SRV_080,reqName = Requirement.DOI_SRV_080_NAME)
-@Requirement(reqId = Requirement.DOI_SRV_090,reqName = Requirement.DOI_SRV_090_NAME)
-@Requirement(reqId = Requirement.DOI_MONIT_020,reqName = Requirement.DOI_MONIT_020_NAME)
+@Requirement(reqId = Requirement.DOI_SRV_010, reqName = Requirement.DOI_SRV_010_NAME)
+@Requirement(reqId = Requirement.DOI_SRV_020, reqName = Requirement.DOI_SRV_020_NAME)
+@Requirement(reqId = Requirement.DOI_SRV_030, reqName = Requirement.DOI_SRV_030_NAME)
+@Requirement(reqId = Requirement.DOI_SRV_040, reqName = Requirement.DOI_SRV_040_NAME)
+@Requirement(reqId = Requirement.DOI_SRV_050, reqName = Requirement.DOI_SRV_050_NAME)
+@Requirement(reqId = Requirement.DOI_SRV_060, reqName = Requirement.DOI_SRV_060_NAME)
+@Requirement(reqId = Requirement.DOI_SRV_070, reqName = Requirement.DOI_SRV_070_NAME)
+@Requirement(reqId = Requirement.DOI_SRV_080, reqName = Requirement.DOI_SRV_080_NAME)
+@Requirement(reqId = Requirement.DOI_SRV_090, reqName = Requirement.DOI_SRV_090_NAME)
+@Requirement(reqId = Requirement.DOI_MONIT_020, reqName = Requirement.DOI_MONIT_020_NAME)
 public class DoiMdsApplication extends AbstractApplication {
-  
+
     /**
      * Template Query for DOI : {@value #DOI_TEMPLATE}.
      */
@@ -143,18 +144,11 @@ public class DoiMdsApplication extends AbstractApplication {
      * Application name : {@value #NAME}
      */
     public static final String NAME = "Metadata Store Application";
-    
-    /**
-     * Schema.
-     */
-    private final SchemaFactory schemaFactory = SchemaFactory.newInstance(
-            XMLConstants.W3C_XML_SCHEMA_NS_URI
-    );
-    
+
     /**
      * Logger.
      */
-    private static final Logger LOG = LogManager.getLogger(DoiMdsApplication.class.getName());      
+    private static final Logger LOG = LogManager.getLogger(DoiMdsApplication.class.getName());
 
     /**
      * Client to query Mds Datacite.
@@ -165,11 +159,13 @@ public class DoiMdsApplication extends AbstractApplication {
      * Token DB that contains the set of generated token.
      */
     private final AbstractTokenDBHelper tokenDB;
-    
+
     /**
      * Cache for Datacite schema
      */
-    private final CacheSchema schemaCache = new CacheSchema();    
+    private final CacheSchema schemaCache = new CacheSchema();
+
+    private final CacheSchema cache = new CacheSchema();
 
     /**
      * Creates the Digital Object Identifier server application.
@@ -190,24 +186,19 @@ public class DoiMdsApplication extends AbstractApplication {
     /**
      * Creates a router for the DoiMdsApplication.
      *
-     * This router routes the resources for the Mds application, which is
-     * protected by two authentication mechanisms (optional mechanisms) and an
-     * authorization by method.
+     * This router routes the resources for the Mds application, which is protected by two
+     * authentication mechanisms (optional mechanisms) and an authorization by method.
      *
-     * @see DoiMdsApplication#createRouter the router that contains the Mds
-     * resources
-     * @see DoiMdsApplication#createAuthenticator the authentication mechanism
-     * by login/password
-     * @see DoiMdsApplication#createTokenAuthenticator the authentication
-     * mechanism by token
-     * @see DoiMdsApplication#createMethodAuthorizer the method authorization
-     * mechanism
+     * @see DoiMdsApplication#createRouter the router that contains the Mds resources
+     * @see DoiMdsApplication#createAuthenticator the authentication mechanism by login/password
+     * @see DoiMdsApplication#createTokenAuthenticator the authentication mechanism by token
+     * @see DoiMdsApplication#createMethodAuthorizer the method authorization mechanism
      * @return Router
      */
     @Override
     public Restlet createInboundRoot() {
         LOG.traceEntry();
-        
+
         // Defines the strategy of authentication (authentication is not required)
         //   - authentication with login/pwd
         final ChallengeAuthenticator challAuth = createAuthenticator();
@@ -233,16 +224,14 @@ public class DoiMdsApplication extends AbstractApplication {
     /**
      * Creates the router. The router routes the following resources:
      * <ul>
-     * <li>{@link DoiMdsApplication#DOI_URI} to create/update a DOI and its
-     * landing page</li>
-     * <li>{@link DoiMdsApplication#DOI_URI} {@link DoiMdsApplication#DOI_NAME_URI}
-     * to get the URL of the landing page related to a given DOI</li>
-     * <li>{@link DoiMdsApplication#METADATAS_URI} to create/update DOI
-     * metadata</li>
-     * <li>{@link DoiMdsApplication#METADATAS_URI} {@link DoiMdsApplication#DOI_NAME_URI}
-     * to get DOI's metadata or delete a given DOI</li>
-     * <li>{@link DoiMdsApplication#MEDIA_URI} {@link DoiMdsApplication#DOI_NAME_URI}
-     * to handle media related to a DOI
+     * <li>{@link DoiMdsApplication#DOI_URI} to create/update a DOI and its landing page</li>
+     * <li>{@link DoiMdsApplication#DOI_URI} {@link DoiMdsApplication#DOI_NAME_URI} to get the URL
+     * of the landing page related to a given DOI</li>
+     * <li>{@link DoiMdsApplication#METADATAS_URI} to create/update DOI metadata</li>
+     * <li>{@link DoiMdsApplication#METADATAS_URI} {@link DoiMdsApplication#DOI_NAME_URI} to get
+     * DOI's metadata or delete a given DOI</li>
+     * <li>{@link DoiMdsApplication#MEDIA_URI} {@link DoiMdsApplication#DOI_NAME_URI} to handle
+     * media related to a DOI
      * </ul>
      *
      * @see DoiResource Handles a DOI and its landing page
@@ -250,11 +239,11 @@ public class DoiMdsApplication extends AbstractApplication {
      * @see MetadataResource Handles DOI metadata
      * @see MediaResource Handles media related to a DOI
      * @return the router
-     */    
+     */
     private Router createRouter() {
         LOG.traceEntry();
-        
-        final Router router = new Router(getContext());        
+
+        final Router router = new Router(getContext());
         router.attach(DOI_URI, DoisResource.class);
         router.attach(DOI_URI + DOI_NAME_URI, DoiResource.class)
                 .getTemplate().setMatchingMode(Template.MODE_STARTS_WITH);
@@ -268,14 +257,14 @@ public class DoiMdsApplication extends AbstractApplication {
     }
 
     /**
-     * Creates the method authorizer. GET method can be anonymous. The verbs
-     * (POST, PUT, DELETE) need to be authenticated.
+     * Creates the method authorizer. GET method can be anonymous. The verbs (POST, PUT, DELETE)
+     * need to be authenticated.
      *
      * @return Authorizer based on authorized methods
      */
     private MethodAuthorizer createMethodAuthorizer() {
         LOG.traceEntry();
-        
+
         final MethodAuthorizer methodAuth = new MethodAuthorizer();
         methodAuth.getAnonymousMethods().add(Method.GET);
         methodAuth.getAuthenticatedMethods().add(Method.GET);
@@ -292,26 +281,16 @@ public class DoiMdsApplication extends AbstractApplication {
      * @return the object that contains the business to check
      * @see TokenBasedVerifier the token verification
      */
-    @Requirement(reqId = Requirement.DOI_AUTH_020,reqName = Requirement.DOI_AUTH_020_NAME)
+    @Requirement(reqId = Requirement.DOI_AUTH_020, reqName = Requirement.DOI_AUTH_020_NAME)
     private ChallengeAuthenticator createTokenAuthenticator() {
         LOG.traceEntry();
-        
+
         final ChallengeAuthenticator guard = new ChallengeAuthenticator(
                 getContext(), ChallengeScheme.HTTP_OAUTH_BEARER, "testRealm");
         final TokenBasedVerifier verifier = new TokenBasedVerifier(getTokenDB());
         guard.setVerifier(verifier);
 
         return LOG.traceExit(guard);
-    }
-
-    /**
-     * Returns the object to valid the datacite schema.
-     *
-     * @return the schema factory
-     */
-    public SchemaFactory getSchemaFactory() {
-        LOG.traceEntry();
-        return LOG.traceExit(this.schemaFactory);
     }
 
     /**
@@ -363,18 +342,20 @@ public class DoiMdsApplication extends AbstractApplication {
         LOG.traceEntry();
         return LOG.traceExit(this.tokenDB);
     }
-    
+
     /**
      * Returns the cache that may contain the schema.
+     *
      * @return the cache
      */
     public CacheSchema getCache() {
         LOG.traceEntry();
-        return LOG.traceExit(this.schemaCache);
-    }    
-    
+        return LOG.traceExit(this.cache);
+    }
+
     /**
      * Returns the logger.
+     *
      * @return the logger
      */
     @Override
@@ -390,7 +371,7 @@ public class DoiMdsApplication extends AbstractApplication {
      * @return the application description for WADL
      */
     @Override
-    public final ApplicationInfo getApplicationInfo(final Request request, final Response response){
+    public final ApplicationInfo getApplicationInfo(final Request request, final Response response) {
         final ApplicationInfo result = super.getApplicationInfo(request, response);
         final DocumentationInfo docInfo = new DocumentationInfo(
                 "DOI server application provides is central service that registers DOI at DataCite"
@@ -413,22 +394,22 @@ public class DoiMdsApplication extends AbstractApplication {
         result.setGrammars(grammar);
         return result;
     }
-    
+
     /**
      * Handles cache for DataCite schema.
      */
     public class CacheSchema {
-        
+
         /**
          * Conversion hour to ms.
          */
         private static final int H_TO_MS = 3600000;
-        
+
         /**
          * Max time before to refresh the cache when the cache is requested.
          */
         private static final int MAX_TIME_CACHE = 24 * H_TO_MS;
-        
+
         /**
          * Cached schema
          */
@@ -437,35 +418,47 @@ public class DoiMdsApplication extends AbstractApplication {
          * Time in ms when the schema was cached.
          */
         private long cachedTime = 0;
-        
+
+        /**
+         * Schema.
+         */
+        private final SchemaFactory schemaFactory = SchemaFactory.newInstance(
+                XMLConstants.W3C_XML_SCHEMA_NS_URI
+        );
+
         /**
          * Create a cache.
          */
-        public CacheSchema() {            
+        public CacheSchema() {
         }
-        
+
         /**
          * Store the schema.
+         *
          * @param schema the Datacite schema
+         * @throws java.net.MalformedURLException
+         * @throws org.xml.sax.SAXException
          */
-        public synchronized void store(final Schema schema) {
+        public synchronized void store(final String schema) throws MalformedURLException, SAXException {
             LOG.traceEntry("Parameter : {}", schema);
-            this.schema = schema;
+            this.schema = schemaFactory.newSchema(new URL(schema));
             this.cachedTime = System.currentTimeMillis();
             LOG.traceExit();
         }
-        
+
         /**
          * Returns the cache.
+         *
          * @return the schema or null
          */
-        public synchronized Schema getCache() {  
+        public Schema getCache() {
             LOG.traceEntry();
             return LOG.traceExit(isStored() ? this.schema : null);
         }
-        
+
         /**
          * Checks whether the cache is stored.
+         *
          * @return true when the schema is stored otherwise false.
          */
         public synchronized boolean isStored() {
@@ -474,6 +467,6 @@ public class DoiMdsApplication extends AbstractApplication {
             long elapsedTime = newTime - cachedTime;
             return LOG.traceExit(elapsedTime <= MAX_TIME_CACHE && elapsedTime != 0);
         }
-        
-    }     
+
+    }
 }

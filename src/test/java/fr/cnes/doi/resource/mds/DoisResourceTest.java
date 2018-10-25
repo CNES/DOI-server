@@ -21,6 +21,7 @@ package fr.cnes.doi.resource.mds;
 import static fr.cnes.doi.AbstractSpec.classTitle;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.MdsSpec;
+import fr.cnes.doi.UnitTest;
 import static fr.cnes.doi.client.BaseClient.DATACITE_MOCKSERVER_PORT;
 import fr.cnes.doi.security.UtilsHeader;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_CONNECTIONS_PER_HOST;
@@ -40,6 +41,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.experimental.categories.Category;
 import org.restlet.Client;
 import org.restlet.Context;
 import org.restlet.data.ChallengeResponse;
@@ -58,6 +60,7 @@ import org.restlet.util.Series;
  * Tests the DoisResource
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
+@Category(UnitTest.class)
 public class DoisResourceTest {
 
     private static Client cl;

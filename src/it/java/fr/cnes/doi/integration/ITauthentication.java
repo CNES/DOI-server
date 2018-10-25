@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fr.cnes.doi.security;
+package fr.cnes.doi.integration;
 
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.client.ClientMDS;
@@ -41,11 +41,13 @@ import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
 import org.restlet.util.Series;
 import static fr.cnes.doi.client.BaseClient.DATACITE_MOCKSERVER_PORT;
+import org.junit.experimental.categories.Category;
 
 /**
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
+@Category(IntegrationTest.class)
 public class ITauthentication {
 
     private static Client cl;

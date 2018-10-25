@@ -126,7 +126,7 @@ public class MonitoringLogFilter extends LogFilter {
             final String subject = "Speed performance alert for " + path;
             final String msg = "Dear administrator,\nthe speed performance of the "
                     + "application " + path + ""
-                    + " has been reduced than more 30% using the method "
+                    + " has been reduced of "+elevation+" using the method "
                     + method.getName() + ".\n\n"
                     + "Details:\n"
                     + "--------\n"

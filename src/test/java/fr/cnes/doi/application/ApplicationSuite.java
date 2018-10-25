@@ -18,10 +18,12 @@
  */
 package fr.cnes.doi.application;
 
+import fr.cnes.doi.UnitTest;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
