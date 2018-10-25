@@ -39,6 +39,7 @@ import fr.cnes.doi.utils.Utils;
 import fr.cnes.doi.utils.spec.Requirement;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -355,7 +356,7 @@ public final class DoiSettings {
     public boolean getBoolean(final String key) {
         LOG.traceEntry("Parameter : {}", key);
         if (getString(key) == null) {
-            throw LOG.throwing(new IllegalArgumentException("Key not found : " + key));
+            throw LOG.throwing(Level.TRACE, new IllegalArgumentException("Key not found : " + key));
         } else {
             return LOG.traceExit(Boolean.parseBoolean(getString(key)));
         }

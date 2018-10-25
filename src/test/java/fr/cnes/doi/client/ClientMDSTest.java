@@ -18,6 +18,7 @@
  */
 package fr.cnes.doi.client;
 
+import static fr.cnes.doi.AbstractSpec.classTitle;
 import fr.cnes.doi.MdsSpec;
 import static fr.cnes.doi.client.BaseClient.DATACITE_MOCKSERVER_PORT;
 import fr.cnes.doi.exception.ClientMdsException;
@@ -63,7 +64,7 @@ public class ClientMDSTest {
 
     @BeforeClass
     public static void setUpClass() {
-        System.out.println("------ TEST ClientMDS ------");    
+        classTitle("ClientMDS");
     }
 
     @AfterClass
@@ -483,18 +484,15 @@ public class ClientMDSTest {
 
         // Creates the MetadataStoreService stub        
         this.mdsServerStub.createSpec(spec);
-
+        Representation entity = new StringRepresentation(
+                MdsSpec.XML, org.restlet.data.MediaType.TEXT_XML, Language.ALL, CharacterSet.UTF_8
+        );
         ClientMDS instance = new ClientMDS(ClientMDS.Context.DEV, login, pwd);
         String expResult = spec.getBody();
         int expCode = spec.getStatus();
         String result;
         int code;
 
-        final JAXBContext ctx = JAXBContext.newInstance(new Class[]{Resource.class});
-        final Unmarshaller unMarshaller = ctx.createUnmarshaller();
-        final Resource entity = (Resource) unMarshaller.unmarshal(
-                new ByteArrayInputStream(MdsSpec.XML.getBytes(StandardCharsets.UTF_8))
-        );
         try {
             result = instance.createMetadata(entity);
             code = spec.getStatus();

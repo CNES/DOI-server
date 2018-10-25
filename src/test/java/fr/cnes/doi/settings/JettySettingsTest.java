@@ -18,6 +18,7 @@
  */
 package fr.cnes.doi.settings;
 
+import static fr.cnes.doi.AbstractSpec.classTitle;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
@@ -41,7 +42,7 @@ public class JettySettingsTest {
 
     @BeforeClass
     public static void setUpClass() {
-        System.out.println("------ TEST JettySettings ------");
+        classTitle("JettySettings");
     }
 
     @AfterClass

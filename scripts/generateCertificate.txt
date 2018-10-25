@@ -54,3 +54,5 @@ keytool -export -v -alias doiServer -file doiServer.cer -keystore doiServerKey.j
 # production, as the password is shown in plain text.
 
 
+# Mockup certificate
+https://github.com/jamesdbloom/mockserver/blob/master/scripts/install_ca_certificate.sh

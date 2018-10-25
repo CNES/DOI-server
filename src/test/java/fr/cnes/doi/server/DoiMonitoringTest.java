@@ -18,6 +18,7 @@
  */
 package fr.cnes.doi.server;
 
+import static fr.cnes.doi.AbstractSpec.classTitle;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -42,7 +43,7 @@ public class DoiMonitoringTest {
     
     @BeforeClass
     public static void setUpClass() {
-        System.out.println("------ TEST DoiMonitoring ------");        
+        classTitle("DoiMonitoring");
     }
     
     @AfterClass

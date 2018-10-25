@@ -19,7 +19,6 @@
 package fr.cnes.doi.server;
 
 import fr.cnes.doi.exception.DoiRuntimeException;
-import fr.cnes.doi.exception.MailingException;
 import fr.cnes.doi.resource.admin.SuffixProjectsResource;
 import fr.cnes.doi.security.TokenSecurity;
 import fr.cnes.doi.security.UtilsCryptography;
@@ -125,11 +124,7 @@ public class Starter {
                 LOG.fatal("Unable to stop the server", ex);
             } finally {
                 LOG.info("Interrups the server, which is stopping");
-                try {
-                    EmailSettings.getInstance().sendMessage("[DOI] Stopping Server", "Ther server has been interrupted");
-                } catch (MailingException ex) {
-                    LOG.fatal("Cannot send the notification to the administrator", ex);
-                }
+                EmailSettings.getInstance().sendMessage("[DOI] Stopping Server", "Ther server has been interrupted");
                 server.interrupt();
                 server.join();
             }

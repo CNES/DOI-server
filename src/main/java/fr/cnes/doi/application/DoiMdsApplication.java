@@ -46,6 +46,7 @@ import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.security.TokenBasedVerifier;
 import fr.cnes.doi.security.TokenSecurity;
 import fr.cnes.doi.utils.spec.Requirement;
+import javax.xml.validation.Schema;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.restlet.routing.Template;
@@ -71,12 +72,35 @@ import org.restlet.routing.Template;
  * </ul>
  * Only the GET can be anonymous whereas POST, PUT, DELETE
  * {@link #createMethodAuthorizer methods need to be authenticated}.
- *
- *
- * @author Jean-Christophe Malapert (jean-Christophe Malapert@cnes.fr)
+ * 
+ * <p>
+ * <b>Security</b><br>
+ * --------------<br>
+ * The authentication is done by the following pipeline:<br>
+ * |Method authorization|-->|Authentication login/pwd|-->|Authentication token|<br>
+ * Method authorization : Only GET method does not need an authorization 
+ * 
+ * <p>
+ * <b>Routing</b><br>
+ *  --------------<br>
+ * <br>
+ * root<br>
+ *  |<br>
+ *  |__ dois (authorization)<br>
+ *  |__ dois/{doiName} (authorization)<br>
+ *  |__ metadata (authorization)<br>
+ *  |__ metadata/{doiName} (authorization)<br>
+ *  |__ media/{doiName} (authorization)<br> 
  * @see #createInboundRoot the resources related to this application
  * @see <a href="http://www.doi.org/hb.html">DOI Handbook</a>
  * @see <a href="https://mds.datacite.org/static/apidoc">API Documentation</a>
+ * @see DoisResource List and create DOI
+ * @see DoiResource Handle a DOI
+ * @see MetadatasResource Create metadata
+ * @see MetadataResource Handle DOI metadata
+ * @see MediaResource Handle media related to metadata
+ * 
+ * @author Jean-Christophe Malapert (jean-Christophe Malapert@cnes.fr) 
  */
 @Requirement(reqId = Requirement.DOI_SRV_010,reqName = Requirement.DOI_SRV_010_NAME)
 @Requirement(reqId = Requirement.DOI_SRV_020,reqName = Requirement.DOI_SRV_020_NAME)
@@ -141,6 +165,11 @@ public class DoiMdsApplication extends AbstractApplication {
      * Token DB that contains the set of generated token.
      */
     private final AbstractTokenDBHelper tokenDB;
+    
+    /**
+     * Cache for Datacite schema
+     */
+    private final CacheSchema schemaCache = new CacheSchema();    
 
     /**
      * Creates the Digital Object Identifier server application.
@@ -336,6 +365,15 @@ public class DoiMdsApplication extends AbstractApplication {
     }
     
     /**
+     * Returns the cache that may contain the schema.
+     * @return the cache
+     */
+    public CacheSchema getCache() {
+        LOG.traceEntry();
+        return LOG.traceExit(this.schemaCache);
+    }    
+    
+    /**
      * Returns the logger.
      * @return the logger
      */
@@ -375,4 +413,67 @@ public class DoiMdsApplication extends AbstractApplication {
         result.setGrammars(grammar);
         return result;
     }
+    
+    /**
+     * Handles cache for DataCite schema.
+     */
+    public class CacheSchema {
+        
+        /**
+         * Conversion hour to ms.
+         */
+        private static final int H_TO_MS = 3600000;
+        
+        /**
+         * Max time before to refresh the cache when the cache is requested.
+         */
+        private static final int MAX_TIME_CACHE = 24 * H_TO_MS;
+        
+        /**
+         * Cached schema
+         */
+        private Schema schema;
+        /**
+         * Time in ms when the schema was cached.
+         */
+        private long cachedTime = 0;
+        
+        /**
+         * Create a cache.
+         */
+        public CacheSchema() {            
+        }
+        
+        /**
+         * Store the schema.
+         * @param schema the Datacite schema
+         */
+        public synchronized void store(final Schema schema) {
+            LOG.traceEntry("Parameter : {}", schema);
+            this.schema = schema;
+            this.cachedTime = System.currentTimeMillis();
+            LOG.traceExit();
+        }
+        
+        /**
+         * Returns the cache.
+         * @return the schema or null
+         */
+        public synchronized Schema getCache() {  
+            LOG.traceEntry();
+            return LOG.traceExit(isStored() ? this.schema : null);
+        }
+        
+        /**
+         * Checks whether the cache is stored.
+         * @return true when the schema is stored otherwise false.
+         */
+        public synchronized boolean isStored() {
+            LOG.traceEntry();
+            long newTime = System.currentTimeMillis();
+            long elapsedTime = newTime - cachedTime;
+            return LOG.traceExit(elapsedTime <= MAX_TIME_CACHE && elapsedTime != 0);
+        }
+        
+    }     
 }

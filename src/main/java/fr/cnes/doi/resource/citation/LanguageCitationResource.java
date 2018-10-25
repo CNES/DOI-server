@@ -29,6 +29,7 @@ import org.restlet.resource.ResourceException;
 
 import fr.cnes.doi.exception.ClientCrossCiteException;
 import fr.cnes.doi.utils.spec.Requirement;
+import org.apache.logging.log4j.Level;
 
 /**
  * The supported languages for citation.
@@ -70,7 +71,7 @@ public class LanguageCitationResource extends BaseCitationResource {
             result = this.getApp().getClient().getLanguages();
         } catch (ClientCrossCiteException ex) {
             ((AbstractApplication) getApplication()).sendAlertWhenDataCiteFailed(ex);
-            throw LOG.throwing(new ResourceException(ex.getStatus(), ex.getDetailMessage(), ex));
+            throw LOG.throwing(Level.DEBUG, new ResourceException(ex.getStatus(), ex.getDetailMessage(), ex));
         }
         return LOG.traceExit(result);
     }

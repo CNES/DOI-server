@@ -19,6 +19,7 @@
 package fr.cnes.doi.resource.mds;
 
 import fr.cnes.doi.application.AbstractApplication;
+import fr.cnes.doi.application.DoiMdsApplication;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
@@ -42,6 +43,7 @@ import org.xml.sax.SAXException;
 import fr.cnes.doi.exception.ClientMdsException;
 import fr.cnes.doi.utils.spec.Requirement;
 import javax.xml.bind.ValidationException;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 
 /**
@@ -62,6 +64,10 @@ public class MetadatasResource extends BaseMdsResource {
     public static final String SCHEMA_DATACITE = "https://schema.datacite.org/meta/kernel-4.0/metadata.xsd";
 
     /**
+     * The cache that may contains the Datacite schema.
+     */
+    private DoiMdsApplication.CacheSchema cache;    
+    /**
      * Init.
      *
      * @throws ResourceException - if a problem happens
@@ -69,8 +75,9 @@ public class MetadatasResource extends BaseMdsResource {
     @Override
     protected void doInit() throws ResourceException {
         super.doInit();
-        LOG.traceEntry();
+        LOG.traceEntry();        
         setDescription("This resource can create metadata");
+        this.cache = this.getDoiApp().getCache();
         LOG.traceExit();
     }
 
@@ -103,36 +110,43 @@ public class MetadatasResource extends BaseMdsResource {
         final String result;
         try {
             setStatus(Status.SUCCESS_CREATED);
-            final Resource resource = createDataCiteResourceObject(entity);
+            final Schema schema;
+            if (this.cache.isStored()) {
+                schema = this.cache.getCache();          
+            } else {
+                schema = this.getDoiApp().getSchemaFactory().newSchema(new URL(SCHEMA_DATACITE));
+                this.cache.store(schema);            
+            }             
+            final Resource resource = createDataCiteResourceObject(entity, schema);
             final String selectedRole = extractSelectedRoleFromRequestIfExists();
             checkPermission(resource.getIdentifier().getValue(), selectedRole);
             resource.setPublisher("CNES");
-            result = this.getDoiApp().getClient().createMetadata(resource);
+            result = this.getDoiApp().getClient().createMetadata(resource, schema);
         } catch (ClientMdsException ex) {
             ((AbstractApplication) getApplication()).sendAlertWhenDataCiteFailed(ex);
-            throw LOG.traceExit(
-                    new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex)
+            throw LOG.throwing(Level.DEBUG, 
+                    new ResourceException(ex.getStatus(), ex.getMessage(), ex)
             );
         } catch (ValidationException ex) {
-            throw LOG.traceExit(new ResourceException(
+            throw LOG.throwing(Level.DEBUG, new ResourceException(
                     Status.CLIENT_ERROR_BAD_REQUEST,
                     "invalid XML",
                     ex)
             );
         } catch (JAXBException ex) {
-            throw LOG.traceExit(new ResourceException(
+            throw LOG.throwing(Level.DEBUG, new ResourceException(
                     Status.CLIENT_ERROR_BAD_REQUEST,
                     "invalid XML",
                     ex)
             );
         } catch (SAXException ex) {
-            throw LOG.traceExit(new ResourceException(
+            throw LOG.throwing(Level.DEBUG, new ResourceException(
                     Status.SERVER_ERROR_INTERNAL,
                     "DataCite schema not available",
                     ex)
             );
         } catch (IOException ex) {
-            throw LOG.traceExit(new ResourceException(
+            throw LOG.throwing(Level.DEBUG, new ResourceException(
                     Status.CONNECTOR_ERROR_COMMUNICATION,
                     "Network problem",
                     ex)
@@ -151,7 +165,7 @@ public class MetadatasResource extends BaseMdsResource {
     private void checkInputs(final Object obj) throws ResourceException {
         LOG.traceEntry("Parameter : " + obj);
         if (isObjectNotExist(obj)) {
-            throw LOG.traceExit(new ResourceException(
+            throw LOG.throwing(Level.DEBUG, new ResourceException(
                     Status.CLIENT_ERROR_BAD_REQUEST, "Entity cannot be null")
             );
         }
@@ -170,22 +184,19 @@ public class MetadatasResource extends BaseMdsResource {
      */
     @Requirement(reqId = Requirement.DOI_INTER_060, reqName = Requirement.DOI_INTER_060_NAME)
     @Requirement(reqId = Requirement.DOI_INTER_070, reqName = Requirement.DOI_INTER_070_NAME)
-    private Resource createDataCiteResourceObject(final Representation entity) 
+    private Resource createDataCiteResourceObject(final Representation entity, final Schema schema) 
             throws JAXBException, SAXException, ValidationException, IOException {
         LOG.traceEntry("Parameter : " + entity);
         final JAXBContext ctx = JAXBContext.newInstance(new Class[]{Resource.class});
         final Unmarshaller unMarshal = ctx.createUnmarshaller();
-        final Schema schema = this.getDoiApp().getSchemaFactory()
-                .newSchema(new URL(SCHEMA_DATACITE));
         unMarshal.setSchema(schema);
-        final MyValidationEventHandler validationHandler
-                = new MyValidationEventHandler(LOG);
+        final MyValidationEventHandler validationHandler = new MyValidationEventHandler(LOG);
         unMarshal.setEventHandler(validationHandler);
-        final Resource resource = (Resource) unMarshal.unmarshal(entity.getStream());
-        if (validationHandler.isValid()) {
+        final Resource resource = (Resource) unMarshal.unmarshal(entity.getStream()); 
+        if (validationHandler.isValid()) {                                   
             return LOG.traceExit(resource);
         } else {
-            throw LOG.traceExit(new ValidationException(validationHandler.getErrorMsg()));
+            throw LOG.throwing(Level.DEBUG, new ValidationException(validationHandler.getErrorMsg()));
         }
     }
 

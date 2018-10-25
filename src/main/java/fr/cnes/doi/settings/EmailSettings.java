@@ -18,7 +18,6 @@
  */
 package fr.cnes.doi.settings;
 
-import fr.cnes.doi.exception.MailingException;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_CONNECTIONS_PER_HOST;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_TOTAL_CONNECTIONS;
 import static fr.cnes.doi.server.DoiServer.RESTLET_MAX_CONNECTIONS_PER_HOST;
@@ -27,6 +26,7 @@ import fr.cnes.doi.utils.spec.Requirement;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -183,9 +183,8 @@ public final class EmailSettings {
      * @param subject Email's subject
      * @param msg Email's message
      * @return True when the message is sent
-     * @throws MailingException - if the SMTP server cannot be reached
      */
-    public boolean sendMessage(final String subject, final String msg) throws MailingException {
+    public boolean sendMessage(final String subject, final String msg) {
         LOG.traceEntry("Parameters : {} and {}", subject, msg);
         boolean result;
         try {
@@ -195,9 +194,12 @@ public final class EmailSettings {
                     new ChallengeResponse(ChallengeScheme.SMTP_PLAIN, getAuthUser(), getAuthPwd()));
             result = sendMail(Protocol.valueOf(getSmtpProtocol()), request, Boolean.getBoolean(getTlsEnable()), subject, msg);
         } catch (RuntimeException ex) {
-            throw LOG.throwing(new MailingException("The SMTP server cannot be reached", ex));
+            LOG.catching(Level.DEBUG, ex);
+            LOG.error("Cannot send the message with the subject {} : {}", subject, msg);
+            result = false;
         } catch (Exception ex) {
-            LOG.error("Cannot send the message with the subject {} : {}", subject, msg, ex);
+            LOG.catching(Level.DEBUG, ex);
+            LOG.error("Cannot send the message with the subject {} : {}", subject, msg);
             result = false;
         }
         return LOG.traceExit(result);

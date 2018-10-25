@@ -18,6 +18,7 @@
  */
 package fr.cnes.doi.resource.mds;
 
+import static fr.cnes.doi.AbstractSpec.classTitle;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.MdsSpec;
 import static fr.cnes.doi.client.BaseClient.DATACITE_MOCKSERVER_PORT;
@@ -47,7 +48,6 @@ import org.restlet.data.Form;
 import org.restlet.data.Header;
 import org.restlet.data.Parameter;
 import org.restlet.data.Protocol;
-import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
@@ -76,8 +76,8 @@ public class MediaResourceTest {
         parameters.set(RESTLET_MAX_CONNECTIONS_PER_HOST, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_CONNECTIONS_PER_HOST, DEFAULT_MAX_CONNECTIONS_PER_HOST));
         parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
-        parameters.add("truststoreType", "JKS");      
-        System.out.println("------ TEST MediaResource ------");        
+        parameters.add("truststoreType", "JKS");     
+        classTitle("MediaResource");
     }
     
     @AfterClass

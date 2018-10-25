@@ -20,7 +20,6 @@ package fr.cnes.doi.services;
 
 import fr.cnes.doi.client.ClientLandingPage;
 import fr.cnes.doi.client.ClientSearchDataCite;
-import fr.cnes.doi.exception.MailingException;
 import fr.cnes.doi.settings.EmailSettings;
 import fr.cnes.doi.utils.spec.Requirement;
 import java.util.List;
@@ -71,12 +70,7 @@ public class LandingPageMonitoring implements Runnable {
             email.sendMessage(subject, msg.toString());
             LOG.info("message to send : {}", msg.toString());
         } catch (Exception ex) {
-            try {
-                email.sendMessage("Unrecoverable errors when checking landing pages", ex.toString());
-            } catch (MailingException ex1) {
-                LOG.fatal("Cannot send the email", ex1);
-            }
-            LOG.fatal("Cannot send the email", ex);
+            email.sendMessage("Unrecoverable errors when checking landing pages", ex.toString());
         }
     }
 

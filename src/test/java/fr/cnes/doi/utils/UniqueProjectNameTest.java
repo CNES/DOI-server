@@ -18,6 +18,7 @@
  */
 package fr.cnes.doi.utils;
 
+import static fr.cnes.doi.AbstractSpec.classTitle;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -54,7 +55,7 @@ public class UniqueProjectNameTest {
     @BeforeClass
     public static void setUpClass() {
         InitSettingsForTest.init();
-        System.out.println("------ TEST UniqueProjectName ------");        
+        classTitle("UniqueProjectName");
     }
 
     /**

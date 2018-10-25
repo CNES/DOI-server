@@ -30,6 +30,7 @@ import org.restlet.resource.ResourceException;
 
 import fr.cnes.doi.exception.ClientCrossCiteException;
 import fr.cnes.doi.utils.spec.Requirement;
+import org.apache.logging.log4j.Level;
 
 /**
  * Formats a citation. CrossRef, DataCite and mEDRA support formatted citations via the
@@ -110,7 +111,7 @@ public class FormatCitationResource extends BaseCitationResource {
             return LOG.traceExit(result);
         } catch (ClientCrossCiteException ex) {
             ((AbstractApplication) getApplication()).sendAlertWhenDataCiteFailed(ex);
-            throw LOG.throwing(new ResourceException(ex.getStatus(), ex.getDetailMessage(), ex));
+            throw LOG.throwing(Level.DEBUG, new ResourceException(ex.getStatus(), ex.getDetailMessage(), ex));
         }
     }
 
@@ -135,7 +136,7 @@ public class FormatCitationResource extends BaseCitationResource {
         if (errorMsg.length() == 0) {
             LOG.debug("The parameters are valid");
         } else {
-            throw LOG.throwing(new ResourceException(
+            throw LOG.throwing(Level.DEBUG, new ResourceException(
                     Status.CLIENT_ERROR_BAD_REQUEST, errorMsg.toString()));
         }
         LOG.traceExit();

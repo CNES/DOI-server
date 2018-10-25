@@ -30,7 +30,7 @@ import org.junit.runners.Suite;
  * @author malapert
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({fr.cnes.doi.settings.ProxySettingsTest.class, fr.cnes.doi.settings.JettySettingsTest.class, fr.cnes.doi.settings.EmailSettingsTest.class, fr.cnes.doi.settings.DoiSettingsTest.class})
+@Suite.SuiteClasses({fr.cnes.doi.settings.ProxySettingsTest.class, fr.cnes.doi.settings.JettySettingsTest.class, fr.cnes.doi.settings.DoiSettingsTest.class})
 public class SettingsSuite {
 
     @BeforeClass

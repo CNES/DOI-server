@@ -18,6 +18,7 @@
  */
 package fr.cnes.doi.settings;
 
+import static fr.cnes.doi.AbstractSpec.classTitle;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -29,7 +30,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import fr.cnes.doi.InitSettingsForTest;
-import fr.cnes.doi.exception.MailingException;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 
@@ -37,7 +37,7 @@ import org.junit.rules.ExpectedException;
  * Test class for {@link fr.cnes.doi.settings.EmailSettings}
  * @author Jean-Christophe Malapert
  */
-public class EmailSettingsTest {
+public class ITemailSettings {
 
     private static EmailSettings instance;
 
@@ -48,7 +48,7 @@ public class EmailSettingsTest {
     public static void setUpClass() {
         InitSettingsForTest.init();
         instance = EmailSettings.getInstance();
-        System.out.println("------ TEST EmailSettings ------");        
+        classTitle("EmailSettings");
     }
 
     @AfterClass
@@ -139,17 +139,14 @@ public class EmailSettingsTest {
 
     /**
      * Test of sendMessage method, of class EmailSettings.
-     * @throws fr.cnes.doi.exception.MailingException - Host not found
      */
     @Test
-    public void testSendMessage() throws MailingException {
+    public void testSendMessage() {
         System.out.println("TEST: SendMessage");
-        exceptions.expect(MailingException.class);
-        exceptions.expectMessage("The SMTP server cannot be reached");
         String subject = "Test";
         String msg = "My message";
         boolean result = instance.sendMessage(subject, msg);
-        assertTrue(result);
+        assertTrue(!result);
     }
 
     /**

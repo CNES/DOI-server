@@ -18,6 +18,7 @@
  */
 package fr.cnes.doi.client;
 
+import static fr.cnes.doi.AbstractSpec.classTitle;
 import fr.cnes.doi.CrossCiteSpec;
 import static fr.cnes.doi.client.BaseClient.DATACITE_MOCKSERVER_PORT;
 import java.util.List;
@@ -47,7 +48,7 @@ public class ClientCrossCiteCitationTest {
 
     @BeforeClass
     public static void setUpClass() {
-        System.out.println("------ TEST ClientCrossCiteCitation ------");        
+        classTitle("ClientCrossCiteCitation");
     }
 
     @AfterClass

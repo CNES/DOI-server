@@ -18,6 +18,7 @@
  */
 package fr.cnes.doi.utils;
 
+import static fr.cnes.doi.AbstractSpec.classTitle;
 import fr.cnes.doi.security.UtilsCryptography;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -37,7 +38,7 @@ public class UtilsTest {
     
     @BeforeClass
     public static void setUpClass() {
-        System.out.println("------ TEST Utils ------");        
+        classTitle("Utils");
     }
     
     @AfterClass

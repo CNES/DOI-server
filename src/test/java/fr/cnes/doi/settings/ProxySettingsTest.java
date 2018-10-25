@@ -18,6 +18,7 @@
  */
 package fr.cnes.doi.settings;
 
+import static fr.cnes.doi.AbstractSpec.classTitle;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -45,7 +46,7 @@ public class ProxySettingsTest {
     public static void setUpClass() {
         InitSettingsForTest.init();
         instance = ProxySettings.getInstance();
-        System.out.println("------ TEST ProxySettings ------");        
+        classTitle("ProxySettings");
     }
 
     @AfterClass

@@ -49,8 +49,46 @@ import org.restlet.routing.Filter;
 import org.restlet.routing.Redirector;
 
 /**
- * Application to expose the web site.
+ * Provides an application for handling features related to the administration system of the DOI 
+ * server.
+ * 
+ * The administration application provides the following features:
+ * <ul>
+ * <li>An asynchronous task to check the availability of created landing pages each 
+ * {@value #PERIOD_SCHEDULER} days</li>
+ * <li>The form for creating DOI</li>
+ * <li>The Datacite status page to check Datacite services availability</li>
+ * <li>The Datacite stats page</li>
+ * <li>A service to create random string as a part of the DOI suffix</li>
+ * <li>A token service for creating token and to get token information</li>
+ * </ul>
+ * <p>
+ * <b>Security</b><br>
+ * --------------<br>
+ * The authentication is done by a simple login/password. Only users having the group "admin" will
+ * be allowed to log in to this application.<br>
+ * The website for creating DOI is opened on the net whereas the others services are filtered by IP.
+ * The allowed IPs are localhost and the IPs defined in 
+ * {@value fr.cnes.doi.settings.Consts#ADMIN_IP_ALLOWER} attribute from the configuration file
+ * 
+ * <p>
+ * <b>Routing</b><br>
+ *  --------------<br>
+ * <br>
+ * root (DOI creation web form - no authorization)<br>
+ *  |<br>
+ *  |__ resources (status page - no authorization)<br>
+ *  |__ status (Datacite status page - authorization)<br>
+ *  |__ stats (Datacite stats page - authorization)<br>
+ *  |_ ____________<br>
+ *  |_|************|____ suffixProject (Get a random suffix - authorization)<br> 
+ *  |_|IP_filtering|____ token (Create a token - authorization)<br>
+ *  |_|____________|____ token/{tokenID} (Get token information - authorization)<br>
  *
+ * @see <a href="http://status.datacite.org">Datacite status page</a>
+ * @see <a href="https://stats.datacite.org/#tab-prefixes">Datacite stats page</a>
+ * @see SuffixProjectsResource Creating a project suffix for DOI
+ * @see TokenResource Creating a token and getting information about a token
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 @Requirement(reqId = Requirement.DOI_SRV_130, reqName = Requirement.DOI_SRV_130_NAME)

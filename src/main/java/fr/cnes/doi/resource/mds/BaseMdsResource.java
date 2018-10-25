@@ -27,6 +27,7 @@ import org.restlet.resource.ResourceException;
 import org.restlet.security.Role;
 import org.restlet.util.Series;
 import static fr.cnes.doi.security.UtilsHeader.SELECTED_ROLE_PARAMETER;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 
 
@@ -128,7 +129,7 @@ public class BaseMdsResource extends AbstractResource {
             } else {
                 LOG.debug("User is not in Role :"+ selectedRole);
                 LOG.info("DOIServer : The role {} is not allowed to use this feature", selectedRole);
-                throw LOG.throwing(new ResourceException(
+                throw LOG.throwing(Level.DEBUG, new ResourceException(
                         Status.CLIENT_ERROR_FORBIDDEN, 
                         "DOIServer : The role " + selectedRole 
                                 + " is not allowed to use this feature"
@@ -137,7 +138,7 @@ public class BaseMdsResource extends AbstractResource {
         } else {
             final List<Role> roles = getClientInfo().getRoles();
             if (hasNoRole(roles)) {
-                throw LOG.throwing(new ResourceException(
+                throw LOG.throwing(Level.DEBUG, new ResourceException(
                         Status.CLIENT_ERROR_UNAUTHORIZED, "DOIServer : No role"));
             } else if (hasSingleRole(roles)) {
                 final Role role = roles.get(0);
@@ -145,7 +146,7 @@ public class BaseMdsResource extends AbstractResource {
                 LOG.debug("User has a single Role "+ role);
             } else {
                 LOG.info("DOIServer : Cannot know which role must be applied");
-                throw LOG.throwing(new ResourceException(
+                throw LOG.throwing(Level.DEBUG, new ResourceException(
                         Status.CLIENT_ERROR_CONFLICT, 
                         "DOIServer : Cannot know which role must be applied"));
             }
@@ -183,7 +184,7 @@ public class BaseMdsResource extends AbstractResource {
         final String prefixCNES = this.getDoiApp().getDataCentrePrefix();
         if (!doiName.startsWith(prefixCNES + "/" + projectRole + "/")) {
             LOG.debug("You are not allowed to use this method : {} with {}", doiName, selectedRole);
-            throw LOG.throwing(new ResourceException(
+            throw LOG.throwing(Level.DEBUG, new ResourceException(
                     Status.CLIENT_ERROR_FORBIDDEN, "You are not allowed to use this method"));
         }
         LOG.traceExit();

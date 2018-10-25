@@ -50,7 +50,7 @@ public class MdsSpec extends AbstractSpec {
         GET_METADATA_403("Fail to get DOI metadata due to a forbidden request", HttpMethods.GET, "/" + ClientMDS.METADATA_RESOURCE, "10.5072/EDU/TESTID", 403, "login problem or dataset belongs to another party"),          
         GET_METADATA_404("Fail to get DOI metadata due to an unknown DOI", HttpMethods.GET, "/" + ClientMDS.METADATA_RESOURCE, "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b", 404, "DOI does not exist in our database"),  
         GET_METADATA_410("Fail to get DOI metadata due to an inactive DOI", HttpMethods.GET, "/" + ClientMDS.METADATA_RESOURCE, "10.5072/EDU/TESTID", 410, "the requested dataset was marked inactive"), 
-        GET_METADATA_500("Fail to get DOI metadata due to an internal serer error", HttpMethods.GET, "/" + ClientMDS.METADATA_RESOURCE, "10.5072/EDU/TESTID", 500, "server internal error, try later and if problem persists please contact us"),  
+        GET_METADATA_500("Fail to get DOI metadata due to an internal server error", HttpMethods.GET, "/" + ClientMDS.METADATA_RESOURCE, "10.5072/EDU/TESTID", 500, "server internal error, try later and if problem persists please contact us"),  
         POST_METADATA_201("Create DOI metadata", HttpMethods.POST, "/" + ClientMDS.METADATA_RESOURCE, "", 201, "CREATED"),
         POST_METADATA_400("Fail to create DOI metadata due to wrong input parameters", HttpMethods.POST, "/" + ClientMDS.METADATA_RESOURCE, "", 400, "invalid XML, wrong prefix"),
         POST_METADATA_401("Fail to create DOI metadata due to an unauthorized request", HttpMethods.POST, "/" + ClientMDS.METADATA_RESOURCE, "", 401, "no login"),

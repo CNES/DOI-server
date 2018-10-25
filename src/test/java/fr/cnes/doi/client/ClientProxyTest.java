@@ -18,6 +18,7 @@
  */
 package fr.cnes.doi.client;
 
+import static fr.cnes.doi.AbstractSpec.classTitle;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -66,7 +67,7 @@ public class ClientProxyTest {
     @BeforeClass
     public static void setUpClass() {
         InitSettingsForTest.init();
-        System.out.println("------ TEST ClientProxy ------");
+        classTitle("ClientProxy");
     }
 
     /**

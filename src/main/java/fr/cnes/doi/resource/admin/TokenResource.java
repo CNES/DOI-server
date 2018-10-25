@@ -42,6 +42,7 @@ import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
 import static fr.cnes.doi.application.AdminApplication.TOKEN_TEMPLATE;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 
 /**
@@ -146,7 +147,7 @@ public class TokenResource extends AbstractResource {
 
             return LOG.traceExit(tokenJwt);
         } catch (TokenSecurityException ex) {
-            throw LOG.throwing(new ResourceException(ex.getStatus(), ex.getMessage(), ex));
+            throw LOG.throwing(Level.DEBUG, new ResourceException(ex.getStatus(), ex.getMessage(), ex));
         }
     }
 
@@ -169,7 +170,7 @@ public class TokenResource extends AbstractResource {
         if (errorMsg.length() == 0) {
             LOG.debug("The form is valid");
         } else {
-            throw LOG.throwing(new ResourceException(
+            throw LOG.throwing(Level.DEBUG, new ResourceException(
                     Status.CLIENT_ERROR_BAD_REQUEST, errorMsg.toString()));
         }
     }
@@ -188,7 +189,7 @@ public class TokenResource extends AbstractResource {
                     .getTokenInformation(this.tokenParam);
             return LOG.traceExit(new JsonRepresentation(jws));
         } catch (DoiRuntimeException ex) {
-            throw LOG.throwing(new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, ex));
+            throw LOG.throwing(Level.DEBUG, new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, ex));
         }
     }
 

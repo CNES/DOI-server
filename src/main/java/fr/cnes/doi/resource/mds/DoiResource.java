@@ -27,6 +27,7 @@ import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.utils.spec.Requirement;
 
 import java.util.Arrays;
+import org.apache.logging.log4j.Level;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
 import org.restlet.data.Status;
@@ -104,10 +105,10 @@ public class DoiResource extends BaseMdsResource {
             result = new StringRepresentation(doi, MediaType.TEXT_PLAIN);
         } catch (ClientMdsException ex) {
             if (ex.getStatus().getCode() == Status.CLIENT_ERROR_NOT_FOUND.getCode()) {
-                throw LOG.throwing(new ResourceException(ex.getStatus(), ex.getMessage(), ex));
+                throw LOG.throwing(Level.DEBUG, new ResourceException(ex.getStatus(), ex.getMessage(), ex));
             } else {
                 ((AbstractApplication) getApplication()).sendAlertWhenDataCiteFailed(ex);
-                throw LOG.throwing(new ResourceException(Status.SERVER_ERROR_INTERNAL, 
+                throw LOG.throwing(Level.DEBUG, new ResourceException(Status.SERVER_ERROR_INTERNAL, 
                         ex.getMessage(), ex));
             }
         }
@@ -124,7 +125,7 @@ public class DoiResource extends BaseMdsResource {
     private void checkInput(final String doiName) throws ResourceException {
         LOG.traceEntry("Parameter : {}", doiName);
         if (doiName == null || doiName.isEmpty()) {
-            throw LOG.throwing(new ResourceException(
+            throw LOG.throwing(Level.DEBUG, new ResourceException(
                     Status.CLIENT_ERROR_BAD_REQUEST,
                     "doiName cannot be null or empty"
             ));
@@ -132,10 +133,10 @@ public class DoiResource extends BaseMdsResource {
             try {
                 ClientMDS.checkIfAllCharsAreValid(doiName);
             } catch (IllegalArgumentException ex) {
-                throw LOG.throwing(new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, ex));
+                throw LOG.throwing(Level.DEBUG, new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, ex));
             }
         } else {
-            throw LOG.throwing(new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "the DOI"
+            throw LOG.throwing(Level.DEBUG, new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "the DOI"
                     + " prefix must contains the prefix of the institution"));
         }
         LOG.traceExit();

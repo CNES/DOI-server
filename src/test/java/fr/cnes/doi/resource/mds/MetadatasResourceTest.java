@@ -18,6 +18,7 @@
  */
 package fr.cnes.doi.resource.mds;
 
+import static fr.cnes.doi.AbstractSpec.classTitle;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.MdsSpec;
 import fr.cnes.doi.client.ClientProxyTest;
@@ -90,7 +91,7 @@ public class MetadatasResourceTest {
         parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS");
-        System.out.println("------ TEST MetadatasResource ------");        
+        classTitle("MetadatasResource");
     }
 
     @AfterClass
@@ -191,8 +192,9 @@ public class MetadatasResourceTest {
             code = client.getStatus().getCode();
         } catch (ResourceException ex) {
             code = ex.getStatus().getCode();
-        }
-        client.release();
+        } finally {
+            client.release();    
+        }        
         assertEquals(spec.getStatus(), code);        
         
         // Checks the stub.        

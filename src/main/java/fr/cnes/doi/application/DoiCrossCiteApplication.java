@@ -49,9 +49,22 @@ import org.apache.logging.log4j.Logger;
  * <p>
  * The FAIR Guiding Principles provide a guideline for the those that want to enhance reuse of their
  * data (Wilkinson 2016).
- *
+ * <p>
+ * <b>Security</b><br>
+ * --------------<br>
+ * No authentication / no autorisation
+ * <p>
+ * <b>Routing</b><br>
+ *  --------------<br>
+ * <br>
+ * root<br>
+ *  |<br>
+ *  |__ style<br>
+ *  |__ language<br>
+ *  |__ format<br>
+ * 
+ * @see <a href="http://citation.crosscite.org/">Making a citation</a>
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
- * @see "http://citation.crosscite.org/"
  */
 @Requirement(reqId = Requirement.DOI_SRV_100, reqName = Requirement.DOI_SRV_100_NAME)
 @Requirement(reqId = Requirement.DOI_SRV_110, reqName = Requirement.DOI_SRV_110_NAME)

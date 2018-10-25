@@ -18,6 +18,7 @@
  */
 package fr.cnes.doi.resource.admin;
 
+import static fr.cnes.doi.AbstractSpec.classTitle;
 import fr.cnes.doi.InitServerForTest;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_CONNECTIONS_PER_HOST;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_TOTAL_CONNECTIONS;
@@ -80,7 +81,7 @@ public class SuffixProjectsResourceTest {
         parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS"); 
-        System.out.println("------ TEST SuffixProjectsResource ------");        
+        classTitle("SuffixProjectsResource");
     }
 
     @AfterClass

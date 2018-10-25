@@ -28,6 +28,7 @@ import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.utils.spec.Requirement;
 
 import java.util.Arrays;
+import org.apache.logging.log4j.Level;
 import org.restlet.data.Form;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
@@ -90,10 +91,10 @@ public class MediaResource extends BaseMdsResource {
             rep = new StringRepresentation(medias, MediaType.TEXT_URI_LIST);
         } catch (ClientMdsException ex) {
             if(ex.getStatus().getCode() == Status.CLIENT_ERROR_NOT_FOUND.getCode()) {
-                throw LOG.throwing(new ResourceException(ex.getStatus(), ex.getMessage(), ex));
+                throw LOG.throwing(Level.DEBUG, new ResourceException(ex.getStatus(), ex.getMessage(), ex));
             } else {
                 ((AbstractApplication)getApplication()).sendAlertWhenDataCiteFailed(ex);
-                throw LOG.throwing(
+                throw LOG.throwing(Level.DEBUG,
                         new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex)
                 );
             }
@@ -140,11 +141,11 @@ public class MediaResource extends BaseMdsResource {
             result = this.getDoiApp().getClient().createMedia(this.mediaName, mediaForm);
         } catch (ClientMdsException ex) {
             if(ex.getStatus().getCode() == Status.CLIENT_ERROR_BAD_REQUEST.getCode()) {
-                throw LOG.traceExit(new ResourceException(ex.getStatus(), ex.getMessage(), ex));
+                throw LOG.throwing(Level.DEBUG, new ResourceException(ex.getStatus(), ex.getMessage(), ex));
             } else {
                 ((AbstractApplication)getApplication())
                         .sendAlertWhenDataCiteFailed(ex);                          
-                throw LOG.traceExit(new ResourceException(
+                throw LOG.throwing(Level.DEBUG, new ResourceException(
                         Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex)
                 );                
             }
@@ -175,7 +176,7 @@ public class MediaResource extends BaseMdsResource {
         if(errorMsg.length() == 0) {        
             LOG.debug("The form is valid");                    
         } else {
-            throw LOG.throwing(new ResourceException(
+            throw LOG.throwing(Level.DEBUG, new ResourceException(
                     Status.CLIENT_ERROR_BAD_REQUEST, errorMsg.toString()));
         }      
         LOG.traceExit();

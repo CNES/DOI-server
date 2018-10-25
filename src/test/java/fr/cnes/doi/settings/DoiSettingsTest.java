@@ -18,6 +18,7 @@
  */
 package fr.cnes.doi.settings;
 
+import static fr.cnes.doi.AbstractSpec.classTitle;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -41,7 +42,7 @@ public class DoiSettingsTest {
     public static void setUpClass() {
         InitSettingsForTest.init();
         instance = DoiSettings.getInstance();
-        System.out.println("------ TEST DoiSettings ------");
+        classTitle("DoiSettings");
     }
 
     @AfterClass

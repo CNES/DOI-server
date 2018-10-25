@@ -18,6 +18,7 @@
  */
 package fr.cnes.doi.client;
 
+import static fr.cnes.doi.client.ClientMDS.METADATA_RESOURCE;
 import java.io.IOException;
 import java.util.Map;
 import java.util.logging.Level;
@@ -54,7 +55,8 @@ import org.restlet.resource.ResourceException;
 import org.xml.sax.SAXException;
 
 /**
- * Client to query Metadata store service at <a href="https://support.datacite.org/docs/mds-2">Datacite</a>.
+ * Client to query Metadata store service at
+ * <a href="https://support.datacite.org/docs/mds-2">Datacite</a>.
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  * @see "https://mds.datacite.org/static/apidoc"
@@ -70,7 +72,7 @@ public class ClientMDS extends BaseClient {
     /**
      * Metadata store mock service endpoint {@value #DATA_CITE_MOCK_URL}.
      */
-    public static final String DATA_CITE_MOCK_URL = "http://localhost:"+DATACITE_MOCKSERVER_PORT;
+    public static final String DATA_CITE_MOCK_URL = "http://localhost:" + DATACITE_MOCKSERVER_PORT;
 
     /**
      * Metadata store test service endpoint {@value #DATA_CITE_TEST_URL}.
@@ -204,7 +206,7 @@ public class ClientMDS extends BaseClient {
         public String getDataCiteUrl() {
             return this.dataCiteUrl;
         }
-        
+
         /**
          * Sets the DataCite URL for the context
          *
@@ -212,7 +214,7 @@ public class ClientMDS extends BaseClient {
          */
         private void setDataCiteURl(final String dataCiteUrl) {
             this.dataCiteUrl = dataCiteUrl;
-        }        
+        }
 
         /**
          * Sets the level log for the context
@@ -232,7 +234,7 @@ public class ClientMDS extends BaseClient {
         public static void setLevelLog(final Context context, final Level levelLog) {
             context.setLevelLog(levelLog);
         }
-        
+
         /**
          * Sets the DataCite URL for a given context
          *
@@ -241,7 +243,7 @@ public class ClientMDS extends BaseClient {
          */
         public static void setDataCiteUrl(final Context context, final String dataCiteUrl) {
             context.setDataCiteURl(dataCiteUrl);
-        }        
+        }
 
     }
 
@@ -666,8 +668,15 @@ public class ClientMDS extends BaseClient {
      * @see "https://mds.datacite.org/static/apidoc#tocAnchor-18"
      */
     public String createMetadata(final Representation entity) throws ClientMdsException {
-        final Resource resource = parseDataciteResource(entity);
-        return this.createMetadata(resource);
+        try {
+            final Resource resource = parseDataciteResource(entity);
+            final Schema schema = SchemaFactory.newInstance(
+                    XMLConstants.W3C_XML_SCHEMA_NS_URI
+            ).newSchema(new URL("https://schema.datacite.org/meta/kernel-4.0/metadata.xsd"));
+            return this.createMetadata(resource, schema);
+        } catch (MalformedURLException | SAXException ex) {
+            throw new ClientMdsException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex);
+        }
     }
 
     /**
@@ -675,6 +684,7 @@ public class ClientMDS extends BaseClient {
      * according to the {@link ClientMDS#context}.
      *
      * @param entity Metadata
+     * @param schema schema
      * @return short explanation of status code e.g. CREATED, HANDLE_ALREADY_EXISTS etc
      * @throws ClientMdsException - if an error happens <ul>
      * <li>400 Bad Request - invalid XML, wrong prefix</li>
@@ -685,13 +695,12 @@ public class ClientMDS extends BaseClient {
      * </ul>
      * @see "https://mds.datacite.org/static/apidoc#tocAnchor-18"
      */
-    public String createMetadata(final Resource entity) throws ClientMdsException {
+    public synchronized String createMetadata(final Resource entity, final Schema schema) throws ClientMdsException {
         try {
-            final String result;
             final Identifier identifier = entity.getIdentifier();
             identifier.setValue(getDoiAccorgindToContext(identifier.getValue()));
             final Reference url = createReference(METADATA_RESOURCE);
-            Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "POST {0}", url.toString());
+            Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "PUT {0}", url.toString());
             final OutputStream output = new OutputStream() {
                 /**
                  * Output stream.
@@ -724,13 +733,11 @@ public class ClientMDS extends BaseClient {
             marshaller.setProperty(Marshaller.JAXB_SCHEMA_LOCATION,
                     "http://datacite.org/schema/kernel-4 "
                     + "http://schema.datacite.org/meta/kernel-4/metadata.xsd");
-            final Schema schema = SchemaFactory.newInstance(
-                    XMLConstants.W3C_XML_SCHEMA_NS_URI
-            ).newSchema(new URL("https://schema.datacite.org/meta/kernel-4.0/metadata.xsd"));
             marshaller.setSchema(schema);
             marshaller.marshal(entity, output);
             this.getClient().setReference(url);
             this.getClient().getRequestAttributes().put("charset", "UTF-8");
+            this.getClient().setMethod(null);
             final Representation response = this.getClient().post(
                     new StringRepresentation(
                             output.toString(),
@@ -739,11 +746,10 @@ public class ClientMDS extends BaseClient {
                             CharacterSet.UTF_8
                     )
             );
-            result = getText(response);
-            return result;
-        } catch (ResourceException ex) {           
-            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), this.getClient().getResponseEntity(), ex);            
-        } catch (JAXBException | SAXException | MalformedURLException ex) {
+            return getText(response);
+        } catch (ResourceException ex) {
+            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), this.getClient().getResponseEntity(), ex);
+        } catch (JAXBException ex) {
             throw new ClientMdsException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex);
         } finally {
             this.getClient().release();

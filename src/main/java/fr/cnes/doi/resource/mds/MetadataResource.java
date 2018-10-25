@@ -25,6 +25,7 @@ import fr.cnes.doi.exception.ClientMdsException;
 import fr.cnes.doi.utils.spec.Requirement;
 
 import java.util.Arrays;
+import org.apache.logging.log4j.Level;
 import org.datacite.schema.kernel_4.Resource;
 import org.restlet.data.Method;
 import org.restlet.data.Status;
@@ -98,10 +99,10 @@ public class MetadataResource extends BaseMdsResource {
         } catch (ClientMdsException ex) {
             if (ex.getStatus().getCode() == Status.CLIENT_ERROR_NOT_FOUND.getCode() 
                     || ex.getStatus().getCode() == Status.CLIENT_ERROR_GONE.getCode()) {
-                throw LOG.throwing(new ResourceException(ex.getStatus(), ex.getMessage(), ex));
+                throw LOG.throwing(Level.DEBUG, new ResourceException(ex.getStatus(), ex.getMessage(), ex));
             } else {
                 ((AbstractApplication)getApplication()).sendAlertWhenDataCiteFailed(ex);
-                throw LOG.throwing(new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex));
+                throw LOG.throwing(Level.DEBUG, new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex));
             }
         }
         return LOG.traceExit(resource);
@@ -139,14 +140,14 @@ public class MetadataResource extends BaseMdsResource {
             rep = this.getDoiApp().getClient().deleteMetadata(this.doiName);
         } catch (ClientMdsException exception) {
             if (exception.getStatus().getCode() == Status.CLIENT_ERROR_NOT_FOUND.getCode()) {
-                throw LOG.traceExit(new ResourceException(
+                throw LOG.throwing(Level.DEBUG, new ResourceException(
                         exception.getStatus(), exception.getDetailMessage(), 
                         exception)
                 );
             } else {
                 ((AbstractApplication)getApplication())
                         .sendAlertWhenDataCiteFailed(exception);            
-                throw LOG.traceExit(new ResourceException(
+                throw LOG.throwing(Level.DEBUG, new ResourceException(
                         Status.SERVER_ERROR_INTERNAL, exception.getDetailMessage(), 
                         exception)
                 );
@@ -271,7 +272,7 @@ public class MetadataResource extends BaseMdsResource {
         if(errorMsg.length() == 0) {        
             LOG.debug("The input is valid");                    
         } else {
-            throw LOG.throwing(new ResourceException(
+            throw LOG.throwing(Level.DEBUG, new ResourceException(
                     Status.CLIENT_ERROR_BAD_REQUEST, errorMsg.toString()));            
         }          
         LOG.traceExit();

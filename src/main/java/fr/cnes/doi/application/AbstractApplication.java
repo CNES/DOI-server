@@ -18,7 +18,6 @@
  */
 package fr.cnes.doi.application;
 
-import fr.cnes.doi.exception.MailingException;
 import fr.cnes.doi.services.CnesStatusService;
 import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.settings.EmailSettings;
@@ -158,11 +157,7 @@ public abstract class AbstractApplication extends WadlApplication {
         final String subject = "Datacite problem";
         final String message = "Dear administrator, an error has been detected"
                 + " coming from Datacite, please look to the Service status\n" + exception;
-        try {
-            EmailSettings.getInstance().sendMessage(subject, message);
-        } catch (MailingException ex1) {
-            LOG.error(ex1);
-        }
+        EmailSettings.getInstance().sendMessage(subject, message);
     }
 
     /**
@@ -170,7 +165,7 @@ public abstract class AbstractApplication extends WadlApplication {
      *
      * @return the configuration of the DOI server.
      */
-    protected DoiSettings getConfig() {
+    protected final DoiSettings getConfig() {
         LOG.traceEntry();
         return LOG.traceExit(config);
     }

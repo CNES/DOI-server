@@ -18,6 +18,7 @@
  */
 package fr.cnes.doi.resource.mds;
 
+import static fr.cnes.doi.AbstractSpec.classTitle;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.MdsSpec;
 import static fr.cnes.doi.client.BaseClient.DATACITE_MOCKSERVER_PORT;
@@ -77,7 +78,7 @@ public class DoisResourceTest {
         parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS");
-        System.out.println("------ TEST DoisResource ------");        
+        classTitle("DoisResource");
     }
 
     @AfterClass

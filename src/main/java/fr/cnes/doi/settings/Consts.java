@@ -35,6 +35,11 @@ public class Consts {
      * Application's version.
      */
     public static final String VERSION = "Starter.VERSION";
+    
+    /**
+     * Name of the configuration file.
+     */
+    public static final String NAME = "Starter.NAME";
 
     /**
      * Application's copyright.

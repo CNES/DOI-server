@@ -40,6 +40,7 @@ import static fr.cnes.doi.security.UtilsHeader.SELECTED_ROLE_PARAMETER;
 import static fr.cnes.doi.client.ClientMDS.POST_DOI;
 import static fr.cnes.doi.client.ClientMDS.POST_URL;
 import fr.cnes.doi.utils.spec.Requirement;
+import org.apache.logging.log4j.Level;
 
 /**
  * Resource to handle a collection of DOI.
@@ -95,7 +96,7 @@ public class DoisResource extends BaseMdsResource {
             rep = new StringRepresentation(dois, MediaType.TEXT_URI_LIST);
         } catch (ClientMdsException ex) {
             ((AbstractApplication) getApplication()).sendAlertWhenDataCiteFailed(ex);            
-            throw LOG.throwing(new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex));
+            throw LOG.throwing(Level.DEBUG, new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex));
         }        
         return LOG.traceExit(rep);
     }
@@ -155,10 +156,10 @@ public class DoisResource extends BaseMdsResource {
             result = this.getDoiApp().getClient().createDoi(doiForm);
         } catch (ClientMdsException ex) {
             if (ex.getStatus().getCode() == Status.CLIENT_ERROR_PRECONDITION_FAILED.getCode()) {
-                throw LOG.throwing(new ResourceException(ex.getStatus(), ex.getMessage(), ex));
+                throw LOG.throwing(Level.DEBUG, new ResourceException(ex.getStatus(), ex.getMessage(), ex));
             } else {
                 ((AbstractApplication) getApplication()).sendAlertWhenDataCiteFailed(ex);
-                throw LOG.throwing(new ResourceException(
+                throw LOG.throwing(Level.DEBUG, new ResourceException(
                         Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex));
             }
         }
@@ -194,7 +195,7 @@ public class DoisResource extends BaseMdsResource {
         if (errorMsg.length() == 0) {
             LOG.debug("The form is valid");
         } else {
-            throw LOG.throwing(new ResourceException(
+            throw LOG.throwing(Level.DEBUG, new ResourceException(
                     Status.CLIENT_ERROR_BAD_REQUEST, errorMsg.toString()));
         }
         LOG.traceExit();
