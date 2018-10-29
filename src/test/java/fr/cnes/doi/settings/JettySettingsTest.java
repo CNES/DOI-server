@@ -19,6 +19,7 @@
 package fr.cnes.doi.settings;
 
 import static fr.cnes.doi.AbstractSpec.classTitle;
+import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.UnitTest;
 import static org.junit.Assert.assertEquals;
 
@@ -65,7 +66,7 @@ public class JettySettingsTest {
      */
     @Test
     public void testGetHttpRequestHeaderSize() {
-        System.out.println("TEST: GetHttpRequestHeaderSize");
+        testTitle("testGetHttpRequestHeaderSize");
         int expResult = 8192;
         int result = instance.getHttpRequestHeaderSize();
         assertEquals(expResult, result);
@@ -76,7 +77,7 @@ public class JettySettingsTest {
      */
     @Test
     public void testGetHttpResponseHeaderSize() {
-        System.out.println("TEST: GetHttpResponseHeaderSize");
+        testTitle("testGetHttpResponseHeaderSize");
         int expResult = 8192;
         int result = instance.getHttpResponseHeaderSize();
         assertEquals(expResult, result);
@@ -87,7 +88,7 @@ public class JettySettingsTest {
      */
     @Test
     public void testGetThreadPoolMinThreads() {
-        System.out.println("TEST: GetThreadPoolMinThreads");
+        testTitle("testGetThreadPoolMinThreads");
         int expResult = 8;
         int result = instance.getThreadPoolMinThreads();
         assertEquals(expResult, result);
@@ -98,7 +99,7 @@ public class JettySettingsTest {
      */
     @Test
     public void testGetThreadPoolMaxThreads() {
-        System.out.println("TEST: GetThreadPoolMaxThreads");
+        testTitle("testGetThreadPoolMaxThreads");
         int expResult = 200;
         int result = instance.getThreadPoolMaxThreads();
         assertEquals(expResult, result);
@@ -109,7 +110,7 @@ public class JettySettingsTest {
      */
     @Test
     public void testGetThreadPoolThreadsPriority() {
-        System.out.println("TEST: GetThreadPoolThreadsPriority");
+        testTitle("testGetThreadPoolThreadsPriority");
         int expResult = 5;
         int result = instance.getThreadPoolThreadsPriority();
         assertEquals(expResult, result);
@@ -120,7 +121,7 @@ public class JettySettingsTest {
      */
     @Test
     public void testGetThreadPoolIdleTimeout() {
-        System.out.println("TEST: GetThreadPoolIdleTimeout");
+        testTitle("testGetThreadPoolIdleTimeout");
         int expResult = 60000;
         int result = instance.getThreadPoolIdleTimeout();
         assertEquals(expResult, result);
@@ -131,7 +132,7 @@ public class JettySettingsTest {
      */
     @Test
     public void testGetThreadPoolStopTimeout() {
-        System.out.println("TEST: GetThreadPoolStopTimeout");
+        testTitle("testGetThreadPoolStopTimeout");
         long expResult = 5000L;
         long result = instance.getThreadPoolStopTimeout();
         assertEquals(expResult, result);
@@ -142,7 +143,7 @@ public class JettySettingsTest {
      */
     @Test
     public void testGetConnectorAcceptors() {
-        System.out.println("TEST: GetConnectorAcceptors");
+        testTitle("testGetConnectorAcceptors");
         int expResult = -1;
         int result = instance.getConnectorAcceptors();
         assertEquals(expResult, result);
@@ -153,7 +154,7 @@ public class JettySettingsTest {
      */
     @Test
     public void testGetConnectorSelectors() {
-        System.out.println("TEST: GetConnectorSelectors");
+        testTitle("testGetConnectorSelectors");
         int expResult = -1;
         int result = instance.getConnectorSelectors();
         assertEquals(expResult, result);
@@ -164,7 +165,7 @@ public class JettySettingsTest {
      */
     @Test
     public void testGetLowResourceMonitorIdleTimeout() {
-        System.out.println("TEST: GetLowResourceMonitorIdleTimeout");
+        testTitle("testGetLowResourceMonitorIdleTimeout");
         int expResult = 1000;
         int result = instance.getLowResourceMonitorIdleTimeout();
         assertEquals(expResult, result);
@@ -175,7 +176,7 @@ public class JettySettingsTest {
      */
     @Test
     public void testGetLowResourceMonitorPeriod() {
-        System.out.println("TEST: GetLowResourceMonitorPeriod");
+        testTitle("testGetLowResourceMonitorPeriod");
         int expResult = 1000;
         int result = instance.getLowResourceMonitorPeriod();
         assertEquals(expResult, result);
@@ -186,7 +187,7 @@ public class JettySettingsTest {
      */
     @Test
     public void testGetLowResourceMonitorMaxMemory() {
-        System.out.println("TEST: GetLowResourceMonitorMaxMemory");
+        testTitle("testGetLowResourceMonitorMaxMemory");
         long expResult = 0L;
         long result = instance.getLowResourceMonitorMaxMemory();
         assertEquals(expResult, result);
@@ -198,7 +199,7 @@ public class JettySettingsTest {
      */
     @Test
     public void testGetLowResourceMonitorMaxConnections() {
-        System.out.println("TEST: GetLowResourceMonitorMaxConnections");
+        testTitle("testGetLowResourceMonitorMaxConnections");
         int expResult = 0;
         int result = instance.getLowResourceMonitorMaxConnections();
         assertEquals(expResult, result);
@@ -209,7 +210,7 @@ public class JettySettingsTest {
      */
     @Test
     public void testGetLowResourceMonitorThreads() {
-        System.out.println("TEST: GetLowResourceMonitorThreads");
+        testTitle("testGetLowResourceMonitorThreads");
         boolean expResult = true;
         boolean result = instance.getLowResourceMonitorThreads();
         assertEquals(expResult, result);
@@ -220,7 +221,7 @@ public class JettySettingsTest {
      */
     @Test
     public void testGetConnectorAcceptQueueSize() {
-        System.out.println("TEST: GetConnectorAcceptQueueSize");
+        testTitle("testGetConnectorAcceptQueueSize");
         int expResult = 0;
         int result = instance.getConnectorAcceptQueueSize();
         assertEquals(expResult, result);
@@ -231,7 +232,7 @@ public class JettySettingsTest {
      */
     @Test
     public void testGetConnectorSoLingerTime() {
-        System.out.println("TEST: GetConnectorSoLingerTime");
+        testTitle("testGetConnectorSoLingerTime");
         int expResult = -1;
         int result = instance.getConnectorSoLingerTime();
         assertEquals(expResult, result);
@@ -243,6 +244,7 @@ public class JettySettingsTest {
      */
     @Test
     public void testGetConnectorIdleTimeout() {
+        testTitle("testGetConnectorIdleTimeout");
         System.out.println("TEST: GetConnectorIdleTimeout");
         int expResult = 30000;
         int result = instance.getConnectorIdleTimeout();
@@ -254,7 +256,7 @@ public class JettySettingsTest {
      */
     @Test
     public void testGetHttpOutputBufferSize() {
-        System.out.println("TEST: GetHttpOutputBufferSize");
+        testTitle("testGetHttpOutputBufferSize");
         int expResult = 32768;
         int result = instance.getHttpOutputBufferSize();
         assertEquals(expResult, result);
@@ -265,7 +267,7 @@ public class JettySettingsTest {
      */
     @Test
     public void testGetHttpHeaderCacheSize() {
-        System.out.println("TEST: GetHttpHeaderCacheSize");
+        testTitle("testGetHttpHeaderCacheSize");
         int expResult = 512;
         int result = instance.getHttpHeaderCacheSize();
         assertEquals(expResult, result);
@@ -276,7 +278,7 @@ public class JettySettingsTest {
      */
     @Test
     public void testGetConnectorStopTimeout() {
-        System.out.println("TEST: GetConnectorStopTimeout");
+        testTitle("testGetConnectorStopTimeout");
         int expResult = 30000;
         int result = instance.getConnectorStopTimeout();
         assertEquals(expResult, result);
@@ -287,7 +289,7 @@ public class JettySettingsTest {
      */
     @Test
     public void testGetLowResourceMonitorStopTimeout() {
-        System.out.println("TEST: GetLowResourceMonitorStopTimeout");
+        testTitle("testGetLowResourceMonitorStopTimeout");
         long expResult = 30000;
         long result = instance.getLowResourceMonitorStopTimeout();
         assertEquals(expResult, result);

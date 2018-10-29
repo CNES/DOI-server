@@ -85,7 +85,7 @@ public class ITperformance {
 
     private static final String METADATA_SERVICE = "/mds/metadata";
     private static final String DOIS_SERVICE = "/mds/dois";
-    private static final int NB_ITERS = 100;
+    private static final int NB_ITERS = 101;
 
     @Rule
     public ExpectedException exceptions = ExpectedException.none();
@@ -179,7 +179,7 @@ public class ITperformance {
         
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
-        double meanProcessingTime = elapsedTime / NB_ITERS;
+        double meanProcessingTime = elapsedTime;
 
         double expectedTime = 1 * 1000; //1 s per DOI
         System.out.println(map.get("nbErrors") + "  " + meanProcessingTime);

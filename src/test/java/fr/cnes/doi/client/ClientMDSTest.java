@@ -19,6 +19,7 @@
 package fr.cnes.doi.client;
 
 import static fr.cnes.doi.AbstractSpec.classTitle;
+import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.MdsSpec;
 import fr.cnes.doi.UnitTest;
 import static fr.cnes.doi.client.BaseClient.DATACITE_MOCKSERVER_PORT;
@@ -40,7 +41,6 @@ import static org.junit.Assert.*;
 import org.junit.Rule;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
-import org.mockserver.junit.MockServerRule;
 import org.restlet.data.CharacterSet;
 import org.restlet.data.Form;
 import org.restlet.data.Language;
@@ -87,15 +87,12 @@ public class ClientMDSTest {
     @Rule
     public ExpectedException exceptions = ExpectedException.none();
     
-    @Rule
-    public MockServerRule mockServerRule = new MockServerRule(this);
-    
     /**
      * Test of checkIfAllCharsAreValid method, of class ClientMDS.
      */
     @Test
-    public void testCheckIfOneCharIsNotValid() {        
-        System.out.println("TEST: CheckIfOneCharIsNotValid");
+    public void testCheckIfOneCharIsNotValid() {  
+        testTitle("testCheckIfOneCharIsNotValid");
         exceptions.expect(IllegalArgumentException.class);
         String test = "10.5072/éabscd";
         ClientMDS.checkIfAllCharsAreValid(test);
@@ -103,7 +100,7 @@ public class ClientMDSTest {
 
     @Test
     public void testCheckIfAllCharsAreValid() {
-        System.out.println("TEST: CheckIfAllCharsAreValid");
+        testTitle("testCheckIfAllCharsAreValid");
         String test = "10.5072/eabscd";
         ClientMDS.checkIfAllCharsAreValid(test);
         assertTrue("Test the DOI chars are valid", true);
@@ -114,7 +111,7 @@ public class ClientMDSTest {
      * @param spec spec
      */
     private void testSpecGetDoi(MdsSpec.Spec spec) {
-        System.out.println("TEST: "+spec.getDescription());
+        testTitle(spec.getDescription());
 
         // Creates the MetadataStoreService stub
         this.mdsServerStub.createSpec(spec);
@@ -146,7 +143,7 @@ public class ClientMDSTest {
      * @param spec spec
      */
     private void testSpecGetDoiCollection(MdsSpec.Spec spec) {
-        System.out.println("TEST: "+spec.getDescription());
+        testTitle(spec.getDescription());
 
         // Creates the MetadataStoreService stub        
         this.mdsServerStub.createSpec(spec);
@@ -176,7 +173,7 @@ public class ClientMDSTest {
      * @param spec spec
      */
     private void testSpecCreateDoi(MdsSpec.Spec spec) {
-        System.out.println("TEST: "+spec.getDescription());
+        testTitle(spec.getDescription());
 
         // Creates the MetadataStoreService stub        
         this.mdsServerStub.createSpec(spec);
@@ -229,7 +226,7 @@ public class ClientMDSTest {
     }
 
     private void testSpectGetMetadata(MdsSpec.Spec spec) throws Exception {
-        System.out.println("TEST: "+spec.getDescription());
+        testTitle(spec.getDescription());
 
         // Creates the MetadataStoreService stub        
         this.mdsServerStub.createSpec(spec);
@@ -265,6 +262,7 @@ public class ClientMDSTest {
      * <li>GET /doi/10.5072/2783446.2783605</li>
      * <li>404 : DOI not found</li>
      * </ul>
+     * @throws java.lang.Exception
      */
     @Test
     public void testGetDoi404() throws Exception {
@@ -278,6 +276,7 @@ public class ClientMDSTest {
      * <li>GET /doi/10.5072/2783446.2783605</li>
      * <li>401 : Bad credentials</li>
      * </ul>
+     * @throws java.lang.Exception
      */
     @Test
     public void testGetDoi401() throws Exception {
@@ -291,6 +290,7 @@ public class ClientMDSTest {
      * <li>GET /doi/10.5072/2783446.2783605</li>
      * <li>204 : ""</li>
      * </ul>
+     * @throws java.lang.Exception
      */
     @Test
     public void testGetDoi204() throws Exception {
@@ -304,6 +304,7 @@ public class ClientMDSTest {
      * <li>GET /doi/10.5072/2783446.2783605</li>
      * <li>403 : ""</li>
      * </ul>
+     * @throws java.lang.Exception
      */
     @Test
     public void testGetDoi403() throws Exception {
@@ -317,6 +318,7 @@ public class ClientMDSTest {
      * <li>GET /doi/10.5072/2783446.2783605</li>
      * <li>500 : "server internal error, try later and if problem persists please contact us"</li>
      * </ul>
+     * @throws java.lang.Exception
      */
     @Test
     public void testGetDoi500() throws Exception {
@@ -330,6 +332,7 @@ public class ClientMDSTest {
      * <li>GET /doi/10.5072/2783446.2783605</li>
      * <li>200 : "https://edutheque.cnes.fr/fr/web/CNES-fr/10884-edutheque.php"</li>
      * </ul>
+     * @throws java.lang.Exception
      */
     @Test
     public void testGetDoi200() throws Exception {
@@ -338,6 +341,7 @@ public class ClientMDSTest {
 
     /**
      * Test of getDoiCollection method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testGetDoiCollection200() throws Exception {
@@ -351,6 +355,7 @@ public class ClientMDSTest {
 
     /**
      * Test of createDoi method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testCreateDoi201() throws Exception {
@@ -359,6 +364,7 @@ public class ClientMDSTest {
 
     /**
      * Test of createDoi method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testCreateDoi400() throws Exception {
@@ -367,6 +373,7 @@ public class ClientMDSTest {
 
     /**
      * Test of createDoi method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testCreateDoi401() throws Exception {
@@ -375,6 +382,7 @@ public class ClientMDSTest {
 
     /**
      * Test of createDoi method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testCreateDoi403() throws Exception {
@@ -383,6 +391,7 @@ public class ClientMDSTest {
 
     /**
      * Test of createDoi method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testCreateDoi412() throws Exception {
@@ -391,6 +400,7 @@ public class ClientMDSTest {
 
     /**
      * Test of createDoi method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testCreateDoi500() throws Exception {
@@ -399,6 +409,7 @@ public class ClientMDSTest {
 
     /**
      * Test of getMetadataAsObject method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testGetMetadataAsObject() throws Exception {
@@ -407,6 +418,7 @@ public class ClientMDSTest {
 
     /**
      * Test of getMetadata method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testGetMetadata200() throws Exception {
@@ -415,6 +427,7 @@ public class ClientMDSTest {
 
     /**
      * Test of getMetadata method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testGetMetadata401() throws Exception {
@@ -423,6 +436,7 @@ public class ClientMDSTest {
 
     /**
      * Test of getMetadata method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testGetMetadata403() throws Exception {
@@ -431,14 +445,16 @@ public class ClientMDSTest {
 
     /**
      * Test of getMetadata method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testGetMetadata404() throws Exception {
-        testSpectGetMetadata(MdsSpec.Spec.GET_METADATA_404);
+        testSpectGetMetadata(MdsSpec.Spec.GET_METADATA_400);
     }
 
     /**
      * Test of getMetadata method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testGetMetadata410() throws Exception {
@@ -447,6 +463,7 @@ public class ClientMDSTest {
 
     /**
      * Test of getMetadata method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testGetMetadata500() throws Exception {
@@ -454,7 +471,7 @@ public class ClientMDSTest {
     }
 
     private void testSpecCreateMetadata(MdsSpec.Spec spec) {
-        System.out.println("TEST: "+spec.getDescription());
+        testTitle(spec.getDescription());
 
         this.mdsServerStub.createSpec(spec);
         Representation entity = new StringRepresentation(
@@ -483,7 +500,7 @@ public class ClientMDSTest {
     }
 
     private void testSpecCreateMetadataAsObj(MdsSpec.Spec spec) throws Exception {
-        System.out.println("TEST: "+spec.getDescription());
+        testTitle(spec.getDescription());
 
         // Creates the MetadataStoreService stub        
         this.mdsServerStub.createSpec(spec);
@@ -514,6 +531,7 @@ public class ClientMDSTest {
 
     /**
      * Test of createMetadata method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testCreateMetadata201() throws Exception {
@@ -522,6 +540,7 @@ public class ClientMDSTest {
 
     /**
      * Test of createMetadata method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testCreateMetadata400() throws Exception {
@@ -530,6 +549,7 @@ public class ClientMDSTest {
 
     /**
      * Test of createMetadata method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testCreateMetadata401() throws Exception {
@@ -538,6 +558,7 @@ public class ClientMDSTest {
 
     /**
      * Test of createMetadata method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testCreateMetadata403() throws Exception {
@@ -546,6 +567,7 @@ public class ClientMDSTest {
 
     /**
      * Test of createMetadata method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testCreateMetadata500() throws Exception {
@@ -554,6 +576,7 @@ public class ClientMDSTest {
     
     /**
      * Test of createMetadata method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testCreateMetadataObj201() throws Exception {
@@ -562,6 +585,7 @@ public class ClientMDSTest {
 
     /**
      * Test of createMetadata method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testCreateMetadataObj400() throws Exception {
@@ -570,6 +594,7 @@ public class ClientMDSTest {
 
     /**
      * Test of createMetadata method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testCreateMetadataObj401() throws Exception {
@@ -578,6 +603,7 @@ public class ClientMDSTest {
 
     /**
      * Test of createMetadata method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testCreateMetadataObj403() throws Exception {
@@ -586,6 +612,7 @@ public class ClientMDSTest {
 
     /**
      * Test of createMetadata method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testCreateMetadataObj500() throws Exception {
@@ -594,7 +621,7 @@ public class ClientMDSTest {
 
 
     private void testSpecDeleteMetadata(MdsSpec.Spec spec) throws Exception {
-        System.out.println("TEST: "+spec.getDescription());
+        testTitle(spec.getDescription());
 
         // Creates the MetadataStoreService stub        
         this.mdsServerStub.createSpec(spec);
@@ -625,7 +652,7 @@ public class ClientMDSTest {
     }
     
     private void testSpecDeleteMetadataAsObj(MdsSpec.Spec spec) throws Exception{
-        System.out.println("TEST: "+spec.getDescription());
+        testTitle(spec.getDescription());
 
         // Creates the MetadataStoreService stub        
         this.mdsServerStub.createSpec(spec);
@@ -664,6 +691,7 @@ public class ClientMDSTest {
 
     /**
      * Test of deleteMetadata method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testDeleteMetadata200() throws Exception {
@@ -672,6 +700,7 @@ public class ClientMDSTest {
     
     /**
      * Test of deleteMetadata method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testDeleteMetadata401() throws Exception {
@@ -680,6 +709,7 @@ public class ClientMDSTest {
     
     /**
      * Test of deleteMetadata method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testDeleteMetadata403() throws Exception {
@@ -688,6 +718,7 @@ public class ClientMDSTest {
     
     /**
      * Test of deleteMetadata method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testDeleteMetadata404() throws Exception {
@@ -696,6 +727,7 @@ public class ClientMDSTest {
     
     /**
      * Test of deleteMetadata method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testDeleteMetadata500() throws Exception {
@@ -704,6 +736,7 @@ public class ClientMDSTest {
     
     /**
      * Test of deleteMetadata method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testDeleteMetadataObj200() throws Exception {
@@ -712,6 +745,7 @@ public class ClientMDSTest {
     
     /**
      * Test of deleteMetadata method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testDeleteMetadataObj401() throws Exception {
@@ -720,6 +754,7 @@ public class ClientMDSTest {
     
     /**
      * Test of deleteMetadata method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testDeleteMetadataObj403() throws Exception {
@@ -728,6 +763,7 @@ public class ClientMDSTest {
     
     /**
      * Test of deleteMetadata method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testDeleteMetadataObj404() throws Exception {
@@ -736,6 +772,7 @@ public class ClientMDSTest {
     
     /**
      * Test of deleteMetadata method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testDeleteMetadataObj500() throws Exception {
@@ -743,7 +780,7 @@ public class ClientMDSTest {
     }   
     
     private void testSpecGetMedia(MdsSpec.Spec spec) {
-        System.out.println("TEST: "+spec.getDescription());
+        testTitle(spec.getDescription());
 
         // Creates the MetadataStoreService stub        
         this.mdsServerStub.createSpec(spec);
@@ -773,6 +810,7 @@ public class ClientMDSTest {
 
     /**
      * Test of getMedia method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testGetMedia200() throws Exception {
@@ -781,6 +819,7 @@ public class ClientMDSTest {
     
     /**
      * Test of getMedia method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testGetMedia401() throws Exception {
@@ -789,6 +828,7 @@ public class ClientMDSTest {
     
     /**
      * Test of getMedia method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testGetMedia403() throws Exception {
@@ -797,6 +837,7 @@ public class ClientMDSTest {
 
     /**
      * Test of getMedia method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testGetMedia404() throws Exception {
@@ -805,6 +846,7 @@ public class ClientMDSTest {
     
     /**
      * Test of getMedia method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testGetMedia500() throws Exception {
@@ -812,7 +854,7 @@ public class ClientMDSTest {
     }    
     
     private void testSpecCreateMedia(MdsSpec.Spec spec) {
-        System.out.println("TEST: "+spec.getDescription());
+        testTitle(spec.getDescription());
        
         // Creates the MetadataStoreService stub        
         this.mdsServerStub.createSpec(spec);
@@ -846,6 +888,7 @@ public class ClientMDSTest {
     
     /**
      * Test of createMedia method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testCreateMedia200() throws Exception {
@@ -854,6 +897,7 @@ public class ClientMDSTest {
     
     /**
      * Test of createMedia method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testCreateMedia400() throws Exception {
@@ -862,6 +906,7 @@ public class ClientMDSTest {
     
     /**
      * Test of createMedia method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testCreateMedia401() throws Exception {
@@ -870,6 +915,7 @@ public class ClientMDSTest {
     
     /**
      * Test of createMedia method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testCreateMedia403() throws Exception {
@@ -878,6 +924,7 @@ public class ClientMDSTest {
     
     /**
      * Test of createMedia method, of class ClientMDS.
+     * @throws java.lang.Exception
      */
     @Test
     public void testCreateMedia500() throws Exception {

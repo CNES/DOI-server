@@ -58,25 +58,34 @@ public class ClientSearchDataCite extends BaseClient {
      * @throws Exception 
      */
     public ClientSearchDataCite() throws Exception {
-        super(BASE_URI);
-        computeListDOI(0);
+        this(DoiSettings.getInstance().getString(Consts.INIST_DOI));
     }  
+    
+    /**
+     * Constructor.
+     * @param doi_prefix DOI prefix
+     * @throws Exception 
+     */
+    public ClientSearchDataCite(final String doi_prefix) throws Exception {
+        super(BASE_URI);
+        computeListDOI(0, doi_prefix);
+    }    
     
     /**
      * Computes recursively the response.
      * @param start page number
+     * @param doi_prefix DOI prefix
      * @throws DoiRuntimeException - if the status of the query is not 200
      * @throws java.io.IOException - if an error happens in the stream
      */
-    public final void computeListDOI(final int start) throws DoiRuntimeException, IOException {
+    public final void computeListDOI(final int start, final String doi_prefix) throws DoiRuntimeException, IOException {
         this.getClient().setReference(BASE_URI);
-        this.getClient().addQueryParameter("q", "prefix:"
-                +DoiSettings.getInstance().getString(Consts.INIST_DOI));
+        this.getClient().addQueryParameter("q", "prefix:"+doi_prefix);
         this.getClient().addQueryParameter("fl", "doi");
         this.getClient().addQueryParameter("wt", "json");
         this.getClient().addQueryParameter("indent", "true");
         this.getClient().addQueryParameter("rows", String.valueOf(COUNT));
-        this.getClient().addQueryParameter("start", String.valueOf(start));        
+        this.getClient().addQueryParameter("start", String.valueOf(start)); 
         final Representation rep = this.getClient().get();
         final Status status = this.getClient().getStatus();        
         if(status.isSuccess()) { 
@@ -89,7 +98,7 @@ public class ClientSearchDataCite extends BaseClient {
                 this.doiList.add(String.valueOf(doi.get("doi")));
             }
             if(this.doiList.size() != numFound) {
-                computeListDOI(this.doiList.size());
+                computeListDOI(this.doiList.size(), doi_prefix);
             }
             
         } else {

@@ -19,6 +19,7 @@
 package fr.cnes.doi.server;
 
 import static fr.cnes.doi.AbstractSpec.classTitle;
+import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.UnitTest;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -66,7 +67,7 @@ public class DoiMonitoringTest {
      */
     @Test
     public void testRegister() {
-        System.out.println("TEST: Register");
+        testTitle("testRegister");
         Method name = Method.GET;
         String path = "/test";
         String description = "myTest";        
@@ -79,7 +80,7 @@ public class DoiMonitoringTest {
      */
     @Test
     public void testAddMeasurement() {
-        System.out.println("TEST: AddMeasurement");
+        testTitle("testAddMeasurement");
         Method name = Method.GET;
         String path = "/test";
         float duration = 10.0F;
@@ -92,7 +93,7 @@ public class DoiMonitoringTest {
      */
     @Test
     public void testIsRegistered() {
-        System.out.println("TEST: IsRegistered");
+        testTitle("testIsRegistered");
         Method name = Method.POST;
         String path = "/registered";
         instance.register(name, path, "my description");
@@ -106,7 +107,7 @@ public class DoiMonitoringTest {
      */
     @Test
     public void testGetCurrentMean() {
-        System.out.println("TEST: GetCurrentMean");
+        testTitle("testGetCurrentMean");
         Method name = Method.POST;
         String path = "/mean";
         float expResult = 9.0F;
@@ -122,7 +123,7 @@ public class DoiMonitoringTest {
      */
     @Test
     public void testGetDescription() {
-        System.out.println("TEST: GetDescription");
+        testTitle("testGetDescription");
         Method name = Method.HEAD;
         String path = "/test";
         instance.register(name, path, "description");

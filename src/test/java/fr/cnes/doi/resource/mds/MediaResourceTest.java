@@ -19,6 +19,7 @@
 package fr.cnes.doi.resource.mds;
 
 import static fr.cnes.doi.AbstractSpec.classTitle;
+import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.MdsSpec;
 import fr.cnes.doi.UnitTest;
@@ -104,7 +105,7 @@ public class MediaResourceTest {
      */
     @Test
     public void testGetMediasHttps() throws IOException {
-        System.out.println("TEST: "+MdsSpec.Spec.GET_MEDIA_200.getDescription()+" through HTTPS server");
+        testTitle("testGetMediasHttps");
 
         this.mdsServerStub.createSpec(MdsSpec.Spec.GET_MEDIA_200);
         
@@ -130,7 +131,7 @@ public class MediaResourceTest {
      */    
     @Test
     public void testGetMediasHttp() throws IOException {
-        System.out.println("TEST: "+MdsSpec.Spec.GET_MEDIA_200.getDescription()+" through HTTP server");
+        testTitle("testGetMediasHttp");
         
         this.mdsServerStub.createSpec(MdsSpec.Spec.GET_MEDIA_200);
         
@@ -157,7 +158,7 @@ public class MediaResourceTest {
      */
     @Test
     public void testGetMediasWithWrongDOIHttps() throws IOException {
-        System.out.println("TEST: "+MdsSpec.Spec.GET_MEDIA_404.getDescription()+" through HTTPS server");
+        testTitle("testGetMediasWithWrongDOIHttps");
         
         this.mdsServerStub.createSpec(MdsSpec.Spec.GET_MEDIA_404);
         
@@ -185,7 +186,7 @@ public class MediaResourceTest {
      */    
     @Test
     public void testGetMediasWithWrongDOIHttp() throws IOException {
-        System.out.println("TEST: "+MdsSpec.Spec.GET_MEDIA_404.getDescription()+" through HTTP server");
+        testTitle("testGetMediasWithWrongDOIHttp");
         
         this.mdsServerStub.createSpec(MdsSpec.Spec.GET_MEDIA_404);
         
@@ -210,7 +211,7 @@ public class MediaResourceTest {
      */
     @Test    
     public void testCreateMediaForbidden() {
-        System.out.println("TEST: "+MdsSpec.Spec.POST_MEDIA_403.getDescription()+" through HTTPS server");
+        testTitle("testCreateMediaForbidden");
                 
         Form mediaForm = new Form();
         mediaForm.add("image/fits", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");

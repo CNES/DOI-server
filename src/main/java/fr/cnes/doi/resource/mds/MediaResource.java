@@ -18,10 +18,12 @@
  */
 package fr.cnes.doi.resource.mds;
 
-import fr.cnes.doi.application.AbstractApplication;
 import fr.cnes.doi.application.DoiMdsApplication;
+import fr.cnes.doi.application.DoiMdsApplication.API_MDS;
 import fr.cnes.doi.client.ClientMDS;
+import fr.cnes.doi.client.ClientMDS.DATACITE_API_RESPONSE;
 import fr.cnes.doi.exception.ClientMdsException;
+import fr.cnes.doi.exception.DoiServerException;
 import static fr.cnes.doi.security.UtilsHeader.SELECTED_ROLE_PARAMETER;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
@@ -42,10 +44,9 @@ import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Get;
 import org.restlet.resource.Post;
-import org.restlet.resource.ResourceException;
 
 /** 
- * Resource to handle to Media.
+ * Resource to handle the Media.
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class MediaResource extends BaseMdsResource {            
@@ -57,10 +58,10 @@ public class MediaResource extends BaseMdsResource {
 
     /**
      * Init by getting the media name.
-     * @throws ResourceException - if a problem happens
+     * @throws DoiServerException - if a problem happens
      */
     @Override
-    protected void doInit() throws ResourceException {   
+    protected void doInit() throws DoiServerException {   
         super.doInit();        
         LOG.traceEntry();
         this.mediaName = getResourcePath().replace(DoiMdsApplication.MEDIA_URI+"/", "");
@@ -73,15 +74,16 @@ public class MediaResource extends BaseMdsResource {
      * This request returns list of pairs of media type and URLs associated with
      * a given DOI when 200 status is returned (operation successful). 
      * @return the media related to a DOI
-     * @throws ResourceException - if an error happens <ul>
-     * <li>404 Not Found - No media attached to the DOI or DOI does not exist in our database</li>
-     * <li>500 Internal Server Error - Error when requesting DataCite</li>
+     * @throws DoiServerException - if the response is not a success
+     * <ul>
+     * <li>{@link DATACITE_API_RESPONSE#DOI_NOT_FOUND}</li>
+     * <li>{@link API_MDS#DATACITE_PROBLEM}</li>
      * </ul>
      */  
     @Requirement(reqId = Requirement.DOI_SRV_090,reqName = Requirement.DOI_SRV_090_NAME) 
     @Requirement(reqId = Requirement.DOI_MONIT_020,reqName = Requirement.DOI_MONIT_020_NAME)      
     @Get
-    public Representation getMedias() throws ResourceException {
+    public Representation getMedias() throws DoiServerException {
         LOG.traceEntry();
         final Representation rep;
         final String medias;
@@ -91,11 +93,14 @@ public class MediaResource extends BaseMdsResource {
             rep = new StringRepresentation(medias, MediaType.TEXT_URI_LIST);
         } catch (ClientMdsException ex) {
             if(ex.getStatus().getCode() == Status.CLIENT_ERROR_NOT_FOUND.getCode()) {
-                throw LOG.throwing(Level.DEBUG, new ResourceException(ex.getStatus(), ex.getMessage(), ex));
+                throw LOG.throwing(
+                        Level.DEBUG, 
+                        new DoiServerException(getApplication(), DATACITE_API_RESPONSE.DOI_NOT_FOUND, ex)
+                );
             } else {
-                ((AbstractApplication)getApplication()).sendAlertWhenDataCiteFailed(ex);
-                throw LOG.throwing(Level.DEBUG,
-                        new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex)
+                throw LOG.throwing(
+                        Level.DEBUG,
+                        new DoiServerException(getApplication(), API_MDS.DATACITE_PROBLEM, ex)
                 );
             }
         }
@@ -110,18 +115,14 @@ public class MediaResource extends BaseMdsResource {
      * operation is successful.
      * @param mediaForm Form
      * @return short explanation of status code 
-     * @throws ResourceException - if an error happens :<ul>
-     * <li>400 Bad Request - 
-     * {@value fr.cnes.doi.resource.mds.BaseMdsResource#DOI_PARAMETER} not 
-     * provided or one or more of the specified mime-types or urls are
-     * invalid (e.g. non supported mime-type, not allowed url domain, etc.)</li>
-     * <li>401 Unauthorized - user unauthorized</li>     
-     * <li>403 Forbidden - if the role is not allowed to use this feature or 
-     * the user is not allow to create media</li>
-     * <li>404 Not found : The DOI does not exist
-     * <li>409 Conflict if a user is associated to more than one role</li>
-     * <li>500 Internal Server Error - server internal error, try later and if 
-     * problem persists please contact us</li>
+     * @throws DoiServerException - if the response is not a success :
+     * <ul>
+     * <li>{@link DATACITE_API_RESPONSE#BAD_REQUEST}</li>
+     * <li>{@link API_MDS#DATACITE_PROBLEM}</li>
+     * <li>{@link API_MDS#SECURITY_USER_NO_ROLE}</li>
+     * <li>{@link API_MDS#SECURITY_USER_NOT_IN_SELECTED_ROLE}</li>
+     * <li>{@link API_MDS#SECURITY_USER_PERMISSION}</li>
+     * <li>{@link API_MDS#SECURITY_USER_CONFLICT}</li> 
      * </ul>
      */   
     @Requirement(reqId = Requirement.DOI_SRV_080,reqName = Requirement.DOI_SRV_080_NAME) 
@@ -130,7 +131,7 @@ public class MediaResource extends BaseMdsResource {
     @Requirement(reqId = Requirement.DOI_AUTO_020,reqName = Requirement.DOI_AUTO_020_NAME)     
     @Requirement(reqId = Requirement.DOI_AUTO_030,reqName = Requirement.DOI_AUTO_030_NAME)     
     @Post
-    public Representation createMedia(final Form mediaForm) throws ResourceException{
+    public Representation createMedia(final Form mediaForm) throws DoiServerException{
         LOG.traceEntry("Parameter : {}",mediaForm);
         checkInputs(this.mediaName, mediaForm);
         final String result;
@@ -141,12 +142,14 @@ public class MediaResource extends BaseMdsResource {
             result = this.getDoiApp().getClient().createMedia(this.mediaName, mediaForm);
         } catch (ClientMdsException ex) {
             if(ex.getStatus().getCode() == Status.CLIENT_ERROR_BAD_REQUEST.getCode()) {
-                throw LOG.throwing(Level.DEBUG, new ResourceException(ex.getStatus(), ex.getMessage(), ex));
-            } else {
-                ((AbstractApplication)getApplication())
-                        .sendAlertWhenDataCiteFailed(ex);                          
-                throw LOG.throwing(Level.DEBUG, new ResourceException(
-                        Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex)
+                throw LOG.throwing(
+                        Level.DEBUG, 
+                        new DoiServerException(getApplication(), DATACITE_API_RESPONSE.BAD_REQUEST, ex)
+                );
+            } else {                          
+                throw LOG.throwing(
+                        Level.DEBUG, 
+                        new DoiServerException(getApplication(), API_MDS.DATACITE_PROBLEM, ex)
                 );                
             }
         }
@@ -158,10 +161,10 @@ public class MediaResource extends BaseMdsResource {
      * Checks input parameters
      * @param doi DOI number
      * @param mediaForm the parameters
-     * @throws ResourceException - 400 Bad Request if DOI_PARAMETER is not set
+     * @throws DoiServerException - 400 Bad Request if DOI_PARAMETER is not set
      */ 
     @Requirement(reqId = Requirement.DOI_INTER_070,reqName = Requirement.DOI_INTER_070_NAME)        
-    private void checkInputs(final String doi, final Form mediaForm) throws ResourceException {
+    private void checkInputs(final String doi, final Form mediaForm) throws DoiServerException {
         LOG.traceEntry("Parameters : {} and {}",doi, mediaForm);
         final StringBuilder errorMsg = new StringBuilder();
         if(doi == null || doi.isEmpty() || !doi.startsWith(DoiSettings.getInstance().getString(Consts.INIST_DOI))) {
@@ -176,8 +179,10 @@ public class MediaResource extends BaseMdsResource {
         if(errorMsg.length() == 0) {        
             LOG.debug("The form is valid");                    
         } else {
-            throw LOG.throwing(Level.DEBUG, new ResourceException(
-                    Status.CLIENT_ERROR_BAD_REQUEST, errorMsg.toString()));
+            throw LOG.throwing(
+                    Level.DEBUG, 
+                    new DoiServerException(getApplication(), API_MDS.MEDIA_VALIDATION, errorMsg.toString())
+            );
         }      
         LOG.traceExit();
     }      
@@ -199,6 +204,12 @@ public class MediaResource extends BaseMdsResource {
 
     /**
      * Describes the GET method.
+     * The different representations are the followings:
+     * <ul>
+     * <li>{@link DATACITE_API_RESPONSE#SUCCESS}</li>
+     * <li>{@link DATACITE_API_RESPONSE#DOI_NOT_FOUND}</li>
+     * <li>{@link API_MDS#DATACITE_PROBLEM}</li>      
+     * </ul>     
      * @param info Wadl description for a GET method
      */ 
     @Requirement(reqId = Requirement.DOI_DOC_010,reqName = Requirement.DOI_DOC_010_NAME)      
@@ -212,21 +223,34 @@ public class MediaResource extends BaseMdsResource {
                 "DOI name", true, "xs:string")
         );
         addResponseDocToMethod(info, createResponseDoc(
-                Status.SUCCESS_OK, "Operation successful", mediaRepresentation())
+                DATACITE_API_RESPONSE.SUCCESS.getStatus(), 
+                DATACITE_API_RESPONSE.SUCCESS.getShortMessage(), 
+                mediaRepresentation())
         );
         addResponseDocToMethod(info, createResponseDoc(
-                Status.CLIENT_ERROR_NOT_FOUND, "DOI does not exist in our database", 
-                "explainRepresentation")
+                DATACITE_API_RESPONSE.DOI_NOT_FOUND.getStatus(),
+                DATACITE_API_RESPONSE.DOI_NOT_FOUND.getShortMessage(),
+                "explainRepresentationID")
         );
         addResponseDocToMethod(info, createResponseDoc(
-                Status.SERVER_ERROR_INTERNAL, "server internal error, try later "
-                        + "and if problem persists please contact us", 
-                "explainRepresentation")
+                API_MDS.DATACITE_PROBLEM.getStatus(),
+                API_MDS.DATACITE_PROBLEM.getShortMessage(),
+                "explainRepresentationID")
         );
     } 
 
     /**
-     * Describes POST method.
+     * Describes the POST method.
+     * The different representations are the followings:
+     * <ul>
+     * <li>{@link DATACITE_API_RESPONSE#SUCCESS}</li>
+     * <li>{@link API_MDS#MEDIA_VALIDATION}</li>
+     * <li>{@link API_MDS#DATACITE_PROBLEM}</li>
+     * <li>{@link API_MDS#SECURITY_USER_NO_ROLE}</li>
+     * <li>{@link API_MDS#SECURITY_USER_NOT_IN_SELECTED_ROLE}</li>
+     * <li>{@link API_MDS#SECURITY_USER_PERMISSION}</li>
+     * <li>{@link API_MDS#SECURITY_USER_CONFLICT}</li>      
+     * </ul>     
      * @param info Wadl description for describing POST method
      */ 
     @Requirement(reqId = Requirement.DOI_DOC_010,reqName = Requirement.DOI_DOC_010_NAME)      
@@ -248,11 +272,21 @@ public class MediaResource extends BaseMdsResource {
         addRequestDocToMethod(info, 
                 Arrays.asList(createQueryParamDoc(SELECTED_ROLE_PARAMETER, ParameterStyle.HEADER, "A user can select one role when he is associated to several roles", false, "xs:string")), 
                 rep);        
-        addResponseDocToMethod(info, createResponseDoc(Status.SUCCESS_OK, "Operation successful", "explainRepresentation"));
-        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_BAD_REQUEST, DOI_PARAMETER+" not provided or one or more of the specified mime-types or urls are invalid (e.g. non supported mime-type, not allowed url domain, etc.)", "explainRepresentation"));
-        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_UNAUTHORIZED, "if no role is provided", "explainRepresentation"));
-        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_FORBIDDEN, "if the role is not allowed to use this feature or the user is not allow to create media", "explainRepresentation"));
-        addResponseDocToMethod(info, createResponseDoc(Status.CLIENT_ERROR_CONFLICT, "if a user is associated to more than one role without setting selectedRole parameter", "explainRepresentation"));        
-        addResponseDocToMethod(info, createResponseDoc(Status.SERVER_ERROR_INTERNAL, "server internal error, try later and if problem persists please contact us", "explainRepresentation"));           
+        addResponseDocToMethod(info, createResponseDoc(
+                DATACITE_API_RESPONSE.SUCCESS.getStatus(),
+                DATACITE_API_RESPONSE.SUCCESS.getShortMessage(),
+                "explainRepresentationID")
+        );
+        addResponseDocToMethod(info, createResponseDoc(
+                API_MDS.MEDIA_VALIDATION.getStatus(),
+                API_MDS.MEDIA_VALIDATION.getShortMessage(),
+                "explainRepresentationID")
+        );       
+        addResponseDocToMethod(info, createResponseDoc(
+                API_MDS.DATACITE_PROBLEM.getStatus(),
+                API_MDS.DATACITE_PROBLEM.getShortMessage(),
+                "explainRepresentationID")
+        ); 
+        super.describePost(info);
     }     
 }

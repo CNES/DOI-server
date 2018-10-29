@@ -16,12 +16,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package fr.cnes.doi.application;
+package fr.cnes.doi.integration;
 
 import static fr.cnes.doi.AbstractSpec.classTitle;
 import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.InitServerForTest;
-import fr.cnes.doi.UnitTest;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_CONNECTIONS_PER_HOST;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_TOTAL_CONNECTIONS;
 import static fr.cnes.doi.server.DoiServer.JKS_DIRECTORY;
@@ -31,7 +30,6 @@ import static fr.cnes.doi.server.DoiServer.RESTLET_MAX_TOTAL_CONNECTIONS;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -42,6 +40,7 @@ import static org.junit.Assert.*;
 import org.junit.experimental.categories.Category;
 import org.restlet.Client;
 import org.restlet.Context;
+import org.restlet.data.ChallengeScheme;
 import org.restlet.data.Parameter;
 import org.restlet.data.Protocol;
 import org.restlet.representation.Representation;
@@ -49,28 +48,28 @@ import org.restlet.resource.ClientResource;
 import org.restlet.util.Series;
 
 /**
- * Tests the API description for the DoiCrossCite application.
+ * IT API description for the Administration application.
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-@Category(UnitTest.class)
-public class DoiCrossCiteApplicationTest {
+@Category(IntegrationTest.class)
+public class ITadminApplication {
     
     private static Client cl;
     
-    public DoiCrossCiteApplicationTest() {
+    public ITadminApplication() {
     }
     
     @BeforeClass
     public static void setUpClass() {
-        InitServerForTest.init();       
+        InitServerForTest.init();
         cl = new Client(new Context(), Protocol.HTTPS);
         Series<Parameter> parameters = cl.getContext().getParameters();
         parameters.set(RESTLET_MAX_TOTAL_CONNECTIONS, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_TOTAL_CONNECTIONS, DEFAULT_MAX_TOTAL_CONNECTIONS));        
         parameters.set(RESTLET_MAX_CONNECTIONS_PER_HOST, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_CONNECTIONS_PER_HOST, DEFAULT_MAX_CONNECTIONS_PER_HOST));
         parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
-        parameters.add("truststoreType", "JKS"); 
-        classTitle("DOICrossCiteApplication");
+        parameters.add("truststoreType", "JKS");   
+        classTitle("AdminApplication");
     }
     
     @AfterClass
@@ -87,52 +86,37 @@ public class DoiCrossCiteApplicationTest {
     }
 
     /**
-     * Test of the API description with a HTTP server, of class DoiCrossCiteApplication.
+     * Test of the API description with a HTTP server, of class AdminApplication.
      * @throws java.io.IOException - if OutOfMemoryErrors
      */
     @Test
-    public void testApiWithHttp() throws IOException {
-        testTitle("testApiWithHttp");
+    public void testStatusWithHttp() throws IOException {
+        testTitle("testStatusWithHttp");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);        
-        ClientResource client = new ClientResource("http://localhost:"+port+"/citation/");
-        Representation repApi = client.options();
+        ClientResource client = new ClientResource("http://localhost:"+port+"/status");
+        client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
+        Representation repApi = client.get();
         String txt = repApi.getText();
         client.release();
-        assertTrue("WADL API through HTTP",txt!=null && !txt.isEmpty() && txt.contains("wadl"));
+        assertTrue("Testing status page through HTTP", txt!=null && txt.contains("DataCite Status"));
     }
 
     /**
-     * Test of the API description with a HTTPS server, of class DoiCrossCiteApplication.
-     * @throws java.io.IOException -if OutOfMemoryErrors
+     * Test of the API description with a HTTPS server, of class AdminApplication.
+     * @throws java.io.IOException
      */
     @Test
-    public void testApiWithHttps() throws IOException {
-        testTitle("testApiWithHttps");
+    public void testStatusWithHttps() throws IOException {
+        testTitle("testStatusWithHttps");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);        
-        ClientResource client = new ClientResource("https://localhost:"+port+"/citation/");
+        ClientResource client = new ClientResource("https://localhost:"+port+"/status");
+        client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");        
         client.setNext(cl);
-        Representation repApi = client.options();
+        Representation repApi = client.get();
         String txt = repApi.getText();
         client.release();
-        assertTrue("WADL API through HTTPS",txt!=null && !txt.isEmpty() && txt.contains("wadl"));
-    }   
-    
-    /**
-     * Test of API generation in HTML.
-     * @throws Exception 
-     */
-    @Test
-    public void generateAPIWadl() throws Exception {
-        testTitle("generateAPIWadl");
-        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);        
-        ClientResource client = new ClientResource("http://localhost:"+port+"/citation?media=text/html");
-        Representation repApi = client.options();
-        String txt = repApi.getText();
-        client.release();
-        try (FileWriter writer = new FileWriter("citation_api.html")) {
-            writer.write(txt);
-            writer.flush();
-        }
-        assertTrue("HTML API through HTTPS",txt!=null && !txt.isEmpty() && txt.contains("html"));
+        assertTrue("Testing status page through HTTPS",txt!=null && txt.contains("DataCite Status"));
     }    
+    
+
 }

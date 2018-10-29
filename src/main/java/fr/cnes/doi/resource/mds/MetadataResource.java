@@ -18,10 +18,12 @@
  */
 package fr.cnes.doi.resource.mds;
 
-import fr.cnes.doi.application.AbstractApplication;
 import fr.cnes.doi.application.DoiMdsApplication;
+import fr.cnes.doi.application.DoiMdsApplication.API_MDS;
 import fr.cnes.doi.client.ClientMDS;
+import fr.cnes.doi.client.ClientMDS.DATACITE_API_RESPONSE;
 import fr.cnes.doi.exception.ClientMdsException;
+import fr.cnes.doi.exception.DoiServerException;
 import fr.cnes.doi.utils.spec.Requirement;
 
 import java.util.Arrays;
@@ -34,7 +36,6 @@ import org.restlet.ext.wadl.ParameterStyle;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Delete;
 import org.restlet.resource.Get;
-import org.restlet.resource.ResourceException;
 
 /**
  * Resources to handle a metadata.
@@ -61,10 +62,10 @@ public class MetadataResource extends BaseMdsResource {
     /**
      * Init by getting a DOI.
      *
-     * @throws ResourceException - if a problem happens
+     * @throws DoiServerException - if a problem happens
      */
     @Override
-    protected void doInit() throws ResourceException {
+    protected void doInit() throws DoiServerException {
         super.doInit();        
         LOG.traceEntry();
         setDescription("This resource handles a metadata : retrieve, delete");
@@ -74,22 +75,50 @@ public class MetadataResource extends BaseMdsResource {
     }
 
     /**
+     * Checks input parameters
+     * @param doiName DOI number
+     * @throws DoiServerException - 400 Bad Request if DOI_PARAMETER is not set
+     */ 
+    @Requirement(reqId = Requirement.DOI_INTER_070,reqName = Requirement.DOI_INTER_070_NAME)    
+    private void checkInputs(final String doiName) throws DoiServerException {
+        LOG.traceEntry("Parameter : {}",doiName);
+        StringBuilder errorMsg = new StringBuilder();
+        if(doiName == null || doiName.isEmpty()) {
+            errorMsg = errorMsg.append(DoiMdsApplication.DOI_TEMPLATE).append("value is not set.");  
+        } else {
+            try {
+                ClientMDS.checkIfAllCharsAreValid(doiName);
+            } catch(IllegalArgumentException ex) {
+                errorMsg = errorMsg.append(DoiMdsApplication.DOI_TEMPLATE).append("no valid syntax.");
+            }
+        }
+        if(errorMsg.length() == 0) {        
+            LOG.debug("The input is valid");                    
+        } else {
+            throw LOG.throwing(
+                    Level.DEBUG, 
+                    new DoiServerException(getApplication(),Status.CLIENT_ERROR_BAD_REQUEST, errorMsg.toString())
+            );            
+        }          
+        LOG.traceExit();
+    }
+    
+    /**
      * Retuns the metadata for a given DOI. 200 status is returned when the
      * operation is successful.
      *
      * @return the metadata for a given DOI as Json or XML
-     * @throws ResourceException - if an error happens<ul>
-     * <li>400 Bad Request - DOI's syntax is not valid</li>     
-     * <li>404 Not Found - DOI does not exist in DataCite</li>
-     * <li>410 Gone - the requested dataset was marked inactive (using DELETE
-     * method)</li>
-     * <li>500 Internal Server Error - Error when calling DataCite</li>
+     * @throws DoiServerException - if the response is not a success
+     * <ul>
+     * <li>{@link DATACITE_API_RESPONSE#BAD_REQUEST}</li>     
+     * <li>{@link DATACITE_API_RESPONSE#DOI_NOT_FOUND}</li>
+     * <li>{@link API_MDS#DATACITE_PROBLEM}</li>
      * </ul>
      */ 
     @Requirement(reqId = Requirement.DOI_SRV_060,reqName = Requirement.DOI_SRV_060_NAME)   
     @Requirement(reqId = Requirement.DOI_MONIT_020,reqName = Requirement.DOI_MONIT_020_NAME)      
     @Get("xml|json")
-    public Resource getMetadata() throws ResourceException {
+    public Resource getMetadata() throws DoiServerException {
         LOG.traceEntry();
         checkInputs(doiName);
         final Resource resource;
@@ -97,12 +126,21 @@ public class MetadataResource extends BaseMdsResource {
             setStatus(Status.SUCCESS_OK);
             resource = this.getDoiApp().getClient().getMetadataAsObject(this.doiName);
         } catch (ClientMdsException ex) {
-            if (ex.getStatus().getCode() == Status.CLIENT_ERROR_NOT_FOUND.getCode() 
-                    || ex.getStatus().getCode() == Status.CLIENT_ERROR_GONE.getCode()) {
-                throw LOG.throwing(Level.DEBUG, new ResourceException(ex.getStatus(), ex.getMessage(), ex));
+            if (ex.getStatus().getCode() == Status.CLIENT_ERROR_NOT_FOUND.getCode()) {
+                throw LOG.throwing(
+                        Level.DEBUG, 
+                        new DoiServerException(getApplication(), DATACITE_API_RESPONSE.DOI_NOT_FOUND, ex)
+                );
+            } else if (ex.getStatus().getCode() == Status.CLIENT_ERROR_BAD_REQUEST.getCode()) {
+                throw LOG.throwing(
+                        Level.DEBUG, 
+                        new DoiServerException(getApplication(), DATACITE_API_RESPONSE.BAD_REQUEST, ex)
+                );                    
             } else {
-                ((AbstractApplication)getApplication()).sendAlertWhenDataCiteFailed(ex);
-                throw LOG.throwing(Level.DEBUG, new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex));
+                throw LOG.throwing(
+                        Level.DEBUG, 
+                        new DoiServerException(getApplication(), API_MDS.DATACITE_PROBLEM, ex)
+                ); 
             }
         }
         return LOG.traceExit(resource);
@@ -113,14 +151,14 @@ public class MetadataResource extends BaseMdsResource {
      * is successful.
      *
      * @return the deleted representation
-     * @throws ResourceException - if an error happens <ul>
-     * <li>400 Bad request - if the DOI's syntax is not valid</li>     
-     * <li>401 Unauthorized if no role is provided</li>
-     * <li>403 Forbidden - if the role is not allowed to use this feature or the
-     * user is not allow to create the DOI</li>
-     * <li>404 Not found id the DOI is not found in DataCite</li>
-     * <li>409 Conflict if a user is associated to more than one role</li>
-     * <li>500 Internal Server Error - Error when calling DataCite</li>
+     * @throws DoiServerException - if the response is not a success
+     * <ul>
+     * <li>{@link API_MDS#SECURITY_USER_NO_ROLE}</li>
+     * <li>{@link API_MDS#SECURITY_USER_NOT_IN_SELECTED_ROLE}</li>
+     * <li>{@link API_MDS#SECURITY_USER_PERMISSION}</li>
+     * <li>{@link API_MDS#SECURITY_USER_CONFLICT}</li>
+     * <li>{@link DATACITE_API_RESPONSE#DOI_NOT_FOUND}</li>
+     * <li>{@link API_MDS#DATACITE_PROBLEM}</li>
      * </ul>
      */ 
     @Requirement(reqId = Requirement.DOI_SRV_050,reqName = Requirement.DOI_SRV_050_NAME)   
@@ -129,7 +167,7 @@ public class MetadataResource extends BaseMdsResource {
     @Requirement(reqId = Requirement.DOI_AUTO_020,reqName = Requirement.DOI_AUTO_020_NAME)     
     @Requirement(reqId = Requirement.DOI_AUTO_030,reqName = Requirement.DOI_AUTO_030_NAME)     
     @Delete
-    public Representation deleteMetadata() throws ResourceException {
+    public Representation deleteMetadata() throws DoiServerException {
         LOG.traceEntry();
         checkInputs(this.doiName);
         final Representation rep;
@@ -138,18 +176,16 @@ public class MetadataResource extends BaseMdsResource {
             checkPermission(this.doiName, selectedRole);
             setStatus(Status.SUCCESS_OK);
             rep = this.getDoiApp().getClient().deleteMetadata(this.doiName);
-        } catch (ClientMdsException exception) {
-            if (exception.getStatus().getCode() == Status.CLIENT_ERROR_NOT_FOUND.getCode()) {
-                throw LOG.throwing(Level.DEBUG, new ResourceException(
-                        exception.getStatus(), exception.getDetailMessage(), 
-                        exception)
+        } catch (ClientMdsException ex) {
+            if (ex.getStatus().getCode() == Status.CLIENT_ERROR_NOT_FOUND.getCode()) {
+                throw LOG.throwing(
+                        Level.DEBUG, 
+                        new DoiServerException(getApplication(),DATACITE_API_RESPONSE.DOI_NOT_FOUND, ex)
                 );
             } else {
-                ((AbstractApplication)getApplication())
-                        .sendAlertWhenDataCiteFailed(exception);            
-                throw LOG.throwing(Level.DEBUG, new ResourceException(
-                        Status.SERVER_ERROR_INTERNAL, exception.getDetailMessage(), 
-                        exception)
+                throw LOG.throwing(
+                        Level.DEBUG, 
+                        new DoiServerException(getApplication(), API_MDS.DATACITE_PROBLEM, ex)
                 );
             }
         }
@@ -158,6 +194,13 @@ public class MetadataResource extends BaseMdsResource {
 
     /**
      * Describes the GET method.
+     * The different representations are the followings:
+     * <ul>
+     * <li>{@link DATACITE_API_RESPONSE#SUCCESS}</li>
+     * <li>{@link DATACITE_API_RESPONSE#DOI_NOT_FOUND}</li>
+     * <li>{@link DATACITE_API_RESPONSE#DOI_INACTIVE}</li>
+     * <li>{@link API_MDS#DATACITE_PROBLEM}</li>
+     * </ul>       
      *
      * @param info Wadl description for GET method
      */
@@ -173,29 +216,39 @@ public class MetadataResource extends BaseMdsResource {
         );
 
         addResponseDocToMethod(info, createResponseDoc(
-                Status.SUCCESS_OK, "Operation successful", 
+                DATACITE_API_RESPONSE.SUCCESS.getStatus(),
+                DATACITE_API_RESPONSE.SUCCESS.getShortMessage(),
                 "metadataRepresentation")
         );
         addResponseDocToMethod(info, createResponseDoc(
-                Status.CLIENT_ERROR_NOT_FOUND, 
-                "DOI does not exist in DataCite", 
-                "explainRepresentation")
+                DATACITE_API_RESPONSE.DOI_NOT_FOUND.getStatus(),
+                DATACITE_API_RESPONSE.DOI_NOT_FOUND.getShortMessage(),
+                "explainRepresentationID")
+        );
+        addResponseDocToMethod(info, createResponseDoc(  
+                DATACITE_API_RESPONSE.DOI_INACTIVE.getStatus(),
+                DATACITE_API_RESPONSE.DOI_INACTIVE.getShortMessage(),
+                "explainRepresentationID")
         );
         addResponseDocToMethod(info, createResponseDoc(
-                Status.CLIENT_ERROR_GONE, 
-                "the requested dataset was marked inactive (using DELETE method)", 
-                "explainRepresentation")
-        );
-        addResponseDocToMethod(info, createResponseDoc(
-                Status.SERVER_ERROR_INTERNAL, 
-                "server internal error, try later and if problem persists please "
-                        + "contact us", 
-                "explainRepresentation")
+               API_MDS.DATACITE_PROBLEM.getStatus(),
+               API_MDS.DATACITE_PROBLEM.getShortMessage(),
+               "explainRepresentationID")
         );
     }
 
     /**
      * Describes the DELETE method.
+     * The different representations are the followings:
+     * <ul>
+     * <li>{@link DATACITE_API_RESPONSE#SUCCESS}</li>
+     * <li>{@link DATACITE_API_RESPONSE#DOI_NOT_FOUND}</li>
+     * <li>{@link API_MDS#SECURITY_USER_NO_ROLE}</li>
+     * <li>{@link API_MDS#SECURITY_USER_NOT_IN_SELECTED_ROLE}</li>
+     * <li>{@link API_MDS#SECURITY_USER_PERMISSION}</li>
+     * <li>{@link API_MDS#SECURITY_USER_CONFLICT}</li> 
+     * <li>{@link API_MDS#DATACITE_PROBLEM}</li>
+     * </ul>     
      *
      * @param info Wadl description for DELETE method
      */
@@ -217,64 +270,20 @@ public class MetadataResource extends BaseMdsResource {
                 )
         );
         addResponseDocToMethod(info, createResponseDoc(
-                Status.SUCCESS_OK, 
-                "Operation successful", 
+                DATACITE_API_RESPONSE.SUCCESS.getStatus(),
+                DATACITE_API_RESPONSE.SUCCESS.getShortMessage(), 
                 "metadataRepresentation")
-        );
+        );       
         addResponseDocToMethod(info, createResponseDoc(
-                Status.CLIENT_ERROR_UNAUTHORIZED, 
-                "if no role is provided", 
-                "explainRepresentation")
+                DATACITE_API_RESPONSE.DOI_NOT_FOUND.getStatus(),
+                DATACITE_API_RESPONSE.DOI_NOT_FOUND.getShortMessage(),
+                "explainRepresentationID")
         );
-        addResponseDocToMethod(info, createResponseDoc(
-                Status.CLIENT_ERROR_FORBIDDEN, 
-                "if the role is not allowed to use this feature or the role is "
-                        + "not allow to delete the DOI", 
-                "explainRepresentation")
+        addResponseDocToMethod(info, createResponseDoc(                
+               API_MDS.DATACITE_PROBLEM.getStatus(),
+               API_MDS.DATACITE_PROBLEM.getShortMessage(),
+               "explainRepresentationID")        
         );
-        addResponseDocToMethod(info, createResponseDoc(
-                Status.CLIENT_ERROR_NOT_FOUND, 
-                "DOI does not exist in our database", 
-                "explainRepresentation")
-        );
-        addResponseDocToMethod(info, createResponseDoc(
-                Status.CLIENT_ERROR_CONFLICT, 
-                "Error when a user is associated to more than one role without "
-                        + "setting selectedRole parameter", 
-                "explainRepresentation")
-        );
-        addResponseDocToMethod(info, createResponseDoc(
-                Status.SERVER_ERROR_INTERNAL, 
-                "server internal error, try later and if problem persists please "
-                        + "contact us", 
-                "explainRepresentation")
-        );
-    } 
-    
-    /**
-     * Checks input parameters
-     * @param doiName DOI number
-     * @throws ResourceException - 400 Bad Request if DOI_PARAMETER is not set
-     */ 
-    @Requirement(reqId = Requirement.DOI_INTER_070,reqName = Requirement.DOI_INTER_070_NAME)    
-    private void checkInputs(final String doiName) throws ResourceException {
-        LOG.traceEntry("Parameter : {}",doiName);
-        StringBuilder errorMsg = new StringBuilder();
-        if(doiName == null || doiName.isEmpty()) {
-            errorMsg = errorMsg.append(DoiMdsApplication.DOI_TEMPLATE).append(" value is not set.");  
-        } else {
-            try {
-                ClientMDS.checkIfAllCharsAreValid(doiName);
-            } catch(IllegalArgumentException ex) {
-                errorMsg = errorMsg.append(DoiMdsApplication.DOI_TEMPLATE).append(" no valid syntax.");
-            }
-        }
-        if(errorMsg.length() == 0) {        
-            LOG.debug("The input is valid");                    
-        } else {
-            throw LOG.throwing(Level.DEBUG, new ResourceException(
-                    Status.CLIENT_ERROR_BAD_REQUEST, errorMsg.toString()));            
-        }          
-        LOG.traceExit();
-    }
+        super.describeDelete(info);
+    }   
 }

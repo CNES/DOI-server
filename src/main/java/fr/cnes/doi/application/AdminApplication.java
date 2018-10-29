@@ -464,7 +464,6 @@ public class AdminApplication extends AbstractApplication {
      *
      * @return the logger
      */
-    @Override
     public Logger getLog() {
         return LOG;
     }

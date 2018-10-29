@@ -19,6 +19,7 @@
 package fr.cnes.doi.resource.citation;
 
 import static fr.cnes.doi.AbstractSpec.classTitle;
+import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.CrossCiteSpec;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.UnitTest;
@@ -104,7 +105,7 @@ public class FormatCitationResourceTest {
      */
     @Test
     public void testGetFormatHttps() {
-        System.out.println("TEST: GetFormat through a HTTPS server");
+        testTitle("testGetFormatHttps");
         
         spec.createSpec(CrossCiteSpec.Spec.GET_FORMAT_200);               
         
@@ -137,7 +138,7 @@ public class FormatCitationResourceTest {
      */
     @Test
     public void testGetFormatHttpsWithWrongParameters() {
-        System.out.println("TEST: GetFormat through a HTTPS server with wrong parameters");
+        testTitle("testGetFormatHttpsWithWrongParameters");
         exceptions.expect(ResourceException.class);
         
         this.spec.createSpec(CrossCiteSpec.Spec.GET_FORMAT_400);               
@@ -169,7 +170,7 @@ public class FormatCitationResourceTest {
      */
     @Test
     public void testGetFormatHttp() {
-        System.out.println("TEST GetFormat through a HTTP server");
+        testTitle("testGetFormatHttp");
         
         spec.createSpec(CrossCiteSpec.Spec.GET_FORMAT_200);               
         
@@ -203,7 +204,7 @@ public class FormatCitationResourceTest {
      */
     @Test
     public void testGetFormatWithBadDOI() {
-        System.out.println("TEST: GetFormat with a wrong DOI");
+        testTitle("testGetFormatWithBadDOI");
 
         this.spec.createSpec(CrossCiteSpec.Spec.GET_FORMAT_404);
 
@@ -240,7 +241,7 @@ public class FormatCitationResourceTest {
      */
     @Test
     public void testGetFormatWithBadStyle() {
-        System.out.println("TEST: GetFormat with a wrong style");
+        testTitle("testGetFormatWithBadStyle");
         
         this.spec.createSpec(CrossCiteSpec.Spec.GET_FORMAT_400);
 
@@ -277,7 +278,7 @@ public class FormatCitationResourceTest {
      */
     @Test
     public void testGetFormatWithBadLang() {
-        System.out.println("TEST: GetFormat with a wrong language");
+        testTitle("testGetFormatWithBadLang");
         
         this.spec.createSpec(CrossCiteSpec.Spec.GET_FORMAT_400);                
 
@@ -315,7 +316,7 @@ public class FormatCitationResourceTest {
      */
     @Test
     public void testGetFormatWithBadLangAndBadDoi() {
-        System.out.println("TEST: GetFormat with a wrong DOI and language");
+        testTitle("testGetFormatWithBadLangAndBadDoi");
         
         this.spec.createSpec(CrossCiteSpec.Spec.GET_FORMAT_404);                               
         

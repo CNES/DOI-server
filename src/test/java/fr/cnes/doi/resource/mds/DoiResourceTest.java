@@ -19,6 +19,7 @@
 package fr.cnes.doi.resource.mds;
 
 import static fr.cnes.doi.AbstractSpec.classTitle;
+import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.MdsSpec;
 import fr.cnes.doi.UnitTest;
@@ -100,7 +101,7 @@ public class DoiResourceTest {
      */
     @Test
     public void testGetDoiHttp() throws IOException {
-        System.out.println("TEST: "+MdsSpec.Spec.GET_DOI_200.getDescription()+" through HTTP server");
+        testTitle("testGetDoiHttp");
         
         this.mdsServerStub.createSpec(MdsSpec.Spec.GET_DOI_200);
         
@@ -122,7 +123,7 @@ public class DoiResourceTest {
      */
     @Test
     public void testGetDoiHttps() throws IOException {
-        System.out.println("TEST: "+MdsSpec.Spec.GET_DOI_200.getDescription()+" through HTTPS server");
+        testTitle("testGetDoiHttps");
         
         this.mdsServerStub.createSpec(MdsSpec.Spec.GET_DOI_200);
         
@@ -145,8 +146,8 @@ public class DoiResourceTest {
      * @throws java.io.IOException - if OutOfMemoryErrors
      */
     @Test
-    public void testGetDoiNotFoundHttps() throws IOException {        
-        System.out.println("TEST: "+MdsSpec.Spec.GET_DOI_404.getDescription()+" through HTTPS server");      
+    public void testGetDoiNotFoundHttps() throws IOException {    
+        testTitle("testGetDoiNotFoundHttps");
         
         this.mdsServerStub.createSpec(MdsSpec.Spec.GET_DOI_404);
         
@@ -172,8 +173,8 @@ public class DoiResourceTest {
      * @throws java.io.IOException
      */
     @Test
-    public void testGetDoiNotAllowedHttps() throws IOException {        
-        System.out.println("TEST: Failed to create a DOI due to a wrong prefix through a HTTPS server");      
+    public void testGetDoiNotAllowedHttps() throws IOException {
+        testTitle("testGetDoiNotAllowedHttps");        
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:"+port+DOIS_SERVICE+"10.xxxx/828606");
         client.setNext(cl);

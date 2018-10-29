@@ -19,6 +19,7 @@
 package fr.cnes.doi.resource.citation;
 
 import static fr.cnes.doi.AbstractSpec.classTitle;
+import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.CrossCiteSpec;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.UnitTest;
@@ -49,6 +50,7 @@ import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import java.io.File;
 import org.junit.experimental.categories.Category;
+import org.restlet.resource.ResourceException;
 
 /**
  * Tests the language citation resource.
@@ -97,6 +99,7 @@ public class LanguageCitationResourceTest {
      */
     @Test
     public void testGetLanguagesHttps() {
+        testTitle("testGetLanguagesHttps");
         System.out.println("TEST: GetLanguages through a HTTPS server");
         
         this.spec.createSpec(CrossCiteSpec.Spec.GET_LANGUAGE_200);
@@ -109,7 +112,7 @@ public class LanguageCitationResourceTest {
         try {
             List<String> rep = client.get(List.class);
             result = rep.get(0);
-        } catch (Exception ex) {
+        } catch (ResourceException ex) {
         } finally {
             client.release();
             assertEquals("Test if the server returns the right response", expResult, result);
@@ -121,7 +124,7 @@ public class LanguageCitationResourceTest {
 
     @Test
     public void testGetLanguagesHttp() {
-        System.out.println("TEST: GetLanguages through a HTTP Server");
+        testTitle("testGetLanguagesHttp");
         
         this.spec.createSpec(CrossCiteSpec.Spec.GET_LANGUAGE_200);             
 
@@ -133,7 +136,7 @@ public class LanguageCitationResourceTest {
         try {
             List<String> rep = client.get(List.class);
             result = rep.get(0);
-        } catch (Exception ex) {
+        } catch (ResourceException ex) {
         } finally {
             client.release();
             assertEquals("Test if the server returns the right response", expResult, result);

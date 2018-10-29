@@ -1,10 +1,24 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2018 Centre National d'Etudes Spatiales (CNES).
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3.0 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301  USA
  */
 package fr.cnes.doi.integration;
 
+import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.client.ClientMDS;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_CONNECTIONS_PER_HOST;
@@ -90,7 +104,7 @@ public class ITauthentication {
      */
     @Test
     public void testTokenAuthenticationWithBadRole() throws IOException {
-        System.out.println("TEST: Token autentification with bad role");
+        testTitle("testTokenAuthenticationWithBadRole");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + "/admin/token");
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
@@ -134,7 +148,7 @@ public class ITauthentication {
      */
     @Test
     public void testTokenAuthenticationWithRightRole() throws IOException {
-        System.out.println("TEST: Token autentification with right role");
+        testTitle("testTokenAuthenticationWithRightRole");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + "/admin/token");
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
@@ -178,7 +192,7 @@ public class ITauthentication {
      */
     @Test
     public void testTokenAuthenticationWithWrongToken() throws IOException {
-        System.out.println("TEST: Token autentification with wrong token");
+        testTitle("testTokenAuthenticationWithWrongToken");
         
         mockServer.when(HttpRequest.request("/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)
                 .withMethod("POST")).respond(HttpResponse.response().withStatusCode(403));

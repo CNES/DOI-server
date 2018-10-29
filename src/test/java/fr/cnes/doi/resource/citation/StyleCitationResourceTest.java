@@ -19,6 +19,7 @@
 package fr.cnes.doi.resource.citation;
 
 import static fr.cnes.doi.AbstractSpec.classTitle;
+import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.CrossCiteSpec;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.UnitTest;
@@ -104,7 +105,7 @@ public class StyleCitationResourceTest {
      */
     @Test
     public void testGetStylesHttps() {
-        System.out.println("TEST: GetStyles through a HTTPS server");
+        testTitle("testGetStylesHttps");
         
         this.spec.createSpec(CrossCiteSpec.Spec.GET_STYLE_200);
         
@@ -116,7 +117,7 @@ public class StyleCitationResourceTest {
         try {
             List<String> rep = client.get(List.class);
             result = rep.get(0);
-        } catch (Exception ex) {
+        } catch (ResourceException ex) {
         } finally {
             client.release();
             assertEquals("Test if the server returns the right response", expResult, result);
@@ -132,7 +133,7 @@ public class StyleCitationResourceTest {
      */
     @Test
     public void testGetStylesHttp() {
-        System.out.println("TEST: GetStyles through a HTTP server");
+        testTitle("testGetStylesHttp");
         
         this.spec.createSpec(CrossCiteSpec.Spec.GET_STYLE_200);      
         
@@ -144,7 +145,7 @@ public class StyleCitationResourceTest {
         try {
             List<String> rep = client.get(List.class);
             result = rep.get(0);
-        } catch (Exception ex) {
+        } catch (ResourceException ex) {
         } finally {
             client.release();
             assertEquals("Test if the server returns the right response", expResult, result);
@@ -159,11 +160,10 @@ public class StyleCitationResourceTest {
      */
     @Test
     public void testGetStylesHttpsAsJSON() {
-        System.out.println("TEST: GetStyles as a JSON response");
+        testTitle("testGetStylesHttpsAsJSON");
         
         this.spec.createSpec(CrossCiteSpec.Spec.GET_STYLE_200);     
           
-        String expResult = CrossCiteSpec.Spec.GET_STYLE_200.getBody();
         String result = "";
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + "/citation/style");
@@ -186,7 +186,7 @@ public class StyleCitationResourceTest {
      */
     @Test
     public void testGetStylesHttpsAsXML() {
-        System.out.println("TEST: GetStyles as a XML response");
+        testTitle("testGetStylesHttpsAsXML");
         
         this.spec.createSpec(CrossCiteSpec.Spec.GET_STYLE_200);
         

@@ -19,6 +19,7 @@
 package fr.cnes.doi.settings;
 
 import static fr.cnes.doi.AbstractSpec.classTitle;
+import static fr.cnes.doi.AbstractSpec.testTitle;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -69,7 +70,7 @@ public class ProxySettingsTest {
      */
     @Test
     public void testIsWithProxy() {
-        System.out.println("TEST: IsWithProxy");
+        testTitle("testIsWithProxy");
         boolean expResult = false;
         boolean result = instance.isWithProxy();
         assertEquals(expResult, result);
@@ -80,7 +81,7 @@ public class ProxySettingsTest {
      */
     @Test
     public void testGetProxyHost() {
-        System.out.println("TEST: GetProxyHost");
+        testTitle("testGetProxyHost");
         String expResult = "proxy-HTTP2.cnes.fr";
         String result = instance.getProxyHost();
         assertEquals(expResult, result);
@@ -91,7 +92,7 @@ public class ProxySettingsTest {
      */
     @Test
     public void testGetProxyPort() {
-        System.out.println("TEST: GetProxyPort");
+        testTitle("testGetProxyPort");
         String expResult = "8050";
         String result = instance.getProxyPort();
         assertEquals(expResult, result);
@@ -102,7 +103,7 @@ public class ProxySettingsTest {
      */
     @Test
     public void testGetProxyUser() {
-        System.out.println("TEST: GetProxyUser");
+        testTitle("testGetProxyUser");
         String result = instance.getProxyUser();
         assertNotNull(result);
     }
@@ -112,7 +113,7 @@ public class ProxySettingsTest {
      */
     @Test
     public void testGetProxyPassword() {
-        System.out.println("TEST: GetProxyPassword");
+        testTitle("testGetProxyPassword");
         String result = instance.getProxyPassword();
         assertNotNull(result);
     }
@@ -122,7 +123,7 @@ public class ProxySettingsTest {
      */
     @Test
     public void testGetProxyAuthentication() {
-        System.out.println("TEST: GetProxyAuthentication");
+        testTitle("testGetProxyAuthentication");
         ChallengeResponse result = instance.getProxyAuthentication();
         assertNotNull(result);
     }
@@ -132,7 +133,7 @@ public class ProxySettingsTest {
      */
     @Test
     public void testGetNonProxyHosts() {
-        System.out.println("TEST: GetNonProxyHosts");
+        testTitle("testGetNonProxyHosts");
         String expResult = "";
         String result = instance.getNonProxyHosts();
         assertEquals(expResult, result);

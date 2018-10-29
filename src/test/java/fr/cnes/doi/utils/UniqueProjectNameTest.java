@@ -19,6 +19,7 @@
 package fr.cnes.doi.utils;
 
 import static fr.cnes.doi.AbstractSpec.classTitle;
+import static fr.cnes.doi.AbstractSpec.testTitle;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -94,7 +95,7 @@ public class UniqueProjectNameTest {
      */
     @Test
     public void testGetShortName() {
-        System.out.println("TEST: GetShortName");
+        testTitle("testGetShortName");
 
         // New id
         int idSWOT = UniqueProjectName.getInstance().getShortName("SWOT", 6);
@@ -111,7 +112,7 @@ public class UniqueProjectNameTest {
      */
     @Test
     public void testGetShortNameWithLongName() {
-        System.out.println("TEST: GetShortNameWithLongName");
+        testTitle("testGetShortNameWithLongName");
 
         exceptions.expect(DoiRuntimeException.class);
         exceptions.expectMessage("The short name cannot be build because the length requested is too big");

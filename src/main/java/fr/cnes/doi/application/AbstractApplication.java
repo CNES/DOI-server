@@ -30,7 +30,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import fr.cnes.doi.settings.ProxySettings;
 import fr.cnes.doi.utils.spec.Requirement;
 import java.util.Collections;
 import org.apache.logging.log4j.LogManager;
@@ -70,11 +69,6 @@ public abstract class AbstractApplication extends WadlApplication {
     private final DoiSettings config;
 
     /**
-     * Proxy settings.
-     */
-    private final ProxySettings proxySettings;
-
-    /**
      * This constructor creates an instance of proxySettings and doiSettings. 
      * By creating the instance, the constructor creates :
      * <ul>
@@ -90,7 +84,6 @@ public abstract class AbstractApplication extends WadlApplication {
     public AbstractApplication() {
         super();
         this.config = DoiSettings.getInstance();
-        this.proxySettings = ProxySettings.getInstance();
         getServices().add(this.createCoreService(DEFAULT_CORS_ORIGIN, DEFAULT_CORS_CREDENTIALS));
         setStatusService(new CnesStatusService());
         setOwner("Centre National d'Etudes Spatiales (CNES)");
@@ -168,16 +161,6 @@ public abstract class AbstractApplication extends WadlApplication {
     protected final DoiSettings getConfig() {
         LOG.traceEntry();
         return LOG.traceExit(config);
-    }
-
-    /**
-     * Returns the configuration of the proxy.
-     *
-     * @return the proxy settings
-     */
-    protected ProxySettings getProxySettings() {
-        LOG.traceEntry();
-        return LOG.traceExit(proxySettings);
     }
 
     /**

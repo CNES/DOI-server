@@ -174,7 +174,6 @@ public class DoiCrossCiteApplication extends AbstractApplication {
      *
      * @return the logger
      */
-    @Override
     public Logger getLog() {
         return LOG;
     }

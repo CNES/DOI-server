@@ -19,6 +19,7 @@
 package fr.cnes.doi.resource.admin;
 
 import static fr.cnes.doi.AbstractSpec.classTitle;
+import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.UnitTest;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_CONNECTIONS_PER_HOST;
@@ -119,7 +120,7 @@ public class SuffixProjectsResourceTest {
      */
     @Test
     public void testGetProjectsNameAsJson() throws IOException {
-        System.out.println("TEST: getProjectsNameAsJson throw a HTTPS server");
+        testTitle("testGetProjectsNameAsJson");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:"+port+"/admin/suffixProject");
         client.setNext(cl);
@@ -137,7 +138,7 @@ public class SuffixProjectsResourceTest {
      */
     @Test
     public void testGetProjectsNameAsXml() throws IOException {
-        System.out.println("TEST: getProjectsNameAsXml through a HTTPS server");
+        testTitle("testGetProjectsNameAsXml");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:"+port+"/admin/suffixProject");
         client.setNext(cl);
@@ -156,7 +157,7 @@ public class SuffixProjectsResourceTest {
      */
     @Test
     public void testCreateProject() throws IOException {
-        System.out.println("TEST: createProject");
+        testTitle("testCreateProject");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:"+port+"/admin/suffixProject");
         client.setNext(cl);
@@ -176,7 +177,7 @@ public class SuffixProjectsResourceTest {
      */
     @Test
     public void testCreateProjectWithWrongParameter() {
-        System.out.println("TEST: createProject with wrong parameters");
+        testTitle("testCreateProjectWithWrongParameter");
         
         exceptions.expect(ResourceException.class);
         

@@ -23,6 +23,7 @@ package fr.cnes.doi.integration;
  * @author malapert
  * mvn clean verify -P integration-test
  */
+import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.InitServerForTest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -51,6 +52,7 @@ public class ITWebsite {
 
     @Test
     public void shouldSayHelloWorld() {
+        testTitle("shouldSayHelloWorld");
         driver.get("http://localhost:8182/");
         assertEquals("Hello World!", driver.findElement(By.tagName("body")).getText());
     }

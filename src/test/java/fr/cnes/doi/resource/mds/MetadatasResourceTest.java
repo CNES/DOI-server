@@ -19,6 +19,7 @@
 package fr.cnes.doi.resource.mds;
 
 import static fr.cnes.doi.AbstractSpec.classTitle;
+import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.MdsSpec;
 import fr.cnes.doi.UnitTest;
@@ -168,13 +169,12 @@ public class MetadatasResourceTest {
      * @param exactly the number of expected requests to Datacite (-1 when at least 1 request is done)
      */
     private void testSpecCreateMetadataAsObj(MdsSpec.Spec spec, InputStream is, String login, String pwd, String role, int exactly) {
-        System.out.println("TEST: "+spec.getDescription());
+        testTitle(spec.getDescription());
         
         // Creates the MetadataStoreService stub        
         this.mdsServerStub.createSpec(spec);
 
-        result = new BufferedReader(new InputStreamReader(is)).lines()
-                .collect(Collectors.joining("\n"));
+        result = new BufferedReader(new InputStreamReader(is)).lines().collect(Collectors.joining("\n"));
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + METADATA_SERVICE);
         client.setNext(cl);
@@ -195,6 +195,9 @@ public class MetadatasResourceTest {
             code = client.getStatus().getCode();
         } catch (ResourceException ex) {
             code = ex.getStatus().getCode();
+            //if (code == Status.CONNECTOR_ERROR_COMMUNICATION.getCode()) {
+            //    code = Status.CLIENT_ERROR_UNAUTHORIZED.getCode();
+            //}
         } finally {
             client.release();    
         }        
@@ -219,7 +222,7 @@ public class MetadatasResourceTest {
      * @param exactly the number of expected requests to Datacite (-1 when at least 1 request is done)
      */    
     private void testSpecCreateMetadataAsObjWithConflict(MdsSpec.Spec spec, InputStream is, String login, String pwd, String role, int exactly) {
-        System.out.println("TEST: Failed to create metadata due to a conflit - Do not know which role to apply");
+        testTitle("testSpecCreateMetadataAsObjWithConflict");
         
         // Creates the MetadataStoreService stub        
         this.mdsServerStub.createSpec(spec);

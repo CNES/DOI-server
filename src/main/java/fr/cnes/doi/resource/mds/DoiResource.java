@@ -18,10 +18,13 @@
  */
 package fr.cnes.doi.resource.mds;
 
-import fr.cnes.doi.application.AbstractApplication;
 import fr.cnes.doi.application.DoiMdsApplication;
+import fr.cnes.doi.application.DoiMdsApplication.API_MDS;
 import fr.cnes.doi.client.ClientMDS;
+import fr.cnes.doi.client.ClientMDS.DATACITE_API_RESPONSE;
 import fr.cnes.doi.exception.ClientMdsException;
+import fr.cnes.doi.exception.DoiServerException;
+
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.utils.spec.Requirement;
@@ -38,7 +41,6 @@ import org.restlet.ext.wadl.RepresentationInfo;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Get;
-import org.restlet.resource.ResourceException;
 
 /**
  * DOI resource to retrieve the landing page for a given DOI.
@@ -60,15 +62,14 @@ public class DoiResource extends BaseMdsResource {
     /**
      * Init by getting the DOI name in the {@link DoiMdsApplication#DOI_TEMPLATE template URL}.
      *
-     * @throws ResourceException - if a problem happens
+     * @throws DoiServerException - if a problem happens
      */
     @Override
-    protected void doInit() throws ResourceException {
+    protected void doInit() throws DoiServerException {
         super.doInit();
         LOG.traceEntry();
         setDescription("The resource can retrieve a DOI");
         this.doiName = getResourcePath().replace(DoiMdsApplication.DOI_URI + "/", "");
-        //this.doiName = getAttribute(DoiMdsApplication.DOI_TEMPLATE);
         LOG.debug(this.doiName);
         LOG.traceExit();
     }
@@ -80,18 +81,18 @@ public class DoiResource extends BaseMdsResource {
      *
      * @return an URL or no content (DOI is known to MDS, but is not minted (or not resolvable e.g.
      * due to handle's latency))
-     * @throws ResourceException - if an error happens <ul>
-     * <li>400 Bad Request if the DOI does not contain the institution suffix</li>
-     * <li>404 Not Found - DOI does not exist in DataCite</li>
-     * <li>500 Internal Server Error - server internal error, try later and if problem persists
-     * please contact us</li>
+     * @throws DoiServerException - ifthe response is not a success
+     * <ul>
+     * <li>{@link DATACITE_API_RESPONSE#DOI_NOT_FOUND}</li>     
+     * <li>{@link API_MDS#DATACITE_PROBLEM}</li>
+     * <li>{@link API_MDS#DOI_VALIDATION}</li>
      * </ul>
      */
     @Requirement(reqId = Requirement.DOI_SRV_070, reqName = Requirement.DOI_SRV_070_NAME)
     @Requirement(reqId = Requirement.DOI_MONIT_020, reqName = Requirement.DOI_MONIT_020_NAME)
     @Requirement(reqId = Requirement.DOI_INTER_070, reqName = Requirement.DOI_INTER_070_NAME)
     @Get
-    public Representation getDoi() throws ResourceException {
+    public Representation getDoi() throws DoiServerException {
         LOG.traceEntry();
         final Representation result;
         checkInput(this.doiName);
@@ -105,11 +106,15 @@ public class DoiResource extends BaseMdsResource {
             result = new StringRepresentation(doi, MediaType.TEXT_PLAIN);
         } catch (ClientMdsException ex) {
             if (ex.getStatus().getCode() == Status.CLIENT_ERROR_NOT_FOUND.getCode()) {
-                throw LOG.throwing(Level.DEBUG, new ResourceException(ex.getStatus(), ex.getMessage(), ex));
+                throw LOG.throwing(
+                        Level.DEBUG, 
+                        new DoiServerException(getApplication(), DATACITE_API_RESPONSE.DOI_NOT_FOUND,ex)
+                );
             } else {
-                ((AbstractApplication) getApplication()).sendAlertWhenDataCiteFailed(ex);
-                throw LOG.throwing(Level.DEBUG, new ResourceException(Status.SERVER_ERROR_INTERNAL, 
-                        ex.getMessage(), ex));
+                throw LOG.throwing(
+                        Level.DEBUG, 
+                        new DoiServerException(getApplication(), API_MDS.DATACITE_PROBLEM, ex)
+                );
             }
         }
         return LOG.traceExit(result);
@@ -119,25 +124,31 @@ public class DoiResource extends BaseMdsResource {
      * Checks if doiName is not empty and contains the institution's prefix
      *
      * @param doiName DOI name
-     * @throws ResourceException 400 Bad Request if the DOI does not contain the institution suffix.
+     * @throws DoiServerException 400 Bad Request if the DOI does not contain the institution suffix.
      */
     @Requirement(reqId = Requirement.DOI_INTER_070, reqName = Requirement.DOI_INTER_070_NAME)
-    private void checkInput(final String doiName) throws ResourceException {
+    private void checkInput(final String doiName) throws DoiServerException {
         LOG.traceEntry("Parameter : {}", doiName);
         if (doiName == null || doiName.isEmpty()) {
-            throw LOG.throwing(Level.DEBUG, new ResourceException(
-                    Status.CLIENT_ERROR_BAD_REQUEST,
-                    "doiName cannot be null or empty"
-            ));
+            throw LOG.throwing(
+                    Level.DEBUG, 
+                    new DoiServerException(getApplication(),API_MDS.DOI_VALIDATION, "DoiName must be set.")
+            );
         } else if (doiName.startsWith(DoiSettings.getInstance().getString(Consts.INIST_DOI))) {
             try {
                 ClientMDS.checkIfAllCharsAreValid(doiName);
             } catch (IllegalArgumentException ex) {
-                throw LOG.throwing(Level.DEBUG, new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, ex));
+                throw LOG.throwing(
+                        Level.DEBUG, 
+                        new DoiServerException(getApplication(), API_MDS.DOI_VALIDATION, ex)
+                );
             }
         } else {
-            throw LOG.throwing(Level.DEBUG, new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "the DOI"
-                    + " prefix must contains the prefix of the institution"));
+            throw LOG.throwing(
+                    Level.DEBUG, 
+                    new DoiServerException(getApplication(), API_MDS.DOI_VALIDATION, "the DOI"
+                    + " prefix must contains the prefix of the institution")
+            );
         }
         LOG.traceExit();
     }
@@ -160,7 +171,14 @@ public class DoiResource extends BaseMdsResource {
 
     /**
      * Describes the Get Method.
-     *
+     * The different representations are the followings:
+     * <ul>
+     * <li>{@link DATACITE_API_RESPONSE#SUCCESS}</li>
+     * <li>{@link DATACITE_API_RESPONSE#SUCCESS_NO_CONTENT}</li>
+     * <li>{@link API_MDS#DOI_VALIDATION}</li>
+     * <li>{@link DATACITE_API_RESPONSE#DOI_NOT_FOUND}</li>    
+     * <li>{@link API_MDS#DATACITE_PROBLEM}</li>
+     * </ul>     
      * @param info Wadl description
      */
     @Requirement(reqId = Requirement.DOI_DOC_010,reqName = Requirement.DOI_DOC_010_NAME)
@@ -176,25 +194,29 @@ public class DoiResource extends BaseMdsResource {
         ));
 
         addResponseDocToMethod(info, createResponseDoc(
-                Status.SUCCESS_OK, "Operation successful", doiRepresentation())
+                DATACITE_API_RESPONSE.SUCCESS.getStatus(),
+                DATACITE_API_RESPONSE.SUCCESS.getShortMessage(),
+                doiRepresentation())
         );
         addResponseDocToMethod(info, createResponseDoc(
-                Status.SUCCESS_NO_CONTENT,
-                "DOI is known to MDS, but is not minted (or not resolvable e.g. "
-                + "due to handle's latency)", "explainRepresentation")
+                DATACITE_API_RESPONSE.SUCCESS_NO_CONTENT.getStatus(),
+                DATACITE_API_RESPONSE.SUCCESS_NO_CONTENT.getShortMessage(),
+                "explainRepresentationID")
         );
         addResponseDocToMethod(info, createResponseDoc(
-                Status.CLIENT_ERROR_BAD_REQUEST, "if the DOI does not contain "
-                + "the institution suffix", "explainRepresentation")
+                API_MDS.DOI_VALIDATION.getStatus(),
+                API_MDS.DOI_VALIDATION.getShortMessage(),
+                "explainRepresentationID")
         );
         addResponseDocToMethod(info, createResponseDoc(
-                Status.CLIENT_ERROR_NOT_FOUND, "DOI does not exist in DataCite",
-                "explainRepresentation")
+                DATACITE_API_RESPONSE.DOI_NOT_FOUND.getStatus(),
+                DATACITE_API_RESPONSE.DOI_NOT_FOUND.getShortMessage(),
+                "explainRepresentationID")
         );
         addResponseDocToMethod(info, createResponseDoc(
-                Status.SERVER_ERROR_INTERNAL, "server internal error, try later "
-                + "and if problem persists please contact us",
-                "explainRepresentation")
+                API_MDS.DATACITE_PROBLEM.getStatus(),
+                API_MDS.DATACITE_PROBLEM.getShortMessage(),
+                "explainRepresentationID")
         );
     }
 

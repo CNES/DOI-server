@@ -19,6 +19,7 @@
 package fr.cnes.doi.resource.mds;
 
 import static fr.cnes.doi.AbstractSpec.classTitle;
+import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.MdsSpec;
 import fr.cnes.doi.UnitTest;
@@ -114,7 +115,7 @@ public class MetadataResourceTest {
      */
     @Test
     public void testGetMetadata() throws IOException, JAXBException, SAXException {
-        System.out.println("TEST: "+MdsSpec.Spec.GET_METADATA_200.getDescription()+" through HTTPS server");
+        testTitle("testGetMetadata");
 
         mdsServerStub.createSpec(MdsSpec.Spec.GET_METADATA_200);
 
@@ -152,7 +153,7 @@ public class MetadataResourceTest {
      */
     @Test
     public void testGetMetadataAsJson() throws IOException, JAXBException, SAXException {
-        System.out.println("TEST: "+MdsSpec.Spec.GET_METADATA_200.getDescription()+" through HTTPS server");
+        testTitle("testGetMetadataAsJson");
 
         mdsServerStub.createSpec(MdsSpec.Spec.GET_METADATA_200);
 
@@ -186,12 +187,12 @@ public class MetadataResourceTest {
      */
     @Test
     public void testGetMetadataFromWrongDOI() throws IOException, JAXBException, SAXException {
-        System.out.println("TEST: "+MdsSpec.Spec.GET_METADATA_404.getDescription()+" through HTTPS server");
+        testTitle("testGetMetadataFromWrongDOI");
         
-        mdsServerStub.createSpec(MdsSpec.Spec.GET_METADATA_404);
+        mdsServerStub.createSpec(MdsSpec.Spec.GET_METADATA_400);
         
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-        ClientResource client = new ClientResource("https://localhost:" + port + METADATA_SERVICE + MdsSpec.Spec.GET_METADATA_404.getTemplatePath());
+        ClientResource client = new ClientResource("https://localhost:" + port + METADATA_SERVICE + MdsSpec.Spec.GET_METADATA_400.getTemplatePath());
         client.setNext(cl);
         int code;
         String doi;
@@ -204,9 +205,9 @@ public class MetadataResourceTest {
             doi = "";
         }
         client.release();
-        assertEquals(MdsSpec.Spec.GET_METADATA_404.getStatus(), code);
+        assertEquals(MdsSpec.Spec.GET_METADATA_400.getStatus(), code);
         
-        mdsServerStub.verifySpec(MdsSpec.Spec.GET_METADATA_404);
+        mdsServerStub.verifySpec(MdsSpec.Spec.GET_METADATA_400);
 
     }
 
@@ -218,12 +219,12 @@ public class MetadataResourceTest {
      */
     @Test
     public void testGetMetadataFromWrongPrefix() throws IOException, JAXBException, SAXException {
-        System.out.println("TEST: "+MdsSpec.Spec.GET_METADATA_404.getDescription()+" through HTTPS server");
+        testTitle("testGetMetadataFromWrongPrefix");
         
-        mdsServerStub.createSpec(MdsSpec.Spec.GET_METADATA_404);
+        mdsServerStub.createSpec(MdsSpec.Spec.GET_METADATA_400);
         
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-        ClientResource client = new ClientResource("https://localhost:" + port + METADATA_SERVICE + MdsSpec.Spec.GET_METADATA_404.getTemplatePath());
+        ClientResource client = new ClientResource("https://localhost:" + port + METADATA_SERVICE + MdsSpec.Spec.GET_METADATA_400.getTemplatePath());
         client.setNext(cl);
         int code;
         String doi;
@@ -235,9 +236,9 @@ public class MetadataResourceTest {
             code = ex.getStatus().getCode();
             doi = "";
         }
-        assertEquals(MdsSpec.Spec.GET_METADATA_404.getStatus(), code);
+        assertEquals(MdsSpec.Spec.GET_METADATA_400.getStatus(), code);
         
-        mdsServerStub.verifySpec(MdsSpec.Spec.GET_METADATA_404);
+        mdsServerStub.verifySpec(MdsSpec.Spec.GET_METADATA_400);
 
     }      
     /**
@@ -250,7 +251,7 @@ public class MetadataResourceTest {
      */
     @Test
     public void testDeleteMetadata() throws JAXBException, SAXException, IOException {
-        System.out.println("TEST: "+MdsSpec.Spec.DELETE_METADATA_200.getDescription()+" through HTTPS server");
+        testTitle("testDeleteMetadata");
         
         mdsServerStub.createSpec(MdsSpec.Spec.DELETE_METADATA_200);
         

@@ -19,9 +19,11 @@
 package fr.cnes.doi.client;
 
 import static fr.cnes.doi.AbstractSpec.classTitle;
+import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.CrossCiteSpec;
 import fr.cnes.doi.UnitTest;
 import static fr.cnes.doi.client.BaseClient.DATACITE_MOCKSERVER_PORT;
+import fr.cnes.doi.exception.ClientCrossCiteException;
 import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -31,7 +33,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Rule;
 import org.junit.experimental.categories.Category;
-import org.mockserver.junit.MockServerRule;
+import org.junit.rules.ExpectedException;
 
 /**
  * Test of Citation resources
@@ -67,9 +69,9 @@ public class ClientCrossCiteCitationTest {
     public void tearDown() {
         crossCiteServerStub.finish();
     }
-
+    
     @Rule
-    public MockServerRule mockServerRule = new MockServerRule(this);
+    public ExpectedException exceptions = ExpectedException.none();    
 
     /**
      * Test of getStyles method, of class ClientCrossCiteCitation.
@@ -78,7 +80,7 @@ public class ClientCrossCiteCitationTest {
      */
     @Test
     public void testGetStyles() throws Exception {
-        System.out.println("TEST getStyles");
+        testTitle("testGetStyles");
 
         // Create the sub on CrossCite
         this.crossCiteServerStub.createSpec(CrossCiteSpec.Spec.GET_STYLE_200);
@@ -100,7 +102,7 @@ public class ClientCrossCiteCitationTest {
      */
     @Test
     public void testGetLanguages() throws Exception {
-        System.out.println("TEST getLanguages");
+        testTitle("testGetLanguages");
 
         // Create the sub on CrossCite        
         this.crossCiteServerStub.createSpec(CrossCiteSpec.Spec.GET_LANGUAGE_200);
@@ -122,7 +124,7 @@ public class ClientCrossCiteCitationTest {
      */
     @Test
     public void testGetFormat() throws Exception {
-        System.out.println("TEST getFormat");
+        testTitle("testGetFormat");
 
         // Create the sub on CrossCite        
         this.crossCiteServerStub.createSpec(CrossCiteSpec.Spec.GET_FORMAT_200);
@@ -138,6 +140,6 @@ public class ClientCrossCiteCitationTest {
 
         // Check if the stub has been requested        
         this.crossCiteServerStub.verifySpec(CrossCiteSpec.Spec.GET_FORMAT_200);
-    }
+    }  
 
 }

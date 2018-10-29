@@ -19,6 +19,7 @@
 package fr.cnes.doi.resource.admin;
 
 import static fr.cnes.doi.AbstractSpec.classTitle;
+import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.UnitTest;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_CONNECTIONS_PER_HOST;
@@ -102,7 +103,7 @@ public class TokenResourceTest {
      */
     @Test
     public void testCreateToken() throws IOException {
-        System.out.println("TEST: CreateToken");
+        testTitle("testCreateToken");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + "/admin/token");
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
@@ -124,7 +125,7 @@ public class TokenResourceTest {
      */
     @Test
     public void testCreateTokenWithWrongParameters() {
-        System.out.println("TEST: CreateToken with wrong parameters");
+        testTitle("testCreateTokenWithWrongParameters");
         exceptions.expect(ResourceException.class);
         
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
@@ -148,7 +149,7 @@ public class TokenResourceTest {
      */
     @Test
     public void testCreateTokenWithWrongCredentials() throws IOException {
-        System.out.println("TEST: CreateToken");
+        testTitle("testCreateTokenWithWrongCredentials");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + "/admin/token");
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "test");
@@ -174,7 +175,7 @@ public class TokenResourceTest {
      */
     @Test
     public void testGetTokenInformationWithWrongCredentials() throws IOException {
-        System.out.println("TEST: GetTokenInformation with wrong credentials");
+        testTitle("testGetTokenInformationWithWrongCredentials");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + "/admin/token");
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");

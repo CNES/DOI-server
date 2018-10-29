@@ -19,6 +19,7 @@
 package fr.cnes.doi.application;
 
 import static fr.cnes.doi.AbstractSpec.classTitle;
+import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.UnitTest;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_CONNECTIONS_PER_HOST;
@@ -91,7 +92,7 @@ public class DoiMdsApplicationTest {
      */
     @Test
     public void testApiWithHttp() throws IOException {
-        System.out.println("TEST: WADL API through HTTP");
+        testTitle("testApiWithHttp");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);        
         ClientResource client = new ClientResource("http://localhost:"+port+"/mds/");
         Representation repApi = client.options();
@@ -106,7 +107,7 @@ public class DoiMdsApplicationTest {
      */
     @Test
     public void testApiWithHttps() throws IOException {
-        System.out.println("TEST: WADL API through HTTPS");
+        testTitle("testApiWithHttps");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);        
         ClientResource client = new ClientResource("https://localhost:"+port+"/mds/");
         client.setNext(cl);
@@ -122,7 +123,7 @@ public class DoiMdsApplicationTest {
      */
     @Test
     public void generateAPIWadl() throws Exception {
-        System.out.println("TEST: HTML API");
+        testTitle("generateAPIWadl");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);        
         ClientResource client = new ClientResource("http://localhost:"+port+"/mds?media=text/html");
         Representation repApi = client.options();

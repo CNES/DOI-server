@@ -19,6 +19,7 @@
 package fr.cnes.doi.resource.admin;
 
 import static fr.cnes.doi.AbstractSpec.classTitle;
+import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.UnitTest;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_CONNECTIONS_PER_HOST;
@@ -91,7 +92,7 @@ public class ServicesTest {
      */
     @Test
     public void getStatus()  {
-        System.out.println("TEST: getStatus service through a HTTPS server");
+        testTitle("getStatus");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:"+port+"/status");        
         client.setNext(cl);    
@@ -112,7 +113,7 @@ public class ServicesTest {
     @Test
     @Ignore
     public void getStats()  {
-        System.out.println("TEST: getStats service through a HTTPS server");
+        testTitle("getStats");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:"+port+"/stats");        
         client.setNext(cl);    

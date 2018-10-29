@@ -22,7 +22,6 @@ import fr.cnes.doi.client.ClientCrossCiteCitation;
 import java.util.Arrays;
 import java.util.List;
 import org.mortbay.jetty.HttpMethods;
-import static fr.cnes.doi.client.BaseClient.DATACITE_MOCKSERVER_PORT;
 
 /**
  *
@@ -32,11 +31,11 @@ public class CrossCiteSpec extends AbstractSpec {
         
     public enum Spec {
         
-        GET_STYLE_200("Get styles", HttpMethods.GET, ClientCrossCiteCitation.STYLE_URI, 200, "[\"academy-of-management-review\",\"accident-analysis-and-prevention\",\"acm-sig-proceedings-long-author-list\"]"),
-        GET_LANGUAGE_200("Get languages", HttpMethods.GET, ClientCrossCiteCitation.LOCALE_URI, 200, "[\"af-ZA\",\"ar\",\"bg-BG\",\"ca-AD\",\"cs-CZ\",\"cy-GB\",\"da-DK\",\"de-AT\",\"de-CH\",\"de-DE\",\"el-GR\",\"en-GB\",\"en-US\",\"es-CL\",\"es-ES\",\"es-MX\",\"et-EE\",\"eu\",\"fa-IR\",\"fi-FI\",\"fr-CA\",\"fr-FR\",\"he-IL\",\"hr-HR\",\"hu-HU\",\"id-ID\",\"is-IS\",\"it-IT\",\"ja-JP\",\"km-KH\",\"ko-KR\",\"lt-LT\",\"lv-LV\",\"mn-MN\",\"nb-NO\",\"nl-NL\",\"nn-NO\",\"pl-PL\",\"pt-BR\",\"pt-PT\",\"ro-RO\",\"ru-RU\",\"sk-SK\",\"sl-SI\",\"sr-RS\",\"sv-SE\",\"th-TH\",\"tr-TR\",\"uk-UA\",\"vi-VN\",\"zh-CN\",\"zh-TW\"]"),
-        GET_FORMAT_200("Get format", HttpMethods.GET, ClientCrossCiteCitation.FORMAT_URI, 200, "Garza, K., Goble, C., Brooke, J., & Jay, C. 2015. Framing the community data system interface. Proceedings of the 2015 British HCI Conference on - British HCI '15. Presented at the the 2015 British HCI Conference, ACM Press. https://doi.org/10.1145/2783446.2783605.\n"),
-        GET_FORMAT_400("Fail to get format due to a bad request", HttpMethods.GET, ClientCrossCiteCitation.FORMAT_URI, 400, ""),
-        GET_FORMAT_404("Fail to get format due to a bad DOI", HttpMethods.GET, ClientCrossCiteCitation.FORMAT_URI, 404, "");                
+        GET_STYLE_200("Get styles", HttpMethods.GET, "/"+ClientCrossCiteCitation.STYLE_URI, 200, "[\"academy-of-management-review\",\"accident-analysis-and-prevention\",\"acm-sig-proceedings-long-author-list\"]"),
+        GET_LANGUAGE_200("Get languages", HttpMethods.GET, "/"+ClientCrossCiteCitation.LOCALE_URI, 200, "[\"af-ZA\",\"ar\",\"bg-BG\",\"ca-AD\",\"cs-CZ\",\"cy-GB\",\"da-DK\",\"de-AT\",\"de-CH\",\"de-DE\",\"el-GR\",\"en-GB\",\"en-US\",\"es-CL\",\"es-ES\",\"es-MX\",\"et-EE\",\"eu\",\"fa-IR\",\"fi-FI\",\"fr-CA\",\"fr-FR\",\"he-IL\",\"hr-HR\",\"hu-HU\",\"id-ID\",\"is-IS\",\"it-IT\",\"ja-JP\",\"km-KH\",\"ko-KR\",\"lt-LT\",\"lv-LV\",\"mn-MN\",\"nb-NO\",\"nl-NL\",\"nn-NO\",\"pl-PL\",\"pt-BR\",\"pt-PT\",\"ro-RO\",\"ru-RU\",\"sk-SK\",\"sl-SI\",\"sr-RS\",\"sv-SE\",\"th-TH\",\"tr-TR\",\"uk-UA\",\"vi-VN\",\"zh-CN\",\"zh-TW\"]"),
+        GET_FORMAT_200("Get format", HttpMethods.GET, "/"+ClientCrossCiteCitation.FORMAT_URI, 200, "Garza, K., Goble, C., Brooke, J., & Jay, C. 2015. Framing the community data system interface. Proceedings of the 2015 British HCI Conference on - British HCI '15. Presented at the the 2015 British HCI Conference, ACM Press. https://doi.org/10.1145/2783446.2783605.\n"),
+        GET_FORMAT_400("Fail to get format due to a bad request", HttpMethods.GET, "/"+ClientCrossCiteCitation.FORMAT_URI, 400, ""),
+        GET_FORMAT_404("Fail to get format due to a bad DOI", HttpMethods.GET, "/"+ClientCrossCiteCitation.FORMAT_URI, 404, "DOI not found");                
         
         private final String description;
         private final String httVerb;

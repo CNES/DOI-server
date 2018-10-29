@@ -51,6 +51,7 @@ import java.net.URL;
 import javax.xml.validation.Schema;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.restlet.data.Status;
 import org.restlet.routing.Template;
 import org.xml.sax.SAXException;
 
@@ -149,6 +150,98 @@ public class DoiMdsApplication extends AbstractApplication {
      * Logger.
      */
     private static final Logger LOG = LogManager.getLogger(DoiMdsApplication.class.getName());
+    
+    public enum API_MDS {
+        /**
+         * Create metadata.
+         * SUCCESS_CREATED is used as status meaning "Operation successful"
+         */
+        CREATE_METADATA(Status.SUCCESS_CREATED,"Operation successful"),
+        /**
+         * Forbidden to use this role.
+         * It happens when a user provides a role to the server whereas he is unknown in this role. 
+         * CLIENT_ERROR_FORBIDDEN is used as status meaning "Forbidden to use this role" 
+         */
+        SECURITY_USER_NOT_IN_SELECTED_ROLE(Status.CLIENT_ERROR_FORBIDDEN, "Forbidden to use this role"),
+        /**
+         * Fail to authorize the user.
+         * It happens when a client is authentified but unauthorized to use the resource.
+         * CLIENT_ERROR_UNAUTHORIZED is used as status meaning "Fail to authorize the user"
+         */
+        SECURITY_USER_NO_ROLE(Status.CLIENT_ERROR_UNAUTHORIZED, "Fail to authorize the user"),
+        /**
+         * Fail to know privileges of a user.
+         * It happens when an user is associated to several roles without selecting one.
+         * CLIENT_ERROR_CONFLICT is used as status meaning "Error when an user is associated to more
+         * than one role without setting selectedRole parameter"
+         */
+        SECURITY_USER_CONFLICT(Status.CLIENT_ERROR_CONFLICT, "Error when an user is associated to more than one role without setting selectedRole parameter"),
+        /**
+         * Fail to create a DOI.
+         * It happens when a user try to create a DOI with the wrong role. Actually, the role is contained
+         * in the DOI name. So if a user is authentified with a right role and try to create a DOI for
+         * another role, an exception is raised.
+         * SECURITY_USER_PERMISSION is used as status meaning "User is not allowed to make this operation"
+         */
+        SECURITY_USER_PERMISSION(Status.CLIENT_ERROR_FORBIDDEN, "User is not allowed to make this operation"),
+        /**
+         * Cannot access to Datacite.
+         * It happens when a network problem may happen with Datacite.
+         * SERVER_ERROR_GATEWAY_TIMEOUT is used as status meaning "Cannot access to Datacite"
+         */
+        NETWORK_PROBLEM(Status.CONNECTOR_ERROR_COMMUNICATION, "Cannot access to Datacite"),
+        /**
+         * Fail to validate user input parameter for creating the DOI.
+         * It happens in the following cases:
+         * <ul>
+         * <li>the DOI or metadata are not provided</li>
+         * <li>the prefix is not allowed</li>
+         * <li>some characters are not allowed in the DOI name</li>
+         * </ul>
+         * CLIENT_ERROR_BAD_REQUEST is used as status meaning "Failed to validate the user inputs parameters"
+         */
+        METADATA_VALIDATION(Status.CLIENT_ERROR_BAD_REQUEST, "Failed to validate the user inputs parameters"),
+        /**
+         * Fail to create the media related to the DOI.
+         * CLIENT_ERROR_BAD_REQUEST is used as status meaning "DOI not provided or one or more of 
+         * the specified mime-types or urls are invalid (e.g. non supported mime-type, not allowed 
+         * url domain, etc.)"
+         */
+        MEDIA_VALIDATION(Status.CLIENT_ERROR_BAD_REQUEST, "DOI not provided or one or more of the specified mime-types or urls are invalid (e.g. non supported mime-type, not allowed url domain, etc.)"),        
+        /**
+         * Fail to create the landing page related to the DOI.
+         * CLIENT_ERROR_BAD_REQUEST is used as status meaning "Validation error when defining the DOI and its landing page"
+         */
+        LANGING_PAGE_VALIDATION(Status.CLIENT_ERROR_BAD_REQUEST, "Validation error when defining the DOI and its landing page"),        
+        /**
+         * DOI validation error.
+         * CLIENT_ERROR_BAD_REQUEST is used as status meaning "Character or prefix not allowed in the DOI"
+         */
+        DOI_VALIDATION(Status.CLIENT_ERROR_BAD_REQUEST, "Character or prefix not allowed in the DOI"),
+        /**
+         * Internal server error.
+         * Fail to communicate with DataCite using the interface specification meaning "Interface 
+         * problem between Datacite and DOI-Server"
+         */
+        DATACITE_PROBLEM(Status.SERVER_ERROR_INTERNAL,"Interface problem between Datacite and DOI-Server");
+
+        private final Status status;
+        private final String shortMessage;
+        
+        API_MDS(final Status status, final String shortMessage) {
+            this.status = status;
+            this.shortMessage = shortMessage;
+        }
+        
+        public Status getStatus() {
+            return this.status;
+        }
+        
+        public String getShortMessage() {
+            return this.shortMessage;
+        }
+
+    }    
 
     /**
      * Client to query Mds Datacite.
@@ -163,8 +256,6 @@ public class DoiMdsApplication extends AbstractApplication {
     /**
      * Cache for Datacite schema
      */
-    private final CacheSchema schemaCache = new CacheSchema();
-
     private final CacheSchema cache = new CacheSchema();
 
     /**
@@ -358,7 +449,6 @@ public class DoiMdsApplication extends AbstractApplication {
      *
      * @return the logger
      */
-    @Override
     public Logger getLog() {
         return LOG;
     }
@@ -398,7 +488,7 @@ public class DoiMdsApplication extends AbstractApplication {
     /**
      * Handles cache for DataCite schema.
      */
-    public class CacheSchema {
+    public static class CacheSchema {
 
         /**
          * Conversion hour to ms.

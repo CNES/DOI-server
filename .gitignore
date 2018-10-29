@@ -11,3 +11,7 @@ nbactions.xml
 *.log
 *.log.lck
 jks/
+nbactions.xml
+nbactions-dev.xml
+nb-configuration.xml
+

@@ -37,6 +37,9 @@ import org.restlet.engine.Engine;
 import org.restlet.representation.Representation;
 
 import fr.cnes.doi.exception.ClientMdsException;
+import static fr.cnes.doi.exception.ClientMdsException.CLIENT_ERROR_GONE;
+import static fr.cnes.doi.exception.ClientMdsException.CLIENT_ERROR_NOT_FOUND;
+import static fr.cnes.doi.exception.ClientMdsException.SUCCESS_OK;
 import fr.cnes.doi.utils.spec.Requirement;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
@@ -113,6 +116,93 @@ public class ClientMDS extends BaseClient {
      * URL query parameter {@value #POST_URL}.
      */
     public static final String POST_URL = "url";
+    
+    /**
+     * Datacite API.
+     */
+    public enum DATACITE_API_RESPONSE {
+        /**
+         * Get/Delete successfully a DOI or a media.
+         * SUCCESS_OK is used as status
+         */
+        SUCCESS(Status.SUCCESS_OK,"Operation successful"),      
+        /**
+         * Create successfully a DOI.
+         * SUCCESS_CREATED is as used as status.
+         */
+        SUCESS_CREATED(Status.SUCCESS_CREATED,"Operation successful"),
+        /**
+         * Get a DOI without metadata.
+         * SUCCESS_NO_CONTENT is used as status
+         */
+        SUCCESS_NO_CONTENT(Status.SUCCESS_NO_CONTENT, " the DOI is known to DataCite Metadata Store (MDS), but no metadata have been registered"),
+        /**
+         * Fail to create a media or the metadata.
+         * CLIENT_ERROR_BAD_REQUEST is used as status
+         */
+        BAD_REQUEST(Status.CLIENT_ERROR_BAD_REQUEST, "invalid XML, wrong prefix or request body must be exactly two lines: DOI and URL; wrong domain, wrong prefix"),
+        /**
+         * Fail to authorize the user to create/delete a DOI.
+         * CLIENT_ERROR_UNAUTHORIZED is used as status
+         */
+        UNAUTHORIZED(Status.CLIENT_ERROR_UNAUTHORIZED, "no login"),
+        /**
+         * Fail to create/delete media/metadata/Landing page.
+         * CLIENT_ERROR_FORBIDDEN is used as status
+         */
+        FORBIDDEN(Status.CLIENT_ERROR_FORBIDDEN,"login problem, wrong prefix, permission problem or dataset belongs to another party"),
+        /**
+         * Fail to get the DOI.
+         * CLIENT_ERROR_NOT_FOUND is used as status
+         */
+        DOI_NOT_FOUND(Status.CLIENT_ERROR_NOT_FOUND, "DOI does not exist in our database"),
+        /**
+         * Get an inactive DOI.
+         * CLIENT_ERROR_GONE is used as status
+         */
+        DOI_INACTIVE(Status.CLIENT_ERROR_GONE, "the requested dataset was marked inactive (using DELETE method)"),
+        /**
+         * Fail to create a DOI because metadata must be uploaded first.
+         * CLIENT_ERROR_PRECONDITION_FAILED is used as status
+         */
+        PROCESS_ERROR(Status.CLIENT_ERROR_PRECONDITION_FAILED, "metadata must be uploaded first"),
+        /**
+         * Internal server Error.
+         * INTERNAL_SERVER_ERROR is used as status.
+         */
+        INTERNAL_SERVER_ERROR(Status.SERVER_ERROR_INTERNAL, "Internal server error");
+        
+        private final Status status;
+        private final String message;
+        
+        DATACITE_API_RESPONSE(final Status status, final String message) {
+            this.status = status;
+            this.message = message;
+        }
+        
+        public Status getStatus() {
+            return this.status;
+        }
+        
+        public String getShortMessage() {
+            return this.message;
+        }
+        
+        public static String getMessageFromStatus(final Status statusToFind) {
+            String result="";
+            final int codeToFind = statusToFind.getCode();
+            DATACITE_API_RESPONSE[] values = DATACITE_API_RESPONSE.values();
+            for(int i=0; i<=values.length; i++) {
+                DATACITE_API_RESPONSE value = values[i];
+                final int codeValue = value.getStatus().getCode();
+                if(codeValue == codeToFind) {
+                    result = value.message;
+                    break;
+                }        
+            }
+            return result;
+        }
+    }
 
     /**
      * Options for each context
@@ -329,7 +419,7 @@ public class ClientMDS extends BaseClient {
     }
 
     /**
-     * Returns the {@link TEST_MODE} or an empty parameter according to
+     * Returns the {@link #TEST_MODE} or an empty parameter according to
      * <i>isTestMode</i>
      *
      * @return the test mode
@@ -356,7 +446,7 @@ public class ClientMDS extends BaseClient {
     }
 
     /**
-     * Init the client to the reference {@link DATA_CITE_URL} or {@link DATA_CITE_TEST_URL}
+     * Init the client to the reference {@link #DATA_CITE_URL} or {@link #DATA_CITE_TEST_URL}
      */
     private void initReference() {
         this.getClient().setReference(this.context.getDataCiteUrl());

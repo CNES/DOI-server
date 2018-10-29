@@ -300,11 +300,6 @@
         </dependency>
         <dependency>
             <groupId>org.restlet.jse</groupId>
-            <artifactId>org.restlet.ext.httpclient</artifactId>
-            <version>${restlet-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.restlet.jse</groupId>
             <artifactId>org.restlet.ext.oauth</artifactId>
             <version>${restlet-version}</version>
         </dependency>                        
@@ -321,6 +316,11 @@
         <dependency>
             <groupId>org.restlet.jse</groupId>
             <artifactId>org.restlet.ext.javamail</artifactId>
+            <version>${restlet-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.restlet.jee</groupId>
+            <artifactId>org.restlet.ext.slf4j</artifactId>
             <version>${restlet-version}</version>
         </dependency>
         <dependency>
@@ -361,13 +361,6 @@
             <groupId>org.slf4j</groupId>
             <artifactId>jul-to-slf4j</artifactId>
             <version>1.8.0-beta2</version>
-        </dependency>
-        
-        <!-- https://mvnrepository.com/artifact/org.restlet.jee/org.restlet.ext.slf4j -->
-        <dependency>
-            <groupId>org.restlet.jee</groupId>
-            <artifactId>org.restlet.ext.slf4j</artifactId>
-            <version>3.0-M1</version>
         </dependency>
                     
         <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-surefire-report-plugin -->

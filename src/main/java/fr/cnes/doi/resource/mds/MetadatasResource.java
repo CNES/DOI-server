@@ -18,10 +18,9 @@
  */
 package fr.cnes.doi.resource.mds;
 
-import fr.cnes.doi.application.AbstractApplication;
 import fr.cnes.doi.application.DoiMdsApplication;
+import fr.cnes.doi.application.DoiMdsApplication.API_MDS;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Arrays;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -37,10 +36,10 @@ import org.restlet.ext.wadl.MethodInfo;
 import org.restlet.ext.wadl.ParameterStyle;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Post;
-import org.restlet.resource.ResourceException;
 import org.xml.sax.SAXException;
 
 import fr.cnes.doi.exception.ClientMdsException;
+import fr.cnes.doi.exception.DoiServerException;
 import fr.cnes.doi.utils.spec.Requirement;
 import javax.xml.bind.ValidationException;
 import org.apache.logging.log4j.Level;
@@ -70,10 +69,10 @@ public class MetadatasResource extends BaseMdsResource {
     /**
      * Init.
      *
-     * @throws ResourceException - if a problem happens
+     * @throws DoiServerException - if a problem happens
      */
     @Override
-    protected void doInit() throws ResourceException {
+    protected void doInit() throws DoiServerException {
         super.doInit();
         LOG.traceEntry();        
         setDescription("This resource can create metadata");
@@ -87,14 +86,15 @@ public class MetadatasResource extends BaseMdsResource {
      *
      * @param entity Metadata representation
      * @return short explanation of status code e.g. CREATED, HANDLE_ALREADY_EXISTS etc
-     * @throws ResourceException - if an error happens <ul>
-     * <li>400 Bad Request - invalid XML, wrong prefix in the metadata</li>
-     * <li>403 Forbidden - Not allow to execute this request </li>
-     * <li>401 Unauthorized - this request needs authentication</li>
-     * <li>409 Conflict if a user is associated to more than one role</li>
-     * <li>500 Internal Server Error - DataCite Schema not available or problem when requesting
-     * DataCite</li>
-     * <li>1001 Connector error - Network problem</li>
+     * @throws DoiServerException - if the response is not a success 
+     * <ul>
+     * <li>{@link API_MDS#SECURITY_USER_NO_ROLE}</li>
+     * <li>{@link API_MDS#SECURITY_USER_NOT_IN_SELECTED_ROLE}</li>
+     * <li>{@link API_MDS#SECURITY_USER_PERMISSION}</li>
+     * <li>{@link API_MDS#SECURITY_USER_CONFLICT}</li>     
+     * <li>{@link API_MDS#DATACITE_PROBLEM}</li>
+     * <li>{@link API_MDS#METADATA_VALIDATION}</li> 
+     * <li>{@link API_MDS#NETWORK_PROBLEM}</li>
      * </ul>
      */
     @Requirement(reqId = Requirement.DOI_SRV_010, reqName = Requirement.DOI_SRV_010_NAME)
@@ -104,16 +104,13 @@ public class MetadatasResource extends BaseMdsResource {
     @Requirement(reqId = Requirement.DOI_AUTO_020, reqName = Requirement.DOI_AUTO_020_NAME)
     @Requirement(reqId = Requirement.DOI_AUTO_030, reqName = Requirement.DOI_AUTO_030_NAME)
     @Post
-    public String createMetadata(final Representation entity) throws ResourceException {
+    public String createMetadata(final Representation entity) throws DoiServerException {
         LOG.traceEntry("Entering in createMetadata with argument " + entity);
         checkInputs(entity);
         final String result;
         try {
             setStatus(Status.SUCCESS_CREATED);
-            final Schema schema;
-            if (this.cache.isStored()) {
-                schema = this.cache.getCache();
-            } else {                  
+            if (!this.cache.isStored()) {                  
                 this.cache.store(SCHEMA_DATACITE);                 
             }                         
             final Resource resource = createDataCiteResourceObject(entity, this.cache.getCache());
@@ -122,33 +119,28 @@ public class MetadatasResource extends BaseMdsResource {
             resource.setPublisher("CNES");
             result = this.getDoiApp().getClient().createMetadata(resource, this.cache.getCache());
         } catch (ClientMdsException ex) {
-            ((AbstractApplication) getApplication()).sendAlertWhenDataCiteFailed(ex);
+            LOG.error("*** code *** - " + ex.getStatus().getCode());
+            if(ex.getStatus().getCode() == 1001) {
+                LOG.error("*** 1 ***");
+            }            
             throw LOG.throwing(Level.DEBUG, 
-                    new ResourceException(ex.getStatus(), ex.getMessage(), ex)
+                    new DoiServerException(getApplication(), API_MDS.DATACITE_PROBLEM, ex.getMessage(), ex)
             );
         } catch (ValidationException ex) {
-            throw LOG.throwing(Level.DEBUG, new ResourceException(
-                    Status.CLIENT_ERROR_BAD_REQUEST,
-                    "invalid XML",
-                    ex)
+            throw LOG.throwing(Level.DEBUG, 
+                    new DoiServerException(getApplication(),API_MDS.METADATA_VALIDATION,"invalid XML",ex)
             );
         } catch (JAXBException ex) {
-            throw LOG.throwing(Level.DEBUG, new ResourceException(
-                    Status.CLIENT_ERROR_BAD_REQUEST,
-                    "invalid XML",
-                    ex)
+            throw LOG.throwing(Level.DEBUG, 
+                    new DoiServerException(getApplication(),API_MDS.METADATA_VALIDATION,"invalid XML",ex)
             );
         } catch (SAXException ex) {
-            throw LOG.throwing(Level.DEBUG, new ResourceException(
-                    Status.SERVER_ERROR_INTERNAL,
-                    "DataCite schema not available",
-                    ex)
+            throw LOG.throwing(Level.DEBUG, 
+                    new DoiServerException(getApplication(),API_MDS.NETWORK_PROBLEM,"DataCite schema not available",ex)
             );
         } catch (IOException ex) {
-            throw LOG.throwing(Level.DEBUG, new ResourceException(
-                    Status.CONNECTOR_ERROR_COMMUNICATION,
-                    "Network problem",
-                    ex)
+            throw LOG.throwing(Level.DEBUG, 
+                    new DoiServerException(getApplication(), API_MDS.NETWORK_PROBLEM, "Unknown network problem", ex)
             );
         }
         return LOG.traceExit(result);
@@ -156,16 +148,18 @@ public class MetadatasResource extends BaseMdsResource {
 
     /**
      * Checks inputs.
+     * 
+     * Checks if <i>obj</i> is {@link #isObjectExist set}
      *
      * @param obj object to check
-     * @throws ResourceException - 400 Bad Request if entity is null
+     * @throws DoiServerException - {@link API_MDS#METADATA_VALIDATION}
      */
     @Requirement(reqId = Requirement.DOI_INTER_070, reqName = Requirement.DOI_INTER_070_NAME)
-    private void checkInputs(final Object obj) throws ResourceException {
+    private void checkInputs(final Object obj) throws DoiServerException {
         LOG.traceEntry("Parameter : " + obj);
-        if (isObjectNotExist(obj)) {
-            throw LOG.throwing(Level.DEBUG, new ResourceException(
-                    Status.CLIENT_ERROR_BAD_REQUEST, "Entity cannot be null")
+        if (isObjectNotExist(obj)) {          
+            throw LOG.throwing(Level.DEBUG, 
+                    new DoiServerException(getApplication(),API_MDS.METADATA_VALIDATION, "Input is not set")
             );
         }
         LOG.traceExit();
@@ -200,7 +194,20 @@ public class MetadatasResource extends BaseMdsResource {
     }
 
     /**
-     * Describes a POST method.
+     * Describes the POST method.
+     * 
+     * This request stores new version of DOI metadata. The request body must contain a valid XML.
+     * 
+     * <ul>
+     * <li>{@link API_MDS#CREATE_METADATA}</li>
+     * <li>{@link API_MDS#METADATA_VALIDATION}</li>
+     * <li>{@link API_MDS#DATACITE_PROBLEM}</li>
+     * <li>{@link API_MDS#NETWORK_PROBLEM}</li>
+     * <li>{@link API_MDS#SECURITY_USER_NO_ROLE}</li>
+     * <li>{@link API_MDS#SECURITY_USER_NOT_IN_SELECTED_ROLE}</li>
+     * <li>{@link API_MDS#SECURITY_USER_PERMISSION}</li>
+     * <li>{@link API_MDS#SECURITY_USER_CONFLICT}</li> 
+     * </ul>
      *
      * @param info Wadl description for POST method
      */
@@ -209,7 +216,7 @@ public class MetadatasResource extends BaseMdsResource {
     protected final void describePost(final MethodInfo info) {
         info.setName(Method.POST);
         info.setDocumentation("This request stores new version of metadata. "
-                + "The request body must contain valid XML.");
+                + "The request body must contain a valid XML.");
 
         addRequestDocToMethod(info,
                 Arrays.asList(
@@ -226,41 +233,23 @@ public class MetadatasResource extends BaseMdsResource {
                 )
         );
 
-        addResponseDocToMethod(info, createResponseDoc(
-                Status.SUCCESS_CREATED,
-                "Operation successful",
-                "explainRepresentation")
+        addResponseDocToMethod(info, createResponseDoc(API_MDS.CREATE_METADATA.getStatus(),
+                API_MDS.CREATE_METADATA.getShortMessage(),                
+                "explainRepresentationID")
         );
-        addResponseDocToMethod(info, createResponseDoc(
-                Status.CLIENT_ERROR_BAD_REQUEST,
-                "invalid XML, wrong prefix in the metadata",
-                "explainRepresentation")
+        addResponseDocToMethod(info, createResponseDoc(API_MDS.METADATA_VALIDATION.getStatus(),
+                API_MDS.METADATA_VALIDATION.getShortMessage(),
+                "explainRepresentationID")
         );
-        addResponseDocToMethod(info, createResponseDoc(
-                Status.CLIENT_ERROR_UNAUTHORIZED,
-                "this request needs authentication",
-                "explainRepresentation")
+        addResponseDocToMethod(info, createResponseDoc(API_MDS.DATACITE_PROBLEM.getStatus(),
+                API_MDS.DATACITE_PROBLEM.getShortMessage(),
+                "explainRepresentationID")
         );
-        addResponseDocToMethod(info, createResponseDoc(
-                Status.CLIENT_ERROR_FORBIDDEN,
-                "Not allow to execute the request",
-                "explainRepresentation")
+        addResponseDocToMethod(info, createResponseDoc(API_MDS.NETWORK_PROBLEM.getStatus(),
+                API_MDS.NETWORK_PROBLEM.getShortMessage(),
+                "explainRepresentationID")
         );
-        addResponseDocToMethod(info, createResponseDoc(
-                Status.SERVER_ERROR_INTERNAL,
-                "DataCite Schema not available or problem when requesting DataCite",
-                "explainRepresentation")
-        );
-        addResponseDocToMethod(info, createResponseDoc(
-                Status.CONNECTOR_ERROR_COMMUNICATION,
-                "Network problem",
-                "explainRepresentation")
-        );
-        addResponseDocToMethod(info, createResponseDoc(
-                Status.CLIENT_ERROR_CONFLICT,
-                "Error when an user is associated to more than one role without setting selectedRole parameter",
-                "explainRepresentation")
-        );
+        super.describePost(info);
 
     }
 

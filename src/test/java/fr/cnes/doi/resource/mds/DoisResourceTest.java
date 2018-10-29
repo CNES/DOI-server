@@ -19,6 +19,7 @@
 package fr.cnes.doi.resource.mds;
 
 import static fr.cnes.doi.AbstractSpec.classTitle;
+import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.MdsSpec;
 import fr.cnes.doi.UnitTest;
@@ -128,7 +129,7 @@ public class DoisResourceTest {
      */
     @Test
     public void testGetDoisHttps() throws IOException {
-        System.out.println("TEST: "+MdsSpec.Spec.GET_COLLECTION_200.getDescription()+" through a HTTPS server");
+        testTitle("testGetDoiNotAllowedHttps");  
         
         this.mdsSpecStub.createSpec(MdsSpec.Spec.GET_COLLECTION_200);
         
@@ -147,7 +148,7 @@ public class DoisResourceTest {
      */
     @Test
     public void testGetDoisHttp() throws IOException {
-        System.out.println("TEST: "+MdsSpec.Spec.GET_COLLECTION_200.getDescription()+" through a HTTP server");
+        testTitle("testGetDoisHttp");
         
         this.mdsSpecStub.createSpec(MdsSpec.Spec.GET_COLLECTION_200);
         
@@ -168,7 +169,8 @@ public class DoisResourceTest {
      */
     @Test
     public void testCreateDoiConflictHttps() throws IOException {
-        System.out.println("TEST: Failed to create a DOI without a selected role");
+        testTitle("testCreateDoiConflictHttps");
+        
         Form doiForm = new Form();
         doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b"));
         doiForm.add(new Parameter(DoisResource.URL_PARAMETER, "http://www.cnes.fr"));
@@ -195,7 +197,7 @@ public class DoisResourceTest {
      */
     @Test
     public void testCreateDoiHttps() throws IOException {
-        System.out.println("TEST: "+MdsSpec.Spec.POST_DOI_201.getDescription()+" through a HTTPS server");
+        testTitle("testCreateDoiHttps");
 
         this.mdsSpecStub.createSpec(MdsSpec.Spec.POST_DOI_201);
         
@@ -235,7 +237,7 @@ public class DoisResourceTest {
      */
     @Test
     public void testCreateDoiHttp() throws IOException {
-        System.out.println("TEST: "+MdsSpec.Spec.POST_DOI_201.getDescription()+" through a HTTP server");
+        testTitle("testCreateDoiHttp");
         
         this.mdsSpecStub.createSpec(MdsSpec.Spec.POST_DOI_201);        
 
@@ -275,7 +277,7 @@ public class DoisResourceTest {
      */
     @Test
     public void testCreateFalseDoiHttps() throws IOException {
-        System.out.println("TEST: "+MdsSpec.Spec.POST_DOI_412.getDescription()+" through a HTTPS server");
+        testTitle("testCreateFalseDoiHttps");
         
         this.mdsSpecStub.createSpec(MdsSpec.Spec.POST_DOI_412);                        
 
@@ -310,10 +312,11 @@ public class DoisResourceTest {
     
     /**
      * Test of createDoi method, of class DoisResource.
+     * @throws java.io.IOException
      */
     @Test
     public void testCreateDoiWithWrongPrefixHttps() throws IOException {
-        System.out.println("TEST: Failed to create a DOI due to a wrong prefix");
+        testTitle("testCreateDoiWithWrongPrefixHttps");
 
         Form doiForm = new Form();
         doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.4072/828606/8c3e91ad45ca855b477126bc073ae"));

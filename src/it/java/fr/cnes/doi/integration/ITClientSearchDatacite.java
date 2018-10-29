@@ -4,7 +4,7 @@
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
- * version 3.0 of the License, or (at your option) any later version.
+ * version 2.1 of the License, or (at your option) any later version.
  *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -16,80 +16,64 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package fr.cnes.doi.utils;
+package fr.cnes.doi.integration;
 
 import static fr.cnes.doi.AbstractSpec.classTitle;
 import static fr.cnes.doi.AbstractSpec.testTitle;
-import fr.cnes.doi.UnitTest;
-import fr.cnes.doi.security.UtilsCryptography;
+import fr.cnes.doi.client.ClientSearchDataCite;
+import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Rule;
 import org.junit.experimental.categories.Category;
+import org.junit.rules.ExpectedException;
 
 /**
- * Test class for {@link fr.cnes.doi.utils.Utils}
+ * Test of Citation resources
  * @author Jean-Christophe Malapert
+ * @see fr.cnes.doi.resource.citation
  */
-@Category(UnitTest.class)
-public class UtilsTest {
-    
-    public UtilsTest() {
+@Category(IntegrationTest.class)
+public class ITClientSearchDatacite {
+
+    public ITClientSearchDatacite() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
-        classTitle("Utils");
+        classTitle("ClientSearchDatacite");
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
+    
+    @Rule
+    public ExpectedException exceptions = ExpectedException.none();    
 
     /**
-     * Test of isEmpty method, of class Utils.
+     * Test of getFormat method, of class ClientSearchDatacite.
+     * @throws java.lang.Exception
      */
     @Test
-    public void testIsEmpty() {
-        testTitle("testIsEmpty");
-        CharSequence cs = null;
-        boolean expResult = true;
-        boolean result = Utils.isEmpty(cs);
-        assertEquals(expResult, result);
+    public void testGetDois() throws Exception {
+        testTitle("testGetDois");
+
+        ClientSearchDataCite searchDatacite = new ClientSearchDataCite("10.24400");
+        List<String> dois = searchDatacite.getDois();        
+        assertTrue("IT Test searchDatacite",dois.size() > 0);
     }
 
-    /**
-     * Test of decrypt method, of class Utils.
-     */
-    @Test
-    public void testDecrypt() {
-        testTitle("testDecrypt");
-        String encryptedInput = "6YTGxcaZ3b/qFbzECfnvjw==";
-        String expResult = "Hello World !";
-        String result = UtilsCryptography.decrypt(encryptedInput);
-        assertEquals(expResult, result);
-    }
-
-    /**
-     * Test of encrypt method, of class Utils.
-     */
-    @Test
-    public void testEncrypt() {
-        testTitle("testEncrypt");
-        String str = "Hello World !";
-        String expResult = "6YTGxcaZ3b/qFbzECfnvjw==";
-        String result = UtilsCryptography.encrypt(str);
-        assertEquals(expResult, result);
-    }    
 }

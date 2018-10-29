@@ -53,17 +53,17 @@ public class ClientCrossCiteCitation extends BaseClient {
     /**
      * URI to get styles {@value #STYLE_URI}.
      */
-    public static final String STYLE_URI = "/styles";
+    public static final String STYLE_URI = "styles";
 
     /**
      * URI to get locales {@value #LOCALE_URI}.
      */
-    public static final String LOCALE_URI = "/locales";
+    public static final String LOCALE_URI = "locales";
 
     /**
      * URI to get format {@value #FORMAT_URI}.
      */
-    public static final String FORMAT_URI = "/format";
+    public static final String FORMAT_URI = "format";
     
     /**
      * Options for each context.
