@@ -69,10 +69,10 @@ public class DoiMonitoring {
         if (this.applications.containsKey(identifier)) {
             final DoiMonitoringRecord record = this.applications.get(name.getName() + path);
             final float previousSpeedAverage = (float) record.getAverage();
-            LOG.info("current speed average = {}", previousSpeedAverage);
+            LOG.info("current speed average = {} ms", previousSpeedAverage);
             final int previousNbAccess = (int) record.getNbAccess();
             final float newSpeedAverage = (previousSpeedAverage + duration) / (previousNbAccess + 1);
-            LOG.info("new speed average = {}", newSpeedAverage);
+            LOG.info("new speed average = {} ms", newSpeedAverage);
             record.setAverage(newSpeedAverage);
             record.setNbAccess(previousNbAccess + 1);
         } else {

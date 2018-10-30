@@ -62,7 +62,9 @@ import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
 import org.restlet.util.Series;
 import static fr.cnes.doi.client.BaseClient.DATACITE_MOCKSERVER_PORT;
+import fr.cnes.doi.exception.ClientMdsException;
 import org.junit.experimental.categories.Category;
+import org.restlet.data.Status;
 
 /**
  * Test class for {@link fr.cnes.doi.resource.mds.MetadatasResource}
@@ -86,7 +88,7 @@ public class MetadatasResourceTest {
     }
 
     @BeforeClass
-    public static void setUpClass() {
+    public static void setUpClass() throws ClientMdsException {
         InitServerForTest.init();
         cl = new Client(new Context(), Protocol.HTTPS);
         Series<Parameter> parameters = cl.getContext().getParameters();
@@ -195,9 +197,11 @@ public class MetadatasResourceTest {
             code = client.getStatus().getCode();
         } catch (ResourceException ex) {
             code = ex.getStatus().getCode();
-            //if (code == Status.CONNECTOR_ERROR_COMMUNICATION.getCode()) {
-            //    code = Status.CLIENT_ERROR_UNAUTHORIZED.getCode();
-            //}
+//            System.out.println("**** code = "+code);
+//            if (code == Status.CONNECTOR_ERROR_COMMUNICATION.getCode()) {
+//                code = Status.CLIENT_ERROR_UNAUTHORIZED.getCode();
+//                System.out.println("****Cause : "+ex.getCause().getMessage());
+//            }
         } finally {
             client.release();    
         }        
@@ -249,6 +253,10 @@ public class MetadatasResourceTest {
             code = client.getStatus().getCode();
         } catch (ResourceException ex) {
             code = ex.getStatus().getCode();
+//            if (code == Status.CONNECTOR_ERROR_COMMUNICATION.getCode()) {
+//                code = Status.CLIENT_ERROR_UNAUTHORIZED.getCode();
+//                System.out.println("****Cause : "+ex.getCause().getMessage());
+//            }            
         }
         client.release();
         assertEquals(409, code);        

@@ -328,5 +328,9 @@ public class Consts {
      */
     public static final String RESTLET_MAX_CONNECTIONS_PER_HOST = "Starter.maxConnectionsPerHost";
     
+    /**
+     * DataCite schema.    
+     */
+    public static final String DATACITE_SCHEMA = "Starter.dataciteSchema";
 
 }

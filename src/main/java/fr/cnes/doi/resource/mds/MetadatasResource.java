@@ -18,16 +18,9 @@
  */
 package fr.cnes.doi.resource.mds;
 
-import fr.cnes.doi.application.DoiMdsApplication;
 import fr.cnes.doi.application.DoiMdsApplication.API_MDS;
-import java.io.IOException;
 import java.util.Arrays;
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.ValidationEvent;
-import javax.xml.bind.ValidationEventHandler;
-import javax.xml.validation.Schema;
 import org.datacite.schema.kernel_4.Resource;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
@@ -43,7 +36,6 @@ import fr.cnes.doi.exception.DoiServerException;
 import fr.cnes.doi.utils.spec.Requirement;
 import javax.xml.bind.ValidationException;
 import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.Logger;
 
 /**
  * Resource to handle a collection of metadata.
@@ -56,16 +48,7 @@ public class MetadatasResource extends BaseMdsResource {
      *
      */
     public static final String CREATE_METADATA = "Create Metadata";
-
-    /**
-     * Datacite Schema.
-     */
-    public static final String SCHEMA_DATACITE = "https://schema.datacite.org/meta/kernel-4.0/metadata.xsd";
-
-    /**
-     * The cache that may contains the Datacite schema.
-     */
-    private DoiMdsApplication.CacheSchema cache;    
+  
     /**
      * Init.
      *
@@ -76,7 +59,6 @@ public class MetadatasResource extends BaseMdsResource {
         super.doInit();
         LOG.traceEntry();        
         setDescription("This resource can create metadata");
-        this.cache = this.getDoiApp().getCache();
         LOG.traceExit();
     }
 
@@ -109,15 +91,12 @@ public class MetadatasResource extends BaseMdsResource {
         checkInputs(entity);
         final String result;
         try {
-            setStatus(Status.SUCCESS_CREATED);
-            if (!this.cache.isStored()) {                  
-                this.cache.store(SCHEMA_DATACITE);                 
-            }                         
-            final Resource resource = createDataCiteResourceObject(entity, this.cache.getCache());
+            setStatus(Status.SUCCESS_CREATED);                        
+            final Resource resource = createDataCiteResourceObject(entity);
             final String selectedRole = extractSelectedRoleFromRequestIfExists();
             checkPermission(resource.getIdentifier().getValue(), selectedRole);
             resource.setPublisher("CNES");
-            result = this.getDoiApp().getClient().createMetadata(resource, this.cache.getCache());
+            result = this.getDoiApp().getClient().createMetadata(resource);
         } catch (ClientMdsException ex) {
             LOG.error("*** code *** - " + ex.getStatus().getCode());
             if(ex.getStatus().getCode() == 1001) {
@@ -137,10 +116,6 @@ public class MetadatasResource extends BaseMdsResource {
         } catch (SAXException ex) {
             throw LOG.throwing(Level.DEBUG, 
                     new DoiServerException(getApplication(),API_MDS.NETWORK_PROBLEM,"DataCite schema not available",ex)
-            );
-        } catch (IOException ex) {
-            throw LOG.throwing(Level.DEBUG, 
-                    new DoiServerException(getApplication(), API_MDS.NETWORK_PROBLEM, "Unknown network problem", ex)
             );
         }
         return LOG.traceExit(result);
@@ -172,25 +147,14 @@ public class MetadatasResource extends BaseMdsResource {
      * @return the metadata object
      * @throws JAXBException - if an error was encountered while creating the JAXBContex
      * @throws SAXException - if a SAX error occurs during parsing.
-     * @throws IOException - if a problem happens when retrieving the entity
      * @throws ValidationException - if metadata is not valid against the schema
      */
     @Requirement(reqId = Requirement.DOI_INTER_060, reqName = Requirement.DOI_INTER_060_NAME)
     @Requirement(reqId = Requirement.DOI_INTER_070, reqName = Requirement.DOI_INTER_070_NAME)
-    private Resource createDataCiteResourceObject(final Representation entity, final Schema schema) 
-            throws JAXBException, SAXException, ValidationException, IOException {
+    private Resource createDataCiteResourceObject(final Representation entity) 
+            throws JAXBException, SAXException, ValidationException {
         LOG.traceEntry("Parameter : " + entity);
-        final JAXBContext ctx = JAXBContext.newInstance(new Class[]{Resource.class});
-        final Unmarshaller unMarshal = ctx.createUnmarshaller();
-        unMarshal.setSchema(schema);
-        final MyValidationEventHandler validationHandler = new MyValidationEventHandler(LOG);
-        unMarshal.setEventHandler(validationHandler);
-        final Resource resource = (Resource) unMarshal.unmarshal(entity.getStream()); 
-        if (validationHandler.isValid()) {                                   
-            return LOG.traceExit(resource);
-        } else {
-            throw LOG.throwing(Level.DEBUG, new ValidationException(validationHandler.getErrorMsg()));
-        }
+        return LOG.traceExit(this.getDoiApp().getClient().parseMetadata(entity));
     }
 
     /**
@@ -251,93 +215,6 @@ public class MetadatasResource extends BaseMdsResource {
         );
         super.describePost(info);
 
-    }
-
-    /**
-     * Metadata Validation.
-     */
-    @Requirement(reqId = Requirement.DOI_ARCHI_020, reqName = Requirement.DOI_ARCHI_020_NAME)
-    private static class MyValidationEventHandler implements ValidationEventHandler {
-
-        /**
-         * Logger.
-         */
-        private final Logger logger;
-
-        /**
-         * Indicates if an error was happening.
-         */
-        private boolean hasError = false;
-
-        /**
-         * Error message.
-         */
-        private String errorMsg = null;
-
-        /**
-         * Validation handler
-         *
-         * @param logger logger
-         */
-        public MyValidationEventHandler(final Logger logger) {
-            this.logger = logger;
-        }
-
-        /**
-         * Handles event
-         *
-         * @param event event
-         * @return True
-         */
-        @Override
-        public boolean handleEvent(final ValidationEvent event) {
-            final StringBuilder stringBuilder = new StringBuilder("\nEVENT");
-            stringBuilder.append("SEVERITY:  ").append(event.getSeverity()).append("\n");
-            stringBuilder.append("MESSAGE:  ").append(event.getMessage()).append("\n");
-            stringBuilder.append("LINKED EXCEPTION:  ").append(event.getLinkedException()).append("\n");
-            stringBuilder.append("LOCATOR\n");
-            stringBuilder.append("    LINE NUMBER:  ").append(event.getLocator().getLineNumber()).append("\n");
-            stringBuilder.append("    COLUMN NUMBER:  ").append(event.getLocator().getColumnNumber()).append("\n");
-            stringBuilder.append("    OFFSET:  ").append(event.getLocator().getOffset()).append("\n");
-            stringBuilder.append("    OBJECT:  ").append(event.getLocator().getObject()).append("\n");
-            stringBuilder.append("    NODE:  ").append(event.getLocator().getNode()).append("\n");
-            stringBuilder.append("    URL  ").append(event.getLocator().getURL()).append("\n");
-            this.errorMsg = stringBuilder.toString();
-            this.logger.info(this.errorMsg);
-            this.hasError = true;
-            return true;
-        }
-
-        /**
-         * Returns true when metadata is valid against the schema otherwise false.
-         *
-         * @return true when metadata is valid against the schema otherwise false
-         */
-        public boolean isValid() {
-            this.logger.traceEntry();
-            return this.logger.traceExit(!this.isNotValid());
-
-        }
-
-        /**
-         * Returns true when metadata is not valid against the schema otherwise false.
-         *
-         * @return true when metadata is not valid against the schema otherwise false
-         */
-        public boolean isNotValid() {
-            this.logger.traceEntry();
-            return this.logger.traceExit(this.hasError);
-        }
-
-        /**
-         * Returns the errorMsg or null when no error message.
-         *
-         * @return the errorMsg or null when no error message
-         */
-        public String getErrorMsg() {
-            this.logger.traceEntry();
-            return this.logger.traceExit(this.errorMsg);
-        }
     }
 
 }

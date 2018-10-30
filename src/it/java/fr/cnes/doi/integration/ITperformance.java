@@ -25,6 +25,7 @@ import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.MdsSpec;
 import static fr.cnes.doi.client.BaseClient.DATACITE_MOCKSERVER_PORT;
 import fr.cnes.doi.client.ClientProxyTest;
+import fr.cnes.doi.exception.ClientMdsException;
 import fr.cnes.doi.resource.mds.DoisResource;
 import fr.cnes.doi.security.UtilsHeader;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_CONNECTIONS_PER_HOST;
@@ -85,7 +86,7 @@ public class ITperformance {
 
     private static final String METADATA_SERVICE = "/mds/metadata";
     private static final String DOIS_SERVICE = "/mds/dois";
-    private static final int NB_ITERS = 101;
+    private static final int NB_ITERS = 100;
 
     @Rule
     public ExpectedException exceptions = ExpectedException.none();
@@ -94,7 +95,7 @@ public class ITperformance {
     }
 
     @BeforeClass
-    public static void setUpClass() {
+    public static void setUpClass() throws ClientMdsException {
         InitServerForTest.init();
         cl = new Client(new Context(), Protocol.HTTPS);
         Series<Parameter> parameters = cl.getContext().getParameters();
@@ -152,10 +153,9 @@ public class ITperformance {
         long elapsedTime = stopTime - startTime;
         double meanProcessingTime = elapsedTime / NB_ITERS;
 
-        double expectedTime = 1 * 1000; //1 s per DOI
-        System.out.println(map.get("nbErrors") + "  " + meanProcessingTime);
+        double expectedTime = 5.0 / 100.0 * 1000.0; //1 s per DOI
+        LOG.log(Level.INFO, "All working fine : Mean request processing time {0} ms, expected time {1} ms", new Object[]{meanProcessingTime, expectedTime});        
         Assert.assertTrue("Test the performances of DOIs creation", (int) map.get("nbErrors") == 0 && meanProcessingTime <= expectedTime);
-        LOG.log(Level.INFO, "All working fine : Mean request processing time {0} ms", meanProcessingTime);
     }
     
     @Test
@@ -182,9 +182,8 @@ public class ITperformance {
         double meanProcessingTime = elapsedTime;
 
         double expectedTime = 1 * 1000; //1 s per DOI
-        System.out.println(map.get("nbErrors") + "  " + meanProcessingTime);
+        LOG.log(Level.INFO, "All working fine : Mean request processing time {0} ms, expected time {1} ms", new Object[]{meanProcessingTime, expectedTime});        
         Assert.assertTrue("Test the performances of DOIs creation", (int) map.get("nbErrors") == 0 && meanProcessingTime <= expectedTime);
-        LOG.log(Level.INFO, "All working fine : Mean request processing time {0} ms", meanProcessingTime);
         this.mdsServerStub.verifySpec(MdsSpec.Spec.POST_METADATA_201);
         this.mdsServerStub.verifySpec(MdsSpec.Spec.POST_DOI_201);
     }    
@@ -192,7 +191,6 @@ public class ITperformance {
     private void testMultiThreads(final Class jobTask, final ConcurrentHashMap map, int nbIters) {
         try {
             for (int i = 0; i < nbIters; i++) {
-                System.out.println("i=" + i);
                 try {
                     JobTask task = (JobTask) jobTask.newInstance();
                     task.setParameters(map, this.metadata);

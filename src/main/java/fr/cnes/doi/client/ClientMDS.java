@@ -37,18 +37,19 @@ import org.restlet.engine.Engine;
 import org.restlet.representation.Representation;
 
 import fr.cnes.doi.exception.ClientMdsException;
-import static fr.cnes.doi.exception.ClientMdsException.CLIENT_ERROR_GONE;
-import static fr.cnes.doi.exception.ClientMdsException.CLIENT_ERROR_NOT_FOUND;
-import static fr.cnes.doi.exception.ClientMdsException.SUCCESS_OK;
+import fr.cnes.doi.settings.Consts;
+import fr.cnes.doi.settings.DoiSettings;
+import fr.cnes.doi.utils.WebProxyResourceResolver;
 import fr.cnes.doi.utils.spec.Requirement;
 import java.io.OutputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.Iterator;
 import javax.xml.XMLConstants;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.ValidationEvent;
+import javax.xml.bind.ValidationEventHandler;
+import javax.xml.bind.ValidationException;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import org.restlet.data.CharacterSet;
@@ -116,49 +117,60 @@ public class ClientMDS extends BaseClient {
      * URL query parameter {@value #POST_URL}.
      */
     public static final String POST_URL = "url";
-    
+
+    /**
+     * Default XML schema for Datacite: {@value #SCHEMA_DATACITE}
+     */
+    private static final String SCHEMA_DATACITE = "https://schema.datacite.org/meta/kernel-4.0/metadata.xsd";
+
+    /**
+     * SCHEMA_FACTORY.
+     */
+    private static final SchemaFactory SCHEMA_FACTORY = SchemaFactory.newInstance(
+            XMLConstants.W3C_XML_SCHEMA_NS_URI
+    );
+
+    /**
+     * Loads DOI settings.
+     */
+    private static final DoiSettings DOI_SETTINGS = DoiSettings.getInstance();
+
     /**
      * Datacite API.
      */
     public enum DATACITE_API_RESPONSE {
         /**
-         * Get/Delete successfully a DOI or a media.
-         * SUCCESS_OK is used as status
+         * Get/Delete successfully a DOI or a media. SUCCESS_OK is used as status
          */
-        SUCCESS(Status.SUCCESS_OK,"Operation successful"),      
+        SUCCESS(Status.SUCCESS_OK, "Operation successful"),
         /**
-         * Create successfully a DOI.
-         * SUCCESS_CREATED is as used as status.
+         * Create successfully a DOI. SUCCESS_CREATED is as used as status.
          */
-        SUCESS_CREATED(Status.SUCCESS_CREATED,"Operation successful"),
+        SUCESS_CREATED(Status.SUCCESS_CREATED, "Operation successful"),
         /**
-         * Get a DOI without metadata.
-         * SUCCESS_NO_CONTENT is used as status
+         * Get a DOI without metadata. SUCCESS_NO_CONTENT is used as status
          */
         SUCCESS_NO_CONTENT(Status.SUCCESS_NO_CONTENT, " the DOI is known to DataCite Metadata Store (MDS), but no metadata have been registered"),
         /**
-         * Fail to create a media or the metadata.
-         * CLIENT_ERROR_BAD_REQUEST is used as status
+         * Fail to create a media or the metadata. CLIENT_ERROR_BAD_REQUEST is used as status
          */
         BAD_REQUEST(Status.CLIENT_ERROR_BAD_REQUEST, "invalid XML, wrong prefix or request body must be exactly two lines: DOI and URL; wrong domain, wrong prefix"),
         /**
-         * Fail to authorize the user to create/delete a DOI.
-         * CLIENT_ERROR_UNAUTHORIZED is used as status
+         * Fail to authorize the user to create/delete a DOI. CLIENT_ERROR_UNAUTHORIZED is used as
+         * status
          */
         UNAUTHORIZED(Status.CLIENT_ERROR_UNAUTHORIZED, "no login"),
         /**
-         * Fail to create/delete media/metadata/Landing page.
-         * CLIENT_ERROR_FORBIDDEN is used as status
+         * Fail to create/delete media/metadata/Landing page. CLIENT_ERROR_FORBIDDEN is used as
+         * status
          */
-        FORBIDDEN(Status.CLIENT_ERROR_FORBIDDEN,"login problem, wrong prefix, permission problem or dataset belongs to another party"),
+        FORBIDDEN(Status.CLIENT_ERROR_FORBIDDEN, "login problem, wrong prefix, permission problem or dataset belongs to another party"),
         /**
-         * Fail to get the DOI.
-         * CLIENT_ERROR_NOT_FOUND is used as status
+         * Fail to get the DOI. CLIENT_ERROR_NOT_FOUND is used as status
          */
         DOI_NOT_FOUND(Status.CLIENT_ERROR_NOT_FOUND, "DOI does not exist in our database"),
         /**
-         * Get an inactive DOI.
-         * CLIENT_ERROR_GONE is used as status
+         * Get an inactive DOI. CLIENT_ERROR_GONE is used as status
          */
         DOI_INACTIVE(Status.CLIENT_ERROR_GONE, "the requested dataset was marked inactive (using DELETE method)"),
         /**
@@ -167,38 +179,37 @@ public class ClientMDS extends BaseClient {
          */
         PROCESS_ERROR(Status.CLIENT_ERROR_PRECONDITION_FAILED, "metadata must be uploaded first"),
         /**
-         * Internal server Error.
-         * INTERNAL_SERVER_ERROR is used as status.
+         * Internal server Error. INTERNAL_SERVER_ERROR is used as status.
          */
         INTERNAL_SERVER_ERROR(Status.SERVER_ERROR_INTERNAL, "Internal server error");
-        
+
         private final Status status;
         private final String message;
-        
+
         DATACITE_API_RESPONSE(final Status status, final String message) {
             this.status = status;
             this.message = message;
         }
-        
+
         public Status getStatus() {
             return this.status;
         }
-        
+
         public String getShortMessage() {
             return this.message;
         }
-        
+
         public static String getMessageFromStatus(final Status statusToFind) {
-            String result="";
+            String result = "";
             final int codeToFind = statusToFind.getCode();
             DATACITE_API_RESPONSE[] values = DATACITE_API_RESPONSE.values();
-            for(int i=0; i<=values.length; i++) {
+            for (int i = 0; i <= values.length; i++) {
                 DATACITE_API_RESPONSE value = values[i];
                 final int codeValue = value.getStatus().getCode();
-                if(codeValue == codeToFind) {
+                if (codeValue == codeToFind) {
                     result = value.message;
                     break;
-                }        
+                }
             }
             return result;
         }
@@ -348,6 +359,21 @@ public class ClientMDS extends BaseClient {
     private final Context context;
 
     /**
+     * Marshaller.
+     */
+    private final Marshaller marshaller;
+
+    /**
+     * Unarshall.
+     */
+    private final Unmarshaller unMarshaller;
+
+    /**
+     * Validation handler when parsing the metadata.
+     */
+    //final MyValidationEventHandler validationHandler;
+
+    /**
      * Creates a client to handle DataCite server.
      *
      * There is special test prefix 10.5072 available to all datacentres. Please use it for all your
@@ -369,14 +395,30 @@ public class ClientMDS extends BaseClient {
      * /doi?testMode=true and the testing prefix will be used instead of the provided prefix
      *
      * @param context Context using
+     * @throws fr.cnes.doi.exception.ClientMdsException Cannot the Datacite schema
      */
-    public ClientMDS(final Context context) {
+    public ClientMDS(final Context context) throws ClientMdsException {
         super(context.getDataCiteUrl());
-        this.context = context;
-        this.testMode = this.context.hasTestMode() ? TEST_MODE : null;
-        this.getClient().getLogger().setUseParentHandlers(true);
-        this.getClient().getLogger().setLevel(Level.ALL);
-        this.getClient().setLoggable(false);
+        try {
+            this.context = context;
+            this.testMode = this.context.hasTestMode() ? TEST_MODE : null;
+            final String schemaUrl = ClientMDS.DOI_SETTINGS.getString(Consts.DATACITE_SCHEMA, SCHEMA_DATACITE);
+            SCHEMA_FACTORY.setResourceResolver(new WebProxyResourceResolver(this.getClient(), schemaUrl));
+            Schema schema = SCHEMA_FACTORY.newSchema();
+            final JAXBContext ctx = JAXBContext.newInstance(new Class[]{Resource.class});
+            this.marshaller = ctx.createMarshaller();
+            //this.marshaller.setProperty(Marshaller.JAXB_SCHEMA_LOCATION, schemaInfo.get("targetName") + " " + schemaUrl);
+            this.marshaller.setProperty(Marshaller.JAXB_SCHEMA_LOCATION,
+                    "http://datacite.org/schema/kernel-4 "
+                    + "http://schema.datacite.org/meta/kernel-4/metadata.xsd");
+            this.unMarshaller = ctx.createUnmarshaller();
+            this.unMarshaller.setSchema(schema);            
+            this.getClient().getLogger().setUseParentHandlers(true);
+            this.getClient().getLogger().setLevel(Level.ALL);
+            this.getClient().setLoggable(false);
+        } catch (JAXBException | SAXException ex) {
+            throw new ClientMdsException(Status.SERVER_ERROR_INTERNAL, "Cannot get the Datacite schema", ex);
+        }  
     }
 
     /**
@@ -399,8 +441,9 @@ public class ClientMDS extends BaseClient {
      * @param context Context using
      * @param login Login
      * @param pwd password
+     * @throws fr.cnes.doi.exception.ClientMdsException Cannot the Datacite schema
      */
-    public ClientMDS(final Context context, final String login, final String pwd) {
+    public ClientMDS(final Context context, final String login, final String pwd) throws ClientMdsException {
         this(context);
         this.getClient().getLogger().log(Level.FINEST, "Authentication with HTTP_BASIC : {0}/{1}", new Object[]{login, pwd});
         this.getClient().setChallengeResponse(ChallengeScheme.HTTP_BASIC, login, pwd);
@@ -411,12 +454,115 @@ public class ClientMDS extends BaseClient {
      *
      * @param login Login
      * @param pwd password
+     * @throws fr.cnes.doi.exception.ClientMdsException Cannot the Datacite schema
      */
-    public ClientMDS(final String login, final String pwd) {
+    public ClientMDS(final String login, final String pwd) throws ClientMdsException {
         this(Context.PROD);
         this.getClient().getLogger().log(Level.FINEST, "Authentication with HTTP_BASIC : {0}/{1}", new Object[]{login, pwd});
         this.getClient().setChallengeResponse(ChallengeScheme.HTTP_BASIC, login, pwd);
     }
+
+//
+//    /**
+//     * Returns the JAXB schema.
+//     *
+//     * @param schemaInfo Information about the schema
+//     * @return the JAXB schema
+//     * @throws ClientMdsException When a network problem happens.
+//     * @throws SAXException
+//     */
+//    private Schema getSchema(Map<String, String> schemaInfo) throws ClientMdsException, SAXException {
+//        final Source[] sources = getSchemas(schemaInfo.get("referenceUrl"), schemaInfo.get("schemaContent"));
+//        return SCHEMA_FACTORY.newSchema(sources);
+//    }
+//
+//    /**
+//     * Retrieves the schema content from the URL.
+//     *
+//     * @param schemaURL URL where the schema is located
+//     * @return the schema content
+//     * @throws ClientMdsException When a network problem happens.
+//     */
+//    private String getSchemaContent(final String schemaURL) throws ClientMdsException {
+//        final String schema;
+//        this.getClient().setReference(schemaURL);
+//        try {
+//            Representation rep = this.getClient().get();
+//            schema = getText(rep);
+//        } catch (ResourceException ex) {
+//            throw new ClientMdsException(Status.CONNECTOR_ERROR_COMMUNICATION, "Cannot load the Datacite schema", ex);
+//        } finally {
+//            this.getClient().release();
+//        }
+//        return schema;
+//    }
+//
+//    /**
+//     * Extracts targeNamespace from schemaContent content.
+//     *
+//     * @param schemaContent schemaContent
+//     * @return the targetNameSpace
+//     * @throws ClientMdsException Cannot extract the targetNamespace
+//     */
+//    private String getTargetNameSpaceFromSchema(final String schemaContent) throws ClientMdsException {
+//        final String targetNameSpace;
+//        Pattern pattern = Pattern.compile("targetNamespace=\"(.*)\" elementFormDefault");
+//        Matcher matcher = pattern.matcher(schemaContent);
+//        if (matcher.find()) {
+//            targetNameSpace = matcher.group(1);
+//        } else {
+//            throw new ClientMdsException(Status.SERVER_ERROR_INTERNAL, "Cannot get the targetNamespace from the Datacite schema");
+//        }
+//        return targetNameSpace;
+//    }
+//
+//    /**
+//     * Returns the information needed to act as source input (XML source or transformation
+//     * instructions).
+//     *
+//     * @param reference reference URL of the schema
+//     * @param schemaContent schema contain
+//     * @return the information needed to act as source input (XML source or transformation
+//     * instructions).
+//     * @throws ClientMdsException Cannot download includes from Datacite schema
+//     */
+//    private Source[] getSchemas(final String reference, final String schemaContent) throws ClientMdsException {
+//        final List<String> schemas = getIncludesFrom(schemaContent);
+//        for (int i = 0; i < schemas.size(); i++) {
+//            String url = reference + schemas.get(i);
+//            this.getClient().setReference(url);
+//            try {
+//                Representation rep = this.getClient().get();
+//                schemas.set(i, getText(rep));
+//            } catch (ResourceException ex) {
+//                throw new ClientMdsException(Status.SERVER_ERROR_INTERNAL, "Cannot downlaod includes from Datacite schema", ex);
+//            } finally {
+//                this.getClient().release();
+//            }
+//        }
+//        schemas.add(schemaContent);
+//        Source[] sources = new Source[schemas.size()];
+//        for (int i = 0; i < sources.length; i++) {
+//            sources[i] = new StreamSource(new StringReader(schemas.get(i)));
+//        }
+//        return sources;
+//    }
+//
+//    /**
+//     * Returns the schema to include from the schema content.
+//     *
+//     * @param schemaContent schema content
+//     * @return the schema to include from the schema content.
+//     */
+//    private List<String> getIncludesFrom(final String schemaContent) {
+//        final Pattern pattern = Pattern.compile("<xs:include schemaLocation=\"(.*)\"/>");
+//        final Matcher matcher = pattern.matcher(schemaContent);
+//        final List<String> res = new ArrayList<>();
+//        while (matcher.find()) {
+//            res.add(matcher.group(1));
+//        }
+//        return res;
+//    }
 
     /**
      * Returns the {@link #TEST_MODE} or an empty parameter according to
@@ -441,7 +587,7 @@ public class ClientMDS extends BaseClient {
         final String message = String.format(
                 "DOI %s has been renamed as %s for testing", doiName, testingPrefix
         );
-        this.getClient().getLogger().log(Level.INFO, message);
+        this.getClient().getLogger().log(Level.WARNING, message);
         return testingPrefix;
     }
 
@@ -678,12 +824,10 @@ public class ClientMDS extends BaseClient {
      * @return the Resource object
      * @throws ClientMdsException Will throw when a problem happens during the parsing
      */
-    private Resource parseDataciteResource(final Representation rep) throws ClientMdsException {
+    private synchronized Resource parseDataciteResource(final Representation rep) throws ClientMdsException {
         final Resource resource;
         try {
-            final JAXBContext ctx = JAXBContext.newInstance(new Class[]{Resource.class});
-            final Unmarshaller unMarshaller = ctx.createUnmarshaller();
-            resource = (Resource) unMarshaller.unmarshal(rep.getStream());
+            resource = (Resource) this.unMarshaller.unmarshal(rep.getStream());
         } catch (JAXBException | IOException ex) {
             throw new ClientMdsException(Status.SERVER_ERROR_INTERNAL, ex);
         }
@@ -758,23 +902,17 @@ public class ClientMDS extends BaseClient {
      * @see "https://mds.datacite.org/static/apidoc#tocAnchor-18"
      */
     public String createMetadata(final Representation entity) throws ClientMdsException {
-        try {
-            final Resource resource = parseDataciteResource(entity);
-            final Schema schema = SchemaFactory.newInstance(
-                    XMLConstants.W3C_XML_SCHEMA_NS_URI
-            ).newSchema(new URL("https://schema.datacite.org/meta/kernel-4.0/metadata.xsd"));
-            return this.createMetadata(resource, schema);
-        } catch (MalformedURLException | SAXException ex) {
-            throw new ClientMdsException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex);
-        }
+        final Resource resource = parseDataciteResource(entity);
+        return this.createMetadata(resource);
     }
 
     /**
      * Creates metadata with 201 status when operation successful. The DOI prefix may replace
      * according to the {@link ClientMDS#context}.
      *
+     * The method is synchronized because marshall method is not thread-safe.
+     *
      * @param entity Metadata
-     * @param schema schema
      * @return short explanation of status code e.g. CREATED, HANDLE_ALREADY_EXISTS etc
      * @throws ClientMdsException - if an error happens <ul>
      * <li>400 Bad Request - invalid XML, wrong prefix</li>
@@ -785,12 +923,44 @@ public class ClientMDS extends BaseClient {
      * </ul>
      * @see "https://mds.datacite.org/static/apidoc#tocAnchor-18"
      */
-    public synchronized String createMetadata(final Resource entity, final Schema schema) throws ClientMdsException {
+    public String createMetadata(final Resource entity) throws ClientMdsException {
         try {
             final Identifier identifier = entity.getIdentifier();
             identifier.setValue(getDoiAccorgindToContext(identifier.getValue()));
             final Reference url = createReference(METADATA_RESOURCE);
             Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "PUT {0}", url.toString());
+            final OutputStream output = streamMetadata(entity);
+            this.getClient().setReference(url);
+            this.getClient().getRequestAttributes().put("charset", "UTF-8");
+            this.getClient().setMethod(null);
+            final Representation response = this.getClient().post(
+                    new StringRepresentation(
+                            output.toString(),
+                            MediaType.APPLICATION_XML,
+                            Language.ALL,
+                            CharacterSet.UTF_8
+                    )
+            );
+            return getText(response);
+        } catch (ResourceException ex) {
+            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), this.getClient().getResponseEntity(), ex);
+        } catch (JAXBException ex) {
+            throw new ClientMdsException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex);
+        } finally {
+            this.getClient().release();
+        }
+    }
+    
+    /**
+     * Stream a DataCite Resource Object to XML.
+     * 
+     * Use synchronized to have a thread-safe operation
+     * 
+     * @param entity DataCite Resource
+     * @return XML
+     * @throws JAXBException when an problem occurs
+     */
+    private synchronized OutputStream streamMetadata(final Resource entity) throws JAXBException {
             final OutputStream output = new OutputStream() {
                 /**
                  * Output stream.
@@ -818,33 +988,33 @@ public class ClientMDS extends BaseClient {
                     return this.response.toString();
                 }
             };
-            final JAXBContext jaxbContext = JAXBContext.newInstance(new Class[]{Resource.class});
-            final Marshaller marshaller = jaxbContext.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_SCHEMA_LOCATION,
-                    "http://datacite.org/schema/kernel-4 "
-                    + "http://schema.datacite.org/meta/kernel-4/metadata.xsd");
-            marshaller.setSchema(schema);
             marshaller.marshal(entity, output);
-            this.getClient().setReference(url);
-            this.getClient().getRequestAttributes().put("charset", "UTF-8");
-            this.getClient().setMethod(null);
-            final Representation response = this.getClient().post(
-                    new StringRepresentation(
-                            output.toString(),
-                            MediaType.APPLICATION_XML,
-                            Language.ALL,
-                            CharacterSet.UTF_8
-                    )
-            );
-            return getText(response);
-        } catch (ResourceException ex) {
-            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), this.getClient().getResponseEntity(), ex);
-        } catch (JAXBException ex) {
-            throw new ClientMdsException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex);
-        } finally {
-            this.getClient().release();
-        }
+            return output;
+    }
 
+    /**
+     * Parses the metadata and returns the Resource object from DataCite.
+     *
+     * The method is synchronized because unmarshall method is not thread-safe.
+     *
+     * @param entity metadata
+     * @return the Resource object from DataCite
+     * @throws ValidationException When validation failed
+     */
+    public synchronized Resource parseMetadata(final Representation entity) throws ValidationException {
+
+        try {
+            final MyValidationEventHandler validationHandler = new MyValidationEventHandler(this.getClient().getLogger());
+            this.unMarshaller.setEventHandler(validationHandler);            
+            final Resource resource = (Resource) this.unMarshaller.unmarshal(entity.getStream());
+            if (validationHandler.isValid()) {
+                return resource;
+            } else {
+                throw new ValidationException(validationHandler.getErrorMsg());
+            }
+        } catch (IOException | JAXBException ex) {            
+            throw new ValidationException("Cannot read the metadata", ex);
+        }
     }
 
     /**
@@ -990,6 +1160,90 @@ public class ClientMDS extends BaseClient {
                 Language.ENGLISH,
                 CharacterSet.UTF_8
         );
+    }
+
+    /**
+     * Metadata Validation.
+     */
+    @Requirement(reqId = Requirement.DOI_ARCHI_020, reqName = Requirement.DOI_ARCHI_020_NAME)
+    private static class MyValidationEventHandler implements ValidationEventHandler {
+
+        /**
+         * Logger.
+         */
+        private final java.util.logging.Logger logger;
+
+        /**
+         * Indicates if an error was happening.
+         */
+        private boolean hasError = false;
+
+        /**
+         * Error message.
+         */
+        private String errorMsg = null;
+
+        /**
+         * Validation handler
+         *
+         * @param logger logger
+         */
+        public MyValidationEventHandler(final java.util.logging.Logger logger) {
+            this.logger = logger;
+        }
+
+        /**
+         * Handles event
+         *
+         * @param event event
+         * @return True
+         */
+        @Override
+        public boolean handleEvent(final ValidationEvent event) {
+            final StringBuilder stringBuilder = new StringBuilder("\nEVENT");
+            stringBuilder.append("SEVERITY:  ").append(event.getSeverity()).append("\n");
+            stringBuilder.append("MESSAGE:  ").append(event.getMessage()).append("\n");
+            stringBuilder.append("LINKED EXCEPTION:  ").append(event.getLinkedException()).append("\n");
+            stringBuilder.append("LOCATOR\n");
+            stringBuilder.append("    LINE NUMBER:  ").append(event.getLocator().getLineNumber()).append("\n");
+            stringBuilder.append("    COLUMN NUMBER:  ").append(event.getLocator().getColumnNumber()).append("\n");
+            stringBuilder.append("    OFFSET:  ").append(event.getLocator().getOffset()).append("\n");
+            stringBuilder.append("    OBJECT:  ").append(event.getLocator().getObject()).append("\n");
+            stringBuilder.append("    NODE:  ").append(event.getLocator().getNode()).append("\n");
+            stringBuilder.append("    URL  ").append(event.getLocator().getURL()).append("\n");
+            this.errorMsg = stringBuilder.toString();
+            this.logger.info(this.errorMsg);
+            this.hasError = true;
+            return true;
+        }
+
+        /**
+         * Returns true when metadata is valid against the schema otherwise false.
+         *
+         * @return true when metadata is valid against the schema otherwise false
+         */
+        public boolean isValid() {
+            return !this.isNotValid();
+
+        }
+
+        /**
+         * Returns true when metadata is not valid against the schema otherwise false.
+         *
+         * @return true when metadata is not valid against the schema otherwise false
+         */
+        public boolean isNotValid() {
+            return this.hasError;
+        }
+
+        /**
+         * Returns the errorMsg or null when no error message.
+         *
+         * @return the errorMsg or null when no error message
+         */
+        public String getErrorMsg() {
+            return this.errorMsg;
+        }
     }
 
 }

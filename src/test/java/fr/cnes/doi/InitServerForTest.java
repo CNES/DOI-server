@@ -18,6 +18,7 @@
  */
 package fr.cnes.doi;
 
+import fr.cnes.doi.exception.ClientMdsException;
 import fr.cnes.doi.server.DoiServer;
 import fr.cnes.doi.settings.DoiSettings;
 import java.util.logging.Level;
@@ -36,8 +37,9 @@ public class InitServerForTest {
     
     /**
      * Init the settings and starts the server.
+     * @throws fr.cnes.doi.exception.ClientMdsException When cannot get Datacite schema
      */
-    public static void init() {
+    public static void init() throws ClientMdsException {
         InitSettingsForTest.init();
         doiServer = new DoiServer(DoiSettings.getInstance());
         try {

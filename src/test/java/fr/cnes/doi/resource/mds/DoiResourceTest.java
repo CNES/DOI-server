@@ -24,6 +24,7 @@ import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.MdsSpec;
 import fr.cnes.doi.UnitTest;
 import static fr.cnes.doi.client.BaseClient.DATACITE_MOCKSERVER_PORT;
+import fr.cnes.doi.exception.ClientMdsException;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_CONNECTIONS_PER_HOST;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_TOTAL_CONNECTIONS;
 import static fr.cnes.doi.server.DoiServer.JKS_DIRECTORY;
@@ -67,7 +68,7 @@ public class DoiResourceTest {
     }
     
     @BeforeClass
-    public static void setUpClass() {
+    public static void setUpClass() throws ClientMdsException {
         InitServerForTest.init();
         cl = new Client(new Context(), Protocol.HTTPS);
         Series<Parameter> parameters = cl.getContext().getParameters();

@@ -18,9 +18,6 @@
  */
 package fr.cnes.doi.application;
 
-import javax.xml.XMLConstants;
-import javax.xml.validation.SchemaFactory;
-
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
@@ -37,6 +34,7 @@ import org.restlet.routing.Router;
 
 import fr.cnes.doi.client.ClientMDS;
 import fr.cnes.doi.db.AbstractTokenDBHelper;
+import fr.cnes.doi.exception.ClientMdsException;
 import fr.cnes.doi.resource.mds.DoiResource;
 import fr.cnes.doi.resource.mds.DoisResource;
 import fr.cnes.doi.resource.mds.MediaResource;
@@ -46,14 +44,14 @@ import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.security.TokenBasedVerifier;
 import fr.cnes.doi.security.TokenSecurity;
 import fr.cnes.doi.utils.spec.Requirement;
-import java.net.MalformedURLException;
-import java.net.URL;
-import javax.xml.validation.Schema;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.restlet.Context;
+import org.restlet.data.AuthenticationInfo;
+import org.restlet.data.Header;
 import org.restlet.data.Status;
+import org.restlet.routing.Filter;
 import org.restlet.routing.Template;
-import org.xml.sax.SAXException;
 
 /**
  * Provides an application to handle Data Object Identifier within an organization. A Digital Object
@@ -114,7 +112,7 @@ import org.xml.sax.SAXException;
 @Requirement(reqId = Requirement.DOI_SRV_080, reqName = Requirement.DOI_SRV_080_NAME)
 @Requirement(reqId = Requirement.DOI_SRV_090, reqName = Requirement.DOI_SRV_090_NAME)
 @Requirement(reqId = Requirement.DOI_MONIT_020, reqName = Requirement.DOI_MONIT_020_NAME)
-public class DoiMdsApplication extends AbstractApplication {
+public final class DoiMdsApplication extends AbstractApplication {
 
     /**
      * Template Query for DOI : {@value #DOI_TEMPLATE}.
@@ -150,98 +148,94 @@ public class DoiMdsApplication extends AbstractApplication {
      * Logger.
      */
     private static final Logger LOG = LogManager.getLogger(DoiMdsApplication.class.getName());
-    
+
     public enum API_MDS {
         /**
-         * Create metadata.
-         * SUCCESS_CREATED is used as status meaning "Operation successful"
+         * Create metadata. SUCCESS_CREATED is used as status meaning "Operation successful"
          */
-        CREATE_METADATA(Status.SUCCESS_CREATED,"Operation successful"),
+        CREATE_METADATA(Status.SUCCESS_CREATED, "Operation successful"),
         /**
-         * Forbidden to use this role.
-         * It happens when a user provides a role to the server whereas he is unknown in this role. 
-         * CLIENT_ERROR_FORBIDDEN is used as status meaning "Forbidden to use this role" 
+         * Forbidden to use this role. It happens when a user provides a role to the server whereas
+         * he is unknown in this role. CLIENT_ERROR_FORBIDDEN is used as status meaning "Forbidden
+         * to use this role"
          */
         SECURITY_USER_NOT_IN_SELECTED_ROLE(Status.CLIENT_ERROR_FORBIDDEN, "Forbidden to use this role"),
         /**
-         * Fail to authorize the user.
-         * It happens when a client is authentified but unauthorized to use the resource.
-         * CLIENT_ERROR_UNAUTHORIZED is used as status meaning "Fail to authorize the user"
+         * Fail to authorize the user. It happens when a client is authentified but unauthorized to
+         * use the resource. CLIENT_ERROR_UNAUTHORIZED is used as status meaning "Fail to authorize
+         * the user"
          */
         SECURITY_USER_NO_ROLE(Status.CLIENT_ERROR_UNAUTHORIZED, "Fail to authorize the user"),
         /**
-         * Fail to know privileges of a user.
-         * It happens when an user is associated to several roles without selecting one.
-         * CLIENT_ERROR_CONFLICT is used as status meaning "Error when an user is associated to more
-         * than one role without setting selectedRole parameter"
+         * Fail to know privileges of a user. It happens when an user is associated to several roles
+         * without selecting one. CLIENT_ERROR_CONFLICT is used as status meaning "Error when an
+         * user is associated to more than one role without setting selectedRole parameter"
          */
         SECURITY_USER_CONFLICT(Status.CLIENT_ERROR_CONFLICT, "Error when an user is associated to more than one role without setting selectedRole parameter"),
         /**
-         * Fail to create a DOI.
-         * It happens when a user try to create a DOI with the wrong role. Actually, the role is contained
-         * in the DOI name. So if a user is authentified with a right role and try to create a DOI for
-         * another role, an exception is raised.
-         * SECURITY_USER_PERMISSION is used as status meaning "User is not allowed to make this operation"
+         * Fail to create a DOI. It happens when a user try to create a DOI with the wrong role.
+         * Actually, the role is contained in the DOI name. So if a user is authentified with a
+         * right role and try to create a DOI for another role, an exception is raised.
+         * SECURITY_USER_PERMISSION is used as status meaning "User is not allowed to make this
+         * operation"
          */
         SECURITY_USER_PERMISSION(Status.CLIENT_ERROR_FORBIDDEN, "User is not allowed to make this operation"),
         /**
-         * Cannot access to Datacite.
-         * It happens when a network problem may happen with Datacite.
+         * Cannot access to Datacite. It happens when a network problem may happen with Datacite.
          * SERVER_ERROR_GATEWAY_TIMEOUT is used as status meaning "Cannot access to Datacite"
          */
         NETWORK_PROBLEM(Status.CONNECTOR_ERROR_COMMUNICATION, "Cannot access to Datacite"),
         /**
-         * Fail to validate user input parameter for creating the DOI.
-         * It happens in the following cases:
+         * Fail to validate user input parameter for creating the DOI. It happens in the following
+         * cases:
          * <ul>
          * <li>the DOI or metadata are not provided</li>
          * <li>the prefix is not allowed</li>
          * <li>some characters are not allowed in the DOI name</li>
          * </ul>
-         * CLIENT_ERROR_BAD_REQUEST is used as status meaning "Failed to validate the user inputs parameters"
+         * CLIENT_ERROR_BAD_REQUEST is used as status meaning "Failed to validate the user inputs
+         * parameters"
          */
         METADATA_VALIDATION(Status.CLIENT_ERROR_BAD_REQUEST, "Failed to validate the user inputs parameters"),
         /**
-         * Fail to create the media related to the DOI.
-         * CLIENT_ERROR_BAD_REQUEST is used as status meaning "DOI not provided or one or more of 
-         * the specified mime-types or urls are invalid (e.g. non supported mime-type, not allowed 
-         * url domain, etc.)"
+         * Fail to create the media related to the DOI. CLIENT_ERROR_BAD_REQUEST is used as status
+         * meaning "DOI not provided or one or more of the specified mime-types or urls are invalid
+         * (e.g. non supported mime-type, not allowed url domain, etc.)"
          */
-        MEDIA_VALIDATION(Status.CLIENT_ERROR_BAD_REQUEST, "DOI not provided or one or more of the specified mime-types or urls are invalid (e.g. non supported mime-type, not allowed url domain, etc.)"),        
+        MEDIA_VALIDATION(Status.CLIENT_ERROR_BAD_REQUEST, "DOI not provided or one or more of the specified mime-types or urls are invalid (e.g. non supported mime-type, not allowed url domain, etc.)"),
         /**
-         * Fail to create the landing page related to the DOI.
-         * CLIENT_ERROR_BAD_REQUEST is used as status meaning "Validation error when defining the DOI and its landing page"
+         * Fail to create the landing page related to the DOI. CLIENT_ERROR_BAD_REQUEST is used as
+         * status meaning "Validation error when defining the DOI and its landing page"
          */
-        LANGING_PAGE_VALIDATION(Status.CLIENT_ERROR_BAD_REQUEST, "Validation error when defining the DOI and its landing page"),        
+        LANGING_PAGE_VALIDATION(Status.CLIENT_ERROR_BAD_REQUEST, "Validation error when defining the DOI and its landing page"),
         /**
-         * DOI validation error.
-         * CLIENT_ERROR_BAD_REQUEST is used as status meaning "Character or prefix not allowed in the DOI"
+         * DOI validation error. CLIENT_ERROR_BAD_REQUEST is used as status meaning "Character or
+         * prefix not allowed in the DOI"
          */
         DOI_VALIDATION(Status.CLIENT_ERROR_BAD_REQUEST, "Character or prefix not allowed in the DOI"),
         /**
-         * Internal server error.
-         * Fail to communicate with DataCite using the interface specification meaning "Interface 
-         * problem between Datacite and DOI-Server"
+         * Internal server error. Fail to communicate with DataCite using the interface
+         * specification meaning "Interface problem between Datacite and DOI-Server"
          */
-        DATACITE_PROBLEM(Status.SERVER_ERROR_INTERNAL,"Interface problem between Datacite and DOI-Server");
+        DATACITE_PROBLEM(Status.SERVER_ERROR_INTERNAL, "Interface problem between Datacite and DOI-Server");
 
         private final Status status;
         private final String shortMessage;
-        
+
         API_MDS(final Status status, final String shortMessage) {
             this.status = status;
             this.shortMessage = shortMessage;
         }
-        
+
         public Status getStatus() {
             return this.status;
         }
-        
+
         public String getShortMessage() {
             return this.shortMessage;
         }
 
-    }    
+    }
 
     /**
      * Client to query Mds Datacite.
@@ -254,14 +248,11 @@ public class DoiMdsApplication extends AbstractApplication {
     private final AbstractTokenDBHelper tokenDB;
 
     /**
-     * Cache for Datacite schema
-     */
-    private final CacheSchema cache = new CacheSchema();
-
-    /**
      * Creates the Digital Object Identifier server application.
+     *
+     * @throws fr.cnes.doi.exception.ClientMdsException Cannot get the Datacite schema
      */
-    public DoiMdsApplication() {
+    public DoiMdsApplication() throws ClientMdsException {
         super();
         setName(NAME);
         setDescription("Provides an application for handling Data Object Identifier at CNES<br/>"
@@ -309,7 +300,8 @@ public class DoiMdsApplication extends AbstractApplication {
         // Router
         methodAuth.setNext(createRouter());
 
-        return LOG.traceExit(challAuth);
+        Filter filter = new SecurityPostProcessingFilter(getContext(), challAuth);    
+        return LOG.traceExit(filter);
     }
 
     /**
@@ -435,22 +427,39 @@ public class DoiMdsApplication extends AbstractApplication {
     }
 
     /**
-     * Returns the cache that may contain the schema.
-     *
-     * @return the cache
-     */
-    public CacheSchema getCache() {
-        LOG.traceEntry();
-        return LOG.traceExit(this.cache);
-    }
-
-    /**
      * Returns the logger.
      *
      * @return the logger
      */
+    @Override
     public Logger getLog() {
         return LOG;
+    }
+
+    /**
+     * Post processing for specific authorization.
+     * Specific class to handle the case where the user is authorized by oauth but non authorized
+     * by the service because the user's role is not related to any projects
+     */
+    public class SecurityPostProcessingFilter extends Filter {
+
+        /**
+         * Constructor
+         * @param context context
+         * @param next gard
+         */
+        public SecurityPostProcessingFilter(final Context context, final Restlet next) {
+            super(context, next);
+        }
+
+        @Override
+        protected void afterHandle(final Request request, final Response response) {
+            final Status status = response.getStatus();
+            final String reason = status.getReasonPhrase();
+            if (status.getCode() == Status.CLIENT_ERROR_UNAUTHORIZED.getCode() && API_MDS.SECURITY_USER_NO_ROLE.getShortMessage().equals(reason)) {                
+                response.getHeaders().add("WWW-Authenticate", "Basic realm=\"DOI Server access\", charset=\"UTF-8\"");
+            }            
+        }
     }
 
     /**
@@ -483,80 +492,5 @@ public class DoiMdsApplication extends AbstractApplication {
         grammar.getIncludes().add(include);
         result.setGrammars(grammar);
         return result;
-    }
-
-    /**
-     * Handles cache for DataCite schema.
-     */
-    public static class CacheSchema {
-
-        /**
-         * Conversion hour to ms.
-         */
-        private static final int H_TO_MS = 3600000;
-
-        /**
-         * Max time before to refresh the cache when the cache is requested.
-         */
-        private static final int MAX_TIME_CACHE = 24 * H_TO_MS;
-
-        /**
-         * Cached schema
-         */
-        private Schema schema;
-        /**
-         * Time in ms when the schema was cached.
-         */
-        private long cachedTime = 0;
-
-        /**
-         * Schema.
-         */
-        private final SchemaFactory schemaFactory = SchemaFactory.newInstance(
-                XMLConstants.W3C_XML_SCHEMA_NS_URI
-        );
-
-        /**
-         * Create a cache.
-         */
-        public CacheSchema() {
-        }
-
-        /**
-         * Store the schema.
-         *
-         * @param schema the Datacite schema
-         * @throws java.net.MalformedURLException
-         * @throws org.xml.sax.SAXException
-         */
-        public synchronized void store(final String schema) throws MalformedURLException, SAXException {
-            LOG.traceEntry("Parameter : {}", schema);
-            this.schema = schemaFactory.newSchema(new URL(schema));
-            this.cachedTime = System.currentTimeMillis();
-            LOG.traceExit();
-        }
-
-        /**
-         * Returns the cache.
-         *
-         * @return the schema or null
-         */
-        public Schema getCache() {
-            LOG.traceEntry();
-            return LOG.traceExit(isStored() ? this.schema : null);
-        }
-
-        /**
-         * Checks whether the cache is stored.
-         *
-         * @return true when the schema is stored otherwise false.
-         */
-        public synchronized boolean isStored() {
-            LOG.traceEntry();
-            long newTime = System.currentTimeMillis();
-            long elapsedTime = newTime - cachedTime;
-            return LOG.traceExit(elapsedTime <= MAX_TIME_CACHE && elapsedTime != 0);
-        }
-
     }
 }

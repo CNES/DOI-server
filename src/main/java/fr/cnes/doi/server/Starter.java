@@ -18,6 +18,7 @@
  */
 package fr.cnes.doi.server;
 
+import fr.cnes.doi.exception.ClientMdsException;
 import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.resource.admin.SuffixProjectsResource;
 import fr.cnes.doi.security.TokenSecurity;
@@ -40,6 +41,7 @@ import fr.cnes.doi.utils.spec.Requirement;
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
@@ -159,8 +161,9 @@ public class Starter {
      * Launches the server.
      *
      * @param settings Configuration
+     * @throws ClientMdsException When it is not possible to load the Datacite schema.
      */
-    private static void launchServer(final DoiSettings settings) {
+    private static void launchServer(final DoiSettings settings) throws ClientMdsException {
         LOG.trace("Entering in launchServer");
         settings.validConfigurationFile();
         doiServer = new DoiServer(settings);
@@ -259,7 +262,11 @@ public class Starter {
                 //
                 case 's':
                     LOG.debug("s option is selected");
-                    launchServer(settings);
+                    try {
+                        launchServer(settings);
+                    } catch(ClientMdsException ex) {
+                        LOG.fatal("Cannot start the server because the Datacite schema cannot be loaded, "+ex.getMessage());
+                    }
                     break;
                 //
                 case 'k':
@@ -316,7 +323,7 @@ public class Starter {
                         String contentFile = new String(encodedFile, StandardCharsets.UTF_8);
                         contentFile = UtilsCryptography.encrypt(contentFile, settings.getSecretKey());
                         LOG.info(contentFile);
-                    } catch (Exception ex) {
+                    } catch (IOException ex) {
                         LOG.fatal("Error: {}", ex.getMessage());
                     }
                     break;
@@ -334,7 +341,7 @@ public class Starter {
                         String content = reader.lines().collect(Collectors.joining("\n"));
                         content = UtilsCryptography.decrypt(content, settings.getSecretKey());
                         LOG.info(content);
-                    } catch (Exception ex) {
+                    } catch (FileNotFoundException ex) {
                         LOG.fatal("Error: {}", ex.getMessage());
                     } finally {
                         if (inputStream != null) {

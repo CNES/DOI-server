@@ -120,7 +120,7 @@ public class MonitoringLogFilter extends LogFilter {
     private void sendAlertIfNeeded(
             final double average, final double currentDuration, 
             final String path, final Method method) {
-        final double elevation = (currentDuration - average) * 100.0 / average;
+        final double elevation = (currentDuration - average*1000) * 100.0 / average;
         if (elevation > THRESHOLD_SPEED_PERCENT) {
             final EmailSettings email = EmailSettings.getInstance();
             final String subject = "Speed performance alert for " + path;

@@ -43,7 +43,7 @@ public class BaseClient {
     /**
      * Client, which executes request.
      */
-    private final ClientResource client;
+    private volatile ClientResource client;
 
     /**
      * Constructor.

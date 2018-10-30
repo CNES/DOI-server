@@ -110,7 +110,7 @@ public class ClientMDSTest {
      * Test the Get DOI
      * @param spec spec
      */
-    private void testSpecGetDoi(MdsSpec.Spec spec) {
+    private void testSpecGetDoi(MdsSpec.Spec spec) throws ClientMdsException {
         testTitle(spec.getDescription());
 
         // Creates the MetadataStoreService stub
@@ -142,7 +142,7 @@ public class ClientMDSTest {
      * Test the getDoi collection
      * @param spec spec
      */
-    private void testSpecGetDoiCollection(MdsSpec.Spec spec) {
+    private void testSpecGetDoiCollection(MdsSpec.Spec spec) throws ClientMdsException {
         testTitle(spec.getDescription());
 
         // Creates the MetadataStoreService stub        
@@ -172,7 +172,7 @@ public class ClientMDSTest {
      * Test of creating DOI.
      * @param spec spec
      */
-    private void testSpecCreateDoi(MdsSpec.Spec spec) {
+    private void testSpecCreateDoi(MdsSpec.Spec spec) throws ClientMdsException {
         testTitle(spec.getDescription());
 
         // Creates the MetadataStoreService stub        
@@ -470,7 +470,7 @@ public class ClientMDSTest {
         testSpectGetMetadata(MdsSpec.Spec.GET_METADATA_500);
     }
 
-    private void testSpecCreateMetadata(MdsSpec.Spec spec) {
+    private void testSpecCreateMetadata(MdsSpec.Spec spec) throws ClientMdsException {
         testTitle(spec.getDescription());
 
         this.mdsServerStub.createSpec(spec);
@@ -779,7 +779,7 @@ public class ClientMDSTest {
         testSpecDeleteMetadataAsObj(MdsSpec.Spec.DELETE_METADATA_500);
     }   
     
-    private void testSpecGetMedia(MdsSpec.Spec spec) {
+    private void testSpecGetMedia(MdsSpec.Spec spec) throws ClientMdsException {
         testTitle(spec.getDescription());
 
         // Creates the MetadataStoreService stub        
@@ -853,7 +853,7 @@ public class ClientMDSTest {
         testSpecGetMedia(MdsSpec.Spec.GET_MEDIA_500);
     }    
     
-    private void testSpecCreateMedia(MdsSpec.Spec spec) {
+    private void testSpecCreateMedia(MdsSpec.Spec spec) throws ClientMdsException {
         testTitle(spec.getDescription());
        
         // Creates the MetadataStoreService stub        

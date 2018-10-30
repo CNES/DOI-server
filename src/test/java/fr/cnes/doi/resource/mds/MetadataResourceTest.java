@@ -57,6 +57,7 @@ import org.restlet.resource.ResourceException;
 import org.restlet.util.Series;
 import org.xml.sax.SAXException;
 import static fr.cnes.doi.client.BaseClient.DATACITE_MOCKSERVER_PORT;
+import fr.cnes.doi.exception.ClientMdsException;
 import org.junit.experimental.categories.Category;
 
 /**
@@ -76,7 +77,7 @@ public class MetadataResourceTest {
     }
 
     @BeforeClass
-    public static void setUpClass() {
+    public static void setUpClass() throws ClientMdsException {
         InitServerForTest.init();
         cl = new Client(new Context(), Protocol.HTTPS);
         Series<Parameter> parameters = cl.getContext().getParameters();
