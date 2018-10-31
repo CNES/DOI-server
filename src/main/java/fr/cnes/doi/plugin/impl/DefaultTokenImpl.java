@@ -45,7 +45,6 @@ import org.apache.logging.log4j.Logger;
  */
 public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
 
-    private final String NAME = this.getClass().getName();
     private static final String DESCRIPTION = "Provides a pre-defined list of users and groups";
     private static final String VERSION = "1.0.0";
     private static final String OWNER = "CNES";
@@ -60,11 +59,18 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
      * Default file if the path is not defined in the configuration file
      */
     private static final String DEFAULT_CACHE_FILE = "data" + File.separator + "token.conf";
+    private final String NAME = this.getClass().getName();
 
     private String tokenConf;
 
-    private Map<String, Map<String, Object>> db = new ConcurrentHashMap<>();
+    /**
+     * My database.
+     */
+    private final Map<String, Map<String, Object>> db = new ConcurrentHashMap<>();
 
+    /**
+     * Default Constructor of the token database
+     */
     public DefaultTokenImpl() {
         super();
     }

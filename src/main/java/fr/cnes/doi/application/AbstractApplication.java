@@ -21,22 +21,20 @@ package fr.cnes.doi.application;
 import fr.cnes.doi.services.CnesStatusService;
 import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.settings.EmailSettings;
-import org.restlet.data.ChallengeScheme;
-import org.restlet.ext.wadl.WadlApplication;
-import org.restlet.security.ChallengeAuthenticator;
-import org.restlet.service.CorsService;
-
+import fr.cnes.doi.utils.spec.Requirement;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-
-import fr.cnes.doi.utils.spec.Requirement;
-import java.util.Collections;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.restlet.data.ChallengeScheme;
 import org.restlet.ext.wadl.ApplicationInfo;
+import org.restlet.ext.wadl.WadlApplication;
 import org.restlet.ext.wadl.WadlCnesRepresentation;
 import org.restlet.representation.Representation;
+import org.restlet.security.ChallengeAuthenticator;
+import org.restlet.service.CorsService;
 
 /**
  * Creates a base application by setting both the CORS, the DOI status page, the proxy and the DOI.

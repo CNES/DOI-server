@@ -28,6 +28,7 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -51,12 +52,12 @@ public class DefaultDoiImpl extends AbstractDoiDBPluginHelper {
      */
     private static final Logger LOG = LogManager.getLogger(DefaultDoiImpl.class.getName());
 
-    private final String NAME = this.getClass().getName();
     private static final String DESCRIPTION = "Provides a DOI database";
     private static final String VERSION = "1.0.0";
     private static final String OWNER = "CNES";
     private static final String AUTHOR = "Jean-Christophe Malapert";
     private static final String LICENSE = "LGPLV3";
+    private final String NAME = this.getClass().getName();
 
     /**
      * Configuration of the projects identifiers
@@ -72,6 +73,9 @@ public class DefaultDoiImpl extends AbstractDoiDBPluginHelper {
      */
     private final Map<URI, String> landingPageDoiMap = new ConcurrentHashMap<>();
 
+    /**
+     * Default constructor of the project suffix database
+     */
     public DefaultDoiImpl() {
         super();
     }
@@ -202,7 +206,7 @@ public class DefaultDoiImpl extends AbstractDoiDBPluginHelper {
 
     @Override
     public Map<URI, String> getRecords() {
-        return this.landingPageDoiMap;
+        return Collections.unmodifiableMap(this.landingPageDoiMap);
     }
 
     @Override

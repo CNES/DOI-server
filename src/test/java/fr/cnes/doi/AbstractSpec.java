@@ -128,9 +128,9 @@ public class AbstractSpec {
                             response()
                                     .withBody(body, StandardCharsets.UTF_8)
                                     .withStatusCode(statusCode)
-                    );
+                    );  
         }
-
+                      
         public void verifySpec(String verb, String path) {
             mockServer.verify(
                     request()

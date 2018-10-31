@@ -40,7 +40,7 @@ public class WebProxyResourceResolver implements LSResourceResolver {
     public WebProxyResourceResolver(final ClientResource client,
             final String schemaURL) {
         this.client = client;
-        this.referenceSchemaURI = schemaURL.substring(0, schemaURL.lastIndexOf("/"));
+        this.referenceSchemaURI = schemaURL.substring(0, schemaURL.lastIndexOf('/'));
     }
 
     private Representation loadContent(final String schemaURL) throws ResourceException {

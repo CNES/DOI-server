@@ -19,11 +19,11 @@
 package fr.cnes.doi.settings;
 
 import fr.cnes.doi.utils.spec.Requirement;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.restlet.Server;
 import org.restlet.data.Parameter;
 import org.restlet.ext.jetty.JettyServerHelper;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * Fills Jetty configuration file based on DoiSettings and registers it in Jetty.

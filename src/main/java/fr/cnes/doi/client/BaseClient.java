@@ -19,14 +19,12 @@
 package fr.cnes.doi.client;
 
 import fr.cnes.doi.utils.HttpClientHelperPatch;
-
+import java.util.List;
 import org.restlet.Client;
 import org.restlet.data.Protocol;
-import org.restlet.resource.ClientResource;
-
-import java.util.List;
 import org.restlet.engine.Engine;
 import org.restlet.engine.connector.ConnectorHelper;
+import org.restlet.resource.ClientResource;
 
 /**
  * Base client
@@ -39,7 +37,17 @@ public class BaseClient {
      * Port of the Datacite mockserver
      */
     public static final int DATACITE_MOCKSERVER_PORT = 1080;
+    
+    /**
+     * Number of retry when an error happens.
+     */
+    private static final int NB_RETRY = 10;
 
+    /**
+     * Delay between two {@link #NB_RETRY} in ms.
+     */
+    private static final int NB_DELAY = 1000;
+    
     /**
      * Client, which executes request.
      */
@@ -65,8 +73,8 @@ public class BaseClient {
         this.client = new ClientResource(uri);
         this.client.setLoggable(false);
         this.client.setRetryOnError(true);
-        this.client.setRetryAttempts(10);
-        this.client.setRetryDelay(1000);
+        this.client.setRetryAttempts(NB_RETRY);
+        this.client.setRetryDelay(NB_DELAY);
     }
 
     /**

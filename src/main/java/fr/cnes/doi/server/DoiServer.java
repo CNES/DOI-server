@@ -18,12 +18,28 @@
  */
 package fr.cnes.doi.server;
 
+import fr.cnes.doi.application.AdminApplication;
+import fr.cnes.doi.application.DoiCrossCiteApplication;
+import fr.cnes.doi.application.DoiMdsApplication;
+import fr.cnes.doi.exception.ClientMdsException;
+import fr.cnes.doi.logging.api.DoiLogDataServer;
+import fr.cnes.doi.logging.business.JsonMessage;
+import fr.cnes.doi.logging.security.DoiSecurityLogFilter;
+import fr.cnes.doi.security.RoleAuthorizer;
+import fr.cnes.doi.settings.Consts;
+import fr.cnes.doi.settings.DoiSettings;
+import fr.cnes.doi.settings.EmailSettings;
+import fr.cnes.doi.settings.JettySettings;
+import fr.cnes.doi.settings.ProxySettings;
+import fr.cnes.doi.utils.Utils;
+import fr.cnes.doi.utils.spec.Requirement;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.KeyStore;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.restlet.Application;
 import org.restlet.Component;
 import org.restlet.Context;
@@ -37,25 +53,6 @@ import org.restlet.routing.Filter;
 import org.restlet.service.LogService;
 import org.restlet.service.Service;
 import org.restlet.util.Series;
-
-import fr.cnes.doi.application.DoiCrossCiteApplication;
-import fr.cnes.doi.application.DoiMdsApplication;
-import fr.cnes.doi.application.AdminApplication;
-import fr.cnes.doi.exception.ClientMdsException;
-import fr.cnes.doi.logging.api.DoiLogDataServer;
-import fr.cnes.doi.logging.business.JsonMessage;
-import fr.cnes.doi.logging.security.DoiSecurityLogFilter;
-import fr.cnes.doi.security.RoleAuthorizer;
-import fr.cnes.doi.settings.Consts;
-;
-import fr.cnes.doi.settings.DoiSettings;
-import fr.cnes.doi.settings.EmailSettings;
-import fr.cnes.doi.settings.JettySettings;
-import fr.cnes.doi.settings.ProxySettings;
-import fr.cnes.doi.utils.Utils;
-import fr.cnes.doi.utils.spec.Requirement;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * DoiServer contains the configuration of this server and the methods to start/stop it.

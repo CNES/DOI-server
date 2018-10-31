@@ -117,7 +117,7 @@ public class ClientSearchDataCite extends BaseClient {
      * @return the search result
      */
     public List<String> getDois() {
-        return this.doiList;
+        return Collections.unmodifiableList(this.doiList);
     }
 
 }

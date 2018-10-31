@@ -22,17 +22,17 @@ import fr.cnes.doi.application.DoiMdsApplication;
 import fr.cnes.doi.application.DoiMdsApplication.API_MDS;
 import fr.cnes.doi.exception.DoiServerException;
 import fr.cnes.doi.resource.AbstractResource;
+import static fr.cnes.doi.security.UtilsHeader.SELECTED_ROLE_PARAMETER;
 import fr.cnes.doi.utils.spec.Requirement;
 import java.util.List;
-import org.restlet.security.Role;
-import org.restlet.util.Series;
-import static fr.cnes.doi.security.UtilsHeader.SELECTED_ROLE_PARAMETER;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 import org.restlet.data.MediaType;
 import org.restlet.ext.wadl.DocumentationInfo;
 import org.restlet.ext.wadl.MethodInfo;
 import org.restlet.ext.wadl.RepresentationInfo;
+import org.restlet.security.Role;
+import org.restlet.util.Series;
 
 /**
  * Base resource for the different resources.
@@ -41,10 +41,6 @@ import org.restlet.ext.wadl.RepresentationInfo;
  */
 public class BaseMdsResource extends AbstractResource {
 
-    /**
-     * Logger.
-     */
-    protected Logger LOG;
 
     /**
      * The parameter that describes the DOI name {@value #DOI_PARAMETER}.
@@ -55,6 +51,10 @@ public class BaseMdsResource extends AbstractResource {
      * The parameter that describes the landing page related to the DOI {@value #URL_PARAMETER}.
      */
     public static final String URL_PARAMETER = "url";
+    /**
+     * Logger.
+     */
+    protected Logger LOG;
 
     /**
      * DOI Mds application.

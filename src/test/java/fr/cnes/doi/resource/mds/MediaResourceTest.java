@@ -25,7 +25,6 @@ import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.MdsSpec;
 import fr.cnes.doi.UnitTest;
 import static fr.cnes.doi.client.BaseClient.DATACITE_MOCKSERVER_PORT;
-import fr.cnes.doi.exception.ClientMdsException;
 import fr.cnes.doi.security.UtilsHeader;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_CONNECTIONS_PER_HOST;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_TOTAL_CONNECTIONS;

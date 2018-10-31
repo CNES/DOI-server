@@ -19,6 +19,7 @@
 package fr.cnes.doi.client;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import org.restlet.data.Status;
 import org.restlet.resource.ResourceException;
@@ -101,7 +102,7 @@ public class ClientLandingPage extends BaseClient {
      * @return the error
      */
     public List<String> getErrors() {
-        return this.errors;
+        return Collections.unmodifiableList(this.errors);
     }
 
 }

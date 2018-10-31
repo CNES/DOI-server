@@ -18,11 +18,10 @@
  */
 package fr.cnes.doi.logging.business;
 
-import org.apache.logging.log4j.status.StatusLogger;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.message.Message;
+import org.apache.logging.log4j.status.StatusLogger;
 
 /**
  * Converts an Object to a JSON String.
@@ -42,6 +41,10 @@ public class JsonMessage implements Message {
         this.object = object;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String getFormattedMessage() {
         String result;
@@ -54,16 +57,28 @@ public class JsonMessage implements Message {
         return result;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String getFormat() {
         return object.toString();
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public Object[] getParameters() {
         return new Object[]{object};
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public Throwable getThrowable() {
         return null;

@@ -24,7 +24,6 @@ import java.net.CookieStore;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.HttpProxy;
@@ -37,13 +36,11 @@ import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.restlet.Client;
 import org.restlet.Context;
 import org.restlet.Request;
-import org.restlet.Response;
-import org.restlet.data.Protocol;
 import org.restlet.engine.adapter.ClientCall;
-import org.restlet.ext.jetty.HttpClientHelper;
-import org.restlet.ext.jetty.internal.RestletSslContextFactory;
 import org.restlet.engine.util.ReferenceUtils;
+import org.restlet.ext.jetty.HttpClientHelper;
 import org.restlet.ext.jetty.internal.JettyClientCall;
+import org.restlet.ext.jetty.internal.RestletSslContextFactory;
 
 /**
  * Patch of the HttpClientHelper. HttpClientHelper makes a bridge between Restlet and HttpClient
@@ -120,15 +117,15 @@ public class HttpClientHelperPatch extends HttpClientHelper {
             getLogger().log(Level.WARNING,
                     "Unable to create the SSL context factory.", e);
         }
-        HttpClient httpClientJetty = new HttpClient(sslContextFactory);
+        final HttpClient httpClientJetty = new HttpClient(sslContextFactory);
 
         // configure Jetty options 
         configureOptions(httpClientJetty);
 
-        ProxySettings proxySettings = ProxySettings.getInstance();
+        final ProxySettings proxySettings = ProxySettings.getInstance();
         if (proxySettings.isWithProxy()) {
-            ProxyConfiguration proxyConfig = httpClientJetty.getProxyConfiguration();
-            HttpProxy proxy = new HttpProxy(proxySettings.getProxyHost(), Integer.parseInt(
+            final ProxyConfiguration proxyConfig = httpClientJetty.getProxyConfiguration();
+            final HttpProxy proxy = new HttpProxy(proxySettings.getProxyHost(), Integer.parseInt(
                     proxySettings.getProxyPort()));
 
             // hosts not proxified
@@ -155,7 +152,7 @@ public class HttpClientHelperPatch extends HttpClientHelper {
         httpClientJetty.setBindAddress(getBindAddress());
         httpClientJetty.setConnectTimeout(getConnectTimeout());
 
-        CookieStore cookieStore = getCookieStore();
+        final CookieStore cookieStore = getCookieStore();
 
         if (cookieStore != null) {
             httpClientJetty.setCookieStore(cookieStore);
@@ -174,7 +171,7 @@ public class HttpClientHelperPatch extends HttpClientHelper {
         httpClientJetty.setStopTimeout(getStopTimeout());
         httpClientJetty.setStrictEventOrdering(isStrictEventOrdering());
         httpClientJetty.setTCPNoDelay(isTcpNoDelay());
-        String userAgentField = getUserAgentField();
+        final String userAgentField = getUserAgentField();
 
         if (userAgentField != null) {
             httpClientJetty.setUserAgentField(new HttpField(HttpHeader.USER_AGENT, userAgentField));
@@ -187,9 +184,8 @@ public class HttpClientHelperPatch extends HttpClientHelper {
      * @param proxy proxy
      * @param noHosts non proxified hosts as comma sperated value
      */
-    private void addNoPxifiedHost(final HttpProxy proxy,
-            final String noHosts) {
-        List<String> nonProxies = new ArrayList<>();
+    private void addNoPxifiedHost(final HttpProxy proxy, final String noHosts) {
+        final List<String> nonProxies = new ArrayList<>();
         Collections.addAll(nonProxies, noHosts.split("\\s*,\\s*"));
         proxy.getExcludedAddresses().addAll(nonProxies);
     }
@@ -221,9 +217,14 @@ public class HttpClientHelperPatch extends HttpClientHelper {
         if (hasAuthenticationProxy(login, pwd)) {
             AuthenticationStore auth = httpClientJetty.getAuthenticationStore();
             // Proxy credentials.
-            auth.
-                    addAuthentication(new BasicAuthentication(proxy.getURI(), "ProxyRealm", login,
-                            pwd));
+            auth.addAuthentication(
+                    new BasicAuthentication(
+                            proxy.getURI(), 
+                            "ProxyRealm", 
+                            login,
+                            pwd
+                    )
+            );
         }
     }
 
@@ -237,6 +238,10 @@ public class HttpClientHelperPatch extends HttpClientHelper {
         return this.httpClient;
     }
 
+    /**
+     *
+     * @throws Exception
+     */
     @Override
     public void start() throws Exception {
         final HttpClient httpClientJetty = getHttpClient();
@@ -246,6 +251,10 @@ public class HttpClientHelperPatch extends HttpClientHelper {
         }
     }
 
+    /**
+     *
+     * @throws Exception
+     */
     @Override
     public void stop() throws Exception {
         final HttpClient httpClientJetty = getHttpClient();

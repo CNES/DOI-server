@@ -70,12 +70,6 @@ public final class UtilsCryptography {
      */
     private static final String MSG_TPL2 = "Parameters : {} and {}";
 
-    /**
-     * Private constructor
-     */
-    private UtilsCryptography() {
-        //not called
-    }
 
     /**
      * Decrypts the string with the DEFAULT_SECRET_KEY.
@@ -155,5 +149,11 @@ public final class UtilsCryptography {
                 | IllegalBlockSizeException | BadPaddingException ex) {
             throw LOG.throwing(new DoiRuntimeException(ex));
         }
+    }
+    /**
+     * Private constructor
+     */
+    private UtilsCryptography() {
+        //not called
     }
 }

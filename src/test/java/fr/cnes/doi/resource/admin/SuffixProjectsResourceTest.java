@@ -149,7 +149,7 @@ public class SuffixProjectsResourceTest {
         String projects = response.getText();
         client.release();
         assertNotNull("Test if the response is not null",projects);
-        assertTrue("Test is the response is in XML format",projects.contains("<ConcurrentHashMap>"));
+        assertTrue("Test is the response is in XML format",projects.contains("<THEIA>"));
     }
 
     /**

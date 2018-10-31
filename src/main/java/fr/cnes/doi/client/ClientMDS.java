@@ -19,41 +19,40 @@
 package fr.cnes.doi.client;
 
 import static fr.cnes.doi.client.ClientMDS.METADATA_RESOURCE;
+import fr.cnes.doi.exception.ClientMdsException;
+import fr.cnes.doi.settings.Consts;
+import fr.cnes.doi.settings.DoiSettings;
+import fr.cnes.doi.utils.WebProxyResourceResolver;
+import fr.cnes.doi.utils.spec.Requirement;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import java.text.MessageFormat;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Level;
+import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.ValidationEvent;
+import javax.xml.bind.ValidationEventHandler;
+import javax.xml.bind.ValidationException;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
 import org.datacite.schema.kernel_4.Resource;
 import org.datacite.schema.kernel_4.Resource.Identifier;
 import org.restlet.data.ChallengeScheme;
+import org.restlet.data.CharacterSet;
 import org.restlet.data.Form;
+import org.restlet.data.Language;
 import org.restlet.data.MediaType;
 import org.restlet.data.Parameter;
 import org.restlet.data.Reference;
 import org.restlet.data.Status;
 import org.restlet.engine.Engine;
 import org.restlet.representation.Representation;
-
-import fr.cnes.doi.exception.ClientMdsException;
-import fr.cnes.doi.settings.Consts;
-import fr.cnes.doi.settings.DoiSettings;
-import fr.cnes.doi.utils.WebProxyResourceResolver;
-import fr.cnes.doi.utils.spec.Requirement;
-import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
-import java.text.MessageFormat;
-import java.util.Iterator;
-import javax.xml.XMLConstants;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.ValidationEvent;
-import javax.xml.bind.ValidationEventHandler;
-import javax.xml.bind.ValidationException;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import org.restlet.data.CharacterSet;
-import org.restlet.data.Language;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ResourceException;
 import org.xml.sax.SAXException;
@@ -66,8 +65,7 @@ import org.xml.sax.SAXException;
  * @see "https://mds.datacite.org/static/apidoc"
  */
 @Requirement(reqId = Requirement.DOI_INTER_010, reqName = Requirement.DOI_INTER_010_NAME)
-public class ClientMDS extends BaseClient {
-
+public class ClientMDS extends BaseClient {    
     /**
      * Metadata store service endpoint {@value #DATA_CITE_URL}.
      */
@@ -121,7 +119,7 @@ public class ClientMDS extends BaseClient {
     /**
      * Default XML schema for Datacite: {@value #SCHEMA_DATACITE}
      */
-    private static final String SCHEMA_DATACITE = "https://schema.datacite.org/meta/kernel-4.0/metadata.xsd";
+    public static final String SCHEMA_DATACITE = "https://schema.datacite.org/meta/kernel-4.0/metadata.xsd";
 
     /**
      * SCHEMA_FACTORY.
@@ -134,229 +132,31 @@ public class ClientMDS extends BaseClient {
      * Loads DOI settings.
      */
     private static final DoiSettings DOI_SETTINGS = DoiSettings.getInstance();
-
     /**
-     * Datacite API.
+     * DataCite recommends that only the following characters are used within a DOI name:
+     * <ul>
+     * <li>0-9</li>
+     * <li>a-z</li>
+     * <li>A-Z</li>
+     * <li>- (dash)</li>
+     * <li>. (dot)</li>
+     * <li>_ (underscore)</li>
+     * <li>+ (plus)</li>
+     * <li>: (colon)</li>
+     * <li>/ (slash)</li>
+     * </ul>
+     *
+     * @param test DOI name to test
+     * @throws IllegalArgumentException An exception is thrown when at least one character is not
+     * part of 0-9a-zA-Z\\-._+:/ of a DOI name
      */
-    public enum DATACITE_API_RESPONSE {
-        /**
-         * Get/Delete successfully a DOI or a media. SUCCESS_OK is used as status
-         */
-        SUCCESS(Status.SUCCESS_OK, "Operation successful"),
-        /**
-         * Create successfully a DOI. SUCCESS_CREATED is as used as status.
-         */
-        SUCESS_CREATED(Status.SUCCESS_CREATED, "Operation successful"),
-        /**
-         * Get a DOI without metadata. SUCCESS_NO_CONTENT is used as status
-         */
-        SUCCESS_NO_CONTENT(Status.SUCCESS_NO_CONTENT,
-                " the DOI is known to DataCite Metadata Store (MDS), but no metadata have been registered"),
-        /**
-         * Fail to create a media or the metadata. CLIENT_ERROR_BAD_REQUEST is used as status
-         */
-        BAD_REQUEST(Status.CLIENT_ERROR_BAD_REQUEST,
-                "invalid XML, wrong prefix or request body must be exactly two lines: DOI and URL; wrong domain, wrong prefix"),
-        /**
-         * Fail to authorize the user to create/delete a DOI. CLIENT_ERROR_UNAUTHORIZED is used as
-         * status
-         */
-        UNAUTHORIZED(Status.CLIENT_ERROR_UNAUTHORIZED, "no login"),
-        /**
-         * Fail to create/delete media/metadata/Landing page. CLIENT_ERROR_FORBIDDEN is used as
-         * status
-         */
-        FORBIDDEN(Status.CLIENT_ERROR_FORBIDDEN,
-                "login problem, wrong prefix, permission problem or dataset belongs to another party"),
-        /**
-         * Fail to get the DOI. CLIENT_ERROR_NOT_FOUND is used as status
-         */
-        DOI_NOT_FOUND(Status.CLIENT_ERROR_NOT_FOUND, "DOI does not exist in our database"),
-        /**
-         * Get an inactive DOI. CLIENT_ERROR_GONE is used as status
-         */
-        DOI_INACTIVE(Status.CLIENT_ERROR_GONE,
-                "the requested dataset was marked inactive (using DELETE method)"),
-        /**
-         * Fail to create a DOI because metadata must be uploaded first.
-         * CLIENT_ERROR_PRECONDITION_FAILED is used as status
-         */
-        PROCESS_ERROR(Status.CLIENT_ERROR_PRECONDITION_FAILED, "metadata must be uploaded first"),
-        /**
-         * Internal server Error. INTERNAL_SERVER_ERROR is used as status.
-         */
-        INTERNAL_SERVER_ERROR(Status.SERVER_ERROR_INTERNAL, "Internal server error");
-
-        private final Status status;
-        private final String message;
-
-        DATACITE_API_RESPONSE(final Status status,
-                final String message) {
-            this.status = status;
-            this.message = message;
-        }
-
-        public Status getStatus() {
-            return this.status;
-        }
-
-        public String getShortMessage() {
-            return this.message;
-        }
-
-        public static String getMessageFromStatus(final Status statusToFind) {
-            String result = "";
-            final int codeToFind = statusToFind.getCode();
-            DATACITE_API_RESPONSE[] values = DATACITE_API_RESPONSE.values();
-            for (int i = 0; i <= values.length; i++) {
-                DATACITE_API_RESPONSE value = values[i];
-                final int codeValue = value.getStatus().getCode();
-                if (codeValue == codeToFind) {
-                    result = value.message;
-                    break;
-                }
-            }
-            return result;
+    public static void checkIfAllCharsAreValid(final String test) {
+        if (!test.matches("^[0-9a-zA-Z\\-._+:/\\s]+$")) {
+            throw new IllegalArgumentException("Only these characters are allowed "
+                    + "0-9a-zA-Z\\-._+:/ in a DOI name");
         }
     }
-
-    /**
-     * Options for each context
-     */
-    public enum Context {
-
-        /**
-         * Development context.
-         */
-        DEV(false, true, DATA_CITE_MOCK_URL, Level.ALL),
-        /**
-         * Post development context.
-         */
-        POST_DEV(false, true, DATA_CITE_TEST_URL, Level.ALL),
-        /**
-         * Pre production context.
-         */
-        PRE_PROD(false, true, DATA_CITE_URL, Level.FINE),
-        /**
-         * Production context.
-         */
-        PROD(false, false, DATA_CITE_URL, Level.INFO);
-
-        /**
-         * Each API call can have optional query parametertestMode. If set to "true" or "1" the
-         * request will not change the database nor will the DOI handle will be registered or
-         * updated, e.g. POST /doi?testMode=true and the testing prefix will be used instead of the
-         * provided prefix
-         */
-        private final boolean isTestMode;
-
-        /**
-         * There is special test prefix 10.5072 available to all datacentres. Please use it for all
-         * your testing DOIs. Your real prefix should not be used for test DOIs. Note that DOIs with
-         * test prefix will behave like any other DOI, e.g. they can be normally resolved. They will
-         * not be exposed by upcoming services like search and OAI, though. Periodically we purge
-         * all 10.5072 datasets from the system.
-         */
-        private final boolean isDoiPrefix;
-
-        /**
-         * Level log.
-         */
-        private Level levelLog;
-
-        /**
-         * DataCite URL.
-         */
-        private String dataCiteUrl;
-
-        Context(final boolean isTestMode,
-                final boolean isDoiPrefix,
-                final String dataciteUrl,
-                final Level levelLog) {
-            this.isTestMode = isTestMode;
-            this.isDoiPrefix = isDoiPrefix;
-            this.dataCiteUrl = dataciteUrl;
-            this.levelLog = levelLog;
-        }
-
-        /**
-         * Returns true when the context has a DOI dev.
-         *
-         * @return True when the context has a DOI dev
-         */
-        public boolean hasDoiTestPrefix() {
-            return this.isDoiPrefix;
-        }
-
-        /**
-         * Returns true when the context must not register data in DataCite
-         *
-         * @return true when the context must not register data in DataCite
-         */
-        public boolean hasTestMode() {
-            return this.isTestMode;
-        }
-
-        /**
-         * Returns the log level.
-         *
-         * @return the log level
-         */
-        public Level getLevelLog() {
-            return this.levelLog;
-        }
-
-        /**
-         * Returns the service end point.
-         *
-         * @return the service end point
-         */
-        public String getDataCiteUrl() {
-            return this.dataCiteUrl;
-        }
-
-        /**
-         * Sets the DataCite URL for the context
-         *
-         * @param dataCiteUrl DataCite URL
-         */
-        private void setDataCiteURl(final String dataCiteUrl) {
-            this.dataCiteUrl = dataCiteUrl;
-        }
-
-        /**
-         * Sets the level log for the context
-         *
-         * @param levelLog level log
-         */
-        private void setLevelLog(final Level levelLog) {
-            this.levelLog = levelLog;
-        }
-
-        /**
-         * Sets the level log for a given context
-         *
-         * @param context the context
-         * @param levelLog the level log
-         */
-        public static void setLevelLog(final Context context,
-                final Level levelLog) {
-            context.setLevelLog(levelLog);
-        }
-
-        /**
-         * Sets the DataCite URL for a given context
-         *
-         * @param context the context
-         * @param dataCiteUrl the DataCite URL
-         */
-        public static void setDataCiteUrl(final Context context,
-                final String dataCiteUrl) {
-            context.setDataCiteURl(dataCiteUrl);
-        }
-
-    }
-
+    
     /**
      * Selected test mode.
      */
@@ -375,12 +175,9 @@ public class ClientMDS extends BaseClient {
     /**
      * Unarshall.
      */
-    private final Unmarshaller unMarshaller;
+    private final Unmarshaller unMarshaller;    
 
-    /**
-     * Validation handler when parsing the metadata.
-     */
-    //final MyValidationEventHandler validationHandler;
+
     /**
      * Creates a client to handle DataCite server.
      *
@@ -414,10 +211,9 @@ public class ClientMDS extends BaseClient {
                     SCHEMA_DATACITE);
             SCHEMA_FACTORY.setResourceResolver(new WebProxyResourceResolver(this.getClient(),
                     schemaUrl));
-            Schema schema = SCHEMA_FACTORY.newSchema();
+            final Schema schema = SCHEMA_FACTORY.newSchema();
             final JAXBContext ctx = JAXBContext.newInstance(new Class[]{Resource.class});
             this.marshaller = ctx.createMarshaller();
-            //this.marshaller.setProperty(Marshaller.JAXB_SCHEMA_LOCATION, schemaInfo.get("targetName") + " " + schemaUrl);
             this.marshaller.setProperty(Marshaller.JAXB_SCHEMA_LOCATION,
                     "http://datacite.org/schema/kernel-4 "
                     + "http://schema.datacite.org/meta/kernel-4/metadata.xsd");
@@ -478,107 +274,6 @@ public class ClientMDS extends BaseClient {
         this.getClient().setChallengeResponse(ChallengeScheme.HTTP_BASIC, login, pwd);
     }
 
-//
-//    /**
-//     * Returns the JAXB schema.
-//     *
-//     * @param schemaInfo Information about the schema
-//     * @return the JAXB schema
-//     * @throws ClientMdsException When a network problem happens.
-//     * @throws SAXException
-//     */
-//    private Schema getSchema(Map<String, String> schemaInfo) throws ClientMdsException, SAXException {
-//        final Source[] sources = getSchemas(schemaInfo.get("referenceUrl"), schemaInfo.get("schemaContent"));
-//        return SCHEMA_FACTORY.newSchema(sources);
-//    }
-//
-//    /**
-//     * Retrieves the schema content from the URL.
-//     *
-//     * @param schemaURL URL where the schema is located
-//     * @return the schema content
-//     * @throws ClientMdsException When a network problem happens.
-//     */
-//    private String getSchemaContent(final String schemaURL) throws ClientMdsException {
-//        final String schema;
-//        this.getClient().setReference(schemaURL);
-//        try {
-//            Representation rep = this.getClient().get();
-//            schema = getText(rep);
-//        } catch (ResourceException ex) {
-//            throw new ClientMdsException(Status.CONNECTOR_ERROR_COMMUNICATION, "Cannot load the Datacite schema", ex);
-//        } finally {
-//            this.getClient().release();
-//        }
-//        return schema;
-//    }
-//
-//    /**
-//     * Extracts targeNamespace from schemaContent content.
-//     *
-//     * @param schemaContent schemaContent
-//     * @return the targetNameSpace
-//     * @throws ClientMdsException Cannot extract the targetNamespace
-//     */
-//    private String getTargetNameSpaceFromSchema(final String schemaContent) throws ClientMdsException {
-//        final String targetNameSpace;
-//        Pattern pattern = Pattern.compile("targetNamespace=\"(.*)\" elementFormDefault");
-//        Matcher matcher = pattern.matcher(schemaContent);
-//        if (matcher.find()) {
-//            targetNameSpace = matcher.group(1);
-//        } else {
-//            throw new ClientMdsException(Status.SERVER_ERROR_INTERNAL, "Cannot get the targetNamespace from the Datacite schema");
-//        }
-//        return targetNameSpace;
-//    }
-//
-//    /**
-//     * Returns the information needed to act as source input (XML source or transformation
-//     * instructions).
-//     *
-//     * @param reference reference URL of the schema
-//     * @param schemaContent schema contain
-//     * @return the information needed to act as source input (XML source or transformation
-//     * instructions).
-//     * @throws ClientMdsException Cannot download includes from Datacite schema
-//     */
-//    private Source[] getSchemas(final String reference, final String schemaContent) throws ClientMdsException {
-//        final List<String> schemas = getIncludesFrom(schemaContent);
-//        for (int i = 0; i < schemas.size(); i++) {
-//            String url = reference + schemas.get(i);
-//            this.getClient().setReference(url);
-//            try {
-//                Representation rep = this.getClient().get();
-//                schemas.set(i, getText(rep));
-//            } catch (ResourceException ex) {
-//                throw new ClientMdsException(Status.SERVER_ERROR_INTERNAL, "Cannot downlaod includes from Datacite schema", ex);
-//            } finally {
-//                this.getClient().release();
-//            }
-//        }
-//        schemas.add(schemaContent);
-//        Source[] sources = new Source[schemas.size()];
-//        for (int i = 0; i < sources.length; i++) {
-//            sources[i] = new StreamSource(new StringReader(schemas.get(i)));
-//        }
-//        return sources;
-//    }
-//
-//    /**
-//     * Returns the schema to include from the schema content.
-//     *
-//     * @param schemaContent schema content
-//     * @return the schema to include from the schema content.
-//     */
-//    private List<String> getIncludesFrom(final String schemaContent) {
-//        final Pattern pattern = Pattern.compile("<xs:include schemaLocation=\"(.*)\"/>");
-//        final Matcher matcher = pattern.matcher(schemaContent);
-//        final List<String> res = new ArrayList<>();
-//        while (matcher.find()) {
-//            res.add(matcher.group(1));
-//        }
-//        return res;
-//    }
     /**
      * Returns the {@link #TEST_MODE} or an empty parameter according to
      * <i>isTestMode</i>
@@ -657,30 +352,6 @@ public class ClientMDS extends BaseClient {
         return this.context.hasDoiTestPrefix() ? useTestPrefix(doiName) : doiName;
     }
 
-    /**
-     * DataCite recommends that only the following characters are used within a DOI name:
-     * <ul>
-     * <li>0-9</li>
-     * <li>a-z</li>
-     * <li>A-Z</li>
-     * <li>- (dash)</li>
-     * <li>. (dot)</li>
-     * <li>_ (underscore)</li>
-     * <li>+ (plus)</li>
-     * <li>: (colon)</li>
-     * <li>/ (slash)</li>
-     * </ul>
-     *
-     * @param test DOI name to test
-     * @throws IllegalArgumentException An exception is thrown when at least one character is not
-     * part of 0-9a-zA-Z\\-._+:/ of a DOI name
-     */
-    public static void checkIfAllCharsAreValid(final String test) {
-        if (!test.matches("^[0-9a-zA-Z\\-._+:/\\s]+$")) {
-            throw new IllegalArgumentException("Only these characters are allowed "
-                    + "0-9a-zA-Z\\-._+:/ in a DOI name");
-        }
-    }
 
     /**
      * Checks the input parameters and specially the validity of the DOI name. The real prefix is
@@ -1216,7 +887,7 @@ public class ClientMDS extends BaseClient {
          *
          * @param logger logger
          */
-        public MyValidationEventHandler(final java.util.logging.Logger logger) {
+        MyValidationEventHandler(final java.util.logging.Logger logger) {
             this.logger = logger;
         }
 
@@ -1277,6 +948,239 @@ public class ClientMDS extends BaseClient {
         public String getErrorMsg() {
             return this.errorMsg;
         }
+    }
+    /**
+     * Datacite API.
+     */
+    public enum DATACITE_API_RESPONSE {
+        /**
+         * Get/Delete successfully a DOI or a media. SUCCESS_OK is used as status
+         */
+        SUCCESS(Status.SUCCESS_OK, "Operation successful"),
+        /**
+         * Create successfully a DOI. SUCCESS_CREATED is as used as status.
+         */
+        SUCESS_CREATED(Status.SUCCESS_CREATED, "Operation successful"),
+        /**
+         * Get a DOI without metadata. SUCCESS_NO_CONTENT is used as status
+         */
+        SUCCESS_NO_CONTENT(Status.SUCCESS_NO_CONTENT,
+        " the DOI is known to DataCite Metadata Store (MDS), but no metadata have been registered"),
+        /**
+         * Fail to create a media or the metadata. CLIENT_ERROR_BAD_REQUEST is used as status
+         */
+        BAD_REQUEST(Status.CLIENT_ERROR_BAD_REQUEST,
+        "invalid XML, wrong prefix or request body must be exactly two lines: DOI and URL; wrong domain, wrong prefix"),
+        /**
+         * Fail to authorize the user to create/delete a DOI. CLIENT_ERROR_UNAUTHORIZED is used as
+         * status
+         */
+        UNAUTHORIZED(Status.CLIENT_ERROR_UNAUTHORIZED, "no login"),
+        /**
+         * Fail to create/delete media/metadata/Landing page. CLIENT_ERROR_FORBIDDEN is used as
+         * status
+         */
+        FORBIDDEN(Status.CLIENT_ERROR_FORBIDDEN,
+        "login problem, wrong prefix, permission problem or dataset belongs to another party"),
+        /**
+         * Fail to get the DOI. CLIENT_ERROR_NOT_FOUND is used as status
+         */
+        DOI_NOT_FOUND(Status.CLIENT_ERROR_NOT_FOUND, "DOI does not exist in our database"),
+        /**
+         * Get an inactive DOI. CLIENT_ERROR_GONE is used as status
+         */
+        DOI_INACTIVE(Status.CLIENT_ERROR_GONE,
+        "the requested dataset was marked inactive (using DELETE method)"),
+        /**
+         * Fail to create a DOI because metadata must be uploaded first.
+         * CLIENT_ERROR_PRECONDITION_FAILED is used as status
+         */
+        PROCESS_ERROR(Status.CLIENT_ERROR_PRECONDITION_FAILED, "metadata must be uploaded first"),
+        /**
+         * Internal server Error. INTERNAL_SERVER_ERROR is used as status.
+         */
+        INTERNAL_SERVER_ERROR(Status.SERVER_ERROR_INTERNAL, "Internal server error");
+        
+        private final Status status;
+        private final String message;
+        
+        DATACITE_API_RESPONSE(final Status status,
+                final String message) {
+            this.status = status;
+            this.message = message;
+        }
+        
+        /**
+         *
+         * @return
+         */
+        public Status getStatus() {
+            return this.status;
+        }
+        
+        /**
+         *
+         * @return
+         */
+        public String getShortMessage() {
+            return this.message;
+        }
+        
+        /**
+         * Returns the message for a specific Status.
+         * @param statusToFind status to search
+         * @return the message or empty string
+         */
+        public static String getMessageFromStatus(final Status statusToFind) {
+            String result = "";
+            final int codeToFind = statusToFind.getCode();
+            DATACITE_API_RESPONSE[] values = DATACITE_API_RESPONSE.values();
+            for (int i = 0; i <= values.length; i++) {
+                DATACITE_API_RESPONSE value = values[i];
+                final int codeValue = value.getStatus().getCode();
+                if (codeValue == codeToFind) {
+                    result = value.message;
+                    break;
+                }
+            }
+            return result;
+        }
+    }
+    /**
+     * Options for each context
+     */
+    public enum Context {
+        
+        /**
+         * Development context.
+         */
+        DEV(false, true, DATA_CITE_MOCK_URL, Level.ALL),
+        /**
+         * Post development context.
+         */
+        POST_DEV(false, true, DATA_CITE_TEST_URL, Level.ALL),
+        /**
+         * Pre production context.
+         */
+        PRE_PROD(false, true, DATA_CITE_URL, Level.FINE),
+        /**
+         * Production context.
+         */
+        PROD(false, false, DATA_CITE_URL, Level.INFO);
+        
+        /**
+         * Each API call can have optional query parametertestMode. If set to "true" or "1" the
+         * request will not change the database nor will the DOI handle will be registered or
+         * updated, e.g. POST /doi?testMode=true and the testing prefix will be used instead of the
+         * provided prefix
+         */
+        private final boolean isTestMode;
+        
+        /**
+         * There is special test prefix 10.5072 available to all datacentres. Please use it for all
+         * your testing DOIs. Your real prefix should not be used for test DOIs. Note that DOIs with
+         * test prefix will behave like any other DOI, e.g. they can be normally resolved. They will
+         * not be exposed by upcoming services like search and OAI, though. Periodically we purge
+         * all 10.5072 datasets from the system.
+         */
+        private final boolean isDoiPrefix;
+        
+        /**
+         * Level log.
+         */
+        private Level levelLog;
+        
+        /**
+         * DataCite URL.
+         */
+        private String dataCiteUrl;
+        
+        Context(final boolean isTestMode,
+                final boolean isDoiPrefix,
+                final String dataciteUrl,
+                final Level levelLog) {
+            this.isTestMode = isTestMode;
+            this.isDoiPrefix = isDoiPrefix;
+            this.dataCiteUrl = dataciteUrl;
+            this.levelLog = levelLog;
+        }
+        
+        /**
+         * Returns true when the context has a DOI dev.
+         *
+         * @return True when the context has a DOI dev
+         */
+        public boolean hasDoiTestPrefix() {
+            return this.isDoiPrefix;
+        }
+        
+        /**
+         * Returns true when the context must not register data in DataCite
+         *
+         * @return true when the context must not register data in DataCite
+         */
+        public boolean hasTestMode() {
+            return this.isTestMode;
+        }
+        
+        /**
+         * Returns the log level.
+         *
+         * @return the log level
+         */
+        public Level getLevelLog() {
+            return this.levelLog;
+        }
+        
+        /**
+         * Returns the service end point.
+         *
+         * @return the service end point
+         */
+        public String getDataCiteUrl() {
+            return this.dataCiteUrl;
+        }
+        
+        /**
+         * Sets the DataCite URL for the context
+         *
+         * @param dataCiteUrl DataCite URL
+         */
+        private void setDataCiteURl(final String dataCiteUrl) {
+            this.dataCiteUrl = dataCiteUrl;
+        }
+        
+        /**
+         * Sets the level log for the context
+         *
+         * @param levelLog level log
+         */
+        private void setLevelLog(final Level levelLog) {
+            this.levelLog = levelLog;
+        }
+        
+        /**
+         * Sets the level log for a given context
+         *
+         * @param context the context
+         * @param levelLog the level log
+         */
+        public static void setLevelLog(final Context context,
+                final Level levelLog) {
+            context.setLevelLog(levelLog);
+        }
+        
+        /**
+         * Sets the DataCite URL for a given context
+         *
+         * @param context the context
+         * @param dataCiteUrl the DataCite URL
+         */
+        public static void setDataCiteUrl(final Context context,
+                final String dataCiteUrl) {
+            context.setDataCiteURl(dataCiteUrl);
+        }
+        
     }
 
 }

@@ -85,19 +85,6 @@ public final class TokenSecurity {
      */
     private static final Logger LOG = LogManager.getLogger(TokenSecurity.class.getName());
 
-    /**
-     * token key.
-     */
-    private String tokenKey;
-
-    /**
-     * Private constructor.
-     */
-    private TokenSecurity() {
-        LOG.traceEntry();
-        init();
-        LOG.traceExit();
-    }
 
     /**
      * Access to unique INSTANCE of Settings
@@ -120,6 +107,18 @@ public final class TokenSecurity {
         final Key key = MacProvider.generateKey(SignatureAlgorithm.HS256);
         return LOG.traceExit(TextCodec.BASE64.encode(key.getEncoded()));
     }
+    /**
+     * token key.
+     */
+    private String tokenKey;
+    /**
+     * Private constructor.
+     */
+    private TokenSecurity() {
+        LOG.traceEntry();
+        init();
+        LOG.traceExit();
+    }
 
     /**
      * Init.
@@ -132,64 +131,6 @@ public final class TokenSecurity {
         LOG.traceExit();
     }
 
-    /**
-     * Time unit.
-     */
-    public enum TimeUnit {
-        /**
-         * Hour.
-         */
-        HOUR(Calendar.HOUR),
-        /**
-         * Day.
-         */
-        DAY(Calendar.DATE),
-        /**
-         * Year.
-         */
-        YEAR(Calendar.YEAR);
-
-        /**
-         * time unit
-         */
-        private final int timeUnit;
-
-        /**
-         * Constructor.
-         *
-         * @param timeUnit time unit
-         */
-        TimeUnit(final int timeUnit) {
-            this.timeUnit = timeUnit;
-        }
-
-        /**
-         * Returns the time unit.
-         *
-         * @return the time unit
-         */
-        public int getTimeUnit() {
-            return this.timeUnit;
-        }
-
-        /**
-         * Returns the time unit from a value.
-         *
-         * @param value vale
-         * @return time unit
-         */
-        public static TimeUnit getTimeUnitFrom(final int value) {
-            TimeUnit result = null;
-            final TimeUnit[] units = TimeUnit.values();
-            for (final TimeUnit unit : units) {
-                if (unit.getTimeUnit() == value) {
-                    result = unit;
-                    break;
-                }
-            }
-            return result;
-        }
-    }
 
     /**
      * Creates a token.
@@ -316,5 +257,63 @@ public final class TokenSecurity {
          * Unique Instance unique
          */
         private static final TokenSecurity INSTANCE = new TokenSecurity();
+    }
+    /**
+     * Time unit.
+     */
+    public enum TimeUnit {
+        /**
+         * Hour.
+         */
+        HOUR(Calendar.HOUR),
+        /**
+         * Day.
+         */
+        DAY(Calendar.DATE),
+        /**
+         * Year.
+         */
+        YEAR(Calendar.YEAR);
+        
+        /**
+         * time unit
+         */
+        private final int timeUnit;
+        
+        /**
+         * Constructor.
+         *
+         * @param timeUnit time unit
+         */
+        TimeUnit(final int timeUnit) {
+            this.timeUnit = timeUnit;
+        }
+        
+        /**
+         * Returns the time unit.
+         *
+         * @return the time unit
+         */
+        public int getTimeUnit() {
+            return this.timeUnit;
+        }
+        
+        /**
+         * Returns the time unit from a value.
+         *
+         * @param value vale
+         * @return time unit
+         */
+        public static TimeUnit getTimeUnitFrom(final int value) {
+            TimeUnit result = null;
+            final TimeUnit[] units = TimeUnit.values();
+            for (final TimeUnit unit : units) {
+                if (unit.getTimeUnit() == value) {
+                    result = unit;
+                    break;
+                }
+            }
+            return result;
+        }
     }
 }

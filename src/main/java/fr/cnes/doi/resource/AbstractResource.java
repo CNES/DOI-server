@@ -52,6 +52,10 @@ public abstract class AbstractResource extends WadlServerResource {
      */
     private Logger LOG;
 
+    /**
+     *
+     * @throws ResourceException
+     */
     @Override
     protected void doInit() throws ResourceException {
         super.doInit();

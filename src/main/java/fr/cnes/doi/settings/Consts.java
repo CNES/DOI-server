@@ -88,17 +88,20 @@ public class Consts {
     /**
      * HTTPS keystore password. The password is encrypted
      */
-    public static final String SERVER_HTTPS_KEYSTORE_PASSWD = "Starter.Server.HTTPS.keystorePassword";
+    public static final String SERVER_HTTPS_KEYSTORE_PASSWD = 
+            "Starter.Server.HTTPS.keystorePassword";
 
     /**
      * Trust store path.
      */
-    public static final String SERVER_HTTPS_TRUST_STORE_PATH = "Starter.Server.HTTPS.TrustStorePath";
+    public static final String SERVER_HTTPS_TRUST_STORE_PATH = 
+            "Starter.Server.HTTPS.TrustStorePath";
 
     /**
      * Trust store password. The password is encrypted
      */
-    public static final String SERVER_HTTPS_TRUST_STORE_PASSWD = "Starter.Server.HTTPS.TrustStorePassword";
+    public static final String SERVER_HTTPS_TRUST_STORE_PASSWD = 
+            "Starter.Server.HTTPS.TrustStorePassword";
 
     /**
      * Indicates whether the authentication to the proxy must be enabled.
@@ -194,7 +197,8 @@ public class Consts {
     /**
      * Time in ms that connections will persist if listener is low on resources.
      */
-    public static final String JETTY_LOW_RESOURCES_MAX_IDLE_TIME_MS = "Starter.LOW_RESOURCES_MAX_IDLE_TIME_MS";
+    public static final String JETTY_LOW_RESOURCES_MAX_IDLE_TIME_MS = 
+            "Starter.LOW_RESOURCES_MAX_IDLE_TIME_MS";
 
     /**
      * Low resource monitor period in milliseconds; when 0, low resource monitoring is disabled.
@@ -210,7 +214,8 @@ public class Consts {
     /**
      * Low resource monitor max connections; when 0, the check is disabled.
      */
-    public static final String JETTY_LOW_RESOURCES_MAX_CONNECTIONS = "Starter.LOW_RESOURCES_MAX_CONNECTIONS";
+    public static final String JETTY_LOW_RESOURCES_MAX_CONNECTIONS = 
+            "Starter.LOW_RESOURCES_MAX_CONNECTIONS";
 
     /**
      * Low resource monitor, whether to check if we're low on threads.

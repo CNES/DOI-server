@@ -26,10 +26,10 @@ import org.restlet.Context;
 import org.restlet.data.MediaType;
 import org.restlet.engine.Engine;
 import org.restlet.ext.xml.TransformRepresentation;
-import org.restlet.representation.Representation;
 import org.restlet.ext.xml.XmlRepresentation;
 import org.restlet.representation.EmptyRepresentation;
 import org.restlet.representation.InputRepresentation;
+import org.restlet.representation.Representation;
 
 /**
  * Generates a WADL based on a patch of the Restlet XSLT.

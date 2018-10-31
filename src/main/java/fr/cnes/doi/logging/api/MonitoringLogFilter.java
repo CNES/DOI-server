@@ -25,11 +25,8 @@ import fr.cnes.doi.settings.EmailSettings;
 import fr.cnes.doi.utils.Utils;
 import static fr.cnes.doi.utils.Utils.APP_LOGGER_NAME;
 import fr.cnes.doi.utils.spec.Requirement;
-
 import java.text.MessageFormat;
-
 import org.apache.logging.log4j.LogManager;
-
 import org.restlet.Context;
 import org.restlet.Request;
 import org.restlet.Response;
@@ -97,13 +94,19 @@ public class MonitoringLogFilter extends LogFilter {
                 monitoring.addMeasurement(method, path, duration);
                 Engine.getLogger(APP_LOGGER_NAME)
                         .info(MessageFormat.format(
-                                "{0}({1} {2}) - current speed average : {3} ms - current measure: {4} ms",
+                                "{0}({1} {2}) - current speed average : {3} ms - "
+                                        + "current measure: {4} ms",
                                 monitoring.getDescription(method, path),
                                 method.getName(), path,
                                 monitoring.getCurrentAverage(method, path),
                                 duration)
                         );
-                sendAlertIfNeeded(monitoring.getCurrentAverage(method, path), duration, path, method);
+                sendAlertIfNeeded(
+                        monitoring.getCurrentAverage(method, path), 
+                        duration, 
+                        path, 
+                        method
+                );
             }
         }
     }

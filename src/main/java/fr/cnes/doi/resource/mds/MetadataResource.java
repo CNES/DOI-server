@@ -25,7 +25,6 @@ import fr.cnes.doi.client.ClientMDS.DATACITE_API_RESPONSE;
 import fr.cnes.doi.exception.ClientMdsException;
 import fr.cnes.doi.exception.DoiServerException;
 import fr.cnes.doi.utils.spec.Requirement;
-
 import java.util.Arrays;
 import org.apache.logging.log4j.Level;
 import org.datacite.schema.kernel_4.Resource;

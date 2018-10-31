@@ -18,14 +18,6 @@
  */
 package fr.cnes.doi.logging.api;
 
-import org.restlet.Context;
-import org.restlet.data.Method;
-import org.restlet.data.Status;
-import org.restlet.engine.Engine;
-import org.restlet.resource.ResourceException;
-import org.restlet.routing.Filter;
-import org.restlet.service.LogService;
-
 import fr.cnes.doi.application.DoiMdsApplication;
 import fr.cnes.doi.resource.mds.DoiResource;
 import fr.cnes.doi.resource.mds.DoisResource;
@@ -36,6 +28,10 @@ import fr.cnes.doi.services.DoiMonitoring;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.utils.spec.Requirement;
+import org.restlet.Context;
+import org.restlet.data.Method;
+import org.restlet.routing.Filter;
+import org.restlet.service.LogService;
 
 /**
  * Creates a LOG service to monitor the speed of applications.

@@ -19,6 +19,12 @@
 package fr.cnes.doi.services;
 
 import fr.cnes.doi.logging.business.JsonMessage;
+import fr.cnes.doi.settings.Consts;
+import fr.cnes.doi.settings.DoiSettings;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.restlet.Application;
 import org.restlet.Request;
 import org.restlet.Response;
@@ -30,14 +36,6 @@ import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 import org.restlet.service.StatusService;
 
-import java.util.Map;
-
-import fr.cnes.doi.settings.DoiSettings;
-import fr.cnes.doi.settings.Consts;
-import java.util.concurrent.ConcurrentHashMap;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 /**
  * Provides a specific error page, which is sent in the HTTP response.
  *
@@ -45,15 +43,15 @@ import org.apache.logging.log4j.Logger;
  */
 public class CnesStatusService extends StatusService {
 
-    /**
-     * Configuration file.
-     */
-    private final DoiSettings settings;
 
     /**
      * Logger.
      */
     private static final Logger LOG = LogManager.getLogger(CnesStatusService.class.getName());
+    /**
+     * Configuration file.
+     */
+    private final DoiSettings settings;
 
     /**
      * Creates a specific error page.

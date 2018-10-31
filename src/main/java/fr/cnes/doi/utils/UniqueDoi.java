@@ -19,10 +19,6 @@
 package fr.cnes.doi.utils;
 
 import fr.cnes.doi.db.AbstractDoiDBHelper;
-import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.resource.admin.SuffixProjectsResource;
@@ -30,6 +26,9 @@ import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import java.net.URI;
 import java.util.Map;
+import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Utils class to generate a unique DOI
@@ -47,22 +46,6 @@ public class UniqueDoi {
      */
     private static final Logger LOGGER = Logger.getLogger(CLASS_NAME);
 
-    /**
-     * Project Suffix database.
-     */
-    private final AbstractDoiDBHelper doiDB;
-
-    /**
-     * Class to handle the instance
-     *
-     */
-    private static class UniqueDoiHolder {
-
-        /**
-         * Unique Instance unique
-         */
-        private static final UniqueDoi INSTANCE = new UniqueDoi();
-    }
 
     /**
      * Access to unique INSTANCE of Settings
@@ -72,6 +55,10 @@ public class UniqueDoi {
     public static UniqueDoi getInstance() {
         return UniqueDoiHolder.INSTANCE;
     }
+    /**
+     * Project Suffix database.
+     */
+    private final AbstractDoiDBHelper doiDB;
 
     /**
      * Constructor
@@ -196,6 +183,17 @@ public class UniqueDoi {
         }
         LOGGER.exiting(CLASS_NAME, "isIdUnique", result);
         return result;
+    }
+    /**
+     * Class to handle the instance
+     *
+     */
+    private static class UniqueDoiHolder {
+        
+        /**
+         * Unique Instance unique
+         */
+        private static final UniqueDoi INSTANCE = new UniqueDoi();
     }
 
 }

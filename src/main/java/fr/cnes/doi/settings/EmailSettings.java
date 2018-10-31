@@ -29,7 +29,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.restlet.Context;
 import org.restlet.Request;
 import org.restlet.data.ChallengeResponse;
@@ -62,6 +61,14 @@ public final class EmailSettings {
      * Logger.
      */
     private static final Logger LOG = LogManager.getLogger(EmailSettings.class.getName());
+    /**
+     * Access to unique INSTANCE of Settings
+     *
+     * @return the configuration instance.
+     */
+    public static EmailSettings getInstance() {
+        return EmailSettingsHolder.INSTANCE;
+    }
 
     /**
      * SMTP URL.
@@ -105,25 +112,6 @@ public final class EmailSettings {
         init();
     }
 
-    /**
-     *
-     */
-    private static class EmailSettingsHolder {
-
-        /**
-         * Unique Instance unique not pre-initiliaze
-         */
-        private static final EmailSettings INSTANCE = new EmailSettings();
-    }
-
-    /**
-     * Access to unique INSTANCE of Settings
-     *
-     * @return the configuration instance.
-     */
-    public static EmailSettings getInstance() {
-        return EmailSettingsHolder.INSTANCE;
-    }
 
     /**
      * Init singleton.
@@ -376,6 +364,16 @@ public final class EmailSettings {
     public String getContactAdmin() {
         LOG.traceEntry();
         return LOG.traceExit(contactAdmin);
+    }
+    /**
+     *
+     */
+    private static class EmailSettingsHolder {
+        
+        /**
+         * Unique Instance unique not pre-initiliaze
+         */
+        private static final EmailSettings INSTANCE = new EmailSettings();
     }
 
 }

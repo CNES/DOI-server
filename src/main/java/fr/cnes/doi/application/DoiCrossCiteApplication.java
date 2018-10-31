@@ -18,9 +18,6 @@
  */
 package fr.cnes.doi.application;
 
-import org.restlet.Restlet;
-import org.restlet.routing.Router;
-
 import fr.cnes.doi.client.ClientCrossCiteCitation;
 import fr.cnes.doi.resource.citation.FormatCitationResource;
 import fr.cnes.doi.resource.citation.LanguageCitationResource;
@@ -29,6 +26,8 @@ import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.utils.spec.Requirement;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.restlet.Restlet;
+import org.restlet.routing.Router;
 
 /**
  * Provides an application to get citation from a registered DOI. Books and journal articles have

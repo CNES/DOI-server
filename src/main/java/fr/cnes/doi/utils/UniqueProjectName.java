@@ -19,16 +19,15 @@
 package fr.cnes.doi.utils;
 
 import fr.cnes.doi.db.AbstractProjectSuffixDBHelper;
-import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.utils.spec.Requirement;
 import java.util.Map;
+import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Utils class to generate a unique number from the project name
@@ -47,22 +46,6 @@ public class UniqueProjectName {
      */
     private static final Logger LOGGER = Logger.getLogger(CLASS_NAME);
 
-    /**
-     * Project Suffix database.
-     */
-    private final AbstractProjectSuffixDBHelper projectDB;
-
-    /**
-     * Class to handle the instance
-     *
-     */
-    private static class UniqueProjectNameHolder {
-
-        /**
-         * Unique Instance unique
-         */
-        private static final UniqueProjectName INSTANCE = new UniqueProjectName();
-    }
 
     /**
      * Access to unique INSTANCE of Settings
@@ -72,6 +55,10 @@ public class UniqueProjectName {
     public static UniqueProjectName getInstance() {
         return UniqueProjectNameHolder.INSTANCE;
     }
+    /**
+     * Project Suffix database.
+     */
+    private final AbstractProjectSuffixDBHelper projectDB;
 
     /**
      * Constructor
@@ -104,7 +91,7 @@ public class UniqueProjectName {
     private int generateId(final int maxNumber) {
         LOGGER.entering(CLASS_NAME, "generateId", maxNumber);
         final Random rand = new Random();
-        final int identifier = rand.nextInt(maxNumber);
+        final int identifier = Math.abs(rand.nextInt(maxNumber));
         LOGGER.exiting(CLASS_NAME, "generateId", identifier);
         return identifier;
     }
@@ -182,6 +169,17 @@ public class UniqueProjectName {
         }
         LOGGER.exiting(CLASS_NAME, "isIdUnique", result);
         return result;
+    }
+    /**
+     * Class to handle the instance
+     *
+     */
+    private static class UniqueProjectNameHolder {
+        
+        /**
+         * Unique Instance unique
+         */
+        private static final UniqueProjectName INSTANCE = new UniqueProjectName();
     }
 
 }

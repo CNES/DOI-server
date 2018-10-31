@@ -18,21 +18,8 @@
  */
 package fr.cnes.doi.application;
 
-import org.restlet.Request;
-import org.restlet.Response;
-import org.restlet.Restlet;
-import org.restlet.data.ChallengeScheme;
-import org.restlet.data.Method;
-import org.restlet.data.Reference;
-import org.restlet.ext.wadl.ApplicationInfo;
-import org.restlet.ext.wadl.DocumentationInfo;
-import org.restlet.ext.wadl.GrammarsInfo;
-import org.restlet.ext.wadl.IncludeInfo;
-import org.restlet.security.ChallengeAuthenticator;
-import org.restlet.security.MethodAuthorizer;
-import org.restlet.routing.Router;
-
 import fr.cnes.doi.client.ClientMDS;
+import static fr.cnes.doi.client.ClientMDS.SCHEMA_DATACITE;
 import fr.cnes.doi.db.AbstractTokenDBHelper;
 import fr.cnes.doi.exception.ClientMdsException;
 import fr.cnes.doi.resource.mds.DoiResource;
@@ -40,16 +27,29 @@ import fr.cnes.doi.resource.mds.DoisResource;
 import fr.cnes.doi.resource.mds.MediaResource;
 import fr.cnes.doi.resource.mds.MetadataResource;
 import fr.cnes.doi.resource.mds.MetadatasResource;
-import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.security.TokenBasedVerifier;
 import fr.cnes.doi.security.TokenSecurity;
+import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.utils.spec.Requirement;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.restlet.Context;
+import org.restlet.Request;
+import org.restlet.Response;
+import org.restlet.Restlet;
+import org.restlet.data.ChallengeScheme;
+import org.restlet.data.Method;
+import org.restlet.data.Reference;
 import org.restlet.data.Status;
+import org.restlet.ext.wadl.ApplicationInfo;
+import org.restlet.ext.wadl.DocumentationInfo;
+import org.restlet.ext.wadl.GrammarsInfo;
+import org.restlet.ext.wadl.IncludeInfo;
 import org.restlet.routing.Filter;
+import org.restlet.routing.Router;
 import org.restlet.routing.Template;
+import org.restlet.security.ChallengeAuthenticator;
+import org.restlet.security.MethodAuthorizer;
 
 /**
  * Provides an application to handle Data Object Identifier within an organization. A Digital Object
@@ -147,101 +147,6 @@ public final class DoiMdsApplication extends AbstractApplication {
      */
     private static final Logger LOG = LogManager.getLogger(DoiMdsApplication.class.getName());
 
-    public enum API_MDS {
-        /**
-         * Create metadata. SUCCESS_CREATED is used as status meaning "Operation successful"
-         */
-        CREATE_METADATA(Status.SUCCESS_CREATED, "Operation successful"),
-        /**
-         * Forbidden to use this role. It happens when a user provides a role to the server whereas
-         * he is unknown in this role. CLIENT_ERROR_FORBIDDEN is used as status meaning "Forbidden
-         * to use this role"
-         */
-        SECURITY_USER_NOT_IN_SELECTED_ROLE(Status.CLIENT_ERROR_FORBIDDEN,
-                "Forbidden to use this role"),
-        /**
-         * Fail to authorize the user. It happens when a client is authentified but unauthorized to
-         * use the resource. CLIENT_ERROR_UNAUTHORIZED is used as status meaning "Fail to authorize
-         * the user"
-         */
-        SECURITY_USER_NO_ROLE(Status.CLIENT_ERROR_UNAUTHORIZED, "Fail to authorize the user"),
-        /**
-         * Fail to know privileges of a user. It happens when an user is associated to several roles
-         * without selecting one. CLIENT_ERROR_CONFLICT is used as status meaning "Error when an
-         * user is associated to more than one role without setting selectedRole parameter"
-         */
-        SECURITY_USER_CONFLICT(Status.CLIENT_ERROR_CONFLICT,
-                "Error when an user is associated to more than one role without setting selectedRole parameter"),
-        /**
-         * Fail to create a DOI. It happens when a user try to create a DOI with the wrong role.
-         * Actually, the role is contained in the DOI name. So if a user is authentified with a
-         * right role and try to create a DOI for another role, an exception is raised.
-         * SECURITY_USER_PERMISSION is used as status meaning "User is not allowed to make this
-         * operation"
-         */
-        SECURITY_USER_PERMISSION(Status.CLIENT_ERROR_FORBIDDEN,
-                "User is not allowed to make this operation"),
-        /**
-         * Cannot access to Datacite. It happens when a network problem may happen with Datacite.
-         * SERVER_ERROR_GATEWAY_TIMEOUT is used as status meaning "Cannot access to Datacite"
-         */
-        NETWORK_PROBLEM(Status.CONNECTOR_ERROR_COMMUNICATION, "Cannot access to Datacite"),
-        /**
-         * Fail to validate user input parameter for creating the DOI. It happens in the following
-         * cases:
-         * <ul>
-         * <li>the DOI or metadata are not provided</li>
-         * <li>the prefix is not allowed</li>
-         * <li>some characters are not allowed in the DOI name</li>
-         * </ul>
-         * CLIENT_ERROR_BAD_REQUEST is used as status meaning "Failed to validate the user inputs
-         * parameters"
-         */
-        METADATA_VALIDATION(Status.CLIENT_ERROR_BAD_REQUEST,
-                "Failed to validate the user inputs parameters"),
-        /**
-         * Fail to create the media related to the DOI. CLIENT_ERROR_BAD_REQUEST is used as status
-         * meaning "DOI not provided or one or more of the specified mime-types or urls are invalid
-         * (e.g. non supported mime-type, not allowed url domain, etc.)"
-         */
-        MEDIA_VALIDATION(Status.CLIENT_ERROR_BAD_REQUEST,
-                "DOI not provided or one or more of the specified mime-types or urls are invalid (e.g. non supported mime-type, not allowed url domain, etc.)"),
-        /**
-         * Fail to create the landing page related to the DOI. CLIENT_ERROR_BAD_REQUEST is used as
-         * status meaning "Validation error when defining the DOI and its landing page"
-         */
-        LANGING_PAGE_VALIDATION(Status.CLIENT_ERROR_BAD_REQUEST,
-                "Validation error when defining the DOI and its landing page"),
-        /**
-         * DOI validation error. CLIENT_ERROR_BAD_REQUEST is used as status meaning "Character or
-         * prefix not allowed in the DOI"
-         */
-        DOI_VALIDATION(Status.CLIENT_ERROR_BAD_REQUEST, "Character or prefix not allowed in the DOI"),
-        /**
-         * Internal server error. Fail to communicate with DataCite using the interface
-         * specification meaning "Interface problem between Datacite and DOI-Server"
-         */
-        DATACITE_PROBLEM(Status.SERVER_ERROR_INTERNAL,
-                "Interface problem between Datacite and DOI-Server");
-
-        private final Status status;
-        private final String shortMessage;
-
-        API_MDS(final Status status,
-                final String shortMessage) {
-            this.status = status;
-            this.shortMessage = shortMessage;
-        }
-
-        public Status getStatus() {
-            return this.status;
-        }
-
-        public String getShortMessage() {
-            return this.shortMessage;
-        }
-
-    }
 
     /**
      * Client to query Mds Datacite.
@@ -264,7 +169,8 @@ public final class DoiMdsApplication extends AbstractApplication {
         setDescription("Provides an application for handling Data Object Identifier at CNES<br/>"
                 + "This application provides 3 API:" + "<ul>" + "<li>dois : DOI minting</li>"
                 + "<li>metadata : Registration of the associated metadata</li>"
-                + "<li>media : Possbility to obtain metadata in various formats and/or get automatic, direct access to an object rather than via the \"landing page\"</li>"
+                + "<li>media : Possbility to obtain metadata in various formats and/or get "
+                + "automatic, direct access to an object rather than via the \"landing page\"</li>"
                 + "</ul>");
         final String contextMode = this.getConfig().getString(Consts.CONTEXT_MODE);
         client = new ClientMDS(ClientMDS.Context.valueOf(contextMode), getLoginMds(), getPwdMds());
@@ -442,36 +348,6 @@ public final class DoiMdsApplication extends AbstractApplication {
         return LOG;
     }
 
-    /**
-     * Post processing for specific authorization. Specific class to handle the case where the user
-     * is authorized by oauth but non authorized by the service because the user's role is not
-     * related to any projects
-     */
-    public class SecurityPostProcessingFilter extends Filter {
-
-        /**
-         * Constructor
-         *
-         * @param context context
-         * @param next gard
-         */
-        public SecurityPostProcessingFilter(final Context context,
-                final Restlet next) {
-            super(context, next);
-        }
-
-        @Override
-        protected void afterHandle(final Request request,
-                final Response response) {
-            final Status status = response.getStatus();
-            final String reason = status.getReasonPhrase();
-            if (status.getCode() == Status.CLIENT_ERROR_UNAUTHORIZED.getCode() && API_MDS.SECURITY_USER_NO_ROLE.
-                    getShortMessage().equals(reason)) {
-                response.getHeaders().add("WWW-Authenticate",
-                        "Basic realm=\"DOI Server access\", charset=\"UTF-8\"");
-            }
-        }
-    }
 
     /**
      * Method to describe application in the WADL.
@@ -490,19 +366,159 @@ public final class DoiMdsApplication extends AbstractApplication {
         docInfo.setTitle(this.getName());
         docInfo.setTextContent(this.getDescription());
         result.setDocumentation(docInfo);
-        result.getNamespaces().put(
-                "https://schema.datacite.org/meta/kernel-4.0/metadata.xsd", "default"
-        );
-        result.getNamespaces().put(
-                "http://www.w3.org/2001/XMLSchema", "xsi"
-        );
+        result.getNamespaces().put(SCHEMA_DATACITE, "default");
+        result.getNamespaces().put("http://www.w3.org/2001/XMLSchema", "xsi");
         final GrammarsInfo grammar = new GrammarsInfo();
         final IncludeInfo include = new IncludeInfo();
-        include.setTargetRef(
-                new Reference("https://schema.datacite.org/meta/kernel-4.0/metadata.xsd")
-        );
+        include.setTargetRef(new Reference(SCHEMA_DATACITE));
         grammar.getIncludes().add(include);
         result.setGrammars(grammar);
         return result;
+    }
+    
+    /**
+     * API related only to the code in this webservice.
+     * Other codes can be returned by the {@link ClientMDS}
+     */
+    public enum API_MDS {
+        /**
+         * Create metadata. SUCCESS_CREATED is used as status meaning "Operation successful"
+         */
+        CREATE_METADATA(Status.SUCCESS_CREATED, "Operation successful"),
+        /**
+         * Forbidden to use this role. It happens when a user provides a role to the server whereas
+         * he is unknown in this role. CLIENT_ERROR_FORBIDDEN is used as status meaning "Forbidden
+         * to use this role"
+         */
+        SECURITY_USER_NOT_IN_SELECTED_ROLE(Status.CLIENT_ERROR_FORBIDDEN,
+        "Forbidden to use this role"),
+        /**
+         * Fail to authorize the user. It happens when a client is authentified but unauthorized to
+         * use the resource. CLIENT_ERROR_UNAUTHORIZED is used as status meaning "Fail to authorize
+         * the user"
+         */
+        SECURITY_USER_NO_ROLE(Status.CLIENT_ERROR_UNAUTHORIZED, "Fail to authorize the user"),
+        /**
+         * Fail to know privileges of a user. It happens when an user is associated to several roles
+         * without selecting one. CLIENT_ERROR_CONFLICT is used as status meaning "Error when an
+         * user is associated to more than one role without setting selectedRole parameter"
+         */
+        SECURITY_USER_CONFLICT(Status.CLIENT_ERROR_CONFLICT,
+        "Error when an user is associated to more than one role without setting selectedRole "
+                + "parameter"),
+        /**
+         * Fail to create a DOI. It happens when a user try to create a DOI with the wrong role.
+         * Actually, the role is contained in the DOI name. So if a user is authentified with a
+         * right role and try to create a DOI for another role, an exception is raised.
+         * SECURITY_USER_PERMISSION is used as status meaning "User is not allowed to make this
+         * operation"
+         */
+        SECURITY_USER_PERMISSION(Status.CLIENT_ERROR_FORBIDDEN,
+        "User is not allowed to make this operation"),
+        /**
+         * Cannot access to Datacite. It happens when a network problem may happen with Datacite.
+         * SERVER_ERROR_GATEWAY_TIMEOUT is used as status meaning "Cannot access to Datacite"
+         */
+        NETWORK_PROBLEM(Status.CONNECTOR_ERROR_COMMUNICATION, "Cannot access to Datacite"),
+        /**
+         * Fail to validate user input parameter for creating the DOI. It happens in the following
+         * cases:
+         * <ul>
+         * <li>the DOI or metadata are not provided</li>
+         * <li>the prefix is not allowed</li>
+         * <li>some characters are not allowed in the DOI name</li>
+         * </ul>
+         * CLIENT_ERROR_BAD_REQUEST is used as status meaning "Failed to validate the user inputs
+         * parameters"
+         */
+        METADATA_VALIDATION(Status.CLIENT_ERROR_BAD_REQUEST,
+        "Failed to validate the user inputs parameters"),
+        /**
+         * Fail to create the media related to the DOI. CLIENT_ERROR_BAD_REQUEST is used as status
+         * meaning "DOI not provided or one or more of the specified mime-types or urls are invalid
+         * (e.g. non supported mime-type, not allowed url domain, etc.)"
+         */
+        MEDIA_VALIDATION(Status.CLIENT_ERROR_BAD_REQUEST,
+        "DOI not provided or one or more of the specified mime-types or urls are invalid "
+                + "(e.g. non supported mime-type, not allowed url domain, etc.)"),
+        /**
+         * Fail to create the landing page related to the DOI. CLIENT_ERROR_BAD_REQUEST is used as
+         * status meaning "Validation error when defining the DOI and its landing page"
+         */
+        LANGING_PAGE_VALIDATION(Status.CLIENT_ERROR_BAD_REQUEST,
+        "Validation error when defining the DOI and its landing page"),
+        /**
+         * DOI validation error. CLIENT_ERROR_BAD_REQUEST is used as status meaning "Character or
+         * prefix not allowed in the DOI"
+         */
+        DOI_VALIDATION(Status.CLIENT_ERROR_BAD_REQUEST, "Character or prefix not allowed in the "
+                + "DOI"),
+        /**
+         * Internal server error. Fail to communicate with DataCite using the interface
+         * specification meaning "Interface problem between Datacite and DOI-Server"
+         */
+        DATACITE_PROBLEM(Status.SERVER_ERROR_INTERNAL,
+        "Interface problem between Datacite and DOI-Server");
+        
+        private final Status status;
+        private final String shortMessage;
+        
+        API_MDS(final Status status,
+                final String shortMessage) {
+            this.status = status;
+            this.shortMessage = shortMessage;
+        }
+        
+        /**
+         *
+         * @return
+         */
+        public Status getStatus() {
+            return this.status;
+        }
+        
+        /**
+         *
+         * @return
+         */
+        public String getShortMessage() {
+            return this.shortMessage;
+        }
+        
+    }
+    /**
+     * Post processing for specific authorization. Specific class to handle the case where the user
+     * is authorized by oauth but non authorized by the service because the user's role is not
+     * related to any projects
+     */
+    public class SecurityPostProcessingFilter extends Filter {
+        
+        /**
+         * Constructor
+         *
+         * @param context context
+         * @param next gard
+         */
+        public SecurityPostProcessingFilter(final Context context,
+                final Restlet next) {
+            super(context, next);
+        }
+        
+        /**
+         *
+         * @param request
+         * @param response
+         */
+        @Override
+        protected void afterHandle(final Request request,
+                final Response response) {
+            final Status status = response.getStatus();
+            final String reason = status.getReasonPhrase();
+            if (status.getCode() == Status.CLIENT_ERROR_UNAUTHORIZED.getCode() 
+                    && API_MDS.SECURITY_USER_NO_ROLE.getShortMessage().equals(reason)) {
+                response.getHeaders().add("WWW-Authenticate",
+                        "Basic realm=\"DOI Server access\", charset=\"UTF-8\"");
+            }
+        }
     }
 }

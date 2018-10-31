@@ -21,7 +21,6 @@ package fr.cnes.doi.settings;
 import fr.cnes.doi.utils.spec.Requirement;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.restlet.data.ChallengeResponse;
 import org.restlet.data.ChallengeScheme;
 
@@ -32,12 +31,20 @@ import org.restlet.data.ChallengeScheme;
  */
 @Requirement(reqId = Requirement.DOI_CONFIG_010, reqName = Requirement.DOI_CONFIG_010_NAME)
 public final class ProxySettings {
-
     /**
      * Application logger.
      */
     private static final Logger LOG = LogManager.getLogger(ProxySettings.class.getName());
-
+    /**
+     * Access to unique INSTANCE of Settings
+     *
+     * @return the configuration instance.
+     */
+    public static ProxySettings getInstance() {
+        LOG.traceEntry();
+        return LOG.traceExit(ProxySettingsHolder.INSTANCE);
+    }
+    
     /**
      * Proxy configuration - host
      */
@@ -80,17 +87,9 @@ public final class ProxySettings {
         LOG.traceEntry();
         init();
         LOG.traceExit();
-    }
+    }    
 
-    /**
-     * Access to unique INSTANCE of Settings
-     *
-     * @return the configuration instance.
-     */
-    public static ProxySettings getInstance() {
-        LOG.traceEntry();
-        return LOG.traceExit(ProxySettingsHolder.INSTANCE);
-    }
+
 
     /**
      * Init the proxy setting

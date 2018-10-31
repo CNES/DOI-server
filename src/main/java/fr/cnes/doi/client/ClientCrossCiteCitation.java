@@ -19,10 +19,8 @@
 package fr.cnes.doi.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import fr.cnes.doi.exception.ClientCrossCiteException;
 import fr.cnes.doi.utils.spec.Requirement;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
@@ -65,107 +63,6 @@ public class ClientCrossCiteCitation extends BaseClient {
      */
     public static final String FORMAT_URI = "format";
 
-    /**
-     * Options for each context.
-     */
-    public enum Context {
-
-        /**
-         * Development context. This context uses the {@link #CROSS_CITE_MOCK_URL} end point with a
-         * log level sets to OFF.
-         */
-        DEV(CROSS_CITE_MOCK_URL, Level.OFF),
-        /**
-         * Post development context. This context uses the {@link #CROSS_CITE_URL} end point with a
-         * log level sets to ALL.
-         */
-        POST_DEV(CROSS_CITE_URL, Level.ALL),
-        /**
-         * Pre production context. This context uses the {@link #CROSS_CITE_URL} end point with a
-         * log level sets to FINE.
-         */
-        PRE_PROD(CROSS_CITE_URL, Level.FINE),
-        /**
-         * Production context. This context uses the {@link #CROSS_CITE_URL} end point with a log
-         * level sets to INFO.
-         */
-        PROD(CROSS_CITE_URL, Level.INFO);
-
-        /**
-         * Level log.
-         */
-        private Level levelLog;
-
-        /**
-         * CrossCite URL.
-         */
-        private String crossCiteUrl;
-
-        Context(final String dataciteUrl,
-                final Level levelLog) {
-            this.crossCiteUrl = dataciteUrl;
-            this.levelLog = levelLog;
-        }
-
-        /**
-         * Returns the log level.
-         *
-         * @return the log level
-         */
-        public Level getLevelLog() {
-            return this.levelLog;
-        }
-
-        /**
-         * Returns the service end point.
-         *
-         * @return the service end point
-         */
-        public String getCrossCiteUrl() {
-            return this.crossCiteUrl;
-        }
-
-        /**
-         * Sets the level log for the context
-         *
-         * @param levelLog level log
-         */
-        private void setLevelLog(final Level levelLog) {
-            this.levelLog = levelLog;
-        }
-
-        /**
-         * Sets the Cross Cite URL for the context.
-         *
-         * @param crossCiteUrl Cross Cite URL
-         */
-        private void setCrossCiteUrl(final String crossCiteUrl) {
-            this.crossCiteUrl = crossCiteUrl;
-        }
-
-        /**
-         * Sets the level log for a given context
-         *
-         * @param context the context
-         * @param levelLog the level log
-         */
-        public static void setLevelLog(final Context context,
-                final Level levelLog) {
-            context.setLevelLog(levelLog);
-        }
-
-        /**
-         * Sets the Cross Cite URL for a given context
-         *
-         * @param context the context
-         * @param crossCiteUrl Cross Cite URL
-         */
-        public static void setCrossCiteUrl(final Context context,
-                final String crossCiteUrl) {
-            context.setCrossCiteUrl(crossCiteUrl);
-        }
-
-    }
 
     /**
      * Context use.
@@ -283,5 +180,111 @@ public class ClientCrossCiteCitation extends BaseClient {
         } finally {
             this.getClient().release();
         }
+    }
+    /**
+     * Options for each context.
+     */
+    public enum Context {
+        
+        /**
+         * Development context. This context uses the {@link #CROSS_CITE_MOCK_URL} end point with a
+         * log level sets to OFF.
+         */
+        DEV(CROSS_CITE_MOCK_URL, Level.OFF),
+        /**
+         * Post development context. This context uses the {@link #CROSS_CITE_URL} end point with a
+         * log level sets to ALL.
+         */
+        POST_DEV(CROSS_CITE_URL, Level.ALL),
+        /**
+         * Pre production context. This context uses the {@link #CROSS_CITE_URL} end point with a
+         * log level sets to FINE.
+         */
+        PRE_PROD(CROSS_CITE_URL, Level.FINE),
+        /**
+         * Production context. This context uses the {@link #CROSS_CITE_URL} end point with a log
+         * level sets to INFO.
+         */
+        PROD(CROSS_CITE_URL, Level.INFO);
+        
+        /**
+         * Level log.
+         */
+        private Level levelLog;
+        
+        /**
+         * CrossCite URL.
+         */
+        private String crossCiteUrl;
+        
+        /**
+         * Construct a development context
+         * @param dataciteUrl dataciteURL according to the context
+         * @param levelLog level log
+         */
+        Context(final String dataciteUrl,
+                final Level levelLog) {
+            this.crossCiteUrl = dataciteUrl;
+            this.levelLog = levelLog;
+        }
+        
+        /**
+         * Returns the log level.
+         *
+         * @return the log level
+         */
+        public Level getLevelLog() {
+            return this.levelLog;
+        }
+        
+        /**
+         * Returns the service end point.
+         *
+         * @return the service end point
+         */
+        public String getCrossCiteUrl() {
+            return this.crossCiteUrl;
+        }
+        
+        /**
+         * Sets the level log for the context
+         *
+         * @param levelLog level log
+         */
+        private void setLevelLog(final Level levelLog) {
+            this.levelLog = levelLog;
+        }
+        
+        /**
+         * Sets the Cross Cite URL for the context.
+         *
+         * @param crossCiteUrl Cross Cite URL
+         */
+        private void setCrossCiteUrl(final String crossCiteUrl) {
+            this.crossCiteUrl = crossCiteUrl;
+        }
+        
+        /**
+         * Sets the level log for a given context
+         *
+         * @param context the context
+         * @param levelLog the level log
+         */
+        public static void setLevelLog(final Context context,
+                final Level levelLog) {
+            context.setLevelLog(levelLog);
+        }
+        
+        /**
+         * Sets the Cross Cite URL for a given context
+         *
+         * @param context the context
+         * @param crossCiteUrl Cross Cite URL
+         */
+        public static void setCrossCiteUrl(final Context context,
+                final String crossCiteUrl) {
+            context.setCrossCiteUrl(crossCiteUrl);
+        }
+        
     }
 }

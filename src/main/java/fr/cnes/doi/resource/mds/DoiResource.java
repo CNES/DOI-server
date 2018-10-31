@@ -24,11 +24,9 @@ import fr.cnes.doi.client.ClientMDS;
 import fr.cnes.doi.client.ClientMDS.DATACITE_API_RESPONSE;
 import fr.cnes.doi.exception.ClientMdsException;
 import fr.cnes.doi.exception.DoiServerException;
-
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.utils.spec.Requirement;
-
 import java.util.Arrays;
 import org.apache.logging.log4j.Level;
 import org.restlet.data.MediaType;

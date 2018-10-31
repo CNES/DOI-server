@@ -58,7 +58,6 @@ import org.restlet.resource.ResourceException;
 import org.restlet.util.Series;
 import org.xml.sax.SAXException;
 import static fr.cnes.doi.client.BaseClient.DATACITE_MOCKSERVER_PORT;
-import fr.cnes.doi.exception.ClientMdsException;
 import org.junit.experimental.categories.Category;
 
 /**

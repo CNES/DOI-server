@@ -23,16 +23,6 @@ import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.resource.admin.SuffixProjectsResource;
 import fr.cnes.doi.security.TokenSecurity;
 import fr.cnes.doi.security.UtilsCryptography;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.stream.Collectors;
-
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.settings.EmailSettings;
@@ -40,11 +30,20 @@ import fr.cnes.doi.utils.UniqueDoi;
 import fr.cnes.doi.utils.spec.Requirement;
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.slf4j.bridge.SLF4JBridgeHandler;
@@ -58,13 +57,6 @@ import org.slf4j.bridge.SLF4JBridgeHandler;
 @Requirement(reqId = Requirement.DOI_DEV_020, reqName = Requirement.DOI_DEV_020_NAME)
 public class Starter {
 
-    static {
-        java.util.logging.Logger rootLogger = java.util.logging.LogManager.getLogManager().
-                getLogger("");
-        java.util.logging.Handler[] handlers = rootLogger.getHandlers();
-        rootLogger.removeHandler(handlers[0]);
-        SLF4JBridgeHandler.install();
-    }
 
     /**
      */
@@ -79,6 +71,13 @@ public class Starter {
      * DOI Server.
      */
     private static DoiServer doiServer;
+    static {
+        java.util.logging.Logger rootLogger = java.util.logging.LogManager.getLogManager().
+                getLogger("");
+        java.util.logging.Handler[] handlers = rootLogger.getHandlers();
+        rootLogger.removeHandler(handlers[0]);
+        SLF4JBridgeHandler.install();
+    }
 
     private static void displayHelp() {
         LOG.trace("Entering in displayHelp");

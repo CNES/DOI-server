@@ -1,33 +1,15 @@
-/*
- * Copyright (C) 2017-2018 Centre National d'Etudes Spatiales (CNES).
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 3.0 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- * MA 02110-1301  USA
- */
+
 package fr.cnes.doi.security;
 
-import fr.cnes.doi.db.AbstractUserRoleDBHelper;
 import fr.cnes.doi.application.AdminApplication;
 import fr.cnes.doi.application.DoiMdsApplication;
 import fr.cnes.doi.db.AbstractProjectSuffixDBHelper;
+import fr.cnes.doi.db.AbstractUserRoleDBHelper;
 import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.logging.business.JsonMessage;
 import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.utils.UniqueProjectName;
 import fr.cnes.doi.utils.spec.Requirement;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -81,17 +63,6 @@ public class RoleAuthorizer implements Observer {
      */
     private static final MemoryRealm REALM = USER_ROLE_PLUGIN.getRealm();
 
-    /**
-     * Class to handle the instance
-     *
-     */
-    private static class RoleAuthorizerHolder {
-
-        /**
-         * Unique Instance unique
-         */
-        private static final RoleAuthorizer INSTANCE = new RoleAuthorizer();
-    }
 
     /**
      * Access to unique INSTANCE of role authorizer
@@ -338,5 +309,16 @@ public class RoleAuthorizer implements Observer {
         }
 
         return LOG.traceExit(searchedApp);
+    }
+    /**
+     * Class to handle the instance
+     *
+     */
+    private static class RoleAuthorizerHolder {
+        
+        /**
+         * Unique Instance unique
+         */
+        private static final RoleAuthorizer INSTANCE = new RoleAuthorizer();
     }
 }

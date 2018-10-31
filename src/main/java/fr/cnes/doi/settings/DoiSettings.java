@@ -22,26 +22,24 @@ import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.security.UtilsCryptography;
 import fr.cnes.doi.server.Starter;
+import fr.cnes.doi.utils.Utils;
+import fr.cnes.doi.utils.spec.Requirement;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.restlet.data.LocalReference;
-import org.restlet.representation.Representation;
-import org.restlet.resource.ClientResource;
-
-import fr.cnes.doi.utils.Utils;
-import fr.cnes.doi.utils.spec.Requirement;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.restlet.data.LocalReference;
+import org.restlet.representation.Representation;
+import org.restlet.resource.ClientResource;
 
 /**
  * Singleton to load and use the defined variables in the config.properties.
@@ -65,6 +63,15 @@ public final class DoiSettings {
      * Test DOI : {@value #INIST_TEST_DOI}.
      */
     private static final String INIST_TEST_DOI = "10.5072";
+    /**
+     * Access to unique INSTANCE of Settings
+     *
+     * @return the configuration instance.
+     */
+    public static DoiSettings getInstance() {
+        LOG.traceEntry();
+        return LOG.traceExit(DoiSettingsHolder.INSTANCE);
+    }
 
     /**
      * Settings loaded in memory.
@@ -81,6 +88,7 @@ public final class DoiSettings {
      */
     private String pathApp;
 
+    
     /**
      * private constructor Loads the defautl configuration properties {@value #CONFIG_PROPERTIES}
      */
@@ -88,6 +96,7 @@ public final class DoiSettings {
         final Properties properties = loadConfigurationFile();
         init(properties, Level.OFF);
     }
+    
 
     /**
      * Loads configuration file and set it in memory.
@@ -114,7 +123,7 @@ public final class DoiSettings {
             final String path = Starter.class.getProtectionDomain().getCodeSource().getLocation().
                     getPath();
             String decodedPath = URLDecoder.decode(path, "UTF-8");
-            final int posLastSlash = decodedPath.lastIndexOf("/");
+            final int posLastSlash = decodedPath.lastIndexOf('/');
             decodedPath = decodedPath.substring(0, posLastSlash);
             this.pathApp = decodedPath;
         } catch (UnsupportedEncodingException ex) {
@@ -222,26 +231,6 @@ public final class DoiSettings {
         LOG.traceExit();
     }
 
-    /**
-     * Holder
-     */
-    private static class DoiSettingsHolder {
-
-        /**
-         * Unique Instance unique not pre-initiliaze
-         */
-        private static final DoiSettings INSTANCE = new DoiSettings();
-    }
-
-    /**
-     * Access to unique INSTANCE of Settings
-     *
-     * @return the configuration instance.
-     */
-    public static DoiSettings getInstance() {
-        LOG.traceEntry();
-        return LOG.traceExit(DoiSettingsHolder.INSTANCE);
-    }
 
     /**
      * Tests if the key has a value.
@@ -486,5 +475,15 @@ public final class DoiSettings {
             LOG.fatal("error when displaying the configuraiton file on the standard output", ex);
         }
         LOG.traceExit();
+    }
+    /**
+     * Holder
+     */
+    private static class DoiSettingsHolder {
+        
+        /**
+         * Unique Instance unique not pre-initiliaze
+         */
+        private static final DoiSettings INSTANCE = new DoiSettings();
     }
 }

@@ -21,6 +21,7 @@ package fr.cnes.doi.plugin.impl;
 import fr.cnes.doi.plugin.AbstractUserRolePluginHelper;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,7 +36,6 @@ import org.restlet.security.User;
 public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
 
     private static final List<User> users = new ArrayList<>();
-    private final String NAME = this.getClass().getName();
     private static final String DESCRIPTION = "Provides a pre-defined list of users and groups";
     private static final String VERSION = "1.0.0";
     private static final String OWNER = "CNES";
@@ -45,7 +45,11 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
      * Logger.
      */
     private static final Logger LOG = LogManager.getLogger(DefaultUserRoleImpl.class.getName());
+    private final String NAME = this.getClass().getName();
 
+    /**
+     * Default constructor of the authentication plugin.
+     */
     public DefaultUserRoleImpl() {
         super();
     }
@@ -70,7 +74,7 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
 
     @Override
     public List<User> getUsers() {
-        return users;
+        return Collections.unmodifiableList(users);
     }
 
     @Override

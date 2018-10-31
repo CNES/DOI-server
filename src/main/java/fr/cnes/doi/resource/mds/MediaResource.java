@@ -28,7 +28,6 @@ import static fr.cnes.doi.security.UtilsHeader.SELECTED_ROLE_PARAMETER;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.utils.spec.Requirement;
-
 import java.util.Arrays;
 import org.apache.logging.log4j.Level;
 import org.restlet.data.Form;

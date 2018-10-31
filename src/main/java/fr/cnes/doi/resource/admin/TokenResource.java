@@ -19,15 +19,18 @@
 package fr.cnes.doi.resource.admin;
 
 import fr.cnes.doi.application.AdminApplication;
-import fr.cnes.doi.resource.AbstractResource;
+import static fr.cnes.doi.application.AdminApplication.TOKEN_TEMPLATE;
 import fr.cnes.doi.db.AbstractTokenDBHelper;
 import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.exception.TokenSecurityException;
+import fr.cnes.doi.resource.AbstractResource;
 import fr.cnes.doi.security.TokenSecurity;
 import fr.cnes.doi.security.TokenSecurity.TimeUnit;
 import fr.cnes.doi.utils.spec.Requirement;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.Logger;
 import org.restlet.data.Form;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
@@ -41,9 +44,6 @@ import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
-import static fr.cnes.doi.application.AdminApplication.TOKEN_TEMPLATE;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.Logger;
 
 /**
  * Provides a resource to create token and to decrypt token

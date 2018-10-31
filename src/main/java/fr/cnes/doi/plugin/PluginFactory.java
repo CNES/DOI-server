@@ -6,11 +6,11 @@
 package fr.cnes.doi.plugin;
 
 import fr.cnes.doi.db.AbstractProjectSuffixDBHelper;
+import fr.cnes.doi.db.AbstractUserRoleDBHelper;
 import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.settings.Consts;
-import java.util.Map;
-import fr.cnes.doi.db.AbstractUserRoleDBHelper;
 import fr.cnes.doi.utils.spec.Requirement;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**

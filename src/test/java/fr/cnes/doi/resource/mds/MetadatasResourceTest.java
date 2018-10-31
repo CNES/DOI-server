@@ -63,9 +63,7 @@ import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
 import org.restlet.util.Series;
 import static fr.cnes.doi.client.BaseClient.DATACITE_MOCKSERVER_PORT;
-import fr.cnes.doi.exception.ClientMdsException;
 import org.junit.experimental.categories.Category;
-import org.restlet.data.Status;
 
 /**
  * Test class for {@link fr.cnes.doi.resource.mds.MetadatasResource}

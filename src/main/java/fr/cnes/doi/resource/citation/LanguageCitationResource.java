@@ -19,17 +19,16 @@
 package fr.cnes.doi.resource.citation;
 
 import fr.cnes.doi.application.AbstractApplication;
+import fr.cnes.doi.exception.ClientCrossCiteException;
+import fr.cnes.doi.utils.spec.Requirement;
 import java.util.List;
+import org.apache.logging.log4j.Level;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
 import org.restlet.data.Status;
 import org.restlet.ext.wadl.MethodInfo;
 import org.restlet.resource.Get;
 import org.restlet.resource.ResourceException;
-
-import fr.cnes.doi.exception.ClientCrossCiteException;
-import fr.cnes.doi.utils.spec.Requirement;
-import org.apache.logging.log4j.Level;
 
 /**
  * The supported languages for citation.

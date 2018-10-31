@@ -21,7 +21,14 @@ package fr.cnes.doi.resource.mds;
 import fr.cnes.doi.application.DoiMdsApplication.API_MDS;
 import fr.cnes.doi.client.ClientMDS;
 import fr.cnes.doi.client.ClientMDS.DATACITE_API_RESPONSE;
+import static fr.cnes.doi.client.ClientMDS.POST_DOI;
+import static fr.cnes.doi.client.ClientMDS.POST_URL;
+import fr.cnes.doi.exception.ClientMdsException;
+import fr.cnes.doi.exception.DoiServerException;
+import static fr.cnes.doi.security.UtilsHeader.SELECTED_ROLE_PARAMETER;
+import fr.cnes.doi.utils.spec.Requirement;
 import java.util.Arrays;
+import org.apache.logging.log4j.Level;
 import org.restlet.data.Form;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
@@ -34,14 +41,6 @@ import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Get;
 import org.restlet.resource.Post;
-
-import fr.cnes.doi.exception.ClientMdsException;
-import static fr.cnes.doi.security.UtilsHeader.SELECTED_ROLE_PARAMETER;
-import static fr.cnes.doi.client.ClientMDS.POST_DOI;
-import static fr.cnes.doi.client.ClientMDS.POST_URL;
-import fr.cnes.doi.exception.DoiServerException;
-import fr.cnes.doi.utils.spec.Requirement;
-import org.apache.logging.log4j.Level;
 
 /**
  * Resource to handle a collection of DOI.
