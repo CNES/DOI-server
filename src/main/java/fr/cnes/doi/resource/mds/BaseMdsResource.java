@@ -135,7 +135,7 @@ public class BaseMdsResource extends AbstractResource {
      * Get the role when the role is not provided in the header.
      *
      * @return the role name
-     */    
+     */
     private String getRoleNameWhenNotProvidedInHeader() {
         LOG.traceEntry();
         // no role is provided in the header
@@ -143,7 +143,8 @@ public class BaseMdsResource extends AbstractResource {
         if (hasNoRole(roles)) {
             // the user has no role, go out
             throw LOG.throwing(Level.DEBUG,
-                    new DoiServerException(getApplication(), API_MDS.SECURITY_USER_NO_ROLE, "User not contained in any role")
+                    new DoiServerException(getApplication(), API_MDS.SECURITY_USER_NO_ROLE,
+                            "User not contained in any role")
             );
         } else if (hasSingleRole(roles)) {
             // the user has only one role, ok do it
@@ -154,7 +155,8 @@ public class BaseMdsResource extends AbstractResource {
             // the user has several roles, he has to select a profile, go out
             LOG.info("DOIServer : Cannot know which role must be applied");
             throw LOG.throwing(Level.DEBUG,
-                    new DoiServerException(getApplication(), API_MDS.SECURITY_USER_CONFLICT, "Cannot know which role must be applied")
+                    new DoiServerException(getApplication(), API_MDS.SECURITY_USER_CONFLICT,
+                            "Cannot know which role must be applied")
             );
         }
     }
@@ -178,7 +180,8 @@ public class BaseMdsResource extends AbstractResource {
             LOG.debug("User is not in Role :" + selectedRole);
             LOG.info("DOIServer : The role {} is not allowed to use this feature", selectedRole);
             throw LOG.throwing(Level.DEBUG,
-                    new DoiServerException(getApplication(), API_MDS.SECURITY_USER_NOT_IN_SELECTED_ROLE,
+                    new DoiServerException(getApplication(),
+                            API_MDS.SECURITY_USER_NOT_IN_SELECTED_ROLE,
                             "Fail to make this request with this role (" + selectedRole + ")")
             );
         }
@@ -195,7 +198,7 @@ public class BaseMdsResource extends AbstractResource {
      *
      * @param doiName DOI name
      * @param selectedRole Selected role
-     * @throws DoiServerException 
+     * @throws DoiServerException
      * <ul>
      * <li>{@link API_MDS#SECURITY_USER_NO_ROLE}</li>
      * <li>{@link API_MDS#SECURITY_USER_NOT_IN_SELECTED_ROLE}</li>
@@ -206,7 +209,8 @@ public class BaseMdsResource extends AbstractResource {
      * project name
      */
     @Requirement(reqId = Requirement.DOI_AUTO_030, reqName = Requirement.DOI_AUTO_030_NAME)
-    protected void checkPermission(final String doiName, final String selectedRole)
+    protected void checkPermission(final String doiName,
+            final String selectedRole)
             throws DoiServerException {
         LOG.traceEntry("Parameters : {} and {}", doiName, selectedRole);
         final String projectRole = getRoleName(selectedRole);

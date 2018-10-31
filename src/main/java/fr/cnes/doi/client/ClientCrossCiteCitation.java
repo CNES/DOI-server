@@ -32,24 +32,24 @@ import org.restlet.representation.Representation;
 import org.restlet.resource.ResourceException;
 
 /**
- * Client to query the citation service.
- * This class queries <a href="https://citation.crosscite.org/">CrossCite</a>.
+ * Client to query the citation service. This class queries
+ * <a href="https://citation.crosscite.org/">CrossCite</a>.
  *
  * @author Jean-Christophe Malapert (Jean-Christophe.malapert@cnes.fr)
  */
-@Requirement(reqId = Requirement.DOI_INTER_020,reqName = Requirement.DOI_INTER_020_NAME)
+@Requirement(reqId = Requirement.DOI_INTER_020, reqName = Requirement.DOI_INTER_020_NAME)
 public class ClientCrossCiteCitation extends BaseClient {
 
     /**
      * Service end point {@value #CROSS_CITE_URL}.
      */
-    public static final String CROSS_CITE_URL = "http://citation.crosscite.org"; 
-    
+    public static final String CROSS_CITE_URL = "http://citation.crosscite.org";
+
     /**
      * Service end point {@value #CROSS_CITE_MOCK_URL}.
      */
-    public static final String CROSS_CITE_MOCK_URL = "http://localhost:"+DATACITE_MOCKSERVER_PORT;     
-    
+    public static final String CROSS_CITE_MOCK_URL = "http://localhost:" + DATACITE_MOCKSERVER_PORT;
+
     /**
      * URI to get styles {@value #STYLE_URI}.
      */
@@ -64,30 +64,30 @@ public class ClientCrossCiteCitation extends BaseClient {
      * URI to get format {@value #FORMAT_URI}.
      */
     public static final String FORMAT_URI = "format";
-    
+
     /**
      * Options for each context.
      */
     public enum Context {
 
         /**
-         * Development context. This context uses the {@link #CROSS_CITE_MOCK_URL} end point with
-         * a log level sets to OFF.
+         * Development context. This context uses the {@link #CROSS_CITE_MOCK_URL} end point with a
+         * log level sets to OFF.
          */
         DEV(CROSS_CITE_MOCK_URL, Level.OFF),
         /**
-         * Post development context. This context uses the {@link #CROSS_CITE_URL} end point with
-         * a log level sets to ALL.
+         * Post development context. This context uses the {@link #CROSS_CITE_URL} end point with a
+         * log level sets to ALL.
          */
         POST_DEV(CROSS_CITE_URL, Level.ALL),
         /**
-         * Pre production context. This context uses the {@link #CROSS_CITE_URL} end point with
-         * a log level sets to FINE.
+         * Pre production context. This context uses the {@link #CROSS_CITE_URL} end point with a
+         * log level sets to FINE.
          */
         PRE_PROD(CROSS_CITE_URL, Level.FINE),
         /**
-         * Production context.  This context uses the {@link #CROSS_CITE_URL} end point with
-         * a log level sets to INFO.
+         * Production context. This context uses the {@link #CROSS_CITE_URL} end point with a log
+         * level sets to INFO.
          */
         PROD(CROSS_CITE_URL, Level.INFO);
 
@@ -101,11 +101,11 @@ public class ClientCrossCiteCitation extends BaseClient {
          */
         private String crossCiteUrl;
 
-        Context(final String dataciteUrl, final Level levelLog) {
+        Context(final String dataciteUrl,
+                final Level levelLog) {
             this.crossCiteUrl = dataciteUrl;
             this.levelLog = levelLog;
         }
-
 
         /**
          * Returns the log level.
@@ -133,7 +133,7 @@ public class ClientCrossCiteCitation extends BaseClient {
         private void setLevelLog(final Level levelLog) {
             this.levelLog = levelLog;
         }
-        
+
         /**
          * Sets the Cross Cite URL for the context.
          *
@@ -142,29 +142,31 @@ public class ClientCrossCiteCitation extends BaseClient {
         private void setCrossCiteUrl(final String crossCiteUrl) {
             this.crossCiteUrl = crossCiteUrl;
         }
-        
+
         /**
          * Sets the level log for a given context
          *
          * @param context the context
          * @param levelLog the level log
          */
-        public static void setLevelLog(final Context context, final Level levelLog) {
+        public static void setLevelLog(final Context context,
+                final Level levelLog) {
             context.setLevelLog(levelLog);
         }
-        
+
         /**
          * Sets the Cross Cite URL for a given context
          *
          * @param context the context
          * @param crossCiteUrl Cross Cite URL
          */
-        public static void setCrossCiteUrl(final Context context, final String crossCiteUrl) {
+        public static void setCrossCiteUrl(final Context context,
+                final String crossCiteUrl) {
             context.setCrossCiteUrl(crossCiteUrl);
-        }        
+        }
 
-    }    
-    
+    }
+
     /**
      * Context use.
      */
@@ -177,15 +179,16 @@ public class ClientCrossCiteCitation extends BaseClient {
         super(CROSS_CITE_URL);
         this.contextUse = Context.PROD;
     }
-    
+
     /**
      * Constructor used for development purpose.
+     *
      * @param context Context dev
      */
     public ClientCrossCiteCitation(final Context context) {
         super(context.getCrossCiteUrl());
         this.contextUse = context;
-    }    
+    }
 
     /**
      * Init the endpoint.
@@ -210,7 +213,7 @@ public class ClientCrossCiteCitation extends BaseClient {
             if (status.isSuccess()) {
                 final ObjectMapper mapper = new ObjectMapper();
                 return mapper.readValue(rep.getStream(), List.class);
-            } else {                
+            } else {
                 throw new ClientCrossCiteException(status, status.getDescription());
             }
         } catch (IOException | ResourceException ex) {
@@ -224,8 +227,8 @@ public class ClientCrossCiteCitation extends BaseClient {
      * Returns styles by calling {@value #STYLE_URI}.
      *
      * @return list of possible styles
-     * @throws fr.cnes.doi.exception.ClientCrossCiteException Will thrown an
-     * Exception when a problem happens during the request to Cross Cite
+     * @throws fr.cnes.doi.exception.ClientCrossCiteException Will thrown an Exception when a
+     * problem happens during the request to Cross Cite
      */
     public List<String> getStyles() throws ClientCrossCiteException {
         init();
@@ -236,8 +239,8 @@ public class ClientCrossCiteCitation extends BaseClient {
      * Returns languages by calling {@value #LOCALE_URI}.
      *
      * @return List of possible languages
-     * @throws fr.cnes.doi.exception.ClientCrossCiteException Will thrown an
-     * Exception when a problem happens during the request to Cross Cite
+     * @throws fr.cnes.doi.exception.ClientCrossCiteException Will thrown an Exception when a
+     * problem happens during the request to Cross Cite
      */
     public List<String> getLanguages() throws ClientCrossCiteException {
         init();
@@ -251,10 +254,11 @@ public class ClientCrossCiteCitation extends BaseClient {
      * @param style Selected style to format the citation
      * @param language Selected language to format the citation
      * @return The formatted citation
-     * @throws fr.cnes.doi.exception.ClientCrossCiteException Will thrown an
-     * Exception when a problem happens during the request to Cross Cite
+     * @throws fr.cnes.doi.exception.ClientCrossCiteException Will thrown an Exception when a
+     * problem happens during the request to Cross Cite
      */
-    public String getFormat(final String doiName, final String style, 
+    public String getFormat(final String doiName,
+            final String style,
             final String language) throws ClientCrossCiteException {
         init();
         final String result;

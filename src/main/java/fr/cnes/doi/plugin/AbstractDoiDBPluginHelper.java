@@ -24,14 +24,14 @@ import fr.cnes.doi.db.AbstractDoiDBHelper;
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-public abstract class AbstractDoiDBPluginHelper 
+public abstract class AbstractDoiDBPluginHelper
         extends AbstractDoiDBHelper implements PluginMetadata {
-    
+
     /**
      * Empty constructor.
      */
     protected AbstractDoiDBPluginHelper() {
         super();
-    }    
-    
+    }
+
 }

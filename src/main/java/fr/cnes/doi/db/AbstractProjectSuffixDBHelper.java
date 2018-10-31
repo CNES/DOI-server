@@ -54,7 +54,8 @@ public abstract class AbstractProjectSuffixDBHelper extends Observable {
      * @param projectName project name
      * @return True when the suffix project is added otherwise False
      */
-    public abstract boolean addProjectSuffix(int projectID, String projectName);
+    public abstract boolean addProjectSuffix(int projectID,
+            String projectName);
 
     /**
      * Deletes a suffix project from the database.

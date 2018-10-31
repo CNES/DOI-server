@@ -29,9 +29,9 @@ import java.net.URLClassLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-
 /**
  * Utility class for plugins.
+ *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class Utils {
@@ -47,25 +47,25 @@ public class Utils {
      * @param path path
      * @throws IllegalArgumentException - if path is null
      * @throws NoSuchMethodException - if a matching method is not found.
-     * @throws IllegalAccessException - if this Method object is enforcing Java 
-     * language access control and the underlying method is inaccessible.
+     * @throws IllegalAccessException - if this Method object is enforcing Java language access
+     * control and the underlying method is inaccessible.
      * @throws InvocationTargetException - if the underlying method throws an exception.
-     * @throws MalformedURLException - If a protocol handler for the URL could 
-     * not be found, or if some other error occurred while constructing the URL
+     * @throws MalformedURLException - If a protocol handler for the URL could not be found, or if
+     * some other error occurred while constructing the URL
      */
     @Requirement(reqId = Requirement.DOI_ARCHI_040, reqName = Requirement.DOI_ARCHI_040_NAME)
-    public static void addPath(final String path) 
-            throws IllegalArgumentException, NoSuchMethodException, 
+    public static void addPath(final String path)
+            throws IllegalArgumentException, NoSuchMethodException,
             IllegalAccessException, InvocationTargetException, MalformedURLException {
         LOG.debug("Add path {} to plugin", path);
-        if(path == null) {
+        if (path == null) {
             throw LOG.throwing(new IllegalArgumentException("path variable is null"));
         }
         final File pathDir = new File(path);
         if (pathDir.isDirectory()) {
             final File[] files = pathDir.listFiles();
             for (final Object file : fr.cnes.doi.utils.Utils.nullToEmpty(files)) {
-                loadFileInClassPath((File)file);
+                loadFileInClassPath((File) file);
             }
         }
     }
@@ -75,15 +75,15 @@ public class Utils {
      *
      * @param file file
      * @throws NoSuchMethodException - if a matching method is not found.
-     * @throws IllegalAccessException - if this Method object is enforcing Java 
-     * language access control and the underlying method is inaccessible.
+     * @throws IllegalAccessException - if this Method object is enforcing Java language access
+     * control and the underlying method is inaccessible.
      * @throws InvocationTargetException - if the underlying method throws an exception.
-     * @throws MalformedURLException - If a protocol handler for the URL could 
-     * not be found, or if some other error occurred while constructing the URL
+     * @throws MalformedURLException - If a protocol handler for the URL could not be found, or if
+     * some other error occurred while constructing the URL
      */
-    public static void loadFileInClassPath(final File file) 
-            throws NoSuchMethodException, IllegalAccessException, 
-            InvocationTargetException, 
+    public static void loadFileInClassPath(final File file)
+            throws NoSuchMethodException, IllegalAccessException,
+            InvocationTargetException,
             MalformedURLException {
         LOG.debug("Adds file {} to classpathS", file);
         final URI uri = file.toURI();

@@ -50,14 +50,14 @@ import org.restlet.util.Series;
  *
  * @author Jean-Christophe Malapert
  */
-@Requirement(reqId = Requirement.DOI_CONFIG_010,reqName = Requirement.DOI_CONFIG_010_NAME)
+@Requirement(reqId = Requirement.DOI_CONFIG_010, reqName = Requirement.DOI_CONFIG_010_NAME)
 public final class EmailSettings {
 
     /**
      * Default debug : {@value #DEFAULT_DEBUG}.
      */
     private static final boolean DEFAULT_DEBUG = false;
-    
+
     /**
      * Logger.
      */
@@ -67,32 +67,32 @@ public final class EmailSettings {
      * SMTP URL.
      */
     private String smtpUrl;
-    
+
     /**
      * SMTP protocol.
      */
     private String smtpProtocol;
-    
+
     /**
      * TLS.
      */
     private String tlsEnable;
-    
+
     /**
      * login.
      */
     private String authUser;
-    
+
     /**
      * Password.
      */
     private String authPwd;
-    
+
     /**
      * Contact admin uRL.
      */
     private String contactAdmin;
-    
+
     /**
      * debug.
      */
@@ -106,7 +106,7 @@ public final class EmailSettings {
     }
 
     /**
-     * 
+     *
      */
     private static class EmailSettingsHolder {
 
@@ -131,30 +131,30 @@ public final class EmailSettings {
     public void init() {
         LOG.traceEntry();
         LOG.info("----- Email parameters ----");
-        
+
         final DoiSettings settings = DoiSettings.getInstance();
-        
-        this.smtpProtocol = settings.getString(Consts.SMTP_PROTOCOL);        
-        LOG.info(String.format("smtp protocol : %s",this.smtpProtocol));
-        
-        this.smtpUrl = settings.getString(Consts.SMTP_URL);        
-        LOG.info(String.format("smtp URL : %s",this.smtpUrl));        
-        
+
+        this.smtpProtocol = settings.getString(Consts.SMTP_PROTOCOL, "");
+        LOG.info(String.format("smtp protocol : %s", this.smtpProtocol));
+
+        this.smtpUrl = settings.getString(Consts.SMTP_URL, "");
+        LOG.info(String.format("smtp URL : %s", this.smtpUrl));
+
         this.authUser = settings.getSecret(Consts.SMTP_AUTH_USER);
-        LOG.info(String.format("auth user : %s",this.authUser));                
-        
+        LOG.info(String.format("auth user : %s", this.authUser));
+
         this.authPwd = settings.getSecret(Consts.SMTP_AUTH_PWD);
-        LOG.info(String.format("auth pwd : %s",this.authPwd));                
-        
-        this.tlsEnable = settings.getString(Consts.SMTP_STARTTLS_ENABLE);
-        LOG.info(String.format("TLS enable : %s",this.tlsEnable));                        
-        
-        this.contactAdmin = settings.getString(Consts.SERVER_CONTACT_ADMIN);
-        LOG.info(String.format("Contact admin : %s",this.contactAdmin));                                
-        
+        LOG.info(String.format("auth pwd : %s", this.authPwd));
+
+        this.tlsEnable = settings.getString(Consts.SMTP_STARTTLS_ENABLE, "false");
+        LOG.info(String.format("TLS enable : %s", this.tlsEnable));
+
+        this.contactAdmin = settings.getString(Consts.SERVER_CONTACT_ADMIN, "");
+        LOG.info(String.format("Contact admin : %s", this.contactAdmin));
+
         LOG.info("Email settings have been loaded");
-        LOG.info("---------------------------");        
-        
+        LOG.info("---------------------------");
+
         LOG.traceExit();
     }
 
@@ -184,15 +184,17 @@ public final class EmailSettings {
      * @param msg Email's message
      * @return True when the message is sent
      */
-    public boolean sendMessage(final String subject, final String msg) {
+    public boolean sendMessage(final String subject,
+            final String msg) {
         LOG.traceEntry("Parameters : {} and {}", subject, msg);
         boolean result;
         try {
-            final Request request = new Request(Method.POST, getSmtpURL());
-            LOG.debug("Sets the login/passwd for the SMTP server");
-            request.setChallengeResponse(
-                    new ChallengeResponse(ChallengeScheme.SMTP_PLAIN, getAuthUser(), getAuthPwd()));
-            result = sendMail(Protocol.valueOf(getSmtpProtocol()), request, Boolean.getBoolean(getTlsEnable()), subject, msg);
+            if (isConfigureForSendingEmail()) {
+                result = processMessage(subject, msg);
+            } else {
+                LOG.warn("Cannot send the email, please fill the configuration file");
+                result = false;
+            }
         } catch (RuntimeException ex) {
             LOG.catching(Level.DEBUG, ex);
             LOG.error("Cannot send the message with the subject {} : {}", subject, msg);
@@ -206,6 +208,58 @@ public final class EmailSettings {
     }
 
     /**
+     * Process the message. Sends to SMTP server
+     *
+     * @param subject subject of the email
+     * @param message message
+     * @return true when the message has been send otherwise false
+     * @throws Exception when an error happens
+     */
+    private boolean processMessage(final String subject,
+            final String message) throws Exception {
+        LOG.debug("Enough information to send the email.");
+        final Request request = new Request(Method.POST, getSmtpURL());
+        setSmtpPassword(request);
+        return sendMail(Protocol.valueOf(getSmtpProtocol()), request, Boolean.getBoolean(
+                getTlsEnable()), subject, message);
+    }
+
+    /**
+     * Sets the SMTP password
+     *
+     * @param request request
+     */
+    private void setSmtpPassword(final Request request) {
+        if (isAuthenticate()) {
+            LOG.debug("Sets the login/passwd for the SMTP server");
+            request.setChallengeResponse(
+                    new ChallengeResponse(ChallengeScheme.SMTP_PLAIN, getAuthUser(), getAuthPwd()));
+        } else {
+            LOG.debug("No required login/pwd for the SMTP server");
+            request.setChallengeResponse(new ChallengeResponse(ChallengeScheme.SMTP_PLAIN));
+        }
+    }
+
+    /**
+     * Returns true when configuration may be enough to send an email. Checks the SMTP URL and the
+     * SMTP protocol.
+     *
+     * @return true when configuration may be enough to send an email
+     */
+    private boolean isConfigureForSendingEmail() {
+        return !(this.getSmtpURL().isEmpty() && this.getSmtpProtocol().isEmpty());
+    }
+
+    /**
+     * Returns true when sendmail neeed to be authenticated otherwide false.
+     *
+     * @return true when sendmail neeed to be authenticated otherwide false
+     */
+    private boolean isAuthenticate() {
+        return !(this.getAuthUser().isEmpty() && this.getAuthPwd().isEmpty());
+    }
+
+    /**
      * Sends email.
      *
      * @param protocol Protocol (SMTP or SMTPS)
@@ -216,7 +270,10 @@ public final class EmailSettings {
      * @return True when the message is sent
      * @throws Exception - if an error happens when stopping the request
      */
-    private boolean sendMail(final Protocol protocol, final Request request, final boolean startTls, final String subject,
+    private boolean sendMail(final Protocol protocol,
+            final Request request,
+            final boolean startTls,
+            final String subject,
             final String msg) throws Exception {
         LOG.traceEntry("With parameters");
         final DoiSettings settings = DoiSettings.getInstance();
@@ -224,26 +281,39 @@ public final class EmailSettings {
         final Map<String, String> dataModel = new ConcurrentHashMap<>();
         dataModel.put("subject", subject);
         dataModel.put("message", msg);
-        dataModel.put("from", settings.getString(Consts.SERVER_CONTACT_ADMIN, "L-doi-support@cnes.fr"));
-        dataModel.put("to", settings.getString(Consts.SERVER_CONTACT_ADMIN, "L-doi-support@cnes.fr"));
+        dataModel.put("from", settings.getString(Consts.SERVER_CONTACT_ADMIN,
+                "L-doi-support@cnes.fr"));
+        dataModel.
+                put("to", settings.getString(Consts.SERVER_CONTACT_ADMIN, "L-doi-support@cnes.fr"));
 
-        final Representation mailFtl = new ClientResource(LocalReference.createClapReference("class/email.ftl")).get();
-        final Representation mail = new TemplateRepresentation(mailFtl, dataModel, MediaType.TEXT_XML);
+        final Representation mailFtl = new ClientResource(LocalReference.createClapReference(
+                "class/email.ftl")).get();
+        final Representation mail = new TemplateRepresentation(mailFtl, dataModel,
+                MediaType.TEXT_XML);
         request.setEntity(mail);
-        final ClientResource client = new ClientResource(new Context(), request);
-        client.setProtocol(protocol);
-        final Series<Parameter> params = client.getContext().getParameters(); 
-        params.set(RESTLET_MAX_TOTAL_CONNECTIONS, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_TOTAL_CONNECTIONS, DEFAULT_MAX_TOTAL_CONNECTIONS));        
-        params.set(RESTLET_MAX_CONNECTIONS_PER_HOST, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_CONNECTIONS_PER_HOST, DEFAULT_MAX_CONNECTIONS_PER_HOST));
-        params.add("debug", String.valueOf(isDebug()));
-        params.add("startTls", Boolean.toString(startTls).toLowerCase(Locale.ENGLISH));
-        client.get();
-        final Status status = client.getStatus();
-        if (status.isError()) {
-            LOG.error("Cannot send the email! : {}", status.getDescription());
+        try {
+            final ClientResource client = new ClientResource(new Context(), request);
+            client.setProtocol(protocol);
+            final Series<Parameter> params = client.getContext().getParameters();
+            params.set(RESTLET_MAX_TOTAL_CONNECTIONS, DoiSettings.getInstance().getString(
+                    fr.cnes.doi.settings.Consts.RESTLET_MAX_TOTAL_CONNECTIONS,
+                    DEFAULT_MAX_TOTAL_CONNECTIONS));
+            params.set(RESTLET_MAX_CONNECTIONS_PER_HOST, DoiSettings.getInstance().getString(
+                    fr.cnes.doi.settings.Consts.RESTLET_MAX_CONNECTIONS_PER_HOST,
+                    DEFAULT_MAX_CONNECTIONS_PER_HOST));
+            params.add("debug", String.valueOf(isDebug()));
+            params.add("startTls", Boolean.toString(startTls).toLowerCase(Locale.ENGLISH));
+            client.get();
+            final Status status = client.getStatus();
+            if (status.isError()) {
+                LOG.error("Cannot send the email! : {}", status.getDescription());
+                result = false;
+            } else {
+                result = true;
+            }
+        } catch (NullPointerException ex) {
+            LOG.error("Cannot connect to SMTP server", ex);
             result = false;
-        } else {
-            result = true;
         }
         return LOG.traceExit(result);
     }

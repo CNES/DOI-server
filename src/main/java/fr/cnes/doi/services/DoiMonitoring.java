@@ -50,8 +50,10 @@ public class DoiMonitoring {
      * @param path path URI
      * @param description Feature's description
      */
-    public void register(final Method name, final String path, final String description) {
-        LOG.traceEntry("Parameters : {}, {}, {}",name, path, description);
+    public void register(final Method name,
+            final String path,
+            final String description) {
+        LOG.traceEntry("Parameters : {}, {}, {}", name, path, description);
         this.applications.put(name.getName() + path, new DoiMonitoringRecord(description, 0.0f, 0));
         LOG.traceExit();
     }
@@ -63,16 +65,18 @@ public class DoiMonitoring {
      * @param path path URI
      * @param duration duration in ms
      */
-    public void addMeasurement(final Method name, final String path, final float duration) {
+    public void addMeasurement(final Method name,
+            final String path,
+            final float duration) {
         LOG.traceEntry("Parameters : {} {} {}", name.getName(), path, duration);
         final String identifier = name.getName() + path;
         if (this.applications.containsKey(identifier)) {
             final DoiMonitoringRecord record = this.applications.get(name.getName() + path);
             final float previousSpeedAverage = (float) record.getAverage();
-            LOG.info("current speed average = {} ms", previousSpeedAverage);
             final int previousNbAccess = (int) record.getNbAccess();
-            final float newSpeedAverage = (previousSpeedAverage + duration) / (previousNbAccess + 1);
-            LOG.info("new speed average = {} ms", newSpeedAverage);
+            final float newSpeedAverage = (previousSpeedAverage * previousNbAccess + duration) / (previousNbAccess + 1);
+            LOG.info("{} | speed average = {} ms | duration = {} ms", identifier, newSpeedAverage,
+                    duration);
             record.setAverage(newSpeedAverage);
             record.setNbAccess(previousNbAccess + 1);
         } else {
@@ -88,11 +92,12 @@ public class DoiMonitoring {
      * @param path Path URI
      * @return True when the feature is registered
      */
-    public boolean isRegistered(final Method name, final String path) {
+    public boolean isRegistered(final Method name,
+            final String path) {
         LOG.traceEntry("Parameters : {} and {}", name.getName(), path);
         final String identifier = name.getName() + path;
         final boolean isRegistered = this.applications.containsKey(identifier);
-        LOG.debug(name+" "+path+" is registered : " + isRegistered);       
+        LOG.debug(name + " " + path + " is registered : " + isRegistered);
         return LOG.traceExit(isRegistered);
     }
 
@@ -103,7 +108,8 @@ public class DoiMonitoring {
      * @param path path URI
      * @return the average speed
      */
-    public float getCurrentAverage(final Method name, final String path) {    
+    public float getCurrentAverage(final Method name,
+            final String path) {
         LOG.traceEntry("Parameters : {} and {}", name.getName(), path);
         final float average;
         final String identifier = name.getName() + path;
@@ -122,8 +128,9 @@ public class DoiMonitoring {
      * @param path path URI
      * @return the description
      */
-    public String getDescription(final Method name, final String path) {    
-        LOG.traceEntry("Parameters : {} and {}", name.getName(), path);        
+    public String getDescription(final Method name,
+            final String path) {
+        LOG.traceEntry("Parameters : {} and {}", name.getName(), path);
         final String identifier = name.getName() + path;
         final String description = this.applications.get(identifier).getDescription();
         return LOG.traceExit(description);

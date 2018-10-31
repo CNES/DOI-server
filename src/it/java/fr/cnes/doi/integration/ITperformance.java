@@ -22,6 +22,7 @@ import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
 import static fr.cnes.doi.AbstractSpec.classTitle;
 import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.InitServerForTest;
+import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.MdsSpec;
 import static fr.cnes.doi.client.BaseClient.DATACITE_MOCKSERVER_PORT;
 import fr.cnes.doi.client.ClientProxyTest;
@@ -96,7 +97,7 @@ public class ITperformance {
 
     @BeforeClass
     public static void setUpClass() throws ClientMdsException {
-        InitServerForTest.init();
+        InitServerForTest.init(InitSettingsForTest.CONFIG_IT_PROPERTIES);
         cl = new Client(new Context(), Protocol.HTTPS);
         Series<Parameter> parameters = cl.getContext().getParameters();
         parameters.set(RESTLET_MAX_TOTAL_CONNECTIONS, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_TOTAL_CONNECTIONS, DEFAULT_MAX_TOTAL_CONNECTIONS));
@@ -151,11 +152,11 @@ public class ITperformance {
         
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
-        double meanProcessingTime = elapsedTime / NB_ITERS;
+        double meanProcessingTime = elapsedTime / (NB_ITERS - (int) map.get("nbErrors"));
 
         double expectedTime = 5.0 / 100.0 * 1000.0; //1 s per DOI
-        LOG.log(Level.INFO, "All working fine : Mean request processing time {0} ms, expected time {1} ms", new Object[]{meanProcessingTime, expectedTime});        
-        Assert.assertTrue("Test the performances of DOIs creation", (int) map.get("nbErrors") == 0 && meanProcessingTime <= expectedTime);
+        LOG.log(Level.INFO, "All working fine : Mean request processing time {0} ms with {1} error, expected time {2} ms", new Object[]{meanProcessingTime, (int) map.get("nbErrors"), expectedTime});        
+        Assert.assertTrue("Test the performances of DOIs creation",  meanProcessingTime <= expectedTime);
     }
     
     @Test

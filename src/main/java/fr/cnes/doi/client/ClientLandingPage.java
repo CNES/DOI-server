@@ -23,9 +23,9 @@ import java.util.List;
 import org.restlet.data.Status;
 import org.restlet.resource.ResourceException;
 
-
 /**
  * Checks the status of the landing page.
+ *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class ClientLandingPage extends BaseClient {
@@ -34,7 +34,7 @@ public class ClientLandingPage extends BaseClient {
      * DOI name resolver {@value #BASE_URI}.
      */
     private static final String BASE_URI = "http://doi.org";
-    
+
     /**
      * List of offline landing pages.
      */
@@ -42,6 +42,7 @@ public class ClientLandingPage extends BaseClient {
 
     /**
      * Constructor
+     *
      * @param dois List of DOIs to check
      */
     public ClientLandingPage(final List<String> dois) {
@@ -51,6 +52,7 @@ public class ClientLandingPage extends BaseClient {
 
     /**
      * Tests for each DOI if the landing page is online.
+     *
      * @param dois dois to check
      */
     //TODO : check with Head before. If not implemented, check with get
@@ -77,6 +79,7 @@ public class ClientLandingPage extends BaseClient {
 
     /**
      * Returns true when there is no error otherwise False.
+     *
      * @return true when there is no error otherwise False
      */
     public boolean isSuccess() {
@@ -85,6 +88,7 @@ public class ClientLandingPage extends BaseClient {
 
     /**
      * Returns True when there is more than zero error otherwise False
+     *
      * @return True when there is more than zero error otherwise False
      */
     public boolean isError() {
@@ -93,6 +97,7 @@ public class ClientLandingPage extends BaseClient {
 
     /**
      * Returns the errors.
+     *
      * @return the error
      */
     public List<String> getErrors() {

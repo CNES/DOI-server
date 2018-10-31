@@ -16,56 +16,45 @@ import javax.xml.bind.annotation.XmlType;
  * Java class for resourceType.
  *
  * <p>
- * The following schema fragment specifies the expected content contained within
- * this class.
+ * The following schema fragment specifies the expected content contained within this class.
  * <p>
- * <pre>
- * &lt;simpleType name="resourceType"&gt;
- *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"&gt;
- *     &lt;enumeration value="Audiovisual"/&gt;
- *     &lt;enumeration value="Collection"/&gt;
- *     &lt;enumeration value="Dataset"/&gt;
- *     &lt;enumeration value="Event"/&gt;
- *     &lt;enumeration value="Image"/&gt;
- *     &lt;enumeration value="InteractiveResource"/&gt;
- *     &lt;enumeration value="Model"/&gt;
- *     &lt;enumeration value="PhysicalObject"/&gt;
- *     &lt;enumeration value="Service"/&gt;
- *     &lt;enumeration value="Software"/&gt;
- *     &lt;enumeration value="Sound"/&gt;
- *     &lt;enumeration value="Text"/&gt;
- *     &lt;enumeration value="Workflow"/&gt;
- *     &lt;enumeration value="Other"/&gt;
- *   &lt;/restriction&gt;
+ * <
+ * pre>
+ * &lt;simpleType name="resourceType"&gt; &lt;restriction
+ * base="{http://www.w3.org/2001/XMLSchema}string"&gt; &lt;enumeration value="Audiovisual"/&gt;
+ * &lt;enumeration value="Collection"/&gt; &lt;enumeration value="Dataset"/&gt; &lt;enumeration
+ * value="Event"/&gt; &lt;enumeration value="Image"/&gt; &lt;enumeration
+ * value="InteractiveResource"/&gt; &lt;enumeration value="Model"/&gt; &lt;enumeration
+ * value="PhysicalObject"/&gt; &lt;enumeration value="Service"/&gt; &lt;enumeration
+ * value="Software"/&gt; &lt;enumeration value="Sound"/&gt; &lt;enumeration value="Text"/&gt;
+ * &lt;enumeration value="Workflow"/&gt; &lt;enumeration value="Other"/&gt; &lt;/restriction&gt;
  * &lt;/simpleType&gt;
  * </pre>
  *
  */
-@Requirement(reqId = Requirement.DOI_SRV_010,reqName = Requirement.DOI_SRV_010_NAME)
-@Requirement(reqId = Requirement.DOI_SRV_040,reqName = Requirement.DOI_SRV_040_NAME)
-@Requirement(reqId = Requirement.DOI_INTER_060,reqName = Requirement.DOI_INTER_060_NAME)
+@Requirement(reqId = Requirement.DOI_SRV_010, reqName = Requirement.DOI_SRV_010_NAME)
+@Requirement(reqId = Requirement.DOI_SRV_040, reqName = Requirement.DOI_SRV_040_NAME)
+@Requirement(reqId = Requirement.DOI_INTER_060, reqName = Requirement.DOI_INTER_060_NAME)
 @XmlType(name = "resourceType")
 @XmlEnum
 public enum ResourceType {
 
     /**
-     * A series of visual representations imparting an impression of motion when shown
-     * in succession. May or may not include sound.
-     * May be used for films, video, etc,
+     * A series of visual representations imparting an impression of motion when shown in
+     * succession. May or may not include sound. May be used for films, video, etc,
      * <p>
      * Ex: http://data.datacite.org/10.7916/D8610XCB
-     * 
+     *
      */
     @XmlEnumValue("Audiovisual")
     AUDIOVISUAL("Audiovisual"),
     /**
-     * An aggregation of resources of various types, or a list of resources that 
-     * form part of a publication. If a collection exists of a single type, use 
-     * the single type to describe it.
+     * An aggregation of resources of various types, or a list of resources that form part of a
+     * publication. If a collection exists of a single type, use the single type to describe it.
      * <p>
-     * A collection of samples, or various files making up a report. 
-     * Ex: http://data.datacite.org/10.5284/1001038
-     * 
+     * A collection of samples, or various files making up a report. Ex:
+     * http://data.datacite.org/10.5284/1001038
+     *
      */
     @XmlEnumValue("Collection")
     COLLECTION("Collection"),
@@ -79,34 +68,34 @@ public enum ResourceType {
     /**
      * A non‐persistent, time‐based occurrence.
      * <p>
-     * Descriptive information and/or content that is the basis for discovery of
-     * the purpose, location, duration, and responsible agents associated with 
-     * an event such as a webcast or convention. Ex: http://data.datacite.org/10.7269/P3RN35SZ
+     * Descriptive information and/or content that is the basis for discovery of the purpose,
+     * location, duration, and responsible agents associated with an event such as a webcast or
+     * convention. Ex: http://data.datacite.org/10.7269/P3RN35SZ
      */
     @XmlEnumValue("Event")
     EVENT("Event"),
     /**
      * A visual representation other than text.
      * <p>
-     * Digitised or born digital images, drawings or photographs. Ex:http://data.datacite.org/10.6083/M4QN65C5
+     * Digitised or born digital images, drawings or photographs.
+     * Ex:http://data.datacite.org/10.6083/M4QN65C5
      */
     @XmlEnumValue("Image")
     IMAGE("Image"),
     /**
-     * A resource requiring interaction from the user to be understood, executed,
-     * or experienced.
+     * A resource requiring interaction from the user to be understood, executed, or experienced.
      * <p>
-     * Training modules, files that require use of a viewer (e.g., Flash), or
-     * query/response portals. Ex: http://data.datacite.org/10.7269/P3TB14TR
+     * Training modules, files that require use of a viewer (e.g., Flash), or query/response
+     * portals. Ex: http://data.datacite.org/10.7269/P3TB14TR
      */
     @XmlEnumValue("InteractiveResource")
     INTERACTIVE_RESOURCE("InteractiveResource"),
     /**
-     * An abstract, conceptual, graphical, mathematical or visualization model
-     * that represents empirical objects, phenomena, or physical processes.
+     * An abstract, conceptual, graphical, mathematical or visualization model that represents
+     * empirical objects, phenomena, or physical processes.
      * <p>
-     * Modelled descriptions of, for example, different aspects of languages or 
-     * a molecular biology reaction chain. Ex: http://data.datacite.org/10.5285/4D866CD2‐C907‐4CE2‐B070‐084CA9779DC2     
+     * Modelled descriptions of, for example, different aspects of languages or a molecular biology
+     * reaction chain. Ex: http://data.datacite.org/10.5285/4D866CD2‐C907‐4CE2‐B070‐084CA9779DC2
      */
     @XmlEnumValue("Model")
     MODEL("Model"),
@@ -141,19 +130,18 @@ public enum ResourceType {
     /**
      * A resource consisting primarily of words for reading.
      * <p>
-     * Grey literature, lab notes, accompanying materials.
-     * Ex: http://data.datacite.org/10.5682/9786065914018
+     * Grey literature, lab notes, accompanying materials. Ex:
+     * http://data.datacite.org/10.5682/9786065914018
      */
     @XmlEnumValue("Text")
     TEXT("Text"),
     /**
-     * A structured series of steps which can be executed to produce a final outcome,
-     * allowing users a means to specify and enact their work in a more reproducible
-     * manner.
+     * A structured series of steps which can be executed to produce a final outcome, allowing users
+     * a means to specify and enact their work in a more reproducible manner.
      * <p>
-     * Computational workflows involving sequential operations made on data by 
-     * wrapped software and may be specified in a format belonging to a workflow 
-     * management system, such as Taverna (http://www.taverna.org.uk/).
+     * Computational workflows involving sequential operations made on data by wrapped software and
+     * may be specified in a format belonging to a workflow management system, such as Taverna
+     * (http://www.taverna.org.uk/).
      */
     @XmlEnumValue("Workflow")
     WORKFLOW("Workflow"),
@@ -166,6 +154,7 @@ public enum ResourceType {
 
     /**
      * Constructor.
+     *
      * @param v resource type
      */
     ResourceType(String v) {
@@ -174,6 +163,7 @@ public enum ResourceType {
 
     /**
      * Gets the value.
+     *
      * @return the value
      */
     public String value() {
@@ -182,11 +172,12 @@ public enum ResourceType {
 
     /**
      * Gets the resource type from a value
+     *
      * @param v value
      * @return the resource type
      * @throws IllegalArgumentException - if Resource type not found
      */
-    public static ResourceType fromValue(String v) throws IllegalArgumentException{
+    public static ResourceType fromValue(String v) throws IllegalArgumentException {
         for (ResourceType c : ResourceType.values()) {
             if (c.value.equals(v)) {
                 return c;

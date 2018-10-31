@@ -20,12 +20,13 @@ package fr.cnes.doi.utils.spec;
 
 /**
  * Requirement coverage.
+ *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public enum CoverageAnnotation {
-    
-    COMPLETE, 
-    PARTIAL, 
+
+    COMPLETE,
+    PARTIAL,
     NONE
-    
+
 }

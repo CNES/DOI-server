@@ -71,7 +71,8 @@ public class LanguageCitationResource extends BaseCitationResource {
             result = this.getApp().getClient().getLanguages();
         } catch (ClientCrossCiteException ex) {
             ((AbstractApplication) getApplication()).sendAlertWhenDataCiteFailed(ex);
-            throw LOG.throwing(Level.DEBUG, new ResourceException(ex.getStatus(), ex.getDetailMessage(), ex));
+            throw LOG.throwing(Level.DEBUG, new ResourceException(ex.getStatus(), ex.
+                    getDetailMessage(), ex));
         }
         return LOG.traceExit(result);
     }

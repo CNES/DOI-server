@@ -140,14 +140,15 @@ public class TokenResource extends AbstractResource {
                     unit,
                     amount
             );
-            LOG.info("Token created {} for project {} during {} {}", 
+            LOG.info("Token created {} for project {} during {} {}",
                     tokenJwt, projectID, amount, unit.name());
 
             this.tokenDB.addToken(tokenJwt);
 
             return LOG.traceExit(tokenJwt);
         } catch (TokenSecurityException ex) {
-            throw LOG.throwing(Level.DEBUG, new ResourceException(ex.getStatus(), ex.getMessage(), ex));
+            throw LOG.throwing(Level.DEBUG, new ResourceException(ex.getStatus(), ex.getMessage(),
+                    ex));
         }
     }
 
@@ -189,7 +190,8 @@ public class TokenResource extends AbstractResource {
                     .getTokenInformation(this.tokenParam);
             return LOG.traceExit(new JsonRepresentation(jws));
         } catch (DoiRuntimeException ex) {
-            throw LOG.throwing(Level.DEBUG, new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, ex));
+            throw LOG.throwing(Level.DEBUG, new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST,
+                    ex));
         }
     }
 

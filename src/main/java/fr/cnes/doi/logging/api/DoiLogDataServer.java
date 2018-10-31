@@ -42,7 +42,7 @@ import fr.cnes.doi.utils.spec.Requirement;
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-@Requirement(reqId = Requirement.DOI_ARCHI_020,reqName = Requirement.DOI_ARCHI_020_NAME)
+@Requirement(reqId = Requirement.DOI_ARCHI_020, reqName = Requirement.DOI_ARCHI_020_NAME)
 public class DoiLogDataServer extends LogService {
 
     //private Logger logger = Engine.getLogger(Utils.HTTP_LOGGER_NAME);
@@ -52,22 +52,16 @@ public class DoiLogDataServer extends LogService {
      * @param logName logger name
      * @param isEnabled true when logger is enabled otherwise false
      */
-    public DoiLogDataServer(final String logName, final boolean isEnabled) {
+    public DoiLogDataServer(final String logName,
+            final boolean isEnabled) {
         super(isEnabled);
+        this.setLoggerName(logName);
         this.setResponseLogFormat(DoiSettings.getInstance().getString(Consts.LOG_FORMAT));
-        try {
-            this.setLoggerName(logName);
-
-            if (logName != null && !"".equals(logName)) {
-                Engine.getLogger(logName);
-            }
-        } catch (SecurityException ex) {
-            throw new ResourceException(Status.SERVER_ERROR_INTERNAL, ex);
-        }
     }
 
     /**
      * Create the filter that should be invoked for incoming calls
+     *
      * @param context context
      * @return filter
      */
@@ -84,30 +78,30 @@ public class DoiLogDataServer extends LogService {
     private DoiMonitoring initMonitoring() {
 
         final DoiMonitoring monitoring = new DoiMonitoring();
-        monitoring.register(Method.GET, 
-                DoiServer.MDS_URI + DoiMdsApplication.DOI_URI, 
+        monitoring.register(Method.GET,
+                DoiServer.MDS_URI + DoiMdsApplication.DOI_URI,
                 DoisResource.LIST_ALL_DOIS
         );
-        monitoring.register(Method.POST, 
-                DoiServer.MDS_URI + DoiMdsApplication.DOI_URI, 
+        monitoring.register(Method.POST,
+                DoiServer.MDS_URI + DoiMdsApplication.DOI_URI,
                 DoisResource.CREATE_DOI
         );
-        monitoring.register(Method.GET, 
-                DoiServer.MDS_URI + DoiMdsApplication.DOI_URI + DoiMdsApplication.DOI_NAME_URI, 
+        monitoring.register(Method.GET,
+                DoiServer.MDS_URI + DoiMdsApplication.DOI_URI + DoiMdsApplication.DOI_NAME_URI,
                 DoiResource.GET_DOI
         );
-        monitoring.register(Method.POST, 
-                DoiServer.MDS_URI + DoiMdsApplication.METADATAS_URI, 
+        monitoring.register(Method.POST,
+                DoiServer.MDS_URI + DoiMdsApplication.METADATAS_URI,
                 MetadatasResource.CREATE_METADATA
         );
-        monitoring.register(Method.GET, 
-                DoiServer.MDS_URI + DoiMdsApplication.METADATAS_URI 
-                        + DoiMdsApplication.DOI_NAME_URI, 
+        monitoring.register(Method.GET,
+                DoiServer.MDS_URI + DoiMdsApplication.METADATAS_URI
+                + DoiMdsApplication.DOI_NAME_URI,
                 MetadataResource.GET_METADATA
         );
-        monitoring.register(Method.DELETE, 
-                DoiServer.MDS_URI + DoiMdsApplication.METADATAS_URI 
-                        + DoiMdsApplication.DOI_NAME_URI, 
+        monitoring.register(Method.DELETE,
+                DoiServer.MDS_URI + DoiMdsApplication.METADATAS_URI
+                + DoiMdsApplication.DOI_NAME_URI,
                 MetadataResource.DELETE_METADATA
         );
 

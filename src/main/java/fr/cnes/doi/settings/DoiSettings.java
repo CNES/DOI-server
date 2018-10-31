@@ -82,33 +82,37 @@ public final class DoiSettings {
     private String pathApp;
 
     /**
-     * private constructor
+     * private constructor Loads the defautl configuration properties {@value #CONFIG_PROPERTIES}
      */
     private DoiSettings() {
-        final Properties properties = loadConfigurationFile(CONFIG_PROPERTIES);
-        init(properties);
+        final Properties properties = loadConfigurationFile();
+        init(properties, Level.OFF);
     }
 
     /**
      * Loads configuration file and set it in memory.
      *
      * @param properties Configuration file
+     * @param level LOG level
      */
-    private void init(final Properties properties) {
+    private void init(final Properties properties,
+            Level level) {
         LOG.traceEntry("Parameter : {}", properties);
-        LOG.info("----- DOI parameters ----");
-        fillConcurrentMap(properties);
+        LOG.log(level, "----- DOI parameters ----");
+        fillConcurrentMap(properties, level);
         computePathOfTheApplication();
         PluginFactory.init(this.map);
-        LOG.info("DOI settings have been loaded");
-        LOG.info("-------------------------");
+        LOG.log(level, "DOI settings have been loaded");
+        LOG.log(level, "-------------------------");
+        LOG.info(properties.getProperty(Consts.NAME) + " loaded");
         LOG.traceExit();
     }
 
     private void computePathOfTheApplication() {
         LOG.traceEntry();
         try {
-            final String path = Starter.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+            final String path = Starter.class.getProtectionDomain().getCodeSource().getLocation().
+                    getPath();
             String decodedPath = URLDecoder.decode(path, "UTF-8");
             final int posLastSlash = decodedPath.lastIndexOf("/");
             decodedPath = decodedPath.substring(0, posLastSlash);
@@ -122,18 +126,20 @@ public final class DoiSettings {
     /**
      * Load configuration file.
      *
-     * @param path path to the configuration file.
      * @return the configuration file content
      */
-    private Properties loadConfigurationFile(final String path) {
-        LOG.traceEntry("Parameter : {}", path);
+    private Properties loadConfigurationFile() {
+        LOG.traceEntry();
         final Properties properties = new Properties();
-        final ClientResource client = new ClientResource(LocalReference.createClapReference("class/config.properties"));
+        final ClientResource client = new ClientResource(LocalReference.createClapReference(
+                "class/config.properties"));
         final Representation configurationFile = client.get();
         try {
+            LOG.info("Loading " + CONFIG_PROPERTIES + " by default");
             properties.load(configurationFile.getStream());
         } catch (IOException e) {
-            throw LOG.throwing(new DoiRuntimeException("Unable to load " + path, e));
+            LOG.fatal("Unable to load " + CONFIG_PROPERTIES);
+            throw LOG.throwing(new DoiRuntimeException("Unable to load class/config.properties", e));
         } finally {
             client.release();
         }
@@ -181,7 +187,8 @@ public final class DoiSettings {
      * @param keyword keyword to test
      * @return True when the keyword exists in configuration otherwise False
      */
-    private boolean isExist(final ConcurrentHashMap<String, String> properties, final String keyword) {
+    private boolean isExist(final ConcurrentHashMap<String, String> properties,
+            final String keyword) {
         LOG.traceEntry("Parameters : {} and {}", properties, keyword);
         return LOG.traceExit(properties.containsKey(keyword) && !properties.get(keyword).isEmpty());
     }
@@ -193,7 +200,8 @@ public final class DoiSettings {
      * @param keyword keyword to test
      * @return True when the keyword does not exist in configuration otherwise False
      */
-    private boolean isNotExist(final ConcurrentHashMap<String, String> properties, final String keyword) {
+    private boolean isNotExist(final ConcurrentHashMap<String, String> properties,
+            final String keyword) {
         LOG.traceEntry("Parameters : {} and {}", properties, keyword);
         return LOG.traceExit(!isExist(properties, keyword));
     }
@@ -202,12 +210,14 @@ public final class DoiSettings {
      * Sets the configuration as a map.
      *
      * @param properties the configuration file content
+     * @param level log level
      */
-    private void fillConcurrentMap(final Properties properties) {
+    private void fillConcurrentMap(final Properties properties,
+            final Level level) {
         LOG.traceEntry("Paramete : {}", properties);
         for (final Entry<Object, Object> entry : properties.entrySet()) {
             map.put((String) entry.getKey(), (String) entry.getValue());
-            LOG.info("{} = {}", entry.getKey(), entry.getValue());
+            LOG.log(level, "{} = {}", entry.getKey(), entry.getValue());
         }
         LOG.traceExit();
     }
@@ -272,7 +282,8 @@ public final class DoiSettings {
      * @param defaultValue Default value if the key inputStream not found
      * @return the value of the key
      */
-    public String getString(final String key, final String defaultValue) {
+    public String getString(final String key,
+            final String defaultValue) {
         LOG.traceEntry("Parameters : {} and {}", key, defaultValue);
         return LOG.traceExit(map.getOrDefault(key, defaultValue));
     }
@@ -293,7 +304,8 @@ public final class DoiSettings {
         final String value;
         if (Consts.INIST_DOI.equals(key)) {
             final String context = this.getString(Consts.CONTEXT_MODE, "DEV");
-            value = "PRE_PROD".equals(context) ? INIST_TEST_DOI : this.getString(Consts.INIST_DOI, null);
+            value = "PRE_PROD".equals(context) ? INIST_TEST_DOI : this.getString(Consts.INIST_DOI,
+                    null);
         } else {
             value = this.getString(key, null);
         }
@@ -340,7 +352,8 @@ public final class DoiSettings {
      * @return the value
      * @exception NumberFormatException if the string does not contain a parsable integer.
      */
-    public int getInt(final String key, final String defaultValue) {
+    public int getInt(final String key,
+            final String defaultValue) {
         LOG.traceEntry("Parameters : {} and {}", key, defaultValue);
         return LOG.traceExit(Integer.parseInt(getString(key, defaultValue)));
     }
@@ -384,7 +397,8 @@ public final class DoiSettings {
      * @return the value
      * @exception NumberFormatException - if the string does not contain a parsable long
      */
-    public Long getLong(final String key, final String defaultValue) {
+    public Long getLong(final String key,
+            final String defaultValue) {
         LOG.traceEntry("Parameters : {} and {}", key, defaultValue);
         return LOG.traceExit(Long.parseLong(getString(key, defaultValue)));
     }
@@ -394,12 +408,14 @@ public final class DoiSettings {
      */
     public void displayConfigFile() {
         LOG.traceEntry();
-        final ClientResource client = new ClientResource(LocalReference.createClapReference("class/" + CONFIG_PROPERTIES));
+        final ClientResource client = new ClientResource(LocalReference.createClapReference(
+                "class/" + CONFIG_PROPERTIES));
         final Representation configurationFile = client.get();
         try {
             copyStream(configurationFile.getStream(), System.out);
         } catch (IOException ex) {
-            LOG.fatal("Cannot display the configuration file located to class/" + CONFIG_PROPERTIES, ex);
+            LOG.fatal("Cannot display the configuration file located to class/" + CONFIG_PROPERTIES,
+                    ex);
         } finally {
             client.release();
         }
@@ -416,7 +432,7 @@ public final class DoiSettings {
         LOG.traceEntry("Parameter : {}", path);
         try (InputStream inputStream = new FileInputStream(new File(path))) {
             setPropertiesFile(inputStream);
-        } 
+        }
         LOG.traceExit();
     }
 
@@ -430,7 +446,7 @@ public final class DoiSettings {
         LOG.traceEntry("With an inputstream");
         final Properties properties = new Properties();
         properties.load(inputStream);
-        init(properties);
+        init(properties, Level.INFO);
         LOG.traceExit();
     }
 
@@ -450,7 +466,8 @@ public final class DoiSettings {
      * @param inputStream input stream
      * @param outputStream output stream
      */
-    private void copyStream(final InputStream inputStream, final OutputStream outputStream) {
+    private void copyStream(final InputStream inputStream,
+            final OutputStream outputStream) {
         LOG.traceEntry("With an input and output stream");
         final int buffer_size = 1024;
         try {

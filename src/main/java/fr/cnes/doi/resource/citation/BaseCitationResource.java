@@ -31,7 +31,7 @@ import org.restlet.resource.ResourceException;
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-public class BaseCitationResource extends AbstractResource {        
+public class BaseCitationResource extends AbstractResource {
 
     /**
      * Parameter providing the digital object identifier {@value #DOI_PARAMETER}.
@@ -47,11 +47,11 @@ public class BaseCitationResource extends AbstractResource {
      * Style parameter to format the citation {@value #STYLE_PARAMETER}.
      */
     public static final String STYLE_PARAMETER = "style";
-    
+
     /**
      * Logger.
      */
-    protected Logger LOG;    
+    protected Logger LOG;
 
     /**
      * Cross cite application.
@@ -78,8 +78,9 @@ public class BaseCitationResource extends AbstractResource {
      * @param content Explanation of the representation
      * @return the Wadl representation of this representation
      */
-    protected RepresentationInfo listRepresentation(final String title, 
-            final MediaType media, final String content) {
+    protected RepresentationInfo listRepresentation(final String title,
+            final MediaType media,
+            final String content) {
         final RepresentationInfo repInfo = new RepresentationInfo();
         repInfo.setMediaType(media);
         final DocumentationInfo docInfo = new DocumentationInfo();
@@ -91,6 +92,7 @@ public class BaseCitationResource extends AbstractResource {
 
     /**
      * Returns CrossCiteApplication.
+     *
      * @return the app
      */
     public DoiCrossCiteApplication getApp() {

@@ -25,6 +25,6 @@
  * <li>{@link fr.cnes.doi.settings.EmailSettings Email} settings</li>
  * <li>{@link fr.cnes.doi.settings.JettySettings Jetty} settings</li>
  * </ul>
- * 
+ *
  */
 package fr.cnes.doi.settings;

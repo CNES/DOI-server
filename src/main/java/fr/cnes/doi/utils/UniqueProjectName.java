@@ -34,24 +34,24 @@ import java.util.Map;
  * Utils class to generate a unique number from the project name
  *
  */
-@Requirement(reqId = Requirement.DOI_INTER_030,reqName = Requirement.DOI_INTER_030_NAME)
+@Requirement(reqId = Requirement.DOI_INTER_030, reqName = Requirement.DOI_INTER_030_NAME)
 public class UniqueProjectName {
-    
+
     /**
      * Class name.
      */
     private static final String CLASS_NAME = UniqueProjectName.class.getName();
-    
+
     /**
      * logger.
      */
     private static final Logger LOGGER = Logger.getLogger(CLASS_NAME);
-        
+
     /**
      * Project Suffix database.
      */
     private final AbstractProjectSuffixDBHelper projectDB;
-    
+
     /**
      * Class to handle the instance
      *
@@ -72,26 +72,27 @@ public class UniqueProjectName {
     public static UniqueProjectName getInstance() {
         return UniqueProjectNameHolder.INSTANCE;
     }
-    
+
     /**
      * Constructor
      */
     private UniqueProjectName() {
         LOGGER.entering(CLASS_NAME, "Constructor");
-        final String path = DoiSettings.getInstance().getString(Consts.PROJECT_CONF_PATH); 
-        this.projectDB = PluginFactory.getProjectSuffix();        
-        this.projectDB.init(path);        
-        LOGGER.exiting(CLASS_NAME, "Constructor");        
+        final String path = DoiSettings.getInstance().getString(Consts.PROJECT_CONF_PATH);
+        this.projectDB = PluginFactory.getProjectSuffix();
+        this.projectDB.init(path);
+        LOGGER.exiting(CLASS_NAME, "Constructor");
     }
-    
+
     /**
      * Returns the projects from the database.
+     *
      * @return the projects
      */
     public Map<String, Integer> getProjects() {
         LOGGER.log(Level.CONFIG, "getProjects : {0}", this.projectDB.getProjects());
         return this.projectDB.getProjects();
-    }    
+    }
 
     /**
      * Creates an Id with an uniform distribution.
@@ -104,7 +105,7 @@ public class UniqueProjectName {
         LOGGER.entering(CLASS_NAME, "generateId", maxNumber);
         final Random rand = new Random();
         final int identifier = rand.nextInt(maxNumber);
-        LOGGER.exiting(CLASS_NAME, "generateId", identifier);        
+        LOGGER.exiting(CLASS_NAME, "generateId", identifier);
         return identifier;
     }
 
@@ -116,7 +117,9 @@ public class UniqueProjectName {
      * @param maxNumber Number max to generate
      * @return the input that is converted to the base
      */
-    private int convert(final long input, final String projectName, final int maxNumber) {
+    private int convert(final long input,
+            final String projectName,
+            final int maxNumber) {
         LOGGER.entering(CLASS_NAME, "convert", new Object[]{input, projectName, maxNumber});
         int result = 0;
         do {
@@ -130,40 +133,45 @@ public class UniqueProjectName {
      * Build a unique String from the project name
      *
      * @param project the project name
-     * @param length length of the short name to generate (the short name must
-     * be an int to the length cannot be up to 9)
+     * @param length length of the short name to generate (the short name must be an int to the
+     * length cannot be up to 9)
      * @return the unique string
      */
-    public int getShortName(final String project, final int length) {
+    public int getShortName(final String project,
+            final int length) {
         LOGGER.entering(CLASS_NAME, "getShortName", new Object[]{project, length});
         final int suffixID;
         if (length > 9) {
-            final DoiRuntimeException doiEx = new DoiRuntimeException("The short name cannot be build because the length requested is too big");
-            LOGGER.throwing(CLASS_NAME, "getShortName", doiEx);            
+            final DoiRuntimeException doiEx = new DoiRuntimeException(
+                    "The short name cannot be build because the length requested is too big");
+            LOGGER.throwing(CLASS_NAME, "getShortName", doiEx);
             throw doiEx;
         } else if (this.projectDB.isExistProjectName(project)) {
             // Si le projet a déjà un identifiant on ne le recalcule pas
             suffixID = this.projectDB.getIDFrom(project);
-            LOGGER.log(Level.FINE, "The project {0} has already an id : {1}", new Object[]{project, suffixID});
+            LOGGER.log(Level.FINE, "The project {0} has already an id : {1}",
+                    new Object[]{project, suffixID});
         } else {
             final int maxNumber = (int) Math.pow(10.0, length);
             final long idRandom = generateId(maxNumber);
             suffixID = convert(idRandom, project, maxNumber);
-            LOGGER.log(Level.FINE, "The project {0} has an id : {1}", new Object[]{project, suffixID});
+            LOGGER.log(Level.FINE, "The project {0} has an id : {1}",
+                    new Object[]{project, suffixID});
         }
         LOGGER.exiting(CLASS_NAME, "getShortName", suffixID);
         return suffixID;
     }
-        
+
     /**
-     * Check if the generated suffixID is unique (does not already exists) or not. If
-     * not add it associated with the project
+     * Check if the generated suffixID is unique (does not already exists) or not. If not add it
+     * associated with the project
      *
      * @param idToCheck the identifier to check
      * @param projectName Project associated to the suffixID
      * @return true if the Id is OK, false otherwise
      */
-    private synchronized boolean isIdUnique(final int idToCheck, final String projectName) {
+    private synchronized boolean isIdUnique(final int idToCheck,
+            final String projectName) {
         LOGGER.entering(CLASS_NAME, "isIdUnique", new Object[]{idToCheck, projectName});
         final boolean result;
         if (this.projectDB.isExistID(idToCheck)) {

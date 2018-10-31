@@ -24,11 +24,12 @@ import java.lang.annotation.RetentionPolicy;
 
 /**
  * Annotation to allow the use @requirement more than one
+ *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 @Documented
 @Retention(RetentionPolicy.SOURCE)
 public @interface Requirements {
+
     Requirement[] value();
 }
-

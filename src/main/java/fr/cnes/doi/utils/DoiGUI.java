@@ -35,6 +35,7 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * General User Interface for EDU project.
+ *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class DoiGUI extends javax.swing.JDialog {
@@ -43,32 +44,32 @@ public class DoiGUI extends javax.swing.JDialog {
      * serialization UID.
      */
     private static final long serialVersionUID = 3081000511267620881L;
-    
+
     /**
      * DOI TEMPLATE for DOI variable.
      */
     private static final String DOI_TPL = "%DOI%";
-    
+
     /**
      * CREATOR TEMPLATE for Creator variable.
      */
     private static final String CREATOR_TPL = "%CREATOR%";
-    
+
     /**
      * TITLE TEMPLATE for Title variable.
      */
     private static final String TITLE_TPL = "%TITLE%";
-    
+
     /**
      * PUBLISHER TEMPLATE for Publisher variable.
      */
     private static final String PUBLISHER_TPL = "%PUBLISHER%";
-    
+
     /**
      * YEAR TEMPLATE for Year publication variable.
      */
     private static final String YEAR_TPL = "%YEAR%";
-    
+
     /**
      * RESOURCE_TYPE TEMPLATE for Resource type variable.
      */
@@ -91,18 +92,18 @@ public class DoiGUI extends javax.swing.JDialog {
             + "    <publisher>" + PUBLISHER_TPL + "</publisher>\n"
             + "    <publicationYear>" + YEAR_TPL + "</publicationYear>\n"
             + "    <resourceType resourceTypeGeneral=\"Other\">" + RESOURCE_TYPE_TPL + "</resourceType>\n"
-            + "</resource>";    
-    
+            + "</resource>";
+
     /**
      * Directory where the DOI Metadata is downloaded.
      */
     private File directoryToSave = null;
-    
+
     /**
      * DOI.
      */
     private String doi;
-    
+
     /**
      * Xml Representation of the DOI metadata
      */
@@ -111,17 +112,18 @@ public class DoiGUI extends javax.swing.JDialog {
     /**
      * Logger.
      */
-    private static final Logger LOG = LogManager.getLogger(DoiGUI.class.getName());    
+    private static final Logger LOG = LogManager.getLogger(DoiGUI.class.getName());
 
     /**
      * Creates new form DoiGUI.
      *
      * @param parent the Frame from which the dialog is displayed
-     * @param modal specifies whether dialog blocks user input to other top-level 
-     * windows when shown. If true, the modality type property is set to DEFAULT_MODALITY_TYPE, 
-     * otherwise the dialog is modeless
+     * @param modal specifies whether dialog blocks user input to other top-level windows when
+     * shown. If true, the modality type property is set to DEFAULT_MODALITY_TYPE, otherwise the
+     * dialog is modeless
      */
-    public DoiGUI(java.awt.Frame parent, boolean modal) {
+    public DoiGUI(java.awt.Frame parent,
+            boolean modal) {
         super(parent, modal);
         initComponents();
         this.msgLabel.setBackground(Color.GRAY);
@@ -462,14 +464,18 @@ public class DoiGUI extends javax.swing.JDialog {
         } else {
             this.msgLabel.setVisible(false);
             try {
-                final String createdDOI = UniqueDoi.getInstance().createDOI(this.inistPrefixLabel.getText(), this.projectNameLabel.getText(), new URI(landingPage), SuffixProjectsResource.NB_DIGITS);
+                final String createdDOI = UniqueDoi.getInstance().createDOI(this.inistPrefixLabel.
+                        getText(), this.projectNameLabel.getText(), new URI(landingPage),
+                        SuffixProjectsResource.NB_DIGITS);
                 initForm();
-                this.msgLabel.setText("doi://" + createdDOI + " created for the landing page " + landingPage);
+                this.msgLabel.setText(
+                        "doi://" + createdDOI + " created for the landing page " + landingPage);
                 this.msgLabel.setBackground(Color.GREEN);
                 this.msgLabel.setVisible(true);
                 this.saveButton.setEnabled(true);
                 this.doi = createdDOI;
-                this.xml = createXMLFile(landingPage, creator, publisher, createdDOI, title, resourceType, publicationYear);
+                this.xml = createXMLFile(landingPage, creator, publisher, createdDOI, title,
+                        resourceType, publicationYear);
             } catch (URISyntaxException ex) {
                 LOG.fatal(ex);
                 this.msgLabel.setText("Unable to create the DOI: " + ex.getMessage());
@@ -484,6 +490,7 @@ public class DoiGUI extends javax.swing.JDialog {
 
     /**
      * Creates the XML representation of the DOI metadata.
+     *
      * @param landingPage landing page
      * @param creator creator
      * @param publisher publisher
@@ -493,9 +500,13 @@ public class DoiGUI extends javax.swing.JDialog {
      * @param publicationYear publication year
      * @return the XML representation of the DOI metadata
      */
-    private String createXMLFile(final String landingPage, final String creator,
-            final String publisher, final String doi, final String title,
-            final String resourceType, final String publicationYear) {
+    private String createXMLFile(final String landingPage,
+            final String creator,
+            final String publisher,
+            final String doi,
+            final String title,
+            final String resourceType,
+            final String publicationYear) {
         String xmlDoi = TEMPLATE_XML.replaceFirst(CREATOR_TPL, creator);
         xmlDoi = xmlDoi.replaceFirst(PUBLISHER_TPL, publisher);
         xmlDoi = xmlDoi.replaceFirst(TITLE_TPL, title);
@@ -555,6 +566,7 @@ public class DoiGUI extends javax.swing.JDialog {
 
     /**
      * Starts the GUI
+     *
      * @param args the command line arguments
      */
     public static void main(String args[]) {
@@ -564,14 +576,16 @@ public class DoiGUI extends javax.swing.JDialog {
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.
+                    getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(DoiGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DoiGUI.class.getName()).log(
+                    java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 

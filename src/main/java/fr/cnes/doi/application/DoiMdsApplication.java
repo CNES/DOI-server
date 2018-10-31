@@ -47,8 +47,6 @@ import fr.cnes.doi.utils.spec.Requirement;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.restlet.Context;
-import org.restlet.data.AuthenticationInfo;
-import org.restlet.data.Header;
 import org.restlet.data.Status;
 import org.restlet.routing.Filter;
 import org.restlet.routing.Template;
@@ -159,7 +157,8 @@ public final class DoiMdsApplication extends AbstractApplication {
          * he is unknown in this role. CLIENT_ERROR_FORBIDDEN is used as status meaning "Forbidden
          * to use this role"
          */
-        SECURITY_USER_NOT_IN_SELECTED_ROLE(Status.CLIENT_ERROR_FORBIDDEN, "Forbidden to use this role"),
+        SECURITY_USER_NOT_IN_SELECTED_ROLE(Status.CLIENT_ERROR_FORBIDDEN,
+                "Forbidden to use this role"),
         /**
          * Fail to authorize the user. It happens when a client is authentified but unauthorized to
          * use the resource. CLIENT_ERROR_UNAUTHORIZED is used as status meaning "Fail to authorize
@@ -171,7 +170,8 @@ public final class DoiMdsApplication extends AbstractApplication {
          * without selecting one. CLIENT_ERROR_CONFLICT is used as status meaning "Error when an
          * user is associated to more than one role without setting selectedRole parameter"
          */
-        SECURITY_USER_CONFLICT(Status.CLIENT_ERROR_CONFLICT, "Error when an user is associated to more than one role without setting selectedRole parameter"),
+        SECURITY_USER_CONFLICT(Status.CLIENT_ERROR_CONFLICT,
+                "Error when an user is associated to more than one role without setting selectedRole parameter"),
         /**
          * Fail to create a DOI. It happens when a user try to create a DOI with the wrong role.
          * Actually, the role is contained in the DOI name. So if a user is authentified with a
@@ -179,7 +179,8 @@ public final class DoiMdsApplication extends AbstractApplication {
          * SECURITY_USER_PERMISSION is used as status meaning "User is not allowed to make this
          * operation"
          */
-        SECURITY_USER_PERMISSION(Status.CLIENT_ERROR_FORBIDDEN, "User is not allowed to make this operation"),
+        SECURITY_USER_PERMISSION(Status.CLIENT_ERROR_FORBIDDEN,
+                "User is not allowed to make this operation"),
         /**
          * Cannot access to Datacite. It happens when a network problem may happen with Datacite.
          * SERVER_ERROR_GATEWAY_TIMEOUT is used as status meaning "Cannot access to Datacite"
@@ -196,18 +197,21 @@ public final class DoiMdsApplication extends AbstractApplication {
          * CLIENT_ERROR_BAD_REQUEST is used as status meaning "Failed to validate the user inputs
          * parameters"
          */
-        METADATA_VALIDATION(Status.CLIENT_ERROR_BAD_REQUEST, "Failed to validate the user inputs parameters"),
+        METADATA_VALIDATION(Status.CLIENT_ERROR_BAD_REQUEST,
+                "Failed to validate the user inputs parameters"),
         /**
          * Fail to create the media related to the DOI. CLIENT_ERROR_BAD_REQUEST is used as status
          * meaning "DOI not provided or one or more of the specified mime-types or urls are invalid
          * (e.g. non supported mime-type, not allowed url domain, etc.)"
          */
-        MEDIA_VALIDATION(Status.CLIENT_ERROR_BAD_REQUEST, "DOI not provided or one or more of the specified mime-types or urls are invalid (e.g. non supported mime-type, not allowed url domain, etc.)"),
+        MEDIA_VALIDATION(Status.CLIENT_ERROR_BAD_REQUEST,
+                "DOI not provided or one or more of the specified mime-types or urls are invalid (e.g. non supported mime-type, not allowed url domain, etc.)"),
         /**
          * Fail to create the landing page related to the DOI. CLIENT_ERROR_BAD_REQUEST is used as
          * status meaning "Validation error when defining the DOI and its landing page"
          */
-        LANGING_PAGE_VALIDATION(Status.CLIENT_ERROR_BAD_REQUEST, "Validation error when defining the DOI and its landing page"),
+        LANGING_PAGE_VALIDATION(Status.CLIENT_ERROR_BAD_REQUEST,
+                "Validation error when defining the DOI and its landing page"),
         /**
          * DOI validation error. CLIENT_ERROR_BAD_REQUEST is used as status meaning "Character or
          * prefix not allowed in the DOI"
@@ -217,12 +221,14 @@ public final class DoiMdsApplication extends AbstractApplication {
          * Internal server error. Fail to communicate with DataCite using the interface
          * specification meaning "Interface problem between Datacite and DOI-Server"
          */
-        DATACITE_PROBLEM(Status.SERVER_ERROR_INTERNAL, "Interface problem between Datacite and DOI-Server");
+        DATACITE_PROBLEM(Status.SERVER_ERROR_INTERNAL,
+                "Interface problem between Datacite and DOI-Server");
 
         private final Status status;
         private final String shortMessage;
 
-        API_MDS(final Status status, final String shortMessage) {
+        API_MDS(final Status status,
+                final String shortMessage) {
             this.status = status;
             this.shortMessage = shortMessage;
         }
@@ -300,7 +306,7 @@ public final class DoiMdsApplication extends AbstractApplication {
         // Router
         methodAuth.setNext(createRouter());
 
-        Filter filter = new SecurityPostProcessingFilter(getContext(), challAuth);    
+        Filter filter = new SecurityPostProcessingFilter(getContext(), challAuth);
         return LOG.traceExit(filter);
     }
 
@@ -437,28 +443,33 @@ public final class DoiMdsApplication extends AbstractApplication {
     }
 
     /**
-     * Post processing for specific authorization.
-     * Specific class to handle the case where the user is authorized by oauth but non authorized
-     * by the service because the user's role is not related to any projects
+     * Post processing for specific authorization. Specific class to handle the case where the user
+     * is authorized by oauth but non authorized by the service because the user's role is not
+     * related to any projects
      */
     public class SecurityPostProcessingFilter extends Filter {
 
         /**
          * Constructor
+         *
          * @param context context
          * @param next gard
          */
-        public SecurityPostProcessingFilter(final Context context, final Restlet next) {
+        public SecurityPostProcessingFilter(final Context context,
+                final Restlet next) {
             super(context, next);
         }
 
         @Override
-        protected void afterHandle(final Request request, final Response response) {
+        protected void afterHandle(final Request request,
+                final Response response) {
             final Status status = response.getStatus();
             final String reason = status.getReasonPhrase();
-            if (status.getCode() == Status.CLIENT_ERROR_UNAUTHORIZED.getCode() && API_MDS.SECURITY_USER_NO_ROLE.getShortMessage().equals(reason)) {                
-                response.getHeaders().add("WWW-Authenticate", "Basic realm=\"DOI Server access\", charset=\"UTF-8\"");
-            }            
+            if (status.getCode() == Status.CLIENT_ERROR_UNAUTHORIZED.getCode() && API_MDS.SECURITY_USER_NO_ROLE.
+                    getShortMessage().equals(reason)) {
+                response.getHeaders().add("WWW-Authenticate",
+                        "Basic realm=\"DOI Server access\", charset=\"UTF-8\"");
+            }
         }
     }
 
@@ -470,7 +481,8 @@ public final class DoiMdsApplication extends AbstractApplication {
      * @return the application description for WADL
      */
     @Override
-    public final ApplicationInfo getApplicationInfo(final Request request, final Response response) {
+    public final ApplicationInfo getApplicationInfo(final Request request,
+            final Response response) {
         final ApplicationInfo result = super.getApplicationInfo(request, response);
         final DocumentationInfo docInfo = new DocumentationInfo(
                 "DOI server application provides is central service that registers DOI at DataCite"

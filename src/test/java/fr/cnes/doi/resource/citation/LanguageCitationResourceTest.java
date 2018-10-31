@@ -22,6 +22,7 @@ import static fr.cnes.doi.AbstractSpec.classTitle;
 import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.CrossCiteSpec;
 import fr.cnes.doi.InitServerForTest;
+import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.UnitTest;
 import static fr.cnes.doi.client.BaseClient.DATACITE_MOCKSERVER_PORT;
 import fr.cnes.doi.exception.ClientMdsException;
@@ -68,8 +69,8 @@ public class LanguageCitationResourceTest {
     }
 
     @BeforeClass
-    public static void setUpClass() throws ClientMdsException {
-        InitServerForTest.init();
+    public static void setUpClass() {
+        InitServerForTest.init(InitSettingsForTest.CONFIG_TEST_PROPERTIES);
         cl = new Client(new Context(), Protocol.HTTPS);
         Series<Parameter> parameters = cl.getContext().getParameters();
         parameters.set(RESTLET_MAX_TOTAL_CONNECTIONS, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_TOTAL_CONNECTIONS, DEFAULT_MAX_TOTAL_CONNECTIONS));        

@@ -16,8 +16,7 @@ import javax.xml.bind.annotation.XmlType;
  * Java class for box complex type.
  *
  * <p>
- * The following schema fragment specifies the expected content contained within
- * this class.
+ * The following schema fragment specifies the expected content contained within this class.
  *
  * <pre>
  * &lt;complexType name="box"&gt;
@@ -36,9 +35,9 @@ import javax.xml.bind.annotation.XmlType;
  *
  *
  */
-@Requirement(reqId = Requirement.DOI_SRV_010,reqName = Requirement.DOI_SRV_010_NAME)
-@Requirement(reqId = Requirement.DOI_SRV_040,reqName = Requirement.DOI_SRV_040_NAME)
-@Requirement(reqId = Requirement.DOI_INTER_060,reqName = Requirement.DOI_INTER_060_NAME)
+@Requirement(reqId = Requirement.DOI_SRV_010, reqName = Requirement.DOI_SRV_010_NAME)
+@Requirement(reqId = Requirement.DOI_SRV_040, reqName = Requirement.DOI_SRV_040_NAME)
+@Requirement(reqId = Requirement.DOI_INTER_060, reqName = Requirement.DOI_INTER_060_NAME)
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "box", propOrder = {})
 public class Box {

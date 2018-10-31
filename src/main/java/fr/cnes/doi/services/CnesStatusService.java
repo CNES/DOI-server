@@ -54,7 +54,7 @@ public class CnesStatusService extends StatusService {
      * Logger.
      */
     private static final Logger LOG = LogManager.getLogger(CnesStatusService.class.getName());
-    
+
     /**
      * Creates a specific error page.
      */
@@ -72,15 +72,18 @@ public class CnesStatusService extends StatusService {
      * @return the representation of the error page
      */
     @Override
-    public Representation getRepresentation(final Status status, final Request request, final Response response) {
+    public Representation getRepresentation(final Status status,
+            final Request request,
+            final Response response) {
         final Map<String, String> dataModel = createDataModel(response);
-        final Representation mailFtl = new ClientResource(LocalReference.createClapReference("class/CnesStatus.ftl")).get();
+        final Representation mailFtl = new ClientResource(LocalReference.createClapReference(
+                "class/CnesStatus.ftl")).get();
         return new TemplateRepresentation(mailFtl, dataModel, MediaType.TEXT_HTML);
     }
 
     /**
-     * Creates a data model. The data model is used to replace values in the
-     * template CnesStatus.ftl.
+     * Creates a data model. The data model is used to replace values in the template
+     * CnesStatus.ftl.
      *
      * @param response Response from server
      * @return the data model

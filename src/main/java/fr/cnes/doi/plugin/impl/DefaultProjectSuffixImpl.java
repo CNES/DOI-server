@@ -34,6 +34,7 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * Default implementation of the project suffix database.
+ *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper {
@@ -41,7 +42,7 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
     /**
      * Default file if the path is not defined in the configuration file
      */
-    private static final String DEFAULT_CACHE_FILE = "data"+File.separator+"projects.conf";
+    private static final String DEFAULT_CACHE_FILE = "data" + File.separator + "projects.conf";
 
     /**
      * Logger.
@@ -71,29 +72,31 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
 
     public DefaultProjectSuffixImpl() {
         super();
-    }           
+    }
 
     /**
-     * Init the configuration with the configuration file. If the given file
-     * does not exist a new file will be created. The file contains the mapping
-     * between the project name and the identifiers
+     * Init the configuration with the configuration file. If the given file does not exist a new
+     * file will be created. The file contains the mapping between the project name and the
+     * identifiers
      *
      * @param configuration The file that contains the database
      */
     @Override
     public void init(Object configuration) {
-        if(configuration == null) {
+        if (configuration == null) {
             this.projectConf = DoiSettings.getInstance().getPathApp()
-                    +File.separatorChar+DEFAULT_CACHE_FILE;
+                    + File.separatorChar + DEFAULT_CACHE_FILE;
         } else {
-            this.projectConf = String.valueOf(configuration);   
-        }        
+            this.projectConf = String.valueOf(configuration);
+        }
         File projConfFile = new File(projectConf);
         try {
             // If the file exists, load it
             if (projConfFile.exists()) {
+                LOG.info("Loads the project suffix database :" + projectConf);
                 loadProjectConf(projConfFile);
             } else {
+                LOG.info("create the database :" + projectConf);
                 createProjectConf(projConfFile);
             }
             this.addObserver(RoleAuthorizer.getInstance());
@@ -148,20 +151,22 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
         Files.createDirectories(directory.toPath());
         Files.createFile(projConfFile.toPath());
         Files.write(
-                projConfFile.toPath(), 
-                "Project Name;Id\n".getBytes(StandardCharsets.UTF_8), 
+                projConfFile.toPath(),
+                "Project Name;Id\n".getBytes(StandardCharsets.UTF_8),
                 StandardOpenOption.APPEND
         );
     }
 
     @Override
-    public synchronized boolean addProjectSuffix(int projectID, String projectName) {
+    public synchronized boolean addProjectSuffix(int projectID,
+            String projectName) {
         boolean isAdded = false;
         try {
             String line = projectName + ";" + projectID + "\n";
+            LOG.info("Add projectSuffix in the database {} / {}", projectID, projectName);
             Files.write(
-                    new File(this.projectConf).toPath(), 
-                    line.getBytes(StandardCharsets.UTF_8), 
+                    new File(this.projectConf).toPath(),
+                    line.getBytes(StandardCharsets.UTF_8),
                     StandardOpenOption.APPEND
             );
             this.projIdMap.put(projectName, projectID);
@@ -170,7 +175,7 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
             setChanged();
             notifyObservers(new String[]{ADD_RECORD, String.valueOf(projectID)});
         } catch (IOException e) {
-            LOG.fatal("The id " + projectID + " of the project " + projectName 
+            LOG.fatal("The id " + projectID + " of the project " + projectName
                     + "cannot be saved in the file", e);
         }
         return isAdded;

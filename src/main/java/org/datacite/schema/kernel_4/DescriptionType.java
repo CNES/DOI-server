@@ -16,82 +16,72 @@ import javax.xml.bind.annotation.XmlType;
  * Java class for descriptionType.
  *
  * <p>
- * The following schema fragment specifies the expected content contained within
- * this class.
+ * The following schema fragment specifies the expected content contained within this class.
  * <p>
- * <pre>
- * &lt;simpleType name="descriptionType"&gt;
- *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"&gt;
- *     &lt;enumeration value="Abstract"/&gt;
- *     &lt;enumeration value="Methods"/&gt;
- *     &lt;enumeration value="SeriesInformation"/&gt;
- *     &lt;enumeration value="TableOfContents"/&gt;
- *     &lt;enumeration value="TechnicalInfo"/&gt;
- *     &lt;enumeration value="Other"/&gt;
- *   &lt;/restriction&gt;
- * &lt;/simpleType&gt;
+ * <
+ * pre>
+ * &lt;simpleType name="descriptionType"&gt; &lt;restriction
+ * base="{http://www.w3.org/2001/XMLSchema}string"&gt; &lt;enumeration value="Abstract"/&gt;
+ * &lt;enumeration value="Methods"/&gt; &lt;enumeration value="SeriesInformation"/&gt;
+ * &lt;enumeration value="TableOfContents"/&gt; &lt;enumeration value="TechnicalInfo"/&gt;
+ * &lt;enumeration value="Other"/&gt; &lt;/restriction&gt; &lt;/simpleType&gt;
  * </pre>
  *
  */
-@Requirement(reqId = Requirement.DOI_SRV_010,reqName = Requirement.DOI_SRV_010_NAME)
-@Requirement(reqId = Requirement.DOI_SRV_040,reqName = Requirement.DOI_SRV_040_NAME)
-@Requirement(reqId = Requirement.DOI_INTER_060,reqName = Requirement.DOI_INTER_060_NAME)
+@Requirement(reqId = Requirement.DOI_SRV_010, reqName = Requirement.DOI_SRV_010_NAME)
+@Requirement(reqId = Requirement.DOI_SRV_040, reqName = Requirement.DOI_SRV_040_NAME)
+@Requirement(reqId = Requirement.DOI_INTER_060, reqName = Requirement.DOI_INTER_060_NAME)
 @XmlType(name = "descriptionType")
 @XmlEnum
 public enum DescriptionType {
 
     /**
-     * A brief description of the resource and the context in which the resource 
-     * was created.
-     * Recommended for discovery. Use "<br>" to indicate a line break for improved
-     * rendering of multiple paragraphs, but otherwise no html markup.
+     * A brief description of the resource and the context in which the resource was created.
+     * Recommended for discovery. Use "<br>" to indicate a line break for improved rendering of
+     * multiple paragraphs, but otherwise no html markup.
      * <p>
      * Example: http://data.datacite.org/10.1594/PANGAEA.771774
      */
     @XmlEnumValue("Abstract")
     ABSTRACT("Abstract"),
     /**
-     * The methodology employed for the study or research.
-     * Recommended for discovery. 
+     * The methodology employed for the study or research. Recommended for discovery.
      * <p>
-     * For example, see section "Sampling, Processing and Quality Control Methods"
-     * in the following dataset record: https://knb.ecoinformatics.org/#view/doi:10.5063/F1DZ067F
+     * For example, see section "Sampling, Processing and Quality Control Methods" in the following
+     * dataset record: https://knb.ecoinformatics.org/#view/doi:10.5063/F1DZ067F
      */
     @XmlEnumValue("Methods")
     METHODS("Methods"),
     /**
-     * Information about a repeating series, such as volume, issue, number.
-     * For use with grey literature. If providing an ISSN, use property 12 
-     * (RelatedIdentifier), relatedIdentifierType=ISSN. For dataset series, use
-     * property 12 (RelatedIdentifier) and describe the relationships with 
-     * isPartOf or HasPart.
+     * Information about a repeating series, such as volume, issue, number. For use with grey
+     * literature. If providing an ISSN, use property 12 (RelatedIdentifier),
+     * relatedIdentifierType=ISSN. For dataset series, use property 12 (RelatedIdentifier) and
+     * describe the relationships with isPartOf or HasPart.
      * <p>
      * Example: http://data.datacite.org/10.4229/23RDEUPVSEC2008‐5CO.8.3
      */
     @XmlEnumValue("SeriesInformation")
     SERIES_INFORMATION("SeriesInformation"),
     /**
-     * A listing of the Table of Contents.
-     * Use "<br>" to indicate a line break for improved rendering of multiple 
-     * paragraphs, but otherwise no html markup.
+     * A listing of the Table of Contents. Use "<br>" to indicate a line break for improved
+     * rendering of multiple paragraphs, but otherwise no html markup.
      * <p>
-     * Example: http://data.datacite.org/10.5678/LCRS/FOR816.CIT.1031     
+     * Example: http://data.datacite.org/10.5678/LCRS/FOR816.CIT.1031
      */
     @XmlEnumValue("TableOfContents")
     TABLE_OF_CONTENTS("TableOfContents"),
     /**
-     * Detailed information that may be associated with design, implementation,
-     * operation, use, and/or maintenance of a process or system.
-     * For software description, this may include a readme.txt, and necessary 
-     * environmental information such as hardware, operational software, 
-     * applications/programs, and versions. For other uses, this can include 
-     * specific and detailed information as necessary and appropriate.
+     * Detailed information that may be associated with design, implementation, operation, use,
+     * and/or maintenance of a process or system. For software description, this may include a
+     * readme.txt, and necessary environmental information such as hardware, operational software,
+     * applications/programs, and versions. For other uses, this can include specific and detailed
+     * information as necessary and appropriate.
      */
     @XmlEnumValue("TechnicalInfo")
     TECHNICAL_INFO("TechnicalInfo"),
     /**
-     * Other description information that does not fit into an existing category.
-     * Use for any other description type.
+     * Other description information that does not fit into an existing category. Use for any other
+     * description type.
      */
     @XmlEnumValue("Other")
     OTHER("Other");

@@ -140,9 +140,8 @@ public class DoiSettingsTest {
     @Test
     public void testGetLong_String() {
         testTitle("testGetLong_String");
-        System.out.println("TEST: GetLong");
-        String key = Consts.SERVER_PROXY_PORT;
-        Long expResult = 8050L;
+        String key = Consts.SERVER_HTTPS_PORT;
+        Long expResult = 8183L;
         Long result = instance.getLong(key);
         assertEquals(expResult, result);
     }
@@ -153,8 +152,8 @@ public class DoiSettingsTest {
     @Test
     public void testGetLong_String_String() {
         testTitle("testGetLong_String_String");
-        String key = Consts.SERVER_PROXY_PORT;
-        String defaultValue = "";
+        String key = Consts.JETTY_RESPONSE_HEADER_SIZE;
+        String defaultValue = "8050";
         Long expResult = 8050L;
         Long result = instance.getLong(key, defaultValue);
         assertEquals(expResult, result);

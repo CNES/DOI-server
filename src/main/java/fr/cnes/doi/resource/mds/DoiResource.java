@@ -83,7 +83,7 @@ public class DoiResource extends BaseMdsResource {
      * due to handle's latency))
      * @throws DoiServerException - ifthe response is not a success
      * <ul>
-     * <li>{@link DATACITE_API_RESPONSE#DOI_NOT_FOUND}</li>     
+     * <li>{@link DATACITE_API_RESPONSE#DOI_NOT_FOUND}</li>
      * <li>{@link API_MDS#DATACITE_PROBLEM}</li>
      * <li>{@link API_MDS#DOI_VALIDATION}</li>
      * </ul>
@@ -107,12 +107,13 @@ public class DoiResource extends BaseMdsResource {
         } catch (ClientMdsException ex) {
             if (ex.getStatus().getCode() == Status.CLIENT_ERROR_NOT_FOUND.getCode()) {
                 throw LOG.throwing(
-                        Level.DEBUG, 
-                        new DoiServerException(getApplication(), DATACITE_API_RESPONSE.DOI_NOT_FOUND,ex)
+                        Level.DEBUG,
+                        new DoiServerException(getApplication(), DATACITE_API_RESPONSE.DOI_NOT_FOUND,
+                                ex)
                 );
             } else {
                 throw LOG.throwing(
-                        Level.DEBUG, 
+                        Level.DEBUG,
                         new DoiServerException(getApplication(), API_MDS.DATACITE_PROBLEM, ex)
                 );
             }
@@ -124,30 +125,32 @@ public class DoiResource extends BaseMdsResource {
      * Checks if doiName is not empty and contains the institution's prefix
      *
      * @param doiName DOI name
-     * @throws DoiServerException 400 Bad Request if the DOI does not contain the institution suffix.
+     * @throws DoiServerException 400 Bad Request if the DOI does not contain the institution
+     * suffix.
      */
     @Requirement(reqId = Requirement.DOI_INTER_070, reqName = Requirement.DOI_INTER_070_NAME)
     private void checkInput(final String doiName) throws DoiServerException {
         LOG.traceEntry("Parameter : {}", doiName);
         if (doiName == null || doiName.isEmpty()) {
             throw LOG.throwing(
-                    Level.DEBUG, 
-                    new DoiServerException(getApplication(),API_MDS.DOI_VALIDATION, "DoiName must be set.")
+                    Level.DEBUG,
+                    new DoiServerException(getApplication(), API_MDS.DOI_VALIDATION,
+                            "DoiName must be set.")
             );
         } else if (doiName.startsWith(DoiSettings.getInstance().getString(Consts.INIST_DOI))) {
             try {
                 ClientMDS.checkIfAllCharsAreValid(doiName);
             } catch (IllegalArgumentException ex) {
                 throw LOG.throwing(
-                        Level.DEBUG, 
+                        Level.DEBUG,
                         new DoiServerException(getApplication(), API_MDS.DOI_VALIDATION, ex)
                 );
             }
         } else {
             throw LOG.throwing(
-                    Level.DEBUG, 
+                    Level.DEBUG,
                     new DoiServerException(getApplication(), API_MDS.DOI_VALIDATION, "the DOI"
-                    + " prefix must contains the prefix of the institution")
+                            + " prefix must contains the prefix of the institution")
             );
         }
         LOG.traceExit();
@@ -158,7 +161,7 @@ public class DoiResource extends BaseMdsResource {
      *
      * @return Wadl representation for a DOI
      */
-    @Requirement(reqId = Requirement.DOI_DOC_010,reqName = Requirement.DOI_DOC_010_NAME)
+    @Requirement(reqId = Requirement.DOI_DOC_010, reqName = Requirement.DOI_DOC_010_NAME)
     private RepresentationInfo doiRepresentation() {
         final RepresentationInfo repInfo = new RepresentationInfo();
         repInfo.setMediaType(MediaType.TEXT_PLAIN);
@@ -170,18 +173,18 @@ public class DoiResource extends BaseMdsResource {
     }
 
     /**
-     * Describes the Get Method.
-     * The different representations are the followings:
+     * Describes the Get Method. The different representations are the followings:
      * <ul>
      * <li>{@link DATACITE_API_RESPONSE#SUCCESS}</li>
      * <li>{@link DATACITE_API_RESPONSE#SUCCESS_NO_CONTENT}</li>
      * <li>{@link API_MDS#DOI_VALIDATION}</li>
-     * <li>{@link DATACITE_API_RESPONSE#DOI_NOT_FOUND}</li>    
+     * <li>{@link DATACITE_API_RESPONSE#DOI_NOT_FOUND}</li>
      * <li>{@link API_MDS#DATACITE_PROBLEM}</li>
-     * </ul>     
+     * </ul>
+     *
      * @param info Wadl description
      */
-    @Requirement(reqId = Requirement.DOI_DOC_010,reqName = Requirement.DOI_DOC_010_NAME)
+    @Requirement(reqId = Requirement.DOI_DOC_010, reqName = Requirement.DOI_DOC_010_NAME)
     @Override
     protected final void describeGet(final MethodInfo info) {
         info.setName(Method.GET);

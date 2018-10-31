@@ -36,7 +36,7 @@ import org.restlet.representation.InputRepresentation;
  *
  * @author Jean-Christoph Malapert
  */
-@Requirement(reqId = Requirement.DOI_DOC_010,reqName = Requirement.DOI_DOC_010_NAME)
+@Requirement(reqId = Requirement.DOI_DOC_010, reqName = Requirement.DOI_DOC_010_NAME)
 public class WadlCnesRepresentation extends WadlRepresentation {
 
     /**
@@ -61,7 +61,7 @@ public class WadlCnesRepresentation extends WadlRepresentation {
 
         if (wadl2htmlXsltUrl == null) {
             representation = new EmptyRepresentation();
-        } else {        
+        } else {
             try {
                 setSaxSource(XmlRepresentation.getSaxSource(this));
                 final InputRepresentation xslRep = new InputRepresentation(
@@ -72,8 +72,8 @@ public class WadlCnesRepresentation extends WadlRepresentation {
                 representation.setMediaType(MediaType.TEXT_HTML);
             } catch (IOException e) {
                 Context.getCurrentLogger().log(Level.WARNING,
-                                "Unable to generate the WADL HTML representation",
-                                e);
+                        "Unable to generate the WADL HTML representation",
+                        e);
                 representation = new EmptyRepresentation();
             }
         }

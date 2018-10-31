@@ -45,43 +45,45 @@ import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 
-/** 
+/**
  * Resource to handle the Media.
+ *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-public class MediaResource extends BaseMdsResource {            
+public class MediaResource extends BaseMdsResource {
 
     /**
      * DOI parsed from the URL.
      */
-    private String mediaName;        
+    private String mediaName;
 
     /**
      * Init by getting the media name.
+     *
      * @throws DoiServerException - if a problem happens
      */
     @Override
-    protected void doInit() throws DoiServerException {   
-        super.doInit();        
+    protected void doInit() throws DoiServerException {
+        super.doInit();
         LOG.traceEntry();
-        this.mediaName = getResourcePath().replace(DoiMdsApplication.MEDIA_URI+"/", "");
+        this.mediaName = getResourcePath().replace(DoiMdsApplication.MEDIA_URI + "/", "");
         LOG.debug(this.mediaName);
         LOG.traceExit();
     }
 
     /**
-     * Returns the media related to a DOI.
-     * This request returns list of pairs of media type and URLs associated with
-     * a given DOI when 200 status is returned (operation successful). 
+     * Returns the media related to a DOI. This request returns list of pairs of media type and URLs
+     * associated with a given DOI when 200 status is returned (operation successful).
+     *
      * @return the media related to a DOI
      * @throws DoiServerException - if the response is not a success
      * <ul>
      * <li>{@link DATACITE_API_RESPONSE#DOI_NOT_FOUND}</li>
      * <li>{@link API_MDS#DATACITE_PROBLEM}</li>
      * </ul>
-     */  
-    @Requirement(reqId = Requirement.DOI_SRV_090,reqName = Requirement.DOI_SRV_090_NAME) 
-    @Requirement(reqId = Requirement.DOI_MONIT_020,reqName = Requirement.DOI_MONIT_020_NAME)      
+     */
+    @Requirement(reqId = Requirement.DOI_SRV_090, reqName = Requirement.DOI_SRV_090_NAME)
+    @Requirement(reqId = Requirement.DOI_MONIT_020, reqName = Requirement.DOI_MONIT_020_NAME)
     @Get
     public Representation getMedias() throws DoiServerException {
         LOG.traceEntry();
@@ -92,10 +94,11 @@ public class MediaResource extends BaseMdsResource {
             medias = this.getDoiApp().getClient().getMedia(this.mediaName);
             rep = new StringRepresentation(medias, MediaType.TEXT_URI_LIST);
         } catch (ClientMdsException ex) {
-            if(ex.getStatus().getCode() == Status.CLIENT_ERROR_NOT_FOUND.getCode()) {
+            if (ex.getStatus().getCode() == Status.CLIENT_ERROR_NOT_FOUND.getCode()) {
                 throw LOG.throwing(
-                        Level.DEBUG, 
-                        new DoiServerException(getApplication(), DATACITE_API_RESPONSE.DOI_NOT_FOUND, ex)
+                        Level.DEBUG,
+                        new DoiServerException(getApplication(), DATACITE_API_RESPONSE.DOI_NOT_FOUND,
+                                ex)
                 );
             } else {
                 throw LOG.throwing(
@@ -104,17 +107,17 @@ public class MediaResource extends BaseMdsResource {
                 );
             }
         }
-        
+
         return LOG.traceExit(rep);
-    } 
-    
+    }
+
     /**
-     * Creates a media related to an URL for a given DOI.
-     * Will add/update media type/urls pairs to a DOI. Standard domain 
-     * restrictions check will be performed. 200 status is returned when the 
+     * Creates a media related to an URL for a given DOI. Will add/update media type/urls pairs to a
+     * DOI. Standard domain restrictions check will be performed. 200 status is returned when the
      * operation is successful.
+     *
      * @param mediaForm Form
-     * @return short explanation of status code 
+     * @return short explanation of status code
      * @throws DoiServerException - if the response is not a success :
      * <ul>
      * <li>{@link DATACITE_API_RESPONSE#BAD_REQUEST}</li>
@@ -122,53 +125,56 @@ public class MediaResource extends BaseMdsResource {
      * <li>{@link API_MDS#SECURITY_USER_NO_ROLE}</li>
      * <li>{@link API_MDS#SECURITY_USER_NOT_IN_SELECTED_ROLE}</li>
      * <li>{@link API_MDS#SECURITY_USER_PERMISSION}</li>
-     * <li>{@link API_MDS#SECURITY_USER_CONFLICT}</li> 
+     * <li>{@link API_MDS#SECURITY_USER_CONFLICT}</li>
      * </ul>
-     */   
-    @Requirement(reqId = Requirement.DOI_SRV_080,reqName = Requirement.DOI_SRV_080_NAME) 
-    @Requirement(reqId = Requirement.DOI_MONIT_020,reqName = Requirement.DOI_MONIT_020_NAME)   
-    @Requirement(reqId = Requirement.DOI_INTER_070,reqName = Requirement.DOI_INTER_070_NAME)    
-    @Requirement(reqId = Requirement.DOI_AUTO_020,reqName = Requirement.DOI_AUTO_020_NAME)     
-    @Requirement(reqId = Requirement.DOI_AUTO_030,reqName = Requirement.DOI_AUTO_030_NAME)     
+     */
+    @Requirement(reqId = Requirement.DOI_SRV_080, reqName = Requirement.DOI_SRV_080_NAME)
+    @Requirement(reqId = Requirement.DOI_MONIT_020, reqName = Requirement.DOI_MONIT_020_NAME)
+    @Requirement(reqId = Requirement.DOI_INTER_070, reqName = Requirement.DOI_INTER_070_NAME)
+    @Requirement(reqId = Requirement.DOI_AUTO_020, reqName = Requirement.DOI_AUTO_020_NAME)
+    @Requirement(reqId = Requirement.DOI_AUTO_030, reqName = Requirement.DOI_AUTO_030_NAME)
     @Post
-    public Representation createMedia(final Form mediaForm) throws DoiServerException{
-        LOG.traceEntry("Parameter : {}",mediaForm);
+    public Representation createMedia(final Form mediaForm) throws DoiServerException {
+        LOG.traceEntry("Parameter : {}", mediaForm);
         checkInputs(this.mediaName, mediaForm);
         final String result;
-        try {         
+        try {
             setStatus(Status.SUCCESS_OK);
-            final String selectedRole = extractSelectedRoleFromRequestIfExists();         
-            checkPermission(this.mediaName, selectedRole);            
+            final String selectedRole = extractSelectedRoleFromRequestIfExists();
+            checkPermission(this.mediaName, selectedRole);
             result = this.getDoiApp().getClient().createMedia(this.mediaName, mediaForm);
         } catch (ClientMdsException ex) {
-            if(ex.getStatus().getCode() == Status.CLIENT_ERROR_BAD_REQUEST.getCode()) {
+            if (ex.getStatus().getCode() == Status.CLIENT_ERROR_BAD_REQUEST.getCode()) {
                 throw LOG.throwing(
-                        Level.DEBUG, 
-                        new DoiServerException(getApplication(), DATACITE_API_RESPONSE.BAD_REQUEST, ex)
+                        Level.DEBUG,
+                        new DoiServerException(getApplication(), DATACITE_API_RESPONSE.BAD_REQUEST,
+                                ex)
                 );
-            } else {                          
+            } else {
                 throw LOG.throwing(
-                        Level.DEBUG, 
+                        Level.DEBUG,
                         new DoiServerException(getApplication(), API_MDS.DATACITE_PROBLEM, ex)
-                );                
+                );
             }
         }
         return LOG.traceExit(new StringRepresentation(result));
-    }  
-    
-    
+    }
+
     /**
      * Checks input parameters
+     *
      * @param doi DOI number
      * @param mediaForm the parameters
      * @throws DoiServerException - 400 Bad Request if DOI_PARAMETER is not set
-     */ 
-    @Requirement(reqId = Requirement.DOI_INTER_070,reqName = Requirement.DOI_INTER_070_NAME)        
-    private void checkInputs(final String doi, final Form mediaForm) throws DoiServerException {
-        LOG.traceEntry("Parameters : {} and {}",doi, mediaForm);
+     */
+    @Requirement(reqId = Requirement.DOI_INTER_070, reqName = Requirement.DOI_INTER_070_NAME)
+    private void checkInputs(final String doi,
+            final Form mediaForm) throws DoiServerException {
+        LOG.traceEntry("Parameters : {} and {}", doi, mediaForm);
         final StringBuilder errorMsg = new StringBuilder();
-        if(doi == null || doi.isEmpty() || !doi.startsWith(DoiSettings.getInstance().getString(Consts.INIST_DOI))) {
-            errorMsg.append(DOI_PARAMETER).append(" value is not set.");            
+        if (doi == null || doi.isEmpty() || !doi.startsWith(DoiSettings.getInstance().getString(
+                Consts.INIST_DOI))) {
+            errorMsg.append(DOI_PARAMETER).append(" value is not set.");
         } else {
             try {
                 ClientMDS.checkIfAllCharsAreValid(doi);
@@ -176,55 +182,57 @@ public class MediaResource extends BaseMdsResource {
                 errorMsg.append(DOI_PARAMETER).append(" no valid syntax.");
             }
         }
-        if(errorMsg.length() == 0) {        
-            LOG.debug("The form is valid");                    
+        if (errorMsg.length() == 0) {
+            LOG.debug("The form is valid");
         } else {
             throw LOG.throwing(
-                    Level.DEBUG, 
-                    new DoiServerException(getApplication(), API_MDS.MEDIA_VALIDATION, errorMsg.toString())
+                    Level.DEBUG,
+                    new DoiServerException(getApplication(), API_MDS.MEDIA_VALIDATION, errorMsg.
+                            toString())
             );
-        }      
+        }
         LOG.traceExit();
-    }      
-   
+    }
+
     /**
      * Media representation.
+     *
      * @return Wadl description for a Media representation
      */
     private RepresentationInfo mediaRepresentation() {
         final RepresentationInfo repInfo = new RepresentationInfo();
-        repInfo.setMediaType(MediaType.TEXT_PLAIN);        
+        repInfo.setMediaType(MediaType.TEXT_PLAIN);
         final DocumentationInfo docInfo = new DocumentationInfo();
         docInfo.setTitle("Media representation");
         docInfo.setTextContent("This request returns a key-value list of media "
                 + "types/urls for a given DOI name");
         repInfo.setDocumentation(docInfo);
         return repInfo;
-    }    
+    }
 
     /**
-     * Describes the GET method.
-     * The different representations are the followings:
+     * Describes the GET method. The different representations are the followings:
      * <ul>
      * <li>{@link DATACITE_API_RESPONSE#SUCCESS}</li>
      * <li>{@link DATACITE_API_RESPONSE#DOI_NOT_FOUND}</li>
-     * <li>{@link API_MDS#DATACITE_PROBLEM}</li>      
-     * </ul>     
+     * <li>{@link API_MDS#DATACITE_PROBLEM}</li>
+     * </ul>
+     *
      * @param info Wadl description for a GET method
-     */ 
-    @Requirement(reqId = Requirement.DOI_DOC_010,reqName = Requirement.DOI_DOC_010_NAME)      
+     */
+    @Requirement(reqId = Requirement.DOI_DOC_010, reqName = Requirement.DOI_DOC_010_NAME)
     @Override
     protected final void describeGet(final MethodInfo info) {
         info.setName(Method.GET);
         info.setDocumentation("Get a specific media for a given DOI");
 
         addRequestDocToMethod(info, createQueryParamDoc(
-                DoiMdsApplication.DOI_TEMPLATE, ParameterStyle.TEMPLATE, 
+                DoiMdsApplication.DOI_TEMPLATE, ParameterStyle.TEMPLATE,
                 "DOI name", true, "xs:string")
         );
         addResponseDocToMethod(info, createResponseDoc(
-                DATACITE_API_RESPONSE.SUCCESS.getStatus(), 
-                DATACITE_API_RESPONSE.SUCCESS.getShortMessage(), 
+                DATACITE_API_RESPONSE.SUCCESS.getStatus(),
+                DATACITE_API_RESPONSE.SUCCESS.getShortMessage(),
                 mediaRepresentation())
         );
         addResponseDocToMethod(info, createResponseDoc(
@@ -237,11 +245,10 @@ public class MediaResource extends BaseMdsResource {
                 API_MDS.DATACITE_PROBLEM.getShortMessage(),
                 "explainRepresentationID")
         );
-    } 
+    }
 
     /**
-     * Describes the POST method.
-     * The different representations are the followings:
+     * Describes the POST method. The different representations are the followings:
      * <ul>
      * <li>{@link DATACITE_API_RESPONSE#SUCCESS}</li>
      * <li>{@link API_MDS#MEDIA_VALIDATION}</li>
@@ -249,18 +256,20 @@ public class MediaResource extends BaseMdsResource {
      * <li>{@link API_MDS#SECURITY_USER_NO_ROLE}</li>
      * <li>{@link API_MDS#SECURITY_USER_NOT_IN_SELECTED_ROLE}</li>
      * <li>{@link API_MDS#SECURITY_USER_PERMISSION}</li>
-     * <li>{@link API_MDS#SECURITY_USER_CONFLICT}</li>      
-     * </ul>     
+     * <li>{@link API_MDS#SECURITY_USER_CONFLICT}</li>
+     * </ul>
+     *
      * @param info Wadl description for describing POST method
-     */ 
-    @Requirement(reqId = Requirement.DOI_DOC_010,reqName = Requirement.DOI_DOC_010_NAME)      
+     */
+    @Requirement(reqId = Requirement.DOI_DOC_010, reqName = Requirement.DOI_DOC_010_NAME)
     @Override
     protected final void describePost(final MethodInfo info) {
         info.setName(Method.POST);
-        info.setDocumentation("POST will add/update media type/urls pairs to a DOI. Standard domain restrictions check will be performed.");
+        info.setDocumentation(
+                "POST will add/update media type/urls pairs to a DOI. Standard domain restrictions check will be performed.");
         final ParameterInfo param = new ParameterInfo();
         param.setName("{mediaType}");
-        param.setStyle(ParameterStyle.PLAIN);        
+        param.setStyle(ParameterStyle.PLAIN);
         param.setRequired(false);
         param.setType("xs:string");
         param.setFixed("{url}");
@@ -268,10 +277,12 @@ public class MediaResource extends BaseMdsResource {
         param.setDocumentation("(key/value) = (mediaType/url)");
         final RepresentationInfo rep = new RepresentationInfo(MediaType.APPLICATION_WWW_FORM);
         rep.getParameters().add(param);
-        
-        addRequestDocToMethod(info, 
-                Arrays.asList(createQueryParamDoc(SELECTED_ROLE_PARAMETER, ParameterStyle.HEADER, "A user can select one role when he is associated to several roles", false, "xs:string")), 
-                rep);        
+
+        addRequestDocToMethod(info,
+                Arrays.asList(createQueryParamDoc(SELECTED_ROLE_PARAMETER, ParameterStyle.HEADER,
+                        "A user can select one role when he is associated to several roles", false,
+                        "xs:string")),
+                rep);
         addResponseDocToMethod(info, createResponseDoc(
                 DATACITE_API_RESPONSE.SUCCESS.getStatus(),
                 DATACITE_API_RESPONSE.SUCCESS.getShortMessage(),
@@ -281,12 +292,12 @@ public class MediaResource extends BaseMdsResource {
                 API_MDS.MEDIA_VALIDATION.getStatus(),
                 API_MDS.MEDIA_VALIDATION.getShortMessage(),
                 "explainRepresentationID")
-        );       
+        );
         addResponseDocToMethod(info, createResponseDoc(
                 API_MDS.DATACITE_PROBLEM.getStatus(),
                 API_MDS.DATACITE_PROBLEM.getShortMessage(),
                 "explainRepresentationID")
-        ); 
+        );
         super.describePost(info);
-    }     
+    }
 }

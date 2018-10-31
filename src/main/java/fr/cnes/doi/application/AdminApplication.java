@@ -49,12 +49,12 @@ import org.restlet.routing.Filter;
 import org.restlet.routing.Redirector;
 
 /**
- * Provides an application for handling features related to the administration system of the DOI 
+ * Provides an application for handling features related to the administration system of the DOI
  * server.
- * 
+ *
  * The administration application provides the following features:
  * <ul>
- * <li>An asynchronous task to check the availability of created landing pages each 
+ * <li>An asynchronous task to check the availability of created landing pages each
  * {@value #PERIOD_SCHEDULER} days</li>
  * <li>The form for creating DOI</li>
  * <li>The Datacite status page to check Datacite services availability</li>
@@ -68,22 +68,22 @@ import org.restlet.routing.Redirector;
  * The authentication is done by a simple login/password. Only users having the group "admin" will
  * be allowed to log in to this application.<br>
  * The website for creating DOI is opened on the net whereas the others services are filtered by IP.
- * The allowed IPs are localhost and the IPs defined in 
+ * The allowed IPs are localhost and the IPs defined in
  * {@value fr.cnes.doi.settings.Consts#ADMIN_IP_ALLOWER} attribute from the configuration file
- * 
+ *
  * <p>
  * <b>Routing</b><br>
- *  --------------<br>
+ * --------------<br>
  * <br>
  * root (DOI creation web form - no authorization)<br>
- *  |<br>
- *  |__ resources (status page - no authorization)<br>
- *  |__ status (Datacite status page - authorization)<br>
- *  |__ stats (Datacite stats page - authorization)<br>
- *  |_ ____________<br>
- *  |_|************|____ suffixProject (Get a random suffix - authorization)<br> 
- *  |_|IP_filtering|____ token (Create a token - authorization)<br>
- *  |_|____________|____ token/{tokenID} (Get token information - authorization)<br>
+ * |<br>
+ * |__ resources (status page - no authorization)<br>
+ * |__ status (Datacite status page - authorization)<br>
+ * |__ stats (Datacite stats page - authorization)<br>
+ * |_ ____________<br>
+ * |_|************|____ suffixProject (Get a random suffix - authorization)<br>
+ * |_|IP_filtering|____ token (Create a token - authorization)<br>
+ * |_|____________|____ token/{tokenID} (Get token information - authorization)<br>
  *
  * @see <a href="http://status.datacite.org">Datacite status page</a>
  * @see <a href="https://stats.datacite.org/#tab-prefixes">Datacite stats page</a>
@@ -215,8 +215,7 @@ public class AdminApplication extends AbstractApplication {
     }
 
     /**
-     * Creates a router for the AdminApplication. 
-     * This router routes :
+     * Creates a router for the AdminApplication. This router routes :
      * <ul>
      * <li>the web resources for the website with no authentication</li>
      * <li>the REST resources for the system administration with authentication/authorization</li>
@@ -261,8 +260,8 @@ public class AdminApplication extends AbstractApplication {
     }
 
     /**
-     * Creates a router for REST services for the system administration. 
-     * This router contains the following resources :
+     * Creates a router for REST services for the system administration. This router contains the
+     * following resources :
      * <ul>
      * <li>{@link AdminApplication#SUFFIX_PROJECT_URI} resource to handle the project suffix, which
      * is used in the Digital Object Identifier</li>
@@ -286,8 +285,7 @@ public class AdminApplication extends AbstractApplication {
     }
 
     /**
-     * Creates a router for the web site resources. 
-     * This router contains the following resources:
+     * Creates a router for the web site resources. This router contains the following resources:
      * <ul>
      * <li>{@link AdminApplication#RESOURCE_URI} to distribute the web resources for the status
      * page</li>
@@ -322,7 +320,7 @@ public class AdminApplication extends AbstractApplication {
         LOG.traceEntry("Parameter : {}", new JsonMessage(router));
 
         final Directory directory = new Directory(
-                getContext(), 
+                getContext(),
                 LocalReference.createClapReference(STATUS_PAGE_CLASSPATH)
         );
         directory.setDeeplyAccessible(true);
@@ -354,7 +352,8 @@ public class AdminApplication extends AbstractApplication {
              * @return The continuation status. Either Filter.CONTINUE or Filter.STOP.
              */
             @Override
-            protected int doHandle(final Request request, final Response response) {
+            protected int doHandle(final Request request,
+                    final Response response) {
                 final ProxySettings proxySettings = ProxySettings.getInstance();
                 if (proxySettings.isWithProxy()) {
                     request.setProxyChallengeResponse(proxySettings.getProxyAuthentication());
@@ -393,7 +392,8 @@ public class AdminApplication extends AbstractApplication {
              * @return The continuation status. Either Filter.CONTINUE or Filter.STOP.
              */
             @Override
-            protected int doHandle(final Request request, final Response response) {
+            protected int doHandle(final Request request,
+                    final Response response) {
                 final ProxySettings proxySettings = ProxySettings.getInstance();
                 if (proxySettings.isWithProxy()) {
                     request.setProxyChallengeResponse(proxySettings.getProxyAuthentication());

@@ -55,14 +55,14 @@ import org.apache.logging.log4j.Logger;
  * No authentication / no autorisation
  * <p>
  * <b>Routing</b><br>
- *  --------------<br>
+ * --------------<br>
  * <br>
  * root<br>
- *  |<br>
- *  |__ style<br>
- *  |__ language<br>
- *  |__ format<br>
- * 
+ * |<br>
+ * |__ style<br>
+ * |__ language<br>
+ * |__ format<br>
+ *
  * @see <a href="http://citation.crosscite.org/">Making a citation</a>
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */

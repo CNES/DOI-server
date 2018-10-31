@@ -30,8 +30,7 @@ import java.util.stream.Collectors;
 import fr.cnes.doi.client.ClientProxyTest;
 import fr.cnes.doi.security.UtilsCryptography;
 import fr.cnes.doi.settings.DoiSettings;
-import java.util.Properties;
-import java.util.logging.LogManager;
+import java.io.IOException;
 import org.restlet.engine.Engine;
 
 /**
@@ -47,16 +46,26 @@ public class InitSettingsForTest {
      * Init loggers.
      */
     private static final Logger LOGGER = Engine.getLogger(InitSettingsForTest.class);
+    
+    /**
+     * Properties file for tests.
+     */
+    public static final String CONFIG_TEST_PROPERTIES = "config-test.properties";
+    
+    /**
+     * Properties files for it.
+     */
+    public static final String CONFIG_IT_PROPERTIES = "config-it.properties";
 
     /**
      * Reads the settings.
-     *
+     * @param configProperties config properties
      */
-    public static void init() {
+    public static void init(final String configProperties) {
         try {
             String secretKey = System.getProperty("private.key");
             String result;
-            try (InputStream inputStream = ClientProxyTest.class.getResourceAsStream("/config.properties")) {
+            try (InputStream inputStream = ClientProxyTest.class.getResourceAsStream("/"+configProperties)) {
                 result = new BufferedReader(new InputStreamReader(inputStream)).lines()
                         .collect(Collectors.joining("\n"));
             }
@@ -75,10 +84,17 @@ public class InitSettingsForTest {
             InputStream stream = new ByteArrayInputStream(result.getBytes(StandardCharsets.UTF_8));
             DoiSettings.getInstance().setPropertiesFile(stream);
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Error during initialisation of the settings", e);
-        }
-
+        }        
+    }
+    
+    /**
+     * Reads the settings.
+     *
+     */
+    public static void init() {
+        init(DoiSettings.CONFIG_PROPERTIES);
     }
 
 }

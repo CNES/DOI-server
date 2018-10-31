@@ -20,6 +20,7 @@ package fr.cnes.doi.integration;
 
 import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.InitServerForTest;
+import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.client.ClientMDS;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_CONNECTIONS_PER_HOST;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_TOTAL_CONNECTIONS;
@@ -74,7 +75,7 @@ public class ITauthentication {
 
     @BeforeClass
     public static void setUpClass() throws ClientMdsException {
-        InitServerForTest.init();        
+        InitServerForTest.init(InitSettingsForTest.CONFIG_IT_PROPERTIES);        
         cl = new Client(new Context(), Protocol.HTTPS);
         Series<Parameter> parameters = cl.getContext().getParameters();
         parameters.set(RESTLET_MAX_TOTAL_CONNECTIONS, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_TOTAL_CONNECTIONS, DEFAULT_MAX_TOTAL_CONNECTIONS));        

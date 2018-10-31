@@ -21,6 +21,7 @@ package fr.cnes.doi.resource.admin;
 import static fr.cnes.doi.AbstractSpec.classTitle;
 import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.InitServerForTest;
+import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.UnitTest;
 import fr.cnes.doi.exception.ClientMdsException;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_CONNECTIONS_PER_HOST;
@@ -77,8 +78,8 @@ public class SuffixProjectsResourceTest {
     }
 
     @BeforeClass
-    public static void setUpClass() throws ClientMdsException {
-        InitServerForTest.init();
+    public static void setUpClass() {
+        InitServerForTest.init(InitSettingsForTest.CONFIG_TEST_PROPERTIES);
         cl = new Client(new Context(), Protocol.HTTPS);
         Series<Parameter> parameters = cl.getContext().getParameters();
         parameters.set(RESTLET_MAX_TOTAL_CONNECTIONS, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_TOTAL_CONNECTIONS, DEFAULT_MAX_TOTAL_CONNECTIONS));        

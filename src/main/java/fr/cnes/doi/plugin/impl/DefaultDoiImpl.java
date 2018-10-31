@@ -36,6 +36,7 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * Default implementation of the project suffix database.
+ *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class DefaultDoiImpl extends AbstractDoiDBPluginHelper {
@@ -43,7 +44,7 @@ public class DefaultDoiImpl extends AbstractDoiDBPluginHelper {
     /**
      * Default file if the path is not defined in the configuration file
      */
-    private static final String DEFAULT_CACHE_FILE = "data"+File.separator+"doi.conf";
+    private static final String DEFAULT_CACHE_FILE = "data" + File.separator + "doi.conf";
 
     /**
      * Logger.
@@ -73,22 +74,22 @@ public class DefaultDoiImpl extends AbstractDoiDBPluginHelper {
 
     public DefaultDoiImpl() {
         super();
-    }           
+    }
 
     /**
-     * Init the configuration with the configuration file. If the given file
-     * does not exist a new file will be created. The file contains the mapping
-     * between the project name and the identifiers
+     * Init the configuration with the configuration file. If the given file does not exist a new
+     * file will be created. The file contains the mapping between the project name and the
+     * identifiers
      *
      * @param configuration The file that contains the database
      */
     @Override
     public void init(Object configuration) {
-        if(configuration == null) {
-            this.dbConf = DoiSettings.getInstance().getPathApp()+File.separatorChar+DEFAULT_CACHE_FILE;
+        if (configuration == null) {
+            this.dbConf = DoiSettings.getInstance().getPathApp() + File.separatorChar + DEFAULT_CACHE_FILE;
         } else {
-            this.dbConf = String.valueOf(configuration);   
-        }        
+            this.dbConf = String.valueOf(configuration);
+        }
         File projConfFile = new File(dbConf);
         try {
             // If the file exists, load it
@@ -151,17 +152,20 @@ public class DefaultDoiImpl extends AbstractDoiDBPluginHelper {
         File directory = new File(dbConfFile.getParent());
         Files.createDirectories(directory.toPath());
         Files.createFile(dbConfFile.toPath());
-        Files.write(dbConfFile.toPath(), "LandingPage;DOI\n".getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+        Files.write(dbConfFile.toPath(), "LandingPage;DOI\n".getBytes(StandardCharsets.UTF_8),
+                StandardOpenOption.APPEND);
     }
 
     @Override
-    public synchronized boolean addDoi(String doi, URI landingPage) {
+    public synchronized boolean addDoi(String doi,
+            URI landingPage) {
         boolean isAdded = false;
         try {
+            LOG.info("Add doi in the database {} / {}", doi, landingPage);
             String line = landingPage.toString() + ";" + doi + "\n";
             Files.write(
-                    new File(this.dbConf).toPath(), 
-                    line.getBytes(StandardCharsets.UTF_8), 
+                    new File(this.dbConf).toPath(),
+                    line.getBytes(StandardCharsets.UTF_8),
                     StandardOpenOption.APPEND
             );
             this.landingPageDoiMap.put(landingPage, doi);
@@ -170,10 +174,10 @@ public class DefaultDoiImpl extends AbstractDoiDBPluginHelper {
             setChanged();
             notifyObservers(new String[]{ADD_RECORD, doi});
         } catch (IOException e) {
-            LOG.fatal("The doi " + doi + " related to the landing page " + landingPage + 
-                    "cannot be saved in the file", e);
+            LOG.fatal("The doi " + doi + " related to the landing page " + landingPage
+                    + "cannot be saved in the file", e);
         }
-        return isAdded;    
+        return isAdded;
     }
 
     @Override
@@ -200,7 +204,7 @@ public class DefaultDoiImpl extends AbstractDoiDBPluginHelper {
     public Map<URI, String> getRecords() {
         return this.landingPageDoiMap;
     }
-    
+
     @Override
     public String getName() {
         return NAME;
@@ -229,6 +233,6 @@ public class DefaultDoiImpl extends AbstractDoiDBPluginHelper {
     @Override
     public String getLicense() {
         return LICENSE;
-    }    
+    }
 
 }

@@ -23,6 +23,7 @@ import fr.cnes.doi.server.DoiServer;
 import fr.cnes.doi.settings.DoiSettings;
 import java.util.logging.Level;
 import org.restlet.engine.Engine;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 
 /**
  * Class to start/stop the http and https server.
@@ -30,19 +31,33 @@ import org.restlet.engine.Engine;
  */
 public class InitServerForTest {
     
+    static {
+        java.util.logging.Logger rootLogger = java.util.logging.LogManager.getLogManager().getLogger("");
+        java.util.logging.Handler[] handlers = rootLogger.getHandlers();
+        rootLogger.removeHandler(handlers[0]);
+        SLF4JBridgeHandler.install();
+    }    
+    
     /**
      * the servers.
      */
     private static DoiServer doiServer;
     
     /**
-     * Init the settings and starts the server.
-     * @throws fr.cnes.doi.exception.ClientMdsException When cannot get Datacite schema
+     * Init the settings and starts the server with the default configuration properties {@value DoiSettings#CONFIG_PROPERTIES}.
      */
-    public static void init() throws ClientMdsException {
-        InitSettingsForTest.init();
-        doiServer = new DoiServer(DoiSettings.getInstance());
+    public static void init() {
+        init(DoiSettings.CONFIG_PROPERTIES);
+    }
+    
+    /**
+     * Init the settings and starts the server with a specific configuration properties.
+     * @param configProperties config properties
+     */
+    public static void init(final String configProperties) {
+        InitSettingsForTest.init(configProperties);        
         try {
+            doiServer = new DoiServer(DoiSettings.getInstance());
             doiServer.start();
             while(!doiServer.isStarted()) {
                 Thread.sleep(1000);
@@ -51,7 +66,7 @@ public class InitServerForTest {
         } catch (Exception ex) {
             Engine.getLogger(InitServerForTest.class).log(Level.SEVERE, null, ex);
         }
-    }
+    }    
     
     /**
      * Stops the server.

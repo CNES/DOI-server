@@ -46,8 +46,7 @@ public final class UtilsCryptography {
     public static final String CIPHER_ALGORITHM = "AES";
 
     /**
-     * Name of the secret-key algorithm to be associated with the given key
-     * material.
+     * Name of the secret-key algorithm to be associated with the given key material.
      */
     public static final String KEY_ALGORITHM = CIPHER_ALGORITHM;
 
@@ -60,16 +59,16 @@ public final class UtilsCryptography {
      * Logger.
      */
     private static final Logger LOG = LogManager.getLogger(UtilsCryptography.class.getName());
-    
+
     /**
      * Template message.
      */
     private static final String MSG_TPL = "Parameter : {}";
-    
+
     /**
      * Template message.
      */
-    private static final String MSG_TPL2 = "Parameters : {} and {}";    
+    private static final String MSG_TPL2 = "Parameters : {} and {}";
 
     /**
      * Private constructor
@@ -77,7 +76,7 @@ public final class UtilsCryptography {
     private UtilsCryptography() {
         //not called
     }
-    
+
     /**
      * Decrypts the string with the DEFAULT_SECRET_KEY.
      *
@@ -96,7 +95,8 @@ public final class UtilsCryptography {
      * @param secretKey the secret key.
      * @return the decrypted string
      */
-    public static String decrypt(final String encryptedInput, final String secretKey) {
+    public static String decrypt(final String encryptedInput,
+            final String secretKey) {
         LOG.traceEntry(MSG_TPL2, encryptedInput, secretKey);
         if (Utils.isNotEmpty(encryptedInput)) {
             try {
@@ -111,8 +111,8 @@ public final class UtilsCryptography {
                         cipher.doFinal(Base64.getDecoder().decode(encryptedInput)),
                         StandardCharsets.UTF_8
                 ));
-            } catch (NoSuchAlgorithmException | NoSuchPaddingException 
-                    | InvalidKeyException | IllegalBlockSizeException 
+            } catch (NoSuchAlgorithmException | NoSuchPaddingException
+                    | InvalidKeyException | IllegalBlockSizeException
                     | BadPaddingException ex) {
                 throw LOG.throwing(new DoiRuntimeException(ex));
             }
@@ -139,7 +139,8 @@ public final class UtilsCryptography {
      * @param secretKey the secret key of 16 bits length
      * @return the decrypted string
      */
-    public static String encrypt(final String str, final String secretKey) {
+    public static String encrypt(final String str,
+            final String secretKey) {
         LOG.traceEntry(MSG_TPL2, str, secretKey);
         try {
             final Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
@@ -149,8 +150,8 @@ public final class UtilsCryptography {
             return LOG.traceExit(Base64.getEncoder().encodeToString(
                     cipher.doFinal(str.getBytes("UTF-8"))
             ));
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException 
-                | InvalidKeyException | UnsupportedEncodingException 
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException
+                | InvalidKeyException | UnsupportedEncodingException
                 | IllegalBlockSizeException | BadPaddingException ex) {
             throw LOG.throwing(new DoiRuntimeException(ex));
         }

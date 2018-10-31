@@ -17,6 +17,6 @@
  * MA 02110-1301  USA
  */
 /**
- * Provides resources for Meta Data Store application. 
+ * Provides resources for Meta Data Store application.
  */
 package fr.cnes.doi.resource.mds;

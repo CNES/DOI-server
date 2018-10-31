@@ -25,15 +25,15 @@ import fr.cnes.doi.utils.spec.Requirement;
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-@Requirement(reqId = Requirement.DOI_ARCHI_030,reqName = Requirement.DOI_ARCHI_030_NAME)
-public abstract class AbstractTokenDBPluginHelper 
+@Requirement(reqId = Requirement.DOI_ARCHI_030, reqName = Requirement.DOI_ARCHI_030_NAME)
+public abstract class AbstractTokenDBPluginHelper
         extends AbstractTokenDBHelper implements PluginMetadata {
-    
+
     /**
      * Empty constructor.
      */
     protected AbstractTokenDBPluginHelper() {
         super();
-    }    
-    
+    }
+
 }

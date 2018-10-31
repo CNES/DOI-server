@@ -150,11 +150,13 @@ public class ClientMDS extends BaseClient {
         /**
          * Get a DOI without metadata. SUCCESS_NO_CONTENT is used as status
          */
-        SUCCESS_NO_CONTENT(Status.SUCCESS_NO_CONTENT, " the DOI is known to DataCite Metadata Store (MDS), but no metadata have been registered"),
+        SUCCESS_NO_CONTENT(Status.SUCCESS_NO_CONTENT,
+                " the DOI is known to DataCite Metadata Store (MDS), but no metadata have been registered"),
         /**
          * Fail to create a media or the metadata. CLIENT_ERROR_BAD_REQUEST is used as status
          */
-        BAD_REQUEST(Status.CLIENT_ERROR_BAD_REQUEST, "invalid XML, wrong prefix or request body must be exactly two lines: DOI and URL; wrong domain, wrong prefix"),
+        BAD_REQUEST(Status.CLIENT_ERROR_BAD_REQUEST,
+                "invalid XML, wrong prefix or request body must be exactly two lines: DOI and URL; wrong domain, wrong prefix"),
         /**
          * Fail to authorize the user to create/delete a DOI. CLIENT_ERROR_UNAUTHORIZED is used as
          * status
@@ -164,7 +166,8 @@ public class ClientMDS extends BaseClient {
          * Fail to create/delete media/metadata/Landing page. CLIENT_ERROR_FORBIDDEN is used as
          * status
          */
-        FORBIDDEN(Status.CLIENT_ERROR_FORBIDDEN, "login problem, wrong prefix, permission problem or dataset belongs to another party"),
+        FORBIDDEN(Status.CLIENT_ERROR_FORBIDDEN,
+                "login problem, wrong prefix, permission problem or dataset belongs to another party"),
         /**
          * Fail to get the DOI. CLIENT_ERROR_NOT_FOUND is used as status
          */
@@ -172,7 +175,8 @@ public class ClientMDS extends BaseClient {
         /**
          * Get an inactive DOI. CLIENT_ERROR_GONE is used as status
          */
-        DOI_INACTIVE(Status.CLIENT_ERROR_GONE, "the requested dataset was marked inactive (using DELETE method)"),
+        DOI_INACTIVE(Status.CLIENT_ERROR_GONE,
+                "the requested dataset was marked inactive (using DELETE method)"),
         /**
          * Fail to create a DOI because metadata must be uploaded first.
          * CLIENT_ERROR_PRECONDITION_FAILED is used as status
@@ -186,7 +190,8 @@ public class ClientMDS extends BaseClient {
         private final Status status;
         private final String message;
 
-        DATACITE_API_RESPONSE(final Status status, final String message) {
+        DATACITE_API_RESPONSE(final Status status,
+                final String message) {
             this.status = status;
             this.message = message;
         }
@@ -264,8 +269,10 @@ public class ClientMDS extends BaseClient {
          */
         private String dataCiteUrl;
 
-        Context(final boolean isTestMode, final boolean isDoiPrefix,
-                final String dataciteUrl, final Level levelLog) {
+        Context(final boolean isTestMode,
+                final boolean isDoiPrefix,
+                final String dataciteUrl,
+                final Level levelLog) {
             this.isTestMode = isTestMode;
             this.isDoiPrefix = isDoiPrefix;
             this.dataCiteUrl = dataciteUrl;
@@ -332,7 +339,8 @@ public class ClientMDS extends BaseClient {
          * @param context the context
          * @param levelLog the level log
          */
-        public static void setLevelLog(final Context context, final Level levelLog) {
+        public static void setLevelLog(final Context context,
+                final Level levelLog) {
             context.setLevelLog(levelLog);
         }
 
@@ -342,7 +350,8 @@ public class ClientMDS extends BaseClient {
          * @param context the context
          * @param dataCiteUrl the DataCite URL
          */
-        public static void setDataCiteUrl(final Context context, final String dataCiteUrl) {
+        public static void setDataCiteUrl(final Context context,
+                final String dataCiteUrl) {
             context.setDataCiteURl(dataCiteUrl);
         }
 
@@ -372,7 +381,6 @@ public class ClientMDS extends BaseClient {
      * Validation handler when parsing the metadata.
      */
     //final MyValidationEventHandler validationHandler;
-
     /**
      * Creates a client to handle DataCite server.
      *
@@ -402,8 +410,10 @@ public class ClientMDS extends BaseClient {
         try {
             this.context = context;
             this.testMode = this.context.hasTestMode() ? TEST_MODE : null;
-            final String schemaUrl = ClientMDS.DOI_SETTINGS.getString(Consts.DATACITE_SCHEMA, SCHEMA_DATACITE);
-            SCHEMA_FACTORY.setResourceResolver(new WebProxyResourceResolver(this.getClient(), schemaUrl));
+            final String schemaUrl = ClientMDS.DOI_SETTINGS.getString(Consts.DATACITE_SCHEMA,
+                    SCHEMA_DATACITE);
+            SCHEMA_FACTORY.setResourceResolver(new WebProxyResourceResolver(this.getClient(),
+                    schemaUrl));
             Schema schema = SCHEMA_FACTORY.newSchema();
             final JAXBContext ctx = JAXBContext.newInstance(new Class[]{Resource.class});
             this.marshaller = ctx.createMarshaller();
@@ -412,13 +422,14 @@ public class ClientMDS extends BaseClient {
                     "http://datacite.org/schema/kernel-4 "
                     + "http://schema.datacite.org/meta/kernel-4/metadata.xsd");
             this.unMarshaller = ctx.createUnmarshaller();
-            this.unMarshaller.setSchema(schema);            
+            this.unMarshaller.setSchema(schema);
             this.getClient().getLogger().setUseParentHandlers(true);
             this.getClient().getLogger().setLevel(Level.ALL);
             this.getClient().setLoggable(false);
         } catch (JAXBException | SAXException ex) {
-            throw new ClientMdsException(Status.SERVER_ERROR_INTERNAL, "Cannot get the Datacite schema", ex);
-        }  
+            throw new ClientMdsException(Status.SERVER_ERROR_INTERNAL,
+                    "Cannot get the Datacite schema", ex);
+        }
     }
 
     /**
@@ -443,9 +454,12 @@ public class ClientMDS extends BaseClient {
      * @param pwd password
      * @throws fr.cnes.doi.exception.ClientMdsException Cannot the Datacite schema
      */
-    public ClientMDS(final Context context, final String login, final String pwd) throws ClientMdsException {
+    public ClientMDS(final Context context,
+            final String login,
+            final String pwd) throws ClientMdsException {
         this(context);
-        this.getClient().getLogger().log(Level.FINEST, "Authentication with HTTP_BASIC : {0}/{1}", new Object[]{login, pwd});
+        this.getClient().getLogger().log(Level.FINEST, "Authentication with HTTP_BASIC : {0}/{1}",
+                new Object[]{login, pwd});
         this.getClient().setChallengeResponse(ChallengeScheme.HTTP_BASIC, login, pwd);
     }
 
@@ -456,9 +470,11 @@ public class ClientMDS extends BaseClient {
      * @param pwd password
      * @throws fr.cnes.doi.exception.ClientMdsException Cannot the Datacite schema
      */
-    public ClientMDS(final String login, final String pwd) throws ClientMdsException {
+    public ClientMDS(final String login,
+            final String pwd) throws ClientMdsException {
         this(Context.PROD);
-        this.getClient().getLogger().log(Level.FINEST, "Authentication with HTTP_BASIC : {0}/{1}", new Object[]{login, pwd});
+        this.getClient().getLogger().log(Level.FINEST, "Authentication with HTTP_BASIC : {0}/{1}",
+                new Object[]{login, pwd});
         this.getClient().setChallengeResponse(ChallengeScheme.HTTP_BASIC, login, pwd);
     }
 
@@ -563,7 +579,6 @@ public class ClientMDS extends BaseClient {
 //        }
 //        return res;
 //    }
-
     /**
      * Returns the {@link #TEST_MODE} or an empty parameter according to
      * <i>isTestMode</i>
@@ -620,7 +635,8 @@ public class ClientMDS extends BaseClient {
      * @param doiName doi name
      * @return the URL to query
      */
-    private Reference createReferenceWithDOI(final String segment, final String doiName) {
+    private Reference createReferenceWithDOI(final String segment,
+            final String doiName) {
         final String requestDOI = getDoiAccorgindToContext(doiName);
         final Reference ref = createReference(segment);
         final String[] split = requestDOI.split("/");
@@ -735,7 +751,8 @@ public class ClientMDS extends BaseClient {
             rep = this.getClient().get();
             return (rep == null) ? "" : this.getText(rep);
         } catch (ResourceException ex) {
-            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), this.getClient().getResponseEntity(), ex);
+            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), this.getClient().
+                    getResponseEntity(), ex);
         } finally {
             this.getClient().release();
         }
@@ -759,7 +776,8 @@ public class ClientMDS extends BaseClient {
             rep = this.getClient().get();
             return (rep == null) ? "" : this.getText(rep);
         } catch (ResourceException ex) {
-            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), this.getClient().getResponseEntity(), ex);
+            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), this.getClient().
+                    getResponseEntity(), ex);
         } finally {
             this.getClient().release();
         }
@@ -811,7 +829,8 @@ public class ClientMDS extends BaseClient {
             result = getText(rep);
             return result;
         } catch (ResourceException ex) {
-            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), this.getClient().getResponseEntity(), ex);
+            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), this.getClient().
+                    getResponseEntity(), ex);
         } finally {
             this.getClient().release();
         }
@@ -824,7 +843,8 @@ public class ClientMDS extends BaseClient {
      * @return the Resource object
      * @throws ClientMdsException Will throw when a problem happens during the parsing
      */
-    private synchronized Resource parseDataciteResource(final Representation rep) throws ClientMdsException {
+    private synchronized Resource parseDataciteResource(final Representation rep) throws
+            ClientMdsException {
         final Resource resource;
         try {
             resource = (Resource) this.unMarshaller.unmarshal(rep.getStream());
@@ -880,7 +900,8 @@ public class ClientMDS extends BaseClient {
         try {
             return this.getClient().get(MediaType.APPLICATION_XML);
         } catch (ResourceException ex) {
-            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), this.getClient().getResponseEntity(), ex);
+            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), this.getClient().
+                    getResponseEntity(), ex);
         } finally {
             this.getClient().release();
         }
@@ -943,53 +964,54 @@ public class ClientMDS extends BaseClient {
             );
             return getText(response);
         } catch (ResourceException ex) {
-            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), this.getClient().getResponseEntity(), ex);
+            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), this.getClient().
+                    getResponseEntity(), ex);
         } catch (JAXBException ex) {
             throw new ClientMdsException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex);
         } finally {
             this.getClient().release();
         }
     }
-    
+
     /**
      * Stream a DataCite Resource Object to XML.
-     * 
+     *
      * Use synchronized to have a thread-safe operation
-     * 
+     *
      * @param entity DataCite Resource
      * @return XML
      * @throws JAXBException when an problem occurs
      */
     private synchronized OutputStream streamMetadata(final Resource entity) throws JAXBException {
-            final OutputStream output = new OutputStream() {
-                /**
-                 * Output stream.
-                 */
-                private final StringBuilder response = new StringBuilder();
+        final OutputStream output = new OutputStream() {
+            /**
+             * Output stream.
+             */
+            private final StringBuilder response = new StringBuilder();
 
-                /**
-                 * Write into output stream
-                 *
-                 * @param b char
-                 * @throws IOException - if a problem happens
-                 */
-                @Override
-                public void write(final int b) throws IOException {
-                    this.response.append((char) b);
-                }
+            /**
+             * Write into output stream
+             *
+             * @param b char
+             * @throws IOException - if a problem happens
+             */
+            @Override
+            public void write(final int b) throws IOException {
+                this.response.append((char) b);
+            }
 
-                /**
-                 * Transforms toString.
-                 *
-                 * @return response as String
-                 */
-                @Override
-                public String toString() {
-                    return this.response.toString();
-                }
-            };
-            marshaller.marshal(entity, output);
-            return output;
+            /**
+             * Transforms toString.
+             *
+             * @return response as String
+             */
+            @Override
+            public String toString() {
+                return this.response.toString();
+            }
+        };
+        marshaller.marshal(entity, output);
+        return output;
     }
 
     /**
@@ -1001,18 +1023,20 @@ public class ClientMDS extends BaseClient {
      * @return the Resource object from DataCite
      * @throws ValidationException When validation failed
      */
-    public synchronized Resource parseMetadata(final Representation entity) throws ValidationException {
+    public synchronized Resource parseMetadata(final Representation entity) throws
+            ValidationException {
 
         try {
-            final MyValidationEventHandler validationHandler = new MyValidationEventHandler(this.getClient().getLogger());
-            this.unMarshaller.setEventHandler(validationHandler);            
+            final MyValidationEventHandler validationHandler = new MyValidationEventHandler(this.
+                    getClient().getLogger());
+            this.unMarshaller.setEventHandler(validationHandler);
             final Resource resource = (Resource) this.unMarshaller.unmarshal(entity.getStream());
             if (validationHandler.isValid()) {
                 return resource;
             } else {
                 throw new ValidationException(validationHandler.getErrorMsg());
             }
-        } catch (IOException | JAXBException ex) {            
+        } catch (IOException | JAXBException ex) {
             throw new ValidationException("Cannot read the metadata", ex);
         }
     }
@@ -1065,7 +1089,8 @@ public class ClientMDS extends BaseClient {
         try {
             return this.getClient().delete();
         } catch (ResourceException ex) {
-            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), this.getClient().getResponseEntity(), ex);
+            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), this.getClient().
+                    getResponseEntity(), ex);
         } finally {
             this.getClient().release();
         }
@@ -1097,7 +1122,8 @@ public class ClientMDS extends BaseClient {
             result = this.getText(response);
             return result;
         } catch (ResourceException ex) {
-            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), this.getClient().getResponseEntity(), ex);
+            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), this.getClient().
+                    getResponseEntity(), ex);
         } finally {
             this.getClient().release();
         }
@@ -1122,7 +1148,8 @@ public class ClientMDS extends BaseClient {
      * </ul>
      * @see "https://mds.datacite.org/static/apidoc#tocAnchor-22"
      */
-    public String createMedia(final String doiName, final Form form) throws ClientMdsException {
+    public String createMedia(final String doiName,
+            final Form form) throws ClientMdsException {
         final String result;
         final Reference url = createReferenceWithDOI(MEDIA_RESOURCE, doiName);
         Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "POST {0}", url.toString());
@@ -1133,7 +1160,8 @@ public class ClientMDS extends BaseClient {
             result = this.getText(response);
             return result;
         } catch (ResourceException ex) {
-            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), this.getClient().getResponseEntity(), ex);
+            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), this.getClient().
+                    getResponseEntity(), ex);
         } finally {
             this.getClient().release();
         }
@@ -1203,12 +1231,17 @@ public class ClientMDS extends BaseClient {
             final StringBuilder stringBuilder = new StringBuilder("\nEVENT");
             stringBuilder.append("SEVERITY:  ").append(event.getSeverity()).append("\n");
             stringBuilder.append("MESSAGE:  ").append(event.getMessage()).append("\n");
-            stringBuilder.append("LINKED EXCEPTION:  ").append(event.getLinkedException()).append("\n");
+            stringBuilder.append("LINKED EXCEPTION:  ").append(event.getLinkedException()).append(
+                    "\n");
             stringBuilder.append("LOCATOR\n");
-            stringBuilder.append("    LINE NUMBER:  ").append(event.getLocator().getLineNumber()).append("\n");
-            stringBuilder.append("    COLUMN NUMBER:  ").append(event.getLocator().getColumnNumber()).append("\n");
-            stringBuilder.append("    OFFSET:  ").append(event.getLocator().getOffset()).append("\n");
-            stringBuilder.append("    OBJECT:  ").append(event.getLocator().getObject()).append("\n");
+            stringBuilder.append("    LINE NUMBER:  ").append(event.getLocator().getLineNumber()).
+                    append("\n");
+            stringBuilder.append("    COLUMN NUMBER:  ").
+                    append(event.getLocator().getColumnNumber()).append("\n");
+            stringBuilder.append("    OFFSET:  ").append(event.getLocator().getOffset()).
+                    append("\n");
+            stringBuilder.append("    OBJECT:  ").append(event.getLocator().getObject()).
+                    append("\n");
             stringBuilder.append("    NODE:  ").append(event.getLocator().getNode()).append("\n");
             stringBuilder.append("    URL  ").append(event.getLocator().getURL()).append("\n");
             this.errorMsg = stringBuilder.toString();

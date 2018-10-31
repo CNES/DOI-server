@@ -46,7 +46,8 @@ import fr.cnes.doi.logging.api.DoiLogDataServer;
 import fr.cnes.doi.logging.business.JsonMessage;
 import fr.cnes.doi.logging.security.DoiSecurityLogFilter;
 import fr.cnes.doi.security.RoleAuthorizer;
-import fr.cnes.doi.settings.Consts;;
+import fr.cnes.doi.settings.Consts;
+;
 import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.settings.EmailSettings;
 import fr.cnes.doi.settings.JettySettings;
@@ -57,13 +58,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * DoiServer contains the configuration of this server and the methods to
- * start/stop it.
+ * DoiServer contains the configuration of this server and the methods to start/stop it.
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
+
+
 public class DoiServer extends Component {
-    
+
     /**
      * Default value for {@link #SSL_CTX_FACTORY} parameter : {@value #DEFAULT_SSL_CTX}.
      */
@@ -79,32 +81,32 @@ public class DoiServer extends Component {
     /**
      * Key store password parameter {@value #KEY_STORE_PWD}.
      */
-    public static final String KEY_STORE_PWD = "keyStorePassword";    
+    public static final String KEY_STORE_PWD = "keyStorePassword";
     /**
      * Key store type parameter {@value #KEY_STORE_TYPE}.
      */
-    public static final String KEY_STORE_TYPE = "keyStoreType"; 
+    public static final String KEY_STORE_TYPE = "keyStoreType";
     /**
      * Key password parameter {@value #KEY_PWD}.
      */
-    public static final String KEY_PWD = "keyPassword"; 
+    public static final String KEY_PWD = "keyPassword";
     /**
      * Trust store path parameter {@value #TRUST_STORE_PATH}.
      */
-    public static final String TRUST_STORE_PATH = "trustStorePath"; 
+    public static final String TRUST_STORE_PATH = "trustStorePath";
     /**
      * Trust store password parameter {@value #TRUST_STORE_PATH}.
      */
-    public static final String TRUST_STORE_PWD = "trustStorePassword"; 
+    public static final String TRUST_STORE_PWD = "trustStorePassword";
     /**
      * Trust store type parameter {@value #TRUST_STORE_PATH}.
      */
-    public static final String TRUST_STORE_TYPE = "trustStoreType";      
+    public static final String TRUST_STORE_TYPE = "trustStoreType";
     /**
      * JKS file, which is stored in the JAR.
      */
     public static final String JKS_FILE = "doiServerKey.jks";
-    
+
     /**
      * Directory {@value #JKS_DIRECTORY}. where JKS_FILE is located.
      */
@@ -134,22 +136,22 @@ public class DoiServer extends Component {
      * Default port for HTTPS server.
      */
     public static final String DEFAULT_HTTPS_PORT = "8183";
-    
+
     /**
      * Number total connections.
      */
     public static final String RESTLET_MAX_TOTAL_CONNECTIONS = "maxTotalConnections";
-    
+
     /**
      * Number connections per host.
      */
-    public static final String RESTLET_MAX_CONNECTIONS_PER_HOST = "maxConnectionsPerHost";  
-    
+    public static final String RESTLET_MAX_CONNECTIONS_PER_HOST = "maxConnectionsPerHost";
+
     /**
      * Default number for RESTLET_MAX_TOTAL_CONNECTIONS.
      */
     public static final String DEFAULT_MAX_TOTAL_CONNECTIONS = "-1";
-    
+
     /**
      * Default number for RESTLET_MAX_CONNECTIONS_PER_HOST.
      */
@@ -159,28 +161,28 @@ public class DoiServer extends Component {
      * Logger.
      */
     private static final Logger LOG = LogManager.getLogger(DoiServer.class.getName());
-    
+
     /**
      * Template message {@value #MESSAGE_TPL}.
      */
     private static final String MESSAGE_TPL = "{} : {}";
-    
+
     /**
      * Text to display {@value #PARAMETERS} in log messages.
      */
-    private static final String PARAMETERS = "Parameters"; 
-    
+    private static final String PARAMETERS = "Parameters";
+
     /**
      * Configuration.
      */
-    private final DoiSettings settings;    
+    private final DoiSettings settings;
 
     /**
-     * Creates an instance of the server with settings coming from the
-     * config.properties
+     * Creates an instance of the server with settings coming from the config.properties
      *
      * @param settings settings
-     * @throws fr.cnes.doi.exception.ClientMdsException When it is not possible to load Datacite schema
+     * @throws fr.cnes.doi.exception.ClientMdsException When it is not possible to load Datacite
+     * schema
      */
     public DoiServer(final DoiSettings settings) throws ClientMdsException {
         super();
@@ -193,21 +195,21 @@ public class DoiServer extends Component {
      */
     private void initLogServices() {
         LOG.traceEntry();
-        this.getLogService().setLoggerName(Utils.HTTP_LOGGER_NAME);
 
-        final LogService logServiceApplication = new DoiLogDataServer(Utils.APP_LOGGER_NAME, true);
+        final LogService logServiceApplication = new DoiLogDataServer(Utils.HTTP_LOGGER_NAME, true);
         this.getServices().add(logServiceApplication);
 
         final Service logServiceSecurity = new LogService(true) {
             /**
              * Creates a filter
+             *
              * @param context context
              * @return Filter
              * @see org.restlet.service.LogService#createInboundFilter(org.restlet.Context)
              */
             @Override
             public Filter createInboundFilter(final Context context) {
-                return new DoiSecurityLogFilter("fr.cnes.doi.logging.security");
+                return new DoiSecurityLogFilter(Utils.SECURITY_LOGGER_NAME);
             }
         };
         this.getServices().add(logServiceSecurity);
@@ -217,7 +219,7 @@ public class DoiServer extends Component {
     /**
      * Configures the Server in HTTP and HTTPS.
      */
-    @Requirement(reqId = Requirement.DOI_ARCHI_010,reqName = Requirement.DOI_ARCHI_010_NAME)
+    @Requirement(reqId = Requirement.DOI_ARCHI_010, reqName = Requirement.DOI_ARCHI_010_NAME)
     private void configureServer() throws ClientMdsException {
         LOG.traceEntry();
         initHttpServer();
@@ -230,7 +232,7 @@ public class DoiServer extends Component {
     /**
      * Inits the HTTP server.
      */
-    private void initHttpServer() {        
+    private void initHttpServer() {
         LOG.traceEntry();
         final Server serverHttp = startHttpServer(
                 settings.getInt(Consts.SERVER_HTTP_PORT, DEFAULT_HTTP_PORT)
@@ -266,8 +268,7 @@ public class DoiServer extends Component {
     }
 
     /**
-     * Inits supported protocols. Theses protocols are used by the server to
-     * access to resources
+     * Inits supported protocols. Theses protocols are used by the server to access to resources
      */
     private void initClients() {
         LOG.traceEntry();
@@ -288,7 +289,7 @@ public class DoiServer extends Component {
         this.getDefaultHost().attach(MDS_URI, appDoiProject);
         this.getDefaultHost().attach(CITATION_URI, new DoiCrossCiteApplication());
         this.getDefaultHost().attachDefault(appAdmin);
-        // Set authentication
+        // Set authentication        
         RoleAuthorizer.getInstance().createRealmFor(appDoiProject);
         RoleAuthorizer.getInstance().createRealmFor(appAdmin);
         LOG.traceExit();
@@ -301,6 +302,7 @@ public class DoiServer extends Component {
     private void startWithProxy() throws ClientMdsException {
         LOG.traceEntry();
         initLogServices();
+        RoleAuthorizer.getInstance();
         ProxySettings.getInstance();
         EmailSettings.getInstance();
         configureServer();
@@ -330,10 +332,10 @@ public class DoiServer extends Component {
         final String pathKeyStore;
         if (settings.hasValue(Consts.SERVER_HTTPS_KEYSTORE_PATH)) {
             pathKeyStore = settings.getString(Consts.SERVER_HTTPS_KEYSTORE_PATH);
-            LOG.debug("path key store value loaded from a custom configuration file");            
+            LOG.debug("path key store value loaded from a custom configuration file");
         } else {
             pathKeyStore = extractKeyStoreToPath();
-            LOG.debug("path key store value loaded from an internal configuration"); 
+            LOG.debug("path key store value loaded from an internal configuration");
         }
 
         final String pathKeyTrustStore;
@@ -342,48 +344,56 @@ public class DoiServer extends Component {
         } else {
             pathKeyTrustStore = extractKeyStoreToPath();
         }
-        
+
         // create embedding https jetty server
         final Server server = new Server(new Context(), Protocol.HTTPS, port, this);
         final Series<Parameter> parameters = server.getContext().getParameters();
-        
-        LOG.debug(MESSAGE_TPL,RESTLET_MAX_TOTAL_CONNECTIONS, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_TOTAL_CONNECTIONS, DEFAULT_MAX_TOTAL_CONNECTIONS));        
-        parameters.set(RESTLET_MAX_TOTAL_CONNECTIONS, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_TOTAL_CONNECTIONS, DEFAULT_MAX_TOTAL_CONNECTIONS));        
 
-        LOG.debug(MESSAGE_TPL,RESTLET_MAX_CONNECTIONS_PER_HOST, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_CONNECTIONS_PER_HOST, DEFAULT_MAX_CONNECTIONS_PER_HOST));                
-        parameters.set(RESTLET_MAX_CONNECTIONS_PER_HOST, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_CONNECTIONS_PER_HOST, DEFAULT_MAX_CONNECTIONS_PER_HOST));
+        LOG.debug(MESSAGE_TPL, RESTLET_MAX_TOTAL_CONNECTIONS, DoiSettings.getInstance().getString(
+                fr.cnes.doi.settings.Consts.RESTLET_MAX_TOTAL_CONNECTIONS,
+                DEFAULT_MAX_TOTAL_CONNECTIONS));
+        parameters.set(RESTLET_MAX_TOTAL_CONNECTIONS, DoiSettings.getInstance().getString(
+                fr.cnes.doi.settings.Consts.RESTLET_MAX_TOTAL_CONNECTIONS,
+                DEFAULT_MAX_TOTAL_CONNECTIONS));
 
-        LOG.debug(MESSAGE_TPL,SSL_CTX_FACTORY, DEFAULT_SSL_CTX);
+        LOG.debug(MESSAGE_TPL, RESTLET_MAX_CONNECTIONS_PER_HOST, DoiSettings.getInstance().
+                getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_CONNECTIONS_PER_HOST,
+                        DEFAULT_MAX_CONNECTIONS_PER_HOST));
+        parameters.set(RESTLET_MAX_CONNECTIONS_PER_HOST, DoiSettings.getInstance().getString(
+                fr.cnes.doi.settings.Consts.RESTLET_MAX_CONNECTIONS_PER_HOST,
+                DEFAULT_MAX_CONNECTIONS_PER_HOST));
+
+        LOG.debug(MESSAGE_TPL, SSL_CTX_FACTORY, DEFAULT_SSL_CTX);
         parameters.add(SSL_CTX_FACTORY, DEFAULT_SSL_CTX);
-        
+
         // Specifies the path for the keystore used by the server
-        LOG.debug(MESSAGE_TPL,KEY_STORE_PATH, pathKeyStore);
+        LOG.debug(MESSAGE_TPL, KEY_STORE_PATH, pathKeyStore);
         parameters.add(KEY_STORE_PATH, pathKeyStore);
-        
+
         // Specifies the password for the keystore containing several keys
-        LOG.debug(MESSAGE_TPL,KEY_STORE_PWD, "xxxxxxx");
+        LOG.debug(MESSAGE_TPL, KEY_STORE_PWD, "xxxxxxx");
         parameters.add(KEY_STORE_PWD, settings.getSecret(Consts.SERVER_HTTPS_KEYSTORE_PASSWD));
-        
+
         // Specifies the type of the keystore
-        LOG.debug(MESSAGE_TPL,KEY_STORE_TYPE, KeyStore.getDefaultType());
+        LOG.debug(MESSAGE_TPL, KEY_STORE_TYPE, KeyStore.getDefaultType());
         parameters.add(KEY_STORE_TYPE, KeyStore.getDefaultType());
-        
+
         // Specifies the password of the specific key used
-        LOG.debug(MESSAGE_TPL,KEY_PWD, "xxxxxxxx");
+        LOG.debug(MESSAGE_TPL, KEY_PWD, "xxxxxxxx");
         parameters.add(KEY_PWD, settings.getSecret(Consts.SERVER_HTTPS_SECRET_KEY));
-        
+
         // Specifies the path to the truststore
-        LOG.debug(MESSAGE_TPL,TRUST_STORE_PATH, pathKeyTrustStore);
+        LOG.debug(MESSAGE_TPL, TRUST_STORE_PATH, pathKeyTrustStore);
         parameters.add(TRUST_STORE_PATH, pathKeyTrustStore);
-        
+
         // Specifies the password of the truststore
-        LOG.debug(MESSAGE_TPL,TRUST_STORE_PWD, "xxxxx");
+        LOG.debug(MESSAGE_TPL, TRUST_STORE_PWD, "xxxxx");
         parameters.add(TRUST_STORE_PWD, settings.getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
-        
+
         // Specifies the type of the truststore
-        LOG.debug(MESSAGE_TPL,TRUST_STORE_TYPE, KeyStore.getDefaultType());
+        LOG.debug(MESSAGE_TPL, TRUST_STORE_TYPE, KeyStore.getDefaultType());
         parameters.add(TRUST_STORE_TYPE, KeyStore.getDefaultType());
-        
+
         return LOG.traceExit(server);
     }
 
@@ -392,11 +402,11 @@ public class DoiServer extends Component {
      *
      * @return the path of the new location of the keystore.
      */
-    private String extractKeyStoreToPath() { 
+    private String extractKeyStoreToPath() {
         LOG.traceEntry();
         String result;
         final Representation jks = new ClientResource(
-                LocalReference.createClapReference("class/"+JKS_FILE)
+                LocalReference.createClapReference("class/" + JKS_FILE)
         ).get();
         try {
             final Path outputDirectory = new File(JKS_DIRECTORY).toPath();
@@ -404,19 +414,19 @@ public class DoiServer extends Component {
                 Files.createDirectory(outputDirectory);
                 LOG.info("Creates {} directory to extract {} in it", outputDirectory, JKS_FILE);
             }
-            final String outputJksLocation = outputDirectory.getFileName() 
-                    + File.separator 
+            final String outputJksLocation = outputDirectory.getFileName()
+                    + File.separator
                     + JKS_FILE;
 
             final File outputFile = new File(outputJksLocation);
-            Files.copy(jks.getStream(), 
-                    outputFile.toPath(), 
+            Files.copy(jks.getStream(),
+                    outputFile.toPath(),
                     java.nio.file.StandardCopyOption.REPLACE_EXISTING
             );
-            LOG.info("Copy/replace if exists {} in {}",JKS_FILE, outputDirectory, JKS_FILE);
+            LOG.info("Copy/replace if exists {} in {}", JKS_FILE, outputDirectory, JKS_FILE);
             result = outputJksLocation;
         } catch (IOException ex) {
-            LOG.fatal("Unable to extract keystore from class/"+JKS_FILE,ex);
+            LOG.fatal("Unable to extract keystore from class/" + JKS_FILE, ex);
             result = "";
         }
         return LOG.traceExit(result);

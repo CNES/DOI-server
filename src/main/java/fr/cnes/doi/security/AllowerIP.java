@@ -33,10 +33,11 @@ import org.restlet.data.Status;
 
 /**
  * IP filtering
+ *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class AllowerIP extends org.restlet.routing.Filter {
-    
+
     /**
      * Logger.
      */
@@ -77,7 +78,7 @@ public class AllowerIP extends org.restlet.routing.Filter {
      * @param allowedAddresses the new allowed addresses
      */
     private void addCustomIP(final Set<String> allowedAddresses) {
-        LOG.traceEntry("Parameter : {}",allowedAddresses);
+        LOG.traceEntry("Parameter : {}", allowedAddresses);
         final String ips = DoiSettings.getInstance().getString(Consts.ADMIN_IP_ALLOWER);
         if (ips != null) {
             final StringTokenizer tokenizer = new StringTokenizer(ips, "|");
@@ -93,12 +94,14 @@ public class AllowerIP extends org.restlet.routing.Filter {
 
     /**
      * Before Handler.
+     *
      * @param request request
      * @param response response
-     * @return beforeHandler 
+     * @return beforeHandler
      */
     @Override
-    protected int beforeHandle(final Request request, final Response response) {
+    protected int beforeHandle(final Request request,
+            final Response response) {
         LOG.traceEntry(new JsonMessage(request));
         int result = STOP;
         final String ipClient = request.getClientInfo().getAddress();

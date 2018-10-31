@@ -206,7 +206,7 @@ public class ClientMDSTest {
     }
 
     private void testSpectGetMetadataAsObj(MdsSpec.Spec spec) throws JAXBException, ClientMdsException {
-        System.out.println("TEST: "+spec.getDescription());
+        testTitle(spec.getDescription());
 
         // Creates the MetadataStoreService stub        
         this.mdsServerStub.createSpec(spec);

@@ -18,10 +18,10 @@
  */
 /**
  * Provides classes to create the server and start it.
- * 
+ *
  * <p>
  * The architecture of the DOI server is composed of the following elements:
- * 
+ *
  * <ul>
  * <li>A HTTP server</li>
  * <li>A HTTPS server</li>
@@ -30,15 +30,16 @@
  * <li>{@link fr.cnes.doi.application.DoiCrossCiteApplication CrossCite application}</li>
  * <li>{@link fr.cnes.doi.application.DoiMdsApplication DOI MDS application}</li>
  * </ul>
- * 
+ *
  * <img src="{@docRoot}/doc-files/server.png" alt="Server overview">
- * 
- * A user can basically query DataCite for getting, creating, updating, deleting and searching a DOI.
- * For this, he should use the web services of each application or the web page available in the
- * administration application.
- * 
- * According to the web service, the authentication/authorization system must be different. The different
- * system could be one of the following or all of them in the same time with some of them optional :
+ *
+ * A user can basically query DataCite for getting, creating, updating, deleting and searching a
+ * DOI. For this, he should use the web services of each application or the web page available in
+ * the administration application.
+ *
+ * According to the web service, the authentication/authorization system must be different. The
+ * different system could be one of the following or all of them in the same time with some of them
+ * optional :
  * <ul>
  * <li>An authentication based on Token</li>
  * <li>An authentication based on simple login/password</li>

@@ -38,9 +38,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-
 /**
  * Default implementation of the token database.
+ *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
@@ -54,12 +54,12 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
     /**
      * Logger.
      */
-    private static final Logger LOG = LogManager.getLogger(DefaultTokenImpl.class.getName());      
+    private static final Logger LOG = LogManager.getLogger(DefaultTokenImpl.class.getName());
 
     /**
      * Default file if the path is not defined in the configuration file
      */
-    private static final String DEFAULT_CACHE_FILE = "data"+File.separator+"token.conf";
+    private static final String DEFAULT_CACHE_FILE = "data" + File.separator + "token.conf";
 
     private String tokenConf;
 
@@ -70,9 +70,9 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
     }
 
     @Override
-    public void init(Object configuration) {        
-        this.tokenConf = (configuration == null) 
-                ? DoiSettings.getInstance().getPathApp()+File.separatorChar+DEFAULT_CACHE_FILE
+    public void init(Object configuration) {
+        this.tokenConf = (configuration == null)
+                ? DoiSettings.getInstance().getPathApp() + File.separatorChar + DEFAULT_CACHE_FILE
                 : String.valueOf(configuration);
         File tokenConfFile = new File(tokenConf);
         try {
@@ -95,7 +95,7 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
      * @throws IOException Exception when trying to load the file
      */
     private void loadProjectConf(File projConfFile) throws IOException {
-        LOG.debug("Cache file exists : "+ projConfFile.getAbsolutePath());
+        LOG.debug("Cache file exists : " + projConfFile.getAbsolutePath());
 
         List<String> lines = Files.readAllLines(projConfFile.toPath());
         // Si le fichier contient autre chose que la ligne d'entete
@@ -109,12 +109,13 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
                     String[] split = line.split(";");
                     if (split.length != 3) {
                         LOG.fatal(String.format(
-                                "The line %s is not formatted in the expected way", 
+                                "The line %s is not formatted in the expected way",
                                 line)
                         );
                     } else {
                         this.db.put(split[0], new ConcurrentHashMap<String, Object>() {
                             private static final long serialVersionUID = 3109256773218160485L;
+
                             {
                                 put("projectSuffix", split[1]);
                                 put("expirationDate", split[2]);
@@ -134,13 +135,13 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
      */
     private void createProjectConf(File tokenConfFile) throws IOException {
         // Init the config file
-        LOG.info("Cache file does not exist, create it : "+ tokenConfFile.getAbsolutePath());
+        LOG.info("Cache file does not exist, create it : " + tokenConfFile.getAbsolutePath());
         File directory = new File(tokenConfFile.getParent());
         Files.createDirectories(directory.toPath());
         Files.createFile(tokenConfFile.toPath());
         Files.write(
-                tokenConfFile.toPath(), 
-                "#Token;Project suffix;Expiration date\n".getBytes(StandardCharsets.UTF_8), 
+                tokenConfFile.toPath(),
+                "#Token;Project suffix;Expiration date\n".getBytes(StandardCharsets.UTF_8),
                 StandardOpenOption.APPEND
         );
     }
@@ -158,10 +159,10 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
 
             // should be fine, the JWT representation does not contain ;
             String line = jwt + ";" + projectSuffix + ";" + expirationDate + "\n";
-            LOG.info("token inserted : "+ line);
+            LOG.info("token inserted : " + line);
             Files.write(
-                    new File(this.tokenConf).toPath(), 
-                    line.getBytes(StandardCharsets.UTF_8), 
+                    new File(this.tokenConf).toPath(),
+                    line.getBytes(StandardCharsets.UTF_8),
                     StandardOpenOption.APPEND
             );
             this.db.put(jwt, new ConcurrentHashMap<String, Object>() {

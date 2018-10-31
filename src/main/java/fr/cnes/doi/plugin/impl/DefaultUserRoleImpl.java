@@ -27,8 +27,9 @@ import org.apache.logging.log4j.Logger;
 import org.restlet.security.User;
 
 /**
- * Default implementation of the authentication plugin.
- * This implementation defines users/groups/roles.
+ * Default implementation of the authentication plugin. This implementation defines
+ * users/groups/roles.
+ *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
@@ -43,16 +44,18 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
     /**
      * Logger.
      */
-    private static final Logger LOG = LogManager.getLogger(DefaultUserRoleImpl.class.getName());       
+    private static final Logger LOG = LogManager.getLogger(DefaultUserRoleImpl.class.getName());
 
     public DefaultUserRoleImpl() {
         super();
     }
-    
+
     @Override
     public void init(Object configuration) {
+        LOG.info("Init the database");
+        users.clear();
         User admin = new User("admin", "admin");
-        User jcm = new User("malapert", "pwd", "Jean-Christophe","Malapert","jcmalapert@gmail.com");
+        User jcm = new User("malapert", "pwd", "Jean-Christophe", "Malapert", "jcmalapert@gmail.com");
         User cc = new User("caillet", "pppp", "Claire", "Caillet", "claire.caillet@cnes.fr");
         User test1 = new User("test1", "test1");
         User test2 = new User("test2", "test2");
@@ -61,10 +64,9 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
         users.add(jcm);
         users.add(cc);
         users.add(test1);
-        users.add(test2);   
+        users.add(test2);
         users.add(userWithNoRole);
     }
-    
 
     @Override
     public List<User> getUsers() {
@@ -72,14 +74,18 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
     }
 
     @Override
-    public List<User> getUsersFromRole(final String roleName){
+    public List<User> getUsersFromRole(final String roleName) {
         return Arrays.asList(users.get(1), users.get(2), users.get(3), users.get(4));
-    }   
+    }
 
     @Override
     public void setUsersToAdminGroup(final List<User> adminGroup) {
-        adminGroup.add(users.get(0));
-        adminGroup.add(users.get(1));
+        if (!adminGroup.contains(users.get(0))) {
+            adminGroup.add(users.get(0));
+        }
+        if (!adminGroup.contains(users.get(1))) {
+            adminGroup.add(users.get(1));
+        }
     }
 
     @Override

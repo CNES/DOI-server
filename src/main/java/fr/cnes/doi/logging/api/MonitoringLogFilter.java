@@ -22,6 +22,8 @@ import fr.cnes.doi.services.DoiMonitoring;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.settings.EmailSettings;
+import fr.cnes.doi.utils.Utils;
+import static fr.cnes.doi.utils.Utils.APP_LOGGER_NAME;
 import fr.cnes.doi.utils.spec.Requirement;
 
 import java.text.MessageFormat;
@@ -32,6 +34,7 @@ import org.restlet.Context;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.data.Method;
+import org.restlet.engine.Engine;
 import org.restlet.engine.log.LogFilter;
 import org.restlet.service.LogService;
 
@@ -47,7 +50,8 @@ public class MonitoringLogFilter extends LogFilter {
     /**
      * Threshold from which an alarm is send.
      */
-    private static final float THRESHOLD_SPEED_PERCENT = Float.valueOf(DoiSettings.getInstance().getString(Consts.THRESHOLD_SPEED_PERCENT));
+    private static final float THRESHOLD_SPEED_PERCENT = Float.valueOf(DoiSettings.getInstance().
+            getString(Consts.THRESHOLD_SPEED_PERCENT));
 
     /**
      * The monitoring object
@@ -62,20 +66,12 @@ public class MonitoringLogFilter extends LogFilter {
      * @param logService the {@link LogService}
      */
     public MonitoringLogFilter(
-            final Context context, final DoiMonitoring doiMonitoring, final LogService logService) {
+            final Context context,
+            final DoiMonitoring doiMonitoring,
+            final LogService logService) {
         super(context, logService);
         this.monitoring = doiMonitoring;
-
-//        if (logService != null) {
-//            if (logService.getLoggerName() != null) {
-//                Engine.getLogger(logService.getLoggerName());
-//            } else if (context != null && context.getLogger().getParent() != null) {
-//                Engine.getLogger(context.getLogger().getParent().getName() + "."
-//                        + LogUtils.getBestClassName(logService.getClass()));
-//            } else {
-//                Engine.getLogger(LogUtils.getBestClassName(logService.getClass()));
-//            }
-//        }
+        this.logService.setResponseLogFormat(DoiSettings.getInstance().getString(Consts.LOG_FORMAT));
     }
 
     /**
@@ -85,7 +81,13 @@ public class MonitoringLogFilter extends LogFilter {
      * @param response response
      */
     @Override
-    protected void afterHandle(final Request request, final Response response) {
+    protected void afterHandle(final Request request,
+            final Response response) {
+        if (this.logService.isLoggable(request)) {
+
+            LogManager.getLogger(Utils.HTTP_LOGGER_NAME).info(this.logService.getResponseLogMessage(
+                    response, 1));
+        }
         if (response.getStatus().isSuccess()) {
             final String path = request.getResourceRef().getPath();
             final Method method = request.getMethod();
@@ -93,18 +95,15 @@ public class MonitoringLogFilter extends LogFilter {
             final int duration = (int) (System.currentTimeMillis() - startTime);
             if (monitoring.isRegistered(method, path)) {
                 monitoring.addMeasurement(method, path, duration);
-                LogManager.getLogger(this.logService.getLoggerName())
+                Engine.getLogger(APP_LOGGER_NAME)
                         .info(MessageFormat.format(
-                                "{0}({1} {2}) - current speed average : {3} ms / "
-                                        + "current measure: {4} ms", 
-                                monitoring.getDescription(method, path), 
-                                method.getName(), path, 
-                                monitoring.getCurrentAverage(method, path), 
+                                "{0}({1} {2}) - current speed average : {3} ms - current measure: {4} ms",
+                                monitoring.getDescription(method, path),
+                                method.getName(), path,
+                                monitoring.getCurrentAverage(method, path),
                                 duration)
                         );
-                sendAlertIfNeeded(
-                        monitoring.getCurrentAverage(method, path), duration, path, method
-                );
+                sendAlertIfNeeded(monitoring.getCurrentAverage(method, path), duration, path, method);
             }
         }
     }
@@ -118,21 +117,23 @@ public class MonitoringLogFilter extends LogFilter {
      * @param method method name
      */
     private void sendAlertIfNeeded(
-            final double average, final double currentDuration, 
-            final String path, final Method method) {
-        final double elevation = (currentDuration - average*1000) * 100.0 / average;
+            final double average,
+            final double currentDuration,
+            final String path,
+            final Method method) {
+        final double elevation = (currentDuration - average * 1000) * 100.0 / average;
         if (elevation > THRESHOLD_SPEED_PERCENT) {
             final EmailSettings email = EmailSettings.getInstance();
             final String subject = "Speed performance alert for " + path;
             final String msg = "Dear administrator,\nthe speed performance of the "
                     + "application " + path + ""
-                    + " has been reduced of "+String.format("%.02f", elevation)+"% using the method "
+                    + " has been reduced of " + String.format("%.02f", elevation) + "% using the method "
                     + method.getName() + ".\n\n"
                     + "Details:\n"
                     + "--------\n"
                     + " * Average : " + average + "\n"
                     + " * current : " + currentDuration + "\n";
-             email.sendMessage(subject, msg);
+            email.sendMessage(subject, msg);
         }
     }
 

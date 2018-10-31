@@ -19,8 +19,7 @@
 package fr.cnes.doi.settings;
 
 /**
- * Consts contains all configuration variables, which are possible to use in the
- * config.properties.
+ * Consts contains all configuration variables, which are possible to use in the config.properties.
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
@@ -35,7 +34,7 @@ public class Consts {
      * Application's version.
      */
     public static final String VERSION = "Starter.VERSION";
-    
+
     /**
      * Name of the configuration file.
      */
@@ -54,7 +53,7 @@ public class Consts {
     /**
      * DOI prefix, which is given by INIST.
      */
-    public static final String INIST_DOI = "Starter.Inist.doi";    
+    public static final String INIST_DOI = "Starter.Inist.doi";
 
     /**
      * INIST login to use DATACITE's web services. The login is encrypted.
@@ -181,14 +180,14 @@ public class Consts {
     public static final String JETTY_THREADS_PRIORITY = "Starter.THREADS_PRIORITY";
 
     /**
-     * Jetty : Thread pool idle timeout in milliseconds; threads that are idle
-     * for longer than this period may be stopped.
+     * Jetty : Thread pool idle timeout in milliseconds; threads that are idle for longer than this
+     * period may be stopped.
      */
     public static final String JETTY_THREAD_MAX_IDLE_TIME_MS = "Starter.THREAD_MAX_IDLE_TIME_MS";
 
     /**
-     * Thread pool stop timeout in milliseconds; the maximum time allowed for
-     * the service to shutdown.
+     * Thread pool stop timeout in milliseconds; the maximum time allowed for the service to
+     * shutdown.
      */
     public static final String JETTY_THREAD_STOP_TIME_MS = "Starter.THREAD_MAX_STOP_TIME_MS";
 
@@ -198,14 +197,13 @@ public class Consts {
     public static final String JETTY_LOW_RESOURCES_MAX_IDLE_TIME_MS = "Starter.LOW_RESOURCES_MAX_IDLE_TIME_MS";
 
     /**
-     * Low resource monitor period in milliseconds; when 0, low resource
-     * monitoring is disabled.
+     * Low resource monitor period in milliseconds; when 0, low resource monitoring is disabled.
      */
     public static final String JETTY_LOW_RESOURCES_PERIOD = "Starter.LOW_RESOURCES_PERIOD";
 
     /**
-     * Low resource monitor max memory in bytes; when 0, the check disabled;
-     * memory used is calculated as (totalMemory-freeMemory).
+     * Low resource monitor max memory in bytes; when 0, the check disabled; memory used is
+     * calculated as (totalMemory-freeMemory).
      */
     public static final String JETTY_LOW_RESOURCES_MAX_MEMORY = "Starter.LOW_RESOURCES_MAX_MEMORY";
 
@@ -220,8 +218,8 @@ public class Consts {
     public static final String JETTY_LOW_RESOURCES_THREADS = "Starter.LOW_RESOURCES_THREADS";
 
     /**
-     * Connector acceptor thread count; when -1, Jetty will default to
-     * Runtime.availableProcessors() / 2, with a minimum of 1.
+     * Connector acceptor thread count; when -1, Jetty will default to Runtime.availableProcessors()
+     * / 2, with a minimum of 1.
      */
     public static final String JETTY_ACCEPTOR_THREADS = "Starter.ACCEPTOR_THREADS";
 
@@ -235,16 +233,15 @@ public class Consts {
      */
     public static final String JETTY_ACCEPT_QUEUE_SIZE = "Starter.ACCEPT_QUEUE_SIZE";
     /**
-     * HTTP request header size in bytes; larger headers will allow for more
-     * and/or larger cookies plus larger form content encoded in a URL; however,
-     * larger headers consume more memory and can make a server more vulnerable
-     * to denial of service attacks.
+     * HTTP request header size in bytes; larger headers will allow for more and/or larger cookies
+     * plus larger form content encoded in a URL; however, larger headers consume more memory and
+     * can make a server more vulnerable to denial of service attacks.
      */
     public static final String JETTY_REQUEST_HEADER_SIZE = "Starter.REQUEST_HEADER_SIZE";
     /**
-     * HTTP response header size in bytes; larger headers will allow for more
-     * and/or larger cookies and longer HTTP headers (e.g. for redirection);
-     * however, larger headers will also consume more memory
+     * HTTP response header size in bytes; larger headers will allow for more and/or larger cookies
+     * and longer HTTP headers (e.g. for redirection); however, larger headers will also consume
+     * more memory
      */
     public static final String JETTY_RESPONSE_HEADER_SIZE = "Starter.RESPONSE_HEADER_SIZE";
     /**
@@ -252,17 +249,15 @@ public class Consts {
      */
     public static final String JETTY_REQUEST_BUFFER_SIZE = "Starter.REQUEST_BUFFER_SIZE";
     /**
-     * HTTP output buffer size in bytes; a larger buffer can improve performance
-     * by allowing a content producer to run without blocking, however larger
-     * buffers consume more memory and may induce some latency before a client
-     * starts processing the content.
+     * HTTP output buffer size in bytes; a larger buffer can improve performance by allowing a
+     * content producer to run without blocking, however larger buffers consume more memory and may
+     * induce some latency before a client starts processing the content.
      */
     public static final String JETTY_RESPONSE_BUFFER_SIZE = "Starter.RESPONSE_BUFFER_SIZE";
     /**
-     * Connector idle timeout in milliseconds; see Socket.setSoTimeout(int);
-     * this value is interpreted as the maximum time between some progress being
-     * made on the connection; so if a single byte is read or written, then the
-     * timeout is reset.
+     * Connector idle timeout in milliseconds; see Socket.setSoTimeout(int); this value is
+     * interpreted as the maximum time between some progress being made on the connection; so if a
+     * single byte is read or written, then the timeout is reset.
      */
     public static final String JETTY_IO_MAX_IDLE_TIME_MS = "Starter.IO_MAX_IDLE_TIME_MS";
     /**
@@ -271,8 +266,7 @@ public class Consts {
      */
     public static final String JETTY_SO_LINGER_TIME = "Starter.SO_LINGER_TIME";
     /**
-     * Connector stop timeout in milliseconds; the maximum time allowed for the
-     * service to shutdown
+     * Connector stop timeout in milliseconds; the maximum time allowed for the service to shutdown
      */
     public static final String JETTY_GRACEFUL_SHUTDOWN = "Starter.GRACEFUL_SHUTDOWN";
     /**
@@ -282,54 +276,54 @@ public class Consts {
     /**
      * Path of the cache file to store landingPage/DOI association
      */
-    public static final String DOI_CONF_PATH = "Starter.UniqueDoi.cache.file";    
+    public static final String DOI_CONF_PATH = "Starter.UniqueDoi.cache.file";
     /**
      * key for token signature encoded with the algorithm HS256 in base64
      */
     public static final String TOKEN_KEY = "Starter.Token.key";
-    
+
     /**
      * Plugin to load the list of users and to fill group with users
      */
     public static final String PLUGIN_USER_GROUP_MGT = "Starter.Plugin.UserGroupMgt";
-    
+
     /**
      * Plugin to load the project suffix database.
      */
-    public static final String PLUGIN_PROJECT_SUFFIX = "Starter.Plugin.ProjectSuffix";    
-    
+    public static final String PLUGIN_PROJECT_SUFFIX = "Starter.Plugin.ProjectSuffix";
+
     /**
      * Plugin to load the token database.
      */
-    public static final String PLUGIN_TOKEN = "Starter.Plugin.Token";   
-    
+    public static final String PLUGIN_TOKEN = "Starter.Plugin.Token";
+
     /**
      * Plugin to load the DOI database.
      */
-    public static final String PLUGIN_DOI= "Starter.Plugin.Doi";     
-    
+    public static final String PLUGIN_DOI = "Starter.Plugin.Doi";
+
     /**
      * Allowed IPs for the administration application.
      */
     public static final String ADMIN_IP_ALLOWER = "Starter.admin.IP.allower";
-    
+
     /**
      * Level for which an alert must be send.
      */
     public static final String THRESHOLD_SPEED_PERCENT = "Starter.Monitoring.Threshold_speed";
-    
+
     /**
      * Tunning connection for Restlet.
      */
     public static final String RESTLET_MAX_TOTAL_CONNECTIONS = "Starter.maxTotalConnections";
-    
+
     /**
      * Tunning Connection for Restlet
      */
     public static final String RESTLET_MAX_CONNECTIONS_PER_HOST = "Starter.maxConnectionsPerHost";
-    
+
     /**
-     * DataCite schema.    
+     * DataCite schema.
      */
     public static final String DATACITE_SCHEMA = "Starter.dataciteSchema";
 

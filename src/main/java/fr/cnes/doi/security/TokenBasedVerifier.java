@@ -33,23 +33,25 @@ import org.restlet.security.Verifier;
 
 /**
  * Security class for checking token.
+ *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-@Requirement(reqId = Requirement.DOI_AUTH_020,reqName = Requirement.DOI_AUTH_020_NAME)
+@Requirement(reqId = Requirement.DOI_AUTH_020, reqName = Requirement.DOI_AUTH_020_NAME)
 public class TokenBasedVerifier implements Verifier {
 
     /**
      * Logger.
      */
     private static final Logger LOG = LogManager.getLogger(TokenBasedVerifier.class.getName());
-    
+
     /**
      * Token DB.
      */
-    private final AbstractTokenDBHelper tokenDB;    
+    private final AbstractTokenDBHelper tokenDB;
 
     /**
      * Constructor.
+     *
      * @param tokenDB token DB
      */
     public TokenBasedVerifier(final AbstractTokenDBHelper tokenDB) {
@@ -59,12 +61,14 @@ public class TokenBasedVerifier implements Verifier {
 
     /**
      * Verifies the token.
+     *
      * @param request request
      * @param response response
      * @return the result
      */
     @Override
-    public int verify(final Request request, final Response response) {
+    public int verify(final Request request,
+            final Response response) {
         LOG.traceEntry(new JsonMessage(request));
         final int result;
         final ChallengeResponse challResponse = request.getChallengeResponse();
@@ -77,20 +81,22 @@ public class TokenBasedVerifier implements Verifier {
     }
 
     /**
-     * Process Authentication.     
+     * Process Authentication.
+     *
      * @param request request
      * @param challResponse authentication object
      * @return the authentication status
      */
-    private int processAuthentication(final Request request, final ChallengeResponse challResponse) {
-        LOG.traceEntry(new JsonMessage(request));        
+    private int processAuthentication(final Request request,
+            final ChallengeResponse challResponse) {
+        LOG.traceEntry(new JsonMessage(request));
         final int result;
         final String token = challResponse.getRawValue();
-        LOG.debug("Token from challenge response : "+token);
+        LOG.debug("Token from challenge response : " + token);
         if (token == null) {
             result = Verifier.RESULT_MISSING;
         } else if (this.tokenDB.isExist(token)) {
-            result = processToken(request, token);            
+            result = processToken(request, token);
         } else {
             result = Verifier.RESULT_INVALID;
         }
@@ -99,11 +105,13 @@ public class TokenBasedVerifier implements Verifier {
 
     /**
      * Process token.
+     *
      * @param request request
      * @param token token
      * @return the status given by {@link Verifier}
      */
-    private int processToken(final Request request, final String token) {
+    private int processToken(final Request request,
+            final String token) {
         LOG.traceEntry(new JsonMessage(request));
         LOG.traceEntry(token);
         final int result;

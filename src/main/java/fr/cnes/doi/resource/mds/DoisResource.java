@@ -51,15 +51,14 @@ import org.apache.logging.log4j.Level;
 public class DoisResource extends BaseMdsResource {
 
     /**
-     * 
+     *
      */
     public static final String LIST_ALL_DOIS = "List all DOIs";
 
     /**
-     * 
+     *
      */
     public static final String CREATE_DOI = "Create a DOI";
-        
 
     /**
      * Init.
@@ -75,13 +74,12 @@ public class DoisResource extends BaseMdsResource {
     }
 
     /**
-     * Returns the collection of DOI. This request returns a list of all DOIs
-     * for the requesting datacentre. Status 200 is returned when operation is
-     * successful.
+     * Returns the collection of DOI. This request returns a list of all DOIs for the requesting
+     * datacentre. Status 200 is returned when operation is successful.
      *
      * @return the list of DOI
      * @throws DoiServerException 204 No Content - no DOIs founds
-     */       
+     */
     @Get
     public Representation getDois() throws DoiServerException {
         LOG.traceEntry();
@@ -93,13 +91,13 @@ public class DoisResource extends BaseMdsResource {
                 setStatus(Status.SUCCESS_NO_CONTENT);
             } else {
                 setStatus(Status.SUCCESS_OK);
-            }            
+            }
             rep = new StringRepresentation(dois, MediaType.TEXT_URI_LIST);
         } catch (ClientMdsException ex) {
             throw LOG.throwing(
-                    Level.DEBUG, 
+                    Level.DEBUG,
                     new DoiServerException(getApplication(), API_MDS.DATACITE_PROBLEM, ex));
-        }        
+        }
         return LOG.traceExit(rep);
     }
 
@@ -112,39 +110,36 @@ public class DoisResource extends BaseMdsResource {
      * <p>
      * The client provides :
      * <ul>
-     * <li><i>doi</i> : the project suffix, which is an unique identifier within
-     * the project.</li>
+     * <li><i>doi</i> : the project suffix, which is an unique identifier within the project.</li>
      * <li><i>url</i> : the URL of the landing page.
      * </ul>
      * <b>Note 1</b> : the landing page should be accessible from www
      * <b>Note 2</b> : Metadata must be uploaded first
      *
      * <p>
-     * Will mint new DOI if specified DOI doesn't exist. This method will
-     * attempt to update URL if you specify existing DOI. Standard domains and
-     * quota restrictions check will be performed. A Datacentre's doiQuotaUsed
-     * will be increased by 1. A new record in Datasets will be created by
+     * Will mint new DOI if specified DOI doesn't exist. This method will attempt to update URL if
+     * you specify existing DOI. Standard domains and quota restrictions check will be performed. A
+     * Datacentre's doiQuotaUsed will be increased by 1. A new record in Datasets will be created by
      * returning a 201 status for operation successful.
      *
      * @param doiForm doi and url
-     * @return short explanation of status code e.g. CREATED,
-     * HANDLE_ALREADY_EXISTS etc
-     * @throws DoiServerException - if the response is not a success 
+     * @return short explanation of status code e.g. CREATED, HANDLE_ALREADY_EXISTS etc
+     * @throws DoiServerException - if the response is not a success
      * <ul>
      * <li>{@link DATACITE_API_RESPONSE#PROCESS_ERROR}</li>
      * <li>{@link API_MDS#DATACITE_PROBLEM}</li>
      * <li>{@link API_MDS#SECURITY_USER_NO_ROLE}</li>
      * <li>{@link API_MDS#SECURITY_USER_NOT_IN_SELECTED_ROLE}</li>
      * <li>{@link API_MDS#SECURITY_USER_PERMISSION}</li>
-     * <li>{@link API_MDS#SECURITY_USER_CONFLICT}</li>      
+     * <li>{@link API_MDS#SECURITY_USER_CONFLICT}</li>
      * </ul>
-     */ 
-    @Requirement(reqId = Requirement.DOI_SRV_020,reqName = Requirement.DOI_SRV_020_NAME)   
-    @Requirement(reqId = Requirement.DOI_SRV_030,reqName = Requirement.DOI_SRV_030_NAME)    
-    @Requirement(reqId = Requirement.DOI_MONIT_020,reqName = Requirement.DOI_MONIT_020_NAME) 
-    @Requirement(reqId = Requirement.DOI_INTER_070,reqName = Requirement.DOI_INTER_070_NAME)    
-    @Requirement(reqId = Requirement.DOI_AUTO_020,reqName = Requirement.DOI_AUTO_020_NAME)     
-    @Requirement(reqId = Requirement.DOI_AUTO_030,reqName = Requirement.DOI_AUTO_030_NAME)     
+     */
+    @Requirement(reqId = Requirement.DOI_SRV_020, reqName = Requirement.DOI_SRV_020_NAME)
+    @Requirement(reqId = Requirement.DOI_SRV_030, reqName = Requirement.DOI_SRV_030_NAME)
+    @Requirement(reqId = Requirement.DOI_MONIT_020, reqName = Requirement.DOI_MONIT_020_NAME)
+    @Requirement(reqId = Requirement.DOI_INTER_070, reqName = Requirement.DOI_INTER_070_NAME)
+    @Requirement(reqId = Requirement.DOI_AUTO_020, reqName = Requirement.DOI_AUTO_020_NAME)
+    @Requirement(reqId = Requirement.DOI_AUTO_030, reqName = Requirement.DOI_AUTO_030_NAME)
     @Post("form")
     public String createDoi(final Form doiForm) throws DoiServerException {
         LOG.traceEntry("Parameter : {}", doiForm);
@@ -158,13 +153,14 @@ public class DoisResource extends BaseMdsResource {
         } catch (ClientMdsException ex) {
             if (ex.getStatus().getCode() == Status.CLIENT_ERROR_PRECONDITION_FAILED.getCode()) {
                 throw LOG.throwing(
-                        Level.DEBUG, 
-                        new DoiServerException(getApplication(),DATACITE_API_RESPONSE.PROCESS_ERROR, ex)
+                        Level.DEBUG,
+                        new DoiServerException(getApplication(), DATACITE_API_RESPONSE.PROCESS_ERROR,
+                                ex)
                 );
             } else {
                 throw LOG.throwing(
-                        Level.DEBUG, 
-                        new DoiServerException(getApplication(),API_MDS.DATACITE_PROBLEM, ex)
+                        Level.DEBUG,
+                        new DoiServerException(getApplication(), API_MDS.DATACITE_PROBLEM, ex)
                 );
             }
         }
@@ -173,17 +169,20 @@ public class DoisResource extends BaseMdsResource {
     }
 
     /**
-     * Checks input parameters. Checks that {@value fr.cnes.doi.resource.mds.BaseMdsResource#DOI_PARAMETER} and
-     * {@value fr.cnes.doi.resource.mds.BaseMdsResource#URL_PARAMETER} are provided in the mediaForm.
+     * Checks input parameters. Checks that
+     * {@value fr.cnes.doi.resource.mds.BaseMdsResource#DOI_PARAMETER} and
+     * {@value fr.cnes.doi.resource.mds.BaseMdsResource#URL_PARAMETER} are provided in the
+     * mediaForm.
      *
-     * @param mediaForm the parameters {@value fr.cnes.doi.resource.mds.BaseMdsResource#DOI_PARAMETER} 
-     * and {@value fr.cnes.doi.resource.mds.BaseMdsResource#URL_PARAMETER}
-     * @throws DoiServerException - 400 Bad Request if DOI_PARAMETER 
-     * and {@value fr.cnes.doi.resource.mds.BaseMdsResource#URL_PARAMETER} are not set
-     */  
-    @Requirement(reqId = Requirement.DOI_INTER_070,reqName = Requirement.DOI_INTER_070_NAME)    
+     * @param mediaForm the parameters
+     * {@value fr.cnes.doi.resource.mds.BaseMdsResource#DOI_PARAMETER} and
+     * {@value fr.cnes.doi.resource.mds.BaseMdsResource#URL_PARAMETER}
+     * @throws DoiServerException - 400 Bad Request if DOI_PARAMETER and
+     * {@value fr.cnes.doi.resource.mds.BaseMdsResource#URL_PARAMETER} are not set
+     */
+    @Requirement(reqId = Requirement.DOI_INTER_070, reqName = Requirement.DOI_INTER_070_NAME)
     private void checkInputs(final Form mediaForm) throws DoiServerException {
-        LOG.traceEntry("Parameter : {}",mediaForm);
+        LOG.traceEntry("Parameter : {}", mediaForm);
         StringBuilder errorMsg = new StringBuilder();
         if (isValueNotExist(mediaForm, DOI_PARAMETER)) {
             errorMsg = errorMsg.append(DOI_PARAMETER).append(" value is not set.");
@@ -192,7 +191,7 @@ public class DoisResource extends BaseMdsResource {
                 ClientMDS.checkIfAllCharsAreValid(mediaForm.getFirstValue(DOI_PARAMETER));
             } catch (IllegalArgumentException ex) {
                 errorMsg = errorMsg.append(DOI_PARAMETER).append(" no valid syntax.");
-            } 
+            }
         }
         if (isValueNotExist(mediaForm, URL_PARAMETER)) {
             errorMsg = errorMsg.append(URL_PARAMETER).append(" value is not set.");
@@ -201,8 +200,9 @@ public class DoisResource extends BaseMdsResource {
             LOG.debug("The form is valid");
         } else {
             throw LOG.throwing(
-                    Level.DEBUG, 
-                    new DoiServerException(getApplication(), API_MDS.LANGING_PAGE_VALIDATION, errorMsg.toString())
+                    Level.DEBUG,
+                    new DoiServerException(getApplication(), API_MDS.LANGING_PAGE_VALIDATION,
+                            errorMsg.toString())
             );
         }
         LOG.traceExit();
@@ -213,7 +213,7 @@ public class DoisResource extends BaseMdsResource {
      *
      * @return the Wadl Representation
      */
-    @Requirement(reqId = Requirement.DOI_DOC_010,reqName = Requirement.DOI_DOC_010_NAME)      
+    @Requirement(reqId = Requirement.DOI_DOC_010, reqName = Requirement.DOI_DOC_010_NAME)
     private RepresentationInfo successFullRepresentation() {
         final RepresentationInfo repInfo = new RepresentationInfo();
         repInfo.setMediaType(MediaType.TEXT_URI_LIST);
@@ -230,7 +230,7 @@ public class DoisResource extends BaseMdsResource {
      *
      * @return the Wadl description
      */
-    @Requirement(reqId = Requirement.DOI_DOC_010,reqName = Requirement.DOI_DOC_010_NAME)      
+    @Requirement(reqId = Requirement.DOI_DOC_010, reqName = Requirement.DOI_DOC_010_NAME)
     private RepresentationInfo noContentRepresentation() {
         final RepresentationInfo repInfo = new RepresentationInfo();
         repInfo.setMediaType(MediaType.TEXT_PLAIN);
@@ -246,7 +246,7 @@ public class DoisResource extends BaseMdsResource {
      *
      * @return the exit status representation
      */
-    @Requirement(reqId = Requirement.DOI_DOC_010,reqName = Requirement.DOI_DOC_010_NAME)      
+    @Requirement(reqId = Requirement.DOI_DOC_010, reqName = Requirement.DOI_DOC_010_NAME)
     private RepresentationInfo explainStatusRepresentation() {
         final RepresentationInfo repInfo = new RepresentationInfo();
         repInfo.setIdentifier("explainRepresentation");
@@ -260,16 +260,16 @@ public class DoisResource extends BaseMdsResource {
     }
 
     /**
-     * Describes the GET method.
-     * The different representations are the followings:
+     * Describes the GET method. The different representations are the followings:
      * <ul>
      * <li>{@link DATACITE_API_RESPONSE#SUCCESS}</li>
      * <li>{@link DATACITE_API_RESPONSE#SUCCESS_NO_CONTENT}</li>
      * <li>{@link API_MDS#DATACITE_PROBLEM}</li>
-     * </ul>     
+     * </ul>
+     *
      * @param info Wadl description
      */
-    @Requirement(reqId = Requirement.DOI_DOC_010,reqName = Requirement.DOI_DOC_010_NAME)      
+    @Requirement(reqId = Requirement.DOI_DOC_010, reqName = Requirement.DOI_DOC_010_NAME)
     @Override
     protected final void describeGet(final MethodInfo info) {
         info.setName(Method.GET);
@@ -284,7 +284,7 @@ public class DoisResource extends BaseMdsResource {
                 noContentRepresentation()));
         addResponseDocToMethod(info, createResponseDoc(
                 API_MDS.DATACITE_PROBLEM.getStatus(),
-                API_MDS.DATACITE_PROBLEM.getShortMessage()));        
+                API_MDS.DATACITE_PROBLEM.getShortMessage()));
     }
 
     /**
@@ -292,7 +292,7 @@ public class DoisResource extends BaseMdsResource {
      *
      * @return representation
      */
-    @Requirement(reqId = Requirement.DOI_DOC_010,reqName = Requirement.DOI_DOC_010_NAME)      
+    @Requirement(reqId = Requirement.DOI_DOC_010, reqName = Requirement.DOI_DOC_010_NAME)
     private RepresentationInfo requestRepresentation() {
         final RepresentationInfo rep = new RepresentationInfo(MediaType.APPLICATION_WWW_FORM);
         rep.getParameters().add(createQueryParamDoc(
@@ -303,8 +303,7 @@ public class DoisResource extends BaseMdsResource {
     }
 
     /**
-     * Describes the POST method.
-     * The different representations are the followings:
+     * Describes the POST method. The different representations are the followings:
      * <ul>
      * <li>{@link DATACITE_API_RESPONSE#SUCESS_CREATED}</li>
      * <li>{@link API_MDS#LANGING_PAGE_VALIDATION}</li>
@@ -312,12 +311,13 @@ public class DoisResource extends BaseMdsResource {
      * <li>{@link API_MDS#SECURITY_USER_NO_ROLE}</li>
      * <li>{@link API_MDS#SECURITY_USER_NOT_IN_SELECTED_ROLE}</li>
      * <li>{@link API_MDS#SECURITY_USER_PERMISSION}</li>
-     * <li>{@link API_MDS#SECURITY_USER_CONFLICT}</li> 
+     * <li>{@link API_MDS#SECURITY_USER_CONFLICT}</li>
      * <li>{@link API_MDS#DATACITE_PROBLEM}</li>
-     * </ul>     
+     * </ul>
+     *
      * @param info Wadl description
      */
-    @Requirement(reqId = Requirement.DOI_DOC_010,reqName = Requirement.DOI_DOC_010_NAME)      
+    @Requirement(reqId = Requirement.DOI_DOC_010, reqName = Requirement.DOI_DOC_010_NAME)
     @Override
     protected final void describePost(final MethodInfo info) {
         info.setName(Method.POST);
@@ -329,10 +329,10 @@ public class DoisResource extends BaseMdsResource {
 
         addRequestDocToMethod(info,
                 Arrays.asList(
-                        createQueryParamDoc(SELECTED_ROLE_PARAMETER, 
-                                ParameterStyle.HEADER, 
+                        createQueryParamDoc(SELECTED_ROLE_PARAMETER,
+                                ParameterStyle.HEADER,
                                 "A user can select one role when he is associated "
-                                        + "to several roles", false, "xs:string")
+                                + "to several roles", false, "xs:string")
                 ),
                 requestRepresentation());
 
@@ -345,7 +345,7 @@ public class DoisResource extends BaseMdsResource {
                 API_MDS.LANGING_PAGE_VALIDATION.getStatus(),
                 API_MDS.LANGING_PAGE_VALIDATION.getShortMessage(),
                 "explainRepresentationID")
-        );    
+        );
         addResponseDocToMethod(info, createResponseDoc(
                 DATACITE_API_RESPONSE.PROCESS_ERROR.getStatus(),
                 DATACITE_API_RESPONSE.PROCESS_ERROR.getShortMessage(),

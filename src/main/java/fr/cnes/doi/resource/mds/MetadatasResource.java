@@ -48,7 +48,7 @@ public class MetadatasResource extends BaseMdsResource {
      *
      */
     public static final String CREATE_METADATA = "Create Metadata";
-  
+
     /**
      * Init.
      *
@@ -57,7 +57,7 @@ public class MetadatasResource extends BaseMdsResource {
     @Override
     protected void doInit() throws DoiServerException {
         super.doInit();
-        LOG.traceEntry();        
+        LOG.traceEntry();
         setDescription("This resource can create metadata");
         LOG.traceExit();
     }
@@ -68,14 +68,14 @@ public class MetadatasResource extends BaseMdsResource {
      *
      * @param entity Metadata representation
      * @return short explanation of status code e.g. CREATED, HANDLE_ALREADY_EXISTS etc
-     * @throws DoiServerException - if the response is not a success 
+     * @throws DoiServerException - if the response is not a success
      * <ul>
      * <li>{@link API_MDS#SECURITY_USER_NO_ROLE}</li>
      * <li>{@link API_MDS#SECURITY_USER_NOT_IN_SELECTED_ROLE}</li>
      * <li>{@link API_MDS#SECURITY_USER_PERMISSION}</li>
-     * <li>{@link API_MDS#SECURITY_USER_CONFLICT}</li>     
+     * <li>{@link API_MDS#SECURITY_USER_CONFLICT}</li>
      * <li>{@link API_MDS#DATACITE_PROBLEM}</li>
-     * <li>{@link API_MDS#METADATA_VALIDATION}</li> 
+     * <li>{@link API_MDS#METADATA_VALIDATION}</li>
      * <li>{@link API_MDS#NETWORK_PROBLEM}</li>
      * </ul>
      */
@@ -91,7 +91,7 @@ public class MetadatasResource extends BaseMdsResource {
         checkInputs(entity);
         final String result;
         try {
-            setStatus(Status.SUCCESS_CREATED);                        
+            setStatus(Status.SUCCESS_CREATED);
             final Resource resource = createDataCiteResourceObject(entity);
             final String selectedRole = extractSelectedRoleFromRequestIfExists();
             checkPermission(resource.getIdentifier().getValue(), selectedRole);
@@ -99,23 +99,27 @@ public class MetadatasResource extends BaseMdsResource {
             result = this.getDoiApp().getClient().createMetadata(resource);
         } catch (ClientMdsException ex) {
             LOG.error("*** code *** - " + ex.getStatus().getCode());
-            if(ex.getStatus().getCode() == 1001) {
+            if (ex.getStatus().getCode() == 1001) {
                 LOG.error("*** 1 ***");
-            }            
-            throw LOG.throwing(Level.DEBUG, 
-                    new DoiServerException(getApplication(), API_MDS.DATACITE_PROBLEM, ex.getMessage(), ex)
+            }
+            throw LOG.throwing(Level.DEBUG,
+                    new DoiServerException(getApplication(), API_MDS.DATACITE_PROBLEM, ex.
+                            getMessage(), ex)
             );
         } catch (ValidationException ex) {
-            throw LOG.throwing(Level.DEBUG, 
-                    new DoiServerException(getApplication(),API_MDS.METADATA_VALIDATION,"invalid XML",ex)
+            throw LOG.throwing(Level.DEBUG,
+                    new DoiServerException(getApplication(), API_MDS.METADATA_VALIDATION,
+                            "invalid XML", ex)
             );
         } catch (JAXBException ex) {
-            throw LOG.throwing(Level.DEBUG, 
-                    new DoiServerException(getApplication(),API_MDS.METADATA_VALIDATION,"invalid XML",ex)
+            throw LOG.throwing(Level.DEBUG,
+                    new DoiServerException(getApplication(), API_MDS.METADATA_VALIDATION,
+                            "invalid XML", ex)
             );
         } catch (SAXException ex) {
-            throw LOG.throwing(Level.DEBUG, 
-                    new DoiServerException(getApplication(),API_MDS.NETWORK_PROBLEM,"DataCite schema not available",ex)
+            throw LOG.throwing(Level.DEBUG,
+                    new DoiServerException(getApplication(), API_MDS.NETWORK_PROBLEM,
+                            "DataCite schema not available", ex)
             );
         }
         return LOG.traceExit(result);
@@ -123,7 +127,7 @@ public class MetadatasResource extends BaseMdsResource {
 
     /**
      * Checks inputs.
-     * 
+     *
      * Checks if <i>obj</i> is {@link #isObjectExist set}
      *
      * @param obj object to check
@@ -132,9 +136,10 @@ public class MetadatasResource extends BaseMdsResource {
     @Requirement(reqId = Requirement.DOI_INTER_070, reqName = Requirement.DOI_INTER_070_NAME)
     private void checkInputs(final Object obj) throws DoiServerException {
         LOG.traceEntry("Parameter : " + obj);
-        if (isObjectNotExist(obj)) {          
-            throw LOG.throwing(Level.DEBUG, 
-                    new DoiServerException(getApplication(),API_MDS.METADATA_VALIDATION, "Input is not set")
+        if (isObjectNotExist(obj)) {
+            throw LOG.throwing(Level.DEBUG,
+                    new DoiServerException(getApplication(), API_MDS.METADATA_VALIDATION,
+                            "Input is not set")
             );
         }
         LOG.traceExit();
@@ -151,7 +156,7 @@ public class MetadatasResource extends BaseMdsResource {
      */
     @Requirement(reqId = Requirement.DOI_INTER_060, reqName = Requirement.DOI_INTER_060_NAME)
     @Requirement(reqId = Requirement.DOI_INTER_070, reqName = Requirement.DOI_INTER_070_NAME)
-    private Resource createDataCiteResourceObject(final Representation entity) 
+    private Resource createDataCiteResourceObject(final Representation entity)
             throws JAXBException, SAXException, ValidationException {
         LOG.traceEntry("Parameter : " + entity);
         return LOG.traceExit(this.getDoiApp().getClient().parseMetadata(entity));
@@ -159,9 +164,9 @@ public class MetadatasResource extends BaseMdsResource {
 
     /**
      * Describes the POST method.
-     * 
+     *
      * This request stores new version of DOI metadata. The request body must contain a valid XML.
-     * 
+     *
      * <ul>
      * <li>{@link API_MDS#CREATE_METADATA}</li>
      * <li>{@link API_MDS#METADATA_VALIDATION}</li>
@@ -170,7 +175,7 @@ public class MetadatasResource extends BaseMdsResource {
      * <li>{@link API_MDS#SECURITY_USER_NO_ROLE}</li>
      * <li>{@link API_MDS#SECURITY_USER_NOT_IN_SELECTED_ROLE}</li>
      * <li>{@link API_MDS#SECURITY_USER_PERMISSION}</li>
-     * <li>{@link API_MDS#SECURITY_USER_CONFLICT}</li> 
+     * <li>{@link API_MDS#SECURITY_USER_CONFLICT}</li>
      * </ul>
      *
      * @param info Wadl description for POST method
@@ -198,7 +203,7 @@ public class MetadatasResource extends BaseMdsResource {
         );
 
         addResponseDocToMethod(info, createResponseDoc(API_MDS.CREATE_METADATA.getStatus(),
-                API_MDS.CREATE_METADATA.getShortMessage(),                
+                API_MDS.CREATE_METADATA.getShortMessage(),
                 "explainRepresentationID")
         );
         addResponseDocToMethod(info, createResponseDoc(API_MDS.METADATA_VALIDATION.getStatus(),

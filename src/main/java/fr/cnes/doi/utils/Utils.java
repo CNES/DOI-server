@@ -30,7 +30,7 @@ import java.util.Set;
  * @author Jean-Christophe Malapert
  * @author Claire
  */
-public class Utils {    
+public class Utils {
 
     /**
      * An empty immutable {@code Object} array.
@@ -51,6 +51,11 @@ public class Utils {
      * Name of the logger to measure performances {@value #APP_LOGGER_NAME}.
      */
     public static final String APP_LOGGER_NAME = "fr.cnes.doi.logging.app";
+
+    /**
+     * Name of the logger to measure performances {@value #SECURITY_LOGGER_NAME}.
+     */
+    public static String SECURITY_LOGGER_NAME = "fr.cnes.doi.logging.security";
 
     /**
      * Checks whether the char sequence is empty.
@@ -81,7 +86,8 @@ public class Utils {
      * @param value value to search
      * @return the keys related to a value
      */
-    public static <T, E> Set<T> getKeysByValue(final Map<T, E> map, final E value) {
+    public static <T, E> Set<T> getKeysByValue(final Map<T, E> map,
+            final E value) {
         final Set<T> keys = new HashSet<>();
         for (final Entry<T, E> entry : map.entrySet()) {
             final E entryVal = entry.getValue();
@@ -94,8 +100,7 @@ public class Utils {
 
     /**
      * <p>
-     * Defensive programming technique to change a {@code null} reference to an
-     * empty one.
+     * Defensive programming technique to change a {@code null} reference to an empty one.
      *
      * <p>
      * This method returns an empty array for a {@code null} input array.
@@ -106,12 +111,13 @@ public class Utils {
      * @return the same array, {@code public static} empty array if {@code null}
      * @throws IllegalArgumentException if the type argument is null
      */
-    public static <T> T[] nullToEmpty(final T[] array, final Class<T[]> type) 
-            throws IllegalArgumentException{        
+    public static <T> T[] nullToEmpty(final T[] array,
+            final Class<T[]> type)
+            throws IllegalArgumentException {
         if (type == null) {
             throw new IllegalArgumentException("The type must not be null");
         }
-        
+
         T[] result;
         if (array == null) {
             result = type.cast(Array.newInstance(type.getComponentType(), 0));
@@ -123,19 +129,17 @@ public class Utils {
 
     /**
      * <p>
-     * Defensive programming technique to change a {@code null} reference to an
-     * empty one.
+     * Defensive programming technique to change a {@code null} reference to an empty one.
      *
      * <p>
      * This method returns an empty array for a {@code null} input array.
      *
      * <p>
-     * As a memory optimizing technique an empty array passed in will be
-     * overridden with the empty {@code public static} references in this class.
+     * As a memory optimizing technique an empty array passed in will be overridden with the empty
+     * {@code public static} references in this class.
      *
      * @param array the array to check for {@code null} or empty
-     * @return the same array, {@code public static} empty array if {@code null}
-     * or empty input
+     * @return the same array, {@code public static} empty array if {@code null} or empty input
      */
     public static Object[] nullToEmpty(final Object[] array) {
         Object[] result;
@@ -160,8 +164,8 @@ public class Utils {
 
     /**
      * <p>
-     * Returns the length of the specified array. This method can deal with
-     * {@code Object} arrays and with primitive arrays.
+     * Returns the length of the specified array. This method can deal with {@code Object} arrays
+     * and with primitive arrays.
      *
      * <p>
      * If the input array is {@code null}, {@code 0} is returned.
@@ -176,8 +180,7 @@ public class Utils {
      * </pre>
      *
      * @param array the array to retrieve the length from, may be null
-     * @return The length of the array, or {@code 0} if the array is
-     * {@code null}
+     * @return The length of the array, or {@code 0} if the array is {@code null}
      * @throws IllegalArgumentException if the object argument is not an array.
      */
     public static int getLength(final Object array) throws IllegalArgumentException {

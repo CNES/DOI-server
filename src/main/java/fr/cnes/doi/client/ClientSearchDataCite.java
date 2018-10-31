@@ -33,85 +33,91 @@ import org.restlet.representation.Representation;
 
 /**
  * Class to search DOI from metadata
+ *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-@Requirement(reqId = Requirement.DOI_INTER_010,reqName = Requirement.DOI_INTER_010_NAME)
+@Requirement(reqId = Requirement.DOI_INTER_010, reqName = Requirement.DOI_INTER_010_NAME)
 public class ClientSearchDataCite extends BaseClient {
-    
+
     /**
      * Base URI for the search API {@value #BASE_URI}.
      */
-    private static final String BASE_URI = "https://search.datacite.org/api?";    
-    
+    private static final String BASE_URI = "https://search.datacite.org/api?";
+
     /**
      * Default pagination {@value #COUNT}.
      */
     private static final int COUNT = 1000;
-    
+
     /**
      * List of Doi as search result.
      */
-    private final List<String> doiList = new ArrayList<>();    
-    
+    private final List<String> doiList = new ArrayList<>();
+
     /**
      * Constructor.
-     * @throws Exception 
+     *
+     * @throws Exception
      */
     public ClientSearchDataCite() throws Exception {
         this(DoiSettings.getInstance().getString(Consts.INIST_DOI));
-    }  
-    
+    }
+
     /**
      * Constructor.
+     *
      * @param doi_prefix DOI prefix
-     * @throws Exception 
+     * @throws Exception
      */
     public ClientSearchDataCite(final String doi_prefix) throws Exception {
         super(BASE_URI);
         computeListDOI(0, doi_prefix);
-    }    
-    
+    }
+
     /**
      * Computes recursively the response.
+     *
      * @param start page number
      * @param doi_prefix DOI prefix
      * @throws DoiRuntimeException - if the status of the query is not 200
      * @throws java.io.IOException - if an error happens in the stream
      */
-    public final void computeListDOI(final int start, final String doi_prefix) throws DoiRuntimeException, IOException {
+    public final void computeListDOI(final int start,
+            final String doi_prefix) throws DoiRuntimeException, IOException {
         this.getClient().setReference(BASE_URI);
-        this.getClient().addQueryParameter("q", "prefix:"+doi_prefix);
+        this.getClient().addQueryParameter("q", "prefix:" + doi_prefix);
         this.getClient().addQueryParameter("fl", "doi");
         this.getClient().addQueryParameter("wt", "json");
         this.getClient().addQueryParameter("indent", "true");
         this.getClient().addQueryParameter("rows", String.valueOf(COUNT));
-        this.getClient().addQueryParameter("start", String.valueOf(start)); 
+        this.getClient().addQueryParameter("start", String.valueOf(start));
         final Representation rep = this.getClient().get();
-        final Status status = this.getClient().getStatus();        
-        if(status.isSuccess()) { 
+        final Status status = this.getClient().getStatus();
+        if (status.isSuccess()) {
             final ObjectMapper mapper = new ObjectMapper();
-            final Map responseJson = mapper.readValue(rep.getStream() , Map.class);             
+            final Map responseJson = mapper.readValue(rep.getStream(), Map.class);
             final Map responseMap = (Map) responseJson.get("response");
             final int numFound = (int) responseMap.get("numFound");
             final List<Map> dois = (List) responseMap.getOrDefault("docs", Collections.EMPTY_LIST);
-            for(final Map doi : dois) {
+            for (final Map doi : dois) {
                 this.doiList.add(String.valueOf(doi.get("doi")));
             }
-            if(this.doiList.size() != numFound) {
+            if (this.doiList.size() != numFound) {
                 computeListDOI(this.doiList.size(), doi_prefix);
             }
-            
+
         } else {
             throw new DoiRuntimeException(status.getDescription(), status.getThrowable());
         }
-    }   
-    
+    }
+
     /**
      * Returns the search result.
+     *
      * @return the search result
      */
     public List<String> getDois() {
         return this.doiList;
     }
-    
+
 }

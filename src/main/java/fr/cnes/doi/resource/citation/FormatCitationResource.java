@@ -111,7 +111,8 @@ public class FormatCitationResource extends BaseCitationResource {
             return LOG.traceExit(result);
         } catch (ClientCrossCiteException ex) {
             ((AbstractApplication) getApplication()).sendAlertWhenDataCiteFailed(ex);
-            throw LOG.throwing(Level.DEBUG, new ResourceException(ex.getStatus(), ex.getDetailMessage(), ex));
+            throw LOG.throwing(Level.DEBUG, new ResourceException(ex.getStatus(), ex.
+                    getDetailMessage(), ex));
         }
     }
 
@@ -147,7 +148,7 @@ public class FormatCitationResource extends BaseCitationResource {
      *
      * @param info Wadl description
      */
-    @Requirement(reqId = Requirement.DOI_DOC_010,reqName = Requirement.DOI_DOC_010_NAME)
+    @Requirement(reqId = Requirement.DOI_DOC_010, reqName = Requirement.DOI_DOC_010_NAME)
     @Override
     protected final void describeGet(final MethodInfo info) {
         info.setName(Method.GET);

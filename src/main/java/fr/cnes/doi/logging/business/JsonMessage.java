@@ -61,7 +61,7 @@ public class JsonMessage implements Message {
 
     @Override
     public Object[] getParameters() {
-        return new Object[] {object};
+        return new Object[]{object};
     }
 
     @Override

@@ -34,7 +34,7 @@ import org.restlet.engine.connector.ConnectorHelper;
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr(
  */
 public class BaseClient {
-    
+
     /**
      * Port of the Datacite mockserver
      */
@@ -50,11 +50,13 @@ public class BaseClient {
      *
      * @param uri URI of the client's end point
      */
-    public BaseClient(final String uri) {        
-        final  List<ConnectorHelper<Client>> registeredClients = Engine.getInstance().getRegisteredClients();
-        for(int i = registeredClients.size()-1; i>=0; i--) {
-            ConnectorHelper<Client> conn = registeredClients.get(i);  
-            if(conn.getProtocols().contains(Protocol.HTTP) || conn.getProtocols().contains(Protocol.HTTPS)){
+    public BaseClient(final String uri) {
+        final List<ConnectorHelper<Client>> registeredClients = Engine.getInstance().
+                getRegisteredClients();
+        for (int i = registeredClients.size() - 1; i >= 0; i--) {
+            ConnectorHelper<Client> conn = registeredClients.get(i);
+            if (conn.getProtocols().contains(Protocol.HTTP) || conn.getProtocols().contains(
+                    Protocol.HTTPS)) {
                 registeredClients.remove(i);
             }
         }
@@ -64,15 +66,16 @@ public class BaseClient {
         this.client.setLoggable(false);
         this.client.setRetryOnError(true);
         this.client.setRetryAttempts(10);
-        this.client.setRetryDelay(1000);        
+        this.client.setRetryDelay(1000);
     }
 
     /**
      * Returns the client.
+     *
      * @return the client
      */
     public final ClientResource getClient() {
         return client;
-    }  
+    }
 
 }

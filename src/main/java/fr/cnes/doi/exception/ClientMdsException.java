@@ -25,77 +25,67 @@ import org.restlet.representation.Representation;
 
 /**
  * Exception for Client Cross Cite.
+ *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class ClientMdsException extends Exception {
-    
+
     /**
-     * Operation successful.
-     * 201
+     * Operation successful. 201
      */
     public static final int SUCCESS_CREATED = 201;
 
     /**
-     * Operation successful.
-     * 200
+     * Operation successful. 200
      */
     public static final int SUCCESS_OK = 200;
 
     /**
-     * no DOIs founds.
-     * 204
+     * no DOIs founds. 204
      */
     public static final int SUCCESS_NO_CONTENT = 204;
 
     /**
-     * invalid XML, wrong prefix or request body must be exactly two lines:
-     * "DOI and URL; wrong domain, wrong prefix".
-     * 400   
+     * invalid XML, wrong prefix or request body must be exactly two lines: "DOI and URL; wrong
+     * domain, wrong prefix". 400
      */
     public static final int CLIENT_BAD_REQUEST = 400;
 
     /**
-     * no login.
-     * 401
+     * no login. 401
      */
     public static final int CLIENT_ERROR_UNAUTHORIZED = 401;
 
     /**
-     * no login.
-     * 1001
+     * no login. 1001
      */
     public static final int CONNECTOR_ERROR_COMMUNICATION = 1001;
 
     /**
-     * login problem, quota exceeded or dataset belongs to another party.
-     * 403
+     * login problem, quota exceeded or dataset belongs to another party. 403
      */
-    public static final int CLIENT_ERROR_FORBIDDEN = 403;    
+    public static final int CLIENT_ERROR_FORBIDDEN = 403;
 
     /**
-     * DOI does not exist in our database.
-     * 404
+     * DOI does not exist in our database. 404
      */
-    public static final int CLIENT_ERROR_NOT_FOUND = 404;    
-    
-    /**
-     * DOIServer : Cannot know which role must be applied.
-     * 409
-     */
-    public static final int CLIENT_ERROR_CONFLICT = 409;     
+    public static final int CLIENT_ERROR_NOT_FOUND = 404;
 
     /**
-     * the requested dataset was marked inactive (using DELETE method).
-     * 410
+     * DOIServer : Cannot know which role must be applied. 409
      */
-    public static final int CLIENT_ERROR_GONE = 410;    
+    public static final int CLIENT_ERROR_CONFLICT = 409;
 
     /**
-     * metadata must be uploaded first.
-     * 412
+     * the requested dataset was marked inactive (using DELETE method). 410
      */
-    public static final int CLIENT_ERROR_PRECONDITION_FAILED = 412;    
-    
+    public static final int CLIENT_ERROR_GONE = 410;
+
+    /**
+     * metadata must be uploaded first. 412
+     */
+    public static final int CLIENT_ERROR_PRECONDITION_FAILED = 412;
+
     /**
      * SeralVersionUID
      */
@@ -105,14 +95,15 @@ public class ClientMdsException extends Exception {
      * Detail message.
      */
     private final String detailMessage;
-    
+
     /**
      * HTTP status.
      */
     private final Status status;
-    
+
     /**
      * Constructs a new exception with HTTP status as its detail message.
+     *
      * @param status HTTP status
      */
     public ClientMdsException(final Status status) {
@@ -120,55 +111,63 @@ public class ClientMdsException extends Exception {
         this.detailMessage = computeDetailMessage(status);
         this.status = computeStatus(status);
     }
-    
+
     /**
      * Constructs a new exception with the specified HTTP status and detail message.
+     *
      * @param status HTTP message
      * @param message message
      */
-    public ClientMdsException(final Status status, final String message) {
+    public ClientMdsException(final Status status,
+            final String message) {
         super(message);
         this.detailMessage = computeDetailMessage(status);
         this.status = computeStatus(status);
-    }    
-    
+    }
+
     /**
      * Constructs a new exception with the specified detail cause.
+     *
      * @param status HTTP status
      * @param cause cause
      */
-    public ClientMdsException(final Status status,final Throwable cause) {
+    public ClientMdsException(final Status status,
+            final Throwable cause) {
         super(cause);
         this.detailMessage = computeDetailMessage(status);
         this.status = computeStatus(status);
-    }    
-    
+    }
+
     /**
-     * Constructs a new exception with the specified detail HTTP status, message
-     * and cause.
+     * Constructs a new exception with the specified detail HTTP status, message and cause.
+     *
      * @param status HTTP status
      * @param message message
      * @param cause cause
      */
-    public ClientMdsException(final Status status, final String message, final Throwable cause) {
+    public ClientMdsException(final Status status,
+            final String message,
+            final Throwable cause) {
         super(message, cause);
         this.detailMessage = computeDetailMessage(status);
         this.status = computeStatus(status);
     }
-    
+
     /**
-     * Constructs a new exception with the specified detail HTTP status, response
-     * and cause.
+     * Constructs a new exception with the specified detail HTTP status, response and cause.
+     *
      * @param status HTTP status
      * @param message message
      * @param responseEntity Representation of the response
      * @param cause cause
      */
-    public ClientMdsException(final Status status, final String message, 
-            final Representation responseEntity, final Throwable cause) {
-       super(message, cause);
-       this.status = computeStatus(status);
-       String txt;
+    public ClientMdsException(final Status status,
+            final String message,
+            final Representation responseEntity,
+            final Throwable cause) {
+        super(message, cause);
+        this.status = computeStatus(status);
+        String txt;
         try {
             txt = responseEntity.getText();
         } catch (IOException ex) {
@@ -176,18 +175,21 @@ public class ClientMdsException extends Exception {
         }
         this.detailMessage = txt;
     }
-    
+
     /**
-     * Computes status     
+     * Computes status
+     *
      * @param status status
      * @return status
      */
     private Status computeStatus(final Status status) {
-        return (status.getCode() == CONNECTOR_ERROR_COMMUNICATION) ? new Status(CLIENT_ERROR_UNAUTHORIZED) : status;
+        return (status.getCode() == CONNECTOR_ERROR_COMMUNICATION) ? new Status(
+                CLIENT_ERROR_UNAUTHORIZED) : status;
     }
-    
+
     /**
      * Returns the detail message according to the status.
+     *
      * @param status HTTP status
      * @return the detail message
      */
@@ -195,7 +197,7 @@ public class ClientMdsException extends Exception {
         return DATACITE_API_RESPONSE.getMessageFromStatus(status);
 //        switch(status.getCode()) {
         //final String result;
-        
+
 //            case SUCCESS_CREATED:
 //            case SUCCESS_OK:
 //                result = "Operation successful";
@@ -231,21 +233,23 @@ public class ClientMdsException extends Exception {
 //                break;
 //        }
 //        return result;
-    } 
-    
+    }
+
     /**
      * Returns the status.
+     *
      * @return the status
      */
     public Status getStatus() {
         return this.status;
     }
-    
+
     /**
      * Returns detail message;
+     *
      * @return the detail message
      */
     public String getDetailMessage() {
         return this.detailMessage;
-    }    
+    }
 }

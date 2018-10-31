@@ -16,71 +16,55 @@ import javax.xml.bind.annotation.XmlType;
  * Java class for relationType.
  *
  * <p>
- * The following schema fragment specifies the expected content contained within
- * this class.
+ * The following schema fragment specifies the expected content contained within this class.
  * <p>
- * <pre>
- * &lt;simpleType name="relationType"&gt;
- *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"&gt;
- *     &lt;enumeration value="IsCitedBy"/&gt;
- *     &lt;enumeration value="Cites"/&gt;
- *     &lt;enumeration value="IsSupplementTo"/&gt;
- *     &lt;enumeration value="IsSupplementedBy"/&gt;
- *     &lt;enumeration value="IsContinuedBy"/&gt;
- *     &lt;enumeration value="Continues"/&gt;
- *     &lt;enumeration value="IsNewVersionOf"/&gt;
- *     &lt;enumeration value="IsPreviousVersionOf"/&gt;
- *     &lt;enumeration value="IsPartOf"/&gt;
- *     &lt;enumeration value="HasPart"/&gt;
- *     &lt;enumeration value="IsReferencedBy"/&gt;
- *     &lt;enumeration value="References"/&gt;
- *     &lt;enumeration value="IsDocumentedBy"/&gt;
- *     &lt;enumeration value="Documents"/&gt;
- *     &lt;enumeration value="IsCompiledBy"/&gt;
- *     &lt;enumeration value="Compiles"/&gt;
- *     &lt;enumeration value="IsVariantFormOf"/&gt;
- *     &lt;enumeration value="IsOriginalFormOf"/&gt;
- *     &lt;enumeration value="IsIdenticalTo"/&gt;
- *     &lt;enumeration value="HasMetadata"/&gt;
- *     &lt;enumeration value="IsMetadataFor"/&gt;
- *     &lt;enumeration value="Reviews"/&gt;
- *     &lt;enumeration value="IsReviewedBy"/&gt;
- *     &lt;enumeration value="IsDerivedFrom"/&gt;
- *     &lt;enumeration value="IsSourceOf"/&gt;
- *   &lt;/restriction&gt;
+ * <
+ * pre>
+ * &lt;simpleType name="relationType"&gt; &lt;restriction
+ * base="{http://www.w3.org/2001/XMLSchema}string"&gt; &lt;enumeration value="IsCitedBy"/&gt;
+ * &lt;enumeration value="Cites"/&gt; &lt;enumeration value="IsSupplementTo"/&gt; &lt;enumeration
+ * value="IsSupplementedBy"/&gt; &lt;enumeration value="IsContinuedBy"/&gt; &lt;enumeration
+ * value="Continues"/&gt; &lt;enumeration value="IsNewVersionOf"/&gt; &lt;enumeration
+ * value="IsPreviousVersionOf"/&gt; &lt;enumeration value="IsPartOf"/&gt; &lt;enumeration
+ * value="HasPart"/&gt; &lt;enumeration value="IsReferencedBy"/&gt; &lt;enumeration
+ * value="References"/&gt; &lt;enumeration value="IsDocumentedBy"/&gt; &lt;enumeration
+ * value="Documents"/&gt; &lt;enumeration value="IsCompiledBy"/&gt; &lt;enumeration
+ * value="Compiles"/&gt; &lt;enumeration value="IsVariantFormOf"/&gt; &lt;enumeration
+ * value="IsOriginalFormOf"/&gt; &lt;enumeration value="IsIdenticalTo"/&gt; &lt;enumeration
+ * value="HasMetadata"/&gt; &lt;enumeration value="IsMetadataFor"/&gt; &lt;enumeration
+ * value="Reviews"/&gt; &lt;enumeration value="IsReviewedBy"/&gt; &lt;enumeration
+ * value="IsDerivedFrom"/&gt; &lt;enumeration value="IsSourceOf"/&gt; &lt;/restriction&gt;
  * &lt;/simpleType&gt;
  * </pre>
  *
  */
-
 /**
- * Description of the relationship of the resource being registered (A) and the related resource (B).
+ * Description of the relationship of the resource being registered (A) and the related resource
+ * (B).
  */
-@Requirement(reqId = Requirement.DOI_SRV_010,reqName = Requirement.DOI_SRV_010_NAME)
-@Requirement(reqId = Requirement.DOI_SRV_040,reqName = Requirement.DOI_SRV_040_NAME)
-@Requirement(reqId = Requirement.DOI_INTER_060,reqName = Requirement.DOI_INTER_060_NAME)
+@Requirement(reqId = Requirement.DOI_SRV_010, reqName = Requirement.DOI_SRV_010_NAME)
+@Requirement(reqId = Requirement.DOI_SRV_040, reqName = Requirement.DOI_SRV_040_NAME)
+@Requirement(reqId = Requirement.DOI_INTER_060, reqName = Requirement.DOI_INTER_060_NAME)
 @XmlType(name = "relationType")
 @XmlEnum
 public enum RelationType {
 
     /**
-     * indicates that B includes A in a citation.
-     * Recommended for discovery.
+     * indicates that B includes A in a citation. Recommended for discovery.
      * <pre>
      * {@code
      * <relatedIdentifier relatedIdentifierType="DOI"relationType="IsCitedBy">
      *    10.4232/10.ASEAS‐5.2‐1
      * </relatedIdentifier>
      * }
-     * </pre>     
+     * </pre>
      */
     @XmlEnumValue("IsCitedBy")
     IS_CITED_BY("IsCitedBy"),
     /**
-     * indicates that A includes B in a citation.
-     * Recommended for discovery.
+     * indicates that A includes B in a citation. Recommended for discovery.
      * <pre>
-     * {@code 
+     * {@code
      * <relatedIdentifier relatedIdentifierType="ISBN" relationType="Cites">
      *    0761964312
      * </relatedIdentifier>
@@ -90,8 +74,7 @@ public enum RelationType {
     @XmlEnumValue("Cites")
     CITES("Cites"),
     /**
-     * indicates that A is a supplement to B.
-     * Recommended for discovery.     
+     * indicates that A is a supplement to B. Recommended for discovery.
      * <pre>
      * {@code
      * <relatedIdentifier relatedIdentifierType="URN" relationType="IsSupplementTo">
@@ -103,8 +86,7 @@ public enum RelationType {
     @XmlEnumValue("IsSupplementTo")
     IS_SUPPLEMENT_TO("IsSupplementTo"),
     /**
-     * indicates that B is a supplement to A.
-     * Recommended for discovery.     
+     * indicates that B is a supplement to A. Recommended for discovery.
      * <pre>
      * {@code
      * <relatedIdentifier relatedIdentifierType="PMID" relationType="IsSupplementedBy">
@@ -118,7 +100,7 @@ public enum RelationType {
     /**
      * indicates A is continued by the work B.
      * <pre>
-     * {@code 
+     * {@code
      * <relatedIdentifier relatedIdentifierType="URN" relationType="IsContinuedBy">
      *    urn:nbn:de:bsz:21‐opus‐4967
      * </relatedIdentifier>
@@ -140,8 +122,7 @@ public enum RelationType {
     @XmlEnumValue("Continues")
     CONTINUES("Continues"),
     /**
-     * indicates A is a new edition of B, where the new edition has been modified
-     * or updated.
+     * indicates A is a new edition of B, where the new edition has been modified or updated.
      * <pre>
      * {@code
      * <relatedIdentifier relatedIdentifierType="DOI" relationType="IsNewVersionOf">
@@ -165,8 +146,8 @@ public enum RelationType {
     @XmlEnumValue("IsPreviousVersionOf")
     IS_PREVIOUS_VERSION_OF("IsPreviousVersionOf"),
     /**
-     * indicates A is a portion of B; may be used for elements of a series.
-     * Recommended for discovery.     
+     * indicates A is a portion of B; may be used for elements of a series. Recommended for
+     * discovery.
      * <pre>
      * {@code
      * <relatedIdentifier relatedIdentifierType="ISBN" relationType="IsPartOf">
@@ -178,8 +159,7 @@ public enum RelationType {
     @XmlEnumValue("IsPartOf")
     IS_PART_OF("IsPartOf"),
     /**
-     * indicates A includes the part B.
-     * Recommended for discovery.
+     * indicates A includes the part B. Recommended for discovery.
      * <pre>
      * {@code
      * <relatedIdentifier relatedIdentifierType="DOI" relationType="HasPart">
@@ -263,16 +243,15 @@ public enum RelationType {
     @XmlEnumValue("Compiles")
     COMPILES("Compiles"),
     /**
-     * indicates A is a variant or different form of B, e.g. calculated or
-     * calibrated form or different packaging
+     * indicates A is a variant or different form of B, e.g. calculated or calibrated form or
+     * different packaging
      * <pre>
-     * {@code 
+     * {@code
      * <relatedIdentifier relatedIdentifierType="DOI" relationType="IsVariantFormOf">
      *    10.1234/8675
      * </relatedIdentifier>
      * }
-     * </pre>
-     * Use for a different form of one thing.     
+     * </pre> Use for a different form of one thing.
      */
     @XmlEnumValue("IsVariantFormOf")
     IS_VARIANT_FORM_OF("IsVariantFormOf"),
@@ -284,23 +263,21 @@ public enum RelationType {
      *   10.1234/9035
      * </relatedIdentifier>
      * }
-     * </pre>     
+     * </pre>
      */
     @XmlEnumValue("IsOriginalFormOf")
     IS_ORIGINAL_FORM_OF("IsOriginalFormOf"),
     /**
-     * indicates that A is identical to B, for use when there is a need to
-     * register two separate instances of the same resource
+     * indicates that A is identical to B, for use when there is a need to register two separate
+     * instances of the same resource
      * <pre>
-     * {@code 
+     * {@code
      * <relatedIdentifier relatedIdentifierType="URL" relationType="IsIdenticalTo">
      *    http://oac.cdlib.org/findaid/ark:/13030/c8r78fzq
-     * </relatedIdentifier> 
+     * </relatedIdentifier>
      * }
-     * </pre>
-     * IsIdenticalTo should be used for a resource that is the same as the
-     * registered resource but is saved on another location, maybe another
-     * institution.     
+     * </pre> IsIdenticalTo should be used for a resource that is the same as the registered
+     * resource but is saved on another location, maybe another institution.
      */
     @XmlEnumValue("IsIdenticalTo")
     IS_IDENTICAL_TO("IsIdenticalTo"),
@@ -308,8 +285,8 @@ public enum RelationType {
      * indicates resource A has additional metadata B.
      * <pre>
      * {@code
-     * <relatedIdentifier relatedIdentifierType="DOI" relationType="HasMetadata" 
-     * relatedMetadataScheme="DDI‐L" 
+     * <relatedIdentifier relatedIdentifierType="DOI" relationType="HasMetadata"
+     * relatedMetadataScheme="DDI‐L"
      * schemeURI="http://www.ddialliance.org/Specification/DDI‐Lifecycle/3.1/XMLSchema/instance.xsd">
      *    10.1234/567890
      * </relatedIdentifier>
@@ -321,9 +298,9 @@ public enum RelationType {
     /**
      * indicates additional metadata A for a resource B.
      * <pre>
-     * {@code 
-     * <relatedIdentifier relatedIdentifierType="DOI" relationType="IsMetadataFor" 
-     * relatedMetadataScheme="DDI‐L" 
+     * {@code
+     * <relatedIdentifier relatedIdentifierType="DOI" relationType="IsMetadataFor"
+     * relatedMetadataScheme="DDI‐L"
      * schemeURI="http://www.ddialliance.org/Specification/DDI‐Lifecycle/3.1/XMLSchema/instance.xsd">
      *    10.1234/567891
      * </relatedIdentifier>
@@ -364,10 +341,9 @@ public enum RelationType {
      *    10.6078/M7DZ067C
      * </relatedIdentifier>
      * }
-     * </pre>
-     * IsDerivedFrom should be used for a resource that is a derivative of an
-     * original resource. In this example, the dataset is derived from a larger
-     * dataset and  data values have been manipulated from their original state.
+     * </pre> IsDerivedFrom should be used for a resource that is a derivative of an original
+     * resource. In this example, the dataset is derived from a larger dataset and  data values have
+     * been manipulated from their original state.
      */
     @XmlEnumValue("IsDerivedFrom")
     IS_DERIVED_FROM("IsDerivedFrom"),
@@ -379,10 +355,9 @@ public enum RelationType {
      *    http://opencontext.org/projects/81204AF8‐127C‐4686‐E9B0‐1202C3A47959
      * </relatedIdentifier>
      * }
-     * </pre>
-     * IsSourceOf is the original resource from which a derivative resource
-     * was created. In this example, this is the original dataset without value 
-     * manipulation, and the source of the derived dataset.            
+     * </pre> IsSourceOf is the original resource from which a derivative resource was created. In
+     * this example, this is the original dataset without value manipulation, and the source of the
+     * derived dataset.  
      */
     @XmlEnumValue("IsSourceOf")
     IS_SOURCE_OF("IsSourceOf");

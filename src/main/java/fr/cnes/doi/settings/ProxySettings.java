@@ -30,8 +30,8 @@ import org.restlet.data.ChallengeScheme;
  *
  * @author Jean-Christophe Malapert
  */
-@Requirement(reqId = Requirement.DOI_CONFIG_010,reqName = Requirement.DOI_CONFIG_010_NAME)
-public final class ProxySettings {    
+@Requirement(reqId = Requirement.DOI_CONFIG_010, reqName = Requirement.DOI_CONFIG_010_NAME)
+public final class ProxySettings {
 
     /**
      * Application logger.
@@ -82,7 +82,6 @@ public final class ProxySettings {
         LOG.traceExit();
     }
 
-
     /**
      * Access to unique INSTANCE of Settings
      *
@@ -94,36 +93,37 @@ public final class ProxySettings {
     }
 
     /**
-     * Init the proxy setting     
+     * Init the proxy setting
      */
     public void init() {
         LOG.traceEntry();
         final DoiSettings settings = DoiSettings.getInstance();
-        LOG.info("----- proxy parameters ----");  
-        
+        LOG.info("----- proxy parameters ----");
+
         this.proxyHost = settings.getString(Consts.SERVER_PROXY_HOST);
-        LOG.info("proxyHost : {}",this.proxyHost);
-        
+        LOG.info("proxyHost : {}", this.proxyHost);
+
         this.proxyPort = settings.getString(Consts.SERVER_PROXY_PORT);
-        LOG.info("proxyPort : {}",this.proxyPort);
-        
+        LOG.info("proxyPort : {}", this.proxyPort);
+
         this.proxyUser = settings.getSecret(Consts.SERVER_PROXY_LOGIN);
-        LOG.info("proxyUser : {}",this.proxyUser);        
-        
+        LOG.info("proxyUser : {}", this.proxyUser);
+
         this.proxyPassword = settings.getSecret(Consts.SERVER_PROXY_PWD);
-        LOG.info("proxyPassword : {}",this.proxyPassword);                
-        
+        LOG.info("proxyPassword : {}", this.proxyPassword);
+
         this.nonProxyHosts = settings.getString(Consts.SERVER_NONPROXY_HOSTS);
-        LOG.info("nonProxyHosts : {}",this.nonProxyHosts);                
-        
+        LOG.info("nonProxyHosts : {}", this.nonProxyHosts);
+
         this.proxySet = settings.getBoolean(Consts.SERVER_PROXY_USED);
-        LOG.info("proxySet : {}",this.proxySet);                        
-        
-        this.proxyAuthentication = new ChallengeResponse(ChallengeScheme.HTTP_BASIC, this.proxyUser, this.proxyPassword);        
-        
+        LOG.info("proxySet : {}", this.proxySet);
+
+        this.proxyAuthentication = new ChallengeResponse(ChallengeScheme.HTTP_BASIC, this.proxyUser,
+                this.proxyPassword);
+
         LOG.info("Proxy settings have been loaded");
-        LOG.info("--------------------------");        
-        
+        LOG.info("--------------------------");
+
         LOG.traceExit();
     }
 
@@ -196,9 +196,9 @@ public final class ProxySettings {
         LOG.traceEntry();
         return LOG.traceExit(nonProxyHosts);
     }
-    
+
     /**
-     * 
+     *
      */
     private static class ProxySettingsHolder {
 
@@ -206,6 +206,6 @@ public final class ProxySettings {
          * Unique Instance unique not pre-initiliaze
          */
         private static final ProxySettings INSTANCE = new ProxySettings();
-    }    
+    }
 
 }

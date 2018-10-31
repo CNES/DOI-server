@@ -37,15 +37,16 @@ public class WebProxyResourceResolver implements LSResourceResolver {
     final ClientResource client;
     final String referenceSchemaURI;
 
-    public WebProxyResourceResolver(final ClientResource client, final String schemaURL) {
+    public WebProxyResourceResolver(final ClientResource client,
+            final String schemaURL) {
         this.client = client;
         this.referenceSchemaURI = schemaURL.substring(0, schemaURL.lastIndexOf("/"));
     }
 
     private Representation loadContent(final String schemaURL) throws ResourceException {
-        this.client.setReference(schemaURL);         
+        this.client.setReference(schemaURL);
         try {
-            Representation rep = this.client.get();          
+            Representation rep = this.client.get();
             return rep;
         } finally {
             this.client.release();
@@ -53,7 +54,11 @@ public class WebProxyResourceResolver implements LSResourceResolver {
     }
 
     @Override
-    public LSInput resolveResource(String type, String namespaceURI, String publicId, String systemId, String baseURI) {
+    public LSInput resolveResource(String type,
+            String namespaceURI,
+            String publicId,
+            String systemId,
+            String baseURI) {
         final String schemaURL = this.referenceSchemaURI != null ? (this.referenceSchemaURI + "/" + systemId) : systemId;
         final Representation rep = loadContent(schemaURL);
         WebProxyInput input = new WebProxyInput(publicId, systemId, rep);
@@ -67,7 +72,9 @@ public class WebProxyResourceResolver implements LSResourceResolver {
         private String systemId;
         private Representation rep;
 
-        public WebProxyInput(String publicId, String sysId, Representation rep) {
+        public WebProxyInput(String publicId,
+                String sysId,
+                Representation rep) {
             this.publicId = publicId;
             this.systemId = sysId;
         }
@@ -117,7 +124,7 @@ public class WebProxyResourceResolver implements LSResourceResolver {
         }
 
         @Override
-        public void setBaseURI(String baseURI) {          
+        public void setBaseURI(String baseURI) {
         }
 
         @Override

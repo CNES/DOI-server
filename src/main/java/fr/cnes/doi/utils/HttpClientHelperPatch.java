@@ -121,31 +121,34 @@ public class HttpClientHelperPatch extends HttpClientHelper {
                     "Unable to create the SSL context factory.", e);
         }
         HttpClient httpClientJetty = new HttpClient(sslContextFactory);
-        
+
         // configure Jetty options 
         configureOptions(httpClientJetty);
 
         ProxySettings proxySettings = ProxySettings.getInstance();
         if (proxySettings.isWithProxy()) {
             ProxyConfiguration proxyConfig = httpClientJetty.getProxyConfiguration();
-            HttpProxy proxy = new HttpProxy(proxySettings.getProxyHost(), Integer.parseInt(proxySettings.getProxyPort()));
+            HttpProxy proxy = new HttpProxy(proxySettings.getProxyHost(), Integer.parseInt(
+                    proxySettings.getProxyPort()));
 
             // hosts not proxified
             addNoPxifiedHost(proxy, proxySettings.getNonProxyHosts());
 
             // proxy authentication if needed
-            autenticateProxyIfNeeded(httpClientJetty, proxy, proxySettings.getProxyUser(), proxySettings.getProxyPassword());
-            
+            autenticateProxyIfNeeded(httpClientJetty, proxy, proxySettings.getProxyUser(),
+                    proxySettings.getProxyPassword());
+
             // add the new proxy to the list of proxies already registered
             proxyConfig.getProxies().add(proxy);
         }
 
         return httpClientJetty;
     }
-    
+
     /**
      * Basic options for Jetty.
-     * @param httpClientJetty Jetty client 
+     *
+     * @param httpClientJetty Jetty client
      */
     private void configureOptions(final HttpClient httpClientJetty) {
         httpClientJetty.setAddressResolutionTimeout(getAddressResolutionTimeout());
@@ -175,15 +178,17 @@ public class HttpClientHelperPatch extends HttpClientHelper {
 
         if (userAgentField != null) {
             httpClientJetty.setUserAgentField(new HttpField(HttpHeader.USER_AGENT, userAgentField));
-        }        
+        }
     }
 
     /**
      * Adds the non proxified host
+     *
      * @param proxy proxy
      * @param noHosts non proxified hosts as comma sperated value
      */
-    private void addNoPxifiedHost(final HttpProxy proxy, final String noHosts) {        
+    private void addNoPxifiedHost(final HttpProxy proxy,
+            final String noHosts) {
         List<String> nonProxies = new ArrayList<>();
         Collections.addAll(nonProxies, noHosts.split("\\s*,\\s*"));
         proxy.getExcludedAddresses().addAll(nonProxies);
@@ -191,26 +196,34 @@ public class HttpClientHelperPatch extends HttpClientHelper {
 
     /**
      * Checks if the proxy needs an authentication.
+     *
      * @param login login
      * @param pwd password
      * @return True when the proxy needs an authentication otherwise False
      */
-    private boolean hasAuthenticationProxy(final String login, final String pwd) {
+    private boolean hasAuthenticationProxy(final String login,
+            final String pwd) {
         return !(login == null && pwd == null);
     }
 
     /**
      * Creates the proxy authentication
+     *
      * @param httpClientJetty Jetty client
      * @param proxy proxy
      * @param login login
-     * @param pwd  password
+     * @param pwd password
      */
-    private void autenticateProxyIfNeeded(final HttpClient httpClientJetty, final HttpProxy proxy, final String login, final String pwd) {
+    private void autenticateProxyIfNeeded(final HttpClient httpClientJetty,
+            final HttpProxy proxy,
+            final String login,
+            final String pwd) {
         if (hasAuthenticationProxy(login, pwd)) {
             AuthenticationStore auth = httpClientJetty.getAuthenticationStore();
             // Proxy credentials.
-            auth.addAuthentication(new BasicAuthentication(proxy.getURI(), "ProxyRealm", login, pwd));
+            auth.
+                    addAuthentication(new BasicAuthentication(proxy.getURI(), "ProxyRealm", login,
+                            pwd));
         }
     }
 

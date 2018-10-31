@@ -18,10 +18,16 @@
  */
 package fr.cnes.doi.logging.security;
 
+import fr.cnes.doi.security.RoleAuthorizer;
+import fr.cnes.doi.utils.Utils;
 import fr.cnes.doi.utils.spec.Requirement;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import org.apache.logging.log4j.LogManager;
 import org.restlet.Request;
@@ -60,33 +66,39 @@ public class DoiSecurityLogFilter extends Filter {
      * @see org.restlet.routing.Filter#afterHandle(org.restlet.Request, org.restlet.Response)
      */
     @Override
-    protected void afterHandle(final Request request, final Response response) {
+    protected void afterHandle(final Request request,
+            final Response response) {
         super.afterHandle(request, response);
-        final Object logRecordObj = response.getAttributes().get("LOG_RECORD");
-        if (logRecordObj != null) {
 
-            final ClientInfo clientInfo = request.getClientInfo();
-            String user = null;
-            StringBuffer profile = new StringBuffer();
-            if (clientInfo != null && clientInfo.getUser() != null) {
-                user = clientInfo.getUser().getIdentifier();
-                final List<Role> roles = clientInfo.getRoles();
-                final Set<String> rolesStr = new HashSet<>();
-                for (final Role role : roles) {
-                    rolesStr.add(role.getName());
-                }
-                //profile += Joiner.on(",").join(rolesStr);
-                profile = profile.append(",").append(rolesStr);
-            }
-
-            final LogRecord logRecord = (LogRecord) logRecordObj;
-            logRecord.setMessage(
-                    "User: " + user + "\tProfile: " + profile + "\t" + logRecord.getMessage()
-            );
-            LogManager.getLogger(loggerName).info(logRecord);
-            //final Logger logger = Engine.getLogger(loggerName);
-            //logger.log(logRecord);
-
+        final String targetUri = request.getResourceRef().getIdentifier();
+        final String method = request.getMethod().getName();
+        final ClientInfo clientInfo = request.getClientInfo();
+        final String upStreamIp = clientInfo.getUpstreamAddress();
+        if (request.getClientInfo().isAuthenticated()) {
+            final String authenticationMethod = request.getChallengeResponse().getScheme().
+                    getTechnicalName();
+            final String identifier = request.getChallengeResponse().getIdentifier();
+            final String profiles = computeProfiles(clientInfo);
+            LogManager.getLogger(Utils.SECURITY_LOGGER_NAME).info(
+                    "User: " + identifier + "\tProfile(s): " + profiles + "\t - [" + upStreamIp + "] - [" + authenticationMethod + "] " + method + " " + targetUri + " " + response.
+                            getStatus().getCode() + " - " + clientInfo.getAgent());
+        } else {
+            // do no care
         }
+    }
+
+    /**
+     * Represents the list of roles as a single string.
+     *
+     * @param clientInfo Client information
+     * @return the roles
+     */
+    private String computeProfiles(final ClientInfo clientInfo) {
+        final List<Role> roles = clientInfo.getRoles();
+        final Collection<String> rolesStr = new ArrayList<>();
+        for (final Role role : roles) {
+            rolesStr.add(role.getName());
+        }
+        return String.join(",", rolesStr);
     }
 }

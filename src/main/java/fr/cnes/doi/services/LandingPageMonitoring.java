@@ -27,12 +27,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Provides a check on the availability of each published landing page 
- * publisher
+ * Provides a check on the availability of each published landing page publisher
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-@Requirement(reqId = Requirement.DOI_DISPO_020,reqName = Requirement.DOI_DISPO_020_NAME)
+@Requirement(reqId = Requirement.DOI_DISPO_020, reqName = Requirement.DOI_DISPO_020_NAME)
 public class LandingPageMonitoring implements Runnable {
 
     /**
@@ -46,7 +45,7 @@ public class LandingPageMonitoring implements Runnable {
     @Override
     public void run() {
         LOG.traceEntry();
-        final EmailSettings email = EmailSettings.getInstance();        
+        final EmailSettings email = EmailSettings.getInstance();
         final StringBuffer msg = new StringBuffer();
         try {
             final String subject;

@@ -22,14 +22,16 @@ import fr.cnes.doi.utils.spec.Requirement;
 
 /**
  * Utility class.
+ *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-@Requirement(reqId = Requirement.DOI_AUTO_020,reqName = Requirement.DOI_AUTO_020_NAME)
+@Requirement(reqId = Requirement.DOI_AUTO_020, reqName = Requirement.DOI_AUTO_020_NAME)
 public class UtilsHeader {
-    
+
     /**
-     * The parameter to select the role of the operator when he is implied in different groups {@value #SELECTED_ROLE_PARAMETER}.
+     * The parameter to select the role of the operator when he is implied in different groups
+     * {@value #SELECTED_ROLE_PARAMETER}.
      */
-    public static final String SELECTED_ROLE_PARAMETER = "selectedRole";    
-    
+    public static final String SELECTED_ROLE_PARAMETER = "selectedRole";
+
 }

@@ -29,8 +29,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * Java class for anonymous complex type.
  *
  * <p>
- * The following schema fragment specifies the expected content contained within
- * this class.
+ * The following schema fragment specifies the expected content contained within this class.
  *
  * <pre>
  * &lt;complexType&gt;
@@ -414,9 +413,9 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  *
  *
  */
-@Requirement(reqId = Requirement.DOI_SRV_010,reqName = Requirement.DOI_SRV_010_NAME)
-@Requirement(reqId = Requirement.DOI_SRV_040,reqName = Requirement.DOI_SRV_040_NAME)
-@Requirement(reqId = Requirement.DOI_INTER_060,reqName = Requirement.DOI_INTER_060_NAME)
+@Requirement(reqId = Requirement.DOI_SRV_010, reqName = Requirement.DOI_SRV_010_NAME)
+@Requirement(reqId = Requirement.DOI_SRV_040, reqName = Requirement.DOI_SRV_040_NAME)
+@Requirement(reqId = Requirement.DOI_INTER_060, reqName = Requirement.DOI_INTER_060_NAME)
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {})
 @XmlRootElement(name = "resource")
@@ -911,8 +910,7 @@ public class Resource {
      * Java class for anonymous complex type.
      *
      * <p>
-     * The following schema fragment specifies the expected content contained
-     * within this class.
+     * The following schema fragment specifies the expected content contained within this class.
      *
      * <pre>
      * &lt;complexType&gt;
@@ -951,10 +949,9 @@ public class Resource {
          * Gets the value of the alternateIdentifier property.
          *
          * <p>
-         * This accessor method returns a reference to the live list, not a
-         * snapshot. Therefore any modification you make to the returned list
-         * will be present inside the JAXB object. This is why there is not a
-         * <CODE>set</CODE> method for the alternateIdentifier property.
+         * This accessor method returns a reference to the live list, not a snapshot. Therefore any
+         * modification you make to the returned list will be present inside the JAXB object. This
+         * is why there is not a <CODE>set</CODE> method for the alternateIdentifier property.
          *
          * <p>
          * For example, to add a new item, do as follows:
@@ -982,8 +979,7 @@ public class Resource {
          * Java class for anonymous complex type.
          *
          * <p>
-         * The following schema fragment specifies the expected content
-         * contained within this class.
+         * The following schema fragment specifies the expected content contained within this class.
          *
          * <pre>
          * &lt;complexType&gt;
@@ -1065,8 +1061,7 @@ public class Resource {
      * Java class for anonymous complex type.
      *
      * <p>
-     * The following schema fragment specifies the expected content contained
-     * within this class.
+     * The following schema fragment specifies the expected content contained within this class.
      *
      * <pre>
      * &lt;complexType&gt;
@@ -1127,10 +1122,9 @@ public class Resource {
          * Gets the value of the contributor property.
          *
          * <p>
-         * This accessor method returns a reference to the live list, not a
-         * snapshot. Therefore any modification you make to the returned list
-         * will be present inside the JAXB object. This is why there is not a
-         * <CODE>set</CODE> method for the contributor property.
+         * This accessor method returns a reference to the live list, not a snapshot. Therefore any
+         * modification you make to the returned list will be present inside the JAXB object. This
+         * is why there is not a <CODE>set</CODE> method for the contributor property.
          *
          * <p>
          * For example, to add a new item, do as follows:
@@ -1158,8 +1152,7 @@ public class Resource {
          * Java class for anonymous complex type.
          *
          * <p>
-         * The following schema fragment specifies the expected content
-         * contained within this class.
+         * The following schema fragment specifies the expected content contained within this class.
          *
          * <pre>
          * &lt;complexType&gt;
@@ -1301,10 +1294,10 @@ public class Resource {
              * Gets the value of the nameIdentifier property.
              *
              * <p>
-             * This accessor method returns a reference to the live list, not a
-             * snapshot. Therefore any modification you make to the returned
-             * list will be present inside the JAXB object. This is why there is
-             * not a <CODE>set</CODE> method for the nameIdentifier property.
+             * This accessor method returns a reference to the live list, not a snapshot. Therefore
+             * any modification you make to the returned list will be present inside the JAXB
+             * object. This is why there is not a <CODE>set</CODE> method for the nameIdentifier
+             * property.
              *
              * <p>
              * For example, to add a new item, do as follows:
@@ -1331,10 +1324,10 @@ public class Resource {
              * Gets the value of the affiliation property.
              *
              * <p>
-             * This accessor method returns a reference to the live list, not a
-             * snapshot. Therefore any modification you make to the returned
-             * list will be present inside the JAXB object. This is why there is
-             * not a <CODE>set</CODE> method for the affiliation property.
+             * This accessor method returns a reference to the live list, not a snapshot. Therefore
+             * any modification you make to the returned list will be present inside the JAXB
+             * object. This is why there is not a <CODE>set</CODE> method for the affiliation
+             * property.
              *
              * <p>
              * For example, to add a new item, do as follows:
@@ -1344,8 +1337,7 @@ public class Resource {
              *
              *
              * <p>
-             * Objects of the following type(s) are allowed in the list
-             * {@link Object }
+             * Objects of the following type(s) are allowed in the list {@link Object }
              *
              *
              * @return
@@ -1382,8 +1374,8 @@ public class Resource {
              * Java class for anonymous complex type.
              *
              * <p>
-             * The following schema fragment specifies the expected content
-             * contained within this class.
+             * The following schema fragment specifies the expected content contained within this
+             * class.
              *
              * <pre>
              * &lt;complexType&gt;
@@ -1495,8 +1487,7 @@ public class Resource {
      * Java class for anonymous complex type.
      *
      * <p>
-     * The following schema fragment specifies the expected content contained
-     * within this class.
+     * The following schema fragment specifies the expected content contained within this class.
      *
      * <pre>
      * &lt;complexType&gt;
@@ -1556,10 +1547,9 @@ public class Resource {
          * Gets the value of the creator property.
          *
          * <p>
-         * This accessor method returns a reference to the live list, not a
-         * snapshot. Therefore any modification you make to the returned list
-         * will be present inside the JAXB object. This is why there is not a
-         * <CODE>set</CODE> method for the creator property.
+         * This accessor method returns a reference to the live list, not a snapshot. Therefore any
+         * modification you make to the returned list will be present inside the JAXB object. This
+         * is why there is not a <CODE>set</CODE> method for the creator property.
          *
          * <p>
          * For example, to add a new item, do as follows:
@@ -1587,8 +1577,7 @@ public class Resource {
          * Java class for anonymous complex type.
          *
          * <p>
-         * The following schema fragment specifies the expected content
-         * contained within this class.
+         * The following schema fragment specifies the expected content contained within this class.
          *
          * <pre>
          * &lt;complexType&gt;
@@ -1722,10 +1711,10 @@ public class Resource {
              * Gets the value of the nameIdentifier property.
              *
              * <p>
-             * This accessor method returns a reference to the live list, not a
-             * snapshot. Therefore any modification you make to the returned
-             * list will be present inside the JAXB object. This is why there is
-             * not a <CODE>set</CODE> method for the nameIdentifier property.
+             * This accessor method returns a reference to the live list, not a snapshot. Therefore
+             * any modification you make to the returned list will be present inside the JAXB
+             * object. This is why there is not a <CODE>set</CODE> method for the nameIdentifier
+             * property.
              *
              * <p>
              * For example, to add a new item, do as follows:
@@ -1752,10 +1741,10 @@ public class Resource {
              * Gets the value of the affiliation property.
              *
              * <p>
-             * This accessor method returns a reference to the live list, not a
-             * snapshot. Therefore any modification you make to the returned
-             * list will be present inside the JAXB object. This is why there is
-             * not a <CODE>set</CODE> method for the affiliation property.
+             * This accessor method returns a reference to the live list, not a snapshot. Therefore
+             * any modification you make to the returned list will be present inside the JAXB
+             * object. This is why there is not a <CODE>set</CODE> method for the affiliation
+             * property.
              *
              * <p>
              * For example, to add a new item, do as follows:
@@ -1765,8 +1754,7 @@ public class Resource {
              *
              *
              * <p>
-             * Objects of the following type(s) are allowed in the list
-             * {@link Object }
+             * Objects of the following type(s) are allowed in the list {@link Object }
              *
              *
              * @return
@@ -1783,8 +1771,8 @@ public class Resource {
              * Java class for anonymous complex type.
              *
              * <p>
-             * The following schema fragment specifies the expected content
-             * contained within this class.
+             * The following schema fragment specifies the expected content contained within this
+             * class.
              *
              * <pre>
              * &lt;complexType&gt;
@@ -1896,8 +1884,7 @@ public class Resource {
      * Java class for anonymous complex type.
      *
      * <p>
-     * The following schema fragment specifies the expected content contained
-     * within this class.
+     * The following schema fragment specifies the expected content contained within this class.
      *
      * <pre>
      * &lt;complexType&gt;
@@ -1936,10 +1923,9 @@ public class Resource {
          * Gets the value of the date property.
          *
          * <p>
-         * This accessor method returns a reference to the live list, not a
-         * snapshot. Therefore any modification you make to the returned list
-         * will be present inside the JAXB object. This is why there is not a
-         * <CODE>set</CODE> method for the date property.
+         * This accessor method returns a reference to the live list, not a snapshot. Therefore any
+         * modification you make to the returned list will be present inside the JAXB object. This
+         * is why there is not a <CODE>set</CODE> method for the date property.
          *
          * <p>
          * For example, to add a new item, do as follows:
@@ -1949,8 +1935,7 @@ public class Resource {
          *
          *
          * <p>
-         * Objects of the following type(s) are allowed in the list
-         * {@link Resource.Dates.Date }
+         * Objects of the following type(s) are allowed in the list {@link Resource.Dates.Date }
          *
          *
          * @return
@@ -1967,8 +1952,7 @@ public class Resource {
          * Java class for anonymous complex type.
          *
          * <p>
-         * The following schema fragment specifies the expected content
-         * contained within this class.
+         * The following schema fragment specifies the expected content contained within this class.
          *
          * <pre>
          * &lt;complexType&gt;
@@ -2049,8 +2033,7 @@ public class Resource {
      * Java class for anonymous complex type.
      *
      * <p>
-     * The following schema fragment specifies the expected content contained
-     * within this class.
+     * The following schema fragment specifies the expected content contained within this class.
      *
      * <pre>
      * &lt;complexType&gt;
@@ -2099,10 +2082,9 @@ public class Resource {
          * Gets the value of the description property.
          *
          * <p>
-         * This accessor method returns a reference to the live list, not a
-         * snapshot. Therefore any modification you make to the returned list
-         * will be present inside the JAXB object. This is why there is not a
-         * <CODE>set</CODE> method for the description property.
+         * This accessor method returns a reference to the live list, not a snapshot. Therefore any
+         * modification you make to the returned list will be present inside the JAXB object. This
+         * is why there is not a <CODE>set</CODE> method for the description property.
          *
          * <p>
          * For example, to add a new item, do as follows:
@@ -2130,8 +2112,7 @@ public class Resource {
          * Java class for anonymous complex type.
          *
          * <p>
-         * The following schema fragment specifies the expected content
-         * contained within this class.
+         * The following schema fragment specifies the expected content contained within this class.
          *
          * <pre>
          * &lt;complexType&gt;
@@ -2184,10 +2165,9 @@ public class Resource {
              * Gets the value of the content property.
              *
              * <p>
-             * This accessor method returns a reference to the live list, not a
-             * snapshot. Therefore any modification you make to the returned
-             * list will be present inside the JAXB object. This is why there is
-             * not a <CODE>set</CODE> method for the content property.
+             * This accessor method returns a reference to the live list, not a snapshot. Therefore
+             * any modification you make to the returned list will be present inside the JAXB
+             * object. This is why there is not a <CODE>set</CODE> method for the content property.
              *
              * <p>
              * For example, to add a new item, do as follows:
@@ -2197,7 +2177,7 @@ public class Resource {
              *
              *
              * <p>
-             * Objects of the following type(s) are allowed in the list              {@link JAXBElement }{@code <}{@link String }{@code >}
+             * Objects of the following type(s) are allowed in the list null null             {@link JAXBElement }{@code <}{@link String }{@code >}
              * {@link String }
              *
              *
@@ -2259,8 +2239,7 @@ public class Resource {
      * Java class for anonymous complex type.
      *
      * <p>
-     * The following schema fragment specifies the expected content contained
-     * within this class.
+     * The following schema fragment specifies the expected content contained within this class.
      *
      * <pre>
      * &lt;complexType&gt;
@@ -2291,10 +2270,9 @@ public class Resource {
          * Gets the value of the format property.
          *
          * <p>
-         * This accessor method returns a reference to the live list, not a
-         * snapshot. Therefore any modification you make to the returned list
-         * will be present inside the JAXB object. This is why there is not a
-         * <CODE>set</CODE> method for the format property.
+         * This accessor method returns a reference to the live list, not a snapshot. Therefore any
+         * modification you make to the returned list will be present inside the JAXB object. This
+         * is why there is not a <CODE>set</CODE> method for the format property.
          *
          * <p>
          * For example, to add a new item, do as follows:
@@ -2304,8 +2282,7 @@ public class Resource {
          *
          *
          * <p>
-         * Objects of the following type(s) are allowed in the list
-         * {@link String }
+         * Objects of the following type(s) are allowed in the list {@link String }
          *
          *
          * @return
@@ -2324,8 +2301,7 @@ public class Resource {
      * Java class for anonymous complex type.
      *
      * <p>
-     * The following schema fragment specifies the expected content contained
-     * within this class.
+     * The following schema fragment specifies the expected content contained within this class.
      *
      * <pre>
      * &lt;complexType&gt;
@@ -2395,10 +2371,9 @@ public class Resource {
          * Gets the value of the fundingReference property.
          *
          * <p>
-         * This accessor method returns a reference to the live list, not a
-         * snapshot. Therefore any modification you make to the returned list
-         * will be present inside the JAXB object. This is why there is not a
-         * <CODE>set</CODE> method for the fundingReference property.
+         * This accessor method returns a reference to the live list, not a snapshot. Therefore any
+         * modification you make to the returned list will be present inside the JAXB object. This
+         * is why there is not a <CODE>set</CODE> method for the fundingReference property.
          *
          * <p>
          * For example, to add a new item, do as follows:
@@ -2426,8 +2401,7 @@ public class Resource {
          * Java class for anonymous complex type.
          *
          * <p>
-         * The following schema fragment specifies the expected content
-         * contained within this class.
+         * The following schema fragment specifies the expected content contained within this class.
          *
          * <pre>
          * &lt;complexType&gt;
@@ -2535,7 +2509,8 @@ public class Resource {
              *     {@link Resource.FundingReferences.FundingReference.FunderIdentifier }
              *
              */
-            public void setFunderIdentifier(Resource.FundingReferences.FundingReference.FunderIdentifier value) {
+            public void setFunderIdentifier(
+                    Resource.FundingReferences.FundingReference.FunderIdentifier value) {
                 this.funderIdentifier = value;
             }
 
@@ -2586,8 +2561,8 @@ public class Resource {
              * Java class for anonymous complex type.
              *
              * <p>
-             * The following schema fragment specifies the expected content
-             * contained within this class.
+             * The following schema fragment specifies the expected content contained within this
+             * class.
              *
              * <pre>
              * &lt;complexType&gt;
@@ -2667,8 +2642,8 @@ public class Resource {
              * Java class for anonymous complex type.
              *
              * <p>
-             * The following schema fragment specifies the expected content
-             * contained within this class.
+             * The following schema fragment specifies the expected content contained within this
+             * class.
              *
              * <pre>
              * &lt;complexType&gt;
@@ -2751,8 +2726,7 @@ public class Resource {
      * Java class for anonymous complex type.
      *
      * <p>
-     * The following schema fragment specifies the expected content contained
-     * within this class.
+     * The following schema fragment specifies the expected content contained within this class.
      *
      * <pre>
      * &lt;complexType&gt;
@@ -2806,10 +2780,9 @@ public class Resource {
          * Gets the value of the geoLocation property.
          *
          * <p>
-         * This accessor method returns a reference to the live list, not a
-         * snapshot. Therefore any modification you make to the returned list
-         * will be present inside the JAXB object. This is why there is not a
-         * <CODE>set</CODE> method for the geoLocation property.
+         * This accessor method returns a reference to the live list, not a snapshot. Therefore any
+         * modification you make to the returned list will be present inside the JAXB object. This
+         * is why there is not a <CODE>set</CODE> method for the geoLocation property.
          *
          * <p>
          * For example, to add a new item, do as follows:
@@ -2837,8 +2810,7 @@ public class Resource {
          * Java class for anonymous complex type.
          *
          * <p>
-         * The following schema fragment specifies the expected content
-         * contained within this class.
+         * The following schema fragment specifies the expected content contained within this class.
          *
          * <pre>
          * &lt;complexType&gt;
@@ -2969,7 +2941,8 @@ public class Resource {
              *     {@link Resource.GeoLocations.GeoLocation.GeoLocationPolygon }
              *
              */
-            public void setGeoLocationPolygon(Resource.GeoLocations.GeoLocation.GeoLocationPolygon value) {
+            public void setGeoLocationPolygon(
+                    Resource.GeoLocations.GeoLocation.GeoLocationPolygon value) {
                 this.geoLocationPolygon = value;
             }
 
@@ -2978,8 +2951,8 @@ public class Resource {
              * Java class for anonymous complex type.
              *
              * <p>
-             * The following schema fragment specifies the expected content
-             * contained within this class.
+             * The following schema fragment specifies the expected content contained within this
+             * class.
              *
              * <pre>
              * &lt;complexType&gt;
@@ -3011,10 +2984,9 @@ public class Resource {
                  * Gets the value of the polygonPoint property.
                  *
                  * <p>
-                 * This accessor method returns a reference to the live list,
-                 * not a snapshot. Therefore any modification you make to the
-                 * returned list will be present inside the JAXB object. This is
-                 * why there is not a <CODE>set</CODE> method for the
+                 * This accessor method returns a reference to the live list, not a snapshot.
+                 * Therefore any modification you make to the returned list will be present inside
+                 * the JAXB object. This is why there is not a <CODE>set</CODE> method for the
                  * polygonPoint property.
                  *
                  * <p>
@@ -3025,8 +2997,7 @@ public class Resource {
                  *
                  *
                  * <p>
-                 * Objects of the following type(s) are allowed in the list
-                 * {@link Point }
+                 * Objects of the following type(s) are allowed in the list {@link Point }
                  *
                  *
                  * @return
@@ -3049,8 +3020,7 @@ public class Resource {
      * Java class for anonymous complex type.
      *
      * <p>
-     * The following schema fragment specifies the expected content contained
-     * within this class.
+     * The following schema fragment specifies the expected content contained within this class.
      *
      * <pre>
      * &lt;complexType&gt;
@@ -3111,8 +3081,7 @@ public class Resource {
      * Java class for anonymous complex type.
      *
      * <p>
-     * The following schema fragment specifies the expected content contained
-     * within this class.
+     * The following schema fragment specifies the expected content contained within this class.
      *
      * <pre>
      * &lt;complexType&gt;
@@ -3155,10 +3124,9 @@ public class Resource {
          * Gets the value of the relatedIdentifier property.
          *
          * <p>
-         * This accessor method returns a reference to the live list, not a
-         * snapshot. Therefore any modification you make to the returned list
-         * will be present inside the JAXB object. This is why there is not a
-         * <CODE>set</CODE> method for the relatedIdentifier property.
+         * This accessor method returns a reference to the live list, not a snapshot. Therefore any
+         * modification you make to the returned list will be present inside the JAXB object. This
+         * is why there is not a <CODE>set</CODE> method for the relatedIdentifier property.
          *
          * <p>
          * For example, to add a new item, do as follows:
@@ -3186,8 +3154,7 @@ public class Resource {
          * Java class for anonymous complex type.
          *
          * <p>
-         * The following schema fragment specifies the expected content
-         * contained within this class.
+         * The following schema fragment specifies the expected content contained within this class.
          *
          * <pre>
          * &lt;complexType&gt;
@@ -3379,8 +3346,7 @@ public class Resource {
      * Java class for anonymous complex type.
      *
      * <p>
-     * The following schema fragment specifies the expected content contained
-     * within this class.
+     * The following schema fragment specifies the expected content contained within this class.
      *
      * <pre>
      * &lt;complexType&gt;
@@ -3435,8 +3401,7 @@ public class Resource {
         /**
          * Gets the value of the resourceTypeGeneral property.
          *
-         * @return possible object is
-         *     {@link org.datacite.schema.kernel_4.ResourceType }
+         * @return possible object is {@link org.datacite.schema.kernel_4.ResourceType }
          *
          */
         public org.datacite.schema.kernel_4.ResourceType getResourceTypeGeneral() {
@@ -3446,8 +3411,7 @@ public class Resource {
         /**
          * Sets the value of the resourceTypeGeneral property.
          *
-         * @param value allowed object is
-         *     {@link org.datacite.schema.kernel_4.ResourceType }
+         * @param value allowed object is {@link org.datacite.schema.kernel_4.ResourceType }
          *
          */
         public void setResourceTypeGeneral(org.datacite.schema.kernel_4.ResourceType value) {
@@ -3461,8 +3425,7 @@ public class Resource {
      * Java class for anonymous complex type.
      *
      * <p>
-     * The following schema fragment specifies the expected content contained
-     * within this class.
+     * The following schema fragment specifies the expected content contained within this class.
      *
      * <pre>
      * &lt;complexType&gt;
@@ -3501,10 +3464,9 @@ public class Resource {
          * Gets the value of the rights property.
          *
          * <p>
-         * This accessor method returns a reference to the live list, not a
-         * snapshot. Therefore any modification you make to the returned list
-         * will be present inside the JAXB object. This is why there is not a
-         * <CODE>set</CODE> method for the rights property.
+         * This accessor method returns a reference to the live list, not a snapshot. Therefore any
+         * modification you make to the returned list will be present inside the JAXB object. This
+         * is why there is not a <CODE>set</CODE> method for the rights property.
          *
          * <p>
          * For example, to add a new item, do as follows:
@@ -3532,8 +3494,7 @@ public class Resource {
          * Java class for anonymous complex type.
          *
          * <p>
-         * The following schema fragment specifies the expected content
-         * contained within this class.
+         * The following schema fragment specifies the expected content contained within this class.
          *
          * <pre>
          * &lt;complexType&gt;
@@ -3615,8 +3576,7 @@ public class Resource {
      * Java class for anonymous complex type.
      *
      * <p>
-     * The following schema fragment specifies the expected content contained
-     * within this class.
+     * The following schema fragment specifies the expected content contained within this class.
      *
      * <pre>
      * &lt;complexType&gt;
@@ -3647,10 +3607,9 @@ public class Resource {
          * Gets the value of the size property.
          *
          * <p>
-         * This accessor method returns a reference to the live list, not a
-         * snapshot. Therefore any modification you make to the returned list
-         * will be present inside the JAXB object. This is why there is not a
-         * <CODE>set</CODE> method for the size property.
+         * This accessor method returns a reference to the live list, not a snapshot. Therefore any
+         * modification you make to the returned list will be present inside the JAXB object. This
+         * is why there is not a <CODE>set</CODE> method for the size property.
          *
          * <p>
          * For example, to add a new item, do as follows:
@@ -3660,8 +3619,7 @@ public class Resource {
          *
          *
          * <p>
-         * Objects of the following type(s) are allowed in the list
-         * {@link String }
+         * Objects of the following type(s) are allowed in the list {@link String }
          *
          *
          * @return
@@ -3680,8 +3638,7 @@ public class Resource {
      * Java class for anonymous complex type.
      *
      * <p>
-     * The following schema fragment specifies the expected content contained
-     * within this class.
+     * The following schema fragment specifies the expected content contained within this class.
      *
      * <pre>
      * &lt;complexType&gt;
@@ -3723,10 +3680,9 @@ public class Resource {
          * Gets the value of the subject property.
          *
          * <p>
-         * This accessor method returns a reference to the live list, not a
-         * snapshot. Therefore any modification you make to the returned list
-         * will be present inside the JAXB object. This is why there is not a
-         * <CODE>set</CODE> method for the subject property.
+         * This accessor method returns a reference to the live list, not a snapshot. Therefore any
+         * modification you make to the returned list will be present inside the JAXB object. This
+         * is why there is not a <CODE>set</CODE> method for the subject property.
          *
          * <p>
          * For example, to add a new item, do as follows:
@@ -3754,8 +3710,7 @@ public class Resource {
          * Java class for anonymous complex type.
          *
          * <p>
-         * The following schema fragment specifies the expected content
-         * contained within this class.
+         * The following schema fragment specifies the expected content contained within this class.
          *
          * <pre>
          * &lt;complexType&gt;
@@ -3920,8 +3875,7 @@ public class Resource {
      * Java class for anonymous complex type.
      *
      * <p>
-     * The following schema fragment specifies the expected content contained
-     * within this class.
+     * The following schema fragment specifies the expected content contained within this class.
      *
      * <pre>
      * &lt;complexType&gt;
@@ -3962,10 +3916,9 @@ public class Resource {
          * Gets the value of the title property.
          *
          * <p>
-         * This accessor method returns a reference to the live list, not a
-         * snapshot. Therefore any modification you make to the returned list
-         * will be present inside the JAXB object. This is why there is not a
-         * <CODE>set</CODE> method for the title property.
+         * This accessor method returns a reference to the live list, not a snapshot. Therefore any
+         * modification you make to the returned list will be present inside the JAXB object. This
+         * is why there is not a <CODE>set</CODE> method for the title property.
          *
          * <p>
          * For example, to add a new item, do as follows:
@@ -3975,8 +3928,7 @@ public class Resource {
          *
          *
          * <p>
-         * Objects of the following type(s) are allowed in the list
-         * {@link Resource.Titles.Title }
+         * Objects of the following type(s) are allowed in the list {@link Resource.Titles.Title }
          *
          *
          * @return
@@ -3993,8 +3945,7 @@ public class Resource {
          * Java class for anonymous complex type.
          *
          * <p>
-         * The following schema fragment specifies the expected content
-         * contained within this class.
+         * The following schema fragment specifies the expected content contained within this class.
          *
          * <pre>
          * &lt;complexType&gt;

@@ -16,24 +16,20 @@ import javax.xml.bind.annotation.XmlType;
  * Java class for funderIdentifierType.
  *
  * <p>
- * The following schema fragment specifies the expected content contained within
- * this class.
+ * The following schema fragment specifies the expected content contained within this class.
  * <p>
- * <pre>
- * &lt;simpleType name="funderIdentifierType"&gt;
- *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"&gt;
- *     &lt;enumeration value="ISNI"/&gt;
- *     &lt;enumeration value="GRID"/&gt;
- *     &lt;enumeration value="Crossref Funder ID"/&gt;
- *     &lt;enumeration value="Other"/&gt;
- *   &lt;/restriction&gt;
- * &lt;/simpleType&gt;
+ * <
+ * pre>
+ * &lt;simpleType name="funderIdentifierType"&gt; &lt;restriction
+ * base="{http://www.w3.org/2001/XMLSchema}string"&gt; &lt;enumeration value="ISNI"/&gt;
+ * &lt;enumeration value="GRID"/&gt; &lt;enumeration value="Crossref Funder ID"/&gt; &lt;enumeration
+ * value="Other"/&gt; &lt;/restriction&gt; &lt;/simpleType&gt;
  * </pre>
  *
  */
-@Requirement(reqId = Requirement.DOI_SRV_010,reqName = Requirement.DOI_SRV_010_NAME)
-@Requirement(reqId = Requirement.DOI_SRV_040,reqName = Requirement.DOI_SRV_040_NAME)
-@Requirement(reqId = Requirement.DOI_INTER_060,reqName = Requirement.DOI_INTER_060_NAME)
+@Requirement(reqId = Requirement.DOI_SRV_010, reqName = Requirement.DOI_SRV_010_NAME)
+@Requirement(reqId = Requirement.DOI_SRV_040, reqName = Requirement.DOI_SRV_040_NAME)
+@Requirement(reqId = Requirement.DOI_INTER_060, reqName = Requirement.DOI_INTER_060_NAME)
 @XmlType(name = "funderIdentifierType")
 @XmlEnum
 public enum FunderIdentifierType {

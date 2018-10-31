@@ -59,7 +59,8 @@ import org.slf4j.bridge.SLF4JBridgeHandler;
 public class Starter {
 
     static {
-        java.util.logging.Logger rootLogger = java.util.logging.LogManager.getLogManager().getLogger("");
+        java.util.logging.Logger rootLogger = java.util.logging.LogManager.getLogManager().
+                getLogger("");
         java.util.logging.Handler[] handlers = rootLogger.getHandlers();
         rootLogger.removeHandler(handlers[0]);
         SLF4JBridgeHandler.install();
@@ -86,7 +87,8 @@ public class Starter {
         help.append("------------ Help for DOI Server -----------\n");
         help.append("\n");
         help.append("Usage: java -jar ").append(settings.getString(Consts.APP_NAME)).append("-")
-                .append(settings.getString(Consts.VERSION)).append(".jar [--secret <key>] [OPTIONS] [-s]\n");
+                .append(settings.getString(Consts.VERSION)).append(
+                ".jar [--secret <key>] [OPTIONS] [-s]\n");
         help.append("\n\n");
         help.append("with :\n");
         help.append("  --doi \"<INIST_prefix> <projectName> <landingPage>\" : Creates a DOI\n");
@@ -101,8 +103,10 @@ public class Starter {
         help.append("  -e <string>                  : Decrypts a string in the standard output\n");
         help.append("  -d                           : Displays the configuration file\n");
         help.append("  -f <path>                    : Loads the configuation file\n");
-        help.append("  -y|--cryptProperties <path>  : crypts the properties file on the output standard\n");
-        help.append("  -z|--decryptProperties <path>: Decrypts the properties on the output standard\n");
+        help.append(
+                "  -y|--cryptProperties <path>  : crypts the properties file on the output standard\n");
+        help.append(
+                "  -z|--decryptProperties <path>: Decrypts the properties on the output standard\n");
         help.append("  -v|--version                 : DOI server version\n");
         help.append("\n");
         help.append("\n");
@@ -126,7 +130,8 @@ public class Starter {
                 LOG.fatal("Unable to stop the server", ex);
             } finally {
                 LOG.info("Interrups the server, which is stopping");
-                EmailSettings.getInstance().sendMessage("[DOI] Stopping Server", "Ther server has been interrupted");
+                EmailSettings.getInstance().sendMessage("[DOI] Stopping Server",
+                        "Ther server has been interrupted");
                 server.interrupt();
                 server.join();
             }
@@ -248,7 +253,8 @@ public class Starter {
                     String landingPage = arguments[2];
                      {
                         try {
-                            String doi = UniqueDoi.getInstance().createDOI(prefix, projectName, new URI(landingPage), SuffixProjectsResource.NB_DIGITS);
+                            String doi = UniqueDoi.getInstance().createDOI(prefix, projectName,
+                                    new URI(landingPage), SuffixProjectsResource.NB_DIGITS);
                             LOG.info(doi);
                         } catch (URISyntaxException ex) {
                             throw new IllegalArgumentException(ex.getMessage());
@@ -264,8 +270,9 @@ public class Starter {
                     LOG.debug("s option is selected");
                     try {
                         launchServer(settings);
-                    } catch(ClientMdsException ex) {
-                        LOG.fatal("Cannot start the server because the Datacite schema cannot be loaded, "+ex.getMessage());
+                    } catch (ClientMdsException ex) {
+                        LOG.fatal("Cannot connect to internet to get the Datacite schema :" + ex.
+                                getMessage());
                     }
                     break;
                 //
@@ -321,7 +328,8 @@ public class Starter {
                     try {
                         byte[] encodedFile = Files.readAllBytes(Paths.get(arg));
                         String contentFile = new String(encodedFile, StandardCharsets.UTF_8);
-                        contentFile = UtilsCryptography.encrypt(contentFile, settings.getSecretKey());
+                        contentFile = UtilsCryptography.
+                                encrypt(contentFile, settings.getSecretKey());
                         LOG.info(contentFile);
                     } catch (IOException ex) {
                         LOG.fatal("Error: {}", ex.getMessage());

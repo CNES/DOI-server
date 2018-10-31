@@ -52,7 +52,7 @@ import org.restlet.data.Status;
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-@Requirement(reqId = Requirement.DOI_AUTH_020,reqName = Requirement.DOI_AUTH_020_NAME)
+@Requirement(reqId = Requirement.DOI_AUTH_020, reqName = Requirement.DOI_AUTH_020_NAME)
 public final class TokenSecurity {
 
     /**
@@ -79,11 +79,11 @@ public final class TokenSecurity {
      * Plugin for token database.
      */
     private static final AbstractTokenDBHelper TOKEN_DB = PluginFactory.getToken();
-    
+
     /**
      * Logger.
      */
-    private static final Logger LOG = LogManager.getLogger(TokenSecurity.class.getName());    
+    private static final Logger LOG = LogManager.getLogger(TokenSecurity.class.getName());
 
     /**
      * token key.
@@ -98,7 +98,7 @@ public final class TokenSecurity {
         init();
         LOG.traceExit();
     }
-    
+
     /**
      * Access to unique INSTANCE of Settings
      *
@@ -156,6 +156,7 @@ public final class TokenSecurity {
 
         /**
          * Constructor.
+         *
          * @param timeUnit time unit
          */
         TimeUnit(final int timeUnit) {
@@ -164,6 +165,7 @@ public final class TokenSecurity {
 
         /**
          * Returns the time unit.
+         *
          * @return the time unit
          */
         public int getTimeUnit() {
@@ -172,6 +174,7 @@ public final class TokenSecurity {
 
         /**
          * Returns the time unit from a value.
+         *
          * @param value vale
          * @return time unit
          */
@@ -196,17 +199,18 @@ public final class TokenSecurity {
      * @param timeUnit The time unit for the date expiration
      * @param amount the amount of timeUnit for the date expiration
      * @return JWT token
-     * @throws fr.cnes.doi.exception.TokenSecurityException if the projectID is
-     * not first registered
+     * @throws fr.cnes.doi.exception.TokenSecurityException if the projectID is not first registered
      */
-    public String generate(final String userID, final int projectID, 
-            final TokenSecurity.TimeUnit timeUnit, final int amount) throws TokenSecurityException {
-        LOG.traceEntry("Parameters : {}, {}, {} and {}",userID, projectID, timeUnit, amount);
+    public String generate(final String userID,
+            final int projectID,
+            final TokenSecurity.TimeUnit timeUnit,
+            final int amount) throws TokenSecurityException {
+        LOG.traceEntry("Parameters : {}, {}, {} and {}", userID, projectID, timeUnit, amount);
         final Map<String, Integer> projects = UniqueProjectName.getInstance().getProjects();
         final Set<String> projectNameColl = Utils.getKeysByValue(projects, projectID);
         if (projectNameColl.isEmpty()) {
             throw LOG.throwing(new TokenSecurityException(
-                    Status.CLIENT_ERROR_BAD_REQUEST, 
+                    Status.CLIENT_ERROR_BAD_REQUEST,
                     "No register " + PROJECT_ID + ", please create one")
             );
         }
@@ -258,18 +262,17 @@ public final class TokenSecurity {
      *
      * @param jwtToken token JWT
      * @return the information
-     * @throws DoiRuntimeException - if an error happens getting information
-     * from the token
+     * @throws DoiRuntimeException - if an error happens getting information from the token
      */
-    public Jws<Claims> getTokenInformation(final String jwtToken) throws DoiRuntimeException{
+    public Jws<Claims> getTokenInformation(final String jwtToken) throws DoiRuntimeException {
         LOG.traceEntry("Parameter : {}", jwtToken);
         try {
             return LOG.traceExit(Jwts.parser()
                     .requireIssuer(DoiSettings.getInstance().getString(Consts.APP_NAME))
                     .setSigningKey(TextCodec.BASE64.decode(getTokenKey()))
                     .parseClaimsJws(jwtToken));
-        } catch (ExpiredJwtException | UnsupportedJwtException 
-                | MalformedJwtException | SignatureException 
+        } catch (ExpiredJwtException | UnsupportedJwtException
+                | MalformedJwtException | SignatureException
                 | IllegalArgumentException ex) {
             throw LOG.throwing(new DoiRuntimeException("Unable to get the token information", ex));
         }
@@ -277,6 +280,7 @@ public final class TokenSecurity {
 
     /**
      * Returns the token DB.
+     *
      * @return the token DB
      */
     public AbstractTokenDBHelper getTOKEN_DB() {
@@ -292,14 +296,16 @@ public final class TokenSecurity {
      * @param amount amount
      * @return the expiration date
      */
-    private Date computeExpirationDate(final Date now, final int calendarTime, final int amount) {
+    private Date computeExpirationDate(final Date now,
+            final int calendarTime,
+            final int amount) {
         LOG.traceEntry("Parameters : {}, {} and {}", now, calendarTime, amount);
         final Calendar calendar = Calendar.getInstance();
         calendar.setTime(now);
         calendar.add(calendarTime, amount);
         return LOG.traceExit(calendar.getTime());
     }
-    
+
     /**
      * Class to handle the instance
      *
@@ -310,5 +316,5 @@ public final class TokenSecurity {
          * Unique Instance unique
          */
         private static final TokenSecurity INSTANCE = new TokenSecurity();
-    }    
+    }
 }

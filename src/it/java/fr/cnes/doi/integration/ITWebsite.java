@@ -25,6 +25,7 @@ package fr.cnes.doi.integration;
  */
 import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.InitServerForTest;
+import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.exception.ClientMdsException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -41,7 +42,7 @@ public class ITWebsite {
 
     @BeforeClass
     public static void setup() throws ClientMdsException {
-        InitServerForTest.init();
+        InitServerForTest.init(InitSettingsForTest.CONFIG_IT_PROPERTIES);
         driver = new FirefoxDriver();
     }
 

@@ -69,12 +69,11 @@ public abstract class AbstractApplication extends WadlApplication {
     private final DoiSettings config;
 
     /**
-     * This constructor creates an instance of proxySettings and doiSettings. 
-     * By creating the instance, the constructor creates :
+     * This constructor creates an instance of proxySettings and doiSettings. By creating the
+     * instance, the constructor creates :
      * <ul>
-     * <li>the CORS service using the default value
-     * {@link AbstractApplication#DEFAULT_CORS_ORIGIN} and
-     * {@link AbstractApplication#DEFAULT_CORS_CREDENTIALS}</li>
+     * <li>the CORS service using the default value {@link AbstractApplication#DEFAULT_CORS_ORIGIN}
+     * and {@link AbstractApplication#DEFAULT_CORS_CREDENTIALS}</li>
      * <li>the custom status page</li>
      * </ul>
      *
@@ -110,8 +109,8 @@ public abstract class AbstractApplication extends WadlApplication {
     }
 
     /**
-     * Creates the authenticator based on a HTTP basic. 
-     * Creates the user, role and mapping user/role.
+     * Creates the authenticator based on a HTTP basic. Creates the user, role and mapping
+     * user/role.
      *
      * @return Authenticator based on a challenge scheme
      */

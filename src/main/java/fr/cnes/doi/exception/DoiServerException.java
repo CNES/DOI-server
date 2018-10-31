@@ -27,130 +27,167 @@ import org.restlet.resource.ResourceException;
 
 /**
  * General Server Exception
+ *
  * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
  */
 public class DoiServerException extends ResourceException {
 
     /**
      * Creates an exception based on the app and the error coming from Doi-server.
+     *
      * @param app MDS application
      * @param error MDS error
      */
-    public DoiServerException(final Application app, API_MDS error) {
-         super(error.getStatus().getCode(), error.getShortMessage());       
-    }    
-    
-    /**
-     * Creates an exception based on the app and the error coming from Doi-server.
-     * @param app MDS application
-     * @param error MDS error
-     * @param ex Exception
-     */    
-    public DoiServerException(final Application app, API_MDS error, Exception ex) {
-         super(error.getStatus(), error.getShortMessage(), ex);
-    }      
-
-    /**
-     * Creates an exception based on the app and the error coming from Doi-server.
-     * @param app MDS application
-     * @param error MDS error
-     * @param description Description
-     */    
-    public DoiServerException(final Application app, API_MDS error, final String description) {
-         super(error.getStatus().getCode(), error.getShortMessage(), description);
+    public DoiServerException(final Application app,
+            API_MDS error) {
+        super(error.getStatus().getCode(), error.getShortMessage());
     }
 
     /**
      * Creates an exception based on the app and the error coming from Doi-server.
+     *
+     * @param app MDS application
+     * @param error MDS error
+     * @param ex Exception
+     */
+    public DoiServerException(final Application app,
+            API_MDS error,
+            Exception ex) {
+        super(error.getStatus(), error.getShortMessage(), ex);
+    }
+
+    /**
+     * Creates an exception based on the app and the error coming from Doi-server.
+     *
+     * @param app MDS application
+     * @param error MDS error
+     * @param description Description
+     */
+    public DoiServerException(final Application app,
+            API_MDS error,
+            final String description) {
+        super(error.getStatus().getCode(), error.getShortMessage(), description);
+    }
+
+    /**
+     * Creates an exception based on the app and the error coming from Doi-server.
+     *
      * @param app MDS application
      * @param error MDS error
      * @param description Description
      * @param cause Exception
-     */     
-    public DoiServerException(final Application app, API_MDS error, final String description, final Throwable cause) {
-         super(error.getStatus().getCode(), cause, error.getShortMessage(), description);
+     */
+    public DoiServerException(final Application app,
+            API_MDS error,
+            final String description,
+            final Throwable cause) {
+        super(error.getStatus().getCode(), cause, error.getShortMessage(), description);
     }
 
     /**
      * Creates an exception based on the app and the error coming from Doi-server.
+     *
      * @param app MDS application
      * @param error Datacite error
-     */    
-    public DoiServerException(final Application app, DATACITE_API_RESPONSE error) {
-         super(error.getStatus().getCode(), error.getShortMessage());
-         if(DATACITE_API_RESPONSE.INTERNAL_SERVER_ERROR.getStatus().getCode() == error.getStatus().getCode()) {
-             sendAlert(app);
-         }         
-    }  
-    
+     */
+    public DoiServerException(final Application app,
+            DATACITE_API_RESPONSE error) {
+        super(error.getStatus().getCode(), error.getShortMessage());
+        if (DATACITE_API_RESPONSE.INTERNAL_SERVER_ERROR.getStatus().getCode() == error.getStatus().
+                getCode()) {
+            sendAlert(app);
+        }
+    }
+
     /**
      * Creates an exception based on the app and the error coming from Doi-server.
+     *
      * @param app MDS application
      * @param error Datacite error
      * @param ex Exception
-     */     
-    public DoiServerException(final Application app, DATACITE_API_RESPONSE error, Exception ex) {
-         super(error.getStatus(), error.getShortMessage(), ex);
-         if(DATACITE_API_RESPONSE.INTERNAL_SERVER_ERROR.getStatus().getCode() == error.getStatus().getCode()) {
-             sendAlert(app);
-         }         
-    }    
-   
+     */
+    public DoiServerException(final Application app,
+            DATACITE_API_RESPONSE error,
+            Exception ex) {
+        super(error.getStatus(), error.getShortMessage(), ex);
+        if (DATACITE_API_RESPONSE.INTERNAL_SERVER_ERROR.getStatus().getCode() == error.getStatus().
+                getCode()) {
+            sendAlert(app);
+        }
+    }
+
     /**
      * Creates an exception based on the app and the error coming from Doi-server.
+     *
      * @param app MDS application
      * @param error Datacite error
      * @param description description
-     */     
-    public DoiServerException(final Application app, DATACITE_API_RESPONSE error, final String description) {
-         super(error.getStatus().getCode(), error.getShortMessage(), description);
-         if(DATACITE_API_RESPONSE.INTERNAL_SERVER_ERROR.getStatus().getCode() == error.getStatus().getCode()) {
-             sendAlert(app);
-         }         
+     */
+    public DoiServerException(final Application app,
+            DATACITE_API_RESPONSE error,
+            final String description) {
+        super(error.getStatus().getCode(), error.getShortMessage(), description);
+        if (DATACITE_API_RESPONSE.INTERNAL_SERVER_ERROR.getStatus().getCode() == error.getStatus().
+                getCode()) {
+            sendAlert(app);
+        }
     }
-    
+
     /**
      * Creates an exception based on the app and the error coming from Doi-server.
+     *
      * @param app MDS application
      * @param error Datacite error
      * @param description description
      * @param cause Exception
-     */      
-    public DoiServerException(final Application app, DATACITE_API_RESPONSE error, final String description, final Throwable cause) {
-         super(error.getStatus().getCode(), cause, error.getShortMessage(), description);
-         if(DATACITE_API_RESPONSE.INTERNAL_SERVER_ERROR.getStatus().getCode() == error.getStatus().getCode()) {
-             sendAlert(app);
-         }
+     */
+    public DoiServerException(final Application app,
+            DATACITE_API_RESPONSE error,
+            final String description,
+            final Throwable cause) {
+        super(error.getStatus().getCode(), cause, error.getShortMessage(), description);
+        if (DATACITE_API_RESPONSE.INTERNAL_SERVER_ERROR.getStatus().getCode() == error.getStatus().
+                getCode()) {
+            sendAlert(app);
+        }
     }
 
     /**
      * Creates an exception based on the app and the error coming from Doi-server.
+     *
      * @param app MDS application
      * @param status Status
      * @param description description
      * @param cause Exception
-     */     
-    public DoiServerException(final Application app, final Status status, final String description, final Throwable cause) {
+     */
+    public DoiServerException(final Application app,
+            final Status status,
+            final String description,
+            final Throwable cause) {
         super(status, description, cause);
         sendAlert(app);
     }
 
     /**
      * Creates an exception based on the app and the error coming from Doi-server.
+     *
      * @param app MDS application
      * @param status Status
      * @param description description
-     */    
-    public DoiServerException(final Application app,final Status status, final String description) {
-        super(status, description);        
+     */
+    public DoiServerException(final Application app,
+            final Status status,
+            final String description) {
+        super(status, description);
     }
-    
+
     /**
      * Sends the alert to the administrator.
+     *
      * @param app Application
      */
     private void sendAlert(final Application app) {
         ((AbstractApplication) app).sendAlertWhenDataCiteFailed(this);
     }
-    
+
 }
