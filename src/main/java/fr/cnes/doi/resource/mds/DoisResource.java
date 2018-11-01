@@ -50,12 +50,12 @@ import org.restlet.resource.Post;
 public class DoisResource extends BaseMdsResource {
 
     /**
-     *
+     * Function of this resource {@value #LIST_ALL_DOIS}.
      */
     public static final String LIST_ALL_DOIS = "List all DOIs";
 
     /**
-     *
+     * Function of this resource {@value #CREATE_DOI}.
      */
     public static final String CREATE_DOI = "Create a DOI";
 

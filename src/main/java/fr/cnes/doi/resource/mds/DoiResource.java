@@ -48,14 +48,14 @@ import org.restlet.resource.Get;
 public class DoiResource extends BaseMdsResource {
 
     /**
-     *
+     * Function of this resource {@value #GET_DOI}.
      */
     public static final String GET_DOI = "Get DOI";
 
     /**
      * DOI template.
      */
-    private String doiName;
+    private volatile String doiName;
 
     /**
      * Init by getting the DOI name in the {@link DoiMdsApplication#DOI_TEMPLATE template URL}.

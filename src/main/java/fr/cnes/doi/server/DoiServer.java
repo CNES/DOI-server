@@ -21,7 +21,6 @@ package fr.cnes.doi.server;
 import fr.cnes.doi.application.AdminApplication;
 import fr.cnes.doi.application.DoiCrossCiteApplication;
 import fr.cnes.doi.application.DoiMdsApplication;
-import fr.cnes.doi.exception.ClientMdsException;
 import fr.cnes.doi.logging.api.DoiLogDataServer;
 import fr.cnes.doi.logging.business.JsonMessage;
 import fr.cnes.doi.logging.security.DoiSecurityLogFilter;
@@ -178,10 +177,8 @@ public class DoiServer extends Component {
      * Creates an instance of the server with settings coming from the config.properties
      *
      * @param settings settings
-     * @throws fr.cnes.doi.exception.ClientMdsException When it is not possible to load Datacite
-     * schema
      */
-    public DoiServer(final DoiSettings settings) throws ClientMdsException {
+    public DoiServer(final DoiSettings settings) {
         super();
         this.settings = settings;
         startWithProxy();
@@ -217,7 +214,7 @@ public class DoiServer extends Component {
      * Configures the Server in HTTP and HTTPS.
      */
     @Requirement(reqId = Requirement.DOI_ARCHI_010, reqName = Requirement.DOI_ARCHI_010_NAME)
-    private void configureServer() throws ClientMdsException {
+    private void configureServer() {
         LOG.traceEntry();
         initHttpServer();
         initHttpsServer();
@@ -279,7 +276,7 @@ public class DoiServer extends Component {
     /**
      * Routes the applications.
      */
-    private void initAttachApplication() throws ClientMdsException {
+    private void initAttachApplication() {
         LOG.traceEntry();
         final Application appDoiProject = new DoiMdsApplication();
         final Application appAdmin = new AdminApplication();
@@ -296,7 +293,7 @@ public class DoiServer extends Component {
      * Starts with proxy.
      *
      */
-    private void startWithProxy() throws ClientMdsException {
+    private void startWithProxy() {
         LOG.traceEntry();
         initLogServices();
         RoleAuthorizer.getInstance();

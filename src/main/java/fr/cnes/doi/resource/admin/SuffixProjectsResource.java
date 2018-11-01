@@ -59,7 +59,7 @@ public class SuffixProjectsResource extends AbstractResource {
     /**
      * Logger.
      */
-    private Logger LOG;
+    private volatile Logger LOG;
 
     /**
      * Set-up method that can be overridden in order to initialize the state of the resource.

@@ -72,6 +72,11 @@
                 <configuration>
                     <groups>fr.cnes.doi.UnitTest</groups>
                     <skipTests>${skip.unit.tests}</skipTests>
+                    <!--
+                        Fix problem with the new JDK version : 
+                        https://stackoverflow.com/questions/53010200/maven-surefire-could-not-find-forkedbooter-class                                            
+                    -->
+                    <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
                 </configuration>
             </plugin>              
             <plugin>
@@ -80,6 +85,11 @@
                 <version>2.21.0</version>
                 <configuration>
                     <groups>fr.cnes.doi.integration.IntegrationTest</groups>
+                   <!--
+                        Fix problem with the new JDK version : 
+                        https://stackoverflow.com/questions/53010200/maven-surefire-could-not-find-forkedbooter-class                                            
+                    -->                    
+                    <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
                 </configuration>
                 <executions>
                     <execution>
@@ -109,14 +119,16 @@
                 <configuration>
                     <instrumentation>
                         <excludes>
+                            <!-- this is just the starter, we do not care -->
                             <exclude>fr/cnes/doi/server/Starter.class</exclude>
+                            <!-- The specifications, useless to analyze -->
                             <exclude>fr/cnes/doi/utils/spec/*.class</exclude>
-                            <exclude>fr/cnes/doi/exception/*.class</exclude>
-                            <exclude>fr/cnes/doi/logging/**/*.class</exclude>                            
+                            <!-- Generated classes from JAXB -->
                             <exclude>org/datacite/schema/**/*.class</exclude>
-                            <exclude>org/restlet/ext/wadl/*.class</exclude>                            
-                            <exclude>fr/cnes/doi/utils/HttpClientHelperPatch.class</exclude> 
-                            <exclude>fr/cnes/doi/plugin/impl/*.class</exclude>                                                        
+                            <!-- Default plugin / just for test purposes -->
+                            <exclude>fr/cnes/doi/plugin/impl/*.class</exclude>
+                            <!-- Do not check that, is was done for an internal project -->
+                            <exclude>fr/cnes/doi/utils/DoiGUI*.class</exclude>                                             
                         </excludes>
                     </instrumentation>
                 </configuration>

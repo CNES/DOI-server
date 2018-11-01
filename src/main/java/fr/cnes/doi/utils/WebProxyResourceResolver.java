@@ -37,8 +37,7 @@ public class WebProxyResourceResolver implements LSResourceResolver {
     final ClientResource client;
     final String referenceSchemaURI;
 
-    public WebProxyResourceResolver(final ClientResource client,
-            final String schemaURL) {
+    public WebProxyResourceResolver(final ClientResource client, final String schemaURL) {
         this.client = client;
         this.referenceSchemaURI = schemaURL.substring(0, schemaURL.lastIndexOf('/'));
     }
@@ -54,9 +53,7 @@ public class WebProxyResourceResolver implements LSResourceResolver {
     }
 
     @Override
-    public LSInput resolveResource(String type,
-            String namespaceURI,
-            String publicId,
+    public LSInput resolveResource(String type, String namespaceURI, String publicId,
             String systemId,
             String baseURI) {
         final String schemaURL = this.referenceSchemaURI != null ? (this.referenceSchemaURI + "/" + systemId) : systemId;
@@ -66,17 +63,16 @@ public class WebProxyResourceResolver implements LSResourceResolver {
         return input;
     }
 
-    public class WebProxyInput implements LSInput {
+    public static class WebProxyInput implements LSInput {
 
         private String publicId;
         private String systemId;
-        private Representation rep;
+        private final Representation rep;
 
-        public WebProxyInput(String publicId,
-                String sysId,
-                Representation rep) {
+        public WebProxyInput(String publicId, String sysId, Representation rep) {
             this.publicId = publicId;
             this.systemId = sysId;
+            this.rep = rep;
         }
 
         @Override

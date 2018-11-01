@@ -23,7 +23,6 @@ import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.settings.EmailSettings;
 import fr.cnes.doi.utils.Utils;
-import static fr.cnes.doi.utils.Utils.APP_LOGGER_NAME;
 import fr.cnes.doi.utils.spec.Requirement;
 import java.text.MessageFormat;
 import org.apache.logging.log4j.LogManager;
@@ -92,7 +91,7 @@ public class MonitoringLogFilter extends LogFilter {
             final int duration = (int) (System.currentTimeMillis() - startTime);
             if (monitoring.isRegistered(method, path)) {
                 monitoring.addMeasurement(method, path, duration);
-                Engine.getLogger(APP_LOGGER_NAME)
+                Engine.getLogger(Utils.APP_LOGGER_NAME)
                         .info(MessageFormat.format(
                                 "{0}({1} {2}) - current speed average : {3} ms - "
                                         + "current measure: {4} ms",

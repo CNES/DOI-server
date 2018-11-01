@@ -18,6 +18,7 @@
  */
 package fr.cnes.doi.application;
 
+import fr.cnes.doi.client.BaseClient;
 import fr.cnes.doi.db.AbstractTokenDBHelper;
 import fr.cnes.doi.logging.business.JsonMessage;
 import fr.cnes.doi.resource.admin.SuffixProjectsResource;
@@ -36,7 +37,11 @@ import org.apache.logging.log4j.Logger;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
+import org.restlet.data.ChallengeResponse;
+import org.restlet.data.ChallengeScheme;
 import org.restlet.data.LocalReference;
+import org.restlet.data.Status;
+import org.restlet.representation.Representation;
 import org.restlet.resource.Directory;
 import org.restlet.routing.Filter;
 import org.restlet.routing.Redirector;
@@ -192,7 +197,7 @@ public class AdminApplication extends AbstractApplication {
         setDescription("Provides an application for handling features related to "
                 + "the administration system of the DOI server.");
         this.setTaskService(createTaskService());
-        this.tokenDB = TokenSecurity.getInstance().getTOKEN_DB();
+        this.tokenDB = TokenSecurity.getInstance().getTOKEN_DB();       
     }
 
     /**
@@ -350,12 +355,9 @@ public class AdminApplication extends AbstractApplication {
              * @return The continuation status. Either Filter.CONTINUE or Filter.STOP.
              */
             @Override
-            protected int doHandle(final Request request,
-                    final Response response) {
-                final ProxySettings proxySettings = ProxySettings.getInstance();
-                if (proxySettings.isWithProxy()) {
-                    request.setProxyChallengeResponse(proxySettings.getProxyAuthentication());
-                }
+            protected int doHandle(final Request request, final Response response) {
+                response.setLocationRef(TARGET_URL);
+                response.setStatus(Status.REDIRECTION_PERMANENT);                
                 return super.doHandle(request, response);
             }
         };
@@ -390,12 +392,9 @@ public class AdminApplication extends AbstractApplication {
              * @return The continuation status. Either Filter.CONTINUE or Filter.STOP.
              */
             @Override
-            protected int doHandle(final Request request,
-                    final Response response) {
-                final ProxySettings proxySettings = ProxySettings.getInstance();
-                if (proxySettings.isWithProxy()) {
-                    request.setProxyChallengeResponse(proxySettings.getProxyAuthentication());
-                }
+            protected int doHandle(final Request request, final Response response) {
+                response.setLocationRef(TARGET_STATS_URL);
+                response.setStatus(Status.REDIRECTION_PERMANENT);                
                 return super.doHandle(request, response);
             }
         };
@@ -462,6 +461,7 @@ public class AdminApplication extends AbstractApplication {
      *
      * @return the logger
      */
+    @Override
     public Logger getLog() {
         return LOG;
     }

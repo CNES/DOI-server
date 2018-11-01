@@ -50,7 +50,7 @@ public abstract class AbstractResource extends WadlServerResource {
     /**
      * Logger.
      */
-    private Logger LOG;
+    private volatile Logger LOG;
 
     /**
      *

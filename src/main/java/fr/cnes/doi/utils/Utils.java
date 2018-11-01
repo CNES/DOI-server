@@ -55,7 +55,7 @@ public class Utils {
     /**
      * Name of the logger to measure performances {@value #SECURITY_LOGGER_NAME}.
      */
-    public static String SECURITY_LOGGER_NAME = "fr.cnes.doi.logging.security";
+    public static final String SECURITY_LOGGER_NAME = "fr.cnes.doi.logging.security";
 
     /**
      * Checks whether the char sequence is empty.

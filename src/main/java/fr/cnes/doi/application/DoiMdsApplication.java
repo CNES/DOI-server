@@ -22,6 +22,7 @@ import fr.cnes.doi.client.ClientMDS;
 import static fr.cnes.doi.client.ClientMDS.SCHEMA_DATACITE;
 import fr.cnes.doi.db.AbstractTokenDBHelper;
 import fr.cnes.doi.exception.ClientMdsException;
+import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.resource.mds.DoiResource;
 import fr.cnes.doi.resource.mds.DoisResource;
 import fr.cnes.doi.resource.mds.MediaResource;
@@ -160,21 +161,24 @@ public final class DoiMdsApplication extends AbstractApplication {
 
     /**
      * Creates the Digital Object Identifier server application.
-     *
-     * @throws fr.cnes.doi.exception.ClientMdsException Cannot get the Datacite schema
+     * @throws DoiRuntimeException When the DataCite schema is not available
      */
-    public DoiMdsApplication() throws ClientMdsException {
+    public DoiMdsApplication() {
         super();
-        setName(NAME);
-        setDescription("Provides an application for handling Data Object Identifier at CNES<br/>"
-                + "This application provides 3 API:" + "<ul>" + "<li>dois : DOI minting</li>"
-                + "<li>metadata : Registration of the associated metadata</li>"
-                + "<li>media : Possbility to obtain metadata in various formats and/or get "
-                + "automatic, direct access to an object rather than via the \"landing page\"</li>"
-                + "</ul>");
-        final String contextMode = this.getConfig().getString(Consts.CONTEXT_MODE);
-        client = new ClientMDS(ClientMDS.Context.valueOf(contextMode), getLoginMds(), getPwdMds());
-        this.tokenDB = TokenSecurity.getInstance().getTOKEN_DB();
+        try {
+            setName(NAME);
+            setDescription("Provides an application for handling Data Object Identifier at CNES<br/>"
+                    + "This application provides 3 API:" + "<ul>" + "<li>dois : DOI minting</li>"
+                    + "<li>metadata : Registration of the associated metadata</li>"
+                    + "<li>media : Possbility to obtain metadata in various formats and/or get "
+                    + "automatic, direct access to an object rather than via the \"landing page\"</li>"
+                    + "</ul>");
+            final String contextMode = this.getConfig().getString(Consts.CONTEXT_MODE);
+            client = new ClientMDS(ClientMDS.Context.valueOf(contextMode), getLoginMds(), getPwdMds());
+            this.tokenDB = TokenSecurity.getInstance().getTOKEN_DB();
+        } catch (ClientMdsException ex) {
+            throw LOG.throwing(new DoiRuntimeException(ex));
+        }
     }
 
     /**
@@ -491,7 +495,7 @@ public final class DoiMdsApplication extends AbstractApplication {
      * is authorized by oauth but non authorized by the service because the user's role is not
      * related to any projects
      */
-    public class SecurityPostProcessingFilter extends Filter {
+    public static class SecurityPostProcessingFilter extends Filter {
         
         /**
          * Constructor

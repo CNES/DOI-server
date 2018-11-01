@@ -33,6 +33,7 @@
  *
  * <img src="{@docRoot}/doc-files/server.png" alt="Server overview">
  *
+ * <p>
  * A user can basically query DataCite for getting, creating, updating, deleting and searching a
  * DOI. For this, he should use the web services of each application or the web page available in
  * the administration application.

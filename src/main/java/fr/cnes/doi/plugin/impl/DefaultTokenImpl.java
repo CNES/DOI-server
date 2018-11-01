@@ -61,7 +61,7 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
     private static final String DEFAULT_CACHE_FILE = "data" + File.separator + "token.conf";
     private final String NAME = this.getClass().getName();
 
-    private String tokenConf;
+    private volatile String tokenConf;
 
     /**
      * My database.

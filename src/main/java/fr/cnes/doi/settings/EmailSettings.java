@@ -61,49 +61,41 @@ public final class EmailSettings {
      * Logger.
      */
     private static final Logger LOG = LogManager.getLogger(EmailSettings.class.getName());
-    /**
-     * Access to unique INSTANCE of Settings
-     *
-     * @return the configuration instance.
-     */
-    public static EmailSettings getInstance() {
-        return EmailSettingsHolder.INSTANCE;
-    }
 
     /**
      * SMTP URL.
      */
-    private String smtpUrl;
+    private volatile String smtpUrl;
 
     /**
      * SMTP protocol.
      */
-    private String smtpProtocol;
+    private volatile String smtpProtocol;
 
     /**
      * TLS.
      */
-    private String tlsEnable;
+    private volatile String tlsEnable;
 
     /**
      * login.
      */
-    private String authUser;
+    private volatile String authUser;
 
     /**
      * Password.
      */
-    private String authPwd;
+    private volatile String authPwd;
 
     /**
      * Contact admin uRL.
      */
-    private String contactAdmin;
+    private volatile String contactAdmin;
 
     /**
      * debug.
      */
-    private boolean debug = DEFAULT_DEBUG;
+    private volatile boolean debug = DEFAULT_DEBUG;
 
     /**
      * Constructor
@@ -145,6 +137,15 @@ public final class EmailSettings {
 
         LOG.traceExit();
     }
+    
+    /**
+     * Access to unique INSTANCE of Settings
+     *
+     * @return the configuration instance.
+     */
+    public static EmailSettings getInstance() {
+        return EmailSettingsHolder.INSTANCE;
+    }    
 
     /**
      * Sets the debug.

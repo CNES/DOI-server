@@ -47,17 +47,17 @@ public class FormatCitationResource extends BaseCitationResource {
     /**
      * The digital object identifier to format.
      */
-    private String doiName;
+    private volatile String doiName;
 
     /**
      * The style of formatting.
      */
-    private String style;
+    private volatile String style;
 
     /**
      * The language to format.
      */
-    private String language;
+    private volatile String language;
 
     /**
      * Init by getting doi, lang and style values.

@@ -38,7 +38,7 @@
     <module name="LeftCurly"/>
     <module name="LocalFinalVariableName"/>
     <module name="LocalVariableName">
-	  <property name="format" value="^e[a-z][a-zA-Z0-9]*$"/>
+	  <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
       <property name="allowOneCharVarInForLoop" value="true"/>
       <property name="tokens" value="VARIABLE_DEF"/>
     </module>

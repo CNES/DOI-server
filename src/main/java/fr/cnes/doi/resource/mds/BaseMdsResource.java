@@ -54,12 +54,12 @@ public class BaseMdsResource extends AbstractResource {
     /**
      * Logger.
      */
-    protected Logger LOG;
+    protected volatile Logger LOG;
 
     /**
      * DOI Mds application.
      */
-    private DoiMdsApplication doiApp;
+    private volatile DoiMdsApplication doiApp;
 
     /**
      * Init.

@@ -44,7 +44,7 @@ import org.xml.sax.SAXException;
 public class MetadatasResource extends BaseMdsResource {
 
     /**
-     *
+     * Function of this resource {@value #CREATE_METADATA}.
      */
     public static final String CREATE_METADATA = "Create Metadata";
 

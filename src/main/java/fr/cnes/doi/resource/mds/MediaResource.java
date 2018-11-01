@@ -54,7 +54,7 @@ public class MediaResource extends BaseMdsResource {
     /**
      * DOI parsed from the URL.
      */
-    private String mediaName;
+    private volatile String mediaName;
 
     /**
      * Init by getting the media name.

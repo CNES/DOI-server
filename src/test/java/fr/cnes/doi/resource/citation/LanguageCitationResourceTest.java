@@ -134,7 +134,6 @@ public class LanguageCitationResourceTest {
         String result = "";
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);
         ClientResource client = new ClientResource("http://localhost:" + port + "/citation/language");
-        client.setNext(cl);
         try {
             List<String> rep = client.get(List.class);
             result = rep.get(0);

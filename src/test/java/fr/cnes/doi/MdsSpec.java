@@ -138,8 +138,12 @@ public class MdsSpec extends AbstractSpec {
     private final MockupServer mockServer;
     
     public MdsSpec(int port) {
-        this.mockServer = new MockupServer(port);
-    }   
+        this(port, -1);
+    } 
+    
+    public MdsSpec(int port, int portProxy) {
+        this.mockServer = new MockupServer(port, portProxy);
+    }      
     
     public void createSpec(final Spec specification) {
         final String path = specification.getTemplatePath().isEmpty() 

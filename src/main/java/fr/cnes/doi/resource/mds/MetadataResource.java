@@ -44,19 +44,19 @@ import org.restlet.resource.Get;
 public class MetadataResource extends BaseMdsResource {
 
     /**
-     *
+     * Function of this resource {@value #GET_METADATA}.
      */
     public static final String GET_METADATA = "Get a Metadata";
 
     /**
-     *
+     * Function of this resource {@value #DELETE_METADATA}.
      */
     public static final String DELETE_METADATA = "Delete a Metadata";
 
     /**
      * DOI name, which is set on the URL template.
      */
-    private String doiName;
+    private volatile String doiName;
 
     /**
      * Init by getting a DOI.

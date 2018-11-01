@@ -18,7 +18,6 @@
  */
 package fr.cnes.doi.server;
 
-import fr.cnes.doi.exception.ClientMdsException;
 import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.resource.admin.SuffixProjectsResource;
 import fr.cnes.doi.security.TokenSecurity;
@@ -59,6 +58,7 @@ public class Starter {
 
 
     /**
+     * Length of the secret key {@value #BITS_16}
      */
     public static final int BITS_16 = 16;
 
@@ -165,9 +165,8 @@ public class Starter {
      * Launches the server.
      *
      * @param settings Configuration
-     * @throws ClientMdsException When it is not possible to load the Datacite schema.
      */
-    private static void launchServer(final DoiSettings settings) throws ClientMdsException {
+    private static void launchServer(final DoiSettings settings) {
         LOG.trace("Entering in launchServer");
         settings.validConfigurationFile();
         doiServer = new DoiServer(settings);
@@ -269,9 +268,8 @@ public class Starter {
                     LOG.debug("s option is selected");
                     try {
                         launchServer(settings);
-                    } catch (ClientMdsException ex) {
-                        LOG.fatal("Cannot connect to internet to get the Datacite schema :" + ex.
-                                getMessage());
+                    } catch (DoiRuntimeException ex) {
+                        LOG.fatal("Error when starting the server: "+ex.getMessage());
                     }
                     break;
                 //

@@ -49,9 +49,7 @@ public class DoiMonitoring {
      * @param path path URI
      * @param description Feature's description
      */
-    public void register(final Method name,
-            final String path,
-            final String description) {
+    public void register(final Method name, final String path, final String description) {
         LOG.traceEntry("Parameters : {}, {}, {}", name, path, description);
         this.applications.put(name.getName() + path, new DoiMonitoringRecord(description, 0.0f, 0));
         LOG.traceExit();

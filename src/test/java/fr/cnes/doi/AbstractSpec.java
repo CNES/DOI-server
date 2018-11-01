@@ -23,6 +23,8 @@ import static java.lang.Thread.sleep;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.mockserver.integration.ClientAndProxy;
+import static org.mockserver.integration.ClientAndProxy.startClientAndDirectProxy;
 import org.mockserver.integration.ClientAndServer;
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.mockserver.model.HttpRequest.request;
@@ -31,12 +33,14 @@ import org.mockserver.verify.VerificationTimes;
 
 /**
  * Test specifications.
+ *
  * @author Jean-Christophe Malapert
  */
 public class AbstractSpec {
 
     private static ClientAndServer mockServer;
-    
+    private static ClientAndProxy mockProxy;
+
     /**
      *
      */
@@ -80,15 +84,14 @@ public class AbstractSpec {
     /**
      *
      */
-    public static final String ANSI_WHITE = "\u001B[37m";    
+    public static final String ANSI_WHITE = "\u001B[37m";
 
-    
     /**
      *
      * @param title
      */
     public static void classTitle(final String title) {
-        System.out.println("\n\n"+ANSI_BLUE+"------ Testing "+title+" ------"+ANSI_RESET);
+        System.out.println("\n\n" + ANSI_BLUE + "------ Testing " + title + " ------" + ANSI_RESET);
     }
 
     /**
@@ -96,16 +99,23 @@ public class AbstractSpec {
      * @param title
      */
     public static void testTitle(final String title) {
-        System.out.println(ANSI_BLUE+"Testing: "+title+ANSI_RESET);
-    }    
+        System.out.println(ANSI_BLUE + "Testing: " + title + ANSI_RESET);
+    }
 
     /**
      *
      * @author Jean-Christophe Malapert
      */
     protected class MockupServer {
+        
+        private final boolean hasProxy;
 
         public MockupServer(int port) {
+            this(port, -1);
+        }
+
+        public MockupServer(int port, int proxyPort) {
+            this.hasProxy = proxyPort != -1;
             mockServer = startClientAndServer(port);
             while (!mockServer.isRunning()) {
                 try {
@@ -113,6 +123,17 @@ public class AbstractSpec {
                     sleep(1000);
                 } catch (InterruptedException ex) {
                     Logger.getLogger(MockupServer.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if (hasProxy) {
+                mockProxy = startClientAndDirectProxy(proxyPort, "localhost", port);                
+                while (!mockProxy.isRunning()) {
+                    try {
+                        // wait the server starts.
+                        sleep(1000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(MockupServer.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
         }
@@ -128,26 +149,47 @@ public class AbstractSpec {
                             response()
                                     .withBody(body, StandardCharsets.UTF_8)
                                     .withStatusCode(statusCode)
-                    );  
+                    );
         }
-                      
+
         public void verifySpec(String verb, String path) {
+            if(hasProxy) {
+                mockProxy.verify(
+                    request()
+                            .withMethod(verb)
+                            .withPath(path), VerificationTimes.exactly(1)                        
+                );
+            }            
             mockServer.verify(
                     request()
                             .withMethod(verb)
                             .withPath(path), VerificationTimes.atLeast(1)
             );
-        }        
-        
+        }
+
         public void verifySpec(String verb, String path, int exactly) {
+            if(hasProxy) {
+                mockProxy.verify(
+                    request()
+                            .withMethod(verb)
+                            .withPath(path), VerificationTimes.exactly(exactly)                        
+                );
+            }
             mockServer.verify(
                     request()
                             .withMethod(verb)
                             .withPath(path), VerificationTimes.exactly(exactly)
             );
-        }        
+        }
 
         public void close() {
+            if(hasProxy) {
+                try {
+                    mockProxy.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(AbstractSpec.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }            
             try {
                 mockServer.close();
             } catch (IOException ex) {

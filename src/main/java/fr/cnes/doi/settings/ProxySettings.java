@@ -35,6 +35,7 @@ public final class ProxySettings {
      * Application logger.
      */
     private static final Logger LOG = LogManager.getLogger(ProxySettings.class.getName());
+    
     /**
      * Access to unique INSTANCE of Settings
      *
@@ -48,37 +49,37 @@ public final class ProxySettings {
     /**
      * Proxy configuration - host
      */
-    private String proxyHost = null;
+    private volatile String proxyHost;
 
     /**
      * Proxy configuration - port
      */
-    private String proxyPort = null;
+    private volatile String proxyPort;
 
     /**
      * Proxy configuration - user
      */
-    private String proxyUser = null;
+    private volatile String proxyUser;
 
     /**
      * Proxy configuration - password
      */
-    private String proxyPassword = null;
+    private volatile String proxyPassword;
 
     /**
      * Proxy configuration - password
      */
-    private String nonProxyHosts = null;
+    private volatile String nonProxyHosts;
 
     /**
      * Cache Proxy ChallengeResponse
      */
-    private ChallengeResponse proxyAuthentication = null;
+    private volatile ChallengeResponse proxyAuthentication;
 
     /**
      * Proxy configuration enable / disable
      */
-    private boolean proxySet = false;
+    private volatile boolean proxySet = false;
 
     /**
      * Private constructor
@@ -111,7 +112,7 @@ public final class ProxySettings {
         this.proxyPassword = settings.getSecret(Consts.SERVER_PROXY_PWD);
         LOG.info("proxyPassword : {}", this.proxyPassword);
 
-        this.nonProxyHosts = settings.getString(Consts.SERVER_NONPROXY_HOSTS);
+        this.nonProxyHosts = settings.getString(Consts.SERVER_NONPROXY_HOSTS,"");
         LOG.info("nonProxyHosts : {}", this.nonProxyHosts);
 
         this.proxySet = settings.getBoolean(Consts.SERVER_PROXY_USED);

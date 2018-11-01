@@ -51,12 +51,12 @@ public class BaseCitationResource extends AbstractResource {
     /**
      * Logger.
      */
-    protected Logger LOG;
+    protected volatile Logger LOG;
 
     /**
      * Cross cite application.
      */
-    private DoiCrossCiteApplication app;
+    private volatile DoiCrossCiteApplication app;
 
     /**
      * Init.

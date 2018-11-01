@@ -63,31 +63,21 @@ public final class DoiSettings {
      * Test DOI : {@value #INIST_TEST_DOI}.
      */
     private static final String INIST_TEST_DOI = "10.5072";
-    /**
-     * Access to unique INSTANCE of Settings
-     *
-     * @return the configuration instance.
-     */
-    public static DoiSettings getInstance() {
-        LOG.traceEntry();
-        return LOG.traceExit(DoiSettingsHolder.INSTANCE);
-    }
 
     /**
      * Settings loaded in memory.
      */
-    private final ConcurrentHashMap<String, String> map = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, String> MAP_PROPERTIES = new ConcurrentHashMap<>();
 
     /**
      * Secret key to decrypt login and password.
      */
-    private String secretKey = UtilsCryptography.DEFAULT_SECRET_KEY;
+    private volatile String secretKey = UtilsCryptography.DEFAULT_SECRET_KEY;
 
     /**
      * Path where the Java application inputStream located.
      */
-    private String pathApp;
-
+    private volatile String pathApp;
     
     /**
      * private constructor Loads the defautl configuration properties {@value #CONFIG_PROPERTIES}
@@ -110,7 +100,7 @@ public final class DoiSettings {
         LOG.log(level, "----- DOI parameters ----");
         fillConcurrentMap(properties, level);
         computePathOfTheApplication();
-        PluginFactory.init(this.map);
+        PluginFactory.init(DoiSettings.MAP_PROPERTIES);
         LOG.log(level, "DOI settings have been loaded");
         LOG.log(level, "-------------------------");
         LOG.info(properties.getProperty(Consts.NAME) + " loaded");
@@ -156,31 +146,41 @@ public final class DoiSettings {
     }
 
     /**
+     * Access to unique INSTANCE of Settings
+     *
+     * @return the configuration instance.
+     */
+    public static DoiSettings getInstance() {
+        LOG.traceEntry();
+        return LOG.traceExit(DoiSettingsHolder.INSTANCE);
+    }
+    
+    /**
      * Validates the configuration file.
      */
     public void validConfigurationFile() {
         LOG.traceEntry();
         final StringBuilder validation = new StringBuilder();
         final String message = "Sets ";
-        if (isNotExist(this.map, Consts.INIST_DOI)) {
+        if (isNotExist(DoiSettings.MAP_PROPERTIES, Consts.INIST_DOI)) {
             validation.append(message).append(Consts.INIST_DOI).append("\n");
         }
-        if (isNotExist(this.map, Consts.INIST_LOGIN)) {
+        if (isNotExist(DoiSettings.MAP_PROPERTIES, Consts.INIST_LOGIN)) {
             validation.append(message).append(Consts.INIST_LOGIN).append("\n");
         }
-        if (isNotExist(this.map, Consts.INIST_PWD)) {
+        if (isNotExist(DoiSettings.MAP_PROPERTIES, Consts.INIST_PWD)) {
             validation.append(message).append(Consts.INIST_PWD).append("\n");
         }
-        if (isNotExist(this.map, Consts.SERVER_PROXY_USED)) {
+        if (isNotExist(DoiSettings.MAP_PROPERTIES, Consts.SERVER_PROXY_USED)) {
             validation.append(message).append(Consts.SERVER_PROXY_USED).append("\n");
         }
-        if (isNotExist(this.map, Consts.PLUGIN_PROJECT_SUFFIX)) {
+        if (isNotExist(DoiSettings.MAP_PROPERTIES, Consts.PLUGIN_PROJECT_SUFFIX)) {
             validation.append(message).append(Consts.PLUGIN_PROJECT_SUFFIX).append("\n");
         }
-        if (isNotExist(this.map, Consts.PLUGIN_TOKEN)) {
+        if (isNotExist(DoiSettings.MAP_PROPERTIES, Consts.PLUGIN_TOKEN)) {
             validation.append(message).append(Consts.PLUGIN_TOKEN).append("\n");
         }
-        if (isNotExist(this.map, Consts.PLUGIN_USER_GROUP_MGT)) {
+        if (isNotExist(DoiSettings.MAP_PROPERTIES, Consts.PLUGIN_USER_GROUP_MGT)) {
             validation.append(message).append(Consts.PLUGIN_USER_GROUP_MGT).append("\n");
         }
         if (validation.length() != 0) {
@@ -216,7 +216,7 @@ public final class DoiSettings {
     }
 
     /**
-     * Sets the configuration as a map.
+     * Sets the configuration as a MAP_PROPERTIES.
      *
      * @param properties the configuration file content
      * @param level log level
@@ -225,7 +225,7 @@ public final class DoiSettings {
             final Level level) {
         LOG.traceEntry("Paramete : {}", properties);
         for (final Entry<Object, Object> entry : properties.entrySet()) {
-            map.put((String) entry.getKey(), (String) entry.getValue());
+            MAP_PROPERTIES.put((String) entry.getKey(), (String) entry.getValue());
             LOG.log(level, "{} = {}", entry.getKey(), entry.getValue());
         }
         LOG.traceExit();
@@ -274,7 +274,7 @@ public final class DoiSettings {
     public String getString(final String key,
             final String defaultValue) {
         LOG.traceEntry("Parameters : {} and {}", key, defaultValue);
-        return LOG.traceExit(map.getOrDefault(key, defaultValue));
+        return LOG.traceExit(MAP_PROPERTIES.getOrDefault(key, defaultValue));
     }
 
     /**
