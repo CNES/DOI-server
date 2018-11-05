@@ -53,23 +53,17 @@ public class BaseClient {
      */
     private volatile ClientResource client;
 
+    static {
+        final List<ConnectorHelper<Client>> registeredClients = Engine.getInstance().
+                getRegisteredClients();
+        registeredClients.add(0, new HttpClientHelperPatch());
+    }
     /**
      * Constructor.
      *
      * @param uri URI of the client's end point
      */
     public BaseClient(final String uri) {
-        final List<ConnectorHelper<Client>> registeredClients = Engine.getInstance().
-                getRegisteredClients();
-        for (int i = registeredClients.size() - 1; i >= 0; i--) {
-            ConnectorHelper<Client> conn = registeredClients.get(i);
-            if (conn.getProtocols().contains(Protocol.HTTP) || conn.getProtocols().contains(
-                    Protocol.HTTPS)) {
-                registeredClients.remove(i);
-            }
-        }
-        registeredClients.add(new HttpClientHelperPatch());
-        Engine.getInstance().setRegisteredClients(registeredClients);
         this.client = new ClientResource(uri);
         this.client.setLoggable(false);
         this.client.setRetryOnError(true);
