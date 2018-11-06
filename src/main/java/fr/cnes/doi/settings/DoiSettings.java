@@ -103,7 +103,7 @@ public final class DoiSettings {
         PluginFactory.init(DoiSettings.MAP_PROPERTIES);
         LOG.log(level, "DOI settings have been loaded");
         LOG.log(level, "-------------------------");
-        LOG.info(properties.getProperty(Consts.NAME) + " loaded");
+        LOG.info(properties.getProperty(Consts.NAME) + " loaded"); 
         LOG.traceExit();
     }
 
@@ -436,6 +436,11 @@ public final class DoiSettings {
         final Properties properties = new Properties();
         properties.load(inputStream);
         init(properties, Level.INFO);
+        // the following singletons depend on DoiSettings.
+        // So if we init DoiSettings, we need to init the following
+        // singletons
+        ProxySettings.getInstance().init();
+        EmailSettings.getInstance().init();        
         LOG.traceExit();
     }
 
