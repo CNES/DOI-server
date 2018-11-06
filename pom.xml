@@ -249,9 +249,9 @@
                 </executions>                
                 <configuration>
                     <show>private</show>
-                    <!--<encoding>UTF-8</encoding>-->
+                    <encoding>UTF-8</encoding>
                     <!--<docencoding>UTF-8</docencoding>-->
-                    <!--<charset>UTF-8</charset>-->
+                    <charset>UTF-8</charset>
                     <groups>
                         <group>
                             <title>Core Packages</title>
@@ -331,10 +331,15 @@
             <version>${restlet-version}</version>
         </dependency>
         <dependency>
-            <groupId>org.restlet.jee</groupId>
+            <groupId>org.restlet.jse</groupId>
             <artifactId>org.restlet.ext.slf4j</artifactId>
             <version>${restlet-version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.restlet.jse</groupId>
+            <artifactId>org.restlet.ext.httpclient</artifactId>
+            <version>${restlet-version}</version>
+        </dependency>        
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
