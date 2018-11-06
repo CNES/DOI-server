@@ -36,6 +36,7 @@ import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.restlet.Client;
 import org.restlet.Context;
 import org.restlet.Request;
+import org.restlet.data.Protocol;
 import org.restlet.engine.adapter.ClientCall;
 import org.restlet.engine.util.ReferenceUtils;
 import org.restlet.ext.jetty.HttpClientHelper;
@@ -199,7 +200,7 @@ public class HttpClientHelperPatch extends HttpClientHelper {
      */
     private boolean hasAuthenticationProxy(final String login,
             final String pwd) {
-        return !(login == null && pwd == null);
+        return !(login.isEmpty() && pwd.isEmpty());
     }
 
     /**

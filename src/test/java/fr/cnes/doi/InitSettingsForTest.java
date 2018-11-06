@@ -30,28 +30,40 @@ import java.util.stream.Collectors;
 import fr.cnes.doi.client.ClientProxyTest;
 import fr.cnes.doi.security.UtilsCryptography;
 import fr.cnes.doi.settings.DoiSettings;
+import fr.cnes.doi.utils.HttpClientHelperPatch;
+import fr.cnes.doi.utils.HttpClientHelperPatchAC;
 import java.io.IOException;
+import java.util.List;
+import org.restlet.Client;
 import org.restlet.engine.Engine;
+import org.restlet.engine.connector.ConnectorHelper;
 
 /**
- * Class to read the settings from the crypted config file and to enable the
- * proxy if the system property has been sets
+ * Class to read the settings from the crypted config file and to enable the proxy if the system
+ * property has been sets
  *
  * @author Claire
  *
  */
-public class InitSettingsForTest {
+public class InitSettingsForTest {    
+    
+    
+    static {
+        final List<ConnectorHelper<Client>> registeredClients = Engine.getInstance().
+                getRegisteredClients();
+        registeredClients.add(0, new HttpClientHelperPatchAC(null));
+    }       
 
     /**
      * Init loggers.
      */
     private static final Logger LOGGER = Engine.getLogger(InitSettingsForTest.class);
-    
+
     /**
      * Properties file for tests.
      */
     public static final String CONFIG_TEST_PROPERTIES = "config-test.properties";
-    
+
     /**
      * Properties files for it.
      */
@@ -59,25 +71,29 @@ public class InitSettingsForTest {
 
     /**
      * Reads the settings.
+     *
      * @param configProperties config properties
      */
     public static void init(final String configProperties) {
         try {
             String secretKey = System.getProperty("private.key");
             String result;
-            try (InputStream inputStream = ClientProxyTest.class.getResourceAsStream("/"+configProperties)) {
+            try (InputStream inputStream = ClientProxyTest.class.getResourceAsStream(
+                    "/" + configProperties)) {
                 result = new BufferedReader(new InputStreamReader(inputStream)).lines()
                         .collect(Collectors.joining("\n"));
             }
             if (secretKey != null) {
                 result = UtilsCryptography.decrypt(result, secretKey);
             } else {
-                LOGGER.log(Level.WARNING, "No private.key provided, the configuration is not crypted");
+                LOGGER.log(Level.WARNING,
+                        "No private.key provided, the configuration is not crypted");
             }
             // Replace the value to use the proxy by the system property
             String useProxy = System.getProperty("proxy.use");
             if (useProxy != null) {
-                result = result.replace("Starter.Proxy.used = false", "Starter.Proxy.used=" + useProxy);
+                result = result.replace("Starter.Proxy.used = false",
+                        "Starter.Proxy.used=" + useProxy);
             } else {
                 LOGGER.log(Level.INFO, "The key proxy.use is not set, default param applied");
             }
@@ -86,9 +102,9 @@ public class InitSettingsForTest {
 
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Error during initialisation of the settings", e);
-        }        
+        }
     }
-    
+
     /**
      * Reads the settings.
      *

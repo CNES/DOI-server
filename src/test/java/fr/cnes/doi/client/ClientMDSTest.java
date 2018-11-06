@@ -20,22 +20,18 @@ package fr.cnes.doi.client;
 
 import static fr.cnes.doi.AbstractSpec.classTitle;
 import static fr.cnes.doi.AbstractSpec.testTitle;
+import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.MdsSpec;
 import fr.cnes.doi.UnitTest;
 import static fr.cnes.doi.client.BaseClient.DATACITE_MOCKSERVER_PORT;
 import fr.cnes.doi.exception.ClientMdsException;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
-import fr.cnes.doi.settings.ProxySettings;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.logging.Level;
-import java.util.logging.LogManager;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import net.sourceforge.htmlunit.corejs.javascript.ast.DoLoop;
 import org.datacite.schema.kernel_4.Resource;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -73,6 +69,7 @@ public class ClientMDSTest {
     @BeforeClass
     public static void setUpClass() {
         classTitle("ClientMDS");
+        InitSettingsForTest.init(InitSettingsForTest.CONFIG_TEST_PROPERTIES);
     }
 
     @AfterClass
@@ -81,7 +78,7 @@ public class ClientMDSTest {
 
     @Before
     public void setUp() {
-        mdsServerStub = new MdsSpec(DATACITE_MOCKSERVER_PORT);       
+        mdsServerStub = new MdsSpec(DATACITE_MOCKSERVER_PORT);      
     }
 
     @After

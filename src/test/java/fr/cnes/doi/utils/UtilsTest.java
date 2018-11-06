@@ -20,6 +20,7 @@ package fr.cnes.doi.utils;
 
 import static fr.cnes.doi.AbstractSpec.classTitle;
 import static fr.cnes.doi.AbstractSpec.testTitle;
+import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.UnitTest;
 import fr.cnes.doi.security.UtilsCryptography;
 import org.junit.After;
@@ -43,6 +44,7 @@ public class UtilsTest {
     @BeforeClass
     public static void setUpClass() {
         classTitle("Utils");
+        InitSettingsForTest.init(InitSettingsForTest.CONFIG_TEST_PROPERTIES); 
     }
     
     @AfterClass

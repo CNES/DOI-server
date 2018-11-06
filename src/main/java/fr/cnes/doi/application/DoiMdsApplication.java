@@ -73,13 +73,16 @@ import org.restlet.security.MethodAuthorizer;
  *
  * <p>
  * <b>Security</b><br>
+ * <code>
  * --------------<br>
  * The authentication is done by the following pipeline:<br>
  * |Method authorization|-->|Authentication login/pwd|-->|Authentication token|<br>
  * Method authorization : Only GET method does not need an authorization
+ * </code>
  *
  * <p>
  * <b>Routing</b><br>
+ * <code>
  * --------------<br>
  * <br>
  * root<br>
@@ -89,7 +92,7 @@ import org.restlet.security.MethodAuthorizer;
  * |__ metadata (authorization)<br>
  * |__ metadata/{doiName} (authorization)<br>
  * |__ media/{doiName} (authorization)<br>
- *
+ * </code>
  * @see #createInboundRoot the resources related to this application
  * @see <a href="http://www.doi.org/hb.html">DOI Handbook</a>
  * @see <a href="https://mds.datacite.org/static/apidoc">API Documentation</a>

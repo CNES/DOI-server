@@ -20,7 +20,6 @@ package fr.cnes.doi.settings;
 
 import static fr.cnes.doi.AbstractSpec.classTitle;
 import static fr.cnes.doi.AbstractSpec.testTitle;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import org.junit.After;
@@ -32,8 +31,14 @@ import org.restlet.data.ChallengeResponse;
 
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.UnitTest;
+import fr.cnes.doi.client.ClientSearchDataCite;
+import java.util.List;
 import org.junit.Assert;
+import static org.junit.Assert.assertTrue;
 import org.junit.experimental.categories.Category;
+import org.restlet.Client;
+import org.restlet.engine.Engine;
+import org.restlet.engine.connector.ConnectorHelper;
 
 /**
  * Test class for {@link fr.cnes.doi.settings.ProxySettings}
@@ -49,9 +54,9 @@ public class ProxySettingsTest {
      */
     @BeforeClass
     public static void setUpClass() {
-        InitSettingsForTest.init();
+        classTitle("ProxySettings");        
+        InitSettingsForTest.init(InitSettingsForTest.CONFIG_TEST_PROPERTIES);
         instance = ProxySettings.getInstance();
-        classTitle("ProxySettings");
     }
 
     @AfterClass
@@ -59,12 +64,22 @@ public class ProxySettingsTest {
     }
 
     @Before
-    public void setUp() {
+    public void setUp() {       
     }
 
     @After
     public void tearDown() {
     }
+    
+    @Test
+    public void testGetDois() throws Exception {
+        testTitle("testGetDois");
+
+        ClientSearchDataCite searchDatacite = new ClientSearchDataCite("10.24400");
+        List<String> dois = searchDatacite.getDois(); 
+        //System.out.println(dois);
+        assertTrue("IT Test searchDatacite",dois.size() > 0);
+    }    
 
     /**
      * Test of isWithProxy method, of class ProxySettings.
@@ -72,9 +87,8 @@ public class ProxySettingsTest {
     @Test
     public void testIsWithProxy() {
         testTitle("testIsWithProxy");
-        boolean expResult = false;
         boolean result = instance.isWithProxy();
-        assertEquals(expResult, result);
+        assertTrue(true);
     }
 
     /**

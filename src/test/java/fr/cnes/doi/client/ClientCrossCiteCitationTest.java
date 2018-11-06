@@ -21,9 +21,11 @@ package fr.cnes.doi.client;
 import static fr.cnes.doi.AbstractSpec.classTitle;
 import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.CrossCiteSpec;
+import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.UnitTest;
 import static fr.cnes.doi.client.BaseClient.DATACITE_MOCKSERVER_PORT;
 import fr.cnes.doi.exception.ClientCrossCiteException;
+import fr.cnes.doi.utils.HttpClientHelperPatchAC;
 import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -34,6 +36,9 @@ import static org.junit.Assert.*;
 import org.junit.Rule;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
+import org.restlet.Client;
+import org.restlet.engine.Engine;
+import org.restlet.engine.connector.ConnectorHelper;
 
 /**
  * Test of Citation resources
@@ -54,6 +59,7 @@ public class ClientCrossCiteCitationTest {
     @BeforeClass
     public static void setUpClass() {
         classTitle("ClientCrossCiteCitation");
+        InitSettingsForTest.init(InitSettingsForTest.CONFIG_TEST_PROPERTIES);
     }
 
     @AfterClass
@@ -62,7 +68,7 @@ public class ClientCrossCiteCitationTest {
 
     @Before
     public void setUp() {
-        crossCiteServerStub = new CrossCiteSpec(DATACITE_MOCKSERVER_PORT);
+        crossCiteServerStub = new CrossCiteSpec(DATACITE_MOCKSERVER_PORT);        
     }
 
     @After

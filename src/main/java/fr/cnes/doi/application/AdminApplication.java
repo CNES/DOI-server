@@ -18,7 +18,6 @@
  */
 package fr.cnes.doi.application;
 
-import fr.cnes.doi.client.BaseClient;
 import fr.cnes.doi.db.AbstractTokenDBHelper;
 import fr.cnes.doi.logging.business.JsonMessage;
 import fr.cnes.doi.resource.admin.SuffixProjectsResource;
@@ -26,7 +25,6 @@ import fr.cnes.doi.resource.admin.TokenResource;
 import fr.cnes.doi.security.AllowerIP;
 import fr.cnes.doi.security.TokenSecurity;
 import fr.cnes.doi.services.LandingPageMonitoring;
-import fr.cnes.doi.settings.ProxySettings;
 import fr.cnes.doi.utils.spec.CoverageAnnotation;
 import fr.cnes.doi.utils.spec.Requirement;
 import java.io.File;
@@ -37,11 +35,8 @@ import org.apache.logging.log4j.Logger;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
-import org.restlet.data.ChallengeResponse;
-import org.restlet.data.ChallengeScheme;
 import org.restlet.data.LocalReference;
 import org.restlet.data.Status;
-import org.restlet.representation.Representation;
 import org.restlet.resource.Directory;
 import org.restlet.routing.Filter;
 import org.restlet.routing.Redirector;

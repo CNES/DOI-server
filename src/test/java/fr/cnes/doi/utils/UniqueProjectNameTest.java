@@ -58,8 +58,8 @@ public class UniqueProjectNameTest {
      */
     @BeforeClass
     public static void setUpClass() {
-        InitSettingsForTest.init();
-        classTitle("UniqueProjectName");
+        classTitle("UniqueProjectName");        
+        InitSettingsForTest.init(InitSettingsForTest.CONFIG_TEST_PROPERTIES);        
     }
 
     /**

@@ -20,6 +20,7 @@ package fr.cnes.doi.integration;
 
 import static fr.cnes.doi.AbstractSpec.classTitle;
 import static fr.cnes.doi.AbstractSpec.testTitle;
+import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.client.ClientCrossCiteCitation;
 import fr.cnes.doi.exception.ClientCrossCiteException;
 import org.junit.After;
@@ -47,6 +48,7 @@ public class ITClientCrossCiteCitation {
     @BeforeClass
     public static void setUpClass() {
         classTitle("ClientCrossCiteCitation");
+        InitSettingsForTest.init(InitSettingsForTest.CONFIG_IT_PROPERTIES);
     }
 
     @AfterClass
@@ -54,7 +56,7 @@ public class ITClientCrossCiteCitation {
     }
 
     @Before
-    public void setUp() {
+    public void setUp() {       
     }
 
     @After

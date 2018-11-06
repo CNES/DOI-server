@@ -18,12 +18,6 @@
  */
 package fr.cnes.doi.client;
 
-import fr.cnes.doi.utils.HttpClientHelperPatch;
-import java.util.List;
-import org.restlet.Client;
-import org.restlet.data.Protocol;
-import org.restlet.engine.Engine;
-import org.restlet.engine.connector.ConnectorHelper;
 import org.restlet.resource.ClientResource;
 
 /**
@@ -31,7 +25,7 @@ import org.restlet.resource.ClientResource;
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr(
  */
-public class BaseClient {
+public class BaseClient {        
 
     /**
      * Port of the Datacite mockserver
@@ -53,11 +47,6 @@ public class BaseClient {
      */
     private volatile ClientResource client;
 
-    static {
-        final List<ConnectorHelper<Client>> registeredClients = Engine.getInstance().
-                getRegisteredClients();
-        registeredClients.add(0, new HttpClientHelperPatch());
-    }
     /**
      * Constructor.
      *

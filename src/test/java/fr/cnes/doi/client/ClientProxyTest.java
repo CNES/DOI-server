@@ -25,30 +25,13 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.restlet.Client;
-import org.restlet.Context;
-import org.restlet.data.Protocol;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
-import org.restlet.resource.ClientResource;
 
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.UnitTest;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.conn.params.ConnRoutePNames;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
-import org.junit.Ignore;
 import org.junit.experimental.categories.Category;
-import org.restlet.data.Parameter;
-import org.restlet.util.Series;
+import org.restlet.resource.ResourceException;
 
 /**
  *
@@ -62,8 +45,8 @@ public class ClientProxyTest {
      */
     @BeforeClass
     public static void setUpClass() {
-        InitSettingsForTest.init();
         classTitle("ClientProxy");
+        InitSettingsForTest.init(InitSettingsForTest.CONFIG_TEST_PROPERTIES);
     }
 
     /**
@@ -88,121 +71,35 @@ public class ClientProxyTest {
     }
 
     /**
-     * Test the connection through the proxy. Works only if the test is executed
+     * Test the connection through the proxy with BaseClient. Works only if the test is executed
      * behind a proxy
      *
      * @throws Exception - if OutOfMemoryErrors
      */
     @Test
-    @Ignore
-    public void testProxy() throws Exception {
-
-        // Execute only if proxy is enabled
-            List<Protocol> protocols = new ArrayList<>();
-            protocols.add(Protocol.HTTP);
-            protocols.add(Protocol.HTTPS);
-            Client proxy = new Client(new Context(), protocols);
-            Series<Parameter> parameters = proxy.getContext().getParameters();         
-            parameters.add("proxyHost","localhost");
-            parameters.add("proxyPort","3128");
-            //Engine.getInstance().getRegisteredClients().clear();
-            //Engine.getInstance().getRegisteredClients().add(new HttpClientHelperPatch(proxy)); 
-            
-            ClientResource client = new ClientResource("http://www.google.fr");
-            //client.setProxyChallengeResponse(ChallengeScheme.HTTP_BASIC, "", "");
-            client.setNext(proxy);
-            Representation rep = client.get();
-            Status status = client.getStatus();
-            System.out.println(rep.getText());
-            Assert.assertTrue("Test si la requete est OK", status.isSuccess());
-
-
-
+    public void testBaseClient() throws Exception {
+        BaseClient baseClient = new BaseClient("https://www.google.com");
+        Representation rep = baseClient.getClient().get();
+        Status status = baseClient.getClient().getStatus();
+        Assert.assertTrue("Test si la requete est OK", status.isSuccess());
     }
 
     /**
-     * Test the connection through the proxy with BaseClient. Works only if the
+     * Test the connection through the proxy with BaseClient and crossCite URL. Works only if the
      * test is executed behind a proxy
      *
-     * @throws Exception - if OutOfMemoryErrors
      */
     @Test
-    @Ignore
-    public void testBaseClient() throws Exception {
-        BaseClient baseClient = new BaseClient("http://www.google.fr");
-//        if (DoiSettings.getInstance().getBoolean(Consts.SERVER_PROXY_USED)) {
-//            baseClient.setProxyAuthentication(DoiSettings.getInstance().getString(Consts.SERVER_PROXY_HOST),
-//                    DoiSettings.getInstance().getString(Consts.SERVER_PROXY_PORT),
-//                    DoiSettings.getInstance().getSecret(Consts.SERVER_PROXY_LOGIN),
-//                    DoiSettings.getInstance().getSecret(Consts.SERVER_PROXY_PWD));
-//        }
-
-        Representation rep = baseClient.getClient().get();
-        Status status = baseClient.getClient().getStatus();
-        Assert.assertTrue("Test si la requete est OK", status.isSuccess());
-
-        System.out.println(rep.getText());
-
-    }
-
-    /**
-     * Test the connection through the proxy with BaseClient and crossCite URL.
-     * Works only if the test is executed behind a proxy
-     *
-     * @throws Exception - if OutOfMemoryErrors
-     */
-    @Test
-    @Ignore
-    public void testBaseClientCrossCite() throws Exception {
-        BaseClient baseClient = new BaseClient("https://citation.crosscite.org/styles"); 
-                      
-
-        //baseClient.setProxyAuthentication("localhost", "3128", "", "");
-        Representation rep = baseClient.getClient().get();
-        Status status = baseClient.getClient().getStatus();
-        Assert.assertTrue("Test si la requete est OK", status.isSuccess());
-    }
-
-    @Test
-    @Ignore    
-    public void testProxyWhithHttp() throws IOException {
-        //HttpHost proxy = new HttpHost(DoiSettings.getInstance().getString(Consts.SERVER_PROXY_HOST), Integer.valueOf(DoiSettings.getInstance().getString(Consts.SERVER_PROXY_PORT)), "http");
-        HttpHost proxy = new HttpHost("localhost",3128,"http");
-        DefaultHttpClient httpclient = new DefaultHttpClient();
-//        httpclient.getCredentialsProvider().setCredentials(
-//                new AuthScope(DoiSettings.getInstance().getString(Consts.SERVER_PROXY_HOST), Integer.valueOf(DoiSettings.getInstance().getString(Consts.SERVER_PROXY_PORT))),
-//                new UsernamePasswordCredentials(DoiSettings.getInstance().getSecret(Consts.SERVER_PROXY_LOGIN), DoiSettings.getInstance().getSecret(Consts.SERVER_PROXY_PWD))
-//        );
+    public void testBaseClientCrossCite() {
+        BaseClient baseClient = new BaseClient("https://www.google.com");
+        Status status;
         try {
-
-            httpclient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY,proxy);
-
-            HttpGet req = new HttpGet("http://lemonde.fr");
-
-            System.out.println("executing request to " + req + " via "
-                    + proxy);
-            HttpResponse rsp = httpclient.execute(req);
-            HttpEntity entity = rsp.getEntity();
-
-            System.out.println("----------------------------------------");
-            System.out.println(rsp.getStatusLine());
-            Header[] headers = rsp.getAllHeaders();
-            for (int i = 0; i < headers.length; i++) {
-                System.out.println(headers[i]);
-            }
-            System.out.println("----------------------------------------");
-
-            if (entity != null) {
-                System.out.println(EntityUtils.toString(entity));
-            }
-
-        } finally {
-            // When HttpClient instance is no longer needed,
-            // shut down the connection manager to ensure
-            // immediate deallocation of all system resources
-            httpclient.getConnectionManager().shutdown();
+            Representation rep = baseClient.getClient().get();
+            status = baseClient.getClient().getStatus();
+        } catch (ResourceException ex) {
+            status = ex.getStatus();
         }
-
+        Assert.assertTrue("Test si la requete est OK", status.isSuccess());
     }
 
 }

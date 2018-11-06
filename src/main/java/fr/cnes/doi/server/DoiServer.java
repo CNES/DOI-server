@@ -30,6 +30,8 @@ import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.settings.EmailSettings;
 import fr.cnes.doi.settings.JettySettings;
 import fr.cnes.doi.settings.ProxySettings;
+import fr.cnes.doi.utils.HttpClientHelperPatch;
+import fr.cnes.doi.utils.HttpClientHelperPatchAC;
 import fr.cnes.doi.utils.Utils;
 import fr.cnes.doi.utils.spec.Requirement;
 import java.io.File;
@@ -37,15 +39,19 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.KeyStore;
+import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.restlet.Application;
+import org.restlet.Client;
 import org.restlet.Component;
 import org.restlet.Context;
 import org.restlet.Server;
 import org.restlet.data.LocalReference;
 import org.restlet.data.Parameter;
 import org.restlet.data.Protocol;
+import org.restlet.engine.Engine;
+import org.restlet.engine.connector.ConnectorHelper;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 import org.restlet.routing.Filter;
@@ -60,8 +66,14 @@ import org.restlet.util.Series;
  */
 
 
-public class DoiServer extends Component {
+public class DoiServer extends Component {   
 
+    static {
+        final List<ConnectorHelper<Client>> registeredClients = Engine.getInstance().
+                getRegisteredClients();
+        registeredClients.add(0, new HttpClientHelperPatchAC(null));
+    } 
+    
     /**
      * Default value for {@link #SSL_CTX_FACTORY} parameter : {@value #DEFAULT_SSL_CTX}.
      */

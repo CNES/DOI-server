@@ -30,7 +30,7 @@ import org.w3c.dom.ls.LSResourceResolver;
 
 /**
  *
- * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class WebProxyResourceResolver implements LSResourceResolver {
 

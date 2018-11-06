@@ -28,7 +28,7 @@ import org.restlet.resource.ResourceException;
 /**
  * General Server Exception
  *
- * @author Jean-Christophe Malapert <jean-christophe.malapert@cnes.fr>
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class DoiServerException extends ResourceException {
 

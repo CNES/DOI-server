@@ -50,7 +50,7 @@ public class ITemailSettings {
 
     @BeforeClass
     public static void setUpClass() {
-        InitSettingsForTest.init();
+        InitSettingsForTest.init(InitSettingsForTest.CONFIG_IT_PROPERTIES);
         instance = EmailSettings.getInstance();
         classTitle("EmailSettings");
     }

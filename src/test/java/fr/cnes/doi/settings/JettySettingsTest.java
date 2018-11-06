@@ -20,6 +20,7 @@ package fr.cnes.doi.settings;
 
 import static fr.cnes.doi.AbstractSpec.classTitle;
 import static fr.cnes.doi.AbstractSpec.testTitle;
+import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.UnitTest;
 import static org.junit.Assert.assertEquals;
 
@@ -47,6 +48,7 @@ public class JettySettingsTest {
     @BeforeClass
     public static void setUpClass() {
         classTitle("JettySettings");
+        InitSettingsForTest.init(InitSettingsForTest.CONFIG_TEST_PROPERTIES);
     }
 
     @AfterClass

@@ -47,7 +47,7 @@ import org.restlet.resource.ClientResource;
  * @author Jean-Christophe (jean-christophe.malapert@cnes.fr)
  */
 @Requirement(reqId = Requirement.DOI_CONFIG_010, reqName = Requirement.DOI_CONFIG_010_NAME)
-public final class DoiSettings {
+public final class DoiSettings {      
 
     /**
      * Configuration files in JAR.
@@ -310,7 +310,7 @@ public final class DoiSettings {
      */
     public String getSecret(final String key) {
         final String result;
-        final String value = getString(key);
+        final String value = getString(key, "");
         if (Utils.isEmpty(value)) {
             result = value;
         } else {

@@ -100,10 +100,10 @@ public final class ProxySettings {
         final DoiSettings settings = DoiSettings.getInstance();
         LOG.info("----- proxy parameters ----");
 
-        this.proxyHost = settings.getString(Consts.SERVER_PROXY_HOST);
+        this.proxyHost = settings.getString(Consts.SERVER_PROXY_HOST, "");
         LOG.info("proxyHost : {}", this.proxyHost);
 
-        this.proxyPort = settings.getString(Consts.SERVER_PROXY_PORT);
+        this.proxyPort = settings.getString(Consts.SERVER_PROXY_PORT, "");
         LOG.info("proxyPort : {}", this.proxyPort);
 
         this.proxyUser = settings.getSecret(Consts.SERVER_PROXY_LOGIN);
@@ -135,6 +135,15 @@ public final class ProxySettings {
     public boolean isWithProxy() {
         LOG.traceEntry();
         return LOG.traceExit(this.proxySet);
+    }
+    
+    /**
+     * Returns true when the proxy needs an authentication otherwise false.
+     * @return true when the proxy needs an authentication otherwise false.
+     */
+    public boolean isAuthenticate() {
+        LOG.traceEntry();
+        return LOG.traceExit(!this.getProxyUser().isEmpty() && !this.getProxyPassword().isEmpty() && this.isWithProxy());
     }
 
     /**

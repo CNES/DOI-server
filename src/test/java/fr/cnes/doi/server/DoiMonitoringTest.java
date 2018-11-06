@@ -20,6 +20,7 @@ package fr.cnes.doi.server;
 
 import static fr.cnes.doi.AbstractSpec.classTitle;
 import static fr.cnes.doi.AbstractSpec.testTitle;
+import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.UnitTest;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -48,6 +49,7 @@ public class DoiMonitoringTest {
     @BeforeClass
     public static void setUpClass() {
         classTitle("DoiMonitoring");
+        InitSettingsForTest.init(InitSettingsForTest.CONFIG_TEST_PROPERTIES); 
     }
     
     @AfterClass
@@ -55,7 +57,7 @@ public class DoiMonitoringTest {
     }
     
     @Before
-    public void setUp() {
+    public void setUp() {       
     }
     
     @After

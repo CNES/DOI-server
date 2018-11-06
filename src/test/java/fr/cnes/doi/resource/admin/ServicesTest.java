@@ -33,6 +33,7 @@ import static fr.cnes.doi.server.DoiServer.RESTLET_MAX_TOTAL_CONNECTIONS;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import java.io.File;
+import java.io.IOException;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
@@ -93,18 +94,19 @@ public class ServicesTest {
      * Test of getStatus service through a HTTPS server, of class AdministrationApplication.
      */
     @Test
-    public void getStatus()  {
+    public void getStatus() throws IOException  {
         testTitle("getStatus");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:"+port+"/status");        
         client.setNext(cl);    
         Status status;
         try {
-            Representation rep = client.get();
+            Representation rep = client.get();           
             status = client.getStatus();
+            
         } catch(ResourceException ex) {
             status = ex.getStatus();
-        }
+        }        
         client.release();
         assertEquals("Test of status service",Status.SUCCESS_OK.getCode(), status.getCode());
     }    
@@ -113,8 +115,7 @@ public class ServicesTest {
      * Test of createToken method, of class TokenResource.
      */
     @Test
-    @Ignore
-    public void getStats()  {
+    public void getStats() throws IOException  {
         testTitle("getStats");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:"+port+"/stats");        
@@ -123,6 +124,7 @@ public class ServicesTest {
         try {
             Representation rep = client.get();
             status = client.getStatus();
+            System.out.println(rep.getText());
         } catch(ResourceException ex) {
             status = ex.getStatus();
         }
