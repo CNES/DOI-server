@@ -25,7 +25,6 @@ import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.UnitTest;
 import static fr.cnes.doi.client.BaseClient.DATACITE_MOCKSERVER_PORT;
-import fr.cnes.doi.exception.ClientMdsException;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_CONNECTIONS_PER_HOST;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_TOTAL_CONNECTIONS;
 import static fr.cnes.doi.server.DoiServer.JKS_DIRECTORY;
@@ -68,7 +67,7 @@ import org.restlet.resource.ResourceException;
 public class StyleCitationResourceTest {
 
     private static Client cl;
-    private CrossCiteSpec spec;   
+    private static CrossCiteSpec spec;   
 
     public StyleCitationResourceTest() throws InterruptedException, Exception {
     }
@@ -84,21 +83,22 @@ public class StyleCitationResourceTest {
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS");
         classTitle("StyleCitationResource");
+        spec = new CrossCiteSpec(DATACITE_MOCKSERVER_PORT);
     }
 
     @AfterClass
     public static void tearDownClass() {
+        spec.finish();
         InitServerForTest.close();
     }
 
     @Before
     public void setUp() {
-        this.spec = new CrossCiteSpec(DATACITE_MOCKSERVER_PORT);
+        spec.reset();
     }
 
     @After
     public void tearDown() throws Exception {
-        this.spec.finish();
     } 
     
     /**
@@ -109,7 +109,7 @@ public class StyleCitationResourceTest {
     public void testGetStylesHttps() {
         testTitle("testGetStylesHttps");
         
-        this.spec.createSpec(CrossCiteSpec.Spec.GET_STYLE_200);
+        spec.createSpec(CrossCiteSpec.Spec.GET_STYLE_200);
         
         String expResult = "academy-of-management-review";
         String result = "";
@@ -125,7 +125,7 @@ public class StyleCitationResourceTest {
             assertEquals("Test if the server returns the right response", expResult, result);
         }
         
-        this.spec.verifySpec(CrossCiteSpec.Spec.GET_STYLE_200);
+        spec.verifySpec(CrossCiteSpec.Spec.GET_STYLE_200);
         
     }
 
@@ -137,7 +137,7 @@ public class StyleCitationResourceTest {
     public void testGetStylesHttp() {
         testTitle("testGetStylesHttp");
         
-        this.spec.createSpec(CrossCiteSpec.Spec.GET_STYLE_200);      
+        spec.createSpec(CrossCiteSpec.Spec.GET_STYLE_200);      
         
         String expResult = "academy-of-management-review";
         String result = "";
@@ -153,7 +153,7 @@ public class StyleCitationResourceTest {
             assertEquals("Test if the server returns the right response", expResult, result);
         }
         
-        this.spec.verifySpec(CrossCiteSpec.Spec.GET_STYLE_200);
+        spec.verifySpec(CrossCiteSpec.Spec.GET_STYLE_200);
     }
 
     /**
@@ -164,7 +164,7 @@ public class StyleCitationResourceTest {
     public void testGetStylesHttpsAsJSON() {
         testTitle("testGetStylesHttpsAsJSON");
         
-        this.spec.createSpec(CrossCiteSpec.Spec.GET_STYLE_200);     
+        spec.createSpec(CrossCiteSpec.Spec.GET_STYLE_200);     
           
         String result = "";
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
@@ -179,7 +179,7 @@ public class StyleCitationResourceTest {
             Assert.assertTrue("Test is the server returns a JSON response", result.contains("["));
         }
         
-        this.spec.verifySpec(CrossCiteSpec.Spec.GET_STYLE_200);
+        spec.verifySpec(CrossCiteSpec.Spec.GET_STYLE_200);
     }
 
     /**
@@ -190,7 +190,7 @@ public class StyleCitationResourceTest {
     public void testGetStylesHttpsAsXML() {
         testTitle("testGetStylesHttpsAsXML");
         
-        this.spec.createSpec(CrossCiteSpec.Spec.GET_STYLE_200);
+        spec.createSpec(CrossCiteSpec.Spec.GET_STYLE_200);
         
         String expResult = CrossCiteSpec.Spec.GET_STYLE_200.getBody();
         String result = "";
@@ -207,7 +207,7 @@ public class StyleCitationResourceTest {
         }
         
         // verify server has received exactly one request
-        this.spec.verifySpec(CrossCiteSpec.Spec.GET_STYLE_200);
+        spec.verifySpec(CrossCiteSpec.Spec.GET_STYLE_200);
         
     }
 

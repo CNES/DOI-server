@@ -23,7 +23,6 @@ import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.UnitTest;
-import fr.cnes.doi.exception.ClientMdsException;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_CONNECTIONS_PER_HOST;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_TOTAL_CONNECTIONS;
 import static fr.cnes.doi.server.DoiServer.JKS_DIRECTORY;
@@ -39,7 +38,6 @@ import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.restlet.Client;
@@ -92,6 +90,7 @@ public class ServicesTest {
 
     /**
      * Test of getStatus service through a HTTPS server, of class AdministrationApplication.
+     * @throws java.io.IOException
      */
     @Test
     public void getStatus() throws IOException  {
@@ -113,6 +112,7 @@ public class ServicesTest {
     
     /**
      * Test of createToken method, of class TokenResource.
+     * @throws java.io.IOException
      */
     @Test
     public void getStats() throws IOException  {

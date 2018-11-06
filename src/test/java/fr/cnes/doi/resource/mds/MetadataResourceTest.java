@@ -69,7 +69,7 @@ import org.junit.experimental.categories.Category;
 public class MetadataResourceTest {
 
     private static Client cl;
-    private MdsSpec mdsServerStub;
+    private static MdsSpec mdsServerStub;
     
     private static final String METADATA_SERVICE = "/mds/metadata/";
 
@@ -87,21 +87,23 @@ public class MetadataResourceTest {
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS");
         classTitle("MetadataResource");
+        mdsServerStub = new MdsSpec(DATACITE_MOCKSERVER_PORT);
     }
 
     @AfterClass
     public static void tearDownClass() {
+        mdsServerStub.finish();
         InitServerForTest.close();
     }
 
     @Before
     public void setUp() {
-        mdsServerStub = new MdsSpec(DATACITE_MOCKSERVER_PORT);
+        mdsServerStub.reset();
+        
     }
 
     @After
-    public void tearDown() {
-        mdsServerStub.finish();
+    public void tearDown() {        
     }
     
     /**

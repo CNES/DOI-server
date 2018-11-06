@@ -25,7 +25,6 @@ import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.UnitTest;
 import static fr.cnes.doi.client.BaseClient.DATACITE_MOCKSERVER_PORT;
-import fr.cnes.doi.exception.ClientMdsException;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_CONNECTIONS_PER_HOST;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_TOTAL_CONNECTIONS;
 import static fr.cnes.doi.server.DoiServer.JKS_DIRECTORY;
@@ -63,7 +62,7 @@ import org.restlet.resource.ResourceException;
 public class LanguageCitationResourceTest {
 
     private static Client cl;
-    private CrossCiteSpec spec;   
+    private static CrossCiteSpec spec;   
     
     public LanguageCitationResourceTest() {
     }
@@ -79,21 +78,22 @@ public class LanguageCitationResourceTest {
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS");
         classTitle("LanguageCitationResource");
+        spec = new CrossCiteSpec(DATACITE_MOCKSERVER_PORT);
     }
 
     @AfterClass
     public static void tearDownClass() {
+        spec.finish();
         InitServerForTest.close();
     }
 
     @Before
     public void setUp() {
-        this.spec = new CrossCiteSpec(DATACITE_MOCKSERVER_PORT);
+        spec.reset();
     }
 
     @After
     public void tearDown() {
-        this.spec.finish();
     }    
     
     /**
@@ -104,7 +104,7 @@ public class LanguageCitationResourceTest {
         testTitle("testGetLanguagesHttps");
         System.out.println("TEST: GetLanguages through a HTTPS server");
         
-        this.spec.createSpec(CrossCiteSpec.Spec.GET_LANGUAGE_200);
+        spec.createSpec(CrossCiteSpec.Spec.GET_LANGUAGE_200);
 
         String expResult = "af-ZA";
         String result = "";
@@ -120,7 +120,7 @@ public class LanguageCitationResourceTest {
             assertEquals("Test if the server returns the right response", expResult, result);
         }
         
-        this.spec.verifySpec(CrossCiteSpec.Spec.GET_LANGUAGE_200);
+        spec.verifySpec(CrossCiteSpec.Spec.GET_LANGUAGE_200);
 
     }
 
@@ -128,7 +128,7 @@ public class LanguageCitationResourceTest {
     public void testGetLanguagesHttp() {
         testTitle("testGetLanguagesHttp");
         
-        this.spec.createSpec(CrossCiteSpec.Spec.GET_LANGUAGE_200);             
+        spec.createSpec(CrossCiteSpec.Spec.GET_LANGUAGE_200);             
 
         String expResult = "af-ZA";
         String result = "";
@@ -143,7 +143,7 @@ public class LanguageCitationResourceTest {
             assertEquals("Test if the server returns the right response", expResult, result);
         }
         
-        this.spec.verifySpec(CrossCiteSpec.Spec.GET_LANGUAGE_200);
+        spec.verifySpec(CrossCiteSpec.Spec.GET_LANGUAGE_200);
         
     }
 

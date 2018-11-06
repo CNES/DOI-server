@@ -64,7 +64,7 @@ import org.restlet.util.Series;
 @Category(UnitTest.class)
 public class MediaResourceTest {
     
-    private MdsSpec mdsServerStub;      
+    private static MdsSpec mdsServerStub;      
     private static Client cl;
     
     private static final String MEDIA_SERVICE = "/mds/media/";
@@ -83,21 +83,22 @@ public class MediaResourceTest {
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS");     
         classTitle("MediaResource");
+        mdsServerStub = new MdsSpec(DATACITE_MOCKSERVER_PORT);
     }
     
     @AfterClass
     public static void tearDownClass() {
+        mdsServerStub.finish();
         InitServerForTest.close();
     }
     
     @Before
     public void setUp() {
-        this.mdsServerStub = new MdsSpec(DATACITE_MOCKSERVER_PORT);
+        mdsServerStub.reset();
     }
     
     @After
     public void tearDown() {
-        this.mdsServerStub.finish();
     }
       
     /**
@@ -108,7 +109,7 @@ public class MediaResourceTest {
     public void testGetMediasHttps() throws IOException {
         testTitle("testGetMediasHttps");
 
-        this.mdsServerStub.createSpec(MdsSpec.Spec.GET_MEDIA_200);
+        mdsServerStub.createSpec(MdsSpec.Spec.GET_MEDIA_200);
         
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + MEDIA_SERVICE +MdsSpec.Spec.GET_MEDIA_200.getTemplatePath());
@@ -123,7 +124,7 @@ public class MediaResourceTest {
         client.release();
         assertEquals(MdsSpec.Spec.GET_MEDIA_200.getStatus(), code);
         
-        this.mdsServerStub.verifySpec(MdsSpec.Spec.GET_MEDIA_200);        
+        mdsServerStub.verifySpec(MdsSpec.Spec.GET_MEDIA_200);        
     }
     
     /**
@@ -134,7 +135,7 @@ public class MediaResourceTest {
     public void testGetMediasHttp() throws IOException {
         testTitle("testGetMediasHttp");
         
-        this.mdsServerStub.createSpec(MdsSpec.Spec.GET_MEDIA_200);
+        mdsServerStub.createSpec(MdsSpec.Spec.GET_MEDIA_200);
         
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);
         ClientResource client = new ClientResource("http://localhost:" + port + MEDIA_SERVICE+MdsSpec.Spec.GET_MEDIA_200.getTemplatePath());        
@@ -148,7 +149,7 @@ public class MediaResourceTest {
         client.release();
         assertEquals(MdsSpec.Spec.GET_MEDIA_200.getStatus(), code);
         
-        this.mdsServerStub.verifySpec(MdsSpec.Spec.GET_MEDIA_200);                
+        mdsServerStub.verifySpec(MdsSpec.Spec.GET_MEDIA_200);                
     }        
 
     /**
@@ -161,7 +162,7 @@ public class MediaResourceTest {
     public void testGetMediasWithWrongDOIHttps() throws IOException {
         testTitle("testGetMediasWithWrongDOIHttps");
         
-        this.mdsServerStub.createSpec(MdsSpec.Spec.GET_MEDIA_404);
+        mdsServerStub.createSpec(MdsSpec.Spec.GET_MEDIA_404);
         
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + MEDIA_SERVICE+MdsSpec.Spec.GET_MEDIA_404.getTemplatePath());
@@ -176,7 +177,7 @@ public class MediaResourceTest {
         client.release();
         assertEquals(MdsSpec.Spec.GET_MEDIA_404.getStatus(), code);
         
-        this.mdsServerStub.verifySpec(MdsSpec.Spec.GET_MEDIA_404);                          
+        mdsServerStub.verifySpec(MdsSpec.Spec.GET_MEDIA_404);                          
     }
     
     /**
@@ -189,7 +190,7 @@ public class MediaResourceTest {
     public void testGetMediasWithWrongDOIHttp() throws IOException {
         testTitle("testGetMediasWithWrongDOIHttp");
         
-        this.mdsServerStub.createSpec(MdsSpec.Spec.GET_MEDIA_404);
+        mdsServerStub.createSpec(MdsSpec.Spec.GET_MEDIA_404);
         
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);
         ClientResource client = new ClientResource("http://localhost:" + port + MEDIA_SERVICE+MdsSpec.Spec.GET_MEDIA_404.getTemplatePath());        
@@ -203,7 +204,7 @@ public class MediaResourceTest {
         client.release();
         assertEquals(MdsSpec.Spec.GET_MEDIA_404.getStatus(), code);
         
-        this.mdsServerStub.verifySpec(MdsSpec.Spec.GET_MEDIA_404);                                  
+        mdsServerStub.verifySpec(MdsSpec.Spec.GET_MEDIA_404);                                  
     }    
 
     /**

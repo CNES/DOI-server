@@ -68,7 +68,7 @@ public class ITauthentication {
 
     private static Client cl;
     public static final String DOI = "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b";
-    private ClientAndServer mockServer;
+    private static ClientAndServer mockServer;
 
     public ITauthentication() {
     }
@@ -83,21 +83,23 @@ public class ITauthentication {
         parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS");
+        mockServer = startClientAndServer(DATACITE_MOCKSERVER_PORT);   
     }
 
     @AfterClass
     public static void tearDownClass() {
+        mockServer.stop();
         InitServerForTest.close();
     }
 
     @Before
     public void setUp() {
-        mockServer = startClientAndServer(DATACITE_MOCKSERVER_PORT);        
+       mockServer.reset();
     }
 
     @After
     public void tearDown() {
-        mockServer.stop();
+        
     }    
 
     /**

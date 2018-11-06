@@ -32,19 +32,7 @@ import org.junit.Test;
 
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.UnitTest;
-import fr.cnes.doi.client.BaseClient;
-import java.io.IOException;
-import org.junit.Assert;
 import org.junit.experimental.categories.Category;
-import org.restlet.Client;
-import org.restlet.Context;
-import org.restlet.Request;
-import org.restlet.Response;
-import org.restlet.data.Method;
-import org.restlet.data.Protocol;
-import org.restlet.data.Status;
-import org.restlet.representation.Representation;
-import org.restlet.resource.ClientResource;
 
 /**
  * Test class for {@link fr.cnes.doi.settings.DoiSettings}
@@ -169,26 +157,6 @@ public class DoiSettingsTest {
         Long expResult = 8050L;
         Long result = instance.getLong(key, defaultValue);
         assertEquals(expResult, result);
-    }
-    
-    @Test
-    public void toto() throws IOException {
- 
-        Client proxy = new Client(new Context(), Protocol.HTTP);
-        proxy.getContext().getParameters().add("proxyHost", "localhost");
-        proxy.getContext().getParameters().add("proxyPort", "3128");
-       
-        Request request = new Request(Method.GET, "http://www.google.fr");
-        Response response = proxy.handle(request);
-        //System.out.println(response.getEntityAsText());
-        //ClientResource client = new ClientResource("http://www.google.fr");
-        //client.setNext(proxy);
-        
-        //Representation rep = client.get();
-        //Status status = client.getStatus();
-        //Assert.assertTrue("Test si la requete est OK", status.isSuccess());
-
-
-    }
+    }    
     
 }

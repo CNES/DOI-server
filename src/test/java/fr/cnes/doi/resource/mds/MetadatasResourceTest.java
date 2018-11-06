@@ -79,7 +79,7 @@ public class MetadatasResourceTest {
     private String result;
     private InputStream inputStream;
     private InputStream inputStreamFileError; 
-    private MdsSpec mdsServerStub;
+    private static MdsSpec mdsServerStub;
     
     private static final String METADATA_SERVICE = "/mds/metadata";
 
@@ -97,25 +97,27 @@ public class MetadatasResourceTest {
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS");
         classTitle("MetadatasResource");
+        mdsServerStub = new MdsSpec(DATACITE_MOCKSERVER_PORT);
     }
 
     @AfterClass
     public static void tearDownClass() {
+        mdsServerStub.finish();
         InitServerForTest.close();
     }
 
     @Before
     public void setUp() throws IOException {
+        mdsServerStub.reset();
         this.inputStream = ClientProxyTest.class.getResourceAsStream("/test.xml");
-        this.inputStreamFileError = ClientProxyTest.class.getResourceAsStream("/wrongFileTest.xml");
-        mdsServerStub = new MdsSpec(DATACITE_MOCKSERVER_PORT);
+        this.inputStreamFileError = ClientProxyTest.class.getResourceAsStream("/wrongFileTest.xml");        
     }
 
     @After
     public void tearDown() throws IOException {
         this.inputStream.close();
         this.inputStreamFileError.close();
-        mdsServerStub.finish();
+        
     }
     
     /**
@@ -173,7 +175,7 @@ public class MetadatasResourceTest {
         testTitle(spec.getDescription());
         
         // Creates the MetadataStoreService stub        
-        this.mdsServerStub.createSpec(spec);
+        mdsServerStub.createSpec(spec);
 
         result = new BufferedReader(new InputStreamReader(is)).lines().collect(Collectors.joining("\n"));
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
@@ -196,11 +198,6 @@ public class MetadatasResourceTest {
             code = client.getStatus().getCode();
         } catch (ResourceException ex) {
             code = ex.getStatus().getCode();
-//            System.out.println("**** code = "+code);
-//            if (code == Status.CONNECTOR_ERROR_COMMUNICATION.getCode()) {
-//                code = Status.CLIENT_ERROR_UNAUTHORIZED.getCode();
-//                System.out.println("****Cause : "+ex.getCause().getMessage());
-//            }
         } finally {
             client.release();    
         }        
@@ -208,9 +205,9 @@ public class MetadatasResourceTest {
         
         // Checks the stub.        
         if (exactly == -1) {
-            this.mdsServerStub.verifySpec(spec);       
+            mdsServerStub.verifySpec(spec);       
         } else {
-            this.mdsServerStub.verifySpec(spec, exactly);   
+            mdsServerStub.verifySpec(spec, exactly);   
         }
              
     }      
@@ -228,7 +225,7 @@ public class MetadatasResourceTest {
         testTitle("testSpecCreateMetadataAsObjWithConflict");
         
         // Creates the MetadataStoreService stub        
-        this.mdsServerStub.createSpec(spec);
+        mdsServerStub.createSpec(spec);
 
         result = new BufferedReader(new InputStreamReader(is)).lines()
                 .collect(Collectors.joining("\n"));
@@ -262,9 +259,9 @@ public class MetadatasResourceTest {
         
         // Checks the stub.        
         if (exactly == -1) {
-            this.mdsServerStub.verifySpec(spec);       
+            mdsServerStub.verifySpec(spec);       
         } else {
-            this.mdsServerStub.verifySpec(spec, exactly);   
+            mdsServerStub.verifySpec(spec, exactly);   
         }                       
     }      
 }

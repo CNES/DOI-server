@@ -66,7 +66,7 @@ import org.restlet.util.Series;
 public class DoisResourceTest {
 
     private static Client cl;
-    private MdsSpec mdsSpecStub;   
+    private static MdsSpec mdsSpecStub;   
     
     private static final String DOIS_SERVICE = "/mds/dois";
     
@@ -84,6 +84,7 @@ public class DoisResourceTest {
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS");
         classTitle("DoisResource");
+        mdsSpecStub = new MdsSpec(DATACITE_MOCKSERVER_PORT);
     }
 
     @AfterClass
@@ -111,17 +112,17 @@ public class DoisResourceTest {
         } catch (ResourceException ex) {
             code = ex.getStatus().getCode();
         }        
+        mdsSpecStub.finish();
         InitServerForTest.close();
     }
 
     @Before
-    public void setUp() {
-        this.mdsSpecStub = new MdsSpec(DATACITE_MOCKSERVER_PORT);
+    public void setUp() {    
+        mdsSpecStub.reset();
     }
 
     @After
-    public void tearDown() {
-        this.mdsSpecStub.finish();
+    public void tearDown() {        
     }    
 
     /**
@@ -132,7 +133,7 @@ public class DoisResourceTest {
     public void testGetDoisHttps() throws IOException {
         testTitle("testGetDoiNotAllowedHttps");  
         
-        this.mdsSpecStub.createSpec(MdsSpec.Spec.GET_COLLECTION_200);
+        mdsSpecStub.createSpec(MdsSpec.Spec.GET_COLLECTION_200);
         
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + DOIS_SERVICE);
@@ -140,7 +141,7 @@ public class DoisResourceTest {
         Representation rep = client.get();
         assertNotNull("Test if the response is not null", rep.getText());
         
-        this.mdsSpecStub.verifySpec(MdsSpec.Spec.GET_COLLECTION_200);
+        mdsSpecStub.verifySpec(MdsSpec.Spec.GET_COLLECTION_200);
     }
 
     /**
@@ -151,14 +152,14 @@ public class DoisResourceTest {
     public void testGetDoisHttp() throws IOException {
         testTitle("testGetDoisHttp");
         
-        this.mdsSpecStub.createSpec(MdsSpec.Spec.GET_COLLECTION_200);
+        mdsSpecStub.createSpec(MdsSpec.Spec.GET_COLLECTION_200);
         
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);
         ClientResource client = new ClientResource("http://localhost:" + port + DOIS_SERVICE);
         Representation rep = client.get();
         assertNotNull("Test if the response is not null", rep.getText());
         
-        this.mdsSpecStub.verifySpec(MdsSpec.Spec.GET_COLLECTION_200);          
+        mdsSpecStub.verifySpec(MdsSpec.Spec.GET_COLLECTION_200);          
     }
 
     /**
@@ -200,7 +201,7 @@ public class DoisResourceTest {
     public void testCreateDoiHttps() throws IOException {
         testTitle("testCreateDoiHttps");
 
-        this.mdsSpecStub.createSpec(MdsSpec.Spec.POST_DOI_201);
+        mdsSpecStub.createSpec(MdsSpec.Spec.POST_DOI_201);
         
         Form doiForm = new Form();
         doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b"));
@@ -228,7 +229,7 @@ public class DoisResourceTest {
         }
         assertEquals("Test if the DOI is related to several accounts with a specific account", MdsSpec.Spec.POST_DOI_201.getStatus(), code);
         
-        this.mdsSpecStub.verifySpec(MdsSpec.Spec.POST_DOI_201);       
+        mdsSpecStub.verifySpec(MdsSpec.Spec.POST_DOI_201);       
     }
     
     /**
@@ -240,7 +241,7 @@ public class DoisResourceTest {
     public void testCreateDoiHttp() throws IOException {
         testTitle("testCreateDoiHttp");
         
-        this.mdsSpecStub.createSpec(MdsSpec.Spec.POST_DOI_201);        
+        mdsSpecStub.createSpec(MdsSpec.Spec.POST_DOI_201);        
 
         Form doiForm = new Form();
         doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b"));
@@ -267,7 +268,7 @@ public class DoisResourceTest {
         }
         assertEquals("Test the creation of a DOI, related to several accounts with a specific account", MdsSpec.Spec.POST_DOI_201.getStatus(), code);
         
-        this.mdsSpecStub.verifySpec(MdsSpec.Spec.POST_DOI_201);              
+        mdsSpecStub.verifySpec(MdsSpec.Spec.POST_DOI_201);              
     }  
     
     /**
@@ -280,7 +281,7 @@ public class DoisResourceTest {
     public void testCreateFalseDoiHttps() throws IOException {
         testTitle("testCreateFalseDoiHttps");
         
-        this.mdsSpecStub.createSpec(MdsSpec.Spec.POST_DOI_412);                        
+        mdsSpecStub.createSpec(MdsSpec.Spec.POST_DOI_412);                        
 
         Form doiForm = new Form();
         doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.5072/828606/8c3e91ad45ca855b477126bc073ae"));
@@ -308,7 +309,7 @@ public class DoisResourceTest {
         }
         assertEquals("Test an error of the creation of a DOI when the metadata is not uploaded first",MdsSpec.Spec.POST_DOI_412.getStatus(), code);
         
-        this.mdsSpecStub.verifySpec(MdsSpec.Spec.POST_DOI_201);                     
+        mdsSpecStub.verifySpec(MdsSpec.Spec.POST_DOI_201);                     
     }    
     
     /**

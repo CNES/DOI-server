@@ -36,9 +36,6 @@ import java.util.List;
 import org.junit.Assert;
 import static org.junit.Assert.assertTrue;
 import org.junit.experimental.categories.Category;
-import org.restlet.Client;
-import org.restlet.engine.Engine;
-import org.restlet.engine.connector.ConnectorHelper;
 
 /**
  * Test class for {@link fr.cnes.doi.settings.ProxySettings}

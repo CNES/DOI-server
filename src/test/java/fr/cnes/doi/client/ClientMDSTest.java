@@ -57,7 +57,7 @@ import org.restlet.representation.StringRepresentation;
 @Category(UnitTest.class)
 public class ClientMDSTest {
 
-    private MdsSpec mdsServerStub;
+    private static MdsSpec mdsServerStub;
     private final String login;
     private final String pwd;
 
@@ -70,20 +70,22 @@ public class ClientMDSTest {
     public static void setUpClass() {
         classTitle("ClientMDS");
         InitSettingsForTest.init(InitSettingsForTest.CONFIG_TEST_PROPERTIES);
+        mdsServerStub = new MdsSpec(DATACITE_MOCKSERVER_PORT);
     }
 
     @AfterClass
     public static void tearDownClass() {
+        mdsServerStub.finish();
     }
 
     @Before
     public void setUp() {
-        mdsServerStub = new MdsSpec(DATACITE_MOCKSERVER_PORT);      
+        mdsServerStub.reset();      
     }
 
     @After
     public void tearDown() {
-        mdsServerStub.finish();
+        
     }
 
     @Rule
@@ -116,7 +118,7 @@ public class ClientMDSTest {
         testTitle(spec.getDescription());
 
         // Creates the MetadataStoreService stub
-        this.mdsServerStub.createSpec(spec);
+        mdsServerStub.createSpec(spec);
 
         // Requests the DOIServer using the stub (mode DEV)
         ClientMDS instance = new ClientMDS(ClientMDS.Context.DEV, login, pwd);
@@ -137,7 +139,7 @@ public class ClientMDSTest {
         }
 
         // Checks the stub.
-        this.mdsServerStub.verifySpec(spec);
+        mdsServerStub.verifySpec(spec);
     }
     
     /**
@@ -148,7 +150,7 @@ public class ClientMDSTest {
         testTitle(spec.getDescription());
 
         // Creates the MetadataStoreService stub        
-        this.mdsServerStub.createSpec(spec);
+        mdsServerStub.createSpec(spec);
 
         // Requests the DOIServer using the stub (mode DEV)        
         ClientMDS instance = new ClientMDS(ClientMDS.Context.DEV, login, pwd);
@@ -167,7 +169,7 @@ public class ClientMDSTest {
         assertEquals("Test the response", expMessage, message);
 
         // Checks the stub.        
-        this.mdsServerStub.verifySpec(spec);
+        mdsServerStub.verifySpec(spec);
     }    
 
     /**
@@ -178,7 +180,7 @@ public class ClientMDSTest {
         testTitle(spec.getDescription());
 
         // Creates the MetadataStoreService stub        
-        this.mdsServerStub.createSpec(spec);
+        mdsServerStub.createSpec(spec);
 
         Form form = new Form();
         form.add("doi", "10.5072/EDU/TESTID");
@@ -204,14 +206,14 @@ public class ClientMDSTest {
         }
         
         // Checks the stub.
-        this.mdsServerStub.verifySpec(spec);
+        mdsServerStub.verifySpec(spec);
     }
 
     private void testSpectGetMetadataAsObj(MdsSpec.Spec spec) throws JAXBException, ClientMdsException {
         testTitle(spec.getDescription());
 
         // Creates the MetadataStoreService stub        
-        this.mdsServerStub.createSpec(spec);
+        mdsServerStub.createSpec(spec);
 
         // Requests the DOIServer using the stub (mode DEV)        
         ClientMDS instance = new ClientMDS(ClientMDS.Context.DEV, login, pwd);
@@ -224,14 +226,14 @@ public class ClientMDSTest {
         assertEquals("Test the response", expResult.getIdentifier().getValue(), result.getIdentifier().getValue());
 
         // Checks the stub.        
-        this.mdsServerStub.verifySpec(spec);
+        mdsServerStub.verifySpec(spec);
     }
 
     private void testSpectGetMetadata(MdsSpec.Spec spec) throws Exception {
         testTitle(spec.getDescription());
 
         // Creates the MetadataStoreService stub        
-        this.mdsServerStub.createSpec(spec);
+        mdsServerStub.createSpec(spec);
 
         // Requests the DOIServer using the stub (mode DEV)        
         ClientMDS instance = new ClientMDS(ClientMDS.Context.DEV, login, pwd);
@@ -254,7 +256,7 @@ public class ClientMDSTest {
         }
 
         // Checks the stub.        
-        this.mdsServerStub.verifySpec(spec);
+        mdsServerStub.verifySpec(spec);
     }
 
     /**
@@ -475,7 +477,7 @@ public class ClientMDSTest {
     private void testSpecCreateMetadata(MdsSpec.Spec spec) throws ClientMdsException {
         testTitle(spec.getDescription());
 
-        this.mdsServerStub.createSpec(spec);
+        mdsServerStub.createSpec(spec);
         Representation entity = new StringRepresentation(
                 MdsSpec.XML, org.restlet.data.MediaType.TEXT_XML, Language.ALL, CharacterSet.UTF_8
         );
@@ -498,14 +500,14 @@ public class ClientMDSTest {
         }
 
         // Checks the stub.        
-        this.mdsServerStub.verifySpec(spec);
+        mdsServerStub.verifySpec(spec);
     }
 
     private void testSpecCreateMetadataAsObj(MdsSpec.Spec spec) throws Exception {
         testTitle(spec.getDescription());
 
         // Creates the MetadataStoreService stub        
-        this.mdsServerStub.createSpec(spec);
+        mdsServerStub.createSpec(spec);
         Representation entity = new StringRepresentation(
                 MdsSpec.XML, org.restlet.data.MediaType.TEXT_XML, Language.ALL, CharacterSet.UTF_8
         );
@@ -528,7 +530,7 @@ public class ClientMDSTest {
         }
 
         // Checks the stub.        
-        this.mdsServerStub.verifySpec(spec);
+        mdsServerStub.verifySpec(spec);
     }
 
     /**
@@ -626,7 +628,7 @@ public class ClientMDSTest {
         testTitle(spec.getDescription());
 
         // Creates the MetadataStoreService stub        
-        this.mdsServerStub.createSpec(spec);
+        mdsServerStub.createSpec(spec);
 
         // Requests the DOIServer using the stub (mode DEV)        
         ClientMDS instance = new ClientMDS(ClientMDS.Context.DEV, login, pwd);
@@ -650,14 +652,14 @@ public class ClientMDSTest {
             assertEquals("Test the response", expResult, result);
         }
 
-        this.mdsServerStub.verifySpec(spec);
+        mdsServerStub.verifySpec(spec);
     }
     
     private void testSpecDeleteMetadataAsObj(MdsSpec.Spec spec) throws Exception{
         testTitle(spec.getDescription());
 
         // Creates the MetadataStoreService stub        
-        this.mdsServerStub.createSpec(spec);
+        mdsServerStub.createSpec(spec);
 
         ClientMDS instance = new ClientMDS(ClientMDS.Context.DEV, login, pwd);
 
@@ -688,7 +690,7 @@ public class ClientMDSTest {
         }
 
         // Checks the stub.        
-       this.mdsServerStub.verifySpec(spec);
+       mdsServerStub.verifySpec(spec);
     }
 
     /**
@@ -785,7 +787,7 @@ public class ClientMDSTest {
         testTitle(spec.getDescription());
 
         // Creates the MetadataStoreService stub        
-        this.mdsServerStub.createSpec(spec);
+        mdsServerStub.createSpec(spec);
 
         ClientMDS instance = new ClientMDS(ClientMDS.Context.DEV, login, pwd);
 
@@ -807,7 +809,7 @@ public class ClientMDSTest {
         }
 
         // Checks the stub.                
-        this.mdsServerStub.verifySpec(spec);
+        mdsServerStub.verifySpec(spec);
     }
 
     /**
@@ -859,7 +861,7 @@ public class ClientMDSTest {
         testTitle(spec.getDescription());
        
         // Creates the MetadataStoreService stub        
-        this.mdsServerStub.createSpec(spec);
+        mdsServerStub.createSpec(spec);
 
         Form form = new Form();
         form.add("application/fits", "http://cnes.fr/test-data");
@@ -884,7 +886,7 @@ public class ClientMDSTest {
         }
        
         // Checks the stub.                
-        this.mdsServerStub.verifySpec(spec);
+        mdsServerStub.verifySpec(spec);
     }
     
     

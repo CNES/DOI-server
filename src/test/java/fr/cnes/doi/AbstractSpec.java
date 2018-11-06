@@ -197,6 +197,13 @@ public class AbstractSpec {
             }
         }
 
+        void reset() {
+            if(hasProxy) {
+                mockProxy.reset();
+            }
+            mockServer.reset();
+        }
+
     }
 
 }

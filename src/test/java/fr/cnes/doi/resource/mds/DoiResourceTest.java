@@ -60,7 +60,7 @@ import org.restlet.util.Series;
 public class DoiResourceTest {
     
     private static Client cl;
-    private MdsSpec mdsServerStub;     
+    private static MdsSpec mdsServerStub;     
 
     private static final String DOIS_SERVICE = "/mds/dois/";
     
@@ -78,21 +78,22 @@ public class DoiResourceTest {
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS"); 
         classTitle("DoiResource");
+        mdsServerStub = new MdsSpec(DATACITE_MOCKSERVER_PORT); 
     }
     
     @AfterClass
     public static void tearDownClass() {
+        mdsServerStub.finish();
         InitServerForTest.close();
     }
     
     @Before
     public void setUp() {
-        this.mdsServerStub = new MdsSpec(DATACITE_MOCKSERVER_PORT);        
+        mdsServerStub.reset();     
     }
     
     @After
-    public void tearDown() {
-        this.mdsServerStub.finish();
+    public void tearDown() {        
     }
     
     /**
@@ -104,7 +105,7 @@ public class DoiResourceTest {
     public void testGetDoiHttp() throws IOException {
         testTitle("testGetDoiHttp");
         
-        this.mdsServerStub.createSpec(MdsSpec.Spec.GET_DOI_200);
+        mdsServerStub.createSpec(MdsSpec.Spec.GET_DOI_200);
         
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);
         ClientResource client = new ClientResource("http://localhost:"+port+DOIS_SERVICE+MdsSpec.Spec.GET_DOI_200.getTemplatePath());
@@ -114,7 +115,7 @@ public class DoiResourceTest {
         assertEquals("Test the status code is the right one", MdsSpec.Spec.GET_DOI_200.getStatus(), status.getCode());
         assertEquals("Test the landing page is the right one", MdsSpec.Spec.GET_DOI_200.getBody(), rep.getText());
         
-        this.mdsServerStub.verifySpec(MdsSpec.Spec.GET_DOI_200);
+        mdsServerStub.verifySpec(MdsSpec.Spec.GET_DOI_200);
     }
     
     /**
@@ -126,7 +127,7 @@ public class DoiResourceTest {
     public void testGetDoiHttps() throws IOException {
         testTitle("testGetDoiHttps");
         
-        this.mdsServerStub.createSpec(MdsSpec.Spec.GET_DOI_200);
+        mdsServerStub.createSpec(MdsSpec.Spec.GET_DOI_200);
         
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:"+port+DOIS_SERVICE+MdsSpec.Spec.GET_DOI_200.getTemplatePath());
@@ -137,7 +138,7 @@ public class DoiResourceTest {
         assertEquals("Test the status code is the right one", MdsSpec.Spec.GET_DOI_200.getStatus(), status.getCode());
         assertEquals("Test the landing page is the right one",MdsSpec.Spec.GET_DOI_200.getBody(), rep.getText());
         
-        this.mdsServerStub.verifySpec(MdsSpec.Spec.GET_DOI_200);
+        mdsServerStub.verifySpec(MdsSpec.Spec.GET_DOI_200);
          
     }    
     
@@ -150,7 +151,7 @@ public class DoiResourceTest {
     public void testGetDoiNotFoundHttps() throws IOException {    
         testTitle("testGetDoiNotFoundHttps");
         
-        this.mdsServerStub.createSpec(MdsSpec.Spec.GET_DOI_404);
+        mdsServerStub.createSpec(MdsSpec.Spec.GET_DOI_404);
         
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:"+port+DOIS_SERVICE+MdsSpec.Spec.GET_DOI_404.getTemplatePath());
@@ -165,7 +166,7 @@ public class DoiResourceTest {
         client.release();
         assertEquals(MdsSpec.Spec.GET_DOI_404.getStatus(), code);
         
-        this.mdsServerStub.verifySpec(MdsSpec.Spec.GET_DOI_404);
+        mdsServerStub.verifySpec(MdsSpec.Spec.GET_DOI_404);
        
     }        
     

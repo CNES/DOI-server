@@ -25,7 +25,6 @@ import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.UnitTest;
 import static fr.cnes.doi.client.BaseClient.DATACITE_MOCKSERVER_PORT;
-import fr.cnes.doi.exception.ClientMdsException;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_CONNECTIONS_PER_HOST;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_TOTAL_CONNECTIONS;
 import static fr.cnes.doi.server.DoiServer.JKS_DIRECTORY;
@@ -69,7 +68,7 @@ public class FormatCitationResourceTest {
     public ExpectedException exceptions = ExpectedException.none(); 
     
     private static Client cl;
-    private CrossCiteSpec spec;   
+    private static CrossCiteSpec spec;   
 
     public FormatCitationResourceTest() {
     }
@@ -85,21 +84,23 @@ public class FormatCitationResourceTest {
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS");    
         classTitle("FormatCitationResource");
+        spec = new CrossCiteSpec(DATACITE_MOCKSERVER_PORT);
     }
 
     @AfterClass
     public static void tearDownClass() {
+        spec.finish();        
         InitServerForTest.close();
     }
 
     @Before
     public void setUp() {
-        spec = new CrossCiteSpec(DATACITE_MOCKSERVER_PORT);
+        spec.reset();        
     }
 
     @After
     public void tearDown() {
-        spec.finish();
+        
     }         
 
     /**
@@ -130,7 +131,7 @@ public class FormatCitationResourceTest {
         client.release();
         assertEquals("Test the citation format through a HTTPS server",expResult, result);
         
-        this.spec.verifySpec(CrossCiteSpec.Spec.GET_FORMAT_200);
+        spec.verifySpec(CrossCiteSpec.Spec.GET_FORMAT_200);
         
     }
     
@@ -143,7 +144,7 @@ public class FormatCitationResourceTest {
         testTitle("testGetFormatHttpsWithWrongParameters");
         exceptions.expect(ResourceException.class);
         
-        this.spec.createSpec(CrossCiteSpec.Spec.GET_FORMAT_400);               
+        spec.createSpec(CrossCiteSpec.Spec.GET_FORMAT_400);               
         
         String expResult = "Garza, K., Goble, C., Brooke, J., & Jay, C. 2015. Framing the community data system interface. Proceedings of the 2015 British HCI Conference on - British HCI ’15. Presented at the the 2015 British HCI Conference, ACM Press. https://doi.org/10.1145/2783446.2783605.\n";
         String result = "";
@@ -164,7 +165,7 @@ public class FormatCitationResourceTest {
         client.release();
         assertEquals("Test the citation format through a HTTPS server",expResult, result);
                
-        this.spec.verifySpec(CrossCiteSpec.Spec.GET_FORMAT_400);
+        spec.verifySpec(CrossCiteSpec.Spec.GET_FORMAT_400);
     }    
     
     /**
@@ -195,7 +196,7 @@ public class FormatCitationResourceTest {
         client.release();
         assertEquals("Test the citation format through a HTTP server",expResult, result);
         
-        this.spec.verifySpec(CrossCiteSpec.Spec.GET_FORMAT_200);
+        spec.verifySpec(CrossCiteSpec.Spec.GET_FORMAT_200);
         
     }    
 
@@ -208,7 +209,7 @@ public class FormatCitationResourceTest {
     public void testGetFormatWithBadDOI() {
         testTitle("testGetFormatWithBadDOI");
 
-        this.spec.createSpec(CrossCiteSpec.Spec.GET_FORMAT_404);
+        spec.createSpec(CrossCiteSpec.Spec.GET_FORMAT_404);
 
         int expResult = Status.CLIENT_ERROR_NOT_FOUND.getCode();
         int result;
@@ -232,7 +233,7 @@ public class FormatCitationResourceTest {
         client.release();
         assertEquals("Test the response with a given wrong DOI",expResult, result);
         
-        this.spec.verifySpec(CrossCiteSpec.Spec.GET_FORMAT_404);
+        spec.verifySpec(CrossCiteSpec.Spec.GET_FORMAT_404);
         
     }
 
@@ -245,7 +246,7 @@ public class FormatCitationResourceTest {
     public void testGetFormatWithBadStyle() {
         testTitle("testGetFormatWithBadStyle");
         
-        this.spec.createSpec(CrossCiteSpec.Spec.GET_FORMAT_400);
+        spec.createSpec(CrossCiteSpec.Spec.GET_FORMAT_400);
 
         int expResult = Status.CLIENT_ERROR_BAD_REQUEST.getCode();
         int result = -1;
@@ -269,7 +270,7 @@ public class FormatCitationResourceTest {
         client.release();
         assertEquals("Test the response with a given wrong style", expResult, result);
         
-        this.spec.verifySpec(CrossCiteSpec.Spec.GET_FORMAT_400);
+        spec.verifySpec(CrossCiteSpec.Spec.GET_FORMAT_400);
         
     }
 
@@ -282,7 +283,7 @@ public class FormatCitationResourceTest {
     public void testGetFormatWithBadLang() {
         testTitle("testGetFormatWithBadLang");
         
-        this.spec.createSpec(CrossCiteSpec.Spec.GET_FORMAT_400);                
+        spec.createSpec(CrossCiteSpec.Spec.GET_FORMAT_400);                
 
         int expResult = Status.CLIENT_ERROR_BAD_REQUEST.getCode();
         int result = -1;
@@ -307,7 +308,7 @@ public class FormatCitationResourceTest {
         client.release();
         assertEquals("Test the response with a given wrong style",expResult, result);
         
-        this.spec.verifySpec(CrossCiteSpec.Spec.GET_FORMAT_400);
+        spec.verifySpec(CrossCiteSpec.Spec.GET_FORMAT_400);
         
     }
 
@@ -320,7 +321,7 @@ public class FormatCitationResourceTest {
     public void testGetFormatWithBadLangAndBadDoi() {
         testTitle("testGetFormatWithBadLangAndBadDoi");
         
-        this.spec.createSpec(CrossCiteSpec.Spec.GET_FORMAT_404);                               
+        spec.createSpec(CrossCiteSpec.Spec.GET_FORMAT_404);                               
         
         int expResult = Status.CLIENT_ERROR_NOT_FOUND.getCode();
         int result = -1;
@@ -345,7 +346,7 @@ public class FormatCitationResourceTest {
         client.release();
         assertEquals(expResult, result);
         
-        this.spec.verifySpec(CrossCiteSpec.Spec.GET_FORMAT_404);
+        spec.verifySpec(CrossCiteSpec.Spec.GET_FORMAT_404);
         
     }
 }

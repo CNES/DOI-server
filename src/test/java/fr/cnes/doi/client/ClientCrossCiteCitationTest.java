@@ -24,8 +24,6 @@ import fr.cnes.doi.CrossCiteSpec;
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.UnitTest;
 import static fr.cnes.doi.client.BaseClient.DATACITE_MOCKSERVER_PORT;
-import fr.cnes.doi.exception.ClientCrossCiteException;
-import fr.cnes.doi.utils.HttpClientHelperPatchAC;
 import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -36,9 +34,6 @@ import static org.junit.Assert.*;
 import org.junit.Rule;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
-import org.restlet.Client;
-import org.restlet.engine.Engine;
-import org.restlet.engine.connector.ConnectorHelper;
 
 /**
  * Test of Citation resources
@@ -51,7 +46,7 @@ public class ClientCrossCiteCitationTest {
     /**
      * Stub on Cross Cite Server.
      */
-    private CrossCiteSpec crossCiteServerStub;
+    private static CrossCiteSpec crossCiteServerStub;
 
     public ClientCrossCiteCitationTest() {
     }
@@ -60,20 +55,22 @@ public class ClientCrossCiteCitationTest {
     public static void setUpClass() {
         classTitle("ClientCrossCiteCitation");
         InitSettingsForTest.init(InitSettingsForTest.CONFIG_TEST_PROPERTIES);
+        crossCiteServerStub = new CrossCiteSpec(DATACITE_MOCKSERVER_PORT);
     }
 
     @AfterClass
     public static void tearDownClass() {
+        crossCiteServerStub.finish();
     }
 
     @Before
-    public void setUp() {
-        crossCiteServerStub = new CrossCiteSpec(DATACITE_MOCKSERVER_PORT);        
+    public void setUp() {        
+        crossCiteServerStub.reset();        
     }
 
     @After
     public void tearDown() {
-        crossCiteServerStub.finish();
+        
     }
     
     @Rule
@@ -89,7 +86,7 @@ public class ClientCrossCiteCitationTest {
         testTitle("testGetStyles");
 
         // Create the sub on CrossCite
-        this.crossCiteServerStub.createSpec(CrossCiteSpec.Spec.GET_STYLE_200);
+        crossCiteServerStub.createSpec(CrossCiteSpec.Spec.GET_STYLE_200);
 
         // Create a GET request client API on DOIServer. DOIServer calls the CrossCite stub
         ClientCrossCiteCitation instance = new ClientCrossCiteCitation(ClientCrossCiteCitation.Context.DEV);
@@ -98,7 +95,7 @@ public class ClientCrossCiteCitationTest {
         assertEquals("Test retrieving styles", expResult, result);
 
         // Check if the stub has been requested        
-        this.crossCiteServerStub.verifySpec(CrossCiteSpec.Spec.GET_STYLE_200);
+        crossCiteServerStub.verifySpec(CrossCiteSpec.Spec.GET_STYLE_200);
     }
 
     /**
@@ -111,7 +108,7 @@ public class ClientCrossCiteCitationTest {
         testTitle("testGetLanguages");
 
         // Create the sub on CrossCite        
-        this.crossCiteServerStub.createSpec(CrossCiteSpec.Spec.GET_LANGUAGE_200);
+        crossCiteServerStub.createSpec(CrossCiteSpec.Spec.GET_LANGUAGE_200);
 
         // Create a GET request client API on DOIServer. DOIServer calls the CrossCite stub        
         ClientCrossCiteCitation instance = new ClientCrossCiteCitation(ClientCrossCiteCitation.Context.DEV);
@@ -120,7 +117,7 @@ public class ClientCrossCiteCitationTest {
         assertEquals("Test retrieving languages", expResult, result);
 
         // Check if the stub has been requested
-        this.crossCiteServerStub.verifySpec(CrossCiteSpec.Spec.GET_LANGUAGE_200);
+        crossCiteServerStub.verifySpec(CrossCiteSpec.Spec.GET_LANGUAGE_200);
     }
 
     /**
@@ -133,7 +130,7 @@ public class ClientCrossCiteCitationTest {
         testTitle("testGetFormat");
 
         // Create the sub on CrossCite        
-        this.crossCiteServerStub.createSpec(CrossCiteSpec.Spec.GET_FORMAT_200);
+        crossCiteServerStub.createSpec(CrossCiteSpec.Spec.GET_FORMAT_200);
 
         // Create a GET request client API on DOIServer. DOIServer calls the CrossCite stub        
         String doiName = "10.1145/2783446.2783605";
@@ -145,7 +142,7 @@ public class ClientCrossCiteCitationTest {
         assertEquals("Test retrieving format", expResult, result);
 
         // Check if the stub has been requested        
-        this.crossCiteServerStub.verifySpec(CrossCiteSpec.Spec.GET_FORMAT_200);
+        crossCiteServerStub.verifySpec(CrossCiteSpec.Spec.GET_FORMAT_200);
     }  
 
 }

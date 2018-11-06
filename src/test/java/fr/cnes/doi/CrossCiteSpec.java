@@ -95,6 +95,10 @@ public class CrossCiteSpec extends AbstractSpec {
         this.mockServer.verifySpec(specification.getHttpVerb(), specification.getPath());
     }
     
+    public void reset() {
+        this.mockServer.reset();
+    }    
+    
     public void finish() {
         this.mockServer.close();
     }

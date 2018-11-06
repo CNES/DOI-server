@@ -81,7 +81,7 @@ public class ITperformance {
     private final ExecutorService clientExec = Executors.newFixedThreadPool(200);
 
     private static Client cl;
-    private MdsSpec mdsServerStub;
+    private static MdsSpec mdsServerStub;
     private InputStream inputStream;
     private String metadata;
 
@@ -106,16 +106,18 @@ public class ITperformance {
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS");
         classTitle("ITperformance");
+        mdsServerStub = new MdsSpec(DATACITE_MOCKSERVER_PORT);
     }
 
     @AfterClass
     public static void tearDownClass() {
+        mdsServerStub.finish();
         InitServerForTest.close();
     }
 
     @Before
     public void setUp() {
-        this.mdsServerStub = new MdsSpec(DATACITE_MOCKSERVER_PORT);
+        mdsServerStub.reset();
         this.inputStream = ClientProxyTest.class.getResourceAsStream("/test.xml");
         this.metadata = new BufferedReader(new InputStreamReader(inputStream)).lines()
                 .collect(Collectors.joining("\n"));
@@ -127,8 +129,7 @@ public class ITperformance {
     }
 
     @After
-    public void tearDown() {
-        this.mdsServerStub.finish();
+    public void tearDown() {        
     }
 
     @Test
@@ -137,8 +138,8 @@ public class ITperformance {
         long startTime = System.currentTimeMillis();
         ConcurrentHashMap map = new ConcurrentHashMap();
         map.put("nbErrors", 0);
-        this.mdsServerStub.createSpec(MdsSpec.Spec.POST_METADATA_201);
-        this.mdsServerStub.createSpec(MdsSpec.Spec.POST_DOI_201);
+        mdsServerStub.createSpec(MdsSpec.Spec.POST_METADATA_201);
+        mdsServerStub.createSpec(MdsSpec.Spec.POST_DOI_201);
         
         
         testMultiThreads(CreateDOI.class, map, NB_ITERS);        
@@ -165,8 +166,8 @@ public class ITperformance {
         long startTime = System.currentTimeMillis();
         ConcurrentHashMap map = new ConcurrentHashMap();
         map.put("nbErrors", 0);
-        this.mdsServerStub.createSpec(MdsSpec.Spec.POST_METADATA_201);
-        this.mdsServerStub.createSpec(MdsSpec.Spec.POST_DOI_201);
+        mdsServerStub.createSpec(MdsSpec.Spec.POST_METADATA_201);
+        mdsServerStub.createSpec(MdsSpec.Spec.POST_DOI_201);
         
         
         testMultiThreads(CreateDOI.class, map, 1);        
@@ -185,8 +186,6 @@ public class ITperformance {
         double expectedTime = 1 * 1000; //1 s per DOI
         LOG.log(Level.INFO, "All working fine : Mean request processing time {0} ms, expected time {1} ms", new Object[]{meanProcessingTime, expectedTime});        
         Assert.assertTrue("Test the performances of DOIs creation", (int) map.get("nbErrors") == 0 && meanProcessingTime <= expectedTime);
-        this.mdsServerStub.verifySpec(MdsSpec.Spec.POST_METADATA_201);
-        this.mdsServerStub.verifySpec(MdsSpec.Spec.POST_DOI_201);
     }    
 
     private void testMultiThreads(final Class jobTask, final ConcurrentHashMap map, int nbIters) {
@@ -271,7 +270,6 @@ public class ITperformance {
             } finally {
                 client.release();
             }
-
         }
 
         @Override
