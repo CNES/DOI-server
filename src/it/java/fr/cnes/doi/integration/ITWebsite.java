@@ -23,7 +23,6 @@ package fr.cnes.doi.integration;
  * @author malapert
  * mvn clean verify -P integration-test
  */
-import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.exception.ClientMdsException;
@@ -53,8 +52,8 @@ public class ITWebsite {
     }
 
     @Test
+    @Ignore("TO DO for web site")
     public void shouldSayHelloWorld() {
-        testTitle("shouldSayHelloWorld");
         driver.get("http://localhost:8182/");
         assertEquals("Hello World!", driver.findElement(By.tagName("body")).getText());
     }

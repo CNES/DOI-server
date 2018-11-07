@@ -63,14 +63,14 @@ public class ClientCrossCiteCitation extends BaseClient {
      */
     public static final String FORMAT_URI = "format";
 
-
     /**
      * Context use.
      */
     private final Context contextUse;
 
     /**
-     * Empty constructor.
+     * Creates a client to {@value CROSS_CITE_URL} with a {@link Context#PROD prod} context and
+     * without a proxy.
      */
     public ClientCrossCiteCitation() {
         super(CROSS_CITE_URL);
@@ -78,9 +78,9 @@ public class ClientCrossCiteCitation extends BaseClient {
     }
 
     /**
-     * Constructor used for development purpose.
+     * Creates a client to an URI related to the context.
      *
-     * @param context Context dev
+     * @param context context
      */
     public ClientCrossCiteCitation(final Context context) {
         super(context.getCrossCiteUrl());
@@ -181,11 +181,12 @@ public class ClientCrossCiteCitation extends BaseClient {
             this.getClient().release();
         }
     }
+
     /**
      * Options for each context.
      */
     public enum Context {
-        
+
         /**
          * Development context. This context uses the {@link #CROSS_CITE_MOCK_URL} end point with a
          * log level sets to OFF.
@@ -206,19 +207,20 @@ public class ClientCrossCiteCitation extends BaseClient {
          * level sets to INFO.
          */
         PROD(CROSS_CITE_URL, Level.INFO);
-        
+
         /**
          * Level log.
          */
         private Level levelLog;
-        
+
         /**
          * CrossCite URL.
          */
         private String crossCiteUrl;
-        
+
         /**
          * Construct a development context
+         *
          * @param dataciteUrl dataciteURL according to the context
          * @param levelLog level log
          */
@@ -227,7 +229,7 @@ public class ClientCrossCiteCitation extends BaseClient {
             this.crossCiteUrl = dataciteUrl;
             this.levelLog = levelLog;
         }
-        
+
         /**
          * Returns the log level.
          *
@@ -236,7 +238,7 @@ public class ClientCrossCiteCitation extends BaseClient {
         public Level getLevelLog() {
             return this.levelLog;
         }
-        
+
         /**
          * Returns the service end point.
          *
@@ -245,7 +247,7 @@ public class ClientCrossCiteCitation extends BaseClient {
         public String getCrossCiteUrl() {
             return this.crossCiteUrl;
         }
-        
+
         /**
          * Sets the level log for the context
          *
@@ -254,7 +256,7 @@ public class ClientCrossCiteCitation extends BaseClient {
         private void setLevelLog(final Level levelLog) {
             this.levelLog = levelLog;
         }
-        
+
         /**
          * Sets the Cross Cite URL for the context.
          *
@@ -263,7 +265,7 @@ public class ClientCrossCiteCitation extends BaseClient {
         private void setCrossCiteUrl(final String crossCiteUrl) {
             this.crossCiteUrl = crossCiteUrl;
         }
-        
+
         /**
          * Sets the level log for a given context
          *
@@ -274,7 +276,7 @@ public class ClientCrossCiteCitation extends BaseClient {
                 final Level levelLog) {
             context.setLevelLog(levelLog);
         }
-        
+
         /**
          * Sets the Cross Cite URL for a given context
          *
@@ -285,6 +287,6 @@ public class ClientCrossCiteCitation extends BaseClient {
                 final String crossCiteUrl) {
             context.setCrossCiteUrl(crossCiteUrl);
         }
-        
+
     }
 }

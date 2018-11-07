@@ -18,8 +18,6 @@
  */
 package fr.cnes.doi.resource.mds;
 
-import static fr.cnes.doi.AbstractSpec.classTitle;
-import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.MdsSpec;
@@ -83,7 +81,6 @@ public class DoisResourceTest {
         parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS");
-        classTitle("DoisResource");
         mdsSpecStub = new MdsSpec(DATACITE_MOCKSERVER_PORT);
     }
 
@@ -130,9 +127,7 @@ public class DoisResourceTest {
      * @throws java.io.IOException - if OutOfMemoryErrors
      */
     @Test
-    public void testGetDoisHttps() throws IOException {
-        testTitle("testGetDoiNotAllowedHttps");  
-        
+    public void testGetDoisHttps() throws IOException {        
         mdsSpecStub.createSpec(MdsSpec.Spec.GET_COLLECTION_200);
         
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
@@ -149,9 +144,7 @@ public class DoisResourceTest {
      * @throws java.io.IOException - if OutOfMemoryErrors
      */
     @Test
-    public void testGetDoisHttp() throws IOException {
-        testTitle("testGetDoisHttp");
-        
+    public void testGetDoisHttp() throws IOException {        
         mdsSpecStub.createSpec(MdsSpec.Spec.GET_COLLECTION_200);
         
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);
@@ -170,9 +163,7 @@ public class DoisResourceTest {
      * @throws java.io.IOException - if OutOfMemoryErrors
      */
     @Test
-    public void testCreateDoiConflictHttps() throws IOException {
-        testTitle("testCreateDoiConflictHttps");
-        
+    public void testCreateDoiConflictHttps() throws IOException {        
         Form doiForm = new Form();
         doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b"));
         doiForm.add(new Parameter(DoisResource.URL_PARAMETER, "http://www.cnes.fr"));
@@ -199,8 +190,6 @@ public class DoisResourceTest {
      */
     @Test
     public void testCreateDoiHttps() throws IOException {
-        testTitle("testCreateDoiHttps");
-
         mdsSpecStub.createSpec(MdsSpec.Spec.POST_DOI_201);
         
         Form doiForm = new Form();
@@ -238,9 +227,7 @@ public class DoisResourceTest {
      * @throws java.io.IOException - if OutOfMemoryErrors
      */
     @Test
-    public void testCreateDoiHttp() throws IOException {
-        testTitle("testCreateDoiHttp");
-        
+    public void testCreateDoiHttp() throws IOException {        
         mdsSpecStub.createSpec(MdsSpec.Spec.POST_DOI_201);        
 
         Form doiForm = new Form();
@@ -278,9 +265,7 @@ public class DoisResourceTest {
      * @throws java.io.IOException - if OutOfMemoryErrors
      */
     @Test
-    public void testCreateFalseDoiHttps() throws IOException {
-        testTitle("testCreateFalseDoiHttps");
-        
+    public void testCreateFalseDoiHttps() throws IOException {        
         mdsSpecStub.createSpec(MdsSpec.Spec.POST_DOI_412);                        
 
         Form doiForm = new Form();
@@ -318,8 +303,6 @@ public class DoisResourceTest {
      */
     @Test
     public void testCreateDoiWithWrongPrefixHttps() throws IOException {
-        testTitle("testCreateDoiWithWrongPrefixHttps");
-
         Form doiForm = new Form();
         doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.4072/828606/8c3e91ad45ca855b477126bc073ae"));
         doiForm.add(new Parameter(DoisResource.URL_PARAMETER, "http://www.cnes.fr"));

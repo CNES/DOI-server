@@ -18,8 +18,6 @@
  */
 package fr.cnes.doi.integration;
 
-import static fr.cnes.doi.AbstractSpec.classTitle;
-import static fr.cnes.doi.AbstractSpec.testTitle;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -52,7 +50,6 @@ public class ITemailSettings {
     public static void setUpClass() {
         InitSettingsForTest.init(InitSettingsForTest.CONFIG_IT_PROPERTIES);
         instance = EmailSettings.getInstance();
-        classTitle("EmailSettings");
     }
 
     @AfterClass
@@ -72,7 +69,6 @@ public class ITemailSettings {
      */
     @Test
     public void testGetTlsEnable() {
-        testTitle("testGetTlsEnable");
         String expResult = "false";
         String result = instance.getTlsEnable();
         assertEquals(expResult, result);
@@ -83,7 +79,6 @@ public class ITemailSettings {
      */
     @Test
     public void testGetAuthUser() {
-        testTitle("testGetAuthUser");
         String result = instance.getAuthUser();
         assertNotNull(result);
     }
@@ -93,7 +88,6 @@ public class ITemailSettings {
      */
     @Test
     public void testGetAuthPwd() {
-        testTitle("testGetAuthPwd");
         String result = instance.getAuthPwd();
         assertNotNull(result);
     }
@@ -103,7 +97,6 @@ public class ITemailSettings {
      */
     @Test
     public void testGetContactAdmin() {
-        testTitle("testGetContactAdmin");
         String expResult = "L-doi-support@cnes.fr";
         String result = instance.getContactAdmin();
         assertEquals(expResult, result);
@@ -114,7 +107,6 @@ public class ITemailSettings {
      */
     @Test
     public void testGetInstance() {
-        testTitle("testGetInstance");
         EmailSettings result = EmailSettings.getInstance();
         assertNotNull(result);
     }
@@ -124,7 +116,6 @@ public class ITemailSettings {
      */
     @Test
     public void testSetDebug() {
-        testTitle("testSetDebug");
         boolean isEnabled = false;
         instance.setDebug(isEnabled);
         assertTrue(true);
@@ -135,7 +126,6 @@ public class ITemailSettings {
      */
     @Test
     public void testGetDebug() {
-        testTitle("testGetDebug");
         boolean expResult = false;
         boolean result = instance.isDebug();
         assertEquals(expResult, result);
@@ -146,7 +136,6 @@ public class ITemailSettings {
      */
     @Test
     public void testSendMessage() {
-        testTitle("testSendMessage");
         String subject = "Test";
         String msg = "My message";
         boolean result = instance.sendMessage(subject, msg);
@@ -158,7 +147,6 @@ public class ITemailSettings {
      */
     @Test
     public void testGetSmtpURL() {
-        testTitle("testGetSmtpURL");
         String expResult = "smtp://smtp-relay.gmail.com";
         String result = instance.getSmtpURL();
         assertEquals(expResult, result);
@@ -169,7 +157,6 @@ public class ITemailSettings {
      */
     @Test
     public void testGetSmtpProtocol() {
-        testTitle("testGetSmtpProtocol");
         String expResult = "SMTP";
         String result = instance.getSmtpProtocol();
         assertEquals(expResult, result);

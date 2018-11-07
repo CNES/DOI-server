@@ -18,8 +18,6 @@
  */
 package fr.cnes.doi.resource.citation;
 
-import static fr.cnes.doi.AbstractSpec.classTitle;
-import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.CrossCiteSpec;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.InitSettingsForTest;
@@ -83,7 +81,6 @@ public class FormatCitationResourceTest {
         parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS");    
-        classTitle("FormatCitationResource");
         spec = new CrossCiteSpec(DATACITE_MOCKSERVER_PORT);
     }
 
@@ -107,9 +104,7 @@ public class FormatCitationResourceTest {
      * Test of getFormat method, of class FormatCitationResource.
      */
     @Test
-    public void testGetFormatHttps() {
-        testTitle("testGetFormatHttps");
-        
+    public void testGetFormatHttps() {        
         spec.createSpec(CrossCiteSpec.Spec.GET_FORMAT_200);               
         
         String expResult = CrossCiteSpec.Spec.GET_FORMAT_200.getBody();
@@ -141,7 +136,6 @@ public class FormatCitationResourceTest {
      */
     @Test
     public void testGetFormatHttpsWithWrongParameters() {
-        testTitle("testGetFormatHttpsWithWrongParameters");
         exceptions.expect(ResourceException.class);
         
         spec.createSpec(CrossCiteSpec.Spec.GET_FORMAT_400);               
@@ -172,9 +166,7 @@ public class FormatCitationResourceTest {
      * Test of getFormat method, of class FormatCitationResource.
      */
     @Test
-    public void testGetFormatHttp() {
-        testTitle("testGetFormatHttp");
-        
+    public void testGetFormatHttp() {        
         spec.createSpec(CrossCiteSpec.Spec.GET_FORMAT_200);               
         
         String expResult = CrossCiteSpec.Spec.GET_FORMAT_200.getBody();
@@ -207,8 +199,6 @@ public class FormatCitationResourceTest {
      */
     @Test
     public void testGetFormatWithBadDOI() {
-        testTitle("testGetFormatWithBadDOI");
-
         spec.createSpec(CrossCiteSpec.Spec.GET_FORMAT_404);
 
         int expResult = Status.CLIENT_ERROR_NOT_FOUND.getCode();
@@ -243,9 +233,7 @@ public class FormatCitationResourceTest {
      * not exist among the enumerated list.     
      */
     @Test
-    public void testGetFormatWithBadStyle() {
-        testTitle("testGetFormatWithBadStyle");
-        
+    public void testGetFormatWithBadStyle() {       
         spec.createSpec(CrossCiteSpec.Spec.GET_FORMAT_400);
 
         int expResult = Status.CLIENT_ERROR_BAD_REQUEST.getCode();
@@ -280,9 +268,7 @@ public class FormatCitationResourceTest {
      * not exist among the enumerated list.      
      */
     @Test
-    public void testGetFormatWithBadLang() {
-        testTitle("testGetFormatWithBadLang");
-        
+    public void testGetFormatWithBadLang() {        
         spec.createSpec(CrossCiteSpec.Spec.GET_FORMAT_400);                
 
         int expResult = Status.CLIENT_ERROR_BAD_REQUEST.getCode();
@@ -318,9 +304,7 @@ public class FormatCitationResourceTest {
      * not exist.      
      */
     @Test
-    public void testGetFormatWithBadLangAndBadDoi() {
-        testTitle("testGetFormatWithBadLangAndBadDoi");
-        
+    public void testGetFormatWithBadLangAndBadDoi() {       
         spec.createSpec(CrossCiteSpec.Spec.GET_FORMAT_404);                               
         
         int expResult = Status.CLIENT_ERROR_NOT_FOUND.getCode();

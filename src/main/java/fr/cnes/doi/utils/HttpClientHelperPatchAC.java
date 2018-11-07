@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.logging.Level;
 import org.apache.http.HttpException;
 import org.apache.http.HttpHost;
+import org.apache.http.HttpRequest;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
@@ -59,12 +60,33 @@ import org.restlet.ext.httpclient.internal.IgnoreCookieSpecFactory;
  */
 public class HttpClientHelperPatchAC extends HttpClientHelper {
 
+    /**
+     * Proxy login for proxy authentication (optional).
+     */
     final String login;
+    /**
+     * Proxy password for proxy authentication (optional).
+     */
     final String pwd;
+    /**
+     * Proxy host (required) when proxy is set.
+     */
     final String proxyHost;
+    /**
+     * Proxy port (required) when proxy is set.
+     */
     final String proxyPort;
+    /**
+     * Excluded hosts, which are not proxified. By default, localhost is set in the constructor 
+     */
     final List<String> excludedHosts = new ArrayList<>();
+    /**
+     * True when the proxy needs authentication.
+     */
     final boolean isAuthenticate;
+    /**
+     * True when the proxy is set.
+     */
     final boolean isWithProxy;
 
     public HttpClientHelperPatchAC(Client client) {
@@ -75,8 +97,10 @@ public class HttpClientHelperPatchAC extends HttpClientHelper {
         this.proxyPort = ProxySettings.getInstance().getProxyPort();
         this.isAuthenticate = ProxySettings.getInstance().isAuthenticate();
         this.isWithProxy = ProxySettings.getInstance().isWithProxy();
-        Collections.addAll(excludedHosts, ProxySettings.getInstance().getNonProxyHosts().split(
+        Collections.addAll(this.excludedHosts, ProxySettings.getInstance().getNonProxyHosts().split(
                 "\\s*,\\s*"));
+        this.excludedHosts.add("localhost");
+        getLogger().setLevel(Level.OFF);
     }
 
     @Override
@@ -88,15 +112,18 @@ public class HttpClientHelperPatchAC extends HttpClientHelper {
     public int getProxyPort() {
         return Integer.parseInt(this.proxyPort);
     }
-
+    
+    /**
+     * Excluded hosts.
+     * @return excluded hosts
+     */
     public List<String> getExcludedHosts() {
         return this.excludedHosts;
     }
 
     @Override
     protected void configure(HttpParams params) {
-        ConnManagerParams.setMaxTotalConnections(params,
-                getMaxTotalConnections());
+        ConnManagerParams.setMaxTotalConnections(params, getMaxTotalConnections());
         ConnManagerParams.setMaxConnectionsPerRoute(params,
                 new ConnPerRouteBean(getMaxConnectionsPerHost()));
 
@@ -108,21 +135,26 @@ public class HttpClientHelperPatchAC extends HttpClientHelper {
 
         HttpClientParams.setCookiePolicy(params, CookiePolicy.IGNORE_COOKIES);
         HttpConnectionParams.setTcpNoDelay(params, getTcpNoDelay());
-        HttpConnectionParams.setConnectionTimeout(params,
-                getSocketConnectTimeoutMs());
+        HttpConnectionParams.setConnectionTimeout(params, getSocketConnectTimeoutMs());
         HttpConnectionParams.setSoTimeout(params, getSocketTimeout());
 
-        String httpProxyHost = getProxyHost();
         if (isWithProxy) {
-            HttpHost proxy = new HttpHost(httpProxyHost, getProxyPort());
-
-            //((DefaultHttpClient) this.getHttpClient()).setRoutePlanner(routePlanner);
+            // proxy is set, so we put the proxy host/port
+            HttpHost proxy = new HttpHost(getProxyHost(), getProxyPort());
             params.setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
         }
     }
 
-    @Override
-    protected void configure(DefaultHttpClient httpClient) {
+    /**
+     * Configures route planner when the proxy is set.
+     * We have two cases to consider:
+     * <ul>
+     * <li>URL for which the proxy must not be used</li>
+     * <li>URL to proxify</li>
+     * </ul>
+     * @param httpClient http client
+     */
+    private void configureRouterPlanner(final DefaultHttpClient httpClient) {
         if (isWithProxy) {
 
             final HttpHost proxy = (HttpHost) httpClient.getParams().getParameter(
@@ -131,7 +163,7 @@ public class HttpClientHelperPatchAC extends HttpClientHelper {
             HttpRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy) {
 
                 @Override
-                public HttpRoute determineRoute(HttpHost host, org.apache.http.HttpRequest request,
+                public HttpRoute determineRoute(HttpHost host, HttpRequest request,
                         HttpContext context) throws HttpException {
                     final HttpClientContext clientContext = HttpClientContext.adapt(context);
                     final RequestConfig config = clientContext.getRequestConfig();
@@ -140,14 +172,16 @@ public class HttpClientHelperPatchAC extends HttpClientHelper {
 
                     final HttpHost target;
                     if (host.getPort() > 0
-                            && (host.getSchemeName().equalsIgnoreCase("http") && host.getPort() == 80
-                            || host.getSchemeName().equalsIgnoreCase("https") && host.getPort() == 443)) {
+                            && (host.getSchemeName().equalsIgnoreCase("http") 
+                            && host.getPort() == 80
+                            || host.getSchemeName().equalsIgnoreCase("https") 
+                            && host.getPort() == 443)) {
                         target = new HttpHost(host.getHostName(), -1, host.getSchemeName());
                     } else {
                         target = host;
                     }
                     final boolean secure = target.getSchemeName().equalsIgnoreCase("https");
-                    if (proxy == null || getExcludedHosts().contains(host.getHostName())) {
+                    if (getExcludedHosts().contains(host.getHostName())) {
                         return new HttpRoute(target, local, secure);
                     } else {
                         return new HttpRoute(target, local, proxy, secure);
@@ -155,37 +189,53 @@ public class HttpClientHelperPatchAC extends HttpClientHelper {
                 }
             };
 
-            ((DefaultHttpClient) this.getHttpClient()).setRoutePlanner(routePlanner);
-
-            if (getRetryHandler() != null) {
-                try {
-                    HttpRequestRetryHandler retryHandler = (HttpRequestRetryHandler) Engine
-                            .loadClass(getRetryHandler()).newInstance();
-                    ((DefaultHttpClient) this.getHttpClient()).setHttpRequestRetryHandler(
-                            retryHandler);
-                } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
-                    getLogger()
-                            .log(Level.WARNING,
-                                    "An error occurred during the instantiation of the retry handler.",
-                                    e);
-                }
-            }
-            CookieSpecRegistry csr = new CookieSpecRegistry();
-            csr.register(CookiePolicy.IGNORE_COOKIES, new IgnoreCookieSpecFactory());
-            ((DefaultHttpClient) this.getHttpClient()).setCookieSpecs(csr);
+            httpClient.setRoutePlanner(routePlanner);
         }
+    }
+    
+    /**
+     * Configures the retry handler.
+     * @param httpClient http client
+     */
+    private void configureRetryHandler(final DefaultHttpClient httpClient) {
+        if (getRetryHandler() != null) {
+            try {
+                HttpRequestRetryHandler retryHandler = (HttpRequestRetryHandler) Engine
+                        .loadClass(getRetryHandler()).newInstance();
+                httpClient.setHttpRequestRetryHandler(retryHandler);
+            } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+                getLogger().log(Level.WARNING, "An error occurred during the instantiation of the "
+                        + "retry handler.", e);
+            }
+        }        
+    }
+    
+    /**
+     * Configures authentication.
+     * @param httpClient http client
+     */
+    private void configureAuthentication(final DefaultHttpClient httpClient) {
+        if (this.isAuthenticate) {
+            final CredentialsProvider credProviders = httpClient.getCredentialsProvider();
+            credProviders.setCredentials(
+                    new AuthScope(this.proxyHost, Integer.parseInt(this.proxyPort)),
+                    new UsernamePasswordCredentials(this.login, this.pwd)
+            );
+        }        
+    }
+
+    @Override
+    protected void configure(DefaultHttpClient httpClient) {
+        configureRouterPlanner(httpClient);
+        configureRetryHandler(httpClient);
+        configureAuthentication(httpClient);
+        CookieSpecRegistry csr = new CookieSpecRegistry();
+        csr.register(CookiePolicy.IGNORE_COOKIES, new IgnoreCookieSpecFactory());        
+        httpClient.setCookieSpecs(csr);
     }
 
     @Override
     public void start() throws Exception {
         super.start();
-        if (this.isAuthenticate) {
-            final CredentialsProvider credProviders = ((DefaultHttpClient) this.getHttpClient()).
-                    getCredentialsProvider();
-            credProviders.setCredentials(
-                    new AuthScope(this.proxyHost, Integer.parseInt(this.proxyPort)),
-                    new UsernamePasswordCredentials(this.login, this.pwd)
-            );
-        }
     }
 }

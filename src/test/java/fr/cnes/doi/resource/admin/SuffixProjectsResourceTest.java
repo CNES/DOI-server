@@ -18,8 +18,6 @@
  */
 package fr.cnes.doi.resource.admin;
 
-import static fr.cnes.doi.AbstractSpec.classTitle;
-import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.UnitTest;
@@ -86,7 +84,6 @@ public class SuffixProjectsResourceTest {
         parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS"); 
-        classTitle("SuffixProjectsResource");
     }
 
     @AfterClass
@@ -121,7 +118,6 @@ public class SuffixProjectsResourceTest {
      */
     @Test
     public void testGetProjectsNameAsJson() throws IOException {
-        testTitle("testGetProjectsNameAsJson");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:"+port+"/admin/suffixProject");
         client.setNext(cl);
@@ -139,7 +135,6 @@ public class SuffixProjectsResourceTest {
      */
     @Test
     public void testGetProjectsNameAsXml() throws IOException {
-        testTitle("testGetProjectsNameAsXml");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:"+port+"/admin/suffixProject");
         client.setNext(cl);
@@ -158,7 +153,6 @@ public class SuffixProjectsResourceTest {
      */
     @Test
     public void testCreateProject() throws IOException {
-        testTitle("testCreateProject");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:"+port+"/admin/suffixProject");
         client.setNext(cl);
@@ -177,9 +171,7 @@ public class SuffixProjectsResourceTest {
      * @throws ResourceException
      */
     @Test
-    public void testCreateProjectWithWrongParameter() {
-        testTitle("testCreateProjectWithWrongParameter");
-        
+    public void testCreateProjectWithWrongParameter() {       
         exceptions.expect(ResourceException.class);
         
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);

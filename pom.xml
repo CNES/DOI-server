@@ -77,6 +77,12 @@
                         https://stackoverflow.com/questions/53010200/maven-surefire-could-not-find-forkedbooter-class                                            
                     -->
                     <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
+                    <properties>
+                        <property>
+                            <name>listener</name>
+                            <value>fr.cnes.doi.PrintTestRunnerListener</value>
+                        </property>
+                    </properties>                     
                 </configuration>
             </plugin>              
             <plugin>
@@ -89,7 +95,13 @@
                         Fix problem with the new JDK version : 
                         https://stackoverflow.com/questions/53010200/maven-surefire-could-not-find-forkedbooter-class                                            
                     -->                    
-                    <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
+                    <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>                    
+                    <properties>
+                        <property>
+                            <name>listener</name>
+                            <value>fr.cnes.doi.PrintTestRunnerListener</value>
+                        </property>
+                    </properties>                                         
                 </configuration>
                 <executions>
                     <execution>

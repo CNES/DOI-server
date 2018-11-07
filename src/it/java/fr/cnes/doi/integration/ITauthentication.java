@@ -18,7 +18,6 @@
  */
 package fr.cnes.doi.integration;
 
-import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.client.ClientMDS;
@@ -108,7 +107,6 @@ public class ITauthentication {
      */
     @Test
     public void testTokenAuthenticationWithBadRole() throws IOException {
-        testTitle("testTokenAuthenticationWithBadRole");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + "/admin/token");
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
@@ -152,7 +150,6 @@ public class ITauthentication {
      */
     @Test
     public void testTokenAuthenticationWithRightRole() throws IOException {
-        testTitle("testTokenAuthenticationWithRightRole");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + "/admin/token");
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
@@ -195,9 +192,7 @@ public class ITauthentication {
      * @throws java.io.IOException - if OutOfMemoryErrors
      */
     @Test
-    public void testTokenAuthenticationWithWrongToken() throws IOException {
-        testTitle("testTokenAuthenticationWithWrongToken");
-        
+    public void testTokenAuthenticationWithWrongToken() throws IOException {        
         mockServer.when(HttpRequest.request("/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)
                 .withMethod("POST")).respond(HttpResponse.response().withStatusCode(403));
         

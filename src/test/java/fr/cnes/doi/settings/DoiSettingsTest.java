@@ -18,8 +18,6 @@
  */
 package fr.cnes.doi.settings;
 
-import static fr.cnes.doi.AbstractSpec.classTitle;
-import static fr.cnes.doi.AbstractSpec.testTitle;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -47,7 +45,6 @@ public class DoiSettingsTest {
     public static void setUpClass() {
         InitSettingsForTest.init(InitSettingsForTest.CONFIG_TEST_PROPERTIES);
         instance = DoiSettings.getInstance();
-        classTitle("DoiSettings");
     }
 
     @AfterClass
@@ -67,7 +64,6 @@ public class DoiSettingsTest {
      */
     @Test
     public void testGetString_String_String() {
-        testTitle("testGetString_String_String");
         String key = "NoKeyword";
         String defaultValue = "TEST";
         String expResult = "TEST";
@@ -80,7 +76,6 @@ public class DoiSettingsTest {
      */
     @Test
     public void testGetString_String() {
-        testTitle("testGetString_String");
         String key = Consts.COPYRIGHT;
         String expResult = "Copyright 2017-2018 CNES";
         String result = instance.getString(key);
@@ -92,7 +87,6 @@ public class DoiSettingsTest {
      */
     @Test
     public void testGetSecret() {
-        testTitle("testGetSecret");
         String key = Consts.INIST_LOGIN;
         String result = instance.getSecret(key);
         assertNotNull(result);
@@ -103,7 +97,6 @@ public class DoiSettingsTest {
      */
     @Test
     public void testGetInt_String() {
-        testTitle("testGetInt_String");
         String key = Consts.SERVER_HTTP_PORT;
         int expResult = 8182;
         int result = instance.getInt(key);
@@ -115,7 +108,6 @@ public class DoiSettingsTest {
      */
     @Test
     public void testGetInt_String_String() {
-        testTitle("testGetInt_String_String");
         String key = "NoKeyword";
         String defaultValue = "50";
         int expResult = 50;
@@ -128,7 +120,6 @@ public class DoiSettingsTest {
      */
     @Test
     public void testGetBoolean() {
-        testTitle("testGetBoolean");
         String key = Consts.SERVER_PROXY_USED;
         boolean result = instance.getBoolean(key);
         assertTrue(true);
@@ -139,7 +130,6 @@ public class DoiSettingsTest {
      */
     @Test
     public void testGetLong_String() {
-        testTitle("testGetLong_String");
         String key = Consts.SERVER_HTTPS_PORT;
         Long expResult = 8183L;
         Long result = instance.getLong(key);
@@ -151,7 +141,6 @@ public class DoiSettingsTest {
      */
     @Test
     public void testGetLong_String_String() {
-        testTitle("testGetLong_String_String");
         String key = Consts.JETTY_RESPONSE_HEADER_SIZE;
         String defaultValue = "8050";
         Long expResult = 8050L;

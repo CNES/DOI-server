@@ -18,8 +18,6 @@
  */
 package fr.cnes.doi.resource.admin;
 
-import static fr.cnes.doi.AbstractSpec.classTitle;
-import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.UnitTest;
@@ -81,7 +79,6 @@ public class TokenResourceTest {
         parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS");
-        classTitle("TokenResource");
     }
 
     @AfterClass
@@ -104,7 +101,6 @@ public class TokenResourceTest {
      */
     @Test
     public void testCreateToken() throws IOException {
-        testTitle("testCreateToken");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + "/admin/token");
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
@@ -126,7 +122,6 @@ public class TokenResourceTest {
      */
     @Test
     public void testCreateTokenWithWrongParameters() {
-        testTitle("testCreateTokenWithWrongParameters");
         exceptions.expect(ResourceException.class);
         
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
@@ -150,7 +145,6 @@ public class TokenResourceTest {
      */
     @Test
     public void testCreateTokenWithWrongCredentials() throws IOException {
-        testTitle("testCreateTokenWithWrongCredentials");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + "/admin/token");
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "test");
@@ -176,7 +170,6 @@ public class TokenResourceTest {
      */
     @Test
     public void testGetTokenInformationWithWrongCredentials() throws IOException {
-        testTitle("testGetTokenInformationWithWrongCredentials");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + "/admin/token");
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");

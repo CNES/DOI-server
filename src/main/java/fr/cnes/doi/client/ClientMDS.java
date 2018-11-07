@@ -51,7 +51,6 @@ import org.restlet.data.MediaType;
 import org.restlet.data.Parameter;
 import org.restlet.data.Reference;
 import org.restlet.data.Status;
-import org.restlet.engine.Engine;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ResourceException;
@@ -65,7 +64,8 @@ import org.xml.sax.SAXException;
  * @see "https://mds.datacite.org/static/apidoc"
  */
 @Requirement(reqId = Requirement.DOI_INTER_010, reqName = Requirement.DOI_INTER_010_NAME)
-public class ClientMDS extends BaseClient {    
+public class ClientMDS extends BaseClient {
+
     /**
      * Metadata store service endpoint {@value #DATA_CITE_URL}.
      */
@@ -132,6 +132,7 @@ public class ClientMDS extends BaseClient {
      * Loads DOI settings.
      */
     private static final DoiSettings DOI_SETTINGS = DoiSettings.getInstance();
+
     /**
      * DataCite recommends that only the following characters are used within a DOI name:
      * <ul>
@@ -156,7 +157,7 @@ public class ClientMDS extends BaseClient {
                     + "0-9a-zA-Z\\-._+:/ in a DOI name");
         }
     }
-    
+
     /**
      * Selected test mode.
      */
@@ -175,8 +176,7 @@ public class ClientMDS extends BaseClient {
     /**
      * Unarshall.
      */
-    private final Unmarshaller unMarshaller;    
-
+    private final Unmarshaller unMarshaller;
 
     /**
      * Creates a client to handle DataCite server.
@@ -219,9 +219,6 @@ public class ClientMDS extends BaseClient {
                     + "http://schema.datacite.org/meta/kernel-4/metadata.xsd");
             this.unMarshaller = ctx.createUnmarshaller();
             this.unMarshaller.setSchema(schema);
-            this.getClient().getLogger().setUseParentHandlers(true);
-            this.getClient().getLogger().setLevel(Level.ALL);
-            this.getClient().setLoggable(false);
         } catch (JAXBException | SAXException ex) {
             throw new ClientMdsException(Status.SERVER_ERROR_INTERNAL,
                     "Cannot get the Datacite schema", ex);
@@ -254,7 +251,7 @@ public class ClientMDS extends BaseClient {
             final String login,
             final String pwd) throws ClientMdsException {
         this(context);
-        this.getClient().getLogger().log(Level.FINEST, "Authentication with HTTP_BASIC : {0}/{1}",
+        this.getLog().debug("Authentication with HTTP_BASIC : {0}/{1}",
                 new Object[]{login, pwd});
         this.getClient().setChallengeResponse(ChallengeScheme.HTTP_BASIC, login, pwd);
     }
@@ -269,7 +266,7 @@ public class ClientMDS extends BaseClient {
     public ClientMDS(final String login,
             final String pwd) throws ClientMdsException {
         this(Context.PROD);
-        this.getClient().getLogger().log(Level.FINEST, "Authentication with HTTP_BASIC : {0}/{1}",
+        this.getLog().debug("Authentication with HTTP_BASIC : {0}/{1}",
                 new Object[]{login, pwd});
         this.getClient().setChallengeResponse(ChallengeScheme.HTTP_BASIC, login, pwd);
     }
@@ -297,7 +294,7 @@ public class ClientMDS extends BaseClient {
         final String message = String.format(
                 "DOI %s has been renamed as %s for testing", doiName, testingPrefix
         );
-        this.getClient().getLogger().log(Level.WARNING, message);
+        this.getLog().warn(message);
         return testingPrefix;
     }
 
@@ -351,7 +348,6 @@ public class ClientMDS extends BaseClient {
     private String getDoiAccorgindToContext(final String doiName) {
         return this.context.hasDoiTestPrefix() ? useTestPrefix(doiName) : doiName;
     }
-
 
     /**
      * Checks the input parameters and specially the validity of the DOI name. The real prefix is
@@ -414,7 +410,7 @@ public class ClientMDS extends BaseClient {
      */
     public String getDoi(final String doiName) throws ClientMdsException {
         final Reference url = createReferenceWithDOI(DOI_RESOURCE, doiName);
-        this.getClient().getLogger().log(Level.INFO, "GET {0}", url.toString());
+        this.getLog().info("GET {0}", url.toString());
 
         this.getClient().setReference(url);
         Representation rep;
@@ -439,7 +435,7 @@ public class ClientMDS extends BaseClient {
      */
     public String getDoiCollection() throws ClientMdsException {
         final Reference url = createReference(DOI_RESOURCE);
-        this.getClient().getLogger().log(Level.INFO, "GET {0}", url.toString());
+        this.getLog().info("GET {0}", url.toString());
 
         this.getClient().setReference(url);
         final Representation rep;
@@ -481,30 +477,36 @@ public class ClientMDS extends BaseClient {
             final String result;
             this.checkInputForm(form);
             final Reference url = createReference(DOI_RESOURCE);
-            Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "POST {0}", url.toString());
-            this.getClient().setReference(url);
-            String requestBody
-                    = POST_DOI + "=" + form.getFirstValue(POST_DOI) + "\n"
-                    + POST_URL + "=" + form.getFirstValue(POST_URL);
-            requestBody = new String(requestBody.getBytes(
-                    StandardCharsets.UTF_8),
-                    StandardCharsets.UTF_8
-            );
-            final Map<String, Object> requestAttributes = this.getClient().getRequestAttributes();
-            requestAttributes.put("charset", StandardCharsets.UTF_8);
-            requestAttributes.put("Content-Type", "text/plain");
-            this.getClient().getLogger().log(
-                    Level.INFO, "POST {0} with parameters {1}", new Object[]{url, requestBody}
-            );
-            final Representation rep = this.getClient().post(requestBody, MediaType.TEXT_PLAIN);
-            result = getText(rep);
-            return result;
+            this.getLog().debug("POST {0}", url.toString());
+            final Representation rep = createRequest(url, form);
+            return getText(rep);
         } catch (ResourceException ex) {
             throw new ClientMdsException(ex.getStatus(), ex.getMessage(), this.getClient().
                     getResponseEntity(), ex);
         } finally {
             this.getClient().release();
         }
+    }
+
+    /**
+     * Creates the request and requests the DOI creation
+     * @param url url
+     * @param form form
+     * @return representation of the response
+     */
+    private Representation createRequest(final Reference url, final Form form) {
+        this.getClient().setReference(url);
+        String requestBody = POST_DOI + "=" + form.getFirstValue(POST_DOI) + "\n"
+                + POST_URL + "=" + form.getFirstValue(POST_URL);
+        requestBody = new String(requestBody.getBytes(
+                StandardCharsets.UTF_8),
+                StandardCharsets.UTF_8
+        );
+        final Map<String, Object> requestAttributes = this.getClient().getRequestAttributes();
+        requestAttributes.put("charset", StandardCharsets.UTF_8);
+        requestAttributes.put("Content-Type", "text/plain");
+        this.getLog().info("POST {0} with parameters {1}", new Object[]{url, requestBody});
+        return this.getClient().post(requestBody, MediaType.TEXT_PLAIN);
     }
 
     /**
@@ -565,9 +567,9 @@ public class ClientMDS extends BaseClient {
      */
     public Representation getMetadata(final String doiName) throws ClientMdsException {
         final Reference url = createReferenceWithDOI(METADATA_RESOURCE, doiName);
-        Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "GET {0}", url.toString());
+        this.getLog().debug("GET {0}", url.toString());
         this.getClient().setReference(url);
-        this.getClient().getLogger().log(Level.INFO, "GET {0}", url);
+        this.getLog().info("GET {0}", url);
         try {
             return this.getClient().get(MediaType.APPLICATION_XML);
         } catch (ResourceException ex) {
@@ -620,7 +622,7 @@ public class ClientMDS extends BaseClient {
             final Identifier identifier = entity.getIdentifier();
             identifier.setValue(getDoiAccorgindToContext(identifier.getValue()));
             final Reference url = createReference(METADATA_RESOURCE);
-            Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "PUT {0}", url.toString());
+            this.getLog().debug("PUT {0}", url.toString());
             final OutputStream output = streamMetadata(entity);
             this.getClient().setReference(url);
             this.getClient().getRequestAttributes().put("charset", "UTF-8");
@@ -755,7 +757,7 @@ public class ClientMDS extends BaseClient {
      */
     public Representation deleteMetadata(final String doiName) throws ClientMdsException {
         final Reference url = createReferenceWithDOI(METADATA_RESOURCE, doiName);
-        Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "DELETE {0}", url.toString());
+        this.getLog().debug("DELETE {0}", url.toString());
         this.getClient().setReference(url);
         try {
             return this.getClient().delete();
@@ -786,7 +788,7 @@ public class ClientMDS extends BaseClient {
     public String getMedia(final String doiName) throws ClientMdsException {
         final String result;
         final Reference url = createReferenceWithDOI(MEDIA_RESOURCE, doiName);
-        Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "GET {0}", url.toString());
+        this.getLog().debug("GET {0}", url.toString());
         this.getClient().setReference(url);
         try {
             final Representation response = this.getClient().get();
@@ -823,7 +825,7 @@ public class ClientMDS extends BaseClient {
             final Form form) throws ClientMdsException {
         final String result;
         final Reference url = createReferenceWithDOI(MEDIA_RESOURCE, doiName);
-        Engine.getLogger(ClientMDS.class.getName()).log(Level.FINE, "POST {0}", url.toString());
+        this.getLog().debug("POST {0}", url.toString());
         this.getClient().setReference(url);
         final Representation entity = createEntity(form);
         try {
@@ -949,6 +951,7 @@ public class ClientMDS extends BaseClient {
             return this.errorMsg;
         }
     }
+
     /**
      * Datacite API.
      */
@@ -965,12 +968,12 @@ public class ClientMDS extends BaseClient {
          * Get a DOI without metadata. SUCCESS_NO_CONTENT is used as status
          */
         SUCCESS_NO_CONTENT(Status.SUCCESS_NO_CONTENT,
-        " the DOI is known to DataCite Metadata Store (MDS), but no metadata have been registered"),
+                " the DOI is known to DataCite Metadata Store (MDS), but no metadata have been registered"),
         /**
          * Fail to create a media or the metadata. CLIENT_ERROR_BAD_REQUEST is used as status
          */
         BAD_REQUEST(Status.CLIENT_ERROR_BAD_REQUEST,
-        "invalid XML, wrong prefix or request body must be exactly two lines: DOI and URL; wrong domain, wrong prefix"),
+                "invalid XML, wrong prefix or request body must be exactly two lines: DOI and URL; wrong domain, wrong prefix"),
         /**
          * Fail to authorize the user to create/delete a DOI. CLIENT_ERROR_UNAUTHORIZED is used as
          * status
@@ -981,7 +984,7 @@ public class ClientMDS extends BaseClient {
          * status
          */
         FORBIDDEN(Status.CLIENT_ERROR_FORBIDDEN,
-        "login problem, wrong prefix, permission problem or dataset belongs to another party"),
+                "login problem, wrong prefix, permission problem or dataset belongs to another party"),
         /**
          * Fail to get the DOI. CLIENT_ERROR_NOT_FOUND is used as status
          */
@@ -990,7 +993,7 @@ public class ClientMDS extends BaseClient {
          * Get an inactive DOI. CLIENT_ERROR_GONE is used as status
          */
         DOI_INACTIVE(Status.CLIENT_ERROR_GONE,
-        "the requested dataset was marked inactive (using DELETE method)"),
+                "the requested dataset was marked inactive (using DELETE method)"),
         /**
          * Fail to create a DOI because metadata must be uploaded first.
          * CLIENT_ERROR_PRECONDITION_FAILED is used as status
@@ -1000,16 +1003,16 @@ public class ClientMDS extends BaseClient {
          * Internal server Error. INTERNAL_SERVER_ERROR is used as status.
          */
         INTERNAL_SERVER_ERROR(Status.SERVER_ERROR_INTERNAL, "Internal server error");
-        
+
         private final Status status;
         private final String message;
-        
+
         DATACITE_API_RESPONSE(final Status status,
                 final String message) {
             this.status = status;
             this.message = message;
         }
-        
+
         /**
          *
          * @return
@@ -1017,7 +1020,7 @@ public class ClientMDS extends BaseClient {
         public Status getStatus() {
             return this.status;
         }
-        
+
         /**
          *
          * @return
@@ -1025,9 +1028,10 @@ public class ClientMDS extends BaseClient {
         public String getShortMessage() {
             return this.message;
         }
-        
+
         /**
          * Returns the message for a specific Status.
+         *
          * @param statusToFind status to search
          * @return the message or empty string
          */
@@ -1046,11 +1050,12 @@ public class ClientMDS extends BaseClient {
             return result;
         }
     }
+
     /**
      * Options for each context
      */
     public enum Context {
-        
+
         /**
          * Development context.
          */
@@ -1067,7 +1072,7 @@ public class ClientMDS extends BaseClient {
          * Production context.
          */
         PROD(false, false, DATA_CITE_URL, Level.INFO);
-        
+
         /**
          * Each API call can have optional query parametertestMode. If set to "true" or "1" the
          * request will not change the database nor will the DOI handle will be registered or
@@ -1075,7 +1080,7 @@ public class ClientMDS extends BaseClient {
          * provided prefix
          */
         private final boolean isTestMode;
-        
+
         /**
          * There is special test prefix 10.5072 available to all datacentres. Please use it for all
          * your testing DOIs. Your real prefix should not be used for test DOIs. Note that DOIs with
@@ -1084,17 +1089,17 @@ public class ClientMDS extends BaseClient {
          * all 10.5072 datasets from the system.
          */
         private final boolean isDoiPrefix;
-        
+
         /**
          * Level log.
          */
         private Level levelLog;
-        
+
         /**
          * DataCite URL.
          */
         private String dataCiteUrl;
-        
+
         Context(final boolean isTestMode,
                 final boolean isDoiPrefix,
                 final String dataciteUrl,
@@ -1104,7 +1109,7 @@ public class ClientMDS extends BaseClient {
             this.dataCiteUrl = dataciteUrl;
             this.levelLog = levelLog;
         }
-        
+
         /**
          * Returns true when the context has a DOI dev.
          *
@@ -1113,7 +1118,7 @@ public class ClientMDS extends BaseClient {
         public boolean hasDoiTestPrefix() {
             return this.isDoiPrefix;
         }
-        
+
         /**
          * Returns true when the context must not register data in DataCite
          *
@@ -1122,7 +1127,7 @@ public class ClientMDS extends BaseClient {
         public boolean hasTestMode() {
             return this.isTestMode;
         }
-        
+
         /**
          * Returns the log level.
          *
@@ -1131,7 +1136,7 @@ public class ClientMDS extends BaseClient {
         public Level getLevelLog() {
             return this.levelLog;
         }
-        
+
         /**
          * Returns the service end point.
          *
@@ -1140,7 +1145,7 @@ public class ClientMDS extends BaseClient {
         public String getDataCiteUrl() {
             return this.dataCiteUrl;
         }
-        
+
         /**
          * Sets the DataCite URL for the context
          *
@@ -1149,7 +1154,7 @@ public class ClientMDS extends BaseClient {
         private void setDataCiteURl(final String dataCiteUrl) {
             this.dataCiteUrl = dataCiteUrl;
         }
-        
+
         /**
          * Sets the level log for the context
          *
@@ -1158,7 +1163,7 @@ public class ClientMDS extends BaseClient {
         private void setLevelLog(final Level levelLog) {
             this.levelLog = levelLog;
         }
-        
+
         /**
          * Sets the level log for a given context
          *
@@ -1169,7 +1174,7 @@ public class ClientMDS extends BaseClient {
                 final Level levelLog) {
             context.setLevelLog(levelLog);
         }
-        
+
         /**
          * Sets the DataCite URL for a given context
          *
@@ -1180,7 +1185,7 @@ public class ClientMDS extends BaseClient {
                 final String dataCiteUrl) {
             context.setDataCiteURl(dataCiteUrl);
         }
-        
+
     }
 
 }

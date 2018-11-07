@@ -33,8 +33,12 @@
         <Logger name="fr.cnes.doi.logging.api" level="INFO">
             <AppenderRef ref="API"/>                        
         </Logger>
-                
-        <Logger name="fr.cnes.doi.application" level="INFO">
+
+        <Logger name="org.restlet" level="OFF">
+            <AppenderRef ref="CONSOLE"/>
+        </Logger>
+
+        <Logger name="fr.cnes.doi.application" level="OFF">
             <AppenderRef ref="CONSOLE"/>
         </Logger>
 

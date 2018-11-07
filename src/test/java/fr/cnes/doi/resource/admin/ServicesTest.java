@@ -18,8 +18,6 @@
  */
 package fr.cnes.doi.resource.admin;
 
-import static fr.cnes.doi.AbstractSpec.classTitle;
-import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.UnitTest;
@@ -72,7 +70,6 @@ public class ServicesTest {
         parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS");
-        classTitle("Services");
     }
 
     @AfterClass
@@ -94,7 +91,6 @@ public class ServicesTest {
      */
     @Test
     public void getStatus() throws IOException  {
-        testTitle("getStatus");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:"+port+"/status");        
         client.setNext(cl);    
@@ -116,7 +112,6 @@ public class ServicesTest {
      */
     @Test
     public void getStats() throws IOException  {
-        testTitle("getStats");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:"+port+"/stats");        
         client.setNext(cl);    
@@ -124,7 +119,6 @@ public class ServicesTest {
         try {
             Representation rep = client.get();
             status = client.getStatus();
-            System.out.println(rep.getText());
         } catch(ResourceException ex) {
             status = ex.getStatus();
         }

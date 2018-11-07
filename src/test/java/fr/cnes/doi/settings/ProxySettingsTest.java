@@ -18,8 +18,6 @@
  */
 package fr.cnes.doi.settings;
 
-import static fr.cnes.doi.AbstractSpec.classTitle;
-import static fr.cnes.doi.AbstractSpec.testTitle;
 import static org.junit.Assert.assertNotNull;
 
 import org.junit.After;
@@ -51,7 +49,6 @@ public class ProxySettingsTest {
      */
     @BeforeClass
     public static void setUpClass() {
-        classTitle("ProxySettings");        
         InitSettingsForTest.init(InitSettingsForTest.CONFIG_TEST_PROPERTIES);
         instance = ProxySettings.getInstance();
     }
@@ -70,8 +67,6 @@ public class ProxySettingsTest {
     
     @Test
     public void testGetDois() throws Exception {
-        testTitle("testGetDois");
-
         ClientSearchDataCite searchDatacite = new ClientSearchDataCite("10.24400");
         List<String> dois = searchDatacite.getDois(); 
         //System.out.println(dois);
@@ -83,7 +78,6 @@ public class ProxySettingsTest {
      */
     @Test
     public void testIsWithProxy() {
-        testTitle("testIsWithProxy");
         boolean result = instance.isWithProxy();
         assertTrue(true);
     }
@@ -93,7 +87,6 @@ public class ProxySettingsTest {
      */
     @Test
     public void testGetProxyHost() {
-        testTitle("testGetProxyHost");
         String result = instance.getProxyHost();
         assertNotNull(result);
     }
@@ -103,7 +96,6 @@ public class ProxySettingsTest {
      */
     @Test
     public void testGetProxyPort() {
-        testTitle("testGetProxyPort");
         if (instance.isWithProxy()) {
             String result = instance.getProxyPort();
             assertNotNull(result);
@@ -117,7 +109,6 @@ public class ProxySettingsTest {
      */
     @Test
     public void testGetProxyUser() {
-        testTitle("testGetProxyUser");
         String result = instance.getProxyUser();
         assertNotNull(result);
     }
@@ -127,7 +118,6 @@ public class ProxySettingsTest {
      */
     @Test
     public void testGetProxyPassword() {
-        testTitle("testGetProxyPassword");
         String result = instance.getProxyPassword();
         assertNotNull(result);
     }
@@ -137,7 +127,6 @@ public class ProxySettingsTest {
      */
     @Test
     public void testGetProxyAuthentication() {
-        testTitle("testGetProxyAuthentication");
         ChallengeResponse result = instance.getProxyAuthentication();
         assertNotNull(result);
     }
@@ -147,7 +136,6 @@ public class ProxySettingsTest {
      */
     @Test
     public void testGetNonProxyHosts() {
-        testTitle("testGetNonProxyHosts");
         String result = instance.getNonProxyHosts();
         assertNotNull(result);
     }

@@ -18,8 +18,6 @@
  */
 package fr.cnes.doi.resource.mds;
 
-import static fr.cnes.doi.AbstractSpec.classTitle;
-import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.MdsSpec;
@@ -96,7 +94,6 @@ public class MetadatasResourceTest {
         parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS");
-        classTitle("MetadatasResource");
         mdsServerStub = new MdsSpec(DATACITE_MOCKSERVER_PORT);
     }
 
@@ -171,9 +168,7 @@ public class MetadatasResourceTest {
      * @param role the role to set (when no role, set to null)
      * @param exactly the number of expected requests to Datacite (-1 when at least 1 request is done)
      */
-    private void testSpecCreateMetadataAsObj(MdsSpec.Spec spec, InputStream is, String login, String pwd, String role, int exactly) {
-        testTitle(spec.getDescription());
-        
+    private void testSpecCreateMetadataAsObj(MdsSpec.Spec spec, InputStream is, String login, String pwd, String role, int exactly) {        
         // Creates the MetadataStoreService stub        
         mdsServerStub.createSpec(spec);
 
@@ -221,9 +216,7 @@ public class MetadatasResourceTest {
      * @param role the role to set (when no role, set to null)
      * @param exactly the number of expected requests to Datacite (-1 when at least 1 request is done)
      */    
-    private void testSpecCreateMetadataAsObjWithConflict(MdsSpec.Spec spec, InputStream is, String login, String pwd, String role, int exactly) {
-        testTitle("testSpecCreateMetadataAsObjWithConflict");
-        
+    private void testSpecCreateMetadataAsObjWithConflict(MdsSpec.Spec spec, InputStream is, String login, String pwd, String role, int exactly) {        
         // Creates the MetadataStoreService stub        
         mdsServerStub.createSpec(spec);
 

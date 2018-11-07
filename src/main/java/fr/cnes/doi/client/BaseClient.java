@@ -18,6 +18,8 @@
  */
 package fr.cnes.doi.client;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.restlet.resource.ClientResource;
 
 /**
@@ -25,13 +27,18 @@ import org.restlet.resource.ClientResource;
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr(
  */
-public class BaseClient {        
+public class BaseClient {
+
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = LogManager.getLogger(BaseClient.class.getName());
 
     /**
      * Port of the Datacite mockserver
      */
     public static final int DATACITE_MOCKSERVER_PORT = 1080;
-    
+
     /**
      * Number of retry when an error happens.
      */
@@ -41,7 +48,7 @@ public class BaseClient {
      * Delay between two {@link #NB_RETRY} in ms.
      */
     private static final int NB_DELAY = 1000;
-    
+
     /**
      * Client, which executes request.
      */
@@ -68,5 +75,14 @@ public class BaseClient {
     public final ClientResource getClient() {
         return client;
     }
+    
+    /**
+     * Returns the logger.
+     * @return the logger
+     */
+    public Logger getLog() {
+        return LOG;
+    }
+    
 
 }

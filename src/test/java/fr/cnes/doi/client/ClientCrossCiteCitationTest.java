@@ -18,8 +18,6 @@
  */
 package fr.cnes.doi.client;
 
-import static fr.cnes.doi.AbstractSpec.classTitle;
-import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.CrossCiteSpec;
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.UnitTest;
@@ -53,7 +51,6 @@ public class ClientCrossCiteCitationTest {
 
     @BeforeClass
     public static void setUpClass() {
-        classTitle("ClientCrossCiteCitation");
         InitSettingsForTest.init(InitSettingsForTest.CONFIG_TEST_PROPERTIES);
         crossCiteServerStub = new CrossCiteSpec(DATACITE_MOCKSERVER_PORT);
     }
@@ -83,8 +80,6 @@ public class ClientCrossCiteCitationTest {
      */
     @Test
     public void testGetStyles() throws Exception {
-        testTitle("testGetStyles");
-
         // Create the sub on CrossCite
         crossCiteServerStub.createSpec(CrossCiteSpec.Spec.GET_STYLE_200);
 
@@ -105,8 +100,6 @@ public class ClientCrossCiteCitationTest {
      */
     @Test
     public void testGetLanguages() throws Exception {
-        testTitle("testGetLanguages");
-
         // Create the sub on CrossCite        
         crossCiteServerStub.createSpec(CrossCiteSpec.Spec.GET_LANGUAGE_200);
 
@@ -127,8 +120,6 @@ public class ClientCrossCiteCitationTest {
      */
     @Test
     public void testGetFormat() throws Exception {
-        testTitle("testGetFormat");
-
         // Create the sub on CrossCite        
         crossCiteServerStub.createSpec(CrossCiteSpec.Spec.GET_FORMAT_200);
 

@@ -18,8 +18,6 @@
  */
 package fr.cnes.doi.resource.citation;
 
-import static fr.cnes.doi.AbstractSpec.classTitle;
-import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.CrossCiteSpec;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.InitSettingsForTest;
@@ -82,7 +80,6 @@ public class StyleCitationResourceTest {
         parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS");
-        classTitle("StyleCitationResource");
         spec = new CrossCiteSpec(DATACITE_MOCKSERVER_PORT);
     }
 
@@ -106,9 +103,7 @@ public class StyleCitationResourceTest {
      * StyleCitationResource.
      */
     @Test
-    public void testGetStylesHttps() {
-        testTitle("testGetStylesHttps");
-        
+    public void testGetStylesHttps() {        
         spec.createSpec(CrossCiteSpec.Spec.GET_STYLE_200);
         
         String expResult = "academy-of-management-review";
@@ -134,9 +129,7 @@ public class StyleCitationResourceTest {
      * StyleCitationResource.
      */
     @Test
-    public void testGetStylesHttp() {
-        testTitle("testGetStylesHttp");
-        
+    public void testGetStylesHttp() {        
         spec.createSpec(CrossCiteSpec.Spec.GET_STYLE_200);      
         
         String expResult = "academy-of-management-review";
@@ -161,9 +154,7 @@ public class StyleCitationResourceTest {
      * StyleCitationResource.
      */
     @Test
-    public void testGetStylesHttpsAsJSON() {
-        testTitle("testGetStylesHttpsAsJSON");
-        
+    public void testGetStylesHttpsAsJSON() {        
         spec.createSpec(CrossCiteSpec.Spec.GET_STYLE_200);     
           
         String result = "";
@@ -187,9 +178,7 @@ public class StyleCitationResourceTest {
      * StyleCitationResource.
      */
     @Test
-    public void testGetStylesHttpsAsXML() {
-        testTitle("testGetStylesHttpsAsXML");
-        
+    public void testGetStylesHttpsAsXML() {        
         spec.createSpec(CrossCiteSpec.Spec.GET_STYLE_200);
         
         String expResult = CrossCiteSpec.Spec.GET_STYLE_200.getBody();

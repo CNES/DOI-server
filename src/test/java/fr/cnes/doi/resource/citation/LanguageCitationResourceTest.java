@@ -18,8 +18,6 @@
  */
 package fr.cnes.doi.resource.citation;
 
-import static fr.cnes.doi.AbstractSpec.classTitle;
-import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.CrossCiteSpec;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.InitSettingsForTest;
@@ -77,7 +75,6 @@ public class LanguageCitationResourceTest {
         parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS");
-        classTitle("LanguageCitationResource");
         spec = new CrossCiteSpec(DATACITE_MOCKSERVER_PORT);
     }
 
@@ -100,10 +97,7 @@ public class LanguageCitationResourceTest {
      * Test of getLanguages method, of class LanguageCitationResource.
      */
     @Test
-    public void testGetLanguagesHttps() {
-        testTitle("testGetLanguagesHttps");
-        System.out.println("TEST: GetLanguages through a HTTPS server");
-        
+    public void testGetLanguagesHttps() {        
         spec.createSpec(CrossCiteSpec.Spec.GET_LANGUAGE_200);
 
         String expResult = "af-ZA";
@@ -125,9 +119,7 @@ public class LanguageCitationResourceTest {
     }
 
     @Test
-    public void testGetLanguagesHttp() {
-        testTitle("testGetLanguagesHttp");
-        
+    public void testGetLanguagesHttp() {        
         spec.createSpec(CrossCiteSpec.Spec.GET_LANGUAGE_200);             
 
         String expResult = "af-ZA";

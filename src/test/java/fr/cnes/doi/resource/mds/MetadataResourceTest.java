@@ -18,8 +18,6 @@
  */
 package fr.cnes.doi.resource.mds;
 
-import static fr.cnes.doi.AbstractSpec.classTitle;
-import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.MdsSpec;
@@ -86,7 +84,6 @@ public class MetadataResourceTest {
         parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS");
-        classTitle("MetadataResource");
         mdsServerStub = new MdsSpec(DATACITE_MOCKSERVER_PORT);
     }
 
@@ -118,8 +115,6 @@ public class MetadataResourceTest {
      */
     @Test
     public void testGetMetadata() throws IOException, JAXBException, SAXException {
-        testTitle("testGetMetadata");
-
         mdsServerStub.createSpec(MdsSpec.Spec.GET_METADATA_200);
 
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
@@ -156,8 +151,6 @@ public class MetadataResourceTest {
      */
     @Test
     public void testGetMetadataAsJson() throws IOException, JAXBException, SAXException {
-        testTitle("testGetMetadataAsJson");
-
         mdsServerStub.createSpec(MdsSpec.Spec.GET_METADATA_200);
 
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
@@ -189,9 +182,7 @@ public class MetadataResourceTest {
      * @throws org.xml.sax.SAXException - if a parsing problem occurs
      */
     @Test
-    public void testGetMetadataFromWrongDOI() throws IOException, JAXBException, SAXException {
-        testTitle("testGetMetadataFromWrongDOI");
-        
+    public void testGetMetadataFromWrongDOI() throws IOException, JAXBException, SAXException {        
         mdsServerStub.createSpec(MdsSpec.Spec.GET_METADATA_400);
         
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
@@ -221,9 +212,7 @@ public class MetadataResourceTest {
      * @throws org.xml.sax.SAXException
      */
     @Test
-    public void testGetMetadataFromWrongPrefix() throws IOException, JAXBException, SAXException {
-        testTitle("testGetMetadataFromWrongPrefix");
-        
+    public void testGetMetadataFromWrongPrefix() throws IOException, JAXBException, SAXException {        
         mdsServerStub.createSpec(MdsSpec.Spec.GET_METADATA_400);
         
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
@@ -253,9 +242,7 @@ public class MetadataResourceTest {
      * @throws java.io.IOException - if OutOfMemoryErrors
      */
     @Test
-    public void testDeleteMetadata() throws JAXBException, SAXException, IOException {
-        testTitle("testDeleteMetadata");
-        
+    public void testDeleteMetadata() throws JAXBException, SAXException, IOException {        
         mdsServerStub.createSpec(MdsSpec.Spec.DELETE_METADATA_200);
         
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);

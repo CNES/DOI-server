@@ -19,8 +19,6 @@
 package fr.cnes.doi.integration;
 
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
-import static fr.cnes.doi.AbstractSpec.classTitle;
-import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.MdsSpec;
@@ -105,7 +103,6 @@ public class ITperformance {
         parameters.add("truststorePath", DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_TRUST_STORE_PATH));
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS");
-        classTitle("ITperformance");
         mdsServerStub = new MdsSpec(DATACITE_MOCKSERVER_PORT);
     }
 
@@ -134,7 +131,6 @@ public class ITperformance {
 
     @Test
     public void testCreateDOIs() {
-        testTitle("testCreateDOIs");
         long startTime = System.currentTimeMillis();
         ConcurrentHashMap map = new ConcurrentHashMap();
         map.put("nbErrors", 0);
@@ -162,7 +158,6 @@ public class ITperformance {
     
     @Test
     public void testCreateDOI() {
-        testTitle("testCreateDOI");
         long startTime = System.currentTimeMillis();
         ConcurrentHashMap map = new ConcurrentHashMap();
         map.put("nbErrors", 0);

@@ -18,8 +18,6 @@
  */
 package fr.cnes.doi.resource.mds;
 
-import static fr.cnes.doi.AbstractSpec.classTitle;
-import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.MdsSpec;
@@ -82,7 +80,6 @@ public class MediaResourceTest {
         parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS");     
-        classTitle("MediaResource");
         mdsServerStub = new MdsSpec(DATACITE_MOCKSERVER_PORT);
     }
     
@@ -107,8 +104,6 @@ public class MediaResourceTest {
      */
     @Test
     public void testGetMediasHttps() throws IOException {
-        testTitle("testGetMediasHttps");
-
         mdsServerStub.createSpec(MdsSpec.Spec.GET_MEDIA_200);
         
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
@@ -132,9 +127,7 @@ public class MediaResourceTest {
      * @throws java.io.IOException - if OutOfMemoryErrors
      */    
     @Test
-    public void testGetMediasHttp() throws IOException {
-        testTitle("testGetMediasHttp");
-        
+    public void testGetMediasHttp() throws IOException {        
         mdsServerStub.createSpec(MdsSpec.Spec.GET_MEDIA_200);
         
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);
@@ -159,9 +152,7 @@ public class MediaResourceTest {
      * @throws java.io.IOException - if OutOfMemoryErrors
      */
     @Test
-    public void testGetMediasWithWrongDOIHttps() throws IOException {
-        testTitle("testGetMediasWithWrongDOIHttps");
-        
+    public void testGetMediasWithWrongDOIHttps() throws IOException {        
         mdsServerStub.createSpec(MdsSpec.Spec.GET_MEDIA_404);
         
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
@@ -187,9 +178,7 @@ public class MediaResourceTest {
      * @throws java.io.IOException - if OutOfMemoryErrors
      */    
     @Test
-    public void testGetMediasWithWrongDOIHttp() throws IOException {
-        testTitle("testGetMediasWithWrongDOIHttp");
-        
+    public void testGetMediasWithWrongDOIHttp() throws IOException {        
         mdsServerStub.createSpec(MdsSpec.Spec.GET_MEDIA_404);
         
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);
@@ -212,9 +201,7 @@ public class MediaResourceTest {
      * A Status.SUCCESS_OK is expected
      */
     @Test    
-    public void testCreateMediaForbidden() {
-        testTitle("testCreateMediaForbidden");
-                
+    public void testCreateMediaForbidden() {                
         Form mediaForm = new Form();
         mediaForm.add("image/fits", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
         mediaForm.add("image/jpeg", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");

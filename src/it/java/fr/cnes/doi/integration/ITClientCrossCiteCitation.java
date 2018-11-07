@@ -18,8 +18,6 @@
  */
 package fr.cnes.doi.integration;
 
-import static fr.cnes.doi.AbstractSpec.classTitle;
-import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.client.ClientCrossCiteCitation;
 import fr.cnes.doi.exception.ClientCrossCiteException;
@@ -47,7 +45,6 @@ public class ITClientCrossCiteCitation {
 
     @BeforeClass
     public static void setUpClass() {
-        classTitle("ClientCrossCiteCitation");
         InitSettingsForTest.init(InitSettingsForTest.CONFIG_IT_PROPERTIES);
     }
 
@@ -74,8 +71,6 @@ public class ITClientCrossCiteCitation {
      */
     @Test
     public void testGetFormat() throws ClientCrossCiteException {
-        testTitle("testGetFormat");
-
         // Create a GET request client API on DOIServer. DOIServer calls the CrossCite stub
         String doiName = "10.1145/2783446.2783605";
         String style = "academy-of-management-review";

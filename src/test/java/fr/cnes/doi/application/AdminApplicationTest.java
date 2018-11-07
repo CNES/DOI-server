@@ -18,8 +18,6 @@
  */
 package fr.cnes.doi.application;
 
-import static fr.cnes.doi.AbstractSpec.classTitle;
-import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.UnitTest;
@@ -72,7 +70,6 @@ public class AdminApplicationTest {
         parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS");   
-        classTitle("AdminApplication");
     }
     
     @AfterClass
@@ -94,7 +91,6 @@ public class AdminApplicationTest {
      */
     @Test
     public void testApiWithHttp() throws IOException {
-        testTitle("testApiWithHttp");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);        
         ClientResource client = new ClientResource("http://localhost:"+port+"/");
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
@@ -110,7 +106,6 @@ public class AdminApplicationTest {
      */
     @Test
     public void testApiWithHttps() throws IOException {
-        testTitle("testApiWithHttps");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);        
         ClientResource client = new ClientResource("https://localhost:"+port+"/");
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");        
@@ -127,7 +122,6 @@ public class AdminApplicationTest {
      */
     @Test
     public void generateAPIWadl() throws Exception {
-        testTitle("generateAPIWadl");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);        
         ClientResource client = new ClientResource("http://localhost:"+port+"/?media=text/html"); 
 	client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");              

@@ -18,8 +18,6 @@
  */
 package fr.cnes.doi.application;
 
-import static fr.cnes.doi.AbstractSpec.classTitle;
-import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.UnitTest;
@@ -71,7 +69,6 @@ public class DoiCrossCiteApplicationTest {
         parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS"); 
-        classTitle("DOICrossCiteApplication");
     }
     
     @AfterClass
@@ -93,7 +90,6 @@ public class DoiCrossCiteApplicationTest {
      */
     @Test
     public void testApiWithHttp() throws IOException {
-        testTitle("testApiWithHttp");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);        
         ClientResource client = new ClientResource("http://localhost:"+port+"/citation/");
         Representation repApi = client.options();
@@ -108,7 +104,6 @@ public class DoiCrossCiteApplicationTest {
      */
     @Test
     public void testApiWithHttps() throws IOException {
-        testTitle("testApiWithHttps");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);        
         ClientResource client = new ClientResource("https://localhost:"+port+"/citation/");
         client.setNext(cl);
@@ -124,7 +119,6 @@ public class DoiCrossCiteApplicationTest {
      */
     @Test
     public void generateAPIWadl() throws Exception {
-        testTitle("generateAPIWadl");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);        
         ClientResource client = new ClientResource("http://localhost:"+port+"/citation?media=text/html");
         Representation repApi = client.options();

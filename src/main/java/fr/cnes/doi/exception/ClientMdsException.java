@@ -195,44 +195,6 @@ public class ClientMdsException extends Exception {
      */
     private String computeDetailMessage(final Status status) {
         return DATACITE_API_RESPONSE.getMessageFromStatus(status);
-//        switch(status.getCode()) {
-        //final String result;
-
-//            case SUCCESS_CREATED:
-//            case SUCCESS_OK:
-//                result = "Operation successful";
-//                break;
-//            case SUCCESS_NO_CONTENT:
-//                result = "no DOIs founds";
-//                break;
-//            case CLIENT_BAD_REQUEST:
-//                result = "invalid XML, wrong prefix or request body must be exactly two lines: "
-//                        + "DOI and URL; wrong domain, wrong prefix";
-//                break;
-//            case CONNECTOR_ERROR_COMMUNICATION:
-//            case CLIENT_ERROR_UNAUTHORIZED:
-//                result = "no login";
-//                break;
-//            case CLIENT_ERROR_FORBIDDEN:
-//                result = "login problem, quota exceeded or dataset belongs to another party";
-//                break;
-//            case CLIENT_ERROR_NOT_FOUND:
-//                result = "DOI does not exist in our database";
-//                break;
-//            case CLIENT_ERROR_CONFLICT:
-//                result = "DOIServer : Cannot know which role must be applied";
-//                break;
-//            case CLIENT_ERROR_GONE:
-//                result = "the requested dataset was marked inactive (using DELETE method)";
-//                break;
-//            case CLIENT_ERROR_PRECONDITION_FAILED:
-//                result = "metadata must be uploaded first";
-//                break;
-//            default:
-//                result = "Internal error";
-//                break;
-//        }
-//        return result;
     }
 
     /**

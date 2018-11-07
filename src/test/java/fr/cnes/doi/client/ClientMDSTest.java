@@ -18,8 +18,6 @@
  */
 package fr.cnes.doi.client;
 
-import static fr.cnes.doi.AbstractSpec.classTitle;
-import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.MdsSpec;
 import fr.cnes.doi.UnitTest;
@@ -68,7 +66,6 @@ public class ClientMDSTest {
 
     @BeforeClass
     public static void setUpClass() {
-        classTitle("ClientMDS");
         InitSettingsForTest.init(InitSettingsForTest.CONFIG_TEST_PROPERTIES);
         mdsServerStub = new MdsSpec(DATACITE_MOCKSERVER_PORT);
     }
@@ -96,7 +93,6 @@ public class ClientMDSTest {
      */
     @Test
     public void testCheckIfOneCharIsNotValid() {  
-        testTitle("testCheckIfOneCharIsNotValid");
         exceptions.expect(IllegalArgumentException.class);
         String test = "10.5072/éabscd";
         ClientMDS.checkIfAllCharsAreValid(test);
@@ -104,7 +100,6 @@ public class ClientMDSTest {
 
     @Test
     public void testCheckIfAllCharsAreValid() {
-        testTitle("testCheckIfAllCharsAreValid");
         String test = "10.5072/eabscd";
         ClientMDS.checkIfAllCharsAreValid(test);
         assertTrue("Test the DOI chars are valid", true);
@@ -115,8 +110,6 @@ public class ClientMDSTest {
      * @param spec spec
      */
     private void testSpecGetDoi(MdsSpec.Spec spec) throws ClientMdsException {
-        testTitle(spec.getDescription());
-
         // Creates the MetadataStoreService stub
         mdsServerStub.createSpec(spec);
 
@@ -147,8 +140,6 @@ public class ClientMDSTest {
      * @param spec spec
      */
     private void testSpecGetDoiCollection(MdsSpec.Spec spec) throws ClientMdsException {
-        testTitle(spec.getDescription());
-
         // Creates the MetadataStoreService stub        
         mdsServerStub.createSpec(spec);
 
@@ -177,8 +168,6 @@ public class ClientMDSTest {
      * @param spec spec
      */
     private void testSpecCreateDoi(MdsSpec.Spec spec) throws ClientMdsException {
-        testTitle(spec.getDescription());
-
         // Creates the MetadataStoreService stub        
         mdsServerStub.createSpec(spec);
 
@@ -210,8 +199,6 @@ public class ClientMDSTest {
     }
 
     private void testSpectGetMetadataAsObj(MdsSpec.Spec spec) throws JAXBException, ClientMdsException {
-        testTitle(spec.getDescription());
-
         // Creates the MetadataStoreService stub        
         mdsServerStub.createSpec(spec);
 
@@ -230,8 +217,6 @@ public class ClientMDSTest {
     }
 
     private void testSpectGetMetadata(MdsSpec.Spec spec) throws Exception {
-        testTitle(spec.getDescription());
-
         // Creates the MetadataStoreService stub        
         mdsServerStub.createSpec(spec);
 
@@ -475,8 +460,6 @@ public class ClientMDSTest {
     }
 
     private void testSpecCreateMetadata(MdsSpec.Spec spec) throws ClientMdsException {
-        testTitle(spec.getDescription());
-
         mdsServerStub.createSpec(spec);
         Representation entity = new StringRepresentation(
                 MdsSpec.XML, org.restlet.data.MediaType.TEXT_XML, Language.ALL, CharacterSet.UTF_8
@@ -504,8 +487,6 @@ public class ClientMDSTest {
     }
 
     private void testSpecCreateMetadataAsObj(MdsSpec.Spec spec) throws Exception {
-        testTitle(spec.getDescription());
-
         // Creates the MetadataStoreService stub        
         mdsServerStub.createSpec(spec);
         Representation entity = new StringRepresentation(
@@ -625,8 +606,6 @@ public class ClientMDSTest {
 
 
     private void testSpecDeleteMetadata(MdsSpec.Spec spec) throws Exception {
-        testTitle(spec.getDescription());
-
         // Creates the MetadataStoreService stub        
         mdsServerStub.createSpec(spec);
 
@@ -656,8 +635,6 @@ public class ClientMDSTest {
     }
     
     private void testSpecDeleteMetadataAsObj(MdsSpec.Spec spec) throws Exception{
-        testTitle(spec.getDescription());
-
         // Creates the MetadataStoreService stub        
         mdsServerStub.createSpec(spec);
 
@@ -784,8 +761,6 @@ public class ClientMDSTest {
     }   
     
     private void testSpecGetMedia(MdsSpec.Spec spec) throws ClientMdsException {
-        testTitle(spec.getDescription());
-
         // Creates the MetadataStoreService stub        
         mdsServerStub.createSpec(spec);
 
@@ -857,9 +832,7 @@ public class ClientMDSTest {
         testSpecGetMedia(MdsSpec.Spec.GET_MEDIA_500);
     }    
     
-    private void testSpecCreateMedia(MdsSpec.Spec spec) throws ClientMdsException {
-        testTitle(spec.getDescription());
-       
+    private void testSpecCreateMedia(MdsSpec.Spec spec) throws ClientMdsException {     
         // Creates the MetadataStoreService stub        
         mdsServerStub.createSpec(spec);
 

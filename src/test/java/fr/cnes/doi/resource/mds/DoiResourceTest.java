@@ -18,8 +18,6 @@
  */
 package fr.cnes.doi.resource.mds;
 
-import static fr.cnes.doi.AbstractSpec.classTitle;
-import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.MdsSpec;
@@ -77,7 +75,6 @@ public class DoiResourceTest {
         parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS"); 
-        classTitle("DoiResource");
         mdsServerStub = new MdsSpec(DATACITE_MOCKSERVER_PORT); 
     }
     
@@ -102,9 +99,7 @@ public class DoiResourceTest {
      * @throws java.io.IOException - if OutOfMemoryErrors
      */
     @Test
-    public void testGetDoiHttp() throws IOException {
-        testTitle("testGetDoiHttp");
-        
+    public void testGetDoiHttp() throws IOException {        
         mdsServerStub.createSpec(MdsSpec.Spec.GET_DOI_200);
         
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);
@@ -124,9 +119,7 @@ public class DoiResourceTest {
      * @throws java.io.IOException - if OutOfMemoryErrors
      */
     @Test
-    public void testGetDoiHttps() throws IOException {
-        testTitle("testGetDoiHttps");
-        
+    public void testGetDoiHttps() throws IOException {        
         mdsServerStub.createSpec(MdsSpec.Spec.GET_DOI_200);
         
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
@@ -148,9 +141,7 @@ public class DoiResourceTest {
      * @throws java.io.IOException - if OutOfMemoryErrors
      */
     @Test
-    public void testGetDoiNotFoundHttps() throws IOException {    
-        testTitle("testGetDoiNotFoundHttps");
-        
+    public void testGetDoiNotFoundHttps() throws IOException {            
         mdsServerStub.createSpec(MdsSpec.Spec.GET_DOI_404);
         
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
@@ -176,7 +167,6 @@ public class DoiResourceTest {
      */
     @Test
     public void testGetDoiNotAllowedHttps() throws IOException {
-        testTitle("testGetDoiNotAllowedHttps");        
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:"+port+DOIS_SERVICE+"10.xxxx/828606");
         client.setNext(cl);

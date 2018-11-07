@@ -30,7 +30,6 @@ import java.util.stream.Collectors;
 import fr.cnes.doi.client.ClientProxyTest;
 import fr.cnes.doi.security.UtilsCryptography;
 import fr.cnes.doi.settings.DoiSettings;
-import fr.cnes.doi.utils.HttpClientHelperPatch;
 import fr.cnes.doi.utils.HttpClientHelperPatchAC;
 import java.io.IOException;
 import java.util.List;

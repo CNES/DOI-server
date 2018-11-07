@@ -18,8 +18,6 @@
  */
 package fr.cnes.doi.integration;
 
-import static fr.cnes.doi.AbstractSpec.classTitle;
-import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.exception.ClientMdsException;
@@ -71,7 +69,6 @@ public class ITadminApplication {
         parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS");   
-        classTitle("AdminApplication");
     }
     
     @AfterClass
@@ -93,7 +90,6 @@ public class ITadminApplication {
      */
     @Test
     public void testStatusWithHttp() throws IOException {
-        testTitle("testStatusWithHttp");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);        
         ClientResource client = new ClientResource("http://localhost:"+port+"/status");
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
@@ -109,7 +105,6 @@ public class ITadminApplication {
      */
     @Test
     public void testStatusWithHttps() throws IOException {
-        testTitle("testStatusWithHttps");
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);        
         ClientResource client = new ClientResource("https://localhost:"+port+"/status");
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");        

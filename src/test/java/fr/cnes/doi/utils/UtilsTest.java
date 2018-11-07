@@ -18,8 +18,6 @@
  */
 package fr.cnes.doi.utils;
 
-import static fr.cnes.doi.AbstractSpec.classTitle;
-import static fr.cnes.doi.AbstractSpec.testTitle;
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.UnitTest;
 import fr.cnes.doi.security.UtilsCryptography;
@@ -43,7 +41,6 @@ public class UtilsTest {
     
     @BeforeClass
     public static void setUpClass() {
-        classTitle("Utils");
         InitSettingsForTest.init(InitSettingsForTest.CONFIG_TEST_PROPERTIES); 
     }
     
@@ -64,7 +61,6 @@ public class UtilsTest {
      */
     @Test
     public void testIsEmpty() {
-        testTitle("testIsEmpty");
         CharSequence cs = null;
         boolean expResult = true;
         boolean result = Utils.isEmpty(cs);
@@ -76,7 +72,6 @@ public class UtilsTest {
      */
     @Test
     public void testDecrypt() {
-        testTitle("testDecrypt");
         String encryptedInput = "6YTGxcaZ3b/qFbzECfnvjw==";
         String expResult = "Hello World !";
         String result = UtilsCryptography.decrypt(encryptedInput);
@@ -88,7 +83,6 @@ public class UtilsTest {
      */
     @Test
     public void testEncrypt() {
-        testTitle("testEncrypt");
         String str = "Hello World !";
         String expResult = "6YTGxcaZ3b/qFbzECfnvjw==";
         String result = UtilsCryptography.encrypt(str);
