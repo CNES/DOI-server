@@ -97,10 +97,6 @@ public class MetadatasResource extends BaseMdsResource {
             resource.setPublisher("CNES");
             result = this.getDoiApp().getClient().createMetadata(resource);
         } catch (ClientMdsException ex) {
-            LOG.error("*** code *** - " + ex.getStatus().getCode());
-            if (ex.getStatus().getCode() == 1001) {
-                LOG.error("*** 1 ***");
-            }
             throw LOG.throwing(Level.DEBUG,
                     new DoiServerException(getApplication(), API_MDS.DATACITE_PROBLEM, ex.
                             getMessage(), ex)
