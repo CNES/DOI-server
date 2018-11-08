@@ -23,7 +23,7 @@
                     Sorry, an error has occured, ${statusDescription}!
                 </div>
                 <div class="error-actions">                    
-                    <a href="/mds?method=options" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-home"></span>
+                    <a href="/mds?method=OPTIONS" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-home"></span>
                         Take Me Documentation </a><a href="mailto:${contactAdmin}" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-envelope"></span> Support</a>
                 </div>
             </div>
