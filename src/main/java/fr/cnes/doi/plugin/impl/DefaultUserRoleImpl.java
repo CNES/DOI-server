@@ -79,7 +79,11 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
 
     @Override
     public List<User> getUsersFromRole(final String roleName) {
-        return Arrays.asList(users.get(1), users.get(2), users.get(3), users.get(4));
+        if(roleName.equals("828606")) {
+            return Arrays.asList(users.get(2), users.get(1));
+        } else {
+            return Arrays.asList(users.get(1), users.get(2), users.get(3), users.get(4));
+        }
     }
 
     @Override

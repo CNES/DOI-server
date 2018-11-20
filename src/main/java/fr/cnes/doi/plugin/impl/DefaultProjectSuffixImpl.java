@@ -159,6 +159,17 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
                 "Project Name;Id\n".getBytes(StandardCharsets.UTF_8),
                 StandardOpenOption.APPEND
         );
+        // current projects for which a role has already been given
+        Files.write(
+                projConfFile.toPath(),
+                "CFOSAT;828606\n".getBytes(StandardCharsets.UTF_8),
+                StandardOpenOption.APPEND
+        );
+        Files.write(
+                projConfFile.toPath(),
+                "THEIA;329360\n".getBytes(StandardCharsets.UTF_8),
+                StandardOpenOption.APPEND
+        );        
     }
 
     @Override
