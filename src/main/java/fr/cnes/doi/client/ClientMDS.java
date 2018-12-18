@@ -573,11 +573,10 @@ public class ClientMDS extends BaseClient {
         try {
             return this.getClient().get(MediaType.APPLICATION_XML);
         } catch (ResourceException ex) {
+            this.getClient().release();
             throw new ClientMdsException(ex.getStatus(), ex.getMessage(), this.getClient().
                     getResponseEntity(), ex);
-        } finally {
-            this.getClient().release();
-        }
+        } 
     }
 
     /**
@@ -762,11 +761,10 @@ public class ClientMDS extends BaseClient {
         try {
             return this.getClient().delete();
         } catch (ResourceException ex) {
+            this.getClient().release();
             throw new ClientMdsException(ex.getStatus(), ex.getMessage(), this.getClient().
                     getResponseEntity(), ex);
-        } finally {
-            this.getClient().release();
-        }
+        } 
     }
 
     /**

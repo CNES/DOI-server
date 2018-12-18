@@ -9,6 +9,14 @@
             <name>Restlet repository</name>
             <url>https://maven.restlet.com</url>
         </repository>
+        <repository>
+            <id>maven-jspnego</id>
+            <url>https://raw.github.com/Cnes/JSPNego/mvn-repo/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>         
     </repositories>
     <properties>
         <timestamp>${maven.build.timestamp}</timestamp>
@@ -283,6 +291,11 @@
         </plugins>
     </build>
     <dependencies>    
+        <dependency>
+            <groupId>fr.cnes.lib.proxy</groupId>
+            <artifactId>LibraryForProxyWeb</artifactId>
+            <version>1.0.0</version>             
+        </dependency>          
         <!-- mockserver -->
         <dependency>
             <groupId>org.mock-server</groupId>
@@ -346,12 +359,7 @@
             <groupId>org.restlet.jse</groupId>
             <artifactId>org.restlet.ext.slf4j</artifactId>
             <version>${restlet-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.restlet.jse</groupId>
-            <artifactId>org.restlet.ext.httpclient</artifactId>
-            <version>${restlet-version}</version>
-        </dependency>        
+        </dependency>       
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>

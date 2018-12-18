@@ -30,12 +30,12 @@ import java.util.stream.Collectors;
 import fr.cnes.doi.client.ClientProxyTest;
 import fr.cnes.doi.security.UtilsCryptography;
 import fr.cnes.doi.settings.DoiSettings;
-import fr.cnes.doi.utils.HttpClientHelperPatchAC;
 import java.io.IOException;
 import java.util.List;
 import org.restlet.Client;
 import org.restlet.engine.Engine;
 import org.restlet.engine.connector.ConnectorHelper;
+import org.restlet.ext.httpclient4.HttpClientHelper;
 
 /**
  * Class to read the settings from the crypted config file and to enable the proxy if the system
@@ -50,7 +50,7 @@ public class InitSettingsForTest {
     static {
         final List<ConnectorHelper<Client>> registeredClients = Engine.getInstance().
                 getRegisteredClients();
-        registeredClients.add(0, new HttpClientHelperPatchAC(null));
+        registeredClients.add(0, new HttpClientHelper(null));
     }       
 
     /**
