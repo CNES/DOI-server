@@ -420,14 +420,15 @@ public class AdminApplication extends AbstractApplication {
 
         final String pathApp = this.getConfig().getPathApp();
 //        final File file = new File(pathApp + File.separator + IHM_DIR);
-        //TODO pour se lancer depuis le .jar
+        //TODO pour se lancer depuis le .jar (getPathApp différent + .jar récupère ihm sur la vm)
         final File file = new File(pathApp + "/classes" + File.separator + IHM_DIR);
         LOG.info("file : >>>>>>>>>> "+ pathApp + "/classes" + File.separator + IHM_DIR + "<<<<<<<<<<<<<<<<<<");
         if (file.canRead()) {
             LOG.info("The website for DOI server is ready here {}", file.getPath());
             final Directory ihm = new Directory(getContext(), "file://" + file.getPath());
+            
             System.out.println(file.getPath() + "\n");
-            LOG.info("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+            
             ihm.setListingAllowed(true);
             ihm.setDeeplyAccessible(true);
             ihm.setIndexName("doiCreation");

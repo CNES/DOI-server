@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource xmlns="http://datacite.org/schema/kernel-4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://datacite.org/schema/kernel-4 http://schema.datacite.org/meta/kernel-4/metadata.xsd">
+<identifier identifierType="DOI">10.toto/toto11</identifier>
+<titles>
+	<title>1title sans attribut</title>
+	<title titleType="Subtitle">1Subtitle tite</title>
+</titles>
+<creators>
+	<creator>
+		<creatorName>1creatorName1</creatorName>
+		<givenName>1givenName1</givenName>
+		<familyName>1familyName1</familyName>
+		<nameIdentifier nameIdentifierScheme="1nameIS1" schemeURI="1schemeURI1">1nameIdentifier1</nameIdentifier>
+		<nameIdentifier nameIdentifierScheme="1nameIS11" schemeURI="1schemeURI11">1nameIdentifier11</nameIdentifier>
+		<affiliation>1aff1</affiliation>
+		<affiliation>1affn11</affiliation>
+		<affiliation>1aff111</affiliation>
+	</creator>
+	<creator>
+		<creatorName>1creatorName2</creatorName>
+		<givenName>1givenName2</givenName>
+		<familyName>1toto2</familyName>
+		<nameIdentifier nameIdentifierScheme="1nameIdentifierScheme2" schemeURI="1schemeURI2">1nameIdentifier2</nameIdentifier>
+		<nameIdentifier nameIdentifierScheme="1nameIdentifierScheme22" schemeURI="1schemeURI22">1nameIdentifier22</nameIdentifier>
+		<affiliation>1aff2</affiliation>
+		<affiliation>1aff22</affiliation>
+	</creator>
+</creators>
+<publisher>1toto</publisher>
+<publicationYear>1191</publicationYear>
+<resourceType resourceTypeGeneral="InteractiveResource">1toto</resourceType>
+<subjects>
+	<subject subjectScheme="1attr1" schemeURI="1attr2" valueURI="1attr3">1toto</subject>
+	<subject subjectScheme="1attr1bis" schemeURI="1attr2bis" valueURI="1attr3bis">1toto212</subject>
+</subjects>
+<contributors>
+	<contributor contributorType="DataManager">
+		<contributorName>1contri1</contributorName>
+		<givenName>1gname1</givenName>
+		<familyName>1fname1</familyName>
+		<nameIdentifier nameIdentifierScheme="1sche1" schemeURI="1scheURI1">1naID1</nameIdentifier>
+		<nameIdentifier nameIdentifierScheme="1sche1111" schemeURI="1scheURI1111">1naID1111</nameIdentifier>
+		<affiliation>1af1</affiliation>
+		<affiliation>1af111</affiliation>
+	</contributor>
+	<contributor contributorType="RegistrationAgency">
+		<contributorName>1contri2</contributorName>
+		<givenName>1gname2</givenName>
+		<familyName>1fname2</familyName>
+		<nameIdentifier nameIdentifierScheme="1sche2" schemeURI="1scheURI2">1naID2</nameIdentifier>
+		<affiliation>1af2</affiliation>
+	</contributor>
+</contributors>
+<dates>
+	<date dateType="Submitted">1toto1</date>
+	<date dateType="Valid">1toto2</date>
+</dates>
+<relatedIdentifiers>
+	<relatedIdentifier relatedIdentifierType="UPC" relationType="HasPart" relatedMetadataScheme="1metashc1" schemeType="1schtype1" schemeURI="1uri1">1rel1</relatedIdentifier>
+	<relatedIdentifier relatedIdentifierType="LISSN" relationType="Cites" relatedMetadataScheme="1metashc2" schemeType="1schtype2" schemeURI="1uri2">r1el2</relatedIdentifier>
+</relatedIdentifiers>
+<descriptions>
+	<description descriptionType="Methods">1des1</description>
+	<description descriptionType="SeriesInformation">des2</description>
+</descriptions>
+<geoLocations>
+	<geoLocation>
+		<geoLocationPlace>geoloc1</geoLocationPlace>
+		<geoLocationPoint>
+			<pointLongitude>1.1</pointLongitude>
+			<pointLatitude>1.11</pointLatitude>
+		</geoLocationPoint>
+		<geoLocationBox>
+			<westBoundLongitude>1.2</westBoundLongitude>
+			<eastBoundLongitude>1.22</eastBoundLongitude>
+			<southBoundLatitude>1.222</southBoundLatitude>
+			<northBoundLatitude>1.2222</northBoundLatitude>
+		</geoLocationBox>
+		<geoLocationPolygon>
+			<polygonPoint>
+				<pointLongitude>1.3</pointLongitude>
+				<pointLatitude>1.33</pointLatitude>
+			</polygonPoint>
+			<polygonPoint>
+				<pointLongitude>1.4</pointLongitude>
+				<pointLatitude>1.44</pointLatitude>
+			</polygonPoint>
+			<polygonPoint>
+				<pointLongitude>1.5</pointLongitude>
+				<pointLatitude>1.55</pointLatitude>
+			</polygonPoint>
+			<polygonPoint>
+				<pointLongitude>1.6</pointLongitude>
+				<pointLatitude>1.66</pointLatitude>
+			</polygonPoint>
+			<polygonPoint>
+				<pointLongitude>1.7</pointLongitude>
+				<pointLatitude>1.77</pointLatitude>
+			</polygonPoint>
+		</geoLocationPolygon>
+	</geoLocation>
+	<geoLocation>
+		<geoLocationPlace>geoloc2</geoLocationPlace>
+		<geoLocationPoint>
+			<pointLongitude>2.1</pointLongitude>
+			<pointLatitude>2.11</pointLatitude>
+		</geoLocationPoint>
+		<geoLocationBox>
+			<westBoundLongitude>2.2</westBoundLongitude>
+			<eastBoundLongitude>2.22</eastBoundLongitude>
+			<southBoundLatitude>2.222</southBoundLatitude>
+			<northBoundLatitude>2.2222</northBoundLatitude>
+		</geoLocationBox>
+		<geoLocationPolygon>
+			<polygonPoint>
+				<pointLongitude>2.3</pointLongitude>
+				<pointLatitude>2.33</pointLatitude>
+			</polygonPoint>
+			<polygonPoint>
+				<pointLongitude>2.4</pointLongitude>
+				<pointLatitude>2.44</pointLatitude>
+			</polygonPoint>
+			<polygonPoint>
+				<pointLongitude>2.5</pointLongitude>
+				<pointLatitude>2.55</pointLatitude>
+			</polygonPoint>
+			<polygonPoint>
+				<pointLongitude>2.6</pointLongitude>
+				<pointLatitude>2.66</pointLatitude>
+			</polygonPoint>
+		</geoLocationPolygon>
+	</geoLocation>
+</geoLocations>
+<language>lang</language>
+<alternateIdentifiers>
+	<alternateIdentifier alternateIdentifierType="alterID1">toto1</alternateIdentifier>
+	<alternateIdentifier alternateIdentifierType="alterID2">toto2</alternateIdentifier>
+</alternateIdentifiers>
+<sizes>
+	<size>size1</size>
+	<size>size2</size>
+</sizes>
+<formats>
+	<format>forma1</format>
+	<format>format2</format>
+</formats>
+<version>version</version>
+<rightsList>
+	<rights rightsURI="uritoto1">toto1</rights>
+	<rights rightsURI="uritoto2">toto2</rights>
+</rightsList>
+
+</resource>

@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Administration</title>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<!-- Bootstrap -->
+		<link href="css/bootstrap-min.css" rel="stylesheet">
+
+		<!-- Css -->
+		<link href="css/doi.css" rel="stylesheet">
+		<link href="css/navbar.css" rel="stylesheet">
+
+	</head>
+
+	<body>
+		<div class="container">
+
+			<div id="navbar"></div>
+
+			<h2>Administration</h2><hr>
+
+			<div class="row">
+				<div class="col-md-6">
+					<div class="panel panel-primary">
+						<div class="panel-heading"><h3 class="panel-title">Projets</h3></div>
+						<div class="panel-body">
+							<div class="col-md-6">
+								<button type="button" onclick="addProject()" class="btn btn-default btn-md btn-block">Créer un projet</button>
+								<button type="button" onclick="renameProject()" class="btn btn-default btn-md btn-block">Renommer un projet</button>
+								<button type="button" onclick="deleteProject()" class="btn btn-default btn-md btn-block">Supprimer un projet</button>
+							</div>	
+							<div class="col-md-6">	
+								<label>Projets</label>
+								<select class="form-control" size="4" id="listProjet">
+						<!--  			<option>Projet A</option>
+									<option>Projet B</option>
+									<option>Projet C</option>
+									<option>Projet D</option>
+									<option>Projet E</option>
+									<option>Projet F</option>  -->
+								</select>
+							</div>			
+						</div>
+					</div> <!-- /panel -->
+				</div>
+			
+				<div class="col-md-6">
+					<div class="panel panel-primary">
+						<div class="panel-heading"><h3 class="panel-title" id="titreProjet">Utilisateurs du projet:</h3></div>
+						<div class="panel-body">
+							<div class="col-md-6">	
+								<label>Utilisateurs</label>
+								<select id="listUser" class="form-control" size="4">
+							<!--  		<option>bob.doe</option>
+									<option>bill.doret</option>
+									<option>tom.hash</option>  -->
+								</select>
+							</div>			
+							<div class="col-md-6">
+								<button type="button" onclick="addUser()" class="btn btn-default btn-md btn-block">Ajouter un utilisateur</button>
+								<button type="button" onclick="deleteUser()" class="btn btn-default btn-md btn-block">Retirer un utilisateur</button>
+							</div>	
+						</div>
+					</div> <!-- /panel -->
+				</div>
+			</div> <!-- /row -->
+			<br>
+
+			<div class="row">
+				<div class="col-md-6">
+					<div class="panel panel-primary">
+						<div class="panel-heading"><h3 class="panel-title">Groupe Admin</h3></div>
+						<div class="panel-body">
+							<div class="col-md-6">	
+								<label>Utilisateurs Admin</label>
+								<select id="listAdmin" class="form-control" size="4">
+						<!--  			<option>bob.doe</option>
+									<option>bill.doret</option>   -->
+								</select>
+							</div>			
+							<div class="col-md-6">
+								<button type="button" onclick="addAdmin()" class="btn btn-default btn-md btn-block">Ajouter un utilisateur</button>
+								<button type="button" onclick="deleteAdmin()" class="btn btn-default btn-md btn-block">Retirer un utilisateur</button>
+							</div>	
+						</div>
+					</div> <!-- /panel -->
+				</div>
+			</div> <!-- /row -->
+
+			<hr>
+			<div id="footer"></div>
+
+		</div> <!-- /container -->
+			 
+  	</body>
+  	
+  		<!-- JS library -->
+		<script src="js/jquery-min.js"></script>
+		<script src="js/bootstrap-min.js"></script>
+
+		<script>
+		
+			var listUser;
+			var users = [];
+			var admins = [];
+			var projets = [];
+			var allProjects = [];  //all different projects selected once
+			
+			function getListUser(){
+				var xhttp = new XMLHttpRequest();
+				xhttp.onreadystatechange = function() {
+					if (this.readyState == 4 && this.status == 200) {
+						
+						 listUser = this.responseText.split(";");      //get the list  user.mdp:admin:project1,project2;
+							 console.log("<<<<<<<<<<   " + listUser);
+						 for (var i=0 ; i < listUser.length ; i++ ){
+							var all = listUser[i].split(':');
+							users.push(all[0]);
+							admins.push(all[1]);
+							projets.push(all[2]);
+						}
+						 console.log("<<<<<<<<<<   " + users); 
+						 console.log("<<<<<<<<<<   " + admins); 
+						 console.log("<<<<<<<<<<   " + projets);
+						 
+						for(var i=0; i<projets.length ; i++){
+							var tampon = [];
+							tampon = projets[i].split(',');
+							
+							if(tampon == ""){
+								continue;
+							}
+							
+							for(var j=0 ; j<tampon.length ; j++){
+								if(!allProjects.includes(tampon[j])){
+									allProjects.push(tampon[j]);
+								}
+							}
+						}
+						
+						 console.log("<<<<<<<<<<   " + allProjects);
+						
+						modifyListProjet();
+						modifyListAdmin();
+						
+					}
+				};
+				xhttp.open("GET", "listUser.txt", true); // was false (synchronous)
+				xhttp.send();
+// 				listUser = xhttp.responseText.split(";");      //get the list  user.mdp:admin:project1,project2:
+			}
+		
+			$(document).ready(function(){
+				$("#footer").load("footer.txt");
+				$("#navbar").load("navbar.txt");
+				
+				getListUser();
+				
+// 				for (var i=0 ; i < listUser.length ; i++ ){
+// 						var all = listUser[i].split(":");
+// 						users.push(all[0]);
+// 						admins.push(all[1]);
+// 						projets.push(all[2]);
+// 				}
+// 				// fill the allProjects tab
+// 				for(var i=0; i<projets.length ; i++){
+// 					var tampon = [];
+// 					tampon = projets[i].split(',');
+					
+// 					for(var j=0 ; j<tampon.length ; j++){
+// 						if(!allProjects.includes(tampon[j])){
+// 							allProjects.push(tampon[j]);
+// 						}
+// 					}
+// 				}
+				
+// 				modifyListProjet();
+// 				modifyListAdmin();
+
+				$("#listProjet").click(function(){
+					if($("#listProjet").val() == null){
+						return;
+					}
+					modifyListUser();
+				});
+				
+			});
+			
+			function modifyListProjet(){
+				$("#listProjet").empty();
+				for(var i=0; i<allProjects.length ; i++){
+					$("#listProjet").append("<option>" + allProjects[i] + "</option>");
+				}
+			}
+			function modifyListUser(){
+				var projet = $("#listProjet").val();
+				$("#titreProjet").text("Utilisateurs du projet: "+projet);
+				
+				console.log("<<<<<<<<<<<<<<   " + projet);
+// 				console.log("<<<<<<<<<<<<<<   " + projets);
+// 				console.log("<<<<<<<<<<<<<<   " + users);
+				
+				$("#listUser").empty();
+				for(var i=0; i<users.length ; i++){
+					if(projets[i].includes(projet)){
+						$("#listUser").append("<option>" + users[i] + "</option>");
+					}
+				}
+			}
+			function modifyListAdmin(){
+				$("#listAdmin").empty();
+				for(var i=0; i<admins.length ; i++){
+					if(admins[i] == "admin"){
+						$("#listAdmin").append("<option>" + users[i] + "</option>");
+					}
+				}
+			}
+			
+			// modification users
+			function addUser(){
+				var projet = $("#listProjet").val();
+				var user = prompt("Entrer le \"nom.prenom\" de l'utilisateur qui sera associé à ce projet:", "toto.toto");
+				if (user == null || user == "") {
+			        return;
+				} else if (!user.includes(".")) {
+					alert("Format invalide.");
+					return;
+				} else {
+					for(var i=0 ; i<users.length ; i++){
+						if(users[i] == user){
+							if(projets[i].includes(projet)){
+								alert("Utilisateur déjà sur le projet.");
+								return;
+							}
+							projets[i] = projets[i] + "," + projet;
+							$("#listUser").append("<option selected=\"selected\">" + user + "</option>");				
+							return;
+						}
+					}
+					users.push(user);
+					admins.push("user");
+					projets.push(projet);
+					$("#listUser").append("<option selected=\"selected\">" + user + "</option>");
+				}
+			}
+			function deleteUser(){
+				var projet = $("#listProjet option:selected").text();
+				var user = $("#listUser option:selected").text();
+				if(user == ""){
+					return;
+				}
+				
+				if(confirm("Voulez-vous vraiment supprimer l'utilisateur "+ user + " du projet " + projet + " ?")){
+				    
+			    	for(var i=0 ; i<users.length ; i++){
+			    		if(users[i].includes(user)){
+			    			projets[i].replace(projet, "");   // TODO prendre en compte "," et ":" et ";"...
+			    		}									  // remplacer les ",," par "," les ":," par ":" les ",;" par ";" + si dernier caract = "," le retirer...
+			    	}
+			    	modifyListUser();
+			    } 
+			}
+			
+			
+			// modification Admin   //TODO maybe show up a hidden select button that allow to find any user...
+			function addAdmin(){
+				var user = prompt("Entrer le \"nom.prenom\" de l'utilisateur qui passera Admin :\n(possibilité d'afficher les noms disponibles ici)", "toto.toto");
+				if (user == null || user == "") {
+			        return;
+				} else {
+			    	for(var i=0 ; i<users.length ; i++){
+			    		if(users[i].includes(user)){
+			    			if(admins[i] == "admin"){
+			    				alert("Utilisateur déjà Admin.");
+			    			}else{
+			    				admins[i] = "admin";
+			    				$("#listAdmin").append("<option selected=\"selected\">" + users[i] + "</option>");
+			    			}
+			    			return;
+			    		}
+			    	}
+			    	alert("Utilisateur inconnu.");
+			    }
+			}
+			function deleteAdmin() {
+				var user = $("#listAdmin option:selected").text();
+				if(user == ""){
+					return;
+				}
+			    if(confirm("Voulez-vous vraiment supprimer l'utilisateur "+ user + " du groupe Admin ?")){
+			    
+			    	for(var i=0 ; i<users.length ; i++){
+			    		if(users[i].includes(user)){
+			    			admins[i]= "user";
+			    		}
+			    	}
+			    	modifyListAdmin();
+			    } 
+			}
+			
+			// modification Projets
+			function addProject() {
+			    var projet = prompt("Entrer le nom du projet:", "ProjetC");
+			    if (projet == null || projet == "") {
+			        return;
+			    } else {
+			    	projet = projet + '(' + Math.floor(Math.random()*1000000) + ')';
+			    	allProjects.push(projet);
+			    	$("#listProjet").append("<option selected=\"selected\">" + projet + "</option>");
+			    	modifyListUser();
+			    }
+			}
+			function renameProject() {
+				var text = $("#listProjet option:selected").text();
+				if(text == ""){
+					return;
+				}
+				
+				var idText = text.substring(text.indexOf('('));
+				var nomText = text.substring(0, text.indexOf('('));
+				
+			    var projet = prompt("Renomer le projet:", nomText);
+			    if (projet == null || projet == "") {
+			        return;
+			    } else {
+			    	for(var i=0 ; i<allProjects.length ; i++){
+			    		if(allProjects[i] == text){
+			    			allProjects[i] = projet + idText;
+			    		}
+			    	}
+			    	for(var i=0 ; i<projets.length ; i++){
+			    		if(projets[i].includes(text)){
+			    			projets[i] = projets[i].replace(text, projet + idText);
+			    		}
+			    	}
+			    	$("#listProjet option:selected").text(projet + idText);
+			    	$("#titreProjet").text("Utilisateurs du projet: "+ projet + idText);
+			    	
+			    }
+			}
+			function deleteProject() {  // ATTENTION manque la vérification des DOIs sur le projet
+				var text = $("#listProjet option:selected").text();
+				if(text == ""){
+					return;
+				}
+				var nomText = text.substring(0, text.indexOf('('));
+				
+			    if(confirm("Voulez-vous vraiment supprimer le projet "+ nomText)){
+			    	var tampon = allProjects;
+			    	allProjects = [];
+			    	for(var i=0 ; i<tampon.length ; i++){
+			    		if(tampon[i] != text){
+			    			allProjects.push(tampon[i]);
+			    		}
+			    	}
+			    	$("#listProjet option:selected").remove();
+			    	$("#titreProjet").text("Utilisateurs du projet: ");
+					$("#listUser").empty();
+			    	
+			    } 
+			}
+	
+		</script>
+		
+</html>

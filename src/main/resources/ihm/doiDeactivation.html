@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Désactivation DOI</title>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<!-- Bootstrap -->
+		<link href="css/bootstrap-min.css" rel="stylesheet">
+
+		<!-- Css -->
+		<link href="css/doi.css" rel="stylesheet">
+		<link href="css/navbar.css" rel="stylesheet">
+
+	</head>
+
+	<body>
+		<div class="container">
+
+			<div id="navbar"></div>
+
+			<h2>Désactivation DOI</h2><hr>
+
+			<form class="form-horizontal">
+
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="doi">DOI :</label>
+					<div class="col-sm-5">
+						<div class="input-group">
+							<span class="input-group-addon">10.24400/</span>
+							<span class="input-group-addon" id="idprojet">idprojet/</span>
+							<select class="form-control" id="doi" >
+							</select>
+						</div>
+					</div>
+				</div>
+
+				<br>
+					
+				<div class="form-group">
+					<div class="col-sm-offset-2 col-sm-10">
+						<button type="button" class="btn btn-default">Désactiver le DOI</button>
+						<!--  Etes vous sur? Copier coller le nom du DOI dans le champ pour valider  -->
+					</div>
+				</div>
+
+			</form>
+			
+			<hr>
+			<div id="footer"></div>
+
+		</div> <!-- /container -->
+			 
+  	</body>
+  	
+  	<!-- JS library -->
+	<script src="js/jquery-min.js"></script>
+	<script src="js/bootstrap-min.js"></script>
+
+	<script>
+	var doi ="";
+	var prefixCnes = "10.24400/";
+	
+	$(document).ready(function(){
+		$("#footer").load("footer.txt");
+		$("#navbar").load("navbar.txt", function(responseTxt, statusTxt, xhr){
+	        if(statusTxt == "success"){
+	        	setProjectID();
+	        	setDOIList();
+	        } else if(statusTxt == "error"){
+	            alert("Error: " + xhr.status + ": " + xhr.statusText);
+	        }
+	    });
+		
+		$("#doi").change(function(){
+			doi = prefixCnes + $("#idprojet").val() + $("#doi").val();
+			console.log("uri = " + doi);
+		});
+		
+		$(".btn").click(function(){
+			var doi = prompt("Réécrire \"" + $("#doi").val() + "\" pour désactiver le doi",
+					"Action irréversible. /!\\");
+			if (doi == $("#doi").val()) {
+				$("#doi option:selected").remove();
+// 				requestDelete();
+			} else {
+				return;
+			}
+			
+		});
+	});
+	
+	function requestDelete(){
+		$.ajax({
+		    type: "DELETE",
+		    url: "http://127.0.0.1:8182/mds/metadata/" + doi,
+		    headers: {
+		    	'Authorization': 'Basic ' + btoa('malapert:pwd'),
+		    	'selectedRole': projectID
+		    },
+		    crossDomain: true,
+			cache : false,
+		    error : function (XMLHttpRequest, textStatus, errorThrown){ console.log("La requête DELETE a échouée."); }, 
+		    success: function(xml) { console.log("DOI "+ doi + " a été supprimé."); }
+		}); 
+	}
+	
+	var projectID;
+	function setProjectID(){
+		projectID = sessionStorage.getItem("projet");
+		projectID = projectID.substring(projectID.indexOf("(")+1, projectID.length-1 ); 
+		$("#idprojet").text(projectID + "/");
+	}
+	
+	function setDOIList(){
+		$("#doi").empty();
+		$("#doi").append("<option disabled selected>Choix d'un doi</option>");
+		if(projectID.includes("111")){
+			$("#doi").append("<option>" + "un DOI du projet A" + "</option>");	
+			$("#doi").append("<option>" + "un autre DOI du projet A" + "</option>");
+		} else {
+			$("#doi").append("<option>" + "un DOI du projet B" + "</option>");
+			$("#doi").append("<option>" + "un autre DOI du projet B" + "</option>");
+		}
+	}
+	</script>
+	
+</html>

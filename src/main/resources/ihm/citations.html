@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html> 
+	<head>
+		<title>Citations</title>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<!-- Bootstrap -->
+		<link href="css/bootstrap-min.css" rel="stylesheet">
+
+		<!-- Css -->
+		<link href="css/doi.css" rel="stylesheet">
+		<link href="css/navbar.css" rel="stylesheet">
+
+	</head>
+
+	<body>
+		<div class="container">
+
+			<div id="navbar"></div>
+			<h2>Citations</h2><hr>
+
+			<form class="form-horizontal my-form">
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="doi">DOI :</label>
+					<div class="col-sm-5">
+						<div class="input-group">
+							<span class="input-group-addon">10.24400/</span>
+							<span class="input-group-addon" id="idprojet">idprojet/</span>
+							<select class="form-control" id="doi" >
+								<option>DOI 1</option>
+								<option>DOI 2</option>
+								<option>DOI 3</option>
+							</select>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="style">Style :</label>
+					<div class="col-sm-5">
+						<select class="form-control" id="style" >
+							<option>bibtex</option>
+							<option>untruc</option>
+							<option>unautre</option>
+						</select>
+					</div>
+				</div>
+			
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="langue">Langue :</label>
+					<div class="col-sm-5">
+						<select class="form-control" id="langue" >
+							<option>fr-FR</option>
+							<option>en-GB</option>
+							<option>en-US</option>
+						</select>
+					</div>
+				</div>
+				<br>
+					
+				<div class="form-group">
+					<div class="col-sm-offset-2 col-sm-10">
+						<button type="button" onclick="getFormat()" class="btn btn-default">Generer la citation</button>
+					</div>
+				</div>
+			</form>
+			
+			<hr>
+			<div id="generation" ></div> <!-- génération de la citation -->
+
+			<form class="form-horizontal" action="">
+				<div class="form-group">
+					<div class="col-sm-10">
+						<p id="message">---- Citation généré ici ----</p>
+					</div>
+					<div class="col-sm-2">
+						<button type="button" id="selectall" class="btn btn-default">Sélectionner</button>
+					</div>
+				</div>
+			</form>
+
+			<hr>
+			<div id="footer"></div>
+			
+		</div> <!-- /container -->
+			 
+  	</body>
+  	
+  		<!-- JS library -->
+		<script src="js/jquery-min.js"></script>
+		<script src="js/bootstrap-min.js"></script>
+
+		<script>
+		var prefixCnes = "10.24400/";
+		var identifier = "";
+		
+		$(document).ready(function(){
+			$("#footer").load("footer.txt");
+			$("#navbar").load("navbar.txt", function(responseTxt, statusTxt, xhr){
+		        if(statusTxt == "success"){
+		        	setProjectID();
+		        	setDOIList();
+		        } else if(statusTxt == "error"){
+		            alert("Error: " + xhr.status + ": " + xhr.statusText);
+		        }
+		    });
+			
+			$("#doi").change(function(){
+				identifier = $("#doi").val();
+			});
+			
+			getStyle();
+			getLanguage();
+			
+		});
+		
+		function getStyle(){
+			$.ajax({
+			    type: "GET",
+			    url: "http://127.0.0.1:8182/citation/style",
+			    crossDomain: true,
+				cache : false,
+			    error : function (XMLHttpRequest, textStatus, errorThrown){ console.log("La requête GET(style) a échouée."); }, 
+			    success: function(styles) {
+			    	console.log("GET style est un succès.");
+		    		$("#style").empty();
+		    		for(var style of styles){
+			    		if(style == "fr-FR"){
+			    			$("#style").append("<option selected=\"selected\">" + style + "</option>");
+			    		} else {
+				    		$("#style").append("<option>" + style + "</option>");
+			    		}
+			    	}
+		    	}
+			}); 
+		}
+		function getLanguage(){
+			$.ajax({
+			    type: "GET",
+			    url: "http://127.0.0.1:8182/citation/language",
+			    crossDomain: true,
+				cache : false,
+			    error : function (XMLHttpRequest, textStatus, errorThrown){ console.log("La requête GET(language) a échouée."); }, 
+			    success: function(languages) {
+			    	console.log("GET language est un succès.");
+		    		$("#langue").empty();
+		    		for(var language of languages){
+			    		if(language == "bibtex"){
+			    			$("#langue").append("<option selected=\"selected\">" + language + "</option>");
+			    		} else {
+				    		$("#langue").append("<option>" + language + "</option>");
+			    		}
+			    	}
+		    	}
+			});
+		}
+		function getFormat(){
+			if(identifier == ""){
+				return;
+			}
+			var fullName = prefixCnes + $("#idprojet").text() + identifier;
+			console.log(fullName);
+			var request = new Object();
+			request.doi = fullName;
+			request.lang = $("#langue").val();
+			request.style = $("#style").val();
+			
+			$.ajax({
+			    type: "GET",
+			    url: "http://127.0.0.1:8182/citation/format?" + $.param(request),
+			    crossDomain: true,
+				cache : false,
+			    error : function (XMLHttpRequest, textStatus, errorThrown){ console.log("La requête GET(format) a échouée."); }, 
+			    success: function(messages) {
+			    	console.log("GET format est un succès.");
+		    		$("#message").empty();
+			    	$("#message").text(messages);
+		    	}
+			});
+		}
+		
+		var projectID;
+		function setProjectID(){
+			projectID = sessionStorage.getItem("projet");
+			projectID = projectID.substring(projectID.indexOf("(")+1, projectID.length-1 ); 
+			$("#idprojet").text(projectID + "/");
+		}
+		function setDOIList(){
+			$("#doi").empty();
+			$("#doi").append("<option disabled selected>Choix d'un doi</option>");
+			if(projectID.includes("111")){
+				$("#doi").append("<option>" + "un DOI du projet A" + "</option>");	
+				$("#doi").append("<option>" + "un autre DOI du projet A" + "</option>");
+			} else {
+				$("#doi").append("<option>" + "un DOI du projet B" + "</option>");
+				$("#doi").append("<option>" + "un autre DOI du projet B" + "</option>");
+			}
+		}
+		
+		$("#selectall").bind("click", function (event) {
+			event.preventDefault();
+			st($("#message").get(0));
+		});
+		function st(element) {
+			var doc = document,
+			text = element,
+			range,
+			selection;
+			if (doc.body.createTextRange) {
+				range = doc.body.createTextRange();
+				range.moveToElementText(text);
+				range.select();
+			} else {
+				if (window.getSelection) {
+					selection = window.getSelection();
+					range = doc.createRange();
+					range.selectNodeContents(text);
+					selection.removeAllRanges();
+					selection.addRange(range);
+				}
+			}
+		}
+		
+		// only for test
+		$('.my-form').on('submit', function (event){
+			event.preventDefault();
+			var doi = $("#doi").val();
+			var boo = $("#langue").val() == $("#langue option:first").val();
+			var proj = doi.includes("projet A")? "projet A" : "projet B";
+			
+			if(doi.includes("autre")){
+				if(boo)
+					$("#message").text("Je suis la citation de l'autre DOI");
+				else
+					$("#message").text("I am the citation of the other DOI");
+			} else {
+				if(boo)
+					$("#message").text("Je suis la citation du premier DOI");
+				else
+					$("#message").text("I am the citation of the first DOI");
+			}
+			$("#message").append(" (" + proj +")" ); 
+		});
+		</script>
+		
+</html>
