@@ -30,9 +30,14 @@ import java.util.stream.Collectors;
 import fr.cnes.doi.client.ClientProxyTest;
 import fr.cnes.doi.security.UtilsCryptography;
 import fr.cnes.doi.settings.DoiSettings;
+import fr.cnes.httpclient.HttpClient;
+import fr.cnes.httpclient.HttpClientFactory;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import org.restlet.Client;
+import org.restlet.Context;
+import org.restlet.data.Protocol;
 import org.restlet.engine.Engine;
 import org.restlet.engine.connector.ConnectorHelper;
 import org.restlet.ext.httpclient4.HttpClientHelper;
@@ -44,14 +49,7 @@ import org.restlet.ext.httpclient4.HttpClientHelper;
  * @author Claire
  *
  */
-public class InitSettingsForTest {    
-    
-    
-    static {
-        final List<ConnectorHelper<Client>> registeredClients = Engine.getInstance().
-                getRegisteredClients();
-        registeredClients.add(0, new HttpClientHelper(null));
-    }       
+public class InitSettingsForTest {                
 
     /**
      * Init loggers.

@@ -125,15 +125,6 @@ public class ProxySettingsTest {
     }
 
     /**
-     * Test of getProxyAuthentication method, of class ProxySettings.
-     */
-    @Test
-    public void testGetProxyAuthentication() {
-        ChallengeResponse result = instance.getProxyAuthentication();
-        assertNotNull(result);
-    }
-
-    /**
      * Test of getNonProxyHosts method, of class ProxySettings.
      */
     @Test

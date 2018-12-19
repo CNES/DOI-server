@@ -107,6 +107,11 @@ public class Consts {
      * Indicates whether the authentication to the proxy must be enabled.
      */
     public static final String SERVER_PROXY_USED = "Starter.Proxy.used";
+    
+    /**
+     * TODO.
+     */
+    public static final String SERVER_PROXY_TYPE = "Starter.Proxy.type";
 
     /**
      * Proxy host name.
@@ -132,6 +137,21 @@ public class Consts {
      * Set of hostname on which the authentication to the proxy is disabled.
      */
     public static final String SERVER_NONPROXY_HOSTS = "Starter.NoProxy.hosts";
+    
+    /**
+     * TODO.
+     */
+    public static final String SERVER_PROXY_JAAS_SPN = "Starter.Proxy.Jass.Spn";
+    
+    /**
+     * TODO.
+     */
+    public static final String SERVER_PROXY_JAAS_FILE = "Starter.Proxy.Jass.File";
+    
+    /**
+     * TODO.
+     */
+    public static final String SERVER_PROXY_JAAS_CONTEXT = "Starter.Proxy.Jass.Context";
 
     /**
      * LOG format.
