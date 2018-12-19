@@ -33,6 +33,9 @@ import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.utils.HttpClientHelperPatchAC;
 import java.io.IOException;
 import java.util.List;
+import java.util.Properties;
+import java.util.Set;
+
 import org.restlet.Client;
 import org.restlet.engine.Engine;
 import org.restlet.engine.connector.ConnectorHelper;
@@ -91,10 +94,20 @@ public class InitSettingsForTest {
             // Replace the value to use the proxy by the system property
             String useProxy = System.getProperty("proxy.use");
             if (useProxy != null) {
-                result = result.replace("Starter.Proxy.used = false",
+                result = result.replace("Starter.Proxy.used=false",
                         "Starter.Proxy.used=" + useProxy);
             } else {
                 LOGGER.log(Level.INFO, "The key proxy.use is not set, default param applied");
+                System.out.println(" >>>>>>>>>>> " + System.getProperty("Starter.Proxy.used"));
+                
+//                Properties prop = System.getProperties();
+//        		Set<Object> keySet = prop.keySet();
+//        		for (Object obj : keySet) {
+//        			System.out.println("System Property: {" 
+//        					+ obj.toString() + "," 
+//        					+ System.getProperty(obj.toString()) + "}");
+//        		}
+                
             }
             InputStream stream = new ByteArrayInputStream(result.getBytes(StandardCharsets.UTF_8));
             DoiSettings.getInstance().setPropertiesFile(stream);

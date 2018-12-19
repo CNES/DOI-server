@@ -253,7 +253,8 @@ public class DoiGUI extends javax.swing.JDialog {
 
         jLabel7.setText("INIST prefix for CNES:");
 
-        inistPrefixLabel.setText("10.24400");
+//        inistPrefixLabel.setText("10.24400");
+        inistPrefixLabel.setText("10.5072");
 
         jLabel8.setText("CNES project:");
 

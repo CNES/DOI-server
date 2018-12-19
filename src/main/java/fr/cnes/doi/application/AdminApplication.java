@@ -20,6 +20,7 @@ package fr.cnes.doi.application;
 
 import fr.cnes.doi.db.AbstractTokenDBHelper;
 import fr.cnes.doi.logging.business.JsonMessage;
+import fr.cnes.doi.resource.admin.SuffixProjectsDoisResource;
 import fr.cnes.doi.resource.admin.SuffixProjectsResource;
 import fr.cnes.doi.resource.admin.TokenResource;
 import fr.cnes.doi.security.AllowerIP;
@@ -36,6 +37,7 @@ import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
 import org.restlet.data.LocalReference;
+import org.restlet.data.Reference;
 import org.restlet.data.Status;
 import org.restlet.resource.Directory;
 import org.restlet.routing.Filter;
@@ -93,6 +95,7 @@ import org.restlet.service.TaskService;
 @Requirement(reqId = Requirement.DOI_SRV_140, reqName = Requirement.DOI_SRV_140_NAME)
 @Requirement(reqId = Requirement.DOI_SRV_150, reqName = Requirement.DOI_SRV_150_NAME)
 @Requirement(reqId = Requirement.DOI_SRV_180, reqName = Requirement.DOI_SRV_180_NAME)
+//TODO SRV 190
 @Requirement(reqId = Requirement.DOI_SRV_190, reqName = Requirement.DOI_SRV_190_NAME,
         coverage = CoverageAnnotation.NONE)
 @Requirement(reqId = Requirement.DOI_DISPO_020, reqName = Requirement.DOI_DISPO_020_NAME)
@@ -126,7 +129,12 @@ public class AdminApplication extends AbstractApplication {
     /**
      * URI {@value #SUFFIX_PROJECT_URI} to create a project suffix.
      */
-    public static final String SUFFIX_PROJECT_URI = "/suffixProject";
+    public static final String SUFFIX_PROJECT_URI = "/projects";
+    
+    //TODO comments
+    public static final String SUFFIX_PROJECT_NAME = "/{suffixProject}";
+  //TODO comments
+    public static final String DOIS_URI = "/dois";
 
     /**
      * URI {@value #TOKEN_URI} to create a token.
@@ -149,9 +157,9 @@ public class AdminApplication extends AbstractApplication {
     private static final Logger LOG = LogManager.getLogger(AdminApplication.class.getName());
 
     /**
-     * Default directory {@value #JS_DIR} where the web site is located.
+     * Default directory {@value #IHM_DIR} where the web site is located.
      */
-    private static final String JS_DIR = "js";
+    private static final String IHM_DIR = "ihm";
 
     /**
      * Location of the resources for the status page in the classpath.
@@ -276,6 +284,8 @@ public class AdminApplication extends AbstractApplication {
 
         final Router router = new Router(getContext());
         router.attach(SUFFIX_PROJECT_URI, SuffixProjectsResource.class);
+        //TODO new class
+        router.attach(SUFFIX_PROJECT_URI + SUFFIX_PROJECT_NAME + DOIS_URI, SuffixProjectsDoisResource.class);
         router.attach(TOKEN_URI, TokenResource.class);
         router.attach(TOKEN_URI + TOKEN_NAME_URI, TokenResource.class);
 
@@ -289,7 +299,7 @@ public class AdminApplication extends AbstractApplication {
      * page</li>
      * <li>the website resources attached by default when it is available</li>
      * </ul>
-     * The website is located to {@link AdminApplication#JS_DIR} directory when it is distributed by
+     * The website is located to {@link AdminApplication#IHM_DIR} directory when it is distributed by
      * the DOI server.
      *
      * @return The router for the public web site
@@ -401,7 +411,7 @@ public class AdminApplication extends AbstractApplication {
 
     /**
      * Adds default route to the website when it exists. The website must be located in the
-     * {@value #JS_DIR} directory.
+     * {@value #IHM_DIR} directory.
      *
      * @param router router
      */
@@ -409,14 +419,21 @@ public class AdminApplication extends AbstractApplication {
         LOG.traceEntry("Parameter : {}", new JsonMessage(router));
 
         final String pathApp = this.getConfig().getPathApp();
-        final File file = new File(pathApp + File.separator + JS_DIR);
+//        final File file = new File(pathApp + File.separator + IHM_DIR);
+        //TODO pour se lancer depuis le .jar
+        final File file = new File(pathApp + "/classes" + File.separator + IHM_DIR);
+        LOG.info("file : >>>>>>>>>> "+ pathApp + "/classes" + File.separator + IHM_DIR + "<<<<<<<<<<<<<<<<<<");
         if (file.canRead()) {
             LOG.info("The website for DOI server is ready here {}", file.getPath());
             final Directory ihm = new Directory(getContext(), "file://" + file.getPath());
+            System.out.println(file.getPath() + "\n");
+            LOG.info("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
             ihm.setListingAllowed(true);
             ihm.setDeeplyAccessible(true);
-            ihm.setIndexName("index");
-            router.attachDefault(ihm);
+            ihm.setIndexName("doiCreation");
+//            router.attachDefault(ihm);
+            router.attach("/ihm",ihm);
+            
         } else {
             LOG.warn("The website for DOI server is not installed");
         }

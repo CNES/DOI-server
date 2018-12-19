@@ -68,6 +68,7 @@ public class ProxySettingsTest {
     @Test
     public void testGetDois() throws Exception {
         ClientSearchDataCite searchDatacite = new ClientSearchDataCite("10.24400");
+//        ClientSearchDataCite searchDatacite = new ClientSearchDataCite("10.5072"); TODO
         List<String> dois = searchDatacite.getDois(); 
         //System.out.println(dois);
         assertTrue("IT Test searchDatacite",dois.size() > 0);

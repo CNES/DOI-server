@@ -21,11 +21,15 @@ package fr.cnes.doi;
 import fr.cnes.doi.exception.ClientMdsException;
 import fr.cnes.doi.server.DoiServer;
 import fr.cnes.doi.settings.DoiSettings;
+
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.logging.Level;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.restlet.engine.Engine;
+import org.restlet.service.CorsService;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 
 /**

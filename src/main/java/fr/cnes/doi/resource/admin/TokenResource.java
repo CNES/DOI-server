@@ -41,6 +41,7 @@ import org.restlet.ext.wadl.MethodInfo;
 import org.restlet.ext.wadl.ParameterStyle;
 import org.restlet.ext.wadl.RepresentationInfo;
 import org.restlet.representation.Representation;
+import org.restlet.resource.Delete;
 import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
@@ -194,6 +195,13 @@ public class TokenResource extends AbstractResource {
                     ex));
         }
     }
+    
+    @Requirement(reqId = Requirement.DOI_INTER_040, reqName = Requirement.DOI_INTER_040_NAME)
+    @Delete
+    public void deleteToken(Form mediaForm) {
+    	// TODO delete token
+    }
+    
 
     /**
      * projects representation

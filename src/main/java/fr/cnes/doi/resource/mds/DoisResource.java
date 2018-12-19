@@ -84,8 +84,11 @@ public class DoisResource extends BaseMdsResource {
         LOG.traceEntry();
         final Representation rep;
         try {
+        	//TODO creer la vrai commande
             setStatus(Status.SUCCESS_OK);
-            final String dois = this.getDoiApp().getClient().getDoiCollection();
+//            final String dois = this.getDoiApp().getClient().getDoiCollection();
+            String dois = this.getDoiApp().getClient().getDoiCollection();
+            dois += " totototo";
             if (dois == null || dois.isEmpty()) {
                 setStatus(Status.SUCCESS_NO_CONTENT);
             } else {
@@ -99,7 +102,7 @@ public class DoisResource extends BaseMdsResource {
         }
         return LOG.traceExit(rep);
     }
-
+    
     /**
      * Creates a new DOI based on the doi and url parameters
      *
@@ -141,6 +144,10 @@ public class DoisResource extends BaseMdsResource {
     @Requirement(reqId = Requirement.DOI_AUTO_030, reqName = Requirement.DOI_AUTO_030_NAME)
     @Post("form")
     public String createDoi(final Form doiForm) throws DoiServerException {
+    	
+    	System.out.println("I'M THERE <<<<<<<<<<<< !");
+    	LOG.info("tototototototototototototototototo");
+    	
         LOG.traceEntry("Parameter : {}", doiForm);
         checkInputs(doiForm);
         final String result;

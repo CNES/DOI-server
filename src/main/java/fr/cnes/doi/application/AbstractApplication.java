@@ -79,7 +79,6 @@ public abstract class AbstractApplication extends WadlApplication {
      * @see AbstractApplication#createCoreService
      */
     public AbstractApplication() {
-        super();
         this.config = DoiSettings.getInstance();
         getServices().add(this.createCoreService(DEFAULT_CORS_ORIGIN, DEFAULT_CORS_CREDENTIALS));
         setStatusService(new CnesStatusService());

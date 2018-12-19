@@ -19,9 +19,16 @@
 package fr.cnes.doi.resource.admin;
 
 import fr.cnes.doi.application.AdminApplication;
+import fr.cnes.doi.persistence.exceptions.DOIDbException;
+import fr.cnes.doi.persistence.impl.DOIDataAccessServiceImpl;
+import fr.cnes.doi.persistence.model.DOIProject;
+import fr.cnes.doi.persistence.model.DOIUser;
+import fr.cnes.doi.persistence.service.DOIDataAccessService;
 import fr.cnes.doi.resource.AbstractResource;
 import fr.cnes.doi.utils.UniqueProjectName;
 import fr.cnes.doi.utils.spec.Requirement;
+
+import java.util.List;
 import java.util.Map;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
@@ -104,6 +111,18 @@ public class SuffixProjectsResource extends AbstractResource {
         checkInputs(mediaForm);
         final String projectName = mediaForm.getFirstValue(PROJECT_NAME_PARAMETER);
         final int digits = UniqueProjectName.getInstance().getShortName(projectName, NB_DIGITS);
+        
+        
+        DOIDataAccessService das = new DOIDataAccessServiceImpl();
+        System.out.println("DOIDataAccessService");
+		try {
+			das.addDOIProject(digits, projectName);
+		} catch (DOIDbException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+        
         return LOG.traceExit(new StringRepresentation(String.valueOf(digits)));
     }
 

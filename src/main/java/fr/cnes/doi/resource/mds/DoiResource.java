@@ -79,7 +79,7 @@ public class DoiResource extends BaseMdsResource {
      *
      * @return an URL or no content (DOI is known to MDS, but is not minted (or not resolvable e.g.
      * due to handle's latency))
-     * @throws DoiServerException - ifthe response is not a success
+     * @throws DoiServerException - if the response is not a success
      * <ul>
      * <li>{@link DATACITE_API_RESPONSE#DOI_NOT_FOUND}</li>
      * <li>{@link API_MDS#DATACITE_PROBLEM}</li>

@@ -72,6 +72,7 @@ public class DoiServer extends Component {
         final List<ConnectorHelper<Client>> registeredClients = Engine.getInstance().
                 getRegisteredClients();
         registeredClients.add(0, new HttpClientHelperPatchAC(null));
+        // HttpClientHelperPatchAC(null)   TO HttpClientHelperPatch()  pour passer en JETTY TODO
     } 
     
     /**
@@ -191,8 +192,9 @@ public class DoiServer extends Component {
      * @param settings settings
      */
     public DoiServer(final DoiSettings settings) {
-        super();
+//        super();
         this.settings = settings;
+        LOG.info("before init server with proxy <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
         startWithProxy();
     }
 
@@ -231,6 +233,7 @@ public class DoiServer extends Component {
         initHttpServer();
         initHttpsServer();
         initClients();
+        LOG.info("init<<<<<<<<<<<<<<<<<<<<<<<<");
         initAttachApplication();
         LOG.traceExit();
     }
@@ -291,6 +294,7 @@ public class DoiServer extends Component {
     private void initAttachApplication() {
         LOG.traceEntry();
         final Application appDoiProject = new DoiMdsApplication();
+        LOG.info("iniAttachApplication <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
         final Application appAdmin = new AdminApplication();
         this.getDefaultHost().attach(MDS_URI, appDoiProject);
         this.getDefaultHost().attach(CITATION_URI, new DoiCrossCiteApplication());

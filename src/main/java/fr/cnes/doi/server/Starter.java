@@ -169,6 +169,7 @@ public class Starter {
     private static void launchServer(final DoiSettings settings) {
         LOG.trace("Entering in launchServer");
         settings.validConfigurationFile();
+        LOG.info("launchServer, entering DOI server");
         doiServer = new DoiServer(settings);
         final Thread server = new Thread() {
             @Override

@@ -266,9 +266,10 @@ public final class DoiMdsApplication extends AbstractApplication {
      */
     private MethodAuthorizer createMethodAuthorizer() {
         LOG.traceEntry();
-
+    	
         final MethodAuthorizer methodAuth = new MethodAuthorizer();
         methodAuth.getAnonymousMethods().add(Method.GET);
+        methodAuth.getAnonymousMethods().add(Method.OPTIONS);
         methodAuth.getAuthenticatedMethods().add(Method.GET);
         methodAuth.getAuthenticatedMethods().add(Method.POST);
         methodAuth.getAuthenticatedMethods().add(Method.PUT);

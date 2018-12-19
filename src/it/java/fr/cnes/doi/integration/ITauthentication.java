@@ -25,6 +25,9 @@ import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_CONNECTIONS_PER_HOST;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_TOTAL_CONNECTIONS;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
+import fr.cnes.doi.settings.DoiSettingsTest;
+import fr.cnes.doi.settings.ProxySettings;
+
 import static fr.cnes.doi.server.DoiServer.JKS_DIRECTORY;
 import static fr.cnes.doi.server.DoiServer.JKS_FILE;
 import static fr.cnes.doi.server.DoiServer.RESTLET_MAX_CONNECTIONS_PER_HOST;
@@ -154,6 +157,7 @@ public class ITauthentication {
         ClientResource client = new ClientResource("https://localhost:" + port + "/admin/token");
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
         client.setNext(cl);
+       
         Form form = new Form();
         form.add("identifier", "malapert");
         form.add("projectID", "828606");
@@ -180,6 +184,7 @@ public class ITauthentication {
             status = client.getStatus();
         } catch (ResourceException ex) {
             status = ex.getStatus();
+            System.out.println(status);
         }
         assertEquals(Status.SUCCESS_OK.getCode(), status.getCode());   
         

@@ -52,6 +52,8 @@ public class LandingPageMonitoring implements Runnable {
             final ClientSearchDataCite client = new ClientSearchDataCite();
             final List<String> response = client.getDois();
             final ClientLandingPage clientLandingPage = new ClientLandingPage(response);
+            
+            //TODO mailing landing page
 
             if (clientLandingPage.isSuccess()) {
                 subject = "Landing pages checked with success";

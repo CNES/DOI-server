@@ -317,7 +317,8 @@
         </Component>
         <Component class="javax.swing.JLabel" name="inistPrefixLabel">
           <Properties>
-            <Property name="text" type="java.lang.String" value="10.24400"/>
+     <!--       <Property name="text" type="java.lang.String" value="10.24400"/> -->
+            <Property name="text" type="java.lang.String" value="10.5072"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel8">
