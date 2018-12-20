@@ -145,9 +145,6 @@ public class DoisResource extends BaseMdsResource {
     @Post("form")
     public String createDoi(final Form doiForm) throws DoiServerException {
     	
-    	System.out.println("I'M THERE <<<<<<<<<<<< !");
-    	LOG.info("tototototototototototototototototo");
-    	
         LOG.traceEntry("Parameter : {}", doiForm);
         checkInputs(doiForm);
         final String result;

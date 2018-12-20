@@ -20,9 +20,16 @@ package fr.cnes.doi.services;
 
 import fr.cnes.doi.client.ClientLandingPage;
 import fr.cnes.doi.client.ClientSearchDataCite;
+import fr.cnes.doi.persistence.exceptions.DOIDbException;
+import fr.cnes.doi.persistence.impl.DOIDbDataAccessServiceImpl;
+import fr.cnes.doi.persistence.model.DOIUser;
+import fr.cnes.doi.persistence.service.DOIDbDataAccessService;
 import fr.cnes.doi.settings.EmailSettings;
 import fr.cnes.doi.utils.spec.Requirement;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -39,6 +46,9 @@ public class LandingPageMonitoring implements Runnable {
      */
     private static final Logger LOG = LogManager.getLogger(LandingPageMonitoring.class.getName());
 
+    private DOIDbDataAccessService dbAccessService = new DOIDbDataAccessServiceImpl();
+    
+    
     /**
      * run.
      */
@@ -52,8 +62,6 @@ public class LandingPageMonitoring implements Runnable {
             final ClientSearchDataCite client = new ClientSearchDataCite();
             final List<String> response = client.getDois();
             final ClientLandingPage clientLandingPage = new ClientLandingPage(response);
-            
-            //TODO mailing landing page
 
             if (clientLandingPage.isSuccess()) {
                 subject = "Landing pages checked with success";
@@ -66,13 +74,36 @@ public class LandingPageMonitoring implements Runnable {
                 msg.append("-------------------------------\n");
                 for (final String error : errors) {
                     msg.append("- ").append(error).append("\n");
+                    // send message to all doi member
+                    String body = "";
+                    sendMessageToMembers(error, subject, body, email);
+                    
                 }
             }
-            email.sendMessage(subject, msg.toString());
+            email.sendMessage(subject, msg.toString(), null);
+            
+            
             LOG.info("message to send : {}", msg.toString());
         } catch (Exception ex) {
-            email.sendMessage("Unrecoverable errors when checking landing pages", ex.toString());
+            email.sendMessage("Unrecoverable errors when checking landing pages", ex.toString(), null);
         }
     }
+
+	private void sendMessageToMembers(String error, String subject, String body, EmailSettings email) {
+		try {
+			// parse project suffix from doi
+			String doiRegex = "^(.+)\\/(.+)\\/(.+)$";
+			Pattern doiPattern = Pattern.compile(doiRegex);
+			Matcher doiMatcher = doiPattern.matcher(error);
+			int doiSuffix = Integer.parseInt(doiMatcher.group(3));
+			List<DOIUser> members = dbAccessService.getAllDOIUsersForProject(doiSuffix);
+			for (DOIUser member: members) {
+				 email.sendMessage(subject, body, member.getEmail());
+			}
+		} catch (DOIDbException e) {
+			LOG.error("[LandingPageMonitoring] Failed to get members list of doi project (" + error + ") from doi database", e);
+		}
+		
+	}
 
 }

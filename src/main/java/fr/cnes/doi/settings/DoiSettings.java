@@ -136,7 +136,6 @@ public final class DoiSettings {
         try {
             LOG.info("Loading " + CONFIG_PROPERTIES + " by default");
             properties.load(configurationFile.getStream());
-//            System.setProperties(properties);  TODO
         } catch (IOException e) {
             LOG.fatal("Unable to load " + CONFIG_PROPERTIES);
             throw LOG.throwing(new DoiRuntimeException("Unable to load class/config.properties", e));

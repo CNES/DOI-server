@@ -392,11 +392,10 @@
 		<script src="js/bootstrap-min.js"></script>
 		
 		<script>
-		var prefixCnes = "10.24400/";
+// 		var prefixCnes = "10.24400/";
+		var prefixCnes = "10.5072/";
 		var identifier = "";
 		
-		// use the initialUrl to save the original state of url
-// 		var initialUrl = "";
 		var url = "";
 		
 			$(document).ready(function(){
@@ -404,8 +403,8 @@
 				$("#navbar").load("navbar.txt", function(responseTxt, statusTxt, xhr){
 			        if(statusTxt == "success"){
 			        	setProjectID();
-			        	setDOIList();
-// 			        	getDoisFromProject();
+// 			        	setDOIList();
+			        	getDoisFromProject();
 			        } else if(statusTxt == "error"){
 			            alert("Error: " + xhr.status + ": " + xhr.statusText);
 			        }
@@ -441,6 +440,7 @@
 			
 			// TODO
 			function getDoisFromProject(){
+				console.log(projectID);
 				$.ajax({
 				    type: "GET",
 				    url: "http://127.0.0.1:8182/admin/projects/" + projectID  + "/dois",
@@ -450,14 +450,17 @@
 				    },
 				    crossDomain: true,
 					cache : false,
-				    error : function (XMLHttpRequest, textStatus, errorThrown){ console.log("La requête GET(dois) a échouée."); }, 
-				    success: function(list) { 
+				    error : function (XMLHttpRequest, textStatus, errorThrown){ 
+				    	console.log("La requête GET(dois) a échouée."); 
+				    	alert("GET doisFromProject : status = " + textStatus);
+				    },
+				    success: function(list) {
+				    	console.log("GET doisFromProject est un succès.");
 				    	$("#doi").empty();
 			    		$("#doi").append("<option disabled selected>Choix d'un doi</option>");
 				    	for(var doi of list){
 				    		$("#doi").append("<option>" + doi + "</option>");	
 				    	}
-				    	console.log("GET "+ projectID + " a été modifiée."); 
 				    }
 				}); 
 			}

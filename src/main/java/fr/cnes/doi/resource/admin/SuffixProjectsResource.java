@@ -18,18 +18,8 @@
  */
 package fr.cnes.doi.resource.admin;
 
-import fr.cnes.doi.application.AdminApplication;
-import fr.cnes.doi.persistence.exceptions.DOIDbException;
-import fr.cnes.doi.persistence.impl.DOIDataAccessServiceImpl;
-import fr.cnes.doi.persistence.model.DOIProject;
-import fr.cnes.doi.persistence.model.DOIUser;
-import fr.cnes.doi.persistence.service.DOIDataAccessService;
-import fr.cnes.doi.resource.AbstractResource;
-import fr.cnes.doi.utils.UniqueProjectName;
-import fr.cnes.doi.utils.spec.Requirement;
-
-import java.util.List;
 import java.util.Map;
+
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 import org.restlet.data.Form;
@@ -45,6 +35,14 @@ import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
+
+import fr.cnes.doi.application.AdminApplication;
+import fr.cnes.doi.persistence.exceptions.DOIDbException;
+import fr.cnes.doi.persistence.impl.DOIDbDataAccessServiceImpl;
+import fr.cnes.doi.persistence.service.DOIDbDataAccessService;
+import fr.cnes.doi.resource.AbstractResource;
+import fr.cnes.doi.utils.UniqueProjectName;
+import fr.cnes.doi.utils.spec.Requirement;
 
 /**
  * Provides a unique identifier to the project. This identifier is used as part of the DOI name.
@@ -113,7 +111,7 @@ public class SuffixProjectsResource extends AbstractResource {
         final int digits = UniqueProjectName.getInstance().getShortName(projectName, NB_DIGITS);
         
         
-        DOIDataAccessService das = new DOIDataAccessServiceImpl();
+        DOIDbDataAccessService das = new DOIDbDataAccessServiceImpl();
         System.out.println("DOIDataAccessService");
 		try {
 			das.addDOIProject(digits, projectName);

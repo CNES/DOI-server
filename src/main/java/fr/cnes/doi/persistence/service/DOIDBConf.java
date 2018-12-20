@@ -11,17 +11,17 @@ public class DOIDBConf {
     private Logger logger = LoggerFactory.getLogger(DOIDBConf.class);
 	
 	// TODO Parse properties from a property file
-	private String doidbPropertiesFileName = "doidbconf.properties";
+	private  String doidbPropertiesFileName = "doidbconf.properties";
 	
-	private String doidburl;
+	private  String doidburl;
 	
-	private String user;
+	private  String user;
 	
-	private String pwd;
+	private  String pwd;
 	
-	private int minConnections;
+	private  int minConnections;
 	
-	private int maxConnections;
+	private  int maxConnections;
 
 	public  DOIDBConf() {
 		Properties prop = new Properties();

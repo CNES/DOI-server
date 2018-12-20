@@ -1,13 +1,13 @@
 package fr.cnes.doi.persistence.model;
 
-import java.util.List;
-
 public class DOIUser {
    
 	private String username;
 	
 	private Boolean admin;
 
+	private String email;
+	
 	public String getUsername() {
 		return username;
 	}
@@ -23,6 +23,12 @@ public class DOIUser {
 	public void setAdmin(Boolean admin) {
 		this.admin = admin;
 	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
 	
-	
+	public String getEmail() {
+		return email;
+	}
 }

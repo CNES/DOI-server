@@ -165,7 +165,7 @@ public final class EmailSettings {
     public boolean isDebug() {
         return LOG.traceExit(this.debug);
     }
-
+    
     /**
      * Sends a message by email.
      *
@@ -179,7 +179,42 @@ public final class EmailSettings {
         boolean result;
         try {
             if (isConfigureForSendingEmail()) {
-                result = processMessage(subject, msg);
+            		result = processMessage(subject, msg, null);		
+            } else {
+                LOG.warn("Cannot send the email, please fill the configuration file");
+                result = false;
+            }
+        } catch (RuntimeException ex) {
+            LOG.catching(Level.DEBUG, ex);
+            LOG.error("Cannot send the message with the subject {} : {}", subject, msg);
+            result = false;
+        } catch (Exception ex) {
+            LOG.catching(Level.DEBUG, ex);
+            LOG.error("Cannot send the message with the subject {} : {}", subject, msg);
+            result = false;
+        }
+        return LOG.traceExit(result);
+    }
+    
+    
+    /**
+     * Sends a message by email to receiver.
+     *
+     * @param subject Email's subject
+     * @param msg Email's message
+     * @return True when the message is sent
+     */
+    public boolean sendMessage(final String subject,
+            final String msg, String receiverEmail) {
+        LOG.traceEntry("Parameters : {} and {}", subject, msg);
+        boolean result;
+        try {
+            if (isConfigureForSendingEmail()) {
+            	if (receiverEmail != null) { 
+            	 result = processMessage(subject, msg, receiverEmail);
+            	} else {
+            		result = processMessage(subject, msg, null);		
+            	}
             } else {
                 LOG.warn("Cannot send the email, please fill the configuration file");
                 result = false;
@@ -205,13 +240,18 @@ public final class EmailSettings {
      * @throws Exception when an error happens
      */
     private boolean processMessage(final String subject,
-            final String message) throws Exception {
+            final String message, final String receiverEmail) throws Exception {
         LOG.debug("Enough information to send the email.");
         final Request request = new Request(Method.POST, getSmtpURL());
         setSmtpPassword(request);
-        return sendMail(Protocol.valueOf(getSmtpProtocol()), request, Boolean.getBoolean(
-                getTlsEnable()), subject, message);
-    }
+        if (receiverEmail != null) {
+          return sendMail(Protocol.valueOf(getSmtpProtocol()), request, Boolean.getBoolean(
+                getTlsEnable()), subject, message, receiverEmail);
+        } else {
+          return sendMail(Protocol.valueOf(getSmtpProtocol()), request, Boolean.getBoolean(
+                    getTlsEnable()), subject, message, null);	
+        }
+    }    
 
     /**
      * Sets the SMTP password
@@ -263,7 +303,8 @@ public final class EmailSettings {
             final Request request,
             final boolean startTls,
             final String subject,
-            final String msg) throws Exception {
+            final String msg,
+            final String to) throws Exception {
         LOG.traceEntry("With parameters");
         final DoiSettings settings = DoiSettings.getInstance();
         boolean result;
@@ -272,9 +313,13 @@ public final class EmailSettings {
         dataModel.put("message", msg);
         dataModel.put("from", settings.getString(Consts.SERVER_CONTACT_ADMIN,
                 "L-doi-support@cnes.fr"));
-        dataModel.
+        if (to == null) {
+         dataModel.
                 put("to", settings.getString(Consts.SERVER_CONTACT_ADMIN, "L-doi-support@cnes.fr"));
-
+        } else {
+         dataModel.
+                put("to", to);	 
+        }
         final Representation mailFtl = new ClientResource(LocalReference.createClapReference(
                 "class/email.ftl")).get();
         final Representation mail = new TemplateRepresentation(mailFtl, dataModel,

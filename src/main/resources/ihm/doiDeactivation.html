@@ -60,7 +60,8 @@
 
 	<script>
 	var doi ="";
-	var prefixCnes = "10.24400/";
+// 	var prefixCnes = "10.24400/";
+	var prefixCnes = "10.5072/";
 	
 	$(document).ready(function(){
 		$("#footer").load("footer.txt");
@@ -83,7 +84,7 @@
 					"Action irréversible. /!\\");
 			if (doi == $("#doi").val()) {
 				$("#doi option:selected").remove();
-// 				requestDelete();
+				requestDelete();
 			} else {
 				return;
 			}

@@ -12,7 +12,6 @@
 		<!-- Css -->
 		<link href="css/doi.css" rel="stylesheet">
 		<link href="css/navbar.css" rel="stylesheet">
-
 	</head>
 
 	<body>
@@ -83,9 +82,7 @@
 
 			<hr>
 			<div id="footer"></div>
-			
 		</div> <!-- /container -->
-			 
   	</body>
   	
   		<!-- JS library -->
@@ -93,7 +90,8 @@
 		<script src="js/bootstrap-min.js"></script>
 
 		<script>
-		var prefixCnes = "10.24400/";
+// 		var prefixCnes = "10.24400/";
+		var prefixCnes = "10.5072/";
 		var identifier = "";
 		
 		$(document).ready(function(){
@@ -113,7 +111,6 @@
 			
 			getStyle();
 			getLanguage();
-			
 		});
 		
 		function getStyle(){
@@ -122,7 +119,10 @@
 			    url: "http://127.0.0.1:8182/citation/style",
 			    crossDomain: true,
 				cache : false,
-			    error : function (XMLHttpRequest, textStatus, errorThrown){ console.log("La requête GET(style) a échouée."); }, 
+			    error : function (XMLHttpRequest, textStatus, errorThrown){ 
+			    	console.log("La requête GET(style) a échouée."); 
+			    	alert("GET style : status = " + textStatus);
+			    }, 
 			    success: function(styles) {
 			    	console.log("GET style est un succès.");
 		    		$("#style").empty();
@@ -142,7 +142,10 @@
 			    url: "http://127.0.0.1:8182/citation/language",
 			    crossDomain: true,
 				cache : false,
-			    error : function (XMLHttpRequest, textStatus, errorThrown){ console.log("La requête GET(language) a échouée."); }, 
+			    error : function (XMLHttpRequest, textStatus, errorThrown){ 
+			    	console.log("La requête GET(language) a échouée.");
+			    	alert("GET language : status = " + textStatus);
+			    }, 
 			    success: function(languages) {
 			    	console.log("GET language est un succès.");
 		    		$("#langue").empty();
@@ -172,10 +175,12 @@
 			    url: "http://127.0.0.1:8182/citation/format?" + $.param(request),
 			    crossDomain: true,
 				cache : false,
-			    error : function (XMLHttpRequest, textStatus, errorThrown){ console.log("La requête GET(format) a échouée."); }, 
+			    error : function (XMLHttpRequest, textStatus, errorThrown){ 
+			    	console.log("La requête GET(format) a échouée."); 
+			    	alert("GET citation : status = " + textStatus);
+			    }, 
 			    success: function(messages) {
 			    	console.log("GET format est un succès.");
-		    		$("#message").empty();
 			    	$("#message").text(messages);
 		    	}
 			});
@@ -222,27 +227,6 @@
 				}
 			}
 		}
-		
-		// only for test
-		$('.my-form').on('submit', function (event){
-			event.preventDefault();
-			var doi = $("#doi").val();
-			var boo = $("#langue").val() == $("#langue option:first").val();
-			var proj = doi.includes("projet A")? "projet A" : "projet B";
-			
-			if(doi.includes("autre")){
-				if(boo)
-					$("#message").text("Je suis la citation de l'autre DOI");
-				else
-					$("#message").text("I am the citation of the other DOI");
-			} else {
-				if(boo)
-					$("#message").text("Je suis la citation du premier DOI");
-				else
-					$("#message").text("I am the citation of the first DOI");
-			}
-			$("#message").append(" (" + proj +")" ); 
-		});
 		</script>
 		
 </html>

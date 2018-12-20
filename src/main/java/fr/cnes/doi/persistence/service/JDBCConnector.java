@@ -4,6 +4,8 @@ import java.sql.SQLException;
 
 import org.apache.commons.dbcp.BasicDataSource;
 
+import fr.cnes.doi.persistence.util.PasswordEncrypter;
+
 public class JDBCConnector {
 
 	private BasicDataSource ds = new BasicDataSource(); 
@@ -17,7 +19,12 @@ public class JDBCConnector {
 		DOIDBConf conf = new DOIDBConf(); 
 		ds.setUrl(conf.getDoidburl());
 		ds.setUsername(conf.getUser());
-		ds.setPassword(conf.getPwd());
+		try {
+			ds.setPassword(PasswordEncrypter.getInstance().decryptPasswd(conf.getPwd()));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		ds.setMinIdle(conf.getMinConnections());
 		ds.setMinIdle(conf.getMaxConnections());
 	}

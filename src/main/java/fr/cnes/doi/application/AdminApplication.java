@@ -252,7 +252,7 @@ public class AdminApplication extends AbstractApplication {
         // Defines the routers
         final Router webSiteRouter = createWebSiteRouter();
         final Router adminRouter = createAdminRouter();
-
+        
         // Defines the admin router as private
         final AllowerIP blocker = new AllowerIP(getContext());
         authorizer.setNext(blocker);
@@ -260,7 +260,8 @@ public class AdminApplication extends AbstractApplication {
 
         final Router router = new Router(getContext());
         router.attachDefault(webSiteRouter);
-        router.attach(ADMIN_URI, challAuth);
+//        router.attach(ADMIN_URI, challAuth);
+        router.attach(ADMIN_URI, adminRouter);
 
         return LOG.traceExit(router);
     }
@@ -418,11 +419,12 @@ public class AdminApplication extends AbstractApplication {
     private void addRouteForWebSite(final Router router) {
         LOG.traceEntry("Parameter : {}", new JsonMessage(router));
 
-        final String pathApp = this.getConfig().getPathApp();
-//        final File file = new File(pathApp + File.separator + IHM_DIR);
+        String pathApp = this.getConfig().getPathApp();
         //TODO pour se lancer depuis le .jar (getPathApp différent + .jar récupère ihm sur la vm)
-        final File file = new File(pathApp + "/classes" + File.separator + IHM_DIR);
-        LOG.info("file : >>>>>>>>>> "+ pathApp + "/classes" + File.separator + IHM_DIR + "<<<<<<<<<<<<<<<<<<");
+        if(!pathApp.contains("/classes")){
+        	pathApp = pathApp + "/classes";
+        }
+        final File file = new File(pathApp + File.separator + IHM_DIR);
         if (file.canRead()) {
             LOG.info("The website for DOI server is ready here {}", file.getPath());
             final Directory ihm = new Directory(getContext(), "file://" + file.getPath());

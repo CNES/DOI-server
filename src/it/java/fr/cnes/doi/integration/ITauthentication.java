@@ -184,7 +184,6 @@ public class ITauthentication {
             status = client.getStatus();
         } catch (ResourceException ex) {
             status = ex.getStatus();
-            System.out.println(status);
         }
         assertEquals(Status.SUCCESS_OK.getCode(), status.getCode());   
         

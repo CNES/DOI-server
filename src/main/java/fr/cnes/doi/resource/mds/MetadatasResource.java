@@ -89,8 +89,6 @@ public class MetadatasResource extends BaseMdsResource {
         LOG.traceEntry("Entering in createMetadata with argument " + entity);
         checkInputs(entity);
         final String result;
-        System.out.println("METADATAS RESOURCE <<<<<<<<<<<< !");
-        
         try {
             setStatus(Status.SUCCESS_CREATED);
             final Resource resource = createDataCiteResourceObject(entity);

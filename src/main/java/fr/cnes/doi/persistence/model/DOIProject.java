@@ -1,7 +1,5 @@
 package fr.cnes.doi.persistence.model;
 
-import java.util.List;
-
 public class DOIProject {
    
 	private int suffix;
