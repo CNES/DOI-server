@@ -23,4 +23,9 @@ public class DOIProject {
 		this.projectname = projectname;
 	}
 
+	public Boolean isEqualTo(DOIProject doiProject) {
+			return (this.suffix == doiProject.getSuffix())
+					&& this.projectname.equals(doiProject.getProjectname());
+	}
+
 }

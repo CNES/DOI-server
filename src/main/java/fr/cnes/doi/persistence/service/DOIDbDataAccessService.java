@@ -40,6 +40,10 @@ public interface DOIDbDataAccessService {
 	 * @throws DOIDbException */
 	public void removeDOIUser(String username) throws DOIDbException;
 	
+	/** Remove a DOI project 
+	 * @throws DOIDbException */
+	public void removeDOIProject(int suffix) throws DOIDbException;
+	
 	/** Add a DOI project 
 	 * @throws DOIDbException */
 	public void addDOIProject(int suffix, String projectname) throws DOIDbException;

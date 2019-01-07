@@ -133,7 +133,7 @@ public class AdminApplication extends AbstractApplication {
     
     //TODO comments
     public static final String SUFFIX_PROJECT_NAME = "/{suffixProject}";
-  //TODO comments
+    //TODO comments
     public static final String DOIS_URI = "/dois";
 
     /**
@@ -285,6 +285,7 @@ public class AdminApplication extends AbstractApplication {
 
         final Router router = new Router(getContext());
         router.attach(SUFFIX_PROJECT_URI, SuffixProjectsResource.class);
+//        router.attach(user)
         //TODO new class
         router.attach(SUFFIX_PROJECT_URI + SUFFIX_PROJECT_NAME + DOIS_URI, SuffixProjectsDoisResource.class);
         router.attach(TOKEN_URI, TokenResource.class);

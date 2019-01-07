@@ -31,4 +31,11 @@ public class DOIUser {
 	public String getEmail() {
 		return email;
 	}
+
+	// Compare to DOIUser objects
+	public Boolean isEqualTo(DOIUser testuser) {
+		return this.username.equals(testuser.getUsername())
+				&& this.admin.equals(testuser.getAdmin())
+				&& this.email.equals(testuser.getEmail());
+	}
 }

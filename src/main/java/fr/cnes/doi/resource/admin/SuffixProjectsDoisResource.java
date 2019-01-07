@@ -68,10 +68,11 @@ public class SuffixProjectsDoisResource extends AbstractResource {
         LOG.traceEntry();
         setDescription("This resource handles the project suffix in the DOI name");
         this.suffixProject = getResourcePath().replace(AdminApplication.ADMIN_URI + AdminApplication.SUFFIX_PROJECT_URI + "/", "");
-        this.suffixProject = this.suffixProject.replace(AdminApplication.DOIS_URI, "");
+        int startIndex = this.suffixProject.indexOf(AdminApplication.DOIS_URI);
+        this.suffixProject = this.suffixProject.substring(0,startIndex);
         LOG.debug(this.suffixProject);
         
-        System.out.println(this.suffixProject + "<<<< suffix Project");
+        System.out.println(this.suffixProject + " <<<< suffix Project");
         LOG.traceExit();
     }
     

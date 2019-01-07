@@ -15,14 +15,14 @@ public class Encrypt {
         
         // TODO Auto-generated method stub
         System.out.println(
-            DatatypeConverter.printBase64Binary(encryptPasswd("password".getBytes())));
+            DatatypeConverter.printBase64Binary(encryptPasswd("doiserver".getBytes())));
     }
     
     public static final byte[] encryptPasswd(byte[] pClearPasswd) throws Exception {
         // Encrypt the specified password so that it can be stored in memory 
         // for application life time
         Cipher lCipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-        byte[] lKsPwdSecret = "key".getBytes();
+        byte[] lKsPwdSecret = "Doiserver2018!99".getBytes();
         final SecretKeySpec pwdEncryptKey = new SecretKeySpec(lKsPwdSecret, "AES");
         lCipher.init(Cipher.ENCRYPT_MODE, pwdEncryptKey);
 

@@ -21,7 +21,7 @@ public class PasswordEncrypter {
      * Private constructor (Singleton pattern)
      */
     private PasswordEncrypter() {
-        byte[] lKsPwdSecret = "key".getBytes();
+        byte[] lKsPwdSecret = "Doiserver2018!99".getBytes();
         pwdEncryptKey = new SecretKeySpec(lKsPwdSecret, "AES");
         Arrays.fill(lKsPwdSecret, (byte) 0); // flush secret key
         lKsPwdSecret = null;
