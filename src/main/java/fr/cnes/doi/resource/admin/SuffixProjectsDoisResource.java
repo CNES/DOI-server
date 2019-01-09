@@ -28,12 +28,14 @@ import org.restlet.data.Status;
 import org.restlet.ext.wadl.DocumentationInfo;
 import org.restlet.ext.wadl.MethodInfo;
 import org.restlet.ext.wadl.RepresentationInfo;
+import org.restlet.resource.Delete;
 import org.restlet.resource.Get;
 import org.restlet.resource.ResourceException;
 
 import fr.cnes.doi.application.AdminApplication;
 import fr.cnes.doi.client.ClientSearchDataCite;
 import fr.cnes.doi.resource.AbstractResource;
+import fr.cnes.doi.utils.ManageProjects;
 import fr.cnes.doi.utils.spec.Requirement;
 
 /**
@@ -103,6 +105,21 @@ public class SuffixProjectsDoisResource extends AbstractResource {
         return LOG.traceExit(response);
     }
     
+//    //TODO requirement
+//    /**
+//     * Delete the project from database.
+//     *
+//     * @return the list of dois
+//     */
+//    @Requirement(reqId = Requirement.DOI_SRV_140, reqName = Requirement.DOI_SRV_140_NAME)
+//    @Delete
+//    public boolean deleteProject() {
+//    	 LOG.traceEntry();
+//         boolean isDeleted = ManageProjects.getInstance().deleteProject(
+//        		 Integer.parseInt(suffixProject));
+//         
+//         return LOG.traceExit(isDeleted);
+//    }
     
     //TODO better checking
 //    /**

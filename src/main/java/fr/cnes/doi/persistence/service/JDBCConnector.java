@@ -22,8 +22,6 @@ public class JDBCConnector {
 		DOIDBConf conf = new DOIDBConf(); 
 		ds.setUrl(conf.getDoidburl());
 		ds.setUsername(conf.getUser());
-		System.out.println(conf.getUser() + "<<<<<<<<<< getUser");
-		System.out.println(conf.getPwd() + "<<<<<<<<<< getPWD");
 		try {
 			ds.setPassword(PasswordEncrypter.getInstance().decryptPasswd(conf.getPwd()));
 		} catch (Exception e) {

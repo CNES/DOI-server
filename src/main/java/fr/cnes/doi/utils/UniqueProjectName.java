@@ -107,14 +107,14 @@ public class UniqueProjectName {
     private int convert(final long input,
             final String projectName,
             final int maxNumber) {
-        LOGGER.entering(CLASS_NAME, "convert", new Object[]{input, projectName, maxNumber});
-        int result = 0;
-        do {
-            result = (int) (input ^ (projectName.hashCode() % maxNumber));
-        } while (!isIdUnique(result, projectName));
-        LOGGER.entering(CLASS_NAME, "convert", result);
-        return result;
-    }
+		LOGGER.entering(CLASS_NAME, "convert", new Object[] { input, projectName, maxNumber });
+		int result = (int) input;
+		do {
+			result = (int) (result ^ (projectName.hashCode() % maxNumber));
+		} while (result >maxNumber || result < 0 || !isIdUnique(result, projectName));
+		LOGGER.entering(CLASS_NAME, "convert", result);
+		return result;
+    } 
 
     /**
      * Build a unique String from the project name

@@ -108,18 +108,9 @@ public class SuffixProjectsResource extends AbstractResource {
         LOG.traceEntry();
         checkInputs(mediaForm);
         final String projectName = mediaForm.getFirstValue(PROJECT_NAME_PARAMETER);
+        System.out.println(projectName + " <<<<< projectName");
         final int digits = UniqueProjectName.getInstance().getShortName(projectName, NB_DIGITS);
-        
-        
-        DOIDbDataAccessService das = new DOIDbDataAccessServiceImpl();
-        System.out.println("DOIDataAccessService");
-		try {
-			das.addDOIProject(digits, projectName);
-		} catch (DOIDbException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        
+        System.out.println(digits + " <<<< digits");
         
         return LOG.traceExit(new StringRepresentation(String.valueOf(digits)));
     }

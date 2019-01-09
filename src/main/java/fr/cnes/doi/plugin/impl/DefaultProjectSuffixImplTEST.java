@@ -18,16 +18,10 @@
  */
 package fr.cnes.doi.plugin.impl;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,8 +31,6 @@ import fr.cnes.doi.persistence.impl.DOIDbDataAccessServiceImpl;
 import fr.cnes.doi.persistence.model.DOIProject;
 import fr.cnes.doi.persistence.service.DOIDbDataAccessService;
 import fr.cnes.doi.plugin.AbstractProjectSuffixPluginHelper;
-import fr.cnes.doi.security.RoleAuthorizer;
-import fr.cnes.doi.settings.DoiSettings;
 
 /**
  * Default implementation of the project suffix database.
@@ -46,11 +38,6 @@ import fr.cnes.doi.settings.DoiSettings;
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class DefaultProjectSuffixImplTEST extends AbstractProjectSuffixPluginHelper {
-
-    /**
-     * Default file if the path is not defined in the configuration file
-     */
-    private static final String DEFAULT_CACHE_FILE = "data" + File.separator + "projects.conf";
 
     /**
      * Logger.
@@ -64,19 +51,14 @@ public class DefaultProjectSuffixImplTEST extends AbstractProjectSuffixPluginHel
     private static final String LICENSE = "LGPLV3";
     private final String NAME = this.getClass().getName();
 
-    /**
-     * Configuration of the projects identifiers
-     */
-    private String projectConf;
-
-    /**
-     * Mapping between the identifiers and the projects
-     */
-    private final Map<Integer, String> idProjMap = new ConcurrentHashMap<>();
-    /**
-     * Mapping between the projects and the identifier
-     */
-    private final Map<String, Integer> projIdMap = new ConcurrentHashMap<>();
+//    /**
+//     * Mapping between the identifiers and the projects
+//     */
+//    private final Map<Integer, String> idProjMap = new ConcurrentHashMap<>();
+//    /**
+//     * Mapping between the projects and the identifier
+//     */
+//    private final Map<String, Integer> projIdMap = new ConcurrentHashMap<>();
 
     /**
      * Default constructor of the project suffix database
@@ -85,8 +67,7 @@ public class DefaultProjectSuffixImplTEST extends AbstractProjectSuffixPluginHel
         super();
     }
     
-    private final DOIDbDataAccessService das = new DOIDbDataAccessServiceImpl();;
-
+    private final DOIDbDataAccessService das = new DOIDbDataAccessServiceImpl();
     
     
     /**
@@ -98,89 +79,26 @@ public class DefaultProjectSuffixImplTEST extends AbstractProjectSuffixPluginHel
      */
     @Override
     public void init(Object configuration) {
-        if (configuration == null) {
-            this.projectConf = DoiSettings.getInstance().getPathApp()
-                    + File.separatorChar + DEFAULT_CACHE_FILE;
-        } else {
-            this.projectConf = String.valueOf(configuration);
-        }
-        File projConfFile = new File(projectConf);
-        try {
-            // If the file exists, load it
-            if (projConfFile.exists()) {
-                LOG.info("Loads the project suffix database :" + projectConf);
-                loadProjectConf(projConfFile);
-            } else {
-                LOG.info("create the database :" + projectConf);
-                createProjectConf(projConfFile);
-            }
-            this.addObserver(RoleAuthorizer.getInstance());
-        } catch (IOException e) {
-            LOG.fatal("Cannot access the cache file for the mapping projects/id " + projectConf, e);
-        }
-
-    }
-
-    /**
-     * Loads the database that contains the encoded project name.
-     *
-     * @param projConfFile File that contains the project configuration
-     * @throws IOException Exception when trying to load the file
-     */
-    private void loadProjectConf(File projConfFile) throws IOException {
-        LOG.debug("Cache file exists : {}", projConfFile.getAbsolutePath());
-
-        List<String> lines = Files.readAllLines(projConfFile.toPath());
-        // Si le fichier contient autre chose que la ligne d'entete
-        if (lines.size() > 1) {
-            boolean firstLine = true;
-            // lit chaque ligne et ajoute les infos dans la map
-            for (String line : lines) {
-                if (firstLine) {
-                    firstLine = false;
-                } else {
-                    String[] split = line.split(";");
-                    if (split.length != 2) {
-                        LOG.debug("The line {} is not formatted in the expected way", line);
-                    } else {
-                        String projectName = split[0];
-                        int id = Integer.parseInt(split[1]);
-                        this.idProjMap.put(id, projectName);
-                        this.projIdMap.put(projectName, id);
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Creates the project configuration with the header Project Name;Id
-     *
-     * @param projConfFile File to create
-     * @throws IOException Exception when trying to create the file
-     */
-    private void createProjectConf(File projConfFile) throws IOException {
-        // Init the config file
-        LOG.debug("Cache file does not exist, create it : {}", projConfFile.getAbsolutePath());
-        File directory = new File(projConfFile.getParent());
-        Files.createDirectories(directory.toPath());
-        Files.createFile(projConfFile.toPath());
-        Files.write(
-                projConfFile.toPath(),
-                "Project Name;Id\n".getBytes(StandardCharsets.UTF_8),
-                StandardOpenOption.APPEND
-        );
-        // current projects for which a role has already been given
-        Files.write(
-                projConfFile.toPath(),
-                "CFOSAT;828606\n".getBytes(StandardCharsets.UTF_8),
-                StandardOpenOption.APPEND
-        );
-        Files.write(
-                projConfFile.toPath(),
-                "THEIA;329360\n".getBytes(StandardCharsets.UTF_8),
-                StandardOpenOption.APPEND
-        );        
+//        if (configuration == null) {
+//            this.projectConf = DoiSettings.getInstance().getPathApp()
+//                    + File.separatorChar + DEFAULT_CACHE_FILE;
+//        } else {
+//            this.projectConf = String.valueOf(configuration);
+//        }
+//        File projConfFile = new File(projectConf);
+//        try {
+//            // If the file exists, load it
+//            if (projConfFile.exists()) {
+//                LOG.info("Loads the project suffix database :" + projectConf);
+//                loadProjectConf(projConfFile);
+//            } else {
+//                LOG.info("create the database :" + projectConf);
+//                createProjectConf(projConfFile);
+//            }
+//            this.addObserver(RoleAuthorizer.getInstance());
+//        } catch (IOException e) {
+//            LOG.fatal("Cannot access the cache file for the mapping projects/id " + projectConf, e);
+//        }
     }
 
     @Override
@@ -188,68 +106,105 @@ public class DefaultProjectSuffixImplTEST extends AbstractProjectSuffixPluginHel
             String projectName) {
         boolean isAdded = false;
         try {
-            String line = projectName + ";" + projectID + "\n";
-            LOG.info("Add projectSuffix in the database {} / {}", projectID, projectName);
-            Files.write(
-                    new File(this.projectConf).toPath(),
-                    line.getBytes(StandardCharsets.UTF_8),
-                    StandardOpenOption.APPEND
-            );
-            this.projIdMap.put(projectName, projectID);
-            this.idProjMap.put(projectID, projectName);
-            isAdded = true;
-            setChanged();
-            notifyObservers(new String[]{ADD_RECORD, String.valueOf(projectID)});
-        } catch (IOException e) {
-            LOG.fatal("The id " + projectID + " of the project " + projectName
+        	LOG.info("Add projectSuffix in the database {} / {}", projectID, projectName);
+			das.addDOIProject(projectID, projectName);
+//			this.projIdMap.put(projectName, projectID);
+//			this.idProjMap.put(projectID, projectName);
+			setChanged();
+			notifyObservers(new String[]{ADD_RECORD, String.valueOf(projectID)});
+			isAdded = true;
+		} catch (DOIDbException e) {
+			LOG.fatal("The id " + projectID + " of the project " + projectName
                     + "cannot be saved in the file", e);
-        }
-        return isAdded;
+		} 
+		return isAdded;
+		
     }
 
     @Override
-    public synchronized void deleteProject(int projectID) {
-        throw new RuntimeException("Not implemented");
-        //setChanged();
-        //notifyObservers(new String[]{DELETE_RECORD, String.valueOf(projectID)});    
+    public synchronized boolean deleteProject(int projectID) {
+    	boolean isDeleted = false;
+    	try {
+			das.removeDOIProject(projectID);
+			setChanged();
+			notifyObservers(new String[]{DELETE_RECORD, String.valueOf(projectID)});    
+			isDeleted = true;
+		} catch (DOIDbException e) {
+			LOG.fatal("The id " + projectID + " cannot be deleted or doest not exist", e);
+		}
+    	return isDeleted;
     }
 
+    //TODO
     @Override
     public boolean isExistID(int projectID) {
-        return this.idProjMap.containsKey(projectID);
+    	Map<String, Integer> map = getProjects();
+    	if(map.size() == 0) {
+    		throw new RuntimeException("The projects list is empty");
+    	}
+        return map.containsValue(projectID);
     }
 
+    //TODO
     @Override
     public boolean isExistProjectName(String projectName) {
-        return this.projIdMap.containsKey(projectName);
+    	Map<String, Integer> map = getProjects();
+    	if(map.size() == 0) {
+    		throw new RuntimeException("The projects list is empty");
+    	}
+        return map.containsKey(projectName);
     }
 
     @Override
     public String getProjectFrom(int projectID) {
-        return this.idProjMap.get(projectID);
+    	String projectName = "";
+    	try {
+			projectName = das.getDOIProjectName(projectID);
+		} catch (DOIDbException e) {
+			LOG.fatal("An error occured while trying to get the name of the project from the id "+ projectID ,e);
+		}
+        return projectName;
     }
 
+    //TODO
     @Override
     public int getIDFrom(String projectName) {
-        return this.projIdMap.get(projectName);
+    	Map<String, Integer> map = getProjects();
+    	if(map.size() == 0) {
+    		throw new RuntimeException("The projects list is empty");
+    	}
+        return map.get(projectName);
     }
 
     @Override
     public Map<String, Integer> getProjects() {
+    	Map<String, Integer> map = new HashMap<String, Integer>();
     	try {
 			List<DOIProject> tt = das.getAllDOIProjects();
-			Map<String, Integer> map = new HashMap<String, Integer>();
 			for(DOIProject x : tt) {
 				map.put(x.getProjectname(), x.getSuffix());
 			}
-			return map;
 		} catch (DOIDbException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return new HashMap<String, Integer>();
+			LOG.fatal("An error occured while trying to get all DOI projects" ,e);
 		}
-//        return Collections.unmodifiableMap(this.projIdMap);
+    	
+    	return Collections.unmodifiableMap(map);
     }
+    
+    @Override
+    public boolean renameProject(int projectId, String newProjectName) {
+    	boolean isRenamed = false;
+    	try {
+			das.renameDOIProject(projectId, newProjectName);
+			setChanged();
+			notifyObservers(new String[]{RENAME_RECORD, String.valueOf(projectId)});   
+			isRenamed = true;
+		} catch (DOIDbException e) {
+			LOG.fatal("An error occured while trying to rename the project " + projectId ,e);
+		}
+    	return isRenamed;
+    }
+    
 
     @Override
     public String getName() {

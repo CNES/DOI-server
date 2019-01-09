@@ -39,6 +39,11 @@ public abstract class AbstractProjectSuffixDBHelper extends Observable {
      * Notification message when the record is added {@value #DELETE_RECORD}.
      */
     public static final String DELETE_RECORD = "DELETE";
+    
+    /**
+     * Notification message when the record is added {@value #RENAME_RECORD}.
+     */
+    public static final String RENAME_RECORD = "RENAME";
 
     /**
      * Init the connection.
@@ -56,13 +61,24 @@ public abstract class AbstractProjectSuffixDBHelper extends Observable {
      */
     public abstract boolean addProjectSuffix(int projectID,
             String projectName);
+    
+    /**
+     * Rename a project in the database.
+     *
+     * @param projectID suffix project to be renamed
+     * @param newProjectName the new project name
+     * @return True when the project has been renamed otherwise False
+     */
+    public abstract boolean renameProject(int projectID,
+            String newProjectName);
 
     /**
      * Deletes a suffix project from the database.
      *
      * @param projectID the suffix project
+     * @return True when the suffix project has been deleted otherwise False
      */
-    public abstract void deleteProject(int projectID);
+    public abstract boolean deleteProject(int projectID);
 
     /**
      * Tests is a suffix project exists in the database.

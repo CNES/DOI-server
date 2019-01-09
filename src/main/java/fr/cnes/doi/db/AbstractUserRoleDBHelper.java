@@ -18,12 +18,13 @@
  */
 package fr.cnes.doi.db;
 
-import fr.cnes.doi.utils.spec.Requirement;
 import java.util.List;
 import java.util.Observable;
+
 import org.restlet.security.MemoryRealm;
-import org.restlet.security.Role;
-import org.restlet.security.User;
+
+import fr.cnes.doi.persistence.model.DOIUser;
+import fr.cnes.doi.utils.spec.Requirement;
 
 /**
  * Interface for handling users and role database. This database is used to authenticate the
@@ -70,7 +71,7 @@ public abstract class AbstractUserRoleDBHelper extends Observable {
      *
      * @return List of users to add for the authentication
      */
-    public abstract List<User> getUsers();
+    public abstract List<DOIUser> getUsers();
 
     /**
      * Adds users to a specific role.
@@ -78,7 +79,7 @@ public abstract class AbstractUserRoleDBHelper extends Observable {
      * @param roleName role name
      * @return The users related to a specific role
      */
-    public abstract List<User> getUsersFromRole(final String roleName);
+    public abstract List<DOIUser> getUsersFromRole(final int roleName);
 
     /**
      * Adds an user to a specific role.
@@ -86,10 +87,11 @@ public abstract class AbstractUserRoleDBHelper extends Observable {
      * @param user user to add
      * @param role role
      */
-    public void addUserToRole(final User user,
-            final Role role) {
-        REALM.map(user, role);
-    }
+    public abstract boolean addUserToRole(final DOIUser user,
+            final int role) ;
+//    {
+//        REALM.map(user, role);
+//    }
 
     /**
      * Removes an user from a specific role.
@@ -97,16 +99,24 @@ public abstract class AbstractUserRoleDBHelper extends Observable {
      * @param user user to remove
      * @param role role
      */
-    public void removeUserToRole(final User user,
-            final Role role) {
-        REALM.unmap(user, role);
-    }
+    public abstract boolean removeUserToRole(final DOIUser user,
+            final int role); 
+//    {
+//        REALM.unmap(user, role);
+//    }
 
     /**
-     * Adds user to Administrators group
+     * Add user to Administrators group
      *
-     * @param adminGroup list of users to add
+     * @param adminGroup user to add
      */
-    public abstract void setUsersToAdminGroup(final List<User> adminGroup);
+    public abstract boolean setUserToAdminGroup(final DOIUser admin);
+    
+    /**
+     * Remove user to Administrators group
+     *
+     * @param adminGroup user to add
+     */
+    public abstract boolean unsetUserFromAdminGroup(final DOIUser admin);
 
 }

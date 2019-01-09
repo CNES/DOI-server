@@ -19,7 +19,7 @@
 package fr.cnes.doi.plugin.impl;
 
 import fr.cnes.doi.plugin.AbstractDoiDBPluginHelper;
-import fr.cnes.doi.security.RoleAuthorizer;
+//import fr.cnes.doi.security.RoleAuthorizer;
 import fr.cnes.doi.settings.DoiSettings;
 import java.io.File;
 import java.io.IOException;
@@ -102,7 +102,7 @@ public class DefaultDoiImpl extends AbstractDoiDBPluginHelper {
             } else {
                 createDbConf(projConfFile);
             }
-            this.addObserver(RoleAuthorizer.getInstance());
+//            this.addObserver(RoleAuthorizer.getInstance());
         } catch (IOException e) {
             LOG.fatal("Cannot access the cache file for the mapping lading page/DOI " + dbConf, e);
         } catch (URISyntaxException ex) {

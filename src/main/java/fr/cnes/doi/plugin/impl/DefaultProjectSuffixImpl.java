@@ -19,7 +19,7 @@
 package fr.cnes.doi.plugin.impl;
 
 import fr.cnes.doi.plugin.AbstractProjectSuffixPluginHelper;
-import fr.cnes.doi.security.RoleAuthorizer;
+//import fr.cnes.doi.security.RoleAuthorizer;
 import fr.cnes.doi.settings.DoiSettings;
 import java.io.File;
 import java.io.IOException;
@@ -103,7 +103,7 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
                 LOG.info("create the database :" + projectConf);
                 createProjectConf(projConfFile);
             }
-            this.addObserver(RoleAuthorizer.getInstance());
+//            this.addObserver(RoleAuthorizer.getInstance());
         } catch (IOException e) {
             LOG.fatal("Cannot access the cache file for the mapping projects/id " + projectConf, e);
         }
@@ -197,7 +197,7 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
     }
 
     @Override
-    public synchronized void deleteProject(int projectID) {
+    public synchronized boolean deleteProject(int projectID) {
         throw new RuntimeException("Not implemented");
         //setChanged();
         //notifyObservers(new String[]{DELETE_RECORD, String.valueOf(projectID)});    
@@ -257,5 +257,11 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
     public String getLicense() {
         return LICENSE;
     }
+
+	@Override
+	public boolean renameProject(int projectID, String newProjectName) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 }

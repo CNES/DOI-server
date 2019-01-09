@@ -24,7 +24,7 @@ import fr.cnes.doi.application.DoiMdsApplication;
 import fr.cnes.doi.logging.api.DoiLogDataServer;
 import fr.cnes.doi.logging.business.JsonMessage;
 import fr.cnes.doi.logging.security.DoiSecurityLogFilter;
-import fr.cnes.doi.security.RoleAuthorizer;
+//import fr.cnes.doi.security.RoleAuthorizer;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.settings.EmailSettings;
@@ -297,8 +297,8 @@ public class DoiServer extends Component {
         this.getDefaultHost().attach(CITATION_URI, new DoiCrossCiteApplication());
         this.getDefaultHost().attachDefault(appAdmin);
         // Set authentication        
-        RoleAuthorizer.getInstance().createRealmFor(appDoiProject);
-        RoleAuthorizer.getInstance().createRealmFor(appAdmin);
+//        RoleAuthorizer.getInstance().createRealmFor(appDoiProject);
+//        RoleAuthorizer.getInstance().createRealmFor(appAdmin);
         LOG.traceExit();
     }
 
@@ -309,7 +309,7 @@ public class DoiServer extends Component {
     private void startWithProxy() {
         LOG.traceEntry();
         initLogServices();
-        RoleAuthorizer.getInstance();
+//        RoleAuthorizer.getInstance();
         ProxySettings.getInstance();
         EmailSettings.getInstance();
         configureServer();

@@ -32,7 +32,7 @@ public class DOIUser {
 		return email;
 	}
 
-	// Compare to DOIUser objects
+	// Compare two DOIUser objects
 	public Boolean isEqualTo(DOIUser testuser) {
 		return this.username.equals(testuser.getUsername())
 				&& this.admin.equals(testuser.getAdmin())
