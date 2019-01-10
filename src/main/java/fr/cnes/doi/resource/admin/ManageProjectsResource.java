@@ -47,7 +47,6 @@ public class ManageProjectsResource extends AbstractResource {
         this.suffixProject = getAttribute("suffixProject");
         LOG.debug(this.suffixProject);
         
-        System.out.println(this.suffixProject + " <<<< suffix Project");
         LOG.traceExit();
     }
     

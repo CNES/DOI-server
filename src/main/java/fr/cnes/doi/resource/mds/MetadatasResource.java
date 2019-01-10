@@ -18,13 +18,11 @@
  */
 package fr.cnes.doi.resource.mds;
 
-import fr.cnes.doi.application.DoiMdsApplication.API_MDS;
-import fr.cnes.doi.exception.ClientMdsException;
-import fr.cnes.doi.exception.DoiServerException;
-import fr.cnes.doi.utils.spec.Requirement;
 import java.util.Arrays;
+
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.ValidationException;
+
 import org.apache.logging.log4j.Level;
 import org.datacite.schema.kernel_4.Resource;
 import org.restlet.data.MediaType;
@@ -35,6 +33,11 @@ import org.restlet.ext.wadl.ParameterStyle;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Post;
 import org.xml.sax.SAXException;
+
+import fr.cnes.doi.application.DoiMdsApplication.API_MDS;
+import fr.cnes.doi.exception.ClientMdsException;
+import fr.cnes.doi.exception.DoiServerException;
+import fr.cnes.doi.utils.spec.Requirement;
 
 /**
  * Resource to handle a collection of metadata.

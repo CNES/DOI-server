@@ -87,7 +87,7 @@ public abstract class AbstractUserRoleDBHelper extends Observable {
      * @param user user to add
      * @param role role
      */
-    public abstract boolean addUserToRole(final DOIUser user,
+    public abstract boolean addUserToRole(final String user,
             final int role) ;
 //    {
 //        REALM.map(user, role);
@@ -99,7 +99,7 @@ public abstract class AbstractUserRoleDBHelper extends Observable {
      * @param user user to remove
      * @param role role
      */
-    public abstract boolean removeUserToRole(final DOIUser user,
+    public abstract boolean removeUserToRole(final String user,
             final int role); 
 //    {
 //        REALM.unmap(user, role);
@@ -110,13 +110,15 @@ public abstract class AbstractUserRoleDBHelper extends Observable {
      *
      * @param adminGroup user to add
      */
-    public abstract boolean setUserToAdminGroup(final DOIUser admin);
+    public abstract boolean setUserToAdminGroup(final String admin);
     
     /**
      * Remove user to Administrators group
      *
      * @param adminGroup user to add
      */
-    public abstract boolean unsetUserFromAdminGroup(final DOIUser admin);
+    public abstract boolean unsetUserFromAdminGroup(final String admin);
+
+	public abstract boolean isUserExist(String username);
 
 }

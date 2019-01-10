@@ -50,30 +50,25 @@ public class ManageSuperUsers {
     
     public boolean isSuperUser(String username){
     	LOGGER.entering(CLASS_NAME, "isSuperUser", username);
-    	/*
-    	List<String> SuperUsers = new ArrayList<String>();
-    	List<DOIUser> doiSuperUsers = userDB.getSuperUsersFromRole(projectId);
-    	for(DOIUser doiUser : doiSuperUsers) {
-    		SuperUsers.add(doiUser.getUsername());
-    	}*/
-    	return true;
+    	for(DOIUser user : userDB.getUsers()) {
+    		if(user.getUsername().equals(username)) {
+    			return user.getAdmin();
+    		}
+    	}
+    	return false;
     }
     
     public boolean addSuperUser(String username) {
     	LOGGER.entering(CLASS_NAME, "addSuperUser", username);
-    	
-    	DOIUser adminToChange = new DOIUser();
-    	adminToChange.setUsername(username);
-    	
-    	return userDB.setUserToAdminGroup(adminToChange);
+    	if(!userDB.isUserExist(username)) {
+    		return false;
+    	}
+    	return userDB.setUserToAdminGroup(username);
     }
     
     public boolean deleteSuperUser(String username) {
     	LOGGER.entering(CLASS_NAME, "deleteSuperUser", username);
-
-    	DOIUser adminToChange = new DOIUser();
-    	adminToChange.setUsername(username);
-    	return userDB.unsetUserFromAdminGroup(adminToChange);
+    	return userDB.unsetUserFromAdminGroup(username);
 	}
     
     public List<String> getSuperUsers() {
@@ -88,8 +83,6 @@ public class ManageSuperUsers {
     	}
         return result;
     }
-    
-    
     
     /**
      * Class to handle the instance

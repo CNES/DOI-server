@@ -403,8 +403,8 @@
 				$("#navbar").load("navbar.txt", function(responseTxt, statusTxt, xhr){
 			        if(statusTxt == "success"){
 			        	setProjectID();
-// 			        	setDOIList();
-			        	getDoisFromProject();
+			        	setDOIList();
+// 			        	getDoisFromProject();
 			        } else if(statusTxt == "error"){
 			            alert("Error: " + xhr.status + ": " + xhr.statusText);
 			        }

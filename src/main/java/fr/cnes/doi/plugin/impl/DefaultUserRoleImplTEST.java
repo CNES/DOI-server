@@ -102,54 +102,50 @@ public class DefaultUserRoleImplTEST extends AbstractUserRolePluginHelper {
     }
 
 	@Override
-	public boolean addUserToRole(DOIUser user, int role) {
-		String username = user.getUsername();
+	public boolean addUserToRole(String user, int role) {
 		boolean isAdded = false;
 		try {
-			das.addDOIProjectToUser(username, role);
+			das.addDOIProjectToUser(user, role);
 			isAdded = true;
 		} catch (DOIDbException e) {
-			LOG.fatal("An error occured while trying to add user " + username + " to project " + role ,e);
+			LOG.fatal("An error occured while trying to add user " + user + " to project " + role ,e);
 		}
 		return isAdded;
 	}
 
 	@Override
-	public boolean removeUserToRole(DOIUser user, int role) {
-		String username = user.getUsername();
+	public boolean removeUserToRole(String user, int role) {
 		boolean isRemoved = false;
 		try {
-			das.removeDOIProjectFromUser(username, role);
+			das.removeDOIProjectFromUser(user, role);
 			isRemoved = true;
 		} catch (DOIDbException e) {
-			LOG.fatal("An error occured while trying to remove user " + username + " from project " + role ,e);
+			LOG.fatal("An error occured while trying to remove user " + user + " from project " + role ,e);
 		}
 		return isRemoved;
 	}
 
 	@Override
-	public boolean setUserToAdminGroup(DOIUser user) {
-		String username = user.getUsername();
+	public boolean setUserToAdminGroup(String user) {
 		boolean isSetted = false;
 		try {
-			das.setAdmin(username);
+			das.setAdmin(user);
 			isSetted = true;
 		} catch (DOIDbException e) {
-			LOG.fatal("An error occured while trying to add user " + username + " to admin group",e);
+			LOG.fatal("An error occured while trying to add user " + user + " to admin group",e);
 		}
 		return isSetted;
 	}
 	
 
 	@Override
-	public boolean unsetUserFromAdminGroup(DOIUser user) {
-		String username = user.getUsername();
+	public boolean unsetUserFromAdminGroup(String user) {
 		boolean isUnsetted = false;
 		try {
-			das.unsetAdmin(username);
+			das.unsetAdmin(user);
 			isUnsetted = true;
 		} catch (DOIDbException e) {
-			LOG.fatal("An error occured while trying to remove user " + username + " to admin group",e);
+			LOG.fatal("An error occured while trying to remove user " + user + " to admin group",e);
 		}
 		return isUnsetted;
 	}
@@ -157,6 +153,16 @@ public class DefaultUserRoleImplTEST extends AbstractUserRolePluginHelper {
     @Override
     public String getName() {
         return NAME;
+    }
+    @Override
+    public boolean isUserExist(String username) {
+    	boolean isExist = false;
+    	try {
+    		isExist =  das.isUserExist(username);
+    	} catch (DOIDbException e) {
+    		LOG.fatal("An error occured while trying to know if user " + username + " exist",e);
+    	}
+    	return isExist;
     }
 
     @Override
@@ -183,5 +189,6 @@ public class DefaultUserRoleImplTEST extends AbstractUserRolePluginHelper {
     public String getLicense() {
         return LICENSE;
     }
+
 
 }

@@ -1,5 +1,7 @@
 package fr.cnes.doi.resource.admin;
 
+import java.util.List;
+
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 import org.restlet.data.Form;
@@ -11,7 +13,7 @@ import org.restlet.resource.ResourceException;
 
 import fr.cnes.doi.application.AdminApplication;
 import fr.cnes.doi.resource.AbstractResource;
-import fr.cnes.doi.utils.ManageProjects;
+import fr.cnes.doi.utils.ManageUsers;
 import fr.cnes.doi.utils.spec.Requirement;
 
 public class ManageUsersResource extends AbstractResource {
@@ -54,50 +56,40 @@ public class ManageUsersResource extends AbstractResource {
         LOG.debug(this.suffixProject);
         LOG.debug(this.userName);
         
-        System.out.println(this.suffixProject + " <<<< suffix Project");
-        System.out.println(this.userName + " <<<< userName");
         LOG.traceExit();
     }
     
     //TODO requirement
     @Get
-    public void getUsers() {
-    	
+    public List<String> getUsers() {
+    	LOG.traceEntry();
+    	int idProject = Integer.parseInt(suffixProject);
+    	return LOG.traceExit(ManageUsers.getInstance().getAllUsersFromProject(idProject));
     }
     
-    //TODO requirement
+    //TODO requirement 
     /**
-     * Rename the project from the project id sent in url.
      *
-     * @return the list of dois
      */
     @Requirement(reqId = Requirement.DOI_SRV_140, reqName = Requirement.DOI_SRV_140_NAME)
     @Post
-    public boolean renameProject(final Form mediaForm) {
+    public boolean addUserToProject(Form mediaForm) {
     	 LOG.traceEntry();
-         checkInputs(mediaForm);
-//         final String newProjectName = mediaForm.getFirstValue(PROJECT_NAME_PARAMETER);
-//         boolean isRenamed = ManageProjects.getInstance().renameProject(
-//        		 Integer.parseInt(suffixProject), newProjectName);
-         
-//         return LOG.traceExit(isRenamed);
-         return LOG.traceExit(false);
+    	 checkInputs(mediaForm);
+    	 final String user = mediaForm.getFirstValue(USER_NAME_PARAMETER);
+    	 int idProject = Integer.parseInt(suffixProject);
+         return LOG.traceExit(ManageUsers.getInstance().addUserToProject(user, idProject));
     }
     
   //TODO requirement
     /**
-     * Delete the project from database.
-     *
-     * @return the list of dois
      */
     @Requirement(reqId = Requirement.DOI_SRV_140, reqName = Requirement.DOI_SRV_140_NAME)
     @Delete
     public boolean deleteProject() {
-    	 LOG.traceEntry();
-         boolean isDeleted = ManageProjects.getInstance().deleteProject(
-        		 Integer.parseInt(suffixProject));
-         
-         return LOG.traceExit(isDeleted);
+    	LOG.traceEntry();
+   	 	int idProject = Integer.parseInt(suffixProject);
+        return LOG.traceExit(ManageUsers.getInstance().deleteUserFromProject(idProject, userName));
     }
     
     /**
@@ -110,11 +102,10 @@ public class ManageUsersResource extends AbstractResource {
         LOG.traceEntry("Parameter : {}", mediaForm);
         if (isValueNotExist(mediaForm, USER_NAME_PARAMETER)) {
             throw LOG.throwing(Level.DEBUG, new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST,
-                    USER_NAME_PARAMETER + " parameter must be set"));
+            		USER_NAME_PARAMETER + " parameter must be set"));
         }
         LOG.debug("The form is valid");
         LOG.traceExit();
     }
-    
     
 }

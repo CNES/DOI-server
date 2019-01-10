@@ -102,9 +102,8 @@
 		<script src="js/bootstrap-min.js"></script>
 
 		<script>
-		var listUser;
-		var users = [];
-		var admins = [];
+		var users;
+		var admins;
 		var projets;
 		
 		$(document).ready(function(){
@@ -112,7 +111,7 @@
 			$("#navbar").load("navbar.txt");
 			
 			getListProjet();
-// 			getListAdmin();
+			getListAdmin();
 
 			$("#listProjet").click(function(){
 				if($("#listProjet").val() == null){
@@ -142,8 +141,31 @@
 			    	console.log("GET getListProjet est un succès.");
 			    	for(project in json){
 			    		$("#listProjet").append("<option>" + project + "(" + json[project] + ")" + "</option>");	
-			    		
 			    	}
+			    }
+			});
+		}
+		
+		function getListAdmin(){
+			$.ajax({
+			    type: "GET",
+			    url: "http://127.0.0.1:8182/admin/superusers",
+			    headers: {
+			    	'Authorization': 'Basic ' + btoa('malapert:pwd')
+			    },
+			    crossDomain: true,
+				cache : false,
+			    error : function (XMLHttpRequest, textStatus, errorThrown){ 
+			    	console.log("La requête GET(getListAdmin) a échouée."); 
+			    	alert("GET getListAdmin : status = " + textStatus);
+			    },
+			    success: function(array) {
+			    	console.log(array);
+			    	admins = array; 
+			    	console.log("GET getListAdmin est un succès.");
+			    	array.forEach(function(admin, index, array){
+			    		$("#listAdmin").append("<option>" + admin + "</option>");	
+			    	});
 			    }
 			});
 		}
@@ -174,9 +196,9 @@
 				    	console.log("POST addProject est un succès.");
 			    		$("#listProjet").append("<option selected=\"selected\">" + projet + 
 			    				"(" + suffixeProjet + ")" + "</option>");	
+			    		modifyListUser();
 				    }
 				});
-// 		    	modifyListUser();
 		    }
 		}
 		
@@ -210,14 +232,15 @@
 				    	alert("POST renameProject : status = " + textStatus);
 				    },
 				    success: function(boo) {
-				    	console.log("isRenamed = "+ boo);
 				    	console.log("POST renameProject est un succès.");
-				    	$("#listProjet option:selected").text( projet + 
-			    				"(" + idText + ")" );	
+				    	console.log("isRenamed = "+ boo);
+				    	if(boo){
+					    	$("#listProjet option:selected").text( projet + 
+				    				"(" + idText + ")" );	
+					    	$("#titreProjet").text("Utilisateurs du projet: "+ projet + idText);
+				    	}
 				    }
 				});
-		    	
-		    	$("#titreProjet").text("Utilisateurs du projet: "+ projet + idText);
 		    }
 		}
 		
@@ -245,89 +268,128 @@
 				    	alert("DELETE deleteProject : status = " + textStatus);
 				    },
 				    success: function(boo) {
-				    	console.log("isDeleted = "+ boo);
 				    	console.log("DELETE deleteProject est un succès.");
-				    	$("#listProjet option:selected").remove();
-				    	$("#titreProjet").text("Utilisateurs du projet: ");
-						$("#listUser").empty();	
+				    	console.log("isDeleted = "+ boo);
+				    	if(boo){
+					    	$("#listProjet option:selected").remove();
+					    	$("#titreProjet").text("Utilisateurs du projet: ");
+							$("#listUser").empty();	
+				    	}
 				    }
 				});
 		    } 
 		}
-			
-		function modifyListProjet(){
-			$("#listProjet").empty();
-			for(var i=0; i<allProjects.length ; i++){
-				$("#listProjet").append("<option>" + allProjects[i] + "</option>");
-			}
-		}
 		function modifyListUser(){
-			var projet = $("#listProjet").val();
-			$("#titreProjet").text("Utilisateurs du projet: "+projet);
-			
-			console.log("<<<<<<<<<<<<<<   " + projet);
-			
+			var project = $("#listProjet").val();
+			$("#titreProjet").text("Utilisateurs du projet: "+project);
 			$("#listUser").empty();
-			for(var i=0; i<users.length ; i++){
-				if(projets[i].includes(projet)){
-					$("#listUser").append("<option>" + users[i] + "</option>");
-				}
-			}
-		}
-		function modifyListAdmin(){
-			$("#listAdmin").empty();
-			for(var i=0; i<admins.length ; i++){
-				if(admins[i] == "admin"){
-					$("#listAdmin").append("<option>" + users[i] + "</option>");
-				}
-			}
+			
+			var suffixProject = project.substring(project.indexOf('(')+1, project.length -1);
+			var nameProject = project.substring(0, project.indexOf('('));
+			console.log(nameProject + " " + suffixProject);
+			
+			$.ajax({
+			    type: "GET",
+			    url: "http://127.0.0.1:8182/admin/projects/" + suffixProject + "/users",
+			    headers: {
+			    	'Authorization': 'Basic ' + btoa('malapert:pwd')
+			    },
+			    crossDomain: true,
+				cache : false,
+			    error : function (XMLHttpRequest, textStatus, errorThrown){ 
+			    	console.log("La requête GET(modifyListUser) a échouée."); 
+			    	alert("GET modifyListUser : status = " + textStatus);
+			    },
+			    success: function(array) {
+			    	console.log(array);
+			    	users = array; 
+			    	console.log("GET modifyListUser est un succès.");
+			    	array.forEach(function(user, index, array){
+			    		$("#listUser").append("<option>" + user + "</option>");	
+			    	});
+			    }
+			});
 		}
 			
 		// modification users
 		function addUser(){
-			var projet = $("#listProjet").val();
+			var project = $("#listProjet").val();
+			
+			
+			var suffixProject = project.substring(project.indexOf('(')+1, project.length -1);
+			var nameProject = project.substring(0, project.indexOf('('));
+			console.log(nameProject + " " + suffixProject);
+			
 			var user = prompt("Entrer le \"nom.prenom\" de l'utilisateur qui sera associé à ce projet:", "toto.toto");
 			if (user == null || user == "") {
 		        return;
-			} else if (!user.includes(".")) {
-				alert("Format invalide.");
-				return;
+// 			} else if (!user.includes(".")) {
+// 				alert("Format invalide.");
+// 				return;
 			} else {
-				for(var i=0 ; i<users.length ; i++){
-					if(users[i] == user){
-						if(projets[i].includes(projet)){
-							alert("Utilisateur déjà sur le projet.");
-							return;
-						}
-						projets[i] = projets[i] + "," + projet;
-						$("#listUser").append("<option selected=\"selected\">" + user + "</option>");				
-						return;
-					}
-				}
-				users.push(user);
-				admins.push("user");
-				projets.push(projet);
-				$("#listUser").append("<option selected=\"selected\">" + user + "</option>");
+				$.ajax({
+				    type: "POST",
+				    url: "http://127.0.0.1:8182/admin/projects/" + suffixProject + "/users",
+				    headers: {
+				    	'Authorization': 'Basic ' + btoa('malapert:pwd')
+				    },
+				    data: {
+				    	"user": user
+				    },
+				    crossDomain: true,
+					cache : false,
+				    error : function (XMLHttpRequest, textStatus, errorThrown){ 
+				    	console.log("La requête POST(addUser) a échouée."); 
+				    	alert("POST addUser : status = " + textStatus);
+				    },
+				    success: function(boo) {
+				    	console.log("POST addUser est un succès.");
+				    	console.log(boo);
+				    	if(boo){
+					    	$("#listUser").append("<option selected=\"selected\">" + user + "</option>");
+				    	}
+				    }
+				});
 			}
 		}
+		
 		function deleteUser(){
-			var projet = $("#listProjet option:selected").text();
-			var user = $("#listUser option:selected").text();
+			var project = $("#listProjet").val();
+			
+			var suffixProject = project.substring(project.indexOf('(')+1, project.length -1);
+			var nameProject = project.substring(0, project.indexOf('('));
+			console.log(nameProject + " " + suffixProject);
+			
+			var user = $("#listUser").val();
+			
 			if(user == ""){
 				return;
 			}
 			
-			if(confirm("Voulez-vous vraiment supprimer l'utilisateur "+ user + " du projet " + projet + " ?")){
+			if(confirm("Voulez-vous vraiment supprimer l'utilisateur "+ user + " du projet " + nameProject + " ?")){
 			    
-		    	for(var i=0 ; i<users.length ; i++){
-		    		if(users[i].includes(user)){
-		    			projets[i].replace(projet, "");   // TODO prendre en compte "," et ":" et ";"...
-		    		}									  // remplacer les ",," par "," les ":," par ":" les ",;" par ";" + si dernier caract = "," le retirer...
-		    	}
-		    	modifyListUser();
+				$.ajax({
+				    type: "DELETE",
+				    url: "http://127.0.0.1:8182/admin/projects/" + suffixProject + "/users/" + user,
+				    headers: {
+				    	'Authorization': 'Basic ' + btoa('malapert:pwd')
+				    },
+				    crossDomain: true,
+					cache : false,
+				    error : function (XMLHttpRequest, textStatus, errorThrown){ 
+				    	console.log("La requête DELETE(deleteUser) a échouée."); 
+				    	alert("DELETE deleteUser : status = " + textStatus);
+				    },
+				    success: function(boo) {
+				    	console.log("DELETE deleteUser est un succès.");
+				    	console.log(boo);
+				    	if(boo){
+					    	$("#listUser option:selected").remove();				    		
+				    	}
+				    }
+				});
 		    } 
 		}
-			
 			
 		// modification Admin   //TODO maybe show up a hidden select button that allow to find any user...
 		function addAdmin(){
@@ -335,18 +397,29 @@
 			if (user == null || user == "") {
 		        return;
 			} else {
-		    	for(var i=0 ; i<users.length ; i++){
-		    		if(users[i].includes(user)){
-		    			if(admins[i] == "admin"){
-		    				alert("Utilisateur déjà Admin.");
-		    			}else{
-		    				admins[i] = "admin";
-		    				$("#listAdmin").append("<option selected=\"selected\">" + users[i] + "</option>");
-		    			}
-		    			return;
-		    		}
-		    	}
-		    	alert("Utilisateur inconnu.");
+				$.ajax({
+				    type: "POST",
+				    url: "http://127.0.0.1:8182/admin/superusers",
+				    headers: {
+				    	'Authorization': 'Basic ' + btoa('malapert:pwd')
+				    },
+				    data: {
+				    	"superUserName": user
+				    },
+				    crossDomain: true,
+					cache : false,
+				    error : function (XMLHttpRequest, textStatus, errorThrown){ 
+				    	console.log("La requête POST(addAdmin) a échouée."); 
+				    	alert("POST addAdmin : status = " + textStatus);
+				    },
+				    success: function(boo) {
+				    	console.log("POST addAdmin est un succès.");
+				    	console.log(boo);
+				    	if(boo){
+					    	$("#listAdmin").append("<option selected=\"selected\">" + user + "</option>");			    		
+				    	}
+				    }
+				});
 		    }
 		}
 		function deleteAdmin() {
@@ -355,13 +428,26 @@
 				return;
 			}
 		    if(confirm("Voulez-vous vraiment supprimer l'utilisateur "+ user + " du groupe Admin ?")){
-		    
-		    	for(var i=0 ; i<users.length ; i++){
-		    		if(users[i].includes(user)){
-		    			admins[i]= "user";
-		    		}
-		    	}
-		    	modifyListAdmin();
+		    	$.ajax({
+				    type: "DELETE",
+				    url: "http://127.0.0.1:8182/admin/superusers/" + user,
+				    headers: {
+				    	'Authorization': 'Basic ' + btoa('malapert:pwd')
+				    },
+				    crossDomain: true,
+					cache : false,
+				    error : function (XMLHttpRequest, textStatus, errorThrown){ 
+				    	console.log("La requête DELETE(deleteAdmin) a échouée."); 
+				    	alert("DELETE deleteAdmin : status = " + textStatus);
+				    },
+				    success: function(boo) {
+				    	console.log("DELETE deleteAdmin est un succès.");
+				    	console.log(boo);
+				    	if(boo){
+					    	$("#listAdmin option:selected").remove();				    		
+				    	}
+				    }
+				});
 		    } 
 		}
 		</script>

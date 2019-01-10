@@ -119,10 +119,10 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
 			conn = dbConnector.getConnection();
 			Statement assignationStatement = conn.createStatement();
 			ResultSet assignations = assignationStatement.executeQuery(
-					"SELECT username, suffix, email FROM T_DOI_ASSIGNATIONS WHERE suffix='" + suffix + "'");
+					"SELECT username, suffix FROM T_DOI_ASSIGNATIONS WHERE suffix='" + suffix + "'");
 			while (assignations.next()) {
 				Statement usersStatement = conn.createStatement();
-				ResultSet rs = usersStatement.executeQuery("SELECT username, admin FROM T_DOI_USERS WHERE username='"
+				ResultSet rs = usersStatement.executeQuery("SELECT username, admin, email FROM T_DOI_USERS WHERE username='"
 						+ assignations.getString("username") + "'");
 				while (rs.next()) {
 					DOIUser doiuser = new DOIUser();
@@ -242,8 +242,15 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
 		Connection conn = null;
 		try {
 			conn = dbConnector.getConnection();
-			Statement statement = conn.createStatement();
-			statement.executeUpdate("UPDATE T_DOI_USERS SET admin = true WHERE username = '" + username + "';");
+			Boolean userExist = conn.createStatement()
+					.executeQuery("SELECT username, admin FROM T_DOI_USERS WHERE username='" + username + "'").next();
+			if (userExist) {
+			  Statement statement = conn.createStatement();
+			  statement.executeUpdate("UPDATE T_DOI_USERS SET admin = true WHERE username = '" + username + "';");
+			} else {
+				throw new DOIDbException("An exception occured when calling setAdmin:" + "user " + username
+						 + " don't exist in doi database", null);
+			}
 		} catch (SQLException e) {
 			logger.error("An exception occured when calling setAdmin", e);
 			throw new DOIDbException("An exception occured when calling setAdmin", e);
@@ -456,4 +463,46 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
 		}
 
 	}
+
+	@Override
+	public boolean isAdmin(String username) throws DOIDbException {
+		return getDoiUserFromDb(username).getAdmin();
+		
+	}
+	
+	private DOIUser getDoiUserFromDb(String username) throws DOIDbException {
+		Connection conn = null;
+		DOIUser doiuser = null;
+		try {
+			conn = dbConnector.getConnection();
+			Statement statement = conn.createStatement();
+			ResultSet rs = statement.executeQuery("SELECT username, admin, email FROM T_DOI_USERS WHERE username='"+username+"';");
+			while (rs.next()) {
+				doiuser = new DOIUser();
+				doiuser.setAdmin(rs.getBoolean("admin"));
+				doiuser.setUsername(rs.getString("username"));
+				doiuser.setEmail(rs.getString("email"));
+				break;
+			}
+		} catch (SQLException e) {
+			logger.error("An exception occured when calling getAllDOIusers", e);
+			throw new DOIDbException("An exception occured when calling getAllDOIusers", e);
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					logger.error("Unable to close connection to database", e);
+				}
+			}
+		}
+		return doiuser;
+	}
+
+	@Override
+	public boolean isUserExist(String username) throws DOIDbException {
+		return getDoiUserFromDb(username)!=null;
+	}
+	
+	
 }

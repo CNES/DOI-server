@@ -60,34 +60,15 @@ public class ManageUsers {
     
     public boolean addUserToProject(String username, int projectId) {
     	LOGGER.entering(CLASS_NAME, "addUserToProject", new Object[] {username, projectId});
-    	DOIUser user = new DOIUser(); 
-    	for(DOIUser doiUser : userDB.getUsers()){
-    		if(doiUser.getUsername().equals(username)) {
-    			user = doiUser;
-    		}
+    	if(!userDB.isUserExist(username)) {
+    		return false;
     	}
-    	if(user.getUsername() == null || user.getUsername().equals("")) {
-    		//TODO exception
-    		throw new RuntimeException("This user doesn't exist.");
-    	} else {
-    		return userDB.addUserToRole(user, projectId);
-    	}
+    	return userDB.addUserToRole(username, projectId);
     }
     
     public boolean deleteUserFromProject(int projectId, String username) {
     	LOGGER.entering(CLASS_NAME, "deleteUserFromProject", new Object[] {projectId, username});
-    	DOIUser user = new DOIUser(); 
-    	for(DOIUser doiUser : userDB.getUsers()){
-    		if(doiUser.getUsername().equals(username)) {
-    			user = doiUser;
-    		}
-    	}
-    	if(user.getUsername() == null || user.getUsername().equals("")) {
-    		//TODO exception
-    		throw new RuntimeException("This user doesn't exist.");
-    	} else {
-    		return userDB.removeUserToRole(user, projectId);
-    	}    
+    	return userDB.removeUserToRole(username, projectId);
 	}
     
     

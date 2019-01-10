@@ -220,7 +220,9 @@ public final class DoiMdsApplication extends AbstractApplication {
         methodAuth.setNext(createRouter());
 
         Filter filter = new SecurityPostProcessingFilter(getContext(), challAuth);
-        return LOG.traceExit(filter);
+        //TODO
+        return createRouter();
+//        return LOG.traceExit(filter);
     }
 
     /**

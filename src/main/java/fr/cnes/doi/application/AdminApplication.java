@@ -145,7 +145,7 @@ public class AdminApplication extends AbstractApplication {
     public static final String USERS_URI = "/users";
     
     /**
-    * URI {@value #SUFFIX_PROJECT_URI} to handle superusers.
+    * URI {@value #SUPERUSERS_URI} to handle superusers.
     */ 
     public static final String SUPERUSERS_URI = "/superusers";
     
@@ -261,15 +261,14 @@ public class AdminApplication extends AbstractApplication {
         challAuth.setOptional(false);
 
         // Defines the authorization
-//        final RoleAuthorizer authorizer = createRoleAuthorizer();
+        final RoleAuthorizer authorizer = createRoleAuthorizer();
         
         //TODO test allow option calls
         // Set specific authorization on method after checking authentication
         final MethodAuthorizer methodAuth = createMethodAuthorizer();
 
         // pipeline of authentication and authorization
-        challAuth.setNext(methodAuth);
-//        methodAuth.setNext(authorizer);
+        challAuth.setNext(authorizer);
         
         //TODO
 //        authorizer.setNext(methodAuth);
@@ -281,8 +280,10 @@ public class AdminApplication extends AbstractApplication {
         // Defines the admin router as private
         final AllowerIP blocker = new AllowerIP(getContext());
         //TODO
-        methodAuth.setNext(blocker);
-        blocker.setNext(adminRouter);
+//        methodAuth.setNext(blocker);
+//        blocker.setNext(adminRouter);
+        
+        authorizer.setNext(adminRouter);
         
         final Router router = new Router(getContext());
         router.attachDefault(webSiteRouter);
@@ -306,7 +307,6 @@ public class AdminApplication extends AbstractApplication {
         final MethodAuthorizer methodAuth = new MethodAuthorizer();
         methodAuth.getAnonymousMethods().add(Method.GET);
         methodAuth.getAnonymousMethods().add(Method.OPTIONS);
-        methodAuth.getAuthenticatedMethods().add(Method.OPTIONS);
         methodAuth.getAuthenticatedMethods().add(Method.GET);
         methodAuth.getAuthenticatedMethods().add(Method.POST);
         methodAuth.getAuthenticatedMethods().add(Method.PUT);
@@ -342,8 +342,8 @@ public class AdminApplication extends AbstractApplication {
         router.attach(SUFFIX_PROJECT_URI + SUFFIX_PROJECT_NAME + USERS_URI, ManageUsersResource.class);
         router.attach(SUFFIX_PROJECT_URI + SUFFIX_PROJECT_NAME + USERS_URI + USERS_NAME, ManageUsersResource.class);
 
-        router.attach(SUFFIX_PROJECT_URI + SUPERUSERS_URI, ManageSuperUsersResource.class);
-        router.attach(SUFFIX_PROJECT_URI + SUPERUSERS_URI + USERS_NAME, ManageSuperUsersResource.class);
+        router.attach(SUPERUSERS_URI, ManageSuperUsersResource.class);
+        router.attach(SUPERUSERS_URI + USERS_NAME, ManageSuperUsersResource.class);
         
         
         router.attach(TOKEN_URI, TokenResource.class);
@@ -502,24 +502,24 @@ public class AdminApplication extends AbstractApplication {
         LOG.traceExit();
     }
 
-//    /**
-//     * Creates a authorization based on the role. Only users attached to the role
-//     * {@link fr.cnes.doi.security.RoleAuthorizer#ROLE_ADMIN} are allowed
-//     *
-//     * @return the authorization that contains the access rights to the resources.
-//     */
-//    private RoleAuthorizer createRoleAuthorizer() {
-//        LOG.traceEntry();
-//
-//        final RoleAuthorizer roleAuth = new RoleAuthorizer();
-//        roleAuth.setAuthorizedRoles(
-//                Arrays.asList(
-//                        Role.get(this, fr.cnes.doi.security.RoleAuthorizer.ROLE_ADMIN)
-//                )
-//        );
-//
-//        return LOG.traceExit(roleAuth);
-//    }
+    /**
+     * Creates a authorization based on the role. Only users attached to the role
+     * {@link fr.cnes.doi.security.RoleAuthorizer#ROLE_ADMIN} are allowed
+     *
+     * @return the authorization that contains the access rights to the resources.
+     */
+    private RoleAuthorizer createRoleAuthorizer() {
+        LOG.traceEntry();
+
+        final RoleAuthorizer roleAuth = new RoleAuthorizer();
+        roleAuth.setAuthorizedRoles(
+                Arrays.asList(
+                        Role.get(this, fr.cnes.doi.security.RoleAuthorizer.ROLE_ADMIN)
+                )
+        );
+
+        return LOG.traceExit(roleAuth);
+    }
 
     /**
      * Returns the token database.

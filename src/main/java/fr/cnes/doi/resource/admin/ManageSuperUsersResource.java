@@ -35,7 +35,7 @@ public class ManageSuperUsersResource extends AbstractResource {
      * Parameter for the SUPERUSER name {@value #SUPERUSER_NAME_PARAMETER}. This parameter is send to
      * create a new identifier for the SUPERUSER.
      */
-    public static final String SUPERUSER_NAME_PARAMETER = "newSUPERUSERName";
+    public static final String SUPERUSER_NAME_PARAMETER = "superUserName";
     
     /**
      * Set-up method that can be overridden in order to initialize the state of the resource.
@@ -50,10 +50,7 @@ public class ManageSuperUsersResource extends AbstractResource {
         LOG.traceEntry();
         this.userName = getAttribute("userName"); 
         LOG.debug(this.userName);
-        setDescription("This resource handles deletion and renaming of a SUPERUSER");
-//    
-
-        System.out.println(this.userName + " <<<< userName");
+        setDescription("This resource handles super users");
         LOG.traceExit();
     }
     
@@ -69,9 +66,9 @@ public class ManageSuperUsersResource extends AbstractResource {
     	 LOG.traceEntry();
          checkInputs(mediaForm);
          final String newSUPERUSERName = mediaForm.getFirstValue(SUPERUSER_NAME_PARAMETER);
-         boolean isRenamed = ManageSuperUsers.getInstance().addSuperUser(newSUPERUSERName);
+         boolean isAdded = ManageSuperUsers.getInstance().addSuperUser(newSUPERUSERName);
          
-         return LOG.traceExit(isRenamed);
+         return LOG.traceExit(isAdded);
     }
     
   //TODO requirement
@@ -92,15 +89,14 @@ public class ManageSuperUsersResource extends AbstractResource {
 
     //TODO requirement
     /**
-     * Returns the list of superusers as Json or xml format.
+     * Returns the list of superusers as an array format.
      *
-     * @return the list of superusers as Json or xml format
+     * @return the list of superusers as an array format
      */
     //@Requirement(reqId = Requirement.DOI_SRV_140, reqName = Requirement.DOI_SRV_140_NAME)
-    @Get("json|xml")
+    @Get
     public List<String> getSuperUsersAsJson() {
         LOG.traceEntry();
-        
         return LOG.traceExit(ManageSuperUsers.getInstance().getSuperUsers());
     }
     

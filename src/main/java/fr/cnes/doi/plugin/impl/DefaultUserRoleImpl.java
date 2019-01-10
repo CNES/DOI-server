@@ -127,4 +127,40 @@
 //        return LICENSE;
 //    }
 //
+//	@Override
+//	public List<DOIUser> getUsersFromRole(int roleName) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+//
+//	@Override
+//	public boolean addUserToRole(String user, int role) {
+//		// TODO Auto-generated method stub
+//		return false;
+//	}
+//
+//	@Override
+//	public boolean removeUserToRole(String user, int role) {
+//		// TODO Auto-generated method stub
+//		return false;
+//	}
+//
+//	@Override
+//	public boolean setUserToAdminGroup(String admin) {
+//		// TODO Auto-generated method stub
+//		return false;
+//	}
+//
+//	@Override
+//	public boolean unsetUserFromAdminGroup(String admin) {
+//		// TODO Auto-generated method stub
+//		return false;
+//	}
+//
+//	@Override
+//	public boolean isUserExist(String username) {
+//		// TODO Auto-generated method stub
+//		return false;
+//	}
+//
 //}

@@ -74,7 +74,6 @@ public class SuffixProjectsDoisResource extends AbstractResource {
         this.suffixProject = this.suffixProject.substring(0,startIndex);
         LOG.debug(this.suffixProject);
         
-        System.out.println(this.suffixProject + " <<<< suffix Project");
         LOG.traceExit();
     }
     

@@ -69,6 +69,19 @@ public interface DOIDbDataAccessService {
 	 */
 	public void unsetAdmin(String username) throws DOIDbException;
 	
+	/** Check if user is an admin user
+	 * @throws DOIDbException
+	 */
+	public boolean isAdmin(String username) throws DOIDbException;
+
+	
+	/** Check if user exists in database
+	 * @throws DOIDbException
+	 * @return null if user does not exist
+	 */
+	public boolean isUserExist(String username) throws DOIDbException;
+
+	
 	
 	/** Rename DOI project
 	 *  @throws DOIDbException

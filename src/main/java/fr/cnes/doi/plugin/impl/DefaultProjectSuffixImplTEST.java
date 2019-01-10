@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -79,26 +80,15 @@ public class DefaultProjectSuffixImplTEST extends AbstractProjectSuffixPluginHel
      */
     @Override
     public void init(Object configuration) {
-//        if (configuration == null) {
-//            this.projectConf = DoiSettings.getInstance().getPathApp()
-//                    + File.separatorChar + DEFAULT_CACHE_FILE;
-//        } else {
-//            this.projectConf = String.valueOf(configuration);
-//        }
-//        File projConfFile = new File(projectConf);
-//        try {
-//            // If the file exists, load it
-//            if (projConfFile.exists()) {
-//                LOG.info("Loads the project suffix database :" + projectConf);
-//                loadProjectConf(projConfFile);
-//            } else {
-//                LOG.info("create the database :" + projectConf);
-//                createProjectConf(projConfFile);
-//            }
-//            this.addObserver(RoleAuthorizer.getInstance());
-//        } catch (IOException e) {
-//            LOG.fatal("Cannot access the cache file for the mapping projects/id " + projectConf, e);
-//        }
+//    	try {
+//			List<DOIProject> doiProjects = das.getAllDOIProjects();
+//			for(DOIProject doiProject : doiProjects) {
+//				idProjMap.put(doiProject.getSuffix(), doiProject.getProjectname());
+//				projIdMap.put(doiProject.getProjectname(), doiProject.getSuffix());
+//			}
+//		} catch (DOIDbException e) {
+//			LOG.fatal("An error occured while trying to get all DOI projects" ,e);
+//		}
     }
 
     @Override
@@ -180,9 +170,9 @@ public class DefaultProjectSuffixImplTEST extends AbstractProjectSuffixPluginHel
     public Map<String, Integer> getProjects() {
     	Map<String, Integer> map = new HashMap<String, Integer>();
     	try {
-			List<DOIProject> tt = das.getAllDOIProjects();
-			for(DOIProject x : tt) {
-				map.put(x.getProjectname(), x.getSuffix());
+			List<DOIProject> doiProjects = das.getAllDOIProjects();
+			for(DOIProject doiProject : doiProjects) {
+				map.put(doiProject.getProjectname(), doiProject.getSuffix());
 			}
 		} catch (DOIDbException e) {
 			LOG.fatal("An error occured while trying to get all DOI projects" ,e);
