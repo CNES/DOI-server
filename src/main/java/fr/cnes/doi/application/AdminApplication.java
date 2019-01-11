@@ -492,8 +492,7 @@ public class AdminApplication extends AbstractApplication {
             
             ihm.setListingAllowed(true);
             ihm.setDeeplyAccessible(true);
-            ihm.setIndexName("doiCreation");
-//            router.attachDefault(ihm);
+            ihm.setIndexName("authentication");
             router.attach("/ihm",ihm);
             
         } else {

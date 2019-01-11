@@ -108,7 +108,13 @@
 		
 		$(document).ready(function(){
 			$("#footer").load("footer.txt");
-			$("#navbar").load("navbar.txt");
+			$("#navbar").load("navbar.txt", function(responseTxt, statusTxt, xhr){
+		        if(statusTxt == "success"){
+		        	$("#selection").parent().remove();
+		        } else if(statusTxt == "error"){
+		            alert("Error: " + xhr.status + ": " + xhr.statusText);
+		        }
+		    });
 			
 			getListProjet();
 			getListAdmin();

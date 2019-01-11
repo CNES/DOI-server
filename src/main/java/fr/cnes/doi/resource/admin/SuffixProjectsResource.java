@@ -65,6 +65,10 @@ public class SuffixProjectsResource extends AbstractResource {
      * Logger.
      */
     private volatile Logger LOG;
+    
+    public final String USER_PARAMETER = "user";
+   
+    private volatile String userName;
 
     /**
      * Set-up method that can be overridden in order to initialize the state of the resource.
@@ -77,6 +81,10 @@ public class SuffixProjectsResource extends AbstractResource {
         final AdminApplication app = (AdminApplication) getApplication();
         LOG = app.getLog();
         LOG.traceEntry();
+        
+        this.userName =getQueryValue(USER_PARAMETER);
+        LOG.debug("USER Parameter : " + this.userName);
+        
         setDescription("This resource handles the project suffix in the DOI name");
         LOG.traceExit();
     }

@@ -75,7 +75,7 @@
 						<p id="message">---- Citation généré ici ----</p>
 					</div>
 					<div class="col-sm-2">
-						<button type="button" id="selectall" class="btn btn-default">Sélectionner</button>
+						<button type="button" id="copyAll" class="btn btn-default">Copier dans le presse-papier</button>
 					</div>
 				</div>
 			</form>
@@ -204,7 +204,7 @@
 			}
 		}
 		
-		$("#selectall").bind("click", function (event) {
+		$("#copyAll").bind("click", function (event) {
 			event.preventDefault();
 			st($("#message").get(0));
 		});
@@ -226,6 +226,7 @@
 					selection.addRange(range);
 				}
 			}
+			document.execCommand("copy");
 		}
 		</script>
 		
