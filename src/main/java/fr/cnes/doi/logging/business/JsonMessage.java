@@ -42,8 +42,8 @@ public class JsonMessage implements Message {
     }
 
     /**
-     *
-     * @return
+     * Returns the formatted message.
+     * @return the formatted message
      */
     @Override
     public String getFormattedMessage() {
@@ -58,8 +58,8 @@ public class JsonMessage implements Message {
     }
 
     /**
-     *
-     * @return
+     * Returns the format.
+     * @return the format
      */
     @Override
     public String getFormat() {
@@ -67,8 +67,8 @@ public class JsonMessage implements Message {
     }
 
     /**
-     *
-     * @return
+     * Returns the parameters
+     * @return the parameters
      */
     @Override
     public Object[] getParameters() {
@@ -76,8 +76,8 @@ public class JsonMessage implements Message {
     }
 
     /**
-     *
-     * @return
+     * Returns the throwable
+     * @return the throwable
      */
     @Override
     public Throwable getThrowable() {

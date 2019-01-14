@@ -19,7 +19,7 @@
 /**
  * Provides resources for Meta Data Store application.
  * 
- * The {@link DoiMdsApplication} is the main DOI {@link fr.cnes.doi.application application} that 
+ * The {@link fr.cnes.doi.application.DoiMdsApplication} is the main DOI {@link fr.cnes.doi.application application} that 
  * brings together a set of resources handling the life of DOIs.
  * 
  * <p>

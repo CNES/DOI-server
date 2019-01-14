@@ -61,17 +61,17 @@ public enum TitleType {
     }
 
     /**
-     *
-     * @return
+     * Returns the value
+     * @return the value
      */
     public String value() {
         return value;
     }
 
     /**
-     *
-     * @param v
-     * @return
+     * Returns the title type
+     * @param v the value
+     * @return the title type
      */
     public static TitleType fromValue(String v) {
         for (TitleType c : TitleType.values()) {

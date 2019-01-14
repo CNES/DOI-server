@@ -1138,7 +1138,7 @@ public class Resource {
          * {@link Resource.Contributors.Contributor }
          *
          *
-         * @return
+         * @return the contributor
          */
         public List<Resource.Contributors.Contributor> getContributor() {
             if (contributor == null) {
@@ -1311,7 +1311,7 @@ public class Resource {
              * {@link Resource.Contributors.Contributor.NameIdentifier }
              *
              *
-             * @return
+             * @return the name identifier
              */
             public List<Resource.Contributors.Contributor.NameIdentifier> getNameIdentifier() {
                 if (nameIdentifier == null) {
@@ -1340,7 +1340,7 @@ public class Resource {
              * Objects of the following type(s) are allowed in the list {@link Object }
              *
              *
-             * @return
+             * @return the affiliations
              */
             public List<Object> getAffiliation() {
                 if (affiliation == null) {
@@ -1563,7 +1563,7 @@ public class Resource {
          * {@link Resource.Creators.Creator }
          *
          *
-         * @return
+         * @return the creator
          */
         public List<Resource.Creators.Creator> getCreator() {
             if (creator == null) {
@@ -1728,7 +1728,7 @@ public class Resource {
              * {@link Resource.Creators.Creator.NameIdentifier }
              *
              *
-             * @return
+             * @return the name identifier
              */
             public List<Resource.Creators.Creator.NameIdentifier> getNameIdentifier() {
                 if (nameIdentifier == null) {
@@ -1757,7 +1757,7 @@ public class Resource {
              * Objects of the following type(s) are allowed in the list {@link Object }
              *
              *
-             * @return
+             * @return the affiliation
              */
             public List<Object> getAffiliation() {
                 if (affiliation == null) {
@@ -1938,7 +1938,7 @@ public class Resource {
          * Objects of the following type(s) are allowed in the list {@link Resource.Dates.Date }
          *
          *
-         * @return
+         * @return the date
          */
         public List<Resource.Dates.Date> getDate() {
             if (date == null) {
@@ -2098,7 +2098,7 @@ public class Resource {
          * {@link Resource.Descriptions.Description }
          *
          *
-         * @return
+         * @return the description
          */
         public List<Resource.Descriptions.Description> getDescription() {
             if (description == null) {
@@ -2181,7 +2181,7 @@ public class Resource {
              * {@link String }
              *
              *
-             * @return
+             * @return the content
              */
             public List<Serializable> getContent() {
                 if (content == null) {
@@ -2285,7 +2285,7 @@ public class Resource {
          * Objects of the following type(s) are allowed in the list {@link String }
          *
          *
-         * @return
+         * @return the formats
          */
         public List<String> getFormat() {
             if (format == null) {
@@ -2387,7 +2387,7 @@ public class Resource {
          * {@link Resource.FundingReferences.FundingReference }
          *
          *
-         * @return
+         * @return the funding reference
          */
         public List<Resource.FundingReferences.FundingReference> getFundingReference() {
             if (fundingReference == null) {
@@ -2796,7 +2796,7 @@ public class Resource {
          * {@link Resource.GeoLocations.GeoLocation }
          *
          *
-         * @return
+         * @return the geolocation
          */
         public List<Resource.GeoLocations.GeoLocation> getGeoLocation() {
             if (geoLocation == null) {
@@ -3000,7 +3000,7 @@ public class Resource {
                  * Objects of the following type(s) are allowed in the list {@link Point }
                  *
                  *
-                 * @return
+                 * @return the polygon
                  */
                 public List<Point> getPolygonPoint() {
                     if (polygonPoint == null) {
@@ -3140,7 +3140,7 @@ public class Resource {
          * {@link Resource.RelatedIdentifiers.RelatedIdentifier }
          *
          *
-         * @return
+         * @return the related identifier
          */
         public List<Resource.RelatedIdentifiers.RelatedIdentifier> getRelatedIdentifier() {
             if (relatedIdentifier == null) {
@@ -3480,7 +3480,7 @@ public class Resource {
          * {@link Resource.RightsList.Rights }
          *
          *
-         * @return
+         * @return the rights
          */
         public List<Resource.RightsList.Rights> getRights() {
             if (rights == null) {
@@ -3622,7 +3622,7 @@ public class Resource {
          * Objects of the following type(s) are allowed in the list {@link String }
          *
          *
-         * @return
+         * @return the sizes
          */
         public List<String> getSize() {
             if (size == null) {
@@ -3696,7 +3696,7 @@ public class Resource {
          * {@link Resource.Subjects.Subject }
          *
          *
-         * @return
+         * @return the subject
          */
         public List<Resource.Subjects.Subject> getSubject() {
             if (subject == null) {
@@ -3931,7 +3931,7 @@ public class Resource {
          * Objects of the following type(s) are allowed in the list {@link Resource.Titles.Title }
          *
          *
-         * @return
+         * @return the title
          */
         public List<Resource.Titles.Title> getTitle() {
             if (title == null) {

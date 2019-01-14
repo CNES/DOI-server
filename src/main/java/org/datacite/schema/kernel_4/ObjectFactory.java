@@ -42,7 +42,7 @@ public class ObjectFactory {
     /**
      * Create an instance of {@link Resource }
      *
-     * @return
+     * @return the resource
      */
     public Resource createResource() {
         return new Resource();
@@ -51,7 +51,7 @@ public class ObjectFactory {
     /**
      * Create an instance of {@link Resource.FundingReferences }
      *
-     * @return
+     * @return the funding references
      */
     public Resource.FundingReferences createResourceFundingReferences() {
         return new Resource.FundingReferences();
@@ -61,7 +61,7 @@ public class ObjectFactory {
      * Create an instance of {@link Resource.FundingReferences.FundingReference
      * }
      *
-     * @return
+     * @return the funding reference
      */
     public Resource.FundingReferences.FundingReference createResourceFundingReferencesFundingReference() {
         return new Resource.FundingReferences.FundingReference();
@@ -70,7 +70,7 @@ public class ObjectFactory {
     /**
      * Create an instance of {@link Resource.GeoLocations }
      *
-     * @return
+     * @return the geolocations
      */
     public Resource.GeoLocations createResourceGeoLocations() {
         return new Resource.GeoLocations();
@@ -79,7 +79,7 @@ public class ObjectFactory {
     /**
      * Create an instance of {@link Resource.GeoLocations.GeoLocation }
      *
-     * @return
+     * @return the geolocation
      */
     public Resource.GeoLocations.GeoLocation createResourceGeoLocationsGeoLocation() {
         return new Resource.GeoLocations.GeoLocation();
@@ -88,7 +88,7 @@ public class ObjectFactory {
     /**
      * Create an instance of {@link Resource.Descriptions }
      *
-     * @return
+     * @return the descriptions
      */
     public Resource.Descriptions createResourceDescriptions() {
         return new Resource.Descriptions();
@@ -97,7 +97,7 @@ public class ObjectFactory {
     /**
      * Create an instance of {@link Resource.RightsList }
      *
-     * @return
+     * @return the rights list
      */
     public Resource.RightsList createResourceRightsList() {
         return new Resource.RightsList();
@@ -106,7 +106,7 @@ public class ObjectFactory {
     /**
      * Create an instance of {@link Resource.RelatedIdentifiers }
      *
-     * @return
+     * @return the related identifiers
      */
     public Resource.RelatedIdentifiers createResourceRelatedIdentifiers() {
         return new Resource.RelatedIdentifiers();
@@ -115,7 +115,7 @@ public class ObjectFactory {
     /**
      * Create an instance of {@link Resource.AlternateIdentifiers }
      *
-     * @return
+     * @return the alternate identifiers
      */
     public Resource.AlternateIdentifiers createResourceAlternateIdentifiers() {
         return new Resource.AlternateIdentifiers();
@@ -124,7 +124,7 @@ public class ObjectFactory {
     /**
      * Create an instance of {@link Resource.Dates }
      *
-     * @return
+     * @return the dates
      */
     public Resource.Dates createResourceDates() {
         return new Resource.Dates();
@@ -133,7 +133,7 @@ public class ObjectFactory {
     /**
      * Create an instance of {@link Resource.Contributors }
      *
-     * @return
+     * @return the contributors
      */
     public Resource.Contributors createResourceContributors() {
         return new Resource.Contributors();
@@ -142,7 +142,7 @@ public class ObjectFactory {
     /**
      * Create an instance of {@link Resource.Contributors.Contributor }
      *
-     * @return
+     * @return the contributor
      */
     public Resource.Contributors.Contributor createResourceContributorsContributor() {
         return new Resource.Contributors.Contributor();
@@ -151,7 +151,7 @@ public class ObjectFactory {
     /**
      * Create an instance of {@link Resource.Subjects }
      *
-     * @return
+     * @return the subjects
      */
     public Resource.Subjects createResourceSubjects() {
         return new Resource.Subjects();
@@ -160,7 +160,7 @@ public class ObjectFactory {
     /**
      * Create an instance of {@link Resource.Titles }
      *
-     * @return
+     * @return the titles
      */
     public Resource.Titles createResourceTitles() {
         return new Resource.Titles();
@@ -169,7 +169,7 @@ public class ObjectFactory {
     /**
      * Create an instance of {@link Resource.Creators }
      *
-     * @return
+     * @return the creators
      */
     public Resource.Creators createResourceCreators() {
         return new Resource.Creators();
@@ -178,7 +178,7 @@ public class ObjectFactory {
     /**
      * Create an instance of {@link Resource.Creators.Creator }
      *
-     * @return
+     * @return the creator
      */
     public Resource.Creators.Creator createResourceCreatorsCreator() {
         return new Resource.Creators.Creator();
@@ -187,7 +187,7 @@ public class ObjectFactory {
     /**
      * Create an instance of {@link Resource.Identifier }
      *
-     * @return
+     * @return the identifier
      */
     public Resource.Identifier createResourceIdentifier() {
         return new Resource.Identifier();
@@ -196,7 +196,7 @@ public class ObjectFactory {
     /**
      * Create an instance of {@link Resource.ResourceType }
      *
-     * @return
+     * @return the resource type
      */
     public Resource.ResourceType createResourceResourceType() {
         return new Resource.ResourceType();
@@ -205,7 +205,7 @@ public class ObjectFactory {
     /**
      * Create an instance of {@link Resource.Sizes }
      *
-     * @return
+     * @return the sizes
      */
     public Resource.Sizes createResourceSizes() {
         return new Resource.Sizes();
@@ -214,7 +214,7 @@ public class ObjectFactory {
     /**
      * Create an instance of {@link Resource.Formats }
      *
-     * @return
+     * @return the formats
      */
     public Resource.Formats createResourceFormats() {
         return new Resource.Formats();
@@ -223,7 +223,7 @@ public class ObjectFactory {
     /**
      * Create an instance of {@link Box }
      *
-     * @return
+     * @return the box
      */
     public Box createBox() {
         return new Box();
@@ -232,7 +232,7 @@ public class ObjectFactory {
     /**
      * Create an instance of {@link Point }
      *
-     * @return
+     * @return the point
      */
     public Point createPoint() {
         return new Point();
@@ -242,7 +242,7 @@ public class ObjectFactory {
      * Create an instance of {@link Resource.FundingReferences.FundingReference.FunderIdentifier
      * }
      *
-     * @return
+     * @return the funder identifier
      */
     public Resource.FundingReferences.FundingReference.FunderIdentifier createResourceFundingReferencesFundingReferenceFunderIdentifier() {
         return new Resource.FundingReferences.FundingReference.FunderIdentifier();
@@ -252,7 +252,7 @@ public class ObjectFactory {
      * Create an instance of {@link Resource.FundingReferences.FundingReference.AwardNumber
      * }
      *
-     * @return
+     * @return the award number
      */
     public Resource.FundingReferences.FundingReference.AwardNumber createResourceFundingReferencesFundingReferenceAwardNumber() {
         return new Resource.FundingReferences.FundingReference.AwardNumber();
@@ -262,7 +262,7 @@ public class ObjectFactory {
      * Create an instance of {@link Resource.GeoLocations.GeoLocation.GeoLocationPolygon
      * }
      *
-     * @return
+     * @return the geolocation polygon
      */
     public Resource.GeoLocations.GeoLocation.GeoLocationPolygon createResourceGeoLocationsGeoLocationGeoLocationPolygon() {
         return new Resource.GeoLocations.GeoLocation.GeoLocationPolygon();
@@ -271,7 +271,7 @@ public class ObjectFactory {
     /**
      * Create an instance of {@link Resource.Descriptions.Description }
      *
-     * @return
+     * @return the description
      */
     public Resource.Descriptions.Description createResourceDescriptionsDescription() {
         return new Resource.Descriptions.Description();
@@ -280,7 +280,7 @@ public class ObjectFactory {
     /**
      * Create an instance of {@link Resource.RightsList.Rights }
      *
-     * @return
+     * @return the rights
      */
     public Resource.RightsList.Rights createResourceRightsListRights() {
         return new Resource.RightsList.Rights();
@@ -290,7 +290,7 @@ public class ObjectFactory {
      * Create an instance of {@link Resource.RelatedIdentifiers.RelatedIdentifier
      * }
      *
-     * @return
+     * @return the related identifier
      */
     public Resource.RelatedIdentifiers.RelatedIdentifier createResourceRelatedIdentifiersRelatedIdentifier() {
         return new Resource.RelatedIdentifiers.RelatedIdentifier();
@@ -300,7 +300,7 @@ public class ObjectFactory {
      * Create an instance of {@link Resource.AlternateIdentifiers.AlternateIdentifier
      * }
      *
-     * @return
+     * @return the alternate identifier
      */
     public Resource.AlternateIdentifiers.AlternateIdentifier createResourceAlternateIdentifiersAlternateIdentifier() {
         return new Resource.AlternateIdentifiers.AlternateIdentifier();
@@ -309,7 +309,7 @@ public class ObjectFactory {
     /**
      * Create an instance of {@link Resource.Dates.Date }
      *
-     * @return
+     * @return the date
      */
     public Resource.Dates.Date createResourceDatesDate() {
         return new Resource.Dates.Date();
@@ -319,7 +319,7 @@ public class ObjectFactory {
      * Create an instance of {@link Resource.Contributors.Contributor.NameIdentifier
      * }
      *
-     * @return
+     * @return the name identifier
      */
     public Resource.Contributors.Contributor.NameIdentifier createResourceContributorsContributorNameIdentifier() {
         return new Resource.Contributors.Contributor.NameIdentifier();
@@ -328,7 +328,7 @@ public class ObjectFactory {
     /**
      * Create an instance of {@link Resource.Subjects.Subject }
      *
-     * @return
+     * @return the subject
      */
     public Resource.Subjects.Subject createResourceSubjectsSubject() {
         return new Resource.Subjects.Subject();
@@ -337,7 +337,7 @@ public class ObjectFactory {
     /**
      * Create an instance of {@link Resource.Titles.Title }
      *
-     * @return
+     * @return the title
      */
     public Resource.Titles.Title createResourceTitlesTitle() {
         return new Resource.Titles.Title();
@@ -346,7 +346,7 @@ public class ObjectFactory {
     /**
      * Create an instance of {@link Resource.Creators.Creator.NameIdentifier }
      *
-     * @return
+     * @return the name identifier
      */
     public Resource.Creators.Creator.NameIdentifier createResourceCreatorsCreatorNameIdentifier() {
         return new Resource.Creators.Creator.NameIdentifier();
@@ -355,8 +355,8 @@ public class ObjectFactory {
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
      *
-     * @param value
-     * @return
+     * @param value value
+     * @return the JAXBElement
      */
     @XmlElementDecl(namespace = "http://datacite.org/schema/kernel-4", name = "br", scope = Resource.Descriptions.Description.class)
     public JAXBElement<String> createResourceDescriptionsDescriptionBr(String value) {

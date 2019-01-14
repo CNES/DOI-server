@@ -477,16 +477,16 @@ public final class DoiMdsApplication extends AbstractApplication {
         }
         
         /**
-         *
-         * @return
+         * Returns the status
+         * @return the status
          */
         public Status getStatus() {
             return this.status;
         }
         
         /**
-         *
-         * @return
+         * Returns the short message.
+         * @return the short message
          */
         public String getShortMessage() {
             return this.shortMessage;

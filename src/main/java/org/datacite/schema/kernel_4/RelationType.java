@@ -368,17 +368,17 @@ public enum RelationType {
     }
 
     /**
-     *
-     * @return
+     * Returns the value.
+     * @return the value
      */
     public String value() {
         return value;
     }
 
     /**
-     *
-     * @param v
-     * @return
+     * Returns the relation type from a value
+     * @param v value
+     * @return the relation type
      */
     public static RelationType fromValue(String v) {
         for (RelationType c : RelationType.values()) {

@@ -274,17 +274,17 @@ public enum RelatedIdentifierType {
     }
 
     /**
-     *
-     * @return
+     * Returns the value.
+     * @return the value
      */
     public String value() {
         return value;
     }
 
     /**
-     *
-     * @param v
-     * @return
+     * Returns the related identifier type
+     * @param v value
+     * @return the related identifier type
      */
     public static RelatedIdentifierType fromValue(String v) {
         for (RelatedIdentifierType c : RelatedIdentifierType.values()) {

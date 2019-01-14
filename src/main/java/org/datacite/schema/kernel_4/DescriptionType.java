@@ -92,17 +92,17 @@ public enum DescriptionType {
     }
 
     /**
-     *
-     * @return
+     * Returns the value.
+     * @return the value
      */
     public String value() {
         return value;
     }
 
     /**
-     *
-     * @param v
-     * @return
+     * Returns the description type from the value.
+     * @param v value
+     * @return the description type
      */
     public static DescriptionType fromValue(String v) {
         for (DescriptionType c : DescriptionType.values()) {

@@ -1012,16 +1012,16 @@ public class ClientMDS extends BaseClient {
         }
 
         /**
-         *
-         * @return
+         * Returns the status
+         * @return the status
          */
         public Status getStatus() {
             return this.status;
         }
 
         /**
-         *
-         * @return
+         * Returns the short message
+         * @return the short message
          */
         public String getShortMessage() {
             return this.message;

@@ -97,17 +97,17 @@ public enum DateType {
     }
 
     /**
-     *
-     * @return
+     * Returns the value
+     * @return the value
      */
     public String value() {
         return value;
     }
 
     /**
-     *
-     * @param v
-     * @return
+     * Finds DateType from value.
+     * @param v value
+     * @return datType
      */
     public static DateType fromValue(String v) {
         for (DateType c : DateType.values()) {
