@@ -115,15 +115,6 @@ public class DoiSettingsTest {
         assertEquals(expResult, result);
     }
 
-    /**
-     * Test of getBoolean method, of class DoiSettings.
-     */
-    @Test
-    public void testGetBoolean() {
-        String key = Consts.SERVER_PROXY_USED;
-        boolean result = instance.getBoolean(key);
-        assertTrue(true);
-    }
 
     /**
      * Test of getLong method, of class DoiSettings.

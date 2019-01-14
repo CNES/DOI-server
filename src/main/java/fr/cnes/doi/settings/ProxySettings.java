@@ -24,7 +24,6 @@ import fr.cnes.httpclient.configuration.ProxyConfiguration;
 import fr.cnes.httpclient.configuration.ProxySPNegoJAASConfiguration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.restlet.data.ChallengeResponse;
 
 /**
  * Sets the proxy parameter based on DoiSettings.
@@ -131,7 +130,7 @@ public final class ProxySettings {
         this.nonProxyHosts = settings.getString(Consts.SERVER_NONPROXY_HOSTS, "localhost");
         LOG.info("nonProxyHosts : {}", this.nonProxyHosts);
 
-        this.proxySet = settings.getBoolean(Consts.SERVER_PROXY_USED);
+        this.proxySet = !Type.NO_PROXY.toString().equals(settings.getString(Consts.SERVER_PROXY_TYPE));
         LOG.info("proxySet : {}", this.proxySet);
 
         this.proxyType = settings.getString(Consts.SERVER_PROXY_TYPE, Type.NO_PROXY.name());
@@ -231,7 +230,7 @@ public final class ProxySettings {
      */
     public String getProxyType() {
         LOG.traceEntry();
-        return LOG.traceExit(this.proxySet ? this.proxyType : Type.NO_PROXY.name());
+        return LOG.traceExit(this.proxyType);
     }
 
     /**
@@ -239,10 +238,11 @@ public final class ProxySettings {
      */
     public void configureProxy() {
         Type type = Type.valueOf(this.getProxyType());
-
+        LOG.info("Starting with proxy : "+this.proxySet);
         if (this.proxySet) {
             switch (type) {
                 case PROXY_BASIC:
+                    LOG.info("Proxy with Basic authentication");
                     ProxyConfiguration.HTTP_PROXY.setValue(this.getProxyHost() + ":" + this.
                             getProxyPort());
                     ProxyConfiguration.NO_PROXY.setValue(this.getNonProxyHosts());
@@ -252,9 +252,11 @@ public final class ProxySettings {
                     }
                     break;
                 case PROXY_SPNEGO_API:
+                    LOG.info("Proxy with SPNego using API");
                     throw new IllegalArgumentException(
                             "SPNego trough API not supported, use JAAS configuration file");
                 case PROXY_SPNEGO_JAAS:
+                    LOG.info("Proxy with SPNego using JAAS configuration file");
                     ProxySPNegoJAASConfiguration.HTTP_PROXY.setValue(
                             this.getProxyHost() + ":" + this.getProxyPort());
                     ProxySPNegoJAASConfiguration.NO_PROXY.setValue(this.getNonProxyHosts());
@@ -263,7 +265,7 @@ public final class ProxySettings {
                     ProxySPNegoJAASConfiguration.SERVICE_PROVIDER_NAME.setValue(this.proxySpn);
                     break;
                 default:
-                // no proxy case
+                    throw new IllegalArgumentException("Proxy "+type+" is not implemented");               
             }
         }
     }

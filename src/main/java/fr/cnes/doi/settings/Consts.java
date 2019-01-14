@@ -102,11 +102,6 @@ public class Consts {
      */
     public static final String SERVER_HTTPS_TRUST_STORE_PASSWD = 
             "Starter.Server.HTTPS.TrustStorePassword";
-
-    /**
-     * Indicates whether the authentication to the proxy must be enabled.
-     */
-    public static final String SERVER_PROXY_USED = "Starter.Proxy.used";
     
     /**
      * TODO.
