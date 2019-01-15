@@ -80,6 +80,16 @@ public class UniqueProjectName {
         LOGGER.log(Level.CONFIG, "getProjects : {0}", this.projectDB.getProjects());
         return this.projectDB.getProjects();
     }
+    
+    /**
+     * Returns the projects associated to an user from the database.
+     *
+     * @return the projects
+     */
+    public Map<String, Integer> getProjectsFromUser(String userName) {
+        LOGGER.log(Level.CONFIG, "getProjectsFromUser : {0}", this.projectDB.getProjectsFromUser(userName));
+        return this.projectDB.getProjectsFromUser(userName);
+    }
 
     /**
      * Creates an Id with an uniform distribution.

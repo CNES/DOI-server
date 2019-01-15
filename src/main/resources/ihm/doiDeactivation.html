@@ -64,11 +64,20 @@
 	var prefixCnes = "10.5072/";
 	
 	$(document).ready(function(){
+		if(sessionStorage.getItem("user") == null){
+			window.location.href = ".";
+		}
+		if(sessionStorage.getItem("projects") == null){
+			sessionStorage.clear();
+			window.location.href = ".";
+		}
+		
 		$("#footer").load("footer.txt");
 		$("#navbar").load("navbar.txt", function(responseTxt, statusTxt, xhr){
 	        if(statusTxt == "success"){
 	        	setProjectID();
-	        	setDOIList();
+// 	        	setDOIList();
+	        	getDoisFromProject
 	        } else if(statusTxt == "error"){
 	            alert("Error: " + xhr.status + ": " + xhr.statusText);
 	        }
@@ -107,11 +116,36 @@
 		}); 
 	}
 	
-	var projectID;
+	var projectId;
 	function setProjectID(){
-		projectID = sessionStorage.getItem("projet");
-		projectID = projectID.substring(projectID.indexOf("(")+1, projectID.length-1 ); 
-		$("#idprojet").text(projectID + "/");
+		projectId = sessionStorage.getItem("projectId");
+		$("#idprojet").text(projectId + "/");
+	}
+	// TODO
+	function getDoisFromProject(){
+		console.log(projectId);
+		$.ajax({
+		    type: "GET",
+		    url: "http://127.0.0.1:8182/admin/projects/" + projectId  + "/dois",
+		    headers: {
+		    	'Authorization': 'Basic ' + btoa('malapert:pwd')
+//			    	'selectedRole': projectId
+		    },
+		    crossDomain: true,
+			cache : false,
+		    error : function (XMLHttpRequest, textStatus, errorThrown){ 
+		    	console.log("La requête GET(dois) a échouée."); 
+		    	alert("GET doisFromProject : status = " + textStatus);
+		    },
+		    success: function(list) {
+		    	console.log("GET doisFromProject est un succès.");
+		    	$("#doi").empty();
+	    		$("#doi").append("<option disabled selected>Choix d'un doi</option>");
+		    	for(var doi of list){
+		    		$("#doi").append("<option>" + doi + "</option>");	
+		    	}
+		    }
+		}); 
 	}
 	
 	function setDOIList(){

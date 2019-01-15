@@ -390,12 +390,21 @@
 	<script src="js/jquery-min.js"></script>
 	<script src="js/bootstrap-min.js"></script>
 	<script>
+	
 // 	var prefixCnes = "10.24400/";
 	var prefixCnes = "10.5072/";
 	var identifier = "";
 	var url = "";
 	
 		$(document).ready(function(){
+			if(sessionStorage.getItem("user") == null){
+				window.location.href = ".";
+			}
+			if(sessionStorage.getItem("projects") == null){
+				sessionStorage.clear();
+				window.location.href = ".";
+			}
+			
 			$("#footer").load("footer.txt");
 			$("#navbar").load("navbar.txt", function(responseTxt, statusTxt, xhr){
 		        if(statusTxt == "success"){
@@ -416,11 +425,10 @@
 			
 		});
 		
-		var projectID;
+		var projectId;
 		function setProjectID(){
-			projectID = sessionStorage.getItem("projet");
-			projectID = projectID.substring(projectID.indexOf("(")+1, projectID.length-1 ); 
-			$("#idprojet").text(projectID + "/");
+			projectId = sessionStorage.getItem("projectId");
+			$("#idprojet").text(projectId + "/");
 		}
 		
 		function createDOI(){
@@ -457,7 +465,7 @@
 			    data: formData,
 			    headers: {
 			    	'Authorization': 'Basic ' + btoa('malapert:pwd'),
-			    	'selectedRole': projectID
+			    	'selectedRole': projectId
 			    },
 			    crossDomain: true,
 				cache : false,
@@ -468,7 +476,7 @@
 		
 		function requestPost(xml){
 			console.log("identifier >> " + identifier);
-			console.log("idProjet >> " + projectID);
+			console.log("idProjet >> " + projectId);
 			// give project id in header for doi identifier verification
 			// org.restlet.http.headers selectedRole
 			$.ajax({
@@ -479,7 +487,7 @@
 			    dataType: "xml",
 			    headers: {
 			    	'Authorization': 'Basic ' + btoa('malapert:pwd'),
-			    	'selectedRole': projectID
+			    	'selectedRole': projectId
 			    },
 			    crossDomain: true,
 				cache : false,

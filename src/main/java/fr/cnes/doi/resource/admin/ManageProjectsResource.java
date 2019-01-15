@@ -1,5 +1,8 @@
 package fr.cnes.doi.resource.admin;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 import org.restlet.data.Form;
@@ -9,6 +12,7 @@ import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
 
 import fr.cnes.doi.application.AdminApplication;
+import fr.cnes.doi.client.ClientSearchDataCite;
 import fr.cnes.doi.resource.AbstractResource;
 import fr.cnes.doi.utils.ManageProjects;
 import fr.cnes.doi.utils.spec.Requirement;
@@ -78,6 +82,25 @@ public class ManageProjectsResource extends AbstractResource {
     @Delete
     public boolean deleteProject() {
     	 LOG.traceEntry();
+    		
+    	 final ClientSearchDataCite client;
+         List<String> response = new ArrayList<>();
+         
+         try {
+ 	       client = new ClientSearchDataCite();
+ 	       response = client.getDois(suffixProject);
+         
+         } catch (Exception ex) {
+         	LOG.error(ex + "\n" 
+         			+ "Error in SuffixProjectsDoisResource while searching for dois in project " 
+         			+ suffixProject);
+         }
+         
+         // No DOIs have to be attached to a project before deleting it
+         if(response.isEmpty()) {
+        	 return LOG.traceExit(false);
+         }
+         
          boolean isDeleted = ManageProjects.getInstance().deleteProject(
         		 Integer.parseInt(suffixProject));
          

@@ -70,9 +70,10 @@ public interface DOIDbDataAccessService {
 	public void unsetAdmin(String username) throws DOIDbException;
 	
 	/** Check if user is an admin user
+	 * return null if user doesn't exist
 	 * @throws DOIDbException
 	 */
-	public boolean isAdmin(String username) throws DOIDbException;
+	public Boolean isAdmin(String username) throws DOIDbException;
 
 	
 	/** Check if user exists in database

@@ -61,75 +61,82 @@
 		<script src="js/jquery-min.js"></script>
 		<script src="js/bootstrap-min.js"></script>
 		<script>
-			var listUser;
-			var users = [];
-			var admins = [];
-			var projets = [];
 
-			function authentication(){
-				var userId = $("#user").val();
-				var userPwd = $("#password").val();
-				
-				//TODO password not use
-// 				$.ajax({
-// 				    type: "GET",
-// 				    url: "http://127.0.0.1:8182/citation/style",
-// 				    crossDomain: true,
-// 					cache : false,
-// 				    error : function (XMLHttpRequest, textStatus, errorThrown){
-// 				    	console.log("La requête GET(style) a échouée."); 
-// 				    	alert("GET style : status = " + textStatus);
-// 				    }, 
-// 				    success: function(styles) {
-// 				    	console.log("GET style est un succès.");
-// 			    		$("#style").empty();
-// 			    		for(var style of styles){
-// 				    		if(style == "fr-FR"){
-// 				    			$("#style").append("<option selected=\"selected\">" + style + "</option>");
-// 				    		} else {
-// 					    		$("#style").append("<option>" + style + "</option>");
-// 				    		}
-// 				    	}
-// 			    	}
-// 				}
-				
-				for (var i=0 ; i < listUser.length ; i++ ){
-					var all = listUser[i].split(':');
-					users.push(all[0]);
-					admins.push(all[1]);
-					projets.push(all[2]);
-				}
-				
-				for ( var i=0 ; i < listUser.length ; i++ ){
-					if ( usrpwd === users[i] ){ 
-						sessionStorage.setItem("id", $("#user").val());
-						sessionStorage.setItem("admin", admins[i]);
-						sessionStorage.setItem("projets", projets[i]);
-						
-						if(projets[i] == "" && admins[i] == "admin"){
-							window.location.href = "administration.html";  
-						} else {
-							window.location.href = "doiCreation.html"; 
-						}
-						
-						return;
-					} 
-				}
-				alert("Utilisateur ou mot de passe incorrect.");
-			}
+		$(document).ready(function(){
+			$("#footer").load("footer.txt");
+		});
 
-			$(document).ready(function(){
-				$("#footer").load("footer.txt");
-
-				var xhttp = new XMLHttpRequest();
-				xhttp.onreadystatechange = function() {
-					if (this.readyState == 4 && this.status == 200) {
-						 listUser = this.responseText.split(";");
-					}
-				};
-				xhttp.open("GET", "listUser.txt", true);
-				xhttp.send();
-
+		var userId;
+		var userPwd;
+		function authentication(){
+			userId = $("#user").val();
+			userPwd = $("#password").val();
+			
+			//TODO password not use
+			$.ajax({
+			    type: "GET",
+			    url: "http://127.0.0.1:8182/admin/superusers/" + userId,
+			    crossDomain: true,
+				cache : false,
+			    error : function (XMLHttpRequest, textStatus, errorThrown){
+			    	console.log("La requête GET(authentication) a échouée."); 
+			    	alert("GET authentication : status = " + textStatus);
+			    }, 
+			    success: function(boo) {
+			    	console.log("GET authentication est un succès.");
+			    	console.log(boo);
+			    	if(boo == null){
+			    		alert("Utilisateur ou mot de passe incorrect.");
+			    	} else {
+			    		sessionStorage.setItem("user", userId);
+			    		if(boo){
+			    			sessionStorage.setItem("admin", "true");
+			    		} else {
+			    			sessionStorage.setItem("admin", "false");
+			    		}
+			    		
+			    		getAssociatedProject();
+			    	}
+		    	}
 			});
+		}
+			
+		function getAssociatedProject(){
+			var admin = sessionStorage.getItem("admin");
+			$.ajax({
+			    type: "GET",
+			    url: "http://127.0.0.1:8182/admin/projects?user=" + userId,
+			    crossDomain: true,
+				cache : false,
+			    error : function (XMLHttpRequest, textStatus, errorThrown){
+			    	console.log("La requête GET(getAssociatedProject) a échouée."); 
+			    	alert("GET getAssociatedProject : status = " + textStatus);
+			    }, 
+			    success: function(array) {
+			    	console.log("GET getAssociatedProject est un succès.");
+			    	console.log(array);
+			    	
+			    	if(!isEmpty(array)){
+			    		sessionStorage.setItem("projects", JSON.stringify(array));
+			    		window.location.href = "doiCreation.html";
+			    	} else {
+			    		sessionStorage.setItem("projects", null);
+			    		if(admin == "true"){
+			    			window.location.href = "administration.html";
+			    		}else{
+			    			alert("L'utilisateur n'est rattaché à aucun projets.")
+			    		}
+			    	}
+		    	}
+			});
+		}
+		
+		function isEmpty(object){
+			for(key in object){
+				return false;
+			}
+			return true;
+		}
+
 		</script>
 </html>

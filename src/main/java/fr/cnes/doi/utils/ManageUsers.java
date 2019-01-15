@@ -71,6 +71,11 @@ public class ManageUsers {
     	return userDB.removeUserToRole(username, projectId);
 	}
     
+    public boolean isUserExist(String userName){
+    	LOGGER.entering(CLASS_NAME, "isUserExist", userName);
+    	return userDB.isUserExist(userName);
+    }
+    
     
     /**
      * Class to handle the instance

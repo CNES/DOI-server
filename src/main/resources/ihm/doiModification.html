@@ -399,12 +399,20 @@
 		var url = "";
 		
 			$(document).ready(function(){
+				if(sessionStorage.getItem("user") == null){
+					window.location.href = ".";
+				}
+				if(sessionStorage.getItem("projects") == null){
+					sessionStorage.clear();
+					window.location.href = ".";
+				}
+				
 				$("#footer").load("footer.txt");
 				$("#navbar").load("navbar.txt", function(responseTxt, statusTxt, xhr){
 			        if(statusTxt == "success"){
 			        	setProjectID();
-			        	setDOIList();
-// 			        	getDoisFromProject();
+// 			        	setDOIList();
+			        	getDoisFromProject();
 			        } else if(statusTxt == "error"){
 			            alert("Error: " + xhr.status + ": " + xhr.statusText);
 			        }
@@ -440,13 +448,13 @@
 			
 			// TODO
 			function getDoisFromProject(){
-				console.log(projectID);
+				console.log(projectId);
 				$.ajax({
 				    type: "GET",
-				    url: "http://127.0.0.1:8182/admin/projects/" + projectID  + "/dois",
+				    url: "http://127.0.0.1:8182/admin/projects/" + projectId  + "/dois",
 				    headers: {
 				    	'Authorization': 'Basic ' + btoa('malapert:pwd')
-// 				    	'selectedRole': projectID
+// 				    	'selectedRole': projectId
 				    },
 				    crossDomain: true,
 					cache : false,
@@ -465,11 +473,10 @@
 				}); 
 			}
 			
-			var projectID;
+			var projectId;
 			function setProjectID(){
-				projectID = sessionStorage.getItem("projet");
-				projectID = projectID.substring(projectID.indexOf("(")+1, projectID.length-1 ); 
-				$("#idprojet").text(projectID + "/");
+				projectId = sessionStorage.getItem("projectId");
+				$("#idprojet").text(projectId + "/");
 			}
 			function setDOIList(){
 				$("#doi").empty();

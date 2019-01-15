@@ -119,4 +119,6 @@ public abstract class AbstractProjectSuffixDBHelper extends Observable {
      */
     public abstract Map<String, Integer> getProjects();
 
+	public abstract Map<String, Integer> getProjectsFromUser(String userName);
+
 }

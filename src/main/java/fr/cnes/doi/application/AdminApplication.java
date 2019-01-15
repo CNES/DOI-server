@@ -18,23 +18,10 @@
  */
 package fr.cnes.doi.application;
 
-import fr.cnes.doi.application.DoiMdsApplication.SecurityPostProcessingFilter;
-import fr.cnes.doi.db.AbstractTokenDBHelper;
-import fr.cnes.doi.logging.business.JsonMessage;
-import fr.cnes.doi.resource.admin.ManageProjectsResource;
-import fr.cnes.doi.resource.admin.ManageSuperUsersResource;
-import fr.cnes.doi.resource.admin.ManageUsersResource;
-import fr.cnes.doi.resource.admin.SuffixProjectsDoisResource;
-import fr.cnes.doi.resource.admin.SuffixProjectsResource;
-import fr.cnes.doi.resource.admin.TokenResource;
-import fr.cnes.doi.security.AllowerIP;
-import fr.cnes.doi.security.TokenSecurity;
-import fr.cnes.doi.services.LandingPageMonitoring;
-import fr.cnes.doi.utils.spec.CoverageAnnotation;
-import fr.cnes.doi.utils.spec.Requirement;
 import java.io.File;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.restlet.Request;
@@ -42,7 +29,6 @@ import org.restlet.Response;
 import org.restlet.Restlet;
 import org.restlet.data.LocalReference;
 import org.restlet.data.Method;
-import org.restlet.data.Reference;
 import org.restlet.data.Status;
 import org.restlet.resource.Directory;
 import org.restlet.routing.Filter;
@@ -53,6 +39,21 @@ import org.restlet.security.MethodAuthorizer;
 import org.restlet.security.Role;
 import org.restlet.security.RoleAuthorizer;
 import org.restlet.service.TaskService;
+
+import fr.cnes.doi.db.AbstractTokenDBHelper;
+import fr.cnes.doi.logging.business.JsonMessage;
+import fr.cnes.doi.resource.admin.ManageProjectsResource;
+import fr.cnes.doi.resource.admin.ManageSuperUserResource;
+import fr.cnes.doi.resource.admin.ManageSuperUsersResource;
+import fr.cnes.doi.resource.admin.ManageUsersResource;
+import fr.cnes.doi.resource.admin.SuffixProjectsDoisResource;
+import fr.cnes.doi.resource.admin.SuffixProjectsResource;
+import fr.cnes.doi.resource.admin.TokenResource;
+import fr.cnes.doi.security.AllowerIP;
+import fr.cnes.doi.security.TokenSecurity;
+import fr.cnes.doi.services.LandingPageMonitoring;
+import fr.cnes.doi.utils.spec.CoverageAnnotation;
+import fr.cnes.doi.utils.spec.Requirement;
 
 /**
  * Provides an application for handling features related to the administration system of the DOI
@@ -343,7 +344,7 @@ public class AdminApplication extends AbstractApplication {
         router.attach(SUFFIX_PROJECT_URI + SUFFIX_PROJECT_NAME + USERS_URI + USERS_NAME, ManageUsersResource.class);
 
         router.attach(SUPERUSERS_URI, ManageSuperUsersResource.class);
-        router.attach(SUPERUSERS_URI + USERS_NAME, ManageSuperUsersResource.class);
+        router.attach(SUPERUSERS_URI + USERS_NAME, ManageSuperUserResource.class);
         
         
         router.attach(TOKEN_URI, TokenResource.class);

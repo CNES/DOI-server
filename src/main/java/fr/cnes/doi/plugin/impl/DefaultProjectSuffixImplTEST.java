@@ -182,6 +182,21 @@ public class DefaultProjectSuffixImplTEST extends AbstractProjectSuffixPluginHel
     }
     
     @Override
+    public Map<String, Integer> getProjectsFromUser(String userName) {
+    	Map<String, Integer> map = new HashMap<String, Integer>();
+    	try {
+			List<DOIProject> doiProjects = das.getAllDOIProjectsForUser(userName);
+			for(DOIProject doiProject : doiProjects) {
+				map.put(doiProject.getProjectname(), doiProject.getSuffix());
+			}
+		} catch (DOIDbException e) {
+			LOG.fatal("An error occured while trying to get all DOI projects" ,e);
+		}
+    	
+    	return Collections.unmodifiableMap(map);
+    }
+    
+    @Override
     public boolean renameProject(int projectId, String newProjectName) {
     	boolean isRenamed = false;
     	try {

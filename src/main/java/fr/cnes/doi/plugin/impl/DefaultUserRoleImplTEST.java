@@ -151,10 +151,6 @@ public class DefaultUserRoleImplTEST extends AbstractUserRolePluginHelper {
 	}
 
     @Override
-    public String getName() {
-        return NAME;
-    }
-    @Override
     public boolean isUserExist(String username) {
     	boolean isExist = false;
     	try {
@@ -163,6 +159,22 @@ public class DefaultUserRoleImplTEST extends AbstractUserRolePluginHelper {
     		LOG.fatal("An error occured while trying to know if user " + username + " exist",e);
     	}
     	return isExist;
+    }
+    
+    @Override
+    public Boolean isAdmin(String username) {
+    	Boolean isExist=null;
+    	try {
+    		isExist =  das.isAdmin(username);
+    	} catch (DOIDbException e) {
+    		LOG.fatal("An error occured while trying to know if user " + username + " exist and is admin",e);
+    	}
+    	return isExist;
+    }
+    
+    @Override
+    public String getName() {
+        return NAME;
     }
 
     @Override

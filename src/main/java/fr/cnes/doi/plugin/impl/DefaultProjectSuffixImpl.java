@@ -264,4 +264,10 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
 		return false;
 	}
 
+	@Override
+	public Map<String, Integer> getProjectsFromUser(String userName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

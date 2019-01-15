@@ -25,12 +25,6 @@ public class ManageSuperUsersResource extends AbstractResource {
      */
     private volatile Logger LOG;
      
-
-    /**
-     * User name.
-     */
-    private volatile String userName;
-    
     /**
      * Parameter for the SUPERUSER name {@value #SUPERUSER_NAME_PARAMETER}. This parameter is send to
      * create a new identifier for the SUPERUSER.
@@ -48,8 +42,6 @@ public class ManageSuperUsersResource extends AbstractResource {
         final AdminApplication app = (AdminApplication) getApplication();
         LOG = app.getLog();
         LOG.traceEntry();
-        this.userName = getAttribute("userName"); 
-        LOG.debug(this.userName);
         setDescription("This resource handles super users");
         LOG.traceExit();
     }
@@ -71,22 +63,6 @@ public class ManageSuperUsersResource extends AbstractResource {
          return LOG.traceExit(isAdded);
     }
     
-  //TODO requirement
-    /**
-     * Delete the SUPERUSER from database.
-     *
-     * @return the list of dois
-     */
-    //@Requirement(reqId = Requirement.DOI_SRV_140, reqName = Requirement.DOI_SRV_140_NAME)
-    @Delete
-    public boolean deleteSUPERUSER() {
-    	 LOG.traceEntry();
-         boolean isDeleted = ManageSuperUsers.getInstance().deleteSuperUser(
-        		 userName);
-         
-         return LOG.traceExit(isDeleted);
-    }
-
     //TODO requirement
     /**
      * Returns the list of superusers as an array format.

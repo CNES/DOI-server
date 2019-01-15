@@ -48,14 +48,9 @@ public class ManageSuperUsers {
         LOGGER.exiting(CLASS_NAME, "Constructor");
     }
     
-    public boolean isSuperUser(String username){
+    public Boolean isSuperUser(String username){
     	LOGGER.entering(CLASS_NAME, "isSuperUser", username);
-    	for(DOIUser user : userDB.getUsers()) {
-    		if(user.getUsername().equals(username)) {
-    			return user.getAdmin();
-    		}
-    	}
-    	return false;
+    	return userDB.isAdmin(username);
     }
     
     public boolean addSuperUser(String username) {

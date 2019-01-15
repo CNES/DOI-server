@@ -67,9 +67,11 @@ public class SuffixProjectsResource extends AbstractResource {
     private volatile Logger LOG;
     
     public final String USER_PARAMETER = "user";
-   
+    /**
+     * The user name
+     */
     private volatile String userName;
-
+   
     /**
      * Set-up method that can be overridden in order to initialize the state of the resource.
      *
@@ -82,7 +84,7 @@ public class SuffixProjectsResource extends AbstractResource {
         LOG = app.getLog();
         LOG.traceEntry();
         
-        this.userName =getQueryValue(USER_PARAMETER);
+        this.userName = getQueryValue(USER_PARAMETER);
         LOG.debug("USER Parameter : " + this.userName);
         
         setDescription("This resource handles the project suffix in the DOI name");
@@ -98,7 +100,11 @@ public class SuffixProjectsResource extends AbstractResource {
     @Get("json|xml")
     public Map<String, Integer> getProjectsNameAsJson() {
         LOG.traceEntry();
-        return LOG.traceExit(UniqueProjectName.getInstance().getProjects());
+        if (this.userName == null || this.userName.isEmpty()) {
+        	return LOG.traceExit(UniqueProjectName.getInstance().getProjects());
+        } else {
+        	return LOG.traceExit(UniqueProjectName.getInstance().getProjectsFromUser(this.userName));
+        }
     }
 
     /**
@@ -120,7 +126,7 @@ public class SuffixProjectsResource extends AbstractResource {
         
         return LOG.traceExit(new StringRepresentation(String.valueOf(digits)));
     }
-
+    
     /**
      * Tests if the {@link #PROJECT_NAME_PARAMETER} is set.
      *

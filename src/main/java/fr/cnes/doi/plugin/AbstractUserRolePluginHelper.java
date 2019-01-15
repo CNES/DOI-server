@@ -36,4 +36,5 @@ public abstract class AbstractUserRolePluginHelper
     protected AbstractUserRolePluginHelper() {
         super();
     }
+
 }

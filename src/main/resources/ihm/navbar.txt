@@ -21,46 +21,56 @@
 			</ul>
 			<button type="button" class="navbar-btn navbar-right" onclick="disconnect()">Se déconnecter</button>
 			<form class="navbar-form navbar-right">
-				<label class="control-label" style="color:#FFFFFF">Projet courant :</label>
+				<label class="control-label" style="color:#FFFFFF">project courant :</label>
 				<select id="selection" class="form-control"></select>
 			</form>
 		</div><!--/.nav-collapse -->
 	</div><!--/.container-fluid -->
 </nav>
 <script>
-	var projets = sessionStorage.getItem("projets").split(',');
-	var selectedProjet = sessionStorage.getItem("projet");
-	var right = sessionStorage.getItem("admin");
-	var id = sessionStorage.getItem("id");
+	// Object json
+	var projects = JSON.parse(sessionStorage.getItem("projects"));
+	var user = sessionStorage.getItem("user");
+	var admin = sessionStorage.getItem("admin");
+	var selectedProject = sessionStorage.getItem("project");
 	
 	function disconnect(){
 		if(confirm("Voulez-vous vraiment vous déconnecter?")){
 			//TODO delete token
-			
+			sessionStorage.clear();
 			window.location.href = "."; 
 		}
 	}
 	
 	var previousSelect;
 	function atLoading(){
-		$("#right").text(id + "/" + right);
-		if(right != "admin"){
+		
+		var random = null;
+		if(admin == "false"){
 			$("[href='administration.html']").addClass("hide");
 		}
-		if(projets == ""){
+		if(projects == null){
 			$("[href='doiCreation.html']").addClass("hide");
 			$("[href='doiModification.html']").addClass("hide");
 			$("[href='doiDeactivation.html']").addClass("hide");
 			$("[href='citations.html']").addClass("hide");
 		} else {
-			for(var i = 0 ; i < projets.length ; i++){
-				$("#selection").append("<option>" + projets[i] + "</option>");
+			for(project in projects){
+				$("#selection").append("<option>" + project +
+						"("+projects[project]+")" + "</option>");
+				if(random == null){
+					random = project;
+				}
 			}
-			if(selectedProjet != null){
-				$("#selection").val(selectedProjet);
+			if(selectedProject != null && selectedProject != "null"){
+				$("#selection").val(selectedProject + 
+						"("+ projects[selectedProject] +")");
 			}else{
-				$("#selection").val(projets[0]);
-				sessionStorage.setItem("projet", projets[0]);
+				// if no project is selected, select a random one
+				$("#selection").val(random +
+						"("+ projects[random] +")");
+				sessionStorage.setItem("project", random);
+				sessionStorage.setItem("projectId", projects[random]);
 			}
 			previousSelect = $("#selection").val();
 		}
@@ -70,10 +80,13 @@
 	// keep the selected project in memorys
 	$("#selection").change(function(){
 		var select = $("#selection").val();
+		select = select.substring(0,select.indexOf('('));
+		
 		if (confirm("Voulez-vous vraiment changer de projet ?" 
 						+"\nToute action non sauvegardée sera perdu." )
 				){
-			sessionStorage.setItem("projet", select);
+			sessionStorage.setItem("project", select);
+			sessionStorage.setItem("projectId", projects[select]);
 			location.reload();
 		}else{
 			$("#selection").val(previousSelect);

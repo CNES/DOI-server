@@ -121,4 +121,7 @@ public abstract class AbstractUserRoleDBHelper extends Observable {
 
 	public abstract boolean isUserExist(String username);
 
+	// Boolean and not boolean because the first one can be null
+	public abstract Boolean isAdmin(String username);
+
 }

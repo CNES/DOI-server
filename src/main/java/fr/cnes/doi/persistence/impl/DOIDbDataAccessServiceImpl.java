@@ -465,9 +465,13 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
 	}
 
 	@Override
-	public boolean isAdmin(String username) throws DOIDbException {
-		return getDoiUserFromDb(username).getAdmin();
-		
+	public Boolean isAdmin(String username) throws DOIDbException {
+		DOIUser user = getDoiUserFromDb(username);
+		if (user != null) {
+			return getDoiUserFromDb(username).getAdmin();
+		} else {
+			return null;
+		}
 	}
 	
 	private DOIUser getDoiUserFromDb(String username) throws DOIDbException {

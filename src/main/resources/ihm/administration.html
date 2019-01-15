@@ -102,15 +102,26 @@
 		<script src="js/bootstrap-min.js"></script>
 
 		<script>
-		var users;
-		var admins;
-		var projets;
+		var actualUser = sessionStorage.getItem("user");
 		
 		$(document).ready(function(){
+			if(sessionStorage.getItem("user") == null){
+				window.location.href = ".";
+			}
+			if(sessionStorage.getItem("admin") == "false"){
+				sessionStorage.clear();
+				window.location.href = ".";
+			}
+			
 			$("#footer").load("footer.txt");
 			$("#navbar").load("navbar.txt", function(responseTxt, statusTxt, xhr){
 		        if(statusTxt == "success"){
 		        	$("#selection").parent().remove();
+		        	
+					// remove selected project
+					sessionStorage.setItem("project", null);
+					sessionStorage.setItem("projectId", null);
+					
 		        } else if(statusTxt == "error"){
 		            alert("Error: " + xhr.status + ": " + xhr.statusText);
 		        }
@@ -143,10 +154,10 @@
 			    },
 			    success: function(json) {
 			    	console.log(json);
-			    	projets = json; 
 			    	console.log("GET getListProjet est un succès.");
 			    	for(project in json){
-			    		$("#listProjet").append("<option>" + project + "(" + json[project] + ")" + "</option>");	
+			    		$("#listProjet").append("<option>" + project + 
+			    				"(" + json[project] + ")" + "</option>");	
 			    	}
 			    }
 			});
@@ -167,7 +178,6 @@
 			    },
 			    success: function(array) {
 			    	console.log(array);
-			    	admins = array; 
 			    	console.log("GET getListAdmin est un succès.");
 			    	array.forEach(function(admin, index, array){
 			    		$("#listAdmin").append("<option>" + admin + "</option>");	
@@ -244,6 +254,15 @@
 					    	$("#listProjet option:selected").text( projet + 
 				    				"(" + idText + ")" );	
 					    	$("#titreProjet").text("Utilisateurs du projet: "+ projet + idText);
+					    	
+					    	//if actual user is on this project, actualize project name
+					    	object = JSON.parse(sessionStorage.getItem("projects"));
+					    	for(pro in object){
+					    		if(pro == nomText){
+					    			pro = projet;
+					    		}
+					    	}
+					    	sessionStorage.setItem("projects", JSON.stringify(object));
 				    	}
 				    }
 				});
@@ -280,6 +299,11 @@
 					    	$("#listProjet option:selected").remove();
 					    	$("#titreProjet").text("Utilisateurs du projet: ");
 							$("#listUser").empty();	
+							
+							//if actual user is on this project, remove project from session
+					    	object = JSON.parse(sessionStorage.getItem("projects"));
+							delete object[nomText];
+					    	sessionStorage.setItem("projects", JSON.stringify(object));
 				    	}
 				    }
 				});
@@ -308,7 +332,6 @@
 			    },
 			    success: function(array) {
 			    	console.log(array);
-			    	users = array; 
 			    	console.log("GET modifyListUser est un succès.");
 			    	array.forEach(function(user, index, array){
 			    		$("#listUser").append("<option>" + user + "</option>");	
@@ -353,6 +376,11 @@
 				    	console.log(boo);
 				    	if(boo){
 					    	$("#listUser").append("<option selected=\"selected\">" + user + "</option>");
+					    	if(user == actualUser){
+					    		object = JSON.parse(sessionStorage.getItem("projects"));
+					    		object[nameProject] = suffixProject;
+						    	sessionStorage.setItem("projects", JSON.stringify(object));
+					    	}
 				    	}
 				    }
 				});
@@ -390,7 +418,12 @@
 				    	console.log("DELETE deleteUser est un succès.");
 				    	console.log(boo);
 				    	if(boo){
-					    	$("#listUser option:selected").remove();				    		
+					    	$("#listUser option:selected").remove();
+					    	if(user == actualUser){
+					    		object = JSON.parse(sessionStorage.getItem("projects"));
+					    		delete object[nameProject];
+						    	sessionStorage.setItem("projects", JSON.stringify(object));
+					    	}
 				    	}
 				    }
 				});
@@ -399,7 +432,7 @@
 			
 		// modification Admin   //TODO maybe show up a hidden select button that allow to find any user...
 		function addAdmin(){
-			var user = prompt("Entrer le \"nom.prenom\" de l'utilisateur qui passera Admin :\n(possibilité d'afficher les noms disponibles ici)", "toto.toto");
+			var user = prompt("Entrer le \"nom.prenom\" de l'utilisateur qui passera Admin:", "toto.toto");
 			if (user == null || user == "") {
 		        return;
 			} else {
@@ -422,7 +455,12 @@
 				    	console.log("POST addAdmin est un succès.");
 				    	console.log(boo);
 				    	if(boo){
-					    	$("#listAdmin").append("<option selected=\"selected\">" + user + "</option>");			    		
+					    	$("#listAdmin").append("<option selected=\"selected\">" + user + "</option>");	
+					    	if(user == actualUser){
+					    		//in case user remove himself from superuser list, 
+					    		//and put himself back into the list before reloading the page
+					    		sessionStorage.setItem("admin", "true");
+					    	}
 				    	}
 				    }
 				});
@@ -450,12 +488,16 @@
 				    	console.log("DELETE deleteAdmin est un succès.");
 				    	console.log(boo);
 				    	if(boo){
-					    	$("#listAdmin option:selected").remove();				    		
+					    	$("#listAdmin option:selected").remove();
+					    	if(user == actualUser){
+					    		sessionStorage.setItem("admin", "false");
+					    	}
 				    	}
 				    }
 				});
 		    } 
 		}
+		
 		</script>
 		
 </html>
