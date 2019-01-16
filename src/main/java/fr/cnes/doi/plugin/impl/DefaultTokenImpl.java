@@ -50,6 +50,7 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
     private static final String OWNER = "CNES";
     private static final String AUTHOR = "Jean-Christophe Malapert";
     private static final String LICENSE = "LGPLV3";
+    
     /**
      * Logger.
      */
@@ -67,6 +68,7 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
      * My database.
      */
     private final Map<String, Map<String, Object>> db = new ConcurrentHashMap<>();
+    
 
     /**
      * Default Constructor of the token database
