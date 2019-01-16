@@ -105,10 +105,12 @@ public class MediaResourceTest {
     @Test
     public void testGetMediasHttps() throws IOException {
         mdsServerStub.createSpec(MdsSpec.Spec.GET_MEDIA_200);
-        
+        final Series<Parameter> parameters = cl.getContext().getParameters();
+        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
+        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));        
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + MEDIA_SERVICE +MdsSpec.Spec.GET_MEDIA_200.getTemplatePath());
-        client.setNext(cl);
+        //client.setNext(cl);
         int code;
         try {
             Representation rep = client.get();
@@ -154,10 +156,12 @@ public class MediaResourceTest {
     @Test
     public void testGetMediasWithWrongDOIHttps() throws IOException {        
         mdsServerStub.createSpec(MdsSpec.Spec.GET_MEDIA_404);
-        
+        final Series<Parameter> parameters = cl.getContext().getParameters();
+        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
+        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));        
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + MEDIA_SERVICE+MdsSpec.Spec.GET_MEDIA_404.getTemplatePath());
-        client.setNext(cl);
+        //client.setNext(cl);
         int code;
         try {
             Representation rep = client.get();
@@ -201,7 +205,10 @@ public class MediaResourceTest {
      * A Status.SUCCESS_OK is expected
      */
     @Test    
-    public void testCreateMediaForbidden() {                
+    public void testCreateMediaForbidden() {   
+        final Series<Parameter> parameters = cl.getContext().getParameters();
+        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
+        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));        
         Form mediaForm = new Form();
         mediaForm.add("image/fits", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
         mediaForm.add("image/jpeg", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
@@ -218,7 +225,7 @@ public class MediaResourceTest {
         }
         headers.add(UtilsHeader.SELECTED_ROLE_PARAMETER, "828606");
         
-        client.setNext(cl);
+        //client.setNext(cl);
         int code;
         try {
             Representation rep = client.post(mediaForm);

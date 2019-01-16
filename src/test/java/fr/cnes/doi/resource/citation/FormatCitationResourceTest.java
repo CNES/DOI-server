@@ -106,7 +106,9 @@ public class FormatCitationResourceTest {
     @Test
     public void testGetFormatHttps() {        
         spec.createSpec(CrossCiteSpec.Spec.GET_FORMAT_200);               
-        
+        final Series<Parameter> parameters = cl.getContext().getParameters();
+        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
+        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));        
         String expResult = CrossCiteSpec.Spec.GET_FORMAT_200.getBody();
         String result = "";
         String doiName = "10.1145/2783446.2783605";
@@ -117,7 +119,7 @@ public class FormatCitationResourceTest {
         client.addQueryParameter("doi", doiName);
         client.addQueryParameter("lang", language);
         client.addQueryParameter("style", style);
-        client.setNext(cl);
+        //client.setNext(cl);
         Representation rep = client.get();
         try {
             result = rep.getText();
@@ -139,7 +141,9 @@ public class FormatCitationResourceTest {
         exceptions.expect(ResourceException.class);
         
         spec.createSpec(CrossCiteSpec.Spec.GET_FORMAT_400);               
-        
+        final Series<Parameter> parameters = cl.getContext().getParameters();
+        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
+        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));        
         String expResult = "Garza, K., Goble, C., Brooke, J., & Jay, C. 2015. Framing the community data system interface. Proceedings of the 2015 British HCI Conference on - British HCI ’15. Presented at the the 2015 British HCI Conference, ACM Press. https://doi.org/10.1145/2783446.2783605.\n";
         String result = "";
         String doiName = "10.1145/2783446.2783605";
@@ -150,7 +154,7 @@ public class FormatCitationResourceTest {
         client.addQueryParameter("do", doiName);
         client.addQueryParameter("lan", language);
         client.addQueryParameter("styl", style);
-        client.setNext(cl);
+        //client.setNext(cl);
         Representation rep = client.get();
         try {
             result = rep.getText();
@@ -168,7 +172,9 @@ public class FormatCitationResourceTest {
     @Test
     public void testGetFormatHttp() {        
         spec.createSpec(CrossCiteSpec.Spec.GET_FORMAT_200);               
-        
+        final Series<Parameter> parameters = cl.getContext().getParameters();
+        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
+        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));        
         String expResult = CrossCiteSpec.Spec.GET_FORMAT_200.getBody();
         String result = "";
         String doiName = "10.1145/2783446.2783605";
@@ -179,7 +185,7 @@ public class FormatCitationResourceTest {
         client.addQueryParameter("doi", doiName);
         client.addQueryParameter("lang", language);
         client.addQueryParameter("style", style);
-        client.setNext(cl);
+        //client.setNext(cl);
         Representation rep = client.get();
         try {
             result = rep.getText();
@@ -203,7 +209,9 @@ public class FormatCitationResourceTest {
 
         int expResult = Status.CLIENT_ERROR_NOT_FOUND.getCode();
         int result;
-
+        final Series<Parameter> parameters = cl.getContext().getParameters();
+        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
+        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));
         ClientResource client;
         String doiName = "xxxx";
         String style = "academy-of-management-review";
@@ -213,7 +221,7 @@ public class FormatCitationResourceTest {
         client.addQueryParameter("doi", doiName);
         client.addQueryParameter("lang", language);
         client.addQueryParameter("style", style);
-        client.setNext(cl);
+        //client.setNext(cl);
         try {
             client.get();
             result = client.getStatus().getCode();
@@ -238,7 +246,9 @@ public class FormatCitationResourceTest {
 
         int expResult = Status.CLIENT_ERROR_BAD_REQUEST.getCode();
         int result = -1;
-
+        final Series<Parameter> parameters = cl.getContext().getParameters();
+        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
+        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));
         ClientResource client;
         String doiName = "10.1145/2783446.2783605";
         String style = "academy-of-management-rew";
@@ -248,7 +258,7 @@ public class FormatCitationResourceTest {
         client.addQueryParameter("doi", doiName);
         client.addQueryParameter("lang", language);
         client.addQueryParameter("style", style);
-        client.setNext(cl);
+        //client.setNext(cl);
         try {
             client.get();
             result = client.getStatus().getCode();
@@ -273,7 +283,9 @@ public class FormatCitationResourceTest {
 
         int expResult = Status.CLIENT_ERROR_BAD_REQUEST.getCode();
         int result = -1;
-
+        final Series<Parameter> parameters = cl.getContext().getParameters();
+        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
+        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));
         ClientResource client;
         String doiName = "10.1145/2783446.2783605";
         String style = "academy-of-management-review";
@@ -283,7 +295,7 @@ public class FormatCitationResourceTest {
         client.addQueryParameter("doi", doiName);
         client.addQueryParameter("lang", language);
         client.addQueryParameter("style", style);
-        client.setNext(cl);
+        //client.setNext(cl);
 
         try {
             client.get();
@@ -309,7 +321,9 @@ public class FormatCitationResourceTest {
         
         int expResult = Status.CLIENT_ERROR_NOT_FOUND.getCode();
         int result = -1;
-
+        final Series<Parameter> parameters = cl.getContext().getParameters();
+        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
+        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));
         ClientResource client;
         String doiName = "10.1145/276.27";
         String style = "academy-of-management-review";
@@ -319,7 +333,7 @@ public class FormatCitationResourceTest {
         client.addQueryParameter("doi", doiName);
         client.addQueryParameter("lang", language);
         client.addQueryParameter("style", style);
-        client.setNext(cl);
+        //client.setNext(cl);
 
         try {
             client.get();
