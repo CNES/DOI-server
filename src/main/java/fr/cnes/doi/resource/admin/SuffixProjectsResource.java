@@ -70,6 +70,8 @@ public class SuffixProjectsResource extends AbstractResource {
     protected void doInit() throws ResourceException {
         super.doInit();
         final AdminApplication app = (AdminApplication) getApplication();
+        System.clearProperty("javax.net.ssl.trustStore");
+        System.clearProperty("javax.net.ssl.trustStorePassword");        
         LOG = app.getLog();
         LOG.traceEntry();
         setDescription("This resource handles the project suffix in the DOI name");

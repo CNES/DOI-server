@@ -39,6 +39,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
@@ -118,9 +119,12 @@ public class SuffixProjectsResourceTest {
      */
     @Test
     public void testGetProjectsNameAsJson() throws IOException {
+        final Series<Parameter> parameters = cl.getContext().getParameters();
+        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
+        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));        
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:"+port+"/admin/suffixProject");
-        client.setNext(cl);
+        //client.setNext(cl);
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
         Representation response = client.get(MediaType.APPLICATION_JSON); 
         String projects = response.getText();
@@ -135,9 +139,12 @@ public class SuffixProjectsResourceTest {
      */
     @Test
     public void testGetProjectsNameAsXml() throws IOException {
+        final Series<Parameter> parameters = cl.getContext().getParameters();
+        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
+        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));        
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:"+port+"/admin/suffixProject");
-        client.setNext(cl);
+        //client.setNext(cl);
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
         Representation response = client.get(MediaType.APPLICATION_XML); 
         String projects = response.getText();
@@ -153,9 +160,12 @@ public class SuffixProjectsResourceTest {
      */
     @Test
     public void testCreateProject() throws IOException {
+        final Series<Parameter> parameters = cl.getContext().getParameters();
+        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
+        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));        
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:"+port+"/admin/suffixProject");
-        client.setNext(cl);
+        //client.setNext(cl);
         Form form = new Form();
         form.add("projectName", "Myphhfffcvdscsdfvdffff");
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
@@ -173,10 +183,12 @@ public class SuffixProjectsResourceTest {
     @Test
     public void testCreateProjectWithWrongParameter() {       
         exceptions.expect(ResourceException.class);
-        
+        final Series<Parameter> parameters = cl.getContext().getParameters();
+        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
+        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));        
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:"+port+"/admin/suffixProject");
-        client.setNext(cl);
+        //client.setNext(cl);
         Form form = new Form();
         form.add("project", "Myphhfffcvdscsdfvdffff");
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");

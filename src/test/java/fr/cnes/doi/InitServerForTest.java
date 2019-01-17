@@ -18,14 +18,22 @@
  */
 package fr.cnes.doi;
 
-import fr.cnes.doi.exception.ClientMdsException;
 import fr.cnes.doi.server.DoiServer;
 import fr.cnes.doi.settings.DoiSettings;
+import fr.cnes.httpclient.HttpClient;
+import fr.cnes.httpclient.HttpClientFactory;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.logging.Level;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
+import org.restlet.Client;
+import org.restlet.Context;
+import org.restlet.data.Protocol;
 import org.restlet.engine.Engine;
+import org.restlet.engine.connector.ConnectorHelper;
+import org.restlet.ext.httpclient4.HttpClientHelper;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 
 /**
@@ -39,6 +47,9 @@ public class InitServerForTest {
         java.util.logging.Handler[] handlers = rootLogger.getHandlers();
         rootLogger.removeHandler(handlers[0]);
         SLF4JBridgeHandler.install();
+        final List<ConnectorHelper<Client>> registeredClients = Engine.getInstance().
+                getRegisteredClients();
+        registeredClients.add(0, new HttpClientHelper(null));          
     }    
     
     /**

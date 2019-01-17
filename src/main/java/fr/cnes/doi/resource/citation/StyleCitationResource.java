@@ -45,7 +45,7 @@ public class StyleCitationResource extends BaseCitationResource {
     @Override
     protected void doInit() throws ResourceException {
         super.doInit();
-        LOG.traceEntry();
+        LOG.traceEntry();       
         final StringBuilder description = new StringBuilder();
         description.append("Selects a style");
         description.append("A \"style\" can be chosen from the list of style "

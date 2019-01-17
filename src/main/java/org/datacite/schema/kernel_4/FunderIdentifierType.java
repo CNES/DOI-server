@@ -17,9 +17,8 @@ import javax.xml.bind.annotation.XmlType;
  *
  * <p>
  * The following schema fragment specifies the expected content contained within this class.
- * <p>
- * <
- * pre>
+ * 
+ * <pre>
  * &lt;simpleType name="funderIdentifierType"&gt; &lt;restriction
  * base="{http://www.w3.org/2001/XMLSchema}string"&gt; &lt;enumeration value="ISNI"/&gt;
  * &lt;enumeration value="GRID"/&gt; &lt;enumeration value="Crossref Funder ID"/&gt; &lt;enumeration
@@ -59,17 +58,17 @@ public enum FunderIdentifierType {
     }
 
     /**
-     *
-     * @return
+     * Returns the value.
+     * @return the value
      */
     public String value() {
         return value;
     }
 
     /**
-     *
-     * @param v
-     * @return
+     * Returns the FunderIdentifierType from the value
+     * @param v value
+     * @return the FunderIdentifierType
      */
     public static FunderIdentifierType fromValue(String v) {
         for (FunderIdentifierType c : FunderIdentifierType.values()) {

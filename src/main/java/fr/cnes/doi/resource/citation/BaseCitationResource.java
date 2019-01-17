@@ -66,6 +66,8 @@ public class BaseCitationResource extends AbstractResource {
     @Override
     protected void doInit() throws ResourceException {
         super.doInit();
+        System.clearProperty("javax.net.ssl.trustStore");
+        System.clearProperty("javax.net.ssl.trustStorePassword");          
         this.app = (DoiCrossCiteApplication) getApplication();
         this.LOG = this.app.getLog();
     }

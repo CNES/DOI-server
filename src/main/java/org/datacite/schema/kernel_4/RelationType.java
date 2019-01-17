@@ -17,9 +17,8 @@ import javax.xml.bind.annotation.XmlType;
  *
  * <p>
  * The following schema fragment specifies the expected content contained within this class.
- * <p>
- * <
- * pre>
+ * 
+ * <pre>
  * &lt;simpleType name="relationType"&gt; &lt;restriction
  * base="{http://www.w3.org/2001/XMLSchema}string"&gt; &lt;enumeration value="IsCitedBy"/&gt;
  * &lt;enumeration value="Cites"/&gt; &lt;enumeration value="IsSupplementTo"/&gt; &lt;enumeration
@@ -368,17 +367,17 @@ public enum RelationType {
     }
 
     /**
-     *
-     * @return
+     * Returns the value.
+     * @return the value
      */
     public String value() {
         return value;
     }
 
     /**
-     *
-     * @param v
-     * @return
+     * Returns the relation type from a value
+     * @param v value
+     * @return the relation type
      */
     public static RelationType fromValue(String v) {
         for (RelationType c : RelationType.values()) {

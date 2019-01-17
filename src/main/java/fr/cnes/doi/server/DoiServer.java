@@ -30,8 +30,6 @@ import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.settings.EmailSettings;
 import fr.cnes.doi.settings.JettySettings;
 import fr.cnes.doi.settings.ProxySettings;
-import fr.cnes.doi.utils.HttpClientHelperPatch;
-import fr.cnes.doi.utils.HttpClientHelperPatchAC;
 import fr.cnes.doi.utils.Utils;
 import fr.cnes.doi.utils.spec.Requirement;
 import java.io.File;
@@ -52,6 +50,7 @@ import org.restlet.data.Parameter;
 import org.restlet.data.Protocol;
 import org.restlet.engine.Engine;
 import org.restlet.engine.connector.ConnectorHelper;
+import org.restlet.ext.httpclient4.HttpClientHelper;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 import org.restlet.routing.Filter;
@@ -71,7 +70,7 @@ public class DoiServer extends Component {
     static {
         final List<ConnectorHelper<Client>> registeredClients = Engine.getInstance().
                 getRegisteredClients();
-        registeredClients.add(0, new HttpClientHelperPatchAC(null));
+        registeredClients.add(0, new HttpClientHelper(null));
     } 
     
     /**

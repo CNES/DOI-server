@@ -45,7 +45,7 @@ public class LanguageCitationResource extends BaseCitationResource {
     @Override
     protected void doInit() throws ResourceException {
         super.doInit();
-        LOG.traceEntry();
+        LOG.traceEntry();        
         final StringBuilder description = new StringBuilder();
         description.append("Selects a Language and Country.");
         description.append("The language is used to format the citation.");

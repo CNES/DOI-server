@@ -19,7 +19,7 @@
 /**
  * Provides resources for Meta Data Store application.
  * 
- * The {@link DoiMdsApplication} is the main DOI {@link fr.cnes.doi.application application} that 
+ * The {@link fr.cnes.doi.application.DoiMdsApplication} is the main DOI {@link fr.cnes.doi.application application} that 
  * brings together a set of resources handling the life of DOIs.
  * 
  * <p>
@@ -43,15 +43,15 @@
  * 
  * Some of the above resources are protected by several mechanism. This mechanism is defined as a pipeline:
  * <ul>
- * <li>Request: --> {@link fr.cnes.doi.application.DoiMdsApplication#createAuthenticator Basic auth}(optional)
- * -->{@link fr.cnes.doi.application.DoiMdsApplication#createTokenAuthenticator Token auth}(optional)
- * -->{@link fr.cnes.doi.application.DoiMdsApplication#createMethodAuthorizer Method auth}
- * -->{@link fr.cnes.doi.application.DoiMdsApplication#createRouter router}</li>
- * <li>Response: <-- {@link fr.cnes.doi.application.DoiMdsApplication.SecurityPostProcessingFilter SecurityPostProcessing} <---</li>
+ * <li>Request: --&gt; {@link fr.cnes.doi.application.DoiMdsApplication#createAuthenticator Basic auth}(optional)
+ * --&gt;{@link fr.cnes.doi.application.DoiMdsApplication#createTokenAuthenticator Token auth}(optional)
+ * --&gt;{@link fr.cnes.doi.application.DoiMdsApplication#createMethodAuthorizer Method auth}
+ * --&gt;{@link fr.cnes.doi.application.DoiMdsApplication#createRouter router}</li>
+ * <li>Response: &lt;-- {@link fr.cnes.doi.application.DoiMdsApplication.SecurityPostProcessingFilter SecurityPostProcessing} &lt;---</li>
  * </ul>
  * 
  * The {@link fr.cnes.doi.client.ClientMDS clientMDS} implements the call to <a href="https://support.datacite.org/docs/mds-api-guide">DataCite</a>.
- * This clients supports the proxy by the use of {@link fr.cnes.doi.utils.HttpClientHelperPatch} plugin.
+ * This clients supports the proxy by the use of {@link org.restlet.ext.httpclient4.HttpClientHelper} plugin.
  * This plugin is registered by default when the method {@link fr.cnes.doi.client.BaseClient#getClient}
  * is used. The proxy parameters are automatically set from the config.properties by the use of
  * {@link fr.cnes.doi.settings.ProxySettings}

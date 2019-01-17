@@ -204,22 +204,26 @@ public class ClientMDS extends BaseClient {
      */
     public ClientMDS(final Context context) throws ClientMdsException {
         super(context.getDataCiteUrl());
+        if(Context.DEV == context) {
+            System.clearProperty("javax.net.ssl.trustStore");        
+            System.clearProperty("javax.net.ssl.trustStorePassword");                      
+        }
         try {
             this.context = context;
             this.testMode = this.context.hasTestMode() ? TEST_MODE : null;
-            final String schemaUrl = ClientMDS.DOI_SETTINGS.getString(Consts.DATACITE_SCHEMA,
-                    SCHEMA_DATACITE);
-            SCHEMA_FACTORY.setResourceResolver(new WebProxyResourceResolver(this.getClient(),
-                    schemaUrl));
-            final Schema schema = SCHEMA_FACTORY.newSchema();
+//            final String schemaUrl = ClientMDS.DOI_SETTINGS.getString(Consts.DATACITE_SCHEMA,
+//                    SCHEMA_DATACITE);
+//            SCHEMA_FACTORY.setResourceResolver(new WebProxyResourceResolver(this.getClient(),
+//                    schemaUrl));
+//            final Schema schema = SCHEMA_FACTORY.newSchema();
             final JAXBContext ctx = JAXBContext.newInstance(new Class[]{Resource.class});
             this.marshaller = ctx.createMarshaller();
             this.marshaller.setProperty(Marshaller.JAXB_SCHEMA_LOCATION,
                     "http://datacite.org/schema/kernel-4 "
                     + "http://schema.datacite.org/meta/kernel-4/metadata.xsd");
             this.unMarshaller = ctx.createUnmarshaller();
-            this.unMarshaller.setSchema(schema);
-        } catch (JAXBException | SAXException ex) {
+//            this.unMarshaller.setSchema(schema);
+        } catch (JAXBException ex) {
             throw new ClientMdsException(Status.SERVER_ERROR_INTERNAL,
                     "Cannot get the Datacite schema", ex);
         }
@@ -573,11 +577,10 @@ public class ClientMDS extends BaseClient {
         try {
             return this.getClient().get(MediaType.APPLICATION_XML);
         } catch (ResourceException ex) {
+            this.getClient().release();
             throw new ClientMdsException(ex.getStatus(), ex.getMessage(), this.getClient().
                     getResponseEntity(), ex);
-        } finally {
-            this.getClient().release();
-        }
+        } 
     }
 
     /**
@@ -762,11 +765,10 @@ public class ClientMDS extends BaseClient {
         try {
             return this.getClient().delete();
         } catch (ResourceException ex) {
+            this.getClient().release();
             throw new ClientMdsException(ex.getStatus(), ex.getMessage(), this.getClient().
                     getResponseEntity(), ex);
-        } finally {
-            this.getClient().release();
-        }
+        } 
     }
 
     /**
@@ -1014,16 +1016,16 @@ public class ClientMDS extends BaseClient {
         }
 
         /**
-         *
-         * @return
+         * Returns the status
+         * @return the status
          */
         public Status getStatus() {
             return this.status;
         }
 
         /**
-         *
-         * @return
+         * Returns the short message
+         * @return the short message
          */
         public String getShortMessage() {
             return this.message;

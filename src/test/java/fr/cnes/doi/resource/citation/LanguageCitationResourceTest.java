@@ -99,12 +99,14 @@ public class LanguageCitationResourceTest {
     @Test
     public void testGetLanguagesHttps() {        
         spec.createSpec(CrossCiteSpec.Spec.GET_LANGUAGE_200);
-
+        final Series<Parameter> parameters = cl.getContext().getParameters();
+        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
+        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));
         String expResult = "af-ZA";
         String result = "";
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + "/citation/language");
-        client.setNext(cl);
+        //client.setNext(cl);
         try {
             List<String> rep = client.get(List.class);
             result = rep.get(0);

@@ -99,6 +99,8 @@ public class TokenResource extends AbstractResource {
         final AdminApplication app = (AdminApplication) getApplication();
         LOG = app.getLog();
         LOG.traceEntry();
+        System.clearProperty("javax.net.ssl.trustStore");
+        System.clearProperty("javax.net.ssl.trustStorePassword");        
         setDescription("This resource handles the token");
         this.tokenParam = getAttribute(TOKEN_TEMPLATE);
         this.tokenDB = ((AdminApplication) this.getApplication()).getTokenDB();
