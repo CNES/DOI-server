@@ -192,6 +192,8 @@ public class TokenResourceTest {
         String token = response.getText();
         client.release();
 
+        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
+        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));                
         client = new ClientResource("https://localhost:" + port + "/admin/token/" + token);
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "test");
         Status status;
