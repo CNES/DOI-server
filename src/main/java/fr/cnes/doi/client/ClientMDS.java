@@ -119,7 +119,7 @@ public class ClientMDS extends BaseClient {
     /**
      * Default XML schema for Datacite: {@value #SCHEMA_DATACITE}
      */
-    public static final String SCHEMA_DATACITE = "/resources/xsd/metadata.xsd";
+    public static final String SCHEMA_DATACITE = "https://schema.datacite.org/meta/kernel-4.0/metadata.xsd";
 
     /**
      * SCHEMA_FACTORY.
@@ -207,19 +207,19 @@ public class ClientMDS extends BaseClient {
         try {
             this.context = context;
             this.testMode = this.context.hasTestMode() ? TEST_MODE : null;
-            final String schemaUrl = ClientMDS.DOI_SETTINGS.getString(Consts.DATACITE_SCHEMA,
-                    SCHEMA_DATACITE);
-            SCHEMA_FACTORY.setResourceResolver(new WebProxyResourceResolver(this.getClient(),
-                    schemaUrl));
-            final Schema schema = SCHEMA_FACTORY.newSchema();
+//            final String schemaUrl = ClientMDS.DOI_SETTINGS.getString(Consts.DATACITE_SCHEMA,
+//                    SCHEMA_DATACITE);
+//            SCHEMA_FACTORY.setResourceResolver(new WebProxyResourceResolver(this.getClient(),
+//                    schemaUrl));
+//            final Schema schema = SCHEMA_FACTORY.newSchema();
             final JAXBContext ctx = JAXBContext.newInstance(new Class[]{Resource.class});
             this.marshaller = ctx.createMarshaller();
             this.marshaller.setProperty(Marshaller.JAXB_SCHEMA_LOCATION,
                     "http://datacite.org/schema/kernel-4 "
-                    + "/resources/xsd/metadata.xsd");
+                    + "http://schema.datacite.org/meta/kernel-4/metadata.xsd");
             this.unMarshaller = ctx.createUnmarshaller();
-            this.unMarshaller.setSchema(schema);
-        } catch (JAXBException | SAXException ex) {
+//            this.unMarshaller.setSchema(schema);
+        } catch (JAXBException ex) {
             throw new ClientMdsException(Status.SERVER_ERROR_INTERNAL,
                     "Cannot get the Datacite schema", ex);
         }
