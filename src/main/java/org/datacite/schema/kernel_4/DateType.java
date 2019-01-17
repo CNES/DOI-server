@@ -17,9 +17,8 @@ import javax.xml.bind.annotation.XmlType;
  *
  * <p>
  * The following schema fragment specifies the expected content contained within this class.
- * <p>
- * <
- * pre>
+ * 
+ * <pre>
  * &lt;simpleType name="dateType"&gt; &lt;restriction
  * base="{http://www.w3.org/2001/XMLSchema}string"&gt; &lt;enumeration value="Accepted"/&gt;
  * &lt;enumeration value="Available"/&gt; &lt;enumeration value="Collected"/&gt; &lt;enumeration

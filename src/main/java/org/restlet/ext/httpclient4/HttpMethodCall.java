@@ -72,7 +72,7 @@ public class HttpMethodCall extends ClientCall {
      * @param method The method name.
      * @param requestUri The request URI.
      * @param hasEntity Indicates if the call will have an entity to send to the server.
-     * @throws IOException
+     * @throws IOException when an error happens
      */
     public HttpMethodCall(HttpClientHelper helper, final String method,
             final String requestUri, boolean hasEntity) throws IOException {

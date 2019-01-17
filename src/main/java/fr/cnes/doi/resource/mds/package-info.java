@@ -43,11 +43,11 @@
  * 
  * Some of the above resources are protected by several mechanism. This mechanism is defined as a pipeline:
  * <ul>
- * <li>Request: --> {@link fr.cnes.doi.application.DoiMdsApplication#createAuthenticator Basic auth}(optional)
- * -->{@link fr.cnes.doi.application.DoiMdsApplication#createTokenAuthenticator Token auth}(optional)
- * -->{@link fr.cnes.doi.application.DoiMdsApplication#createMethodAuthorizer Method auth}
- * -->{@link fr.cnes.doi.application.DoiMdsApplication#createRouter router}</li>
- * <li>Response: <-- {@link fr.cnes.doi.application.DoiMdsApplication.SecurityPostProcessingFilter SecurityPostProcessing} <---</li>
+ * <li>Request: --&gt; {@link fr.cnes.doi.application.DoiMdsApplication#createAuthenticator Basic auth}(optional)
+ * --&gt;{@link fr.cnes.doi.application.DoiMdsApplication#createTokenAuthenticator Token auth}(optional)
+ * --&gt;{@link fr.cnes.doi.application.DoiMdsApplication#createMethodAuthorizer Method auth}
+ * --&gt;{@link fr.cnes.doi.application.DoiMdsApplication#createRouter router}</li>
+ * <li>Response: &lt;-- {@link fr.cnes.doi.application.DoiMdsApplication.SecurityPostProcessingFilter SecurityPostProcessing} &lt;---</li>
  * </ul>
  * 
  * The {@link fr.cnes.doi.client.ClientMDS clientMDS} implements the call to <a href="https://support.datacite.org/docs/mds-api-guide">DataCite</a>.

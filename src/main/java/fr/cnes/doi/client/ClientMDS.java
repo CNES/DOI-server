@@ -204,6 +204,10 @@ public class ClientMDS extends BaseClient {
      */
     public ClientMDS(final Context context) throws ClientMdsException {
         super(context.getDataCiteUrl());
+        if(Context.DEV == context) {
+            System.clearProperty("javax.net.ssl.trustStore");        
+            System.clearProperty("javax.net.ssl.trustStorePassword");                      
+        }
         try {
             this.context = context;
             this.testMode = this.context.hasTestMode() ? TEST_MODE : null;
