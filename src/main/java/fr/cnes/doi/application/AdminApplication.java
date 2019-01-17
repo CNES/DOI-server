@@ -36,6 +36,8 @@ import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
 import org.restlet.data.LocalReference;
+import org.restlet.data.MediaType;
+import org.restlet.data.Metadata;
 import org.restlet.data.Status;
 import org.restlet.resource.Directory;
 import org.restlet.routing.Filter;
@@ -44,6 +46,7 @@ import org.restlet.routing.Router;
 import org.restlet.security.ChallengeAuthenticator;
 import org.restlet.security.Role;
 import org.restlet.security.RoleAuthorizer;
+import org.restlet.service.MetadataService;
 import org.restlet.service.TaskService;
 
 /**
@@ -192,7 +195,8 @@ public class AdminApplication extends AbstractApplication {
         setDescription("Provides an application for handling features related to "
                 + "the administration system of the DOI server.");
         this.setTaskService(createTaskService());
-        this.tokenDB = TokenSecurity.getInstance().getTOKEN_DB();       
+        this.tokenDB = TokenSecurity.getInstance().getTOKEN_DB();  
+        getMetadataService().addExtension("xsd", MediaType.TEXT_XML, true);
     }
 
     /**

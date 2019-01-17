@@ -108,7 +108,31 @@ public class ServicesTest {
         }        
         client.release();
         assertEquals("Test of status service",Status.SUCCESS_OK.getCode(), status.getCode());
-    }    
+    }   
+    
+    /**
+     * Test of getStatus service through a HTTPS server, of class AdministrationApplication.
+     * @throws java.io.IOException
+     */
+    @Test  
+    public void getXsd() throws IOException  {
+        final Series<Parameter> parameters = cl.getContext().getParameters();
+        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
+        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));        
+        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
+        ClientResource client = new ClientResource("https://localhost:"+port+"/resources/xsd/metadata.xsd");        
+        //client.setNext(cl);    
+        Status status;
+        try {
+            Representation rep = client.get();           
+            status = client.getStatus();
+            
+        } catch(ResourceException ex) {
+            status = ex.getStatus();
+        }        
+        client.release();
+        assertEquals("Test of status service",Status.SUCCESS_OK.getCode(), status.getCode());
+    }     
     
     /**
      * Test of createToken method, of class TokenResource.

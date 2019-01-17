@@ -119,7 +119,7 @@ public class ClientMDS extends BaseClient {
     /**
      * Default XML schema for Datacite: {@value #SCHEMA_DATACITE}
      */
-    public static final String SCHEMA_DATACITE = "https://schema.datacite.org/meta/kernel-4.0/metadata.xsd";
+    public static final String SCHEMA_DATACITE = "/resources/xsd/metadata.xsd";
 
     /**
      * SCHEMA_FACTORY.
@@ -216,7 +216,7 @@ public class ClientMDS extends BaseClient {
             this.marshaller = ctx.createMarshaller();
             this.marshaller.setProperty(Marshaller.JAXB_SCHEMA_LOCATION,
                     "http://datacite.org/schema/kernel-4 "
-                    + "http://schema.datacite.org/meta/kernel-4/metadata.xsd");
+                    + "/resources/xsd/metadata.xsd");
             this.unMarshaller = ctx.createUnmarshaller();
             this.unMarshaller.setSchema(schema);
         } catch (JAXBException | SAXException ex) {

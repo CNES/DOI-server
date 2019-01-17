@@ -61,6 +61,7 @@
                     <include> **/*.ftl </include>
                     <include> **/*.png </include>
                     <include> **/*.css </include>
+                    <include> **/*.xsd </include>
                 </includes>
             </resource>
             <resource>
