@@ -101,13 +101,10 @@ public class TokenResourceTest {
      */
     @Test
     public void testCreateToken() throws IOException {
-        final Series<Parameter> parameters = cl.getContext().getParameters();
-        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
-        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));        
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + "/admin/token");
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
-        //client.setNext(cl);
+        client.setNext(cl);
         Form form = new Form();
         form.add("identifier", "jcm");
         form.add("projectID", "828606");
@@ -126,13 +123,10 @@ public class TokenResourceTest {
     @Test
     public void testCreateTokenWithWrongParameters() {
         exceptions.expect(ResourceException.class);
-        final Series<Parameter> parameters = cl.getContext().getParameters();
-        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
-        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));        
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + "/admin/token");
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
-        //client.setNext(cl);
+        client.setNext(cl);
         Form form = new Form();
         form.add("identif", "jcm");
         form.add("projec", "828606");
@@ -150,13 +144,10 @@ public class TokenResourceTest {
      */
     @Test
     public void testCreateTokenWithWrongCredentials() throws IOException {
-        final Series<Parameter> parameters = cl.getContext().getParameters();
-        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
-        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));        
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + "/admin/token");
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "test");
-        //client.setNext(cl);
+        client.setNext(cl);
         Form form = new Form();
         form.add("identifier", "jcm");
         form.add("projectID", "828606");
@@ -178,13 +169,10 @@ public class TokenResourceTest {
      */
     @Test
     public void testGetTokenInformationWithWrongCredentials() throws IOException {
-        final Series<Parameter> parameters = cl.getContext().getParameters();
-        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
-        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));        
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + "/admin/token");
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
-        //client.setNext(cl);
+        client.setNext(cl);
         Form form = new Form();
         form.add("identifier", "jcm");
         form.add("projectID", "828606");
@@ -192,10 +180,9 @@ public class TokenResourceTest {
         String token = response.getText();
         client.release();
 
-        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
-        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));                
         client = new ClientResource("https://localhost:" + port + "/admin/token/" + token);
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "test");
+        client.setNext(cl);
         Status status;
         try {
             Representation rep = client.get();

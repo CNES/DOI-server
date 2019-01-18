@@ -104,12 +104,9 @@ public class DoiCrossCiteApplicationTest {
      */
     @Test
     public void testApiWithHttps() throws IOException {
-        final Series<Parameter> parameters = cl.getContext().getParameters();
-        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
-        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));        
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);        
         ClientResource client = new ClientResource("https://localhost:"+port+"/citation/");
-        //client.setNext(cl);
+        client.setNext(cl);
         Representation repApi = client.options();
         String txt = repApi.getText();
         client.release();

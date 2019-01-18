@@ -86,9 +86,6 @@ public class DoisResourceTest {
 
     @AfterClass
     public static void tearDownClass() {
-        final Series<Parameter> parameters = cl.getContext().getParameters();
-        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
-        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));        
         Form doiForm = new Form();
         doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b"));
         doiForm.add(new Parameter(DoisResource.URL_PARAMETER, "https://cfosat.cnes.fr/"));
@@ -104,7 +101,7 @@ public class DoisResourceTest {
             reqAttribs.put(RESTLET_HTTP_HEADERS, headers);
         }
         headers.add(UtilsHeader.SELECTED_ROLE_PARAMETER, "828606");
-        //client.setNext(cl);
+        client.setNext(cl);
         int code;
         try {
             Representation rep = client.post(doiForm);
@@ -132,12 +129,10 @@ public class DoisResourceTest {
     @Test
     public void testGetDoisHttps() throws IOException {        
         mdsSpecStub.createSpec(MdsSpec.Spec.GET_COLLECTION_200);
-        final Series<Parameter> parameters = cl.getContext().getParameters();
-        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
-        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));        
+
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + DOIS_SERVICE);
-        //client.setNext(cl);
+        client.setNext(cl);
         Representation rep = client.get();
         assertNotNull("Test if the response is not null", rep.getText());
         
@@ -172,13 +167,10 @@ public class DoisResourceTest {
         Form doiForm = new Form();
         doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b"));
         doiForm.add(new Parameter(DoisResource.URL_PARAMETER, "http://www.cnes.fr"));
-        final Series<Parameter> parameters = cl.getContext().getParameters();
-        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
-        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + DOIS_SERVICE);
         client.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "malapert", "pwd"));
-        //client.setNext(cl);
+        client.setNext(cl);
         int code;
         try {
             Representation rep = client.post(doiForm);
@@ -202,9 +194,6 @@ public class DoisResourceTest {
         Form doiForm = new Form();
         doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b"));
         doiForm.add(new Parameter(DoisResource.URL_PARAMETER, "http://www.cnes.fr"));
-        final Series<Parameter> parameters = cl.getContext().getParameters();
-        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
-        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + DOIS_SERVICE);
         client.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "malapert", "pwd"));
@@ -217,7 +206,7 @@ public class DoisResourceTest {
             reqAttribs.put(RESTLET_HTTP_HEADERS, headers);
         }
         headers.add(UtilsHeader.SELECTED_ROLE_PARAMETER, "828606");
-        //client.setNext(cl);
+        client.setNext(cl);
         int code;
         try {
             Representation rep = client.post(doiForm);
@@ -280,9 +269,6 @@ public class DoisResourceTest {
         Form doiForm = new Form();
         doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.5072/828606/8c3e91ad45ca855b477126bc073ae"));
         doiForm.add(new Parameter(DoisResource.URL_PARAMETER, "http://www.cnes.fr"));
-        final Series<Parameter> parameters = cl.getContext().getParameters();
-        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
-        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + DOIS_SERVICE);
         client.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "malapert", "pwd"));
@@ -295,7 +281,7 @@ public class DoisResourceTest {
             reqAttribs.put(RESTLET_HTTP_HEADERS, headers);
         }
         headers.add(UtilsHeader.SELECTED_ROLE_PARAMETER, "828606");
-        //client.setNext(cl);
+        client.setNext(cl);
         int code;
         try {
             Representation rep = client.post(doiForm);
@@ -317,9 +303,6 @@ public class DoisResourceTest {
         Form doiForm = new Form();
         doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.4072/828606/8c3e91ad45ca855b477126bc073ae"));
         doiForm.add(new Parameter(DoisResource.URL_PARAMETER, "http://www.cnes.fr"));
-        final Series<Parameter> parameters = cl.getContext().getParameters();
-        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
-        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + DOIS_SERVICE);
         client.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "malapert", "pwd"));
@@ -332,7 +315,7 @@ public class DoisResourceTest {
             reqAttribs.put(RESTLET_HTTP_HEADERS, headers);
         }
         headers.add(UtilsHeader.SELECTED_ROLE_PARAMETER, "828606");
-        //client.setNext(cl);
+        client.setNext(cl);
         int code;
         try {
             Representation rep = client.post(doiForm);

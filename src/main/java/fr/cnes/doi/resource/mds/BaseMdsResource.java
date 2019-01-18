@@ -68,9 +68,7 @@ public class BaseMdsResource extends AbstractResource {
      */
     @Override
     protected void doInit() throws DoiServerException {
-        super.doInit();
-        System.clearProperty("javax.net.ssl.trustStore");
-        System.clearProperty("javax.net.ssl.trustStorePassword");          
+        super.doInit();         
         this.doiApp = (DoiMdsApplication) getApplication();
         LOG = this.doiApp.getLog();
         LOG.traceEntry();

@@ -121,12 +121,10 @@ public class DoiResourceTest {
     @Test
     public void testGetDoiHttps() throws IOException {        
         mdsServerStub.createSpec(MdsSpec.Spec.GET_DOI_200);
-        final Series<Parameter> parameters = cl.getContext().getParameters();
-        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
-        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));        
+
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:"+port+DOIS_SERVICE+MdsSpec.Spec.GET_DOI_200.getTemplatePath());
-        //client.setNext(cl);
+        client.setNext(cl);
         Representation rep = client.get();
         Status status = client.getStatus();
         
@@ -145,12 +143,10 @@ public class DoiResourceTest {
     @Test
     public void testGetDoiNotFoundHttps() throws IOException {            
         mdsServerStub.createSpec(MdsSpec.Spec.GET_DOI_404);
-        final Series<Parameter> parameters = cl.getContext().getParameters();
-        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
-        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));        
+
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:"+port+DOIS_SERVICE+MdsSpec.Spec.GET_DOI_404.getTemplatePath());
-        //client.setNext(cl);
+        client.setNext(cl);
         int code;
         try {
             Representation rep = client.get();
@@ -172,11 +168,10 @@ public class DoiResourceTest {
     @Test
     public void testGetDoiNotAllowedHttps() throws IOException {
         final Series<Parameter> parameters = cl.getContext().getParameters();
-        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
-        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));        
+
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:"+port+DOIS_SERVICE+"10.xxxx/828606");
-        //client.setNext(cl);
+        client.setNext(cl);
         int code;
         try {
             Representation rep = client.get();
