@@ -228,6 +228,7 @@ public class MetadataResourceTest {
             code = ex.getStatus().getCode();
             doi = "";
         }
+        client.release();
         assertEquals(MdsSpec.Spec.GET_METADATA_400.getStatus(), code);
         
         mdsServerStub.verifySpec(MdsSpec.Spec.GET_METADATA_400);

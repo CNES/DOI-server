@@ -139,6 +139,7 @@ public class ITauthentication {
         } catch (ResourceException ex) {
             status = ex.getStatus();
         }
+        client.release();
         assertEquals("Test ITauthentication", Status.CLIENT_ERROR_FORBIDDEN.getCode(), status.getCode());
         
         mockServer.verify(HttpRequest.request("/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)
@@ -217,6 +218,7 @@ public class ITauthentication {
         } catch (ResourceException ex) {
             status = ex.getStatus();
         }
+        client.release();
         assertEquals(Status.CLIENT_ERROR_FORBIDDEN.getCode(), status.getCode());
         
         mockServer.verify(HttpRequest.request("/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)

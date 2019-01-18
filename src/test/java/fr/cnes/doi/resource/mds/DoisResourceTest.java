@@ -108,7 +108,8 @@ public class DoisResourceTest {
             code = client.getStatus().getCode();
         } catch (ResourceException ex) {
             code = ex.getStatus().getCode();
-        }        
+        }
+        client.release();
         mdsSpecStub.finish();
         InitServerForTest.close();
     }
@@ -135,7 +136,7 @@ public class DoisResourceTest {
         client.setNext(cl);
         Representation rep = client.get();
         assertNotNull("Test if the response is not null", rep.getText());
-        
+        client.release();
         mdsSpecStub.verifySpec(MdsSpec.Spec.GET_COLLECTION_200);
     }
 
@@ -214,6 +215,7 @@ public class DoisResourceTest {
         } catch (ResourceException ex) {
             code = ex.getStatus().getCode();
         }
+        client.release();
         assertEquals("Test if the DOI is related to several accounts with a specific account", MdsSpec.Spec.POST_DOI_201.getStatus(), code);
         
         mdsSpecStub.verifySpec(MdsSpec.Spec.POST_DOI_201);       
@@ -289,6 +291,7 @@ public class DoisResourceTest {
         } catch (ResourceException ex) {
             code = ex.getStatus().getCode();
         }
+        client.release();
         assertEquals("Test an error of the creation of a DOI when the metadata is not uploaded first",MdsSpec.Spec.POST_DOI_412.getStatus(), code);
         
         mdsSpecStub.verifySpec(MdsSpec.Spec.POST_DOI_201);                     
@@ -323,6 +326,7 @@ public class DoisResourceTest {
         } catch (ResourceException ex) {
             code = ex.getStatus().getCode();
         }
+        client.release();
         assertEquals("Test an error of the creation of a DOI when the prefix is wrong", Status.CLIENT_ERROR_FORBIDDEN.getCode(), code);
     }        
 

@@ -127,10 +127,10 @@ public class DoiResourceTest {
         client.setNext(cl);
         Representation rep = client.get();
         Status status = client.getStatus();
-        
+        String txt = rep.getText();
+        client.release();        
         assertEquals("Test the status code is the right one", MdsSpec.Spec.GET_DOI_200.getStatus(), status.getCode());
-        assertEquals("Test the landing page is the right one",MdsSpec.Spec.GET_DOI_200.getBody(), rep.getText());
-        
+        assertEquals("Test the landing page is the right one",MdsSpec.Spec.GET_DOI_200.getBody(), txt);
         mdsServerStub.verifySpec(MdsSpec.Spec.GET_DOI_200);
          
     }    
@@ -179,7 +179,7 @@ public class DoiResourceTest {
         } catch (ResourceException ex) {   
             code = ex.getStatus().getCode();
         }
-        
+        client.release();
         assertEquals("Test the status code is the right one", code, Status.CLIENT_ERROR_BAD_REQUEST.getCode());
     }     
     

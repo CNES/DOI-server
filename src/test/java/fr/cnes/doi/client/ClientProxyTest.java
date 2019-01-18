@@ -30,22 +30,9 @@ import org.restlet.representation.Representation;
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.UnitTest;
 import fr.cnes.doi.exception.ClientMdsException;
-import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_CONNECTIONS_PER_HOST;
-import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_TOTAL_CONNECTIONS;
-import static fr.cnes.doi.server.DoiServer.JKS_DIRECTORY;
-import static fr.cnes.doi.server.DoiServer.JKS_FILE;
-import fr.cnes.doi.settings.Consts;
-import static fr.cnes.doi.settings.Consts.RESTLET_MAX_CONNECTIONS_PER_HOST;
-import static fr.cnes.doi.settings.Consts.RESTLET_MAX_TOTAL_CONNECTIONS;
-import fr.cnes.doi.settings.DoiSettings;
-import java.io.File;
 import org.junit.experimental.categories.Category;
 import org.restlet.Client;
-import org.restlet.Context;
-import org.restlet.data.Parameter;
-import org.restlet.data.Protocol;
 import org.restlet.resource.ResourceException;
-import org.restlet.util.Series;
 
 /**
  *
@@ -65,14 +52,7 @@ public class ClientProxyTest {
      */    
     @BeforeClass
     public static void setUpClass() throws ClientMdsException {
-        InitSettingsForTest.init(InitSettingsForTest.CONFIG_TEST_PROPERTIES);
-        cl = new Client(new Context(), Protocol.HTTPS);
-        Series<Parameter> parameters = cl.getContext().getParameters();
-        parameters.set(RESTLET_MAX_TOTAL_CONNECTIONS, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_TOTAL_CONNECTIONS, DEFAULT_MAX_TOTAL_CONNECTIONS));        
-        parameters.set(RESTLET_MAX_CONNECTIONS_PER_HOST, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_CONNECTIONS_PER_HOST, DEFAULT_MAX_CONNECTIONS_PER_HOST));
-        parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
-        parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
-        parameters.add("truststoreType", "JKS");   
+        InitSettingsForTest.init(InitSettingsForTest.CONFIG_TEST_PROPERTIES); 
     }    
 
     /**
@@ -105,7 +85,6 @@ public class ClientProxyTest {
     @Test
     public void testBaseClient() throws Exception {
         BaseClient baseClient = new BaseClient("https://www.google.com");
-        baseClient.getClient().setNext(cl);
         Representation rep = baseClient.getClient().get();
         Status status = baseClient.getClient().getStatus();
         Assert.assertTrue("Test si la requete est OK", status.isSuccess());
@@ -119,7 +98,6 @@ public class ClientProxyTest {
     @Test
     public void testBaseClientCrossCite() {
         BaseClient baseClient = new BaseClient("https://www.google.com");
-        baseClient.getClient().setNext(cl);
         Status status;
         try {
             Representation rep = baseClient.getClient().get();
