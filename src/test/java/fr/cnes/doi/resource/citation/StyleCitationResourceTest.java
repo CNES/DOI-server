@@ -105,14 +105,12 @@ public class StyleCitationResourceTest {
     @Test
     public void testGetStylesHttps() {        
         spec.createSpec(CrossCiteSpec.Spec.GET_STYLE_200);
-        final Series<Parameter> parameters = cl.getContext().getParameters();
-        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
-        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));        
+
         String expResult = "academy-of-management-review";
         String result = "";
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + "/citation/style");
-        //client.setNext(cl);
+        client.setNext(cl);
         try {
             List<String> rep = client.get(List.class);
             result = rep.get(0);
@@ -133,14 +131,12 @@ public class StyleCitationResourceTest {
     @Test
     public void testGetStylesHttp() {        
         spec.createSpec(CrossCiteSpec.Spec.GET_STYLE_200);      
-        final Series<Parameter> parameters = cl.getContext().getParameters();
-        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
-        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));        
+
         String expResult = "academy-of-management-review";
         String result = "";
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);
         ClientResource client = new ClientResource("http://localhost:" + port + "/citation/style");
-        //client.setNext(cl);
+        client.setNext(cl);
         try {
             List<String> rep = client.get(List.class);
             result = rep.get(0);
@@ -160,13 +156,11 @@ public class StyleCitationResourceTest {
     @Test
     public void testGetStylesHttpsAsJSON() {        
         spec.createSpec(CrossCiteSpec.Spec.GET_STYLE_200);     
-        final Series<Parameter> parameters = cl.getContext().getParameters();
-        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
-        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));          
+
         String result = "";
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + "/citation/style");
-        //client.setNext(cl);
+        client.setNext(cl);
         try {
             Representation rep = client.get(MediaType.APPLICATION_JSON);
             result = rep.getText();
@@ -186,14 +180,12 @@ public class StyleCitationResourceTest {
     @Test
     public void testGetStylesHttpsAsXML() {        
         spec.createSpec(CrossCiteSpec.Spec.GET_STYLE_200);
-        final Series<Parameter> parameters = cl.getContext().getParameters();
-        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
-        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));        
+
         String expResult = CrossCiteSpec.Spec.GET_STYLE_200.getBody();
         String result = "";
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + "/citation/style");
-        //client.setNext(cl);
+        client.setNext(cl);
         try {
             Representation rep = client.get(MediaType.APPLICATION_XML);
             result = rep.getText();

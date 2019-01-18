@@ -171,13 +171,11 @@ public class MetadatasResourceTest {
     private void testSpecCreateMetadataAsObj(MdsSpec.Spec spec, InputStream is, String login, String pwd, String role, int exactly) {        
         // Creates the MetadataStoreService stub        
         mdsServerStub.createSpec(spec);
-        final Series<Parameter> parameters = cl.getContext().getParameters();
-        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
-        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));
+
         result = new BufferedReader(new InputStreamReader(is)).lines().collect(Collectors.joining("\n"));
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + METADATA_SERVICE);
-        //client.setNext(cl);
+        client.setNext(cl);
         client.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, login, pwd));
         final String RESTLET_HTTP_HEADERS = "org.restlet.http.headers";
         Map<String, Object> reqAttribs = client.getRequestAttributes();
@@ -221,14 +219,12 @@ public class MetadatasResourceTest {
     private void testSpecCreateMetadataAsObjWithConflict(MdsSpec.Spec spec, InputStream is, String login, String pwd, String role, int exactly) {        
         // Creates the MetadataStoreService stub        
         mdsServerStub.createSpec(spec);
-        final Series<Parameter> parameters = cl.getContext().getParameters();
-        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
-        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));
+
         result = new BufferedReader(new InputStreamReader(is)).lines()
                 .collect(Collectors.joining("\n"));
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + METADATA_SERVICE);
-        //client.setNext(cl);
+        client.setNext(cl);
         client.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, login, pwd));
         final String RESTLET_HTTP_HEADERS = "org.restlet.http.headers";
         Map<String, Object> reqAttribs = client.getRequestAttributes();

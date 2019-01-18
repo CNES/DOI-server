@@ -245,7 +245,7 @@ public class ITperformance {
             }               
 
             client = new ClientResource("http://localhost:" + port + METADATA_SERVICE);
-            //client.setNext(cl);
+            client.setNext(cl);
             client.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "malapert", "pwd"));
             reqAttribs = client.getRequestAttributes();
             headers = (Series) reqAttribs.get(RESTLET_HTTP_HEADERS);

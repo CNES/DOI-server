@@ -107,13 +107,10 @@ public class ITauthentication {
      */
     @Test
     public void testTokenAuthenticationWithBadRole() throws IOException {
-        final Series<Parameter> parameters = cl.getContext().getParameters();
-        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
-        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));                        
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + "/admin/token");
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
-        //client.setNext(cl);
+        client.setNext(cl);
         Form form = new Form();
         form.add("identifier", "jcm");
         form.add("projectID", "828606");
@@ -129,10 +126,8 @@ public class ITauthentication {
         mediaForm.add("image/jpeg", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
         mediaForm.add("image/png", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
 
-        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));
-        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));
         client = new ClientResource("https://localhost:" + port + "/mds/media/" + DOI);
-        //client.setNext(cl);
+        client.setNext(cl);
         ChallengeResponse cr = new ChallengeResponse(ChallengeScheme.HTTP_OAUTH_BEARER);
         cr.setRawValue(token);
         client.setChallengeResponse(cr);
@@ -144,6 +139,7 @@ public class ITauthentication {
         } catch (ResourceException ex) {
             status = ex.getStatus();
         }
+        client.release();
         assertEquals("Test ITauthentication", Status.CLIENT_ERROR_FORBIDDEN.getCode(), status.getCode());
         
         mockServer.verify(HttpRequest.request("/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)
@@ -156,13 +152,10 @@ public class ITauthentication {
      */
     @Test
     public void testTokenAuthenticationWithRightRole() throws IOException {
-        final Series<Parameter> parameters = cl.getContext().getParameters();
-        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
-        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));                        
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + "/admin/token");
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
-        //client.setNext(cl);
+        client.setNext(cl);
         Form form = new Form();
         form.add("identifier", "malapert");
         form.add("projectID", "828606");
@@ -178,10 +171,8 @@ public class ITauthentication {
         mediaForm.add("image/jpeg", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
         mediaForm.add("image/png", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
 
-        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));
-        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));
         client = new ClientResource("https://localhost:" + port + "/mds/media/" + DOI);
-        //client.setNext(cl);
+        client.setNext(cl);
         ChallengeResponse cr = new ChallengeResponse(ChallengeScheme.HTTP_OAUTH_BEARER);
         cr.setRawValue(token);
         client.setChallengeResponse(cr);
@@ -193,6 +184,7 @@ public class ITauthentication {
         } catch (ResourceException ex) {
             status = ex.getStatus();
         }
+        client.release();
         assertEquals(Status.SUCCESS_OK.getCode(), status.getCode());   
         
         mockServer.verify(HttpRequest.request("/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)
@@ -207,18 +199,14 @@ public class ITauthentication {
     public void testTokenAuthenticationWithWrongToken() throws IOException {        
         mockServer.when(HttpRequest.request("/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)
                 .withMethod("POST")).respond(HttpResponse.response().withStatusCode(403));
-        
-        final Series<Parameter> parameters = cl.getContext().getParameters();
-        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
-        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));                
-        
+                
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         Form mediaForm = new Form();
         mediaForm.add("image/fits", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
         mediaForm.add("image/jpeg", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
         mediaForm.add("image/png", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
         ClientResource client = new ClientResource("https://localhost:" + port + "/mds/media/" + DOI);
-        //client.setNext(cl);
+        client.setNext(cl);
         ChallengeResponse cr = new ChallengeResponse(ChallengeScheme.HTTP_OAUTH_BEARER);        
         cr.setRawValue("asdsqqscsqcqdcqscqc");
         client.setChallengeResponse(cr);
@@ -230,6 +218,7 @@ public class ITauthentication {
         } catch (ResourceException ex) {
             status = ex.getStatus();
         }
+        client.release();
         assertEquals(Status.CLIENT_ERROR_FORBIDDEN.getCode(), status.getCode());
         
         mockServer.verify(HttpRequest.request("/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)

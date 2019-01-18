@@ -92,12 +92,9 @@ public class ServicesTest {
      */
     @Test  
     public void getStatus() throws IOException  {
-        final Series<Parameter> parameters = cl.getContext().getParameters();
-        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
-        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));        
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:"+port+"/status");        
-        //client.setNext(cl);    
+        client.setNext(cl);    
         Status status;
         try {
             Representation rep = client.get();           
@@ -116,12 +113,9 @@ public class ServicesTest {
      */
     @Test  
     public void getXsd() throws IOException  {
-        final Series<Parameter> parameters = cl.getContext().getParameters();
-        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
-        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));        
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:"+port+"/resources/xsd/metadata.xsd");        
-        //client.setNext(cl);    
+        client.setNext(cl);    
         Status status;
         try {
             Representation rep = client.get();           
@@ -141,12 +135,9 @@ public class ServicesTest {
     @Test
     @Ignore("Ingoring stats")
     public void getStats() throws IOException  {
-        final Series<Parameter> parameters = cl.getContext().getParameters();
-        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
-        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));        
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:"+port+"/stats");        
-        //client.setNext(cl);    
+        client.setNext(cl);    
         Status status;
         try {
             Representation rep = client.get();

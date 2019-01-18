@@ -29,7 +29,9 @@ import org.restlet.representation.Representation;
 
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.UnitTest;
+import fr.cnes.doi.exception.ClientMdsException;
 import org.junit.experimental.categories.Category;
+import org.restlet.Client;
 import org.restlet.resource.ResourceException;
 
 /**
@@ -38,14 +40,20 @@ import org.restlet.resource.ResourceException;
  */
 @Category(UnitTest.class)
 public class ClientProxyTest {
+    
+    private static Client cl;
+    
+    public ClientProxyTest() {
+        
+    }
 
     /**
      * Init the settings
-     */
+     */    
     @BeforeClass
-    public static void setUpClass() {
-        InitSettingsForTest.init(InitSettingsForTest.CONFIG_TEST_PROPERTIES);
-    }
+    public static void setUpClass() throws ClientMdsException {
+        InitSettingsForTest.init(InitSettingsForTest.CONFIG_TEST_PROPERTIES); 
+    }    
 
     /**
      * Executed after the test class

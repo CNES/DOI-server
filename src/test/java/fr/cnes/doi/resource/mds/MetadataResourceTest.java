@@ -116,12 +116,10 @@ public class MetadataResourceTest {
     @Test
     public void testGetMetadata() throws IOException, JAXBException, SAXException {
         mdsServerStub.createSpec(MdsSpec.Spec.GET_METADATA_200);
-        final Series<Parameter> parameters = cl.getContext().getParameters();
-        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
-        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));
+
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + METADATA_SERVICE + MdsSpec.Spec.GET_METADATA_200.getTemplatePath());
-        //client.setNext(cl);
+        client.setNext(cl);
         int code;
         String doi;
         try {
@@ -154,12 +152,10 @@ public class MetadataResourceTest {
     @Test
     public void testGetMetadataAsJson() throws IOException, JAXBException, SAXException {
         mdsServerStub.createSpec(MdsSpec.Spec.GET_METADATA_200);
-        final Series<Parameter> parameters = cl.getContext().getParameters();
-        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
-        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));
+    
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + METADATA_SERVICE + MdsSpec.Spec.GET_METADATA_200.getTemplatePath());
-        //client.setNext(cl);
+        client.setNext(cl);
         int code;
         String result;
         try {
@@ -188,12 +184,10 @@ public class MetadataResourceTest {
     @Test
     public void testGetMetadataFromWrongDOI() throws IOException, JAXBException, SAXException {        
         mdsServerStub.createSpec(MdsSpec.Spec.GET_METADATA_400);
-        final Series<Parameter> parameters = cl.getContext().getParameters();
-        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
-        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));        
+
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + METADATA_SERVICE + MdsSpec.Spec.GET_METADATA_400.getTemplatePath());
-        //client.setNext(cl);
+        client.setNext(cl);
         int code;
         String doi;
         try {
@@ -220,12 +214,10 @@ public class MetadataResourceTest {
     @Test
     public void testGetMetadataFromWrongPrefix() throws IOException, JAXBException, SAXException {        
         mdsServerStub.createSpec(MdsSpec.Spec.GET_METADATA_400);
-        final Series<Parameter> parameters = cl.getContext().getParameters();
-        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
-        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));        
+
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + METADATA_SERVICE + MdsSpec.Spec.GET_METADATA_400.getTemplatePath());
-        //client.setNext(cl);
+        client.setNext(cl);
         int code;
         String doi;
         try {
@@ -236,6 +228,7 @@ public class MetadataResourceTest {
             code = ex.getStatus().getCode();
             doi = "";
         }
+        client.release();
         assertEquals(MdsSpec.Spec.GET_METADATA_400.getStatus(), code);
         
         mdsServerStub.verifySpec(MdsSpec.Spec.GET_METADATA_400);
@@ -252,12 +245,10 @@ public class MetadataResourceTest {
     @Test
     public void testDeleteMetadata() throws JAXBException, SAXException, IOException {        
         mdsServerStub.createSpec(MdsSpec.Spec.DELETE_METADATA_200);
-        final Series<Parameter> parameters = cl.getContext().getParameters();
-        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
-        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));        
+
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + METADATA_SERVICE +MdsSpec.Spec.DELETE_METADATA_200.getTemplatePath());
-        //client.setNext(cl);
+        client.setNext(cl);
         client.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "malapert", "pwd"));
         final String RESTLET_HTTP_HEADERS = "org.restlet.http.headers";
         Map<String, Object> reqAttribs = client.getRequestAttributes();

@@ -355,8 +355,6 @@ public class AdminApplication extends AbstractApplication {
              */
             @Override
             protected int doHandle(final Request request, final Response response) {
-                System.clearProperty("javax.net.ssl.trustStore");
-                System.clearProperty("javax.net.ssl.trustStorePassword");
                 response.setLocationRef(TARGET_URL);
                 response.setStatus(Status.REDIRECTION_PERMANENT);                
                 return super.doHandle(request, response);
@@ -393,9 +391,7 @@ public class AdminApplication extends AbstractApplication {
              * @return The continuation status. Either Filter.CONTINUE or Filter.STOP.
              */
             @Override
-            protected int doHandle(final Request request, final Response response) {
-                System.clearProperty("javax.net.ssl.trustStore");
-                System.clearProperty("javax.net.ssl.trustStorePassword");                   
+            protected int doHandle(final Request request, final Response response) {                   
                 response.setLocationRef(TARGET_STATS_URL);
                 response.setStatus(Status.REDIRECTION_PERMANENT);                
                 return super.doHandle(request, response);

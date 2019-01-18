@@ -105,13 +105,10 @@ public class ITadminApplication {
      */
     @Test
     public void testStatusWithHttps() throws IOException {
-        final Series<Parameter> parameters = cl.getContext().getParameters();
-        System.setProperty("javax.net.ssl.trustStore", parameters.getFirstValue("truststorePath"));        
-        System.setProperty("javax.net.ssl.trustStorePassword", parameters.getFirstValue("truststorePassword"));                
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);        
         ClientResource client = new ClientResource("https://localhost:"+port+"/status");
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");        
-        //client.setNext(cl);
+        client.setNext(cl);
         Representation repApi = client.get();
         String txt = repApi.getText();
         client.release();
