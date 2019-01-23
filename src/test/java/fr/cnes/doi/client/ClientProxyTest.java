@@ -30,6 +30,9 @@ import org.restlet.representation.Representation;
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.UnitTest;
 import fr.cnes.doi.exception.ClientMdsException;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.experimental.categories.Category;
 import org.restlet.Client;
 import org.restlet.resource.ResourceException;
@@ -86,6 +89,7 @@ public class ClientProxyTest {
     public void testBaseClient() throws Exception {
         BaseClient baseClient = new BaseClient("https://www.google.com");
         Representation rep = baseClient.getClient().get();
+        rep.exhaust();
         Status status = baseClient.getClient().getStatus();
         Assert.assertTrue("Test si la requete est OK", status.isSuccess());
     }
@@ -96,15 +100,16 @@ public class ClientProxyTest {
      *
      */
     @Test
-    public void testBaseClientCrossCite() {
+    public void testBaseClientCrossCite() throws IOException {
         BaseClient baseClient = new BaseClient("https://www.google.com");
         Status status;
         try {
-            Representation rep = baseClient.getClient().get();
+            Representation rep = baseClient.getClient().get();            
             status = baseClient.getClient().getStatus();
+            rep.exhaust();
         } catch (ResourceException ex) {
             status = ex.getStatus();
-        }
+        } 
         Assert.assertTrue("Test si la requete est OK", status.isSuccess());
     }
 

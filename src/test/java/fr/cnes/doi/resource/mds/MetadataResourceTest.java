@@ -262,6 +262,7 @@ public class MetadataResourceTest {
         try {
             Representation rep = client.delete();
             code = client.getStatus().getCode();
+            rep.exhaust();
         } catch (ResourceException ex) {
             code = ex.getStatus().getCode();
         }

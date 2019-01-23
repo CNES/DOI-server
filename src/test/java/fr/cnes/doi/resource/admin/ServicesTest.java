@@ -99,6 +99,7 @@ public class ServicesTest {
         try {
             Representation rep = client.get();           
             status = client.getStatus();
+            rep.exhaust();
             
         } catch(ResourceException ex) {
             status = ex.getStatus();
@@ -120,7 +121,7 @@ public class ServicesTest {
         try {
             Representation rep = client.get();           
             status = client.getStatus();
-            
+            rep.exhaust();
         } catch(ResourceException ex) {
             status = ex.getStatus();
         }        
@@ -142,6 +143,7 @@ public class ServicesTest {
         try {
             Representation rep = client.get();
             status = client.getStatus();
+            rep.exhaust();
         } catch(ResourceException ex) {
             status = ex.getStatus();
         }

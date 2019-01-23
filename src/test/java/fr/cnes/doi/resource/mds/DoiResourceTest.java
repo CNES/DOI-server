@@ -106,7 +106,6 @@ public class DoiResourceTest {
         ClientResource client = new ClientResource("http://localhost:"+port+DOIS_SERVICE+MdsSpec.Spec.GET_DOI_200.getTemplatePath());
         Representation rep = client.get();
         Status status = client.getStatus();
-        
         assertEquals("Test the status code is the right one", MdsSpec.Spec.GET_DOI_200.getStatus(), status.getCode());
         assertEquals("Test the landing page is the right one", MdsSpec.Spec.GET_DOI_200.getBody(), rep.getText());
         
@@ -151,6 +150,7 @@ public class DoiResourceTest {
         try {
             Representation rep = client.get();
             code = client.getStatus().getCode();
+            rep.exhaust();
         } catch (ResourceException ex) {
             code = ex.getStatus().getCode();
         } 
@@ -176,6 +176,7 @@ public class DoiResourceTest {
         try {
             Representation rep = client.get();
             code = client.getStatus().getCode();
+            rep.exhaust();
         } catch (ResourceException ex) {   
             code = ex.getStatus().getCode();
         }
