@@ -293,8 +293,8 @@
     </build>
     <dependencies>    
         <dependency>
-            <groupId>fr.cnes.lib.proxy</groupId>
-            <artifactId>LibraryForProxyWeb</artifactId>
+            <groupId>fr.cnes.jproxy</groupId>
+            <artifactId>jproxy</artifactId>
             <version>1.0.0</version>             
         </dependency>          
         <!-- mockserver -->
@@ -444,6 +444,30 @@
     </developers>
     <reporting>
         <plugins> 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.2</version>
+                <reportSets>
+                    <reportSet>
+                        <id>PDF</id>
+                        <reports>
+                            <report>javadoc</report>
+                        </reports>
+                        <configuration>
+                            <name>PDF</name>                        
+                            <description>This is my Documentation on PDF.</description>
+                            <destDir>pdf</destDir>
+                            <doclet>com.tarsec.javadoc.pdfdoclet.PDFDoclet</doclet>
+                            <docletPath>${basedir}/ConfTools/pdfdoclet-1.0.3-all.jar</docletPath>
+                            <useStandardDocletOptions>false</useStandardDocletOptions>
+                            <additionalparam>
+                                -pdf javadoc.pdf -config ${basedir}/ConfTools/config_pdf.properties
+                            </additionalparam>
+                        </configuration>
+                    </reportSet>
+                </reportSets>
+            </plugin>               
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jxr-plugin</artifactId>

@@ -113,6 +113,7 @@ public class MediaResourceTest {
         try {
             Representation rep = client.get();
             code = client.getStatus().getCode();
+            rep.exhaust();
         } catch(ResourceException ex) {
             code = ex.getStatus().getCode();
         }
@@ -136,6 +137,7 @@ public class MediaResourceTest {
         try {
             Representation rep = client.get();
             code = client.getStatus().getCode();
+            rep.exhaust();
         } catch(ResourceException ex) {
             code = ex.getStatus().getCode();
         }
@@ -162,6 +164,7 @@ public class MediaResourceTest {
         try {
             Representation rep = client.get();
             code = client.getStatus().getCode();
+            rep.exhaust();
         } catch(ResourceException ex) {
             code = ex.getStatus().getCode();
         }
@@ -187,6 +190,7 @@ public class MediaResourceTest {
         try {
             Representation rep = client.get();
             code = client.getStatus().getCode();
+            rep.exhaust();
         } catch(ResourceException ex) {
             code = ex.getStatus().getCode();
         }
@@ -201,7 +205,7 @@ public class MediaResourceTest {
      * A Status.SUCCESS_OK is expected
      */
     @Test    
-    public void testCreateMediaForbidden() {   
+    public void testCreateMediaForbidden() throws IOException {   
         Form mediaForm = new Form();
         mediaForm.add("image/fits", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
         mediaForm.add("image/jpeg", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
@@ -223,6 +227,7 @@ public class MediaResourceTest {
         try {
             Representation rep = client.post(mediaForm);
             code = client.getStatus().getCode();
+            rep.exhaust();
         } catch(ResourceException ex) {
             code = ex.getStatus().getCode();
         }

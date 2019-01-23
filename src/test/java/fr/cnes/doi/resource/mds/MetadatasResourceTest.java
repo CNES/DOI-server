@@ -122,7 +122,7 @@ public class MetadatasResourceTest {
      * A SUCCESS_CREATED status is expected.
      */
     @Test
-    public void testCreateMetadataHttps() {
+    public void testCreateMetadataHttps() throws IOException {
         testSpecCreateMetadataAsObj(MdsSpec.Spec.POST_METADATA_201, inputStream, "malapert", "pwd", "828606", 1);        
     }
     
@@ -132,7 +132,7 @@ public class MetadatasResourceTest {
      * The file is validated at the DOIServer level then DataCite is not requested.
      */    
     @Test
-    public void testCreateMetadataHttpsWithWrongFile() {
+    public void testCreateMetadataHttpsWithWrongFile() throws IOException {
         testSpecCreateMetadataAsObj(MdsSpec.Spec.POST_METADATA_400, inputStreamFileError, "malapert", "pwd", "828606", 0);
     }  
     
@@ -143,7 +143,7 @@ public class MetadatasResourceTest {
      * is not allowed to create a metadata.
      */
     @Test
-    public void testCreateMetadataHttpsWithNoRole() {
+    public void testCreateMetadataHttpsWithNoRole() throws IOException {
         testSpecCreateMetadataAsObj(MdsSpec.Spec.POST_METADATA_401, inputStream, "norole", "norole", null, 0);        
     }
     
@@ -155,7 +155,7 @@ public class MetadatasResourceTest {
      * done to DataCite
      */    
     @Test
-    public void testCreateMetadataHttpsWithConflict() {
+    public void testCreateMetadataHttpsWithConflict() throws IOException {
         testSpecCreateMetadataAsObjWithConflict(MdsSpec.Spec.POST_METADATA_401, inputStream, "malapert", "pwd", null, 0);        
     }
     
@@ -168,7 +168,7 @@ public class MetadatasResourceTest {
      * @param role the role to set (when no role, set to null)
      * @param exactly the number of expected requests to Datacite (-1 when at least 1 request is done)
      */
-    private void testSpecCreateMetadataAsObj(MdsSpec.Spec spec, InputStream is, String login, String pwd, String role, int exactly) {        
+    private void testSpecCreateMetadataAsObj(MdsSpec.Spec spec, InputStream is, String login, String pwd, String role, int exactly) throws IOException {        
         // Creates the MetadataStoreService stub        
         mdsServerStub.createSpec(spec);
 
@@ -191,6 +191,7 @@ public class MetadatasResourceTest {
         try {
             Representation rep = client.post(new StringRepresentation(result, MediaType.APPLICATION_XML));
             code = client.getStatus().getCode();
+            rep.exhaust();
         } catch (ResourceException ex) {
             code = ex.getStatus().getCode();
         } finally {
@@ -216,7 +217,7 @@ public class MetadatasResourceTest {
      * @param role the role to set (when no role, set to null)
      * @param exactly the number of expected requests to Datacite (-1 when at least 1 request is done)
      */    
-    private void testSpecCreateMetadataAsObjWithConflict(MdsSpec.Spec spec, InputStream is, String login, String pwd, String role, int exactly) {        
+    private void testSpecCreateMetadataAsObjWithConflict(MdsSpec.Spec spec, InputStream is, String login, String pwd, String role, int exactly) throws IOException {        
         // Creates the MetadataStoreService stub        
         mdsServerStub.createSpec(spec);
 
@@ -240,6 +241,7 @@ public class MetadatasResourceTest {
         try {
             Representation rep = client.post(new StringRepresentation(result, MediaType.APPLICATION_XML));
             code = client.getStatus().getCode();
+            rep.exhaust();
         } catch (ResourceException ex) {
             code = ex.getStatus().getCode();
 //            if (code == Status.CONNECTOR_ERROR_COMMUNICATION.getCode()) {

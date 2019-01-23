@@ -85,7 +85,7 @@ public class DoisResourceTest {
     }
 
     @AfterClass
-    public static void tearDownClass() {
+    public static void tearDownClass() throws IOException {
         Form doiForm = new Form();
         doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b"));
         doiForm.add(new Parameter(DoisResource.URL_PARAMETER, "https://cfosat.cnes.fr/"));
@@ -106,6 +106,7 @@ public class DoisResourceTest {
         try {
             Representation rep = client.post(doiForm);
             code = client.getStatus().getCode();
+            rep.exhaust();
         } catch (ResourceException ex) {
             code = ex.getStatus().getCode();
         }
@@ -176,6 +177,7 @@ public class DoisResourceTest {
         try {
             Representation rep = client.post(doiForm);
             code = client.getStatus().getCode();
+            rep.exhaust();
         } catch (ResourceException ex) {
             code = ex.getStatus().getCode();
         }
@@ -212,6 +214,7 @@ public class DoisResourceTest {
         try {
             Representation rep = client.post(doiForm);
             code = client.getStatus().getCode();
+            rep.exhaust();
         } catch (ResourceException ex) {
             code = ex.getStatus().getCode();
         }
@@ -250,6 +253,7 @@ public class DoisResourceTest {
         try {
             Representation rep = client.post(doiForm);
             code = client.getStatus().getCode();
+            rep.exhaust();
         } catch (ResourceException ex) {
             code = ex.getStatus().getCode();
         }
@@ -288,6 +292,7 @@ public class DoisResourceTest {
         try {
             Representation rep = client.post(doiForm);
             code = client.getStatus().getCode();
+            rep.exhaust();
         } catch (ResourceException ex) {
             code = ex.getStatus().getCode();
         }
@@ -323,6 +328,7 @@ public class DoisResourceTest {
         try {
             Representation rep = client.post(doiForm);
             code = client.getStatus().getCode();
+            rep.exhaust();
         } catch (ResourceException ex) {
             code = ex.getStatus().getCode();
         }
