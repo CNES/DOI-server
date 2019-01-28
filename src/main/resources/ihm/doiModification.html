@@ -13,6 +13,8 @@
 		<link href="css/doi.css" rel="stylesheet">
 		<link href="css/navbar.css" rel="stylesheet">
 		<link href="css/dataGenerator.css" rel="stylesheet"> 
+		
+		<script src="js/checkAuth.js"></script>
 
 	</head>
 
@@ -394,19 +396,11 @@
 		<script>
 // 		var prefixCnes = "10.24400/";
 		var prefixCnes = "10.5072/";
-		var identifier = "";
 		
+		var identifier = "";
 		var url = "";
 		
 			$(document).ready(function(){
-				if(sessionStorage.getItem("user") == null){
-					window.location.href = ".";
-				}
-				if(sessionStorage.getItem("projects") == null){
-					sessionStorage.clear();
-					window.location.href = ".";
-				}
-				
 				$("#footer").load("footer.txt");
 				$("#navbar").load("navbar.txt", function(responseTxt, statusTxt, xhr){
 			        if(statusTxt == "success"){
@@ -421,20 +415,42 @@
 				$("#doi").change(function(){
 					identifier = $("#doi").val();
 					getUrl();
+					loadMetaData();
 				});
 				$("#url").change(function(){
 					url = $("#url").val();
 				});
 			});
 			
+			function loadMetaData(){
+				var fullDoiName = prefixCnes + projectId + "/" + identifier;
+				$.ajax({
+				    type: "GET",
+				    url: "http://127.0.0.1:8182/mds/metadata/" + fullDoiName,
+				    headers: {
+				    	'Authorization': "Bearer " + sessionStorage.getItem("token")
+				    },
+				    crossDomain: true,
+					cache : false,
+				    error : function (XMLHttpRequest, textStatus, errorThrown){ console.log("La requête GET(metadata) a échouée."); }, 
+				    success: function(xml) { 
+				    	console.log("Get MetaData est un succés."); 
+				    	console.log("xml : " + xml); 
+				    	if(xml != undefined || xml != null){
+				    		//TODO xml type? If doesn't work, check and convert xml 
+							loadXML(xml);
+						}
+			    	}
+				}); 
+			}
+			
 			function getUrl(){
-				var fullName = prefixCnes + $("#idprojet").val() + identifier;
+				var fullName = prefixCnes + projectId + "/" + identifier;
 				$.ajax({
 				    type: "GET",
 				    url: "http://127.0.0.1:8182/mds/dois/" + fullName,
 				    headers: {
-				    	'Authorization': 'Basic ' + btoa('malapert:pwd'),
-				    	'selectedRole': projectID
+				    	'Authorization': "Bearer " + sessionStorage.getItem("token")
 				    },
 				    crossDomain: true,
 					cache : false,
@@ -453,8 +469,7 @@
 				    type: "GET",
 				    url: "http://127.0.0.1:8182/admin/projects/" + projectId  + "/dois",
 				    headers: {
-				    	'Authorization': 'Basic ' + btoa('malapert:pwd')
-// 				    	'selectedRole': projectId
+				    	'Authorization': "Bearer " + sessionStorage.getItem("token")
 				    },
 				    crossDomain: true,
 					cache : false,
@@ -469,6 +484,8 @@
 				    	for(var doi of list){
 				    		$("#doi").append("<option>" + doi + "</option>");	
 				    	}
+				    	// TODO has to be removed
+				    	$("#doi").append("<option>" + "test_jc" + "</option>");	
 				    }
 				}); 
 			}
@@ -478,46 +495,46 @@
 				projectId = sessionStorage.getItem("projectId");
 				$("#idprojet").text(projectId + "/");
 			}
-			function setDOIList(){
-				$("#doi").empty();
-				$("#doi").append("<option disabled selected>Choix d'un doi</option>");
-				if(projectID.includes("111")){
-					$("#doi").append("<option>" + "un DOI du projet A" + "</option>");	
-					$("#doi").append("<option>" + "un autre DOI du projet A" + "</option>");
-				} else {
-					$("#doi").append("<option>" + "un DOI du projet B" + "</option>");
-					$("#doi").append("<option>" + "un autre DOI du projet B" + "</option>");
-				}
-			}
+// 			function setDOIList(){
+// 				$("#doi").empty();
+// 				$("#doi").append("<option disabled selected>Choix d'un doi</option>");
+// 				if(projectId.includes("111")){
+// 					$("#doi").append("<option>" + "un DOI du projet A" + "</option>");	
+// 					$("#doi").append("<option>" + "un autre DOI du projet A" + "</option>");
+// 				} else {
+// 					$("#doi").append("<option>" + "un DOI du projet B" + "</option>");
+// 					$("#doi").append("<option>" + "un autre DOI du projet B" + "</option>");
+// 				}
+// 			}
 			
 			// call by pressing the modify button
 			function modifyDOI(){
 				var xml = $("pre code").text();
 				console.log(xml);
 				if(xml != "" && xml != null){
-					//TODO alert are you sure?
-					requestPost(xml);
+					if(confirm("Voulez-vous vraiment modifier les métadonnées du doi "+ identifier + " ?")){
+						requestPost(xml);
+					}
 				}
 				if(url != "" && url != null){
-					//TODO alert are you sure?
-					requestURL();
+					if(confirm("Voulez-vous vraiment modifier la landing page du doi "+ identifier + " ?")){
+						requestURL();
+					}
 				}
 			}
 			
 			function requestURL(){
-				var fullDoiName = prefixCnes + $("#idprojet").val() + identifier;
+				var fullDoiName = prefixCnes + projectId + "/" + identifier;
 				var formData = {
 						'doi':fullDoiName,
 						'url':url
 				};
-				
 				$.ajax({
 				    type: "POST",
 				    url: "http://127.0.0.1:8182/mds/dois",
 				    data: formData,
 				    headers: {
-				    	'Authorization': 'Basic ' + btoa('malapert:pwd'),
-				    	'selectedRole': projectID
+				    	'Authorization': "Bearer " + sessionStorage.getItem("token")
 				    },
 				    crossDomain: true,
 					cache : false,
@@ -528,9 +545,7 @@
 			
 			function requestPost(xml){
 				console.log("identifier >> " + identifier);
-				console.log("idProjet >> " + projectID);
-				// give project id in header for doi identifier verification
-				// org.restlet.http.headers selectedRole
+				console.log("idProjet >> " + projectId);
 				$.ajax({
 				    type: "POST",
 				    url: "http://127.0.0.1:8182/mds/metadata",
@@ -538,15 +553,15 @@
 				    contentType: "text/xml",
 				    dataType: "xml",
 				    headers: {
-				    	'Authorization': 'Basic ' + btoa('malapert:pwd'),
-				    	'selectedRole': projectID
+				    	'Authorization': "Bearer " + sessionStorage.getItem("token")
 				    },
 				    crossDomain: true,
 					cache : false,
 				    error : function (XMLHttpRequest, textStatus, errorThrown){ console.log("La requête POST(metadata) a échouée."); }, 
-				    success: function(xml) { console.log("DOI "+ identifier + " a été créé."); }
+				    success: function() { console.log("DOI "+ identifier + " a été créé."); }
 				}); 
 			}
+			
 		</script>
 		
 		<!-- Script -->

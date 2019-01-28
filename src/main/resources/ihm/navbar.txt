@@ -35,10 +35,11 @@
 	var selectedProject = sessionStorage.getItem("project");
 	
 	function disconnect(){
+		
 		if(confirm("Voulez-vous vraiment vous déconnecter?")){
-			//TODO delete token
-			sessionStorage.clear();
-			window.location.href = "."; 
+			//if arrived in authentication.html with user in sessionStorage
+			//token is deleted then sessionStorage is clear
+			window.location.href = ".";
 		}
 	}
 	

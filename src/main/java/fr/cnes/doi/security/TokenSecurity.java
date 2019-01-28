@@ -73,7 +73,7 @@ public final class TokenSecurity {
     /**
      * Default date format for the token {@value #DATE_FORMAT}
      */
-    public static final String DATE_FORMAT = "E MMM dd HH:mm:ss z yyyy";
+    public static final String DATE_FORMAT = "EEE MMM dd HH:mm:ss z yyyy";
 
     /**
      * Plugin for token database.
@@ -175,6 +175,37 @@ public final class TokenSecurity {
         LOG.debug(String.format("token generated : %s", token));
         return LOG.traceExit(token);
     }
+    
+    //TODO createToken surcharged
+    /**
+     * Creates a token. (no project ID required) 
+     *
+     * @param userID The user that creates the token
+     * @param timeUnit The time unit for the date expiration
+     * @param amount the amount of timeUnit for the date expiration
+     * @return JWT token
+     */
+    public String generate(final String userID,
+            final TokenSecurity.TimeUnit timeUnit,
+            final int amount){
+        LOG.traceEntry("Parameters : {}, {} and {}", userID, timeUnit, amount);
+        
+        final Date now = Date.from(Instant.now());
+        final Date expirationTime = computeExpirationDate(now, timeUnit.getTimeUnit(), amount);
+
+        final String token = Jwts.builder()
+                .setIssuer(DoiSettings.getInstance().getString(Consts.APP_NAME))
+                .setIssuedAt(Date.from(Instant.now()))
+                .setSubject(userID)
+                .setExpiration(expirationTime)
+                .signWith(
+                        SignatureAlgorithm.HS256,
+                        TextCodec.BASE64.decode(getTokenKey())
+                )
+                .compact();
+        LOG.debug(String.format("token generated : %s", token));
+        return LOG.traceExit(token);
+    }
 
     /**
      * Returns the token key computed by the algorithm HS256.
@@ -212,10 +243,13 @@ public final class TokenSecurity {
                     .requireIssuer(DoiSettings.getInstance().getString(Consts.APP_NAME))
                     .setSigningKey(TextCodec.BASE64.decode(getTokenKey()))
                     .parseClaimsJws(jwtToken));
-        } catch (ExpiredJwtException | UnsupportedJwtException
+        } catch (UnsupportedJwtException
                 | MalformedJwtException | SignatureException
                 | IllegalArgumentException ex) {
             throw LOG.throwing(new DoiRuntimeException("Unable to get the token information", ex));
+        } catch (ExpiredJwtException e) {
+        	LOG.info("Cannot get the token information because : "+ e.getMessage());
+        	return null;
         }
     }
 

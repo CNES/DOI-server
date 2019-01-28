@@ -20,6 +20,7 @@ package fr.cnes.doi.application;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
@@ -27,10 +28,13 @@ import org.apache.logging.log4j.Logger;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
+import org.restlet.data.ChallengeScheme;
 import org.restlet.data.LocalReference;
 import org.restlet.data.Method;
+import org.restlet.data.Reference;
 import org.restlet.data.Status;
 import org.restlet.resource.Directory;
+import org.restlet.resource.Resource;
 import org.restlet.routing.Filter;
 import org.restlet.routing.Redirector;
 import org.restlet.routing.Router;
@@ -41,7 +45,10 @@ import org.restlet.security.RoleAuthorizer;
 import org.restlet.service.TaskService;
 
 import fr.cnes.doi.db.AbstractTokenDBHelper;
+import fr.cnes.doi.db.AbstractUserRoleDBHelper;
 import fr.cnes.doi.logging.business.JsonMessage;
+import fr.cnes.doi.plugin.PluginFactory;
+import fr.cnes.doi.resource.admin.AuthenticationResource;
 import fr.cnes.doi.resource.admin.ManageProjectsResource;
 import fr.cnes.doi.resource.admin.ManageSuperUserResource;
 import fr.cnes.doi.resource.admin.ManageSuperUsersResource;
@@ -50,8 +57,11 @@ import fr.cnes.doi.resource.admin.SuffixProjectsDoisResource;
 import fr.cnes.doi.resource.admin.SuffixProjectsResource;
 import fr.cnes.doi.resource.admin.TokenResource;
 import fr.cnes.doi.security.AllowerIP;
+import fr.cnes.doi.security.LoginBasedVerifier;
+import fr.cnes.doi.security.TokenBasedVerifier;
 import fr.cnes.doi.security.TokenSecurity;
 import fr.cnes.doi.services.LandingPageMonitoring;
+import fr.cnes.doi.services.UpdateTokenDataBase;
 import fr.cnes.doi.utils.spec.CoverageAnnotation;
 import fr.cnes.doi.utils.spec.Requirement;
 
@@ -138,11 +148,19 @@ public class AdminApplication extends AbstractApplication {
      */
     public static final String SUFFIX_PROJECT_URI = "/projects";
     
-    //TODO comments
+    /**
+     * URI {@value #SUFFIX_PROJECT_NAME} to manage a project suffix.
+     */
     public static final String SUFFIX_PROJECT_NAME = "/{suffixProject}";
-    //TODO comments
+    
+    /**
+     * URI {@value #DOIS_URI} to get dois from a specific project.
+     */
     public static final String DOIS_URI = "/dois";
-  //TODO comments
+    
+    /**
+     * URI {@value #USERS_URI} to handle users.
+     */
     public static final String USERS_URI = "/users";
     
     /**
@@ -150,10 +168,11 @@ public class AdminApplication extends AbstractApplication {
     */ 
     public static final String SUPERUSERS_URI = "/superusers";
     
-  //TODO comments
+    /**
+     * URI {@value #USERS_NAME} to handle user.
+     */
     public static final String USERS_NAME = "/{userName}";
     
-
     /**
      * URI {@value #TOKEN_URI} to create a token.
      */
@@ -188,6 +207,11 @@ public class AdminApplication extends AbstractApplication {
      * The period between successive executions : {@value #PERIOD_SCHEDULER}.
      */
     private static final int PERIOD_SCHEDULER = 30;
+    
+    /**
+     * The period between successive executions : {@value #PERIOD_SCHEDULER_FOR_TOKEN_DB}.
+     */
+    private static final int PERIOD_SCHEDULER_FOR_TOKEN_DB = 1;
 
     /**
      * The time unit of the initialDelay and period parameters.
@@ -208,6 +232,11 @@ public class AdminApplication extends AbstractApplication {
      * Token database.
      */
     private final AbstractTokenDBHelper tokenDB;
+    
+    /**
+     * User database.
+     */
+    private final AbstractUserRoleDBHelper userDB;
 
     /**
      * Constructor.
@@ -217,8 +246,11 @@ public class AdminApplication extends AbstractApplication {
         setName(NAME);
         setDescription("Provides an application for handling features related to "
                 + "the administration system of the DOI server.");
+        this.tokenDB = TokenSecurity.getInstance().getTOKEN_DB();   
+        this.userDB = PluginFactory.getUserManagement();
+        this.userDB.init(null);
         this.setTaskService(createTaskService());
-        this.tokenDB = TokenSecurity.getInstance().getTOKEN_DB();       
+        this.setTaskService(periodicalyDeleteExpiredTokenFromDB());
     }
 
     /**
@@ -236,6 +268,22 @@ public class AdminApplication extends AbstractApplication {
                 PERIOD_SCHEDULER, PERIOD_UNIT
         );
         return LOG.traceExit(checkLandingPageTask);
+    }
+    
+    /**
+     * A task removing expired tokens in data base each days.
+     *
+     * @return A task
+     */
+    private TaskService periodicalyDeleteExpiredTokenFromDB() {
+        LOG.traceEntry();
+        final TaskService checkExpiredTokenTask = new TaskService(true);
+        LOG.info("Sets checkExpiredTokenTask running at each {} {}", PERIOD_SCHEDULER_FOR_TOKEN_DB, PERIOD_UNIT);
+        checkExpiredTokenTask.scheduleAtFixedRate(
+                new UpdateTokenDataBase(), 0,
+                PERIOD_SCHEDULER_FOR_TOKEN_DB, PERIOD_UNIT
+        );
+        return LOG.traceExit(checkExpiredTokenTask);
     }
 
     /**
@@ -259,64 +307,175 @@ public class AdminApplication extends AbstractApplication {
         // Defines the strategy of authentication (authentication is not required)
         //   - authentication with login/pwd
         final ChallengeAuthenticator challAuth = createAuthenticator();
-        challAuth.setOptional(false);
-
+        challAuth.setOptional(true);
+        
+        //   - authentication with token
+        final ChallengeAuthenticator challTokenAuth = createTokenAuthenticator();
+        challTokenAuth.setOptional(false);
+        //if already authenticate 
+        challTokenAuth.setMultiAuthenticating(false);
+        
         // Defines the authorization
         final RoleAuthorizer authorizer = createRoleAuthorizer();
         
-        //TODO test allow option calls
-        // Set specific authorization on method after checking authentication
-        final MethodAuthorizer methodAuth = createMethodAuthorizer();
-
-        // pipeline of authentication and authorization
-        challAuth.setNext(authorizer);
-        
-        //TODO
-//        authorizer.setNext(methodAuth);
+        // Defines the admin router as private
+        final AllowerIP blocker = new AllowerIP(getContext());
         
         // Defines the routers
         final Router webSiteRouter = createWebSiteRouter();
         final Router adminRouter = createAdminRouter();
         
-        // Defines the admin router as private
-        final AllowerIP blocker = new AllowerIP(getContext());
-        //TODO
-//        methodAuth.setNext(blocker);
-//        blocker.setNext(adminRouter);
-        
-        authorizer.setNext(adminRouter);
+        // pipeline of authentication and authorization
+        challAuth.setNext(challTokenAuth);
+        challTokenAuth.setNext(authorizer);
+        authorizer.setNext(blocker);
+        blocker.setNext(adminRouter);
         
         final Router router = new Router(getContext());
         router.attachDefault(webSiteRouter);
         
-        //TODO apply authorizer..
-//        router.attach(ADMIN_URI, challAuth);
-        router.attach(ADMIN_URI, adminRouter);
+        router.attach(ADMIN_URI, challAuth);
         
         return LOG.traceExit(router);
     }
     
     /**
-     * Creates the method authorizer. GET method can be anonymous. The verbs (POST, PUT, DELETE)
-     * need to be authenticated.
+     * Creates an authentication by token.
      *
-     * @return Authorizer based on authorized methods
+     * @return the object that contains the business to check
+     * @see TokenBasedVerifier the token verification
      */
-    private MethodAuthorizer createMethodAuthorizer() {
+    @Requirement(reqId = Requirement.DOI_AUTH_020, reqName = Requirement.DOI_AUTH_020_NAME)
+    private ChallengeAuthenticator createTokenAuthenticator() {
         LOG.traceEntry();
-    	
-        final MethodAuthorizer methodAuth = new MethodAuthorizer();
-        methodAuth.getAnonymousMethods().add(Method.GET);
-        methodAuth.getAnonymousMethods().add(Method.OPTIONS);
-        methodAuth.getAuthenticatedMethods().add(Method.GET);
-        methodAuth.getAuthenticatedMethods().add(Method.POST);
-        methodAuth.getAuthenticatedMethods().add(Method.PUT);
-        methodAuth.getAuthenticatedMethods().add(Method.DELETE);
+        final ChallengeAuthenticator guard = new ChallengeAuthenticator(
+                getContext(), ChallengeScheme.HTTP_OAUTH_BEARER, "testRealm")
+        {
+            /**
+             * Verifies the token.
+             *
+             * @param request request
+             * @param response response
+             * @return the result
+             */
+            @Override
+            public int beforeHandle(final Request request,
+                    final Response response) {
+            	if (request.getMethod().equals(Method.OPTIONS)){
+            		response.setStatus(Status.SUCCESS_OK);
+            		return CONTINUE;
+            	}
+            	else {
+            		return super.beforeHandle(request, response);
+            	}
+            }
+        };
+        final TokenBasedVerifier verifier = new TokenBasedVerifier(getTokenDB());
+        guard.setVerifier(verifier);
 
-        return LOG.traceExit(methodAuth);
+        return LOG.traceExit(guard);
+    }
+    
+    /**
+     * Creates the authenticator based on a HTTP basic. Creates the user, role and mapping
+     * user/role.
+     *
+     * @return Authenticator based on a challenge scheme
+     */
+    @Requirement(reqId = Requirement.DOI_AUTH_010, reqName = Requirement.DOI_AUTH_010_NAME)
+    protected ChallengeAuthenticator createAuthenticator() {
+        LOG.traceEntry();
+        final ChallengeAuthenticator guard = new ChallengeAuthenticator(
+                getContext(), ChallengeScheme.HTTP_BASIC, "realm")
+        {
+            /**
+             * Cancel verification on pre-flight OPTIONS method
+             *
+             * @param request request
+             * @param response response
+             * @return the result
+             */
+            @Override
+            public int beforeHandle(final Request request,
+                    final Response response) {
+            	if (request.getMethod().equals(Method.OPTIONS)){
+            		response.setStatus(Status.SUCCESS_OK);
+            		return CONTINUE;
+            	}
+            	else {
+            		return super.beforeHandle(request, response);
+            	}
+            }
+        };
+
+        final LoginBasedVerifier verifier = new LoginBasedVerifier(getUserDB());
+        guard.setVerifier(verifier);
+
+        return LOG.traceExit(guard);
     }
 
     /**
+     * Creates a authorization based on the role. Only users attached to the role
+     * {@link fr.cnes.doi.security.RoleAuthorizer#ROLE_ADMIN} are allowed
+     *
+     * @return the authorization that contains the access rights to the resources.
+     */
+    private RoleAuthorizer createRoleAuthorizer() {
+        LOG.traceEntry();
+
+        final RoleAuthorizer roleAuth = new RoleAuthorizer() {
+
+        	/**
+             * Cancel verification on pre-flight OPTIONS method
+             *
+             * @param request request
+             * @param response response
+             * @return the result
+             */
+            @Override
+            public int beforeHandle(final Request request,
+                    final Response response) {
+            	Method requestMethod = request.getMethod();
+            	Reference requestReference = request.getOriginalRef();
+            	String lastSeg = requestReference.getLastSegment();
+            	
+            	boolean ignoreVerification = false;
+            	
+            	if (requestMethod.equals(Method.OPTIONS) || lastSeg.equals("admin")){
+            		ignoreVerification = true;
+            	}
+            	else if (requestMethod.equals(Method.GET)) {
+            		if(lastSeg.equals("projects") && requestReference.hasQuery()) {
+            			ignoreVerification = true;
+            		}
+            		if(requestReference.toString().contains("/admin/superusers/")) {
+            			ignoreVerification = true;
+            		}
+            		// ignore method GET dois from project
+            		if(lastSeg.equals("dois")) {
+            			ignoreVerification = true;
+            		}
+            	}
+            	
+            	if(ignoreVerification) {
+            		response.setStatus(Status.SUCCESS_OK);
+            		return CONTINUE;
+            	} else {
+            		return super.beforeHandle(request, response);
+            	}
+            }
+        	
+        };
+        roleAuth.setAuthorizedRoles(
+                Arrays.asList(
+                        Role.get(this, fr.cnes.doi.security.RoleAuthorizer.ROLE_ADMIN)
+                )
+        );
+
+        return LOG.traceExit(roleAuth);
+    }
+
+	/**
      * Creates a router for REST services for the system administration. This router contains the
      * following resources :
      * <ul>
@@ -334,9 +493,11 @@ public class AdminApplication extends AbstractApplication {
         LOG.traceEntry();
 
         final Router router = new Router(getContext());
+        //TODO AUTHENTICATION
+        router.attachDefault(AuthenticationResource.class);
+        
         router.attach(SUFFIX_PROJECT_URI, SuffixProjectsResource.class);
         
-        //TODO merge class
         router.attach(SUFFIX_PROJECT_URI + SUFFIX_PROJECT_NAME , ManageProjectsResource.class);
         router.attach(SUFFIX_PROJECT_URI + SUFFIX_PROJECT_NAME + DOIS_URI, SuffixProjectsDoisResource.class);
         
@@ -503,31 +664,21 @@ public class AdminApplication extends AbstractApplication {
     }
 
     /**
-     * Creates a authorization based on the role. Only users attached to the role
-     * {@link fr.cnes.doi.security.RoleAuthorizer#ROLE_ADMIN} are allowed
-     *
-     * @return the authorization that contains the access rights to the resources.
-     */
-    private RoleAuthorizer createRoleAuthorizer() {
-        LOG.traceEntry();
-
-        final RoleAuthorizer roleAuth = new RoleAuthorizer();
-        roleAuth.setAuthorizedRoles(
-                Arrays.asList(
-                        Role.get(this, fr.cnes.doi.security.RoleAuthorizer.ROLE_ADMIN)
-                )
-        );
-
-        return LOG.traceExit(roleAuth);
-    }
-
-    /**
      * Returns the token database.
      *
      * @return the token database
      */
     public AbstractTokenDBHelper getTokenDB() {
         return this.tokenDB;
+    }
+    
+    /**
+     * Returns the user database.
+     *
+     * @return the user database
+     */
+    public AbstractUserRoleDBHelper getUserDB() {
+        return this.userDB;
     }
 
     /**

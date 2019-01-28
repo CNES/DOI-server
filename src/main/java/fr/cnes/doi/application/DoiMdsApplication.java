@@ -18,20 +18,8 @@
  */
 package fr.cnes.doi.application;
 
-import fr.cnes.doi.client.ClientMDS;
 import static fr.cnes.doi.client.ClientMDS.SCHEMA_DATACITE;
-import fr.cnes.doi.db.AbstractTokenDBHelper;
-import fr.cnes.doi.exception.ClientMdsException;
-import fr.cnes.doi.exception.DoiRuntimeException;
-import fr.cnes.doi.resource.mds.DoiResource;
-import fr.cnes.doi.resource.mds.DoisResource;
-import fr.cnes.doi.resource.mds.MediaResource;
-import fr.cnes.doi.resource.mds.MetadataResource;
-import fr.cnes.doi.resource.mds.MetadatasResource;
-import fr.cnes.doi.security.TokenBasedVerifier;
-import fr.cnes.doi.security.TokenSecurity;
-import fr.cnes.doi.settings.Consts;
-import fr.cnes.doi.utils.spec.Requirement;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.restlet.Context;
@@ -51,6 +39,23 @@ import org.restlet.routing.Router;
 import org.restlet.routing.Template;
 import org.restlet.security.ChallengeAuthenticator;
 import org.restlet.security.MethodAuthorizer;
+
+import fr.cnes.doi.client.ClientMDS;
+import fr.cnes.doi.db.AbstractTokenDBHelper;
+import fr.cnes.doi.db.AbstractUserRoleDBHelper;
+import fr.cnes.doi.exception.ClientMdsException;
+import fr.cnes.doi.exception.DoiRuntimeException;
+import fr.cnes.doi.plugin.PluginFactory;
+import fr.cnes.doi.resource.mds.DoiResource;
+import fr.cnes.doi.resource.mds.DoisResource;
+import fr.cnes.doi.resource.mds.MediaResource;
+import fr.cnes.doi.resource.mds.MetadataResource;
+import fr.cnes.doi.resource.mds.MetadatasResource;
+import fr.cnes.doi.security.LoginBasedVerifier;
+import fr.cnes.doi.security.TokenBasedVerifier;
+import fr.cnes.doi.security.TokenSecurity;
+import fr.cnes.doi.settings.Consts;
+import fr.cnes.doi.utils.spec.Requirement;
 
 /**
  * Provides an application to handle Data Object Identifier within an organization. A Digital Object
@@ -150,8 +155,7 @@ public final class DoiMdsApplication extends AbstractApplication {
      * Logger.
      */
     private static final Logger LOG = LogManager.getLogger(DoiMdsApplication.class.getName());
-
-
+    
     /**
      * Client to query Mds Datacite.
      */
@@ -161,7 +165,12 @@ public final class DoiMdsApplication extends AbstractApplication {
      * Token DB that contains the set of generated token.
      */
     private final AbstractTokenDBHelper tokenDB;
-
+    
+    /**
+     * User database.
+     */
+    private final AbstractUserRoleDBHelper userDB;
+    
     /**
      * Creates the Digital Object Identifier server application.
      * @throws DoiRuntimeException When the DataCite schema is not available
@@ -179,6 +188,8 @@ public final class DoiMdsApplication extends AbstractApplication {
             final String contextMode = this.getConfig().getString(Consts.CONTEXT_MODE);
             client = new ClientMDS(ClientMDS.Context.valueOf(contextMode), getLoginMds(), getPwdMds());
             this.tokenDB = TokenSecurity.getInstance().getTOKEN_DB();
+            this.userDB = PluginFactory.getUserManagement();
+            this.userDB.init(null);
         } catch (ClientMdsException ex) {
             throw LOG.throwing(new DoiRuntimeException(ex));
         }
@@ -208,21 +219,20 @@ public final class DoiMdsApplication extends AbstractApplication {
         //   - authentication with token
         final ChallengeAuthenticator challTokenAuth = createTokenAuthenticator();
         challTokenAuth.setOptional(true);
+        
+        // Set specific authorization on method after checking authentication
+        final MethodAuthorizer methodAuth = createMethodAuthorizer();
 
         //  create a pipeline of authentication
         challAuth.setNext(challTokenAuth);
-
-        // Set specific authorization on method after checking authentication
-        final MethodAuthorizer methodAuth = createMethodAuthorizer();
+        
         challTokenAuth.setNext(methodAuth);
-
+        
         // Router
         methodAuth.setNext(createRouter());
 
         Filter filter = new SecurityPostProcessingFilter(getContext(), challAuth);
-        //TODO
-        return createRouter();
-//        return LOG.traceExit(filter);
+        return LOG.traceExit(filter);
     }
 
     /**
@@ -279,6 +289,44 @@ public final class DoiMdsApplication extends AbstractApplication {
 
         return LOG.traceExit(methodAuth);
     }
+    
+    /**
+     * Creates the authenticator based on a HTTP basic. Creates the user, role and mapping
+     * user/role.
+     *
+     * @return Authenticator based on a challenge scheme
+     */
+    @Requirement(reqId = Requirement.DOI_AUTH_010, reqName = Requirement.DOI_AUTH_010_NAME)
+    protected ChallengeAuthenticator createAuthenticator() {
+        LOG.traceEntry();
+        final ChallengeAuthenticator guard = new ChallengeAuthenticator(
+                getContext(), ChallengeScheme.HTTP_BASIC, "realm")
+        {
+            /**
+             * Cancel verification on pre-flight OPTIONS method
+             *
+             * @param request request
+             * @param response response
+             * @return the result
+             */
+            @Override
+            public int beforeHandle(final Request request,
+                    final Response response) {
+            	if (request.getMethod().equals(Method.OPTIONS)){
+            		response.setStatus(Status.SUCCESS_OK);
+            		return CONTINUE;
+            	}
+            	else {
+            		return super.beforeHandle(request, response);
+            	}
+            }
+        };
+
+        final LoginBasedVerifier verifier = new LoginBasedVerifier(getUserDB());
+        guard.setVerifier(verifier);
+
+        return LOG.traceExit(guard);
+    }
 
     /**
      * Creates an authentication by token.
@@ -289,9 +337,28 @@ public final class DoiMdsApplication extends AbstractApplication {
     @Requirement(reqId = Requirement.DOI_AUTH_020, reqName = Requirement.DOI_AUTH_020_NAME)
     private ChallengeAuthenticator createTokenAuthenticator() {
         LOG.traceEntry();
-
         final ChallengeAuthenticator guard = new ChallengeAuthenticator(
-                getContext(), ChallengeScheme.HTTP_OAUTH_BEARER, "testRealm");
+                getContext(), ChallengeScheme.HTTP_OAUTH_BEARER, "testRealm")
+        {
+            /**
+             * Verifies the token.
+             *
+             * @param request request
+             * @param response response
+             * @return the result
+             */
+            @Override
+            public int beforeHandle(final Request request,
+                    final Response response) {
+            	if (request.getMethod().equals(Method.OPTIONS)){
+            		response.setStatus(Status.SUCCESS_OK);
+            		return CONTINUE;
+            	}
+            	else {
+            		return super.beforeHandle(request, response);
+            	}
+            }
+        };
         final TokenBasedVerifier verifier = new TokenBasedVerifier(getTokenDB());
         guard.setVerifier(verifier);
 
@@ -346,6 +413,15 @@ public final class DoiMdsApplication extends AbstractApplication {
     public AbstractTokenDBHelper getTokenDB() {
         LOG.traceEntry();
         return LOG.traceExit(this.tokenDB);
+    }
+    
+    /**
+     * Returns the user database.
+     *
+     * @return the user database
+     */
+    public AbstractUserRoleDBHelper getUserDB() {
+        return this.userDB;
     }
 
     /**

@@ -85,7 +85,6 @@ public class ManageProjectsResource extends AbstractResource {
     		
     	 final ClientSearchDataCite client;
          List<String> response = new ArrayList<>();
-         
          try {
  	       client = new ClientSearchDataCite();
  	       response = client.getDois(suffixProject);
@@ -97,7 +96,7 @@ public class ManageProjectsResource extends AbstractResource {
          }
          
          // No DOIs have to be attached to a project before deleting it
-         if(response.isEmpty()) {
+         if(!response.isEmpty()) {
         	 return LOG.traceExit(false);
          }
          

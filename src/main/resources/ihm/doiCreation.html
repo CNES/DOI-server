@@ -13,6 +13,9 @@
 		<link href="css/doi.css" rel="stylesheet">
 		<link href="css/navbar.css" rel="stylesheet">
 		<link href="css/dataGenerator.css" rel="stylesheet">
+		
+		<script src="js/checkAuth.js"></script>
+		
 	</head>
 
 	<body>
@@ -44,8 +47,10 @@
 				<br>
 					
 				<div class="form-group">
-					<div class="col-sm-offset-2 col-sm-10">
+					<div class="col-sm-offset-2 col-sm-5">
 						<button type="button" class="btn btn-default" onclick="createDOI()">Créer le DOI</button>
+						<button type="button" class="col-sm-offset-1 btn btn-default" onclick="$('#xmlfile').click();">Importer des méta-données</button>
+						<input id="xmlfile" type="file" accept=".xml" style="position: fixed; top: -100em">
 					</div>
 				</div>  
 			</form>
@@ -397,14 +402,6 @@
 	var url = "";
 	
 		$(document).ready(function(){
-			if(sessionStorage.getItem("user") == null){
-				window.location.href = ".";
-			}
-			if(sessionStorage.getItem("projects") == null){
-				sessionStorage.clear();
-				window.location.href = ".";
-			}
-			
 			$("#footer").load("footer.txt");
 			$("#navbar").load("navbar.txt", function(responseTxt, statusTxt, xhr){
 		        if(statusTxt == "success"){
@@ -423,6 +420,27 @@
 				url = $("#url").val();
 			});
 			
+			// Chargement du fichier xml
+			$("#xmlfile").change(function(){
+				console.log("in change event!");
+				var xmlDoc = this.files[0];  
+				var readXml = null;
+				var xmlToSend = null;
+				console.log("xmlDOC.name " +xmlDoc.name);
+				
+				if(xmlDoc != undefined){
+					var reader = new FileReader();
+		            reader.onload = function(e) {
+		                readXml=e.target.result;
+// 		                console.log(readXml);
+		                var parser = new DOMParser();
+		                var doc = parser.parseFromString(readXml, "application/xml");
+// 		                console.log(doc);
+		                loadXML(doc);
+		           }
+		            reader.readAsText(xmlDoc);
+				}
+			});
 		});
 		
 		var projectId;
@@ -440,32 +458,29 @@
 			// create metadata for this doi (identifier)
 			// if the doi already exist, then update metadata
 			requestPost(xml);
+// 			requestURL();
 		}
 		
 		$(document).ajaxSuccess(function(e, xhr, opt){
 			if (opt.url == "http://127.0.0.1:8182/mds/metadata") {
 				if(url != ""){
 					requestURL();
-//					doi:identifier,
-//					url:url
 				}
 			}
 		});
 		
 		function requestURL(){
-			var fullDoiName = prefixCnes + $("#idprojet").val() + identifier;
+			var fullDoiName = prefixCnes + projectId +"/"+ identifier;
 			var formData = {
 					'doi':fullDoiName,
 					'url':url
 			};
-			
 			$.ajax({
 			    type: "POST",
 			    url: "http://127.0.0.1:8182/mds/dois",
 			    data: formData,
 			    headers: {
-			    	'Authorization': 'Basic ' + btoa('malapert:pwd'),
-			    	'selectedRole': projectId
+			    	'Authorization': "Bearer " + sessionStorage.getItem("token")
 			    },
 			    crossDomain: true,
 				cache : false,
@@ -477,8 +492,6 @@
 		function requestPost(xml){
 			console.log("identifier >> " + identifier);
 			console.log("idProjet >> " + projectId);
-			// give project id in header for doi identifier verification
-			// org.restlet.http.headers selectedRole
 			$.ajax({
 			    type: "POST",
 			    url: "http://127.0.0.1:8182/mds/metadata",
@@ -486,16 +499,20 @@
 			    contentType: "text/xml",
 			    dataType: "xml",
 			    headers: {
-			    	'Authorization': 'Basic ' + btoa('malapert:pwd'),
-			    	'selectedRole': projectId
+// 			    	'Authorization': 'Basic ' + btoa('malapert:pwd'),  
+					'Authorization': "Bearer " + sessionStorage.getItem("token")
 			    },
 			    crossDomain: true,
 				cache : false,
 			    error : function (XMLHttpRequest, textStatus, errorThrown){ console.log("La requête POST(metadata) a échouée."); }, 
-			    success: function(xml) { console.log("DOI "+ identifier + " a été créé."); }
+			    success: function() { console.log("DOI "+ identifier + " a été créé."); }
 			}); 
 		}
+		
 	</script>
+	
+	<!-- Script -->
+	<script src="js/doiModification.js" ></script>
 	<script src="js/doiCreation.js" ></script>
 			
 </html>

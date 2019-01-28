@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
@@ -703,7 +704,7 @@ public class ClientMDS extends BaseClient {
             final MyValidationEventHandler validationHandler = new MyValidationEventHandler(this.
                     getClient().getLogger());
             this.unMarshaller.setEventHandler(validationHandler);
-            final Resource resource = (Resource) this.unMarshaller.unmarshal(entity.getStream());
+            final Resource resource = (Resource) (((JAXBElement<?>) this.unMarshaller.unmarshal(entity.getStream())).getValue());
             if (validationHandler.isValid()) {
                 return resource;
             } else {

@@ -131,6 +131,7 @@ public class RoleAuthorizer implements Observer {
     private void initForMds(final Application app) {
         LOG.traceEntry(new JsonMessage(app));
 
+        //TODO why twice?
         initForAdmin(app);
 
         // we load projects from database
@@ -149,10 +150,9 @@ public class RoleAuthorizer implements Observer {
             	User user = new User(doiUser.getUsername());
             	usersFromProject.add(user);
             }
-            final List<User> users = usersFromProject;
             
             // create a role authorizer for each user related to a project
-            for (final User user : users) {
+            for (final User user : usersFromProject) {
                 LOG.debug("Add user " + user + " to role " + projectID + " for " + app.getName());
                 RoleAuthorizer.REALM.map(user, role);
             }

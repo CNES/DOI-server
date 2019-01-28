@@ -50,7 +50,7 @@ public class MetadatasResource extends BaseMdsResource {
      * Function of this resource {@value #CREATE_METADATA}.
      */
     public static final String CREATE_METADATA = "Create Metadata";
-
+    
     /**
      * Init.
      *
@@ -96,6 +96,7 @@ public class MetadatasResource extends BaseMdsResource {
             setStatus(Status.SUCCESS_CREATED);
             final Resource resource = createDataCiteResourceObject(entity);
             final String selectedRole = extractSelectedRoleFromRequestIfExists();
+            
             checkPermission(resource.getIdentifier().getValue(), selectedRole);
             resource.setPublisher("CNES");
             result = this.getDoiApp().getClient().createMetadata(resource);

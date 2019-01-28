@@ -199,7 +199,7 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
     }
 
     @Override
-    public boolean isExpirated(String jwt) {
+    public boolean isExpired(String jwt) {
         boolean isExpirated = true;
         String dateStr = (String) this.db.get(jwt).get("expirationDate");
         try {
@@ -241,5 +241,11 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
     public String getLicense() {
         return LICENSE;
     }
+
+	@Override
+	public List<String> getTokens() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

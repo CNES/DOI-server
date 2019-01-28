@@ -198,8 +198,9 @@ public class TokenResource extends AbstractResource {
     
     @Requirement(reqId = Requirement.DOI_INTER_040, reqName = Requirement.DOI_INTER_040_NAME)
     @Delete
-    public void deleteToken(Form mediaForm) {
-    	// TODO delete token
+    public void deleteToken() {
+    	LOG.traceEntry();
+    	this.tokenDB.deleteToken(this.tokenParam);
     }
     
 

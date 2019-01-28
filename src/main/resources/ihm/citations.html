@@ -12,6 +12,9 @@
 		<!-- Css -->
 		<link href="css/doi.css" rel="stylesheet">
 		<link href="css/navbar.css" rel="stylesheet">
+		
+		<script src="js/checkAuth.js"></script>
+		
 	</head>
 
 	<body>
@@ -92,17 +95,10 @@
 		<script>
 // 		var prefixCnes = "10.24400/";
 		var prefixCnes = "10.5072/";
+		
 		var identifier = "";
 		
 		$(document).ready(function(){
-			if(sessionStorage.getItem("user") == null){
-				window.location.href = ".";
-			}
-			if(sessionStorage.getItem("projects") == null){
-				sessionStorage.clear();
-				window.location.href = ".";
-			}
-			
 			$("#footer").load("footer.txt");
 			$("#navbar").load("navbar.txt", function(responseTxt, statusTxt, xhr){
 		        if(statusTxt == "success"){
@@ -172,7 +168,7 @@
 			if(identifier == ""){
 				return;
 			}
-			var fullName = prefixCnes + $("#idprojet").text() + identifier;
+			var fullName = prefixCnes + projectId + "/" + identifier;
 			console.log(fullName);
 			var request = new Object();
 			request.doi = fullName;
@@ -207,14 +203,13 @@
 			    type: "GET",
 			    url: "http://127.0.0.1:8182/admin/projects/" + projectId  + "/dois",
 			    headers: {
-			    	'Authorization': 'Basic ' + btoa('malapert:pwd')
-//				    	'selectedRole': projectId
+			    	'Authorization': "Bearer " + sessionStorage.getItem("token")
 			    },
 			    crossDomain: true,
 				cache : false,
 			    error : function (XMLHttpRequest, textStatus, errorThrown){ 
 			    	console.log("La requête GET(dois) a échouée."); 
-			    	alert("GET doisFromProject : status = " + textStatus);
+			    	console.log("GET doisFromProject : status = " + textStatus);
 			    },
 			    success: function(list) {
 			    	console.log("GET doisFromProject est un succès.");

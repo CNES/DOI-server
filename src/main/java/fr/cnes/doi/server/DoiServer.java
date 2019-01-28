@@ -299,9 +299,8 @@ public class DoiServer extends Component {
         this.getDefaultHost().attach(CITATION_URI, new DoiCrossCiteApplication());
         this.getDefaultHost().attachDefault(appAdmin);
         // Set authentication 
-        //TODO Unauthorized
-//        RoleAuthorizer.getInstance().createRealmFor(appDoiProject);
-//        RoleAuthorizer.getInstance().createRealmFor(appAdmin);
+        RoleAuthorizer.getInstance().createRealmFor(appDoiProject);
+        RoleAuthorizer.getInstance().createRealmFor(appAdmin);
         LOG.traceExit();
     }
 
@@ -312,7 +311,7 @@ public class DoiServer extends Component {
     private void startWithProxy() {
         LOG.traceEntry();
         initLogServices();
-//        RoleAuthorizer.getInstance();
+        RoleAuthorizer.getInstance();
         ProxySettings.getInstance();
         EmailSettings.getInstance();
         configureServer();

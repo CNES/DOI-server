@@ -28,6 +28,10 @@ import org.apache.logging.log4j.Logger;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.data.ChallengeResponse;
+import org.restlet.data.ChallengeScheme;
+import org.restlet.data.Method;
+import org.restlet.data.Status;
+import org.restlet.routing.Filter;
 import org.restlet.security.User;
 import org.restlet.security.Verifier;
 
@@ -72,9 +76,12 @@ public class TokenBasedVerifier implements Verifier {
         LOG.traceEntry(new JsonMessage(request));
         final int result;
         final ChallengeResponse challResponse = request.getChallengeResponse();
+        
         if (challResponse == null) {
             result = Verifier.RESULT_MISSING;
-        } else {
+        } else if(challResponse.getScheme().equals(ChallengeScheme.HTTP_BASIC)){
+        	result = Verifier.RESULT_MISSING;
+    	}else {
             result = processAuthentication(request, challResponse);
         }
         return LOG.traceExit(result);
@@ -93,6 +100,7 @@ public class TokenBasedVerifier implements Verifier {
         final int result;
         final String token = challResponse.getRawValue();
         LOG.debug("Token from challenge response : " + token);
+        
         if (token == null) {
             result = Verifier.RESULT_MISSING;
         } else if (this.tokenDB.isExist(token)) {
@@ -115,7 +123,7 @@ public class TokenBasedVerifier implements Verifier {
         LOG.traceEntry(new JsonMessage(request));
         LOG.traceEntry(token);
         final int result;
-        if (this.tokenDB.isExpirated(token)) {
+        if (this.tokenDB.isExpired(token)) {
             LOG.info("token {} is expirated", token);
             result = Verifier.RESULT_INVALID;
         } else {

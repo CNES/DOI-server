@@ -84,11 +84,8 @@ public class DoisResource extends BaseMdsResource {
         LOG.traceEntry();
         final Representation rep;
         try {
-        	//TODO creer la vrai commande
             setStatus(Status.SUCCESS_OK);
             final String dois = this.getDoiApp().getClient().getDoiCollection();
-//            String dois = this.getDoiApp().getClient().getDoiCollection();
-//            dois += " totototo";
             if (dois == null || dois.isEmpty()) {
                 setStatus(Status.SUCCESS_NO_CONTENT);
             } else {

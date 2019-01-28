@@ -134,6 +134,16 @@ public class Consts {
     public static final String SERVER_NONPROXY_HOSTS = "Starter.NoProxy.hosts";
 
     /**
+     * Set token expiration delay during creation
+     */
+    public static final String TOKEN_EXPIRATION_DELAY = "Starter.Token.Delay";
+    
+    /**
+     * Set token expiration unit during creation
+     */
+    public static final String TOKEN_EXPIRATION_UNIT = "Starter.Token.Unit";
+    
+    /**
      * LOG format.
      */
     public static final String LOG_FORMAT = "Starter.Server.Log.format";

@@ -36,7 +36,6 @@ public class ManageSuperUserResource extends AbstractResource {
         LOG.traceEntry();
         this.userName = getAttribute("userName"); 
         LOG.debug(this.userName);
-        System.out.println(this.userName + "  <<<<<<<<<< username");
         setDescription("This resource handles super user");
         LOG.traceExit();
     }
@@ -48,11 +47,9 @@ public class ManageSuperUserResource extends AbstractResource {
      *
      * @return boolean (may be null).
      */
-    //@Requirement(reqId = Requirement.DOI_SRV_140, reqName = Requirement.DOI_SRV_140_NAME)
     @Get
     public Boolean isUserExistAndAdmin() {
         LOG.traceEntry();
-//        boolean isUserExist = ManageUsers.getInstance().isUserExist(userName);
         Boolean isAdmin = ManageSuperUsers.getInstance().isSuperUser(userName);
         return LOG.traceExit(isAdmin);
     }

@@ -104,58 +104,6 @@ public class SuffixProjectsDoisResource extends AbstractResource {
         return LOG.traceExit(response);
     }
     
-//    //TODO requirement
-//    /**
-//     * Delete the project from database.
-//     *
-//     * @return the list of dois
-//     */
-//    @Requirement(reqId = Requirement.DOI_SRV_140, reqName = Requirement.DOI_SRV_140_NAME)
-//    @Delete
-//    public boolean deleteProject() {
-//    	 LOG.traceEntry();
-//         boolean isDeleted = ManageProjects.getInstance().deleteProject(
-//        		 Integer.parseInt(suffixProject));
-//         
-//         return LOG.traceExit(isDeleted);
-//    }
-    
-    //TODO better checking
-//    /**
-//     * Checks if doiName is not empty and contains the institution's prefix
-//     *
-//     * @param doiName DOI name
-//     * @throws DoiServerException 400 Bad Request if the DOI does not contain the institution
-//     * suffix.
-//     */
-//    @Requirement(reqId = Requirement.DOI_INTER_070, reqName = Requirement.DOI_INTER_070_NAME)
-//    private void checkInput(final String doiName) throws DoiServerException {
-//        LOG.traceEntry("Parameter : {}", doiName);
-//        if (doiName == null || doiName.isEmpty()) {
-//            throw LOG.throwing(
-//                    Level.DEBUG,
-//                    new DoiServerException(getApplication(), API_MDS.DOI_VALIDATION,
-//                            "SuffixProject must be set.")
-//            );
-//        } else if (doiName.startsWith(DoiSettings.getInstance().getString(Consts.INIST_DOI))) {
-//            try {
-//                ClientMDS.checkIfAllCharsAreValid(doiName);
-//            } catch (IllegalArgumentException ex) {
-//                throw LOG.throwing(
-//                        Level.DEBUG,
-//                        new DoiServerException(getApplication(), API_MDS.DOI_VALIDATION, ex)
-//                );
-//            }
-//        } else {
-//            throw LOG.throwing(
-//                    Level.DEBUG,
-//                    new DoiServerException(getApplication(), API_MDS.DOI_VALIDATION, "the DOI"
-//                            + " prefix must contains the prefix of the institution")
-//            );
-//        }
-//        LOG.traceExit();
-//    }
-
     /**
      * projects representation
      *

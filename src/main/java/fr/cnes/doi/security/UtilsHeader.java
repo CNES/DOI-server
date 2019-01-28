@@ -33,5 +33,11 @@ public class UtilsHeader {
      * {@value #SELECTED_ROLE_PARAMETER}.
      */
     public static final String SELECTED_ROLE_PARAMETER = "selectedRole";
+    
+//    /**
+//     * The parameter to select the token of the operator
+//     * {@value #TOKEN_PARAMETER}.
+//     */
+//    public static final String TOKEN_PARAMETER = "token";
 
 }

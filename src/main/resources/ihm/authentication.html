@@ -64,23 +64,34 @@
 
 		$(document).ready(function(){
 			$("#footer").load("footer.txt");
+			
+			if(sessionStorage.getItem("user") != null){
+				deleteToken();
+			}
 		});
 
 		var userId;
 		var userPwd;
+		var user; //userId + userPwd
+		
 		function authentication(){
 			userId = $("#user").val();
 			userPwd = $("#password").val();
+			user = userId +":"+userPwd;
 			
-			//TODO password not use
+			//isUserExist? save in session userName and admin(true or false)
 			$.ajax({
 			    type: "GET",
 			    url: "http://127.0.0.1:8182/admin/superusers/" + userId,
+			    headers: {
+			    	'Authorization': 'Basic ' + btoa(user)
+// 			    	'Authorization': "Bearer " + sessionStorage.getItem("token")
+			    },
 			    crossDomain: true,
 				cache : false,
 			    error : function (XMLHttpRequest, textStatus, errorThrown){
 			    	console.log("La requête GET(authentication) a échouée."); 
-			    	alert("GET authentication : status = " + textStatus);
+			    	alert("GET authentication : status = " + textStatus + "\nError thrown : "+ errorThrown);
 			    }, 
 			    success: function(boo) {
 			    	console.log("GET authentication est un succès.");
@@ -95,6 +106,7 @@
 			    			sessionStorage.setItem("admin", "false");
 			    		}
 			    		
+						//get project associated to this user
 			    		getAssociatedProject();
 			    	}
 		    	}
@@ -106,11 +118,15 @@
 			$.ajax({
 			    type: "GET",
 			    url: "http://127.0.0.1:8182/admin/projects?user=" + userId,
+			    headers: {
+			    	'Authorization': 'Basic ' + btoa(user)
+// 			    	'Authorization': "Bearer " + sessionStorage.getItem("token")
+			    },
 			    crossDomain: true,
 				cache : false,
 			    error : function (XMLHttpRequest, textStatus, errorThrown){
 			    	console.log("La requête GET(getAssociatedProject) a échouée."); 
-			    	alert("GET getAssociatedProject : status = " + textStatus);
+			    	sessionStorage.clear();
 			    }, 
 			    success: function(array) {
 			    	console.log("GET getAssociatedProject est un succès.");
@@ -118,25 +134,90 @@
 			    	
 			    	if(!isEmpty(array)){
 			    		sessionStorage.setItem("projects", JSON.stringify(array));
-			    		window.location.href = "doiCreation.html";
+						generateToken("doiCreation.html");
 			    	} else {
 			    		sessionStorage.setItem("projects", null);
 			    		if(admin == "true"){
-			    			window.location.href = "administration.html";
+			    			generateToken("administration.html");
 			    		}else{
 			    			alert("L'utilisateur n'est rattaché à aucun projets.")
+			    			//user is not attached to any project nor is admin
+			    			sessionStorage.clear();
 			    		}
 			    	}
 		    	}
 			});
 		}
-		
 		function isEmpty(object){
 			for(key in object){
 				return false;
 			}
 			return true;
 		}
+		
+		function generateToken(redirection){
+			var dataForm = {
+					"user":userId,
+					"pwd":userPwd
+			}
+			
+			$.ajax({
+			    type: "POST",
+			    url: "https://127.0.0.1:8183/admin",
+// 				url: "http://127.0.0.1:8182/admin",
+				headers: {
+			    	'Authorization': 'Basic ' + btoa(user)
+// 			    	'Authorization': "Bearer " + sessionStorage.getItem("token")
+			    },
+				data: dataForm,
+			    crossDomain: true,
+				cache : false,
+			    error : function (XMLHttpRequest, textStatus, errorThrown){
+			    	console.log("La requête POST(authentication) a échouée."); 
+			    	console.log("POST authentication : status = " + textStatus);
+			    	console.log("POST authentication : errorThrown = " + errorThrown);
+			    	sessionStorage.clear();
+			    }, 
+			    success: function(token) {
+			    	console.log("POST authentication est un succès.");
+			    	console.log(token);
+			    	
+		    		sessionStorage.setItem("token", token);
+		    		window.location.href = redirection;
+		    	}
+			});
+		}
+		
+		function deleteToken(){
+			token = sessionStorage.getItem("token");
+			
+			$.ajax({
+			    type: "DELETE",
+// 			    url: "https://127.0.0.1:8183/admin",
+				url: "http://127.0.0.1:8182/admin",
+				headers: {
+	 				'Authorization': "Bearer " + sessionStorage.getItem("token")
+				},
+				data: {
+					"token":token
+				},
+			    crossDomain: true,
+				cache : false,
+			    error : function (XMLHttpRequest, textStatus, errorThrown){
+			    	console.log("La requête DELETE(disconnect) a échouée."); 
+			    	console.log("DELETE disconnect : status = " + textStatus);
+			    	console.log("DELETE disconnect : errorThrown = " + errorThrown);
+			    	//if the request fail then token won't be deleted. 
+			    	//tokens are still deleted periodicaly if expired.
+			    	sessionStorage.clear();
+			    }, 
+			    success: function() {
+			    	console.log("DELETE disconnect est un succès.");
+			    	sessionStorage.clear();
+		    	}
+			});
+		}
+		
 
 		</script>
 </html>

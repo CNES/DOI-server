@@ -1,4 +1,6 @@
-$("#doi").change(function() {
+var xmlDoc;
+
+function loadXML(file) {
 	var doi = $("#doi").val();
 	var projet = $("#selection").val();
 	
@@ -10,29 +12,22 @@ $("#doi").change(function() {
 	 $("#doi").val(doi);
 	 $("#selection").val(projet);
 	
-	if($("#doi").val().includes("autre")){
-		console.log("<<<<<<<<<<< test2.xml");
-		loadXML("test2.xml");
-	} else {
-		console.log("<<<<<<<<<<< test.xml");
-		loadXML("test.xml");
-	}
-});
-
-var xmlDoc;
-
-function loadXML(file) {
-	var xhttp = new XMLHttpRequest();
-	xhttp.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-			// Typical action to be performed when the document is ready:
-			xmlDoc = xhttp.responseXML;
-
-			update();
-		}
-	};
-	xhttp.open("GET", file, true);
-	xhttp.send();
+//	if(typeof file === 'string'  || file instanceof String){
+//		var xhttp = new XMLHttpRequest();
+//		xhttp.onreadystatechange = function() {
+//			if (this.readyState == 4 && this.status == 200) {
+//				// Typical action to be performed when the document is ready:
+//				xmlDoc = xhttp.responseXML;
+//				
+//				update();
+//			}
+//		};
+//		xhttp.open("GET", file, true);
+//		xhttp.send();
+//	} else {
+		xmlDoc = file;
+		update();
+//	}
 }
 var attributes;
 var tags;

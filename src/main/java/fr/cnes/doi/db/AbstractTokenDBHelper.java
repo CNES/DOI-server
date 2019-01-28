@@ -18,8 +18,10 @@
  */
 package fr.cnes.doi.db;
 
-import fr.cnes.doi.utils.spec.Requirement;
+import java.util.List;
 import java.util.Observable;
+
+import fr.cnes.doi.utils.spec.Requirement;
 
 /**
  * Interface for handling the token database.
@@ -65,5 +67,12 @@ public abstract class AbstractTokenDBHelper extends Observable {
      * @param jwt the token
      * @return True when the token is expirated otherwise False
      */
-    public abstract boolean isExpirated(String jwt);
+    public abstract boolean isExpired(String jwt);
+    
+    /**
+     * Return the token list from database.
+     *
+     * @return the list of tokens
+     */
+    public abstract List<String> getTokens();
 }

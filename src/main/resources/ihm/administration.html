@@ -12,6 +12,8 @@
 		<!-- Css -->
 		<link href="css/doi.css" rel="stylesheet">
 		<link href="css/navbar.css" rel="stylesheet">
+		
+		<script src="js/checkAuth.js"></script>
 
 	</head>
 
@@ -105,14 +107,6 @@
 		var actualUser = sessionStorage.getItem("user");
 		
 		$(document).ready(function(){
-			if(sessionStorage.getItem("user") == null){
-				window.location.href = ".";
-			}
-			if(sessionStorage.getItem("admin") == "false"){
-				sessionStorage.clear();
-				window.location.href = ".";
-			}
-			
 			$("#footer").load("footer.txt");
 			$("#navbar").load("navbar.txt", function(responseTxt, statusTxt, xhr){
 		        if(statusTxt == "success"){
@@ -144,7 +138,8 @@
 			    type: "GET",
 			    url: "http://127.0.0.1:8182/admin/projects",
 			    headers: {
-			    	'Authorization': 'Basic ' + btoa('malapert:pwd')
+// 			    	'Authorization': 'Basic ' + btoa('malapert:pwd'), "Bearer " + sessionStorage.getItem("token")
+			    	'Authorization': "Bearer " + sessionStorage.getItem("token")
 			    },
 			    crossDomain: true,
 				cache : false,
@@ -168,7 +163,7 @@
 			    type: "GET",
 			    url: "http://127.0.0.1:8182/admin/superusers",
 			    headers: {
-			    	'Authorization': 'Basic ' + btoa('malapert:pwd')
+			    	'Authorization': "Bearer " + sessionStorage.getItem("token")
 			    },
 			    crossDomain: true,
 				cache : false,
@@ -199,7 +194,7 @@
 				    	'projectName': projet
 				    },
 				    headers: {
-				    	'Authorization': 'Basic ' + btoa('malapert:pwd')
+				    	'Authorization': "Bearer " + sessionStorage.getItem("token")
 				    },
 				    crossDomain: true,
 					cache : false,
@@ -239,7 +234,7 @@
 				    	'newProjectName': projet
 				    },
 				    headers: {
-				    	'Authorization': 'Basic ' + btoa('malapert:pwd')
+				    	'Authorization': "Bearer " + sessionStorage.getItem("token")
 				    },
 				    crossDomain: true,
 					cache : false,
@@ -284,7 +279,7 @@
 				    type: "DELETE",
 				    url: "http://127.0.0.1:8182/admin/projects/" + idText,
 				    headers: {
-				    	'Authorization': 'Basic ' + btoa('malapert:pwd')
+				    	'Authorization': "Bearer " + sessionStorage.getItem("token")
 				    },
 				    crossDomain: true,
 					cache : false,
@@ -322,7 +317,7 @@
 			    type: "GET",
 			    url: "http://127.0.0.1:8182/admin/projects/" + suffixProject + "/users",
 			    headers: {
-			    	'Authorization': 'Basic ' + btoa('malapert:pwd')
+			    	'Authorization': "Bearer " + sessionStorage.getItem("token")
 			    },
 			    crossDomain: true,
 				cache : false,
@@ -360,7 +355,7 @@
 				    type: "POST",
 				    url: "http://127.0.0.1:8182/admin/projects/" + suffixProject + "/users",
 				    headers: {
-				    	'Authorization': 'Basic ' + btoa('malapert:pwd')
+				    	'Authorization': "Bearer " + sessionStorage.getItem("token")
 				    },
 				    data: {
 				    	"user": user
@@ -406,7 +401,7 @@
 				    type: "DELETE",
 				    url: "http://127.0.0.1:8182/admin/projects/" + suffixProject + "/users/" + user,
 				    headers: {
-				    	'Authorization': 'Basic ' + btoa('malapert:pwd')
+				    	'Authorization': "Bearer " + sessionStorage.getItem("token")
 				    },
 				    crossDomain: true,
 					cache : false,
@@ -440,7 +435,7 @@
 				    type: "POST",
 				    url: "http://127.0.0.1:8182/admin/superusers",
 				    headers: {
-				    	'Authorization': 'Basic ' + btoa('malapert:pwd')
+				    	'Authorization': "Bearer " + sessionStorage.getItem("token")
 				    },
 				    data: {
 				    	"superUserName": user
@@ -476,7 +471,7 @@
 				    type: "DELETE",
 				    url: "http://127.0.0.1:8182/admin/superusers/" + user,
 				    headers: {
-				    	'Authorization': 'Basic ' + btoa('malapert:pwd')
+				    	'Authorization': "Bearer " + sessionStorage.getItem("token")
 				    },
 				    crossDomain: true,
 					cache : false,

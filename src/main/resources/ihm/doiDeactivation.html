@@ -12,6 +12,8 @@
 		<!-- Css -->
 		<link href="css/doi.css" rel="stylesheet">
 		<link href="css/navbar.css" rel="stylesheet">
+		
+		<script src="js/checkAuth.js"></script>
 
 	</head>
 
@@ -59,32 +61,25 @@
 	<script src="js/bootstrap-min.js"></script>
 
 	<script>
-	var doi ="";
 // 	var prefixCnes = "10.24400/";
 	var prefixCnes = "10.5072/";
 	
+	var doi ="";
+	
 	$(document).ready(function(){
-		if(sessionStorage.getItem("user") == null){
-			window.location.href = ".";
-		}
-		if(sessionStorage.getItem("projects") == null){
-			sessionStorage.clear();
-			window.location.href = ".";
-		}
-		
 		$("#footer").load("footer.txt");
 		$("#navbar").load("navbar.txt", function(responseTxt, statusTxt, xhr){
 	        if(statusTxt == "success"){
 	        	setProjectID();
 // 	        	setDOIList();
-	        	getDoisFromProject
+	        	getDoisFromProject();
 	        } else if(statusTxt == "error"){
 	            alert("Error: " + xhr.status + ": " + xhr.statusText);
 	        }
 	    });
 		
 		$("#doi").change(function(){
-			doi = prefixCnes + $("#idprojet").val() + $("#doi").val();
+			doi = prefixCnes + projectId + "/" + $("#doi").val();
 			console.log("uri = " + doi);
 		});
 		
@@ -106,8 +101,7 @@
 		    type: "DELETE",
 		    url: "http://127.0.0.1:8182/mds/metadata/" + doi,
 		    headers: {
-		    	'Authorization': 'Basic ' + btoa('malapert:pwd'),
-		    	'selectedRole': projectID
+		    	'Authorization': "Bearer " + sessionStorage.getItem("token")
 		    },
 		    crossDomain: true,
 			cache : false,
@@ -128,8 +122,7 @@
 		    type: "GET",
 		    url: "http://127.0.0.1:8182/admin/projects/" + projectId  + "/dois",
 		    headers: {
-		    	'Authorization': 'Basic ' + btoa('malapert:pwd')
-//			    	'selectedRole': projectId
+		    	'Authorization': "Bearer " + sessionStorage.getItem("token")
 		    },
 		    crossDomain: true,
 			cache : false,

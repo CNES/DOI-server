@@ -3,7 +3,9 @@ $(document).ready(function () {
 	var kernelNamespace = "http://datacite.org/schema/kernel-4";
 	var kernelSchema = "http://schema.datacite.org/meta/kernel-4/metadata.xsd";
 	var kernelSchemaLocation = kernelNamespace + " " + kernelSchema;
-	var header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + br() + "<resource xmlns=\"" + kernelNamespace + "\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"" + kernelSchemaLocation + "\">" + br();
+//	var header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + br() + "<resource xmlns=\"" + kernelNamespace + "\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"" + kernelSchemaLocation + "\">" + br();
+	var header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + br() + "<resource xmlns=\"" + kernelNamespace + "\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"" + ">" + br();
+
 	$("select[title]").each(function () {
 		var tagName = name($(this));
 		ps($(this), optionValues[tagName]);

@@ -24,6 +24,8 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.restlet.security.Role;
+import org.restlet.security.User;
 
 import fr.cnes.doi.persistence.exceptions.DOIDbException;
 import fr.cnes.doi.persistence.impl.DOIDbDataAccessServiceImpl;
@@ -107,6 +109,16 @@ public class DefaultUserRoleImplTEST extends AbstractUserRolePluginHelper {
 		try {
 			das.addDOIProjectToUser(user, role);
 			isAdded = true;
+			
+			//TODO /!\ shity realm
+//			final Role roleFromRealm = new Role(app, String.valueOf(role), "Role " + String.valueOf(
+//                    role) + " for " + app.getName());
+//			for(User userFromRealm : getRealm().getUsers()){
+//				if(userFromRealm.getIdentifier().equals(user)) {
+//					getRealm().map(userFromRealm, roleFromRealm);
+//				}
+//			}
+//			getRealm().map(new User(user), getRealm().roleInteger.toString(role)));
 		} catch (DOIDbException e) {
 			LOG.fatal("An error occured while trying to add user " + user + " to project " + role ,e);
 		}
