@@ -152,7 +152,7 @@ public class MetadataResourceTest {
     @Test
     public void testGetMetadataAsJson() throws IOException, JAXBException, SAXException {
         mdsServerStub.createSpec(MdsSpec.Spec.GET_METADATA_200);
-
+    
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + METADATA_SERVICE + MdsSpec.Spec.GET_METADATA_200.getTemplatePath());
         client.setNext(cl);
@@ -184,7 +184,7 @@ public class MetadataResourceTest {
     @Test
     public void testGetMetadataFromWrongDOI() throws IOException, JAXBException, SAXException {        
         mdsServerStub.createSpec(MdsSpec.Spec.GET_METADATA_400);
-        
+
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + METADATA_SERVICE + MdsSpec.Spec.GET_METADATA_400.getTemplatePath());
         client.setNext(cl);
@@ -214,7 +214,7 @@ public class MetadataResourceTest {
     @Test
     public void testGetMetadataFromWrongPrefix() throws IOException, JAXBException, SAXException {        
         mdsServerStub.createSpec(MdsSpec.Spec.GET_METADATA_400);
-        
+
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + METADATA_SERVICE + MdsSpec.Spec.GET_METADATA_400.getTemplatePath());
         client.setNext(cl);
@@ -228,6 +228,7 @@ public class MetadataResourceTest {
             code = ex.getStatus().getCode();
             doi = "";
         }
+        client.release();
         assertEquals(MdsSpec.Spec.GET_METADATA_400.getStatus(), code);
         
         mdsServerStub.verifySpec(MdsSpec.Spec.GET_METADATA_400);
@@ -244,7 +245,7 @@ public class MetadataResourceTest {
     @Test
     public void testDeleteMetadata() throws JAXBException, SAXException, IOException {        
         mdsServerStub.createSpec(MdsSpec.Spec.DELETE_METADATA_200);
-        
+
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + METADATA_SERVICE +MdsSpec.Spec.DELETE_METADATA_200.getTemplatePath());
         client.setNext(cl);
@@ -261,6 +262,7 @@ public class MetadataResourceTest {
         try {
             Representation rep = client.delete();
             code = client.getStatus().getCode();
+            rep.exhaust();
         } catch (ResourceException ex) {
             code = ex.getStatus().getCode();
         }

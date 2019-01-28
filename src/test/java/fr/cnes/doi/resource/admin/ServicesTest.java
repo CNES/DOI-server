@@ -36,6 +36,7 @@ import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.restlet.Client;
@@ -89,7 +90,7 @@ public class ServicesTest {
      * Test of getStatus service through a HTTPS server, of class AdministrationApplication.
      * @throws java.io.IOException
      */
-    @Test
+    @Test  
     public void getStatus() throws IOException  {
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:"+port+"/status");        
@@ -98,19 +99,42 @@ public class ServicesTest {
         try {
             Representation rep = client.get();           
             status = client.getStatus();
+            rep.exhaust();
             
         } catch(ResourceException ex) {
             status = ex.getStatus();
         }        
         client.release();
         assertEquals("Test of status service",Status.SUCCESS_OK.getCode(), status.getCode());
-    }    
+    }   
+    
+    /**
+     * Test of getStatus service through a HTTPS server, of class AdministrationApplication.
+     * @throws java.io.IOException
+     */
+    @Test  
+    public void getXsd() throws IOException  {
+        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
+        ClientResource client = new ClientResource("https://localhost:"+port+"/resources/xsd/metadata.xsd");        
+        client.setNext(cl);    
+        Status status;
+        try {
+            Representation rep = client.get();           
+            status = client.getStatus();
+            rep.exhaust();
+        } catch(ResourceException ex) {
+            status = ex.getStatus();
+        }        
+        client.release();
+        assertEquals("Test of status service",Status.SUCCESS_OK.getCode(), status.getCode());
+    }     
     
     /**
      * Test of createToken method, of class TokenResource.
      * @throws java.io.IOException
      */
     @Test
+    @Ignore("Ingoring stats")
     public void getStats() throws IOException  {
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:"+port+"/stats");        
@@ -119,6 +143,7 @@ public class ServicesTest {
         try {
             Representation rep = client.get();
             status = client.getStatus();
+            rep.exhaust();
         } catch(ResourceException ex) {
             status = ex.getStatus();
         }

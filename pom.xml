@@ -9,6 +9,14 @@
             <name>Restlet repository</name>
             <url>https://maven.restlet.com</url>
         </repository>
+        <repository>
+            <id>maven-jspnego</id>
+            <url>https://raw.github.com/Cnes/JSPNego/mvn-repo/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>         
     </repositories>
     <properties>
         <timestamp>${maven.build.timestamp}</timestamp>
@@ -56,6 +64,7 @@
                     <include> **/*.html </include>
                     <include> **/*.js </include>
                     <include> **/*.txt </include>
+                    <include> **/*.xsd </include>
                 </includes>
             </resource>
             <resource>
@@ -286,6 +295,11 @@
         </plugins>
     </build>
     <dependencies>    
+        <dependency>
+            <groupId>fr.cnes.jproxy</groupId>
+            <artifactId>jproxy</artifactId>
+            <version>1.0.0</version>             
+        </dependency>          
         <!-- mockserver -->
         <dependency>
             <groupId>org.mock-server</groupId>
@@ -349,12 +363,7 @@
             <groupId>org.restlet.jse</groupId>
             <artifactId>org.restlet.ext.slf4j</artifactId>
             <version>${restlet-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.restlet.jse</groupId>
-            <artifactId>org.restlet.ext.httpclient</artifactId>
-            <version>${restlet-version}</version>
-        </dependency>        
+        </dependency>       
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
@@ -448,6 +457,30 @@
     </developers>
     <reporting>
         <plugins> 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.2</version>
+                <reportSets>
+                    <reportSet>
+                        <id>PDF</id>
+                        <reports>
+                            <report>javadoc</report>
+                        </reports>
+                        <configuration>
+                            <name>PDF</name>                        
+                            <description>This is my Documentation on PDF.</description>
+                            <destDir>pdf</destDir>
+                            <doclet>com.tarsec.javadoc.pdfdoclet.PDFDoclet</doclet>
+                            <docletPath>${basedir}/ConfTools/pdfdoclet-1.0.3-all.jar</docletPath>
+                            <useStandardDocletOptions>false</useStandardDocletOptions>
+                            <additionalparam>
+                                -pdf javadoc.pdf -config ${basedir}/ConfTools/config_pdf.properties
+                            </additionalparam>
+                        </configuration>
+                    </reportSet>
+                </reportSets>
+            </plugin>               
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jxr-plugin</artifactId>

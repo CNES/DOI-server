@@ -104,7 +104,6 @@ public final class EmailSettings {
         init();
     }
 
-
     /**
      * Init singleton.
      */
@@ -137,7 +136,7 @@ public final class EmailSettings {
 
         LOG.traceExit();
     }
-    
+
     /**
      * Access to unique INSTANCE of Settings
      *
@@ -145,7 +144,7 @@ public final class EmailSettings {
      */
     public static EmailSettings getInstance() {
         return EmailSettingsHolder.INSTANCE;
-    }    
+    }
 
     /**
      * Sets the debug.
@@ -324,30 +323,37 @@ public final class EmailSettings {
                 "class/email.ftl")).get();
         final Representation mail = new TemplateRepresentation(mailFtl, dataModel,
                 MediaType.TEXT_XML);
-        request.setEntity(mail);
-        try {
-            final ClientResource client = new ClientResource(new Context(), request);
-            client.setProtocol(protocol);
-            final Series<Parameter> params = client.getContext().getParameters();
-            params.set(RESTLET_MAX_TOTAL_CONNECTIONS, DoiSettings.getInstance().getString(
-                    fr.cnes.doi.settings.Consts.RESTLET_MAX_TOTAL_CONNECTIONS,
-                    DEFAULT_MAX_TOTAL_CONNECTIONS));
-            params.set(RESTLET_MAX_CONNECTIONS_PER_HOST, DoiSettings.getInstance().getString(
-                    fr.cnes.doi.settings.Consts.RESTLET_MAX_CONNECTIONS_PER_HOST,
-                    DEFAULT_MAX_CONNECTIONS_PER_HOST));
-            params.add("debug", String.valueOf(isDebug()));
-            params.add("startTls", Boolean.toString(startTls).toLowerCase(Locale.ENGLISH));
-            client.get();
-            final Status status = client.getStatus();
-            if (status.isError()) {
-                LOG.error("Cannot send the email! : {}", status.getDescription());
-                result = false;
-            } else {
-                result = true;
-            }
-        } catch (NullPointerException ex) {
-            LOG.error("Cannot connect to SMTP server", ex);
+        if (request == null) {
+            LOG.error("Cannot connect to SMTP server; request=null");
+            LOG.error(mail.getText());
             result = false;
+        } else {
+            request.setEntity(mail);
+            try {
+                final ClientResource client = new ClientResource(new Context(), request);
+                client.setProtocol(protocol);
+                final Series<Parameter> params = client.getContext().getParameters();
+                params.set(RESTLET_MAX_TOTAL_CONNECTIONS, DoiSettings.getInstance().getString(
+                        fr.cnes.doi.settings.Consts.RESTLET_MAX_TOTAL_CONNECTIONS,
+                        DEFAULT_MAX_TOTAL_CONNECTIONS));
+                params.set(RESTLET_MAX_CONNECTIONS_PER_HOST, DoiSettings.getInstance().getString(
+                        fr.cnes.doi.settings.Consts.RESTLET_MAX_CONNECTIONS_PER_HOST,
+                        DEFAULT_MAX_CONNECTIONS_PER_HOST));
+                params.add("debug", String.valueOf(isDebug()));
+                params.add("startTls", Boolean.toString(startTls).toLowerCase(Locale.ENGLISH));
+                client.get();
+                final Status status = client.getStatus();
+                if (status.isError()) {
+                    LOG.error("Cannot send the email! : {}", status.getDescription());
+                    result = false;
+                } else {
+                    result = true;
+                }
+            } catch (NullPointerException ex) {
+                LOG.error("Cannot connect to SMTP server", ex);
+                LOG.error(mail.getText());
+                result = false;
+            }
         }
         return LOG.traceExit(result);
     }
@@ -411,11 +417,12 @@ public final class EmailSettings {
         LOG.traceEntry();
         return LOG.traceExit(contactAdmin);
     }
+
     /**
      *
      */
     private static class EmailSettingsHolder {
-        
+
         /**
          * Unique Instance unique not pre-initiliaze
          */

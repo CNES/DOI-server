@@ -171,8 +171,8 @@ public final class DoiSettings {
         if (isNotExist(DoiSettings.MAP_PROPERTIES, Consts.INIST_PWD)) {
             validation.append(message).append(Consts.INIST_PWD).append("\n");
         }
-        if (isNotExist(DoiSettings.MAP_PROPERTIES, Consts.SERVER_PROXY_USED)) {
-            validation.append(message).append(Consts.SERVER_PROXY_USED).append("\n");
+        if (isNotExist(DoiSettings.MAP_PROPERTIES, Consts.SERVER_PROXY_TYPE)) {
+            validation.append(message).append(Consts.SERVER_PROXY_TYPE).append("\n");
         }
         if (isNotExist(DoiSettings.MAP_PROPERTIES, Consts.PLUGIN_PROJECT_SUFFIX)) {
             validation.append(message).append(Consts.PLUGIN_PROJECT_SUFFIX).append("\n");

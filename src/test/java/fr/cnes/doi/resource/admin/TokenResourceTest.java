@@ -123,7 +123,6 @@ public class TokenResourceTest {
     @Test
     public void testCreateTokenWithWrongParameters() {
         exceptions.expect(ResourceException.class);
-        
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + "/admin/token");
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
@@ -183,10 +182,12 @@ public class TokenResourceTest {
 
         client = new ClientResource("https://localhost:" + port + "/admin/token/" + token);
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "test");
+        client.setNext(cl);
         Status status;
         try {
             Representation rep = client.get();
             status = client.getStatus();
+            rep.exhaust();
         } catch (ResourceException ex) {
             status=ex.getStatus();
         }

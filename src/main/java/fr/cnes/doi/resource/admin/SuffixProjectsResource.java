@@ -80,7 +80,7 @@ public class SuffixProjectsResource extends AbstractResource {
     @Override
     protected void doInit() throws ResourceException {
         super.doInit();
-        final AdminApplication app = (AdminApplication) getApplication();
+        final AdminApplication app = (AdminApplication) getApplication();      
         LOG = app.getLog();
         LOG.traceEntry();
         

@@ -479,6 +479,7 @@
 				    },
 				    success: function(list) {
 				    	console.log("GET doisFromProject est un succès.");
+				    	console.log(list);
 				    	$("#doi").empty();
 			    		$("#doi").append("<option disabled selected>Choix d'un doi</option>");
 				    	for(var doi of list){

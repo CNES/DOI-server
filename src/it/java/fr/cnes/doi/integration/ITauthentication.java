@@ -128,6 +128,7 @@ public class ITauthentication {
         mediaForm.add("image/fits", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
         mediaForm.add("image/jpeg", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
         mediaForm.add("image/png", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
+
         client = new ClientResource("https://localhost:" + port + "/mds/media/" + DOI);
         client.setNext(cl);
         ChallengeResponse cr = new ChallengeResponse(ChallengeScheme.HTTP_OAUTH_BEARER);
@@ -141,6 +142,7 @@ public class ITauthentication {
         } catch (ResourceException ex) {
             status = ex.getStatus();
         }
+        client.release();
         assertEquals("Test ITauthentication", Status.CLIENT_ERROR_FORBIDDEN.getCode(), status.getCode());
         
         mockServer.verify(HttpRequest.request("/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)
@@ -172,6 +174,7 @@ public class ITauthentication {
         mediaForm.add("image/fits", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
         mediaForm.add("image/jpeg", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
         mediaForm.add("image/png", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
+
         client = new ClientResource("https://localhost:" + port + "/mds/media/" + DOI);
         client.setNext(cl);
         ChallengeResponse cr = new ChallengeResponse(ChallengeScheme.HTTP_OAUTH_BEARER);
@@ -185,6 +188,7 @@ public class ITauthentication {
         } catch (ResourceException ex) {
             status = ex.getStatus();
         }
+        client.release();
         assertEquals(Status.SUCCESS_OK.getCode(), status.getCode());   
         
         mockServer.verify(HttpRequest.request("/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)
@@ -199,7 +203,7 @@ public class ITauthentication {
     public void testTokenAuthenticationWithWrongToken() throws IOException {        
         mockServer.when(HttpRequest.request("/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)
                 .withMethod("POST")).respond(HttpResponse.response().withStatusCode(403));
-        
+                
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         Form mediaForm = new Form();
         mediaForm.add("image/fits", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
@@ -218,6 +222,7 @@ public class ITauthentication {
         } catch (ResourceException ex) {
             status = ex.getStatus();
         }
+        client.release();
         assertEquals(Status.CLIENT_ERROR_FORBIDDEN.getCode(), status.getCode());
         
         mockServer.verify(HttpRequest.request("/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)

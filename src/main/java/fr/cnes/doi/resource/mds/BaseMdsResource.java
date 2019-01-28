@@ -72,7 +72,7 @@ public class BaseMdsResource extends AbstractResource {
      */
     @Override
     protected void doInit() throws DoiServerException {
-        super.doInit();
+        super.doInit();         
         this.doiApp = (DoiMdsApplication) getApplication();
         LOG = this.doiApp.getLog();
         LOG.traceEntry();

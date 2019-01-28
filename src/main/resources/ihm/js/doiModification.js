@@ -5,7 +5,7 @@ function loadXML(file) {
 	var projet = $("#selection").val();
 	
 	 $("button.delete").click();  	// Appuie sur tous boutons '-'
-	 $("input").val("");		  	// reset les inputs
+	 $("input:visible").val("");		  	// reset les inputs
 	 $("select").val("");		  	// reset les selects
 	 $("div.right code").text("");	// efface le xml
 	 

@@ -81,7 +81,7 @@ import fr.cnes.doi.utils.spec.Requirement;
  * <code>
  * --------------<br>
  * The authentication is done by the following pipeline:<br>
- * |Method authorization|-->|Authentication login/pwd|-->|Authentication token|<br>
+ * |Method authorization|--&gt;|Authentication login/pwd|--&gt;|Authentication token|<br>
  * Method authorization : Only GET method does not need an authorization
  * </code>
  *
@@ -556,16 +556,16 @@ public final class DoiMdsApplication extends AbstractApplication {
         }
         
         /**
-         *
-         * @return
+         * Returns the status
+         * @return the status
          */
         public Status getStatus() {
             return this.status;
         }
         
         /**
-         *
-         * @return
+         * Returns the short message.
+         * @return the short message
          */
         public String getShortMessage() {
             return this.shortMessage;
@@ -591,9 +591,9 @@ public final class DoiMdsApplication extends AbstractApplication {
         }
         
         /**
-         *
-         * @param request
-         * @param response
+         * Fixed problem with Jetty response.
+         * @param request request
+         * @param response response
          */
         @Override
         protected void afterHandle(final Request request,

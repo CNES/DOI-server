@@ -57,7 +57,7 @@ public class ClientSearchDataCite extends BaseClient {
     /**
      * Constructor.
      *
-     * @throws Exception
+     * @throws Exception when an error happens
      */
     public ClientSearchDataCite() throws Exception {
         this(DoiSettings.getInstance().getString(Consts.INIST_DOI));
@@ -67,7 +67,7 @@ public class ClientSearchDataCite extends BaseClient {
      * Constructor.
      *
      * @param doi_prefix DOI prefix
-     * @throws Exception
+     * @throws Exception when an error happens
      */
     public ClientSearchDataCite(final String doi_prefix) throws Exception {
         super(BASE_URI);

@@ -53,8 +53,8 @@ public abstract class AbstractResource extends WadlServerResource {
     private volatile Logger LOG;
 
     /**
-     *
-     * @throws ResourceException
+     * Init
+     * @throws ResourceException When an Exception happens
      */
     @Override
     protected void doInit() throws ResourceException {

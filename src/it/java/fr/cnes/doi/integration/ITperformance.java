@@ -29,11 +29,14 @@ import fr.cnes.doi.resource.mds.DoisResource;
 import fr.cnes.doi.security.UtilsHeader;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_CONNECTIONS_PER_HOST;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_TOTAL_CONNECTIONS;
+import static fr.cnes.doi.server.DoiServer.JKS_DIRECTORY;
+import static fr.cnes.doi.server.DoiServer.JKS_FILE;
 import static fr.cnes.doi.server.DoiServer.RESTLET_MAX_CONNECTIONS_PER_HOST;
 import static fr.cnes.doi.server.DoiServer.RESTLET_MAX_TOTAL_CONNECTIONS;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -100,7 +103,7 @@ public class ITperformance {
         Series<Parameter> parameters = cl.getContext().getParameters();
         parameters.set(RESTLET_MAX_TOTAL_CONNECTIONS, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_TOTAL_CONNECTIONS, DEFAULT_MAX_TOTAL_CONNECTIONS));
         parameters.set(RESTLET_MAX_CONNECTIONS_PER_HOST, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_CONNECTIONS_PER_HOST, DEFAULT_MAX_CONNECTIONS_PER_HOST));
-        parameters.add("truststorePath", DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_TRUST_STORE_PATH));
+        parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
         parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
         parameters.add("truststoreType", "JKS");
         mdsServerStub = new MdsSpec(DATACITE_MOCKSERVER_PORT);
@@ -179,6 +182,7 @@ public class ITperformance {
         double meanProcessingTime = elapsedTime;
 
         double expectedTime = 1 * 1000; //1 s per DOI
+      
         LOG.log(Level.INFO, "All working fine : Mean request processing time {0} ms, expected time {1} ms", new Object[]{meanProcessingTime, expectedTime});        
         Assert.assertTrue("Test the performances of DOIs creation", (int) map.get("nbErrors") == 0 ); //&& meanProcessingTime <= expectedTime
     }    
@@ -235,9 +239,13 @@ public class ITperformance {
             int code;
             try {
                 Representation rep = client.post(doiForm);
+                rep.exhaust();
                 code = client.getStatus().getCode();
             } catch (ResourceException ex) {
                 code = ex.getStatus().getCode();
+                int nbErrors = (int) this.map.get("nbErrors");
+                this.map.put("nbErrors", nbErrors + 1);
+            } catch (IOException ex) {
                 int nbErrors = (int) this.map.get("nbErrors");
                 this.map.put("nbErrors", nbErrors + 1);
             } finally {
@@ -245,7 +253,7 @@ public class ITperformance {
             }               
 
             client = new ClientResource("http://localhost:" + port + METADATA_SERVICE);
-            //client.setNext(cl);
+            client.setNext(cl);
             client.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "malapert", "pwd"));
             reqAttribs = client.getRequestAttributes();
             headers = (Series) reqAttribs.get(RESTLET_HTTP_HEADERS);
@@ -258,10 +266,14 @@ public class ITperformance {
             try {
                 Representation rep = client.post(new StringRepresentation(this.doiMetadata, MediaType.APPLICATION_XML));
                 code = client.getStatus().getCode();
+                rep.exhaust();
             } catch (ResourceException ex) {
                 code = ex.getStatus().getCode();
                 int nbErrors = (int) this.map.get("nbErrors");
                 this.map.put("nbErrors", nbErrors + 1);
+            } catch (IOException ex) {
+                int nbErrors = (int) this.map.get("nbErrors");
+                this.map.put("nbErrors", nbErrors + 1);            
             } finally {
                 client.release();
             }

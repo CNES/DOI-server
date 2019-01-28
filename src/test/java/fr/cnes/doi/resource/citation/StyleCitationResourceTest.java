@@ -105,7 +105,7 @@ public class StyleCitationResourceTest {
     @Test
     public void testGetStylesHttps() {        
         spec.createSpec(CrossCiteSpec.Spec.GET_STYLE_200);
-        
+
         String expResult = "academy-of-management-review";
         String result = "";
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
@@ -131,7 +131,7 @@ public class StyleCitationResourceTest {
     @Test
     public void testGetStylesHttp() {        
         spec.createSpec(CrossCiteSpec.Spec.GET_STYLE_200);      
-        
+
         String expResult = "academy-of-management-review";
         String result = "";
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);
@@ -156,7 +156,7 @@ public class StyleCitationResourceTest {
     @Test
     public void testGetStylesHttpsAsJSON() {        
         spec.createSpec(CrossCiteSpec.Spec.GET_STYLE_200);     
-          
+
         String result = "";
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + "/citation/style");
@@ -180,7 +180,7 @@ public class StyleCitationResourceTest {
     @Test
     public void testGetStylesHttpsAsXML() {        
         spec.createSpec(CrossCiteSpec.Spec.GET_STYLE_200);
-        
+
         String expResult = CrossCiteSpec.Spec.GET_STYLE_200.getBody();
         String result = "";
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);

@@ -17,9 +17,8 @@ import javax.xml.bind.annotation.XmlType;
  *
  * <p>
  * The following schema fragment specifies the expected content contained within this class.
- * <p>
- * <
- * pre>
+ * 
+ * <pre>
  * &lt;simpleType name="relatedIdentifierType"&gt; &lt;restriction
  * base="{http://www.w3.org/2001/XMLSchema}string"&gt; &lt;enumeration value="ARK"/&gt;
  * &lt;enumeration value="arXiv"/&gt; &lt;enumeration value="bibcode"/&gt; &lt;enumeration
@@ -274,17 +273,17 @@ public enum RelatedIdentifierType {
     }
 
     /**
-     *
-     * @return
+     * Returns the value.
+     * @return the value
      */
     public String value() {
         return value;
     }
 
     /**
-     *
-     * @param v
-     * @return
+     * Returns the related identifier type
+     * @param v value
+     * @return the related identifier type
      */
     public static RelatedIdentifierType fromValue(String v) {
         for (RelatedIdentifierType c : RelatedIdentifierType.values()) {

@@ -105,7 +105,7 @@ public class FormatCitationResourceTest {
      */
     @Test
     public void testGetFormatHttps() {        
-        spec.createSpec(CrossCiteSpec.Spec.GET_FORMAT_200);               
+        spec.createSpec(CrossCiteSpec.Spec.GET_FORMAT_200); 
         
         String expResult = CrossCiteSpec.Spec.GET_FORMAT_200.getBody();
         String result = "";
@@ -139,7 +139,7 @@ public class FormatCitationResourceTest {
         exceptions.expect(ResourceException.class);
         
         spec.createSpec(CrossCiteSpec.Spec.GET_FORMAT_400);               
-        
+
         String expResult = "Garza, K., Goble, C., Brooke, J., & Jay, C. 2015. Framing the community data system interface. Proceedings of the 2015 British HCI Conference on - British HCI ’15. Presented at the the 2015 British HCI Conference, ACM Press. https://doi.org/10.1145/2783446.2783605.\n";
         String result = "";
         String doiName = "10.1145/2783446.2783605";
@@ -168,7 +168,7 @@ public class FormatCitationResourceTest {
     @Test
     public void testGetFormatHttp() {        
         spec.createSpec(CrossCiteSpec.Spec.GET_FORMAT_200);               
-        
+
         String expResult = CrossCiteSpec.Spec.GET_FORMAT_200.getBody();
         String result = "";
         String doiName = "10.1145/2783446.2783605";
@@ -203,7 +203,7 @@ public class FormatCitationResourceTest {
 
         int expResult = Status.CLIENT_ERROR_NOT_FOUND.getCode();
         int result;
-
+ 
         ClientResource client;
         String doiName = "xxxx";
         String style = "academy-of-management-review";

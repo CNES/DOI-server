@@ -17,9 +17,8 @@ import javax.xml.bind.annotation.XmlType;
  *
  * <p>
  * The following schema fragment specifies the expected content contained within this class.
- * <p>
- * <
- * pre>
+ * 
+ * <pre>
  * &lt;simpleType name="descriptionType"&gt; &lt;restriction
  * base="{http://www.w3.org/2001/XMLSchema}string"&gt; &lt;enumeration value="Abstract"/&gt;
  * &lt;enumeration value="Methods"/&gt; &lt;enumeration value="SeriesInformation"/&gt;
@@ -92,17 +91,17 @@ public enum DescriptionType {
     }
 
     /**
-     *
-     * @return
+     * Returns the value.
+     * @return the value
      */
     public String value() {
         return value;
     }
 
     /**
-     *
-     * @param v
-     * @return
+     * Returns the description type from the value.
+     * @param v value
+     * @return the description type
      */
     public static DescriptionType fromValue(String v) {
         for (DescriptionType c : DescriptionType.values()) {

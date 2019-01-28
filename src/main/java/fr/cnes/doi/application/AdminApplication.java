@@ -32,6 +32,8 @@ import org.restlet.data.ChallengeScheme;
 import org.restlet.data.LocalReference;
 import org.restlet.data.Method;
 import org.restlet.data.Reference;
+import org.restlet.data.MediaType;
+import org.restlet.data.Metadata;
 import org.restlet.data.Status;
 import org.restlet.resource.Directory;
 import org.restlet.resource.Resource;
@@ -42,6 +44,7 @@ import org.restlet.security.ChallengeAuthenticator;
 import org.restlet.security.MethodAuthorizer;
 import org.restlet.security.Role;
 import org.restlet.security.RoleAuthorizer;
+import org.restlet.service.MetadataService;
 import org.restlet.service.TaskService;
 
 import fr.cnes.doi.db.AbstractTokenDBHelper;
@@ -251,6 +254,7 @@ public class AdminApplication extends AbstractApplication {
         this.userDB.init(null);
         this.setTaskService(createTaskService());
         this.setTaskService(periodicalyDeleteExpiredTokenFromDB());
+        getMetadataService().addExtension("xsd", MediaType.TEXT_XML, true);
     }
 
     /**
@@ -619,7 +623,7 @@ public class AdminApplication extends AbstractApplication {
              * @return The continuation status. Either Filter.CONTINUE or Filter.STOP.
              */
             @Override
-            protected int doHandle(final Request request, final Response response) {
+            protected int doHandle(final Request request, final Response response) {                   
                 response.setLocationRef(TARGET_STATS_URL);
                 response.setStatus(Status.REDIRECTION_PERMANENT);                
                 return super.doHandle(request, response);
