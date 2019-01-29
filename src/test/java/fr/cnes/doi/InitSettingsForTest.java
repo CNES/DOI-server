@@ -20,6 +20,7 @@ package fr.cnes.doi;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -27,23 +28,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import org.restlet.engine.Engine;
+
 import fr.cnes.doi.client.ClientProxyTest;
 import fr.cnes.doi.security.UtilsCryptography;
 import fr.cnes.doi.settings.DoiSettings;
-import fr.cnes.httpclient.HttpClient;
-import fr.cnes.httpclient.HttpClientFactory;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
-
-import org.restlet.Client;
-import org.restlet.Context;
-import org.restlet.data.Protocol;
-import org.restlet.engine.Engine;
-import org.restlet.engine.connector.ConnectorHelper;
-import org.restlet.ext.httpclient4.HttpClientHelper;
 
 /**
  * Class to read the settings from the crypted config file and to enable the proxy if the system
@@ -96,16 +85,6 @@ public class InitSettingsForTest {
                         "Starter.Proxy.used=" + useProxy);
             } else {
                 LOGGER.log(Level.INFO, "The key proxy.use is not set, default param applied");
-                System.out.println(" >>>>>>>>>>> " + System.getProperty("Starter.Proxy.used"));
-                
-//                Properties prop = System.getProperties();
-//        		Set<Object> keySet = prop.keySet();
-//        		for (Object obj : keySet) {
-//        			System.out.println("System Property: {" 
-//        					+ obj.toString() + "," 
-//        					+ System.getProperty(obj.toString()) + "}");
-//        		}
-                
             }
             InputStream stream = new ByteArrayInputStream(result.getBytes(StandardCharsets.UTF_8));
             DoiSettings.getInstance().setPropertiesFile(stream);

@@ -1,62 +1,69 @@
-///*
-// * Copyright (C) 2017-2018 Centre National d'Etudes Spatiales (CNES).
-// *
-// * This library is free software; you can redistribute it and/or
-// * modify it under the terms of the GNU Lesser General Public
-// * License as published by the Free Software Foundation; either
-// * version 3.0 of the License, or (at your option) any later version.
-// *
-// * This library is distributed in the hope that it will be useful,
-// * but WITHOUT ANY WARRANTY; without even the implied warranty of
-// * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-// * Lesser General Public License for more details.
-// *
-// * You should have received a copy of the GNU Lesser General Public
-// * License along with this library; if not, write to the Free Software
-// * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-// * MA 02110-1301  USA
-// */
-//package fr.cnes.doi.plugin.impl;
-//
-//import fr.cnes.doi.persistence.model.DOIUser;
-//import fr.cnes.doi.plugin.AbstractUserRolePluginHelper;
-//import java.util.ArrayList;
-//import java.util.Arrays;
-//import java.util.Collections;
-//import java.util.List;
-//import org.apache.logging.log4j.LogManager;
-//import org.apache.logging.log4j.Logger;
-//import org.restlet.security.User;
-//
-///**
-// * Default implementation of the authentication plugin. This implementation defines
-// * users/groups/roles.
-// *
-// * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
-// */
-//public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
-//
-//    private static final List<User> users = new ArrayList<>();
-//    private static final String DESCRIPTION = "Provides a pre-defined list of users and groups";
-//    private static final String VERSION = "1.0.0";
-//    private static final String OWNER = "CNES";
-//    private static final String AUTHOR = "Jean-Christophe Malapert";
-//    private static final String LICENSE = "LGPLV3";
-//    /**
-//     * Logger.
-//     */
-//    private static final Logger LOG = LogManager.getLogger(DefaultUserRoleImpl.class.getName());
-//    private final String NAME = this.getClass().getName();
-//
-//    /**
-//     * Default constructor of the authentication plugin.
-//     */
-//    public DefaultUserRoleImpl() {
-//        super();
-//    }
-//
-//    @Override
-//    public void init(Object configuration) {
+/*
+ * Copyright (C) 2017-2018 Centre National d'Etudes Spatiales (CNES).
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3.0 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301  USA
+ */
+package fr.cnes.doi.plugin.impl;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.restlet.Application;
+import org.restlet.security.Role;
+import org.restlet.security.User;
+
+import fr.cnes.doi.persistence.exceptions.DOIDbException;
+import fr.cnes.doi.persistence.impl.DOIDbDataAccessServiceImpl;
+import fr.cnes.doi.persistence.model.DOIUser;
+import fr.cnes.doi.persistence.service.DOIDbDataAccessService;
+import fr.cnes.doi.plugin.AbstractUserRolePluginHelper;
+
+/**
+ * Default implementation of the authentication plugin. This implementation defines
+ * users/groups/roles.
+ *
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
+ */
+public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
+
+    private static final String DESCRIPTION = "Provides a pre-defined list of users and groups";
+    private static final String VERSION = "1.0.0";
+    private static final String OWNER = "CNES";
+    private static final String AUTHOR = "Jean-Christophe Malapert";
+    private static final String LICENSE = "LGPLV3";
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = LogManager.getLogger(DefaultUserRoleImpl.class.getName());
+    private final String NAME = this.getClass().getName();
+    
+    /**
+     * Default constructor of the authentication plugin.
+     */
+    public DefaultUserRoleImpl() {
+        super();
+    }
+    
+    private final DOIDbDataAccessService das = new DOIDbDataAccessServiceImpl();
+
+    @Override
+    public void init(Object configuration) {
 //        LOG.info("Init the database");
 //        users.clear();
 //        User admin = new User("admin", "admin");
@@ -71,96 +78,144 @@
 //        users.add(test1);
 //        users.add(test2);
 //        users.add(userWithNoRole);
-//    }
-//
-//    @Override
-//    public List<User> getUsers() {
-//        return Collections.unmodifiableList(users);
-//    }
-//
-//    @Override
-//    public List<User> getUsersFromRole(final String roleName) {
-//        if(roleName.equals("828606")) {
-//            return Arrays.asList(users.get(2), users.get(1));
-//        } else {
-//            return Arrays.asList(users.get(1), users.get(2), users.get(3), users.get(4));
-//        }
-//    }
-//
-//    @Override
-//    public void setUsersToAdminGroup(final List<DOIUser> adminGroup) {
-//        if (!adminGroup.contains(users.get(0))) {
-//            adminGroup.add(users.get(0));
-//        }
-//        if (!adminGroup.contains(users.get(1))) {
-//            adminGroup.add(users.get(1));
-//        }
-//    }
-//
-//    @Override
-//    public String getName() {
-//        return NAME;
-//    }
-//
-//    @Override
-//    public String getDescription() {
-//        return DESCRIPTION;
-//    }
-//
-//    @Override
-//    public String getVersion() {
-//        return VERSION;
-//    }
-//
-//    @Override
-//    public String getAuthor() {
-//        return AUTHOR;
-//    }
-//
-//    @Override
-//    public String getOwner() {
-//        return OWNER;
-//    }
-//
-//    @Override
-//    public String getLicense() {
-//        return LICENSE;
-//    }
-//
-//	@Override
-//	public List<DOIUser> getUsersFromRole(int roleName) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//
-//	@Override
-//	public boolean addUserToRole(String user, int role) {
-//		// TODO Auto-generated method stub
-//		return false;
-//	}
-//
-//	@Override
-//	public boolean removeUserToRole(String user, int role) {
-//		// TODO Auto-generated method stub
-//		return false;
-//	}
-//
-//	@Override
-//	public boolean setUserToAdminGroup(String admin) {
-//		// TODO Auto-generated method stub
-//		return false;
-//	}
-//
-//	@Override
-//	public boolean unsetUserFromAdminGroup(String admin) {
-//		// TODO Auto-generated method stub
-//		return false;
-//	}
-//
-//	@Override
-//	public boolean isUserExist(String username) {
-//		// TODO Auto-generated method stub
-//		return false;
-//	}
-//
-//}
+    }
+
+    @Override
+    public List<DOIUser> getUsers() {
+    	List<DOIUser> listUser = new ArrayList<DOIUser>();
+    	try {
+			listUser = das.getAllDOIusers();
+		} catch (DOIDbException e) {
+			LOG.fatal("An error occured while trying to get all DOI users" ,e);
+		}
+    	return Collections.unmodifiableList(listUser);
+    }
+
+    @Override
+    public List<DOIUser> getUsersFromRole(final int roleName) {
+    	List<DOIUser> listUser = new ArrayList<DOIUser>();
+    	try {
+    		listUser = das.getAllDOIUsersForProject(roleName);
+		} catch (DOIDbException e) {
+			LOG.fatal("An error occured while trying to get all DOI users from project " + roleName ,e);
+		}
+    	return Collections.unmodifiableList(listUser);
+    }
+
+	@Override
+	public boolean addUserToRole(String user, int role) {
+		boolean isAdded = false;
+		try {
+			das.addDOIProjectToUser(user, role);
+			isAdded = true;
+			
+			//TODO 
+			User userFromRealm = new User(user);
+			final Role roleFromRealm = new Role(Application.getCurrent(), String.valueOf(role), "Role " + String.valueOf(
+                    role) + " for " + Application.getCurrent().getName());
+			getRealm().map(userFromRealm, roleFromRealm);
+			
+		} catch (DOIDbException e) {
+			LOG.fatal("An error occured while trying to add user " + user + " to project " + role ,e);
+		}
+		return isAdded;
+	}
+
+	@Override
+	public boolean removeUserToRole(String user, int role) {
+		boolean isRemoved = false;
+		try {
+			das.removeDOIProjectFromUser(user, role);
+			isRemoved = true;
+			
+			//TODO 
+			User userFromRealm = new User(user);
+			final Role roleFromRealm = new Role(Application.getCurrent(), String.valueOf(role), "Role " + String.valueOf(
+                    role) + " for " + Application.getCurrent().getName());
+			getRealm().unmap(userFromRealm, roleFromRealm);
+			
+		} catch (DOIDbException e) {
+			LOG.fatal("An error occured while trying to remove user " + user + " from project " + role ,e);
+		}
+		return isRemoved;
+	}
+
+	@Override
+	public boolean setUserToAdminGroup(String user) {
+		boolean isSetted = false;
+		try {
+			das.setAdmin(user);
+			isSetted = true;
+		} catch (DOIDbException e) {
+			LOG.fatal("An error occured while trying to add user " + user + " to admin group",e);
+		}
+		return isSetted;
+	}
+	
+
+	@Override
+	public boolean unsetUserFromAdminGroup(String user) {
+		boolean isUnsetted = false;
+		try {
+			das.unsetAdmin(user);
+			isUnsetted = true;
+		} catch (DOIDbException e) {
+			LOG.fatal("An error occured while trying to remove user " + user + " to admin group",e);
+		}
+		return isUnsetted;
+	}
+
+    @Override
+    public boolean isUserExist(String username) {
+    	boolean isExist = false;
+    	try {
+    		isExist =  das.isUserExist(username);
+    	} catch (DOIDbException e) {
+    		LOG.fatal("An error occured while trying to know if user " + username + " exist",e);
+    	}
+    	return isExist;
+    }
+    
+    @Override
+    public Boolean isAdmin(String username) {
+    	Boolean isExist=null;
+    	try {
+    		isExist =  das.isAdmin(username);
+    	} catch (DOIDbException e) {
+    		LOG.fatal("An error occured while trying to know if user " + username + " exist and is admin",e);
+    	}
+    	return isExist;
+    }
+    
+    @Override
+    public String getName() {
+        return NAME;
+    }
+
+    @Override
+    public String getDescription() {
+        return DESCRIPTION;
+    }
+
+    @Override
+    public String getVersion() {
+        return VERSION;
+    }
+
+    @Override
+    public String getAuthor() {
+        return AUTHOR;
+    }
+
+    @Override
+    public String getOwner() {
+        return OWNER;
+    }
+
+    @Override
+    public String getLicense() {
+        return LICENSE;
+    }
+
+
+}

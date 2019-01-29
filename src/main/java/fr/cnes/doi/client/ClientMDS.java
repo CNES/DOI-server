@@ -633,7 +633,7 @@ public class ClientMDS extends BaseClient {
                             MediaType.APPLICATION_XML,
                             Language.ALL,
                             CharacterSet.UTF_8
-                    )
+                    ) 
             );
             return getText(response);
         } catch (ResourceException ex) {

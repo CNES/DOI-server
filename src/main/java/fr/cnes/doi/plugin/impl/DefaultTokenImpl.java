@@ -18,25 +18,24 @@
  */
 package fr.cnes.doi.plugin.impl;
 
-import fr.cnes.doi.plugin.AbstractTokenDBPluginHelper;
-import fr.cnes.doi.security.TokenSecurity;
-import fr.cnes.doi.settings.DoiSettings;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Locale;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import fr.cnes.doi.persistence.exceptions.DOIDbException;
+import fr.cnes.doi.persistence.impl.DOIDbDataAccessServiceImpl;
+import fr.cnes.doi.persistence.service.DOIDbDataAccessService;
+import fr.cnes.doi.plugin.AbstractTokenDBPluginHelper;
+import fr.cnes.doi.security.TokenSecurity;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 
 /**
  * Default implementation of the token database.
@@ -50,24 +49,14 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
     private static final String OWNER = "CNES";
     private static final String AUTHOR = "Jean-Christophe Malapert";
     private static final String LICENSE = "LGPLV3";
-    
     /**
      * Logger.
      */
     private static final Logger LOG = LogManager.getLogger(DefaultTokenImpl.class.getName());
 
-    /**
-     * Default file if the path is not defined in the configuration file
-     */
-    private static final String DEFAULT_CACHE_FILE = "data" + File.separator + "token.conf";
     private final String NAME = this.getClass().getName();
 
-    private volatile String tokenConf;
-
-    /**
-     * My database.
-     */
-    private final Map<String, Map<String, Object>> db = new ConcurrentHashMap<>();
+    private final DOIDbDataAccessService das = new DOIDbDataAccessServiceImpl();
     
 
     /**
@@ -79,79 +68,6 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
 
     @Override
     public void init(Object configuration) {
-        this.tokenConf = (configuration == null)
-                ? DoiSettings.getInstance().getPathApp() + File.separatorChar + DEFAULT_CACHE_FILE
-                : String.valueOf(configuration);
-        File tokenConfFile = new File(tokenConf);
-        try {
-            // If the file exists, load it
-            if (tokenConfFile.exists()) {
-                loadProjectConf(tokenConfFile);
-            } else {
-                createProjectConf(tokenConfFile);
-            }
-
-        } catch (IOException e) {
-            LOG.fatal("Cannot access the cache file for retrieving Token ", e);
-        }
-    }
-
-    /**
-     * Loads the database that contains the encoded project name.
-     *
-     * @param projConfFile File that contains the project configuration
-     * @throws IOException Exception when trying to load the file
-     */
-    private void loadProjectConf(File projConfFile) throws IOException {
-        LOG.debug("Cache file exists : " + projConfFile.getAbsolutePath());
-
-        List<String> lines = Files.readAllLines(projConfFile.toPath());
-        // Si le fichier contient autre chose que la ligne d'entete
-        if (lines.size() > 1) {
-            boolean firstLine = true;
-            // lit chaque ligne et ajoute les infos dans la map
-            for (String line : lines) {
-                if (firstLine) {
-                    firstLine = false;
-                } else {
-                    String[] split = line.split(";");
-                    if (split.length != 3) {
-                        LOG.fatal(String.format(
-                                "The line %s is not formatted in the expected way",
-                                line)
-                        );
-                    } else {
-                        this.db.put(split[0], new ConcurrentHashMap<String, Object>() {
-                            private static final long serialVersionUID = 3109256773218160485L;
-
-                            {
-                                put("projectSuffix", split[1]);
-                                put("expirationDate", split[2]);
-                            }
-                        });
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Creates the project configuration with the header Project Name;Id
-     *
-     * @param tokenConfFile File to create
-     * @throws IOException Exception when trying to create the file
-     */
-    private void createProjectConf(File tokenConfFile) throws IOException {
-        // Init the config file
-        LOG.info("Cache file does not exist, create it : " + tokenConfFile.getAbsolutePath());
-        File directory = new File(tokenConfFile.getParent());
-        Files.createDirectories(directory.toPath());
-        Files.createFile(tokenConfFile.toPath());
-        Files.write(
-                tokenConfFile.toPath(),
-                "#Token;Project suffix;Expiration date\n".getBytes(StandardCharsets.UTF_8),
-                StandardOpenOption.APPEND
-        );
     }
 
     @Override
@@ -159,57 +75,95 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
 
         boolean isAdded = false;
         try {
-            Jws<Claims> jws = TokenSecurity.getInstance().getTokenInformation(jwt);
-
-            String projectSuffix = String.valueOf(jws.getBody()
-                    .get(TokenSecurity.PROJECT_ID, Integer.class));
-            String expirationDate = jws.getBody().getExpiration().toString();
-
-            // should be fine, the JWT representation does not contain ;
-            String line = jwt + ";" + projectSuffix + ";" + expirationDate + "\n";
-            LOG.info("token inserted : " + line);
-            Files.write(
-                    new File(this.tokenConf).toPath(),
-                    line.getBytes(StandardCharsets.UTF_8),
-                    StandardOpenOption.APPEND
-            );
-            this.db.put(jwt, new ConcurrentHashMap<String, Object>() {
-                private static final long serialVersionUID = 3109256773218160485L;
-
-                {
-                    put("projectSuffix", projectSuffix);
-                    put("expirationDate", expirationDate);
-                }
-            });
+//            Jws<Claims> jws = TokenSecurity.getInstance().getTokenInformation(jwt);
+//
+//            String projectSuffix = String.valueOf(jws.getBody()
+//                    .get(TokenSecurity.PROJECT_ID, Integer.class));
+//            String expirationDate = jws.getBody().getExpiration().toString();
+//
+//            // should be fine, the JWT representation does not contain ;
+//            String line = jwt + ";" + projectSuffix + ";" + expirationDate + "\n";
+//            LOG.info("token inserted : " + line);
+//            Files.write(
+//                    new File(this.tokenConf).toPath(),
+//                    line.getBytes(StandardCharsets.UTF_8),
+//                    StandardOpenOption.APPEND
+//            );
+            das.addToken(jwt);
+//            this.db.put(jwt, new ConcurrentHashMap<String, Object>() {
+//                private static final long serialVersionUID = 3109256773218160485L;
+//
+//                {
+//                    put("projectSuffix", projectSuffix);
+//                    put("expirationDate", expirationDate);
+//                }
+//            });
             isAdded = true;
-        } catch (IOException | RuntimeException e) {
-            LOG.fatal("The token " + jwt + "cannot be saved in the file", e);
-        }
+        } catch (DOIDbException e) {
+        	LOG.fatal("The token " + jwt + "cannot be saved in database", e);
+		}
         return isAdded;
     }
 
     @Override
     public void deleteToken(String jwt) {
-        throw new RuntimeException("Not implemented");
+    	try {
+			das.deleteToken(jwt);
+		} catch (DOIDbException e) {
+			LOG.fatal("The token " + jwt + "cannot be deleted in database", e);
+		}
     }
 
     @Override
     public boolean isExist(String jwt) {
-        return this.db.containsKey(jwt);
+    	boolean isTokenExist = false;
+    	try {
+    		List<String> tokenList = das.getTokens();
+    		if(!tokenList.isEmpty()) {
+    			for(String token : tokenList) {
+    				if(token.equals(jwt)) {
+    					isTokenExist = true;
+    				}
+    			}
+    		}
+			
+		} catch (DOIDbException e) {
+			LOG.fatal("The token " + jwt + "cannot access to token database", e);
+		}
+    	return isTokenExist;
     }
 
     @Override
     public boolean isExpired(String jwt) {
         boolean isExpirated = true;
-        String dateStr = (String) this.db.get(jwt).get("expirationDate");
+        Jws<Claims> jws = TokenSecurity.getInstance().getTokenInformation(jwt);
+        
+        // TODO Cannot get token information of an expired token...
+        if(jws == null) {
+        	return isExpirated;
+        }
+
+//        String projectSuffix = String.valueOf(jws.getBody()
+//                .get(TokenSecurity.PROJECT_ID, Integer.class));
+        String expirationDate = jws.getBody().getExpiration().toString();
         try {
-            DateFormat dateFormat = new SimpleDateFormat(TokenSecurity.DATE_FORMAT);
-            Date expDate = dateFormat.parse(dateStr);
+        	// Precise "Locale.ENGLISH" otherwise unparsable exception occur for day in week and month
+            DateFormat dateFormat = new SimpleDateFormat(TokenSecurity.DATE_FORMAT, Locale.ENGLISH);
+            Date expDate = dateFormat.parse(expirationDate);
             isExpirated = new Date().after(expDate);
         } catch (ParseException ex) {
             LOG.fatal(ex);
         }
         return isExpirated;
+    }
+    
+    public List<String> getTokens(){
+    	try {
+			return das.getTokens();
+		} catch (DOIDbException e) {
+			LOG.fatal("Cannot retrieve the token list from database", e);
+			return new ArrayList<>();
+		}
     }
 
     @Override
@@ -241,11 +195,5 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
     public String getLicense() {
         return LICENSE;
     }
-
-	@Override
-	public List<String> getTokens() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 }

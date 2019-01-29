@@ -132,7 +132,7 @@ public class RoleAuthorizer implements Observer {
         LOG.traceEntry(new JsonMessage(app));
 
         //TODO why twice?
-        initForAdmin(app);
+//        initForAdmin(app);
 
         // we load projects from database
         final Map<String, Integer> projects = UniqueProjectName.getInstance().getProjects();

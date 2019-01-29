@@ -113,7 +113,8 @@ public class LoginBasedVerifier implements Verifier {
 //            result = processToken(request, login);
         	result = Verifier.RESULT_VALID;
         	request.getClientInfo().setUser(new User(userLogin[0]));
-            request.getHeaders().set(UtilsHeader.SELECTED_ROLE_PARAMETER, String.valueOf(""));
+        	//TODO add role parameter if any...
+//            request.getHeaders().set(UtilsHeader.SELECTED_ROLE_PARAMETER, String.valueOf(""));
         } else {
             result = Verifier.RESULT_INVALID;
         }
