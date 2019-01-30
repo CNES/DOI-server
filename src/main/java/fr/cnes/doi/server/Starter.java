@@ -18,17 +18,6 @@
  */
 package fr.cnes.doi.server;
 
-import fr.cnes.doi.exception.DoiRuntimeException;
-import fr.cnes.doi.resource.admin.SuffixProjectsResource;
-import fr.cnes.doi.security.TokenSecurity;
-import fr.cnes.doi.security.UtilsCryptography;
-import fr.cnes.doi.settings.Consts;
-import fr.cnes.doi.settings.DoiSettings;
-import fr.cnes.doi.settings.EmailSettings;
-import fr.cnes.doi.utils.UniqueDoi;
-import fr.cnes.doi.utils.spec.Requirement;
-import gnu.getopt.Getopt;
-import gnu.getopt.LongOpt;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -43,9 +32,22 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.stream.Collectors;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.slf4j.bridge.SLF4JBridgeHandler;
+
+import fr.cnes.doi.exception.DoiRuntimeException;
+import fr.cnes.doi.resource.admin.SuffixProjectsResource;
+import fr.cnes.doi.security.TokenSecurity;
+import fr.cnes.doi.security.UtilsCryptography;
+import fr.cnes.doi.settings.Consts;
+import fr.cnes.doi.settings.DoiSettings;
+import fr.cnes.doi.settings.EmailSettings;
+import fr.cnes.doi.utils.UniqueDoi;
+import fr.cnes.doi.utils.spec.Requirement;
+import gnu.getopt.Getopt;
+import gnu.getopt.LongOpt;
 
 /**
  * DOI server
@@ -167,7 +169,8 @@ public class Starter {
      * @param settings Configuration
      */
     private static void launchServer(final DoiSettings settings) {
-        LOG.trace("Entering in launchServer");
+        
+    	LOG.trace("Entering in launchServer");
         settings.validConfigurationFile();
         LOG.info("launchServer, entering DOI server");
         doiServer = new DoiServer(settings);

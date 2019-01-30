@@ -49,6 +49,7 @@ import org.restlet.service.TaskService;
 
 import fr.cnes.doi.db.AbstractTokenDBHelper;
 import fr.cnes.doi.db.AbstractUserRoleDBHelper;
+import fr.cnes.doi.ldap.job.DOIUsersUpdate;
 import fr.cnes.doi.logging.business.JsonMessage;
 import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.resource.admin.AuthenticationResource;
@@ -65,6 +66,8 @@ import fr.cnes.doi.security.TokenBasedVerifier;
 import fr.cnes.doi.security.TokenSecurity;
 import fr.cnes.doi.services.LandingPageMonitoring;
 import fr.cnes.doi.services.UpdateTokenDataBase;
+import fr.cnes.doi.settings.Consts;
+import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.utils.spec.CoverageAnnotation;
 import fr.cnes.doi.utils.spec.Requirement;
 
@@ -253,6 +256,7 @@ public class AdminApplication extends AbstractApplication {
         this.userDB = PluginFactory.getUserManagement();
         this.userDB.init(null);
         this.setTaskService(createTaskService());
+        this.setTaskService(createUpdateDataBaseTaskService());
         this.setTaskService(periodicalyDeleteExpiredTokenFromDB());
         getMetadataService().addExtension("xsd", MediaType.TEXT_XML, true);
     }
@@ -288,6 +292,23 @@ public class AdminApplication extends AbstractApplication {
                 PERIOD_SCHEDULER_FOR_TOKEN_DB, PERIOD_UNIT
         );
         return LOG.traceExit(checkExpiredTokenTask);
+    }
+    
+    
+    /**
+     * A task updating database from ldap at each configurable period of time.
+     *
+     * @return A task
+     */
+    private TaskService createUpdateDataBaseTaskService() {
+        LOG.traceEntry();
+        final TaskService updateDataBaseTask = new TaskService(true);
+        LOG.info("Sets UpdateDataBaseTask running at each {} {}", PERIOD_SCHEDULER, PERIOD_UNIT);
+        updateDataBaseTask.scheduleAtFixedRate(
+                new DOIUsersUpdate(), 0,
+                DoiSettings.getInstance().getInt(Consts.DB_UPDATE_JOB_PERIOD), TimeUnit.MINUTES
+        );
+        return LOG.traceExit(updateDataBaseTask);
     }
 
     /**

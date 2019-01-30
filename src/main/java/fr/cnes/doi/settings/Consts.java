@@ -356,5 +356,55 @@ public class Consts {
      * DataCite schema.
      */
     public static final String DATACITE_SCHEMA = "Starter.dataciteSchema";
+    
+    /**
+     * Update Database job period
+     */
+    public static final String DB_UPDATE_JOB_PERIOD = "Starter.updateDatabaseJob.period";
 
+    /**
+     * Database url
+     */
+    public static final String DB_URL = "Starter.Database.Doidburl";
+    
+    /**
+     * Database user
+     */
+    public static final String DB_USER = "Starter.Database.User";
+    
+    /**
+     * Database password
+     */
+    public static final String DB_PWD = "Starter.Database.Pwd";
+    
+    /**
+     * Datasource Minimum opened connections
+     */
+    public static final String DB_MAX_IDLE_CONNECTIONS = "Starter.Database.MaxIdleConnections";
+    
+    /**
+     * Datasource Maximum opened connections
+     */
+    public static final String DB_MAX_ACTIVE_CONNECTIONS = "Starter.Database.MaxActiveConnections";
+
+    /**
+     * LDAP url
+     */
+    public static final String LDAP_URL = "ldapurl";
+    
+    /**
+     * LDAP user
+     */
+    public static final String LDAP_USER = "ldapuser";
+    
+    /**
+     * LDAP pwd
+     */
+    public static final String LDAP_PWD = "ldappassword";
+    
+    /**
+     * LDAP project
+     */
+    public static final String LDAP_PROJECT = "ldapdoiproject";
+    
 }

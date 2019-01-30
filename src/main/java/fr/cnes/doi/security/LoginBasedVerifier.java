@@ -34,6 +34,8 @@ import org.restlet.security.User;
 import org.restlet.security.Verifier;
 
 import fr.cnes.doi.db.AbstractUserRoleDBHelper;
+import fr.cnes.doi.ldap.impl.LDAPAccessServiceImpl;
+import fr.cnes.doi.ldap.service.ILDAPAcessService;
 import fr.cnes.doi.logging.business.JsonMessage;
 
 /**
@@ -52,6 +54,13 @@ public class LoginBasedVerifier implements Verifier {
      * User DB.
      */
     private final AbstractUserRoleDBHelper userDB;
+    
+    /**
+     * LDAP access instance.
+     */
+    private final ILDAPAcessService ldapService;
+    
+    
 
     /**
      * Constructor.
@@ -61,6 +70,7 @@ public class LoginBasedVerifier implements Verifier {
     public LoginBasedVerifier(final AbstractUserRoleDBHelper userDB) {
         LOG.traceEntry(new JsonMessage(userDB));
         this.userDB = userDB;
+        this.ldapService = new LDAPAccessServiceImpl();
     }
 
     /**
@@ -105,58 +115,22 @@ public class LoginBasedVerifier implements Verifier {
             return LOG.traceExit(Verifier.RESULT_MISSING);
         }
         
-        //TODO test password via LDAP
         final String decodedLogin = new String(Base64.getDecoder().decode(login));
         final String[] userLogin = decodedLogin.split(":");
         
-        if (this.userDB.isUserExist(userLogin[0])) {
-//            result = processToken(request, login);
+        if(this.userDB.isUserExist(userLogin[0]) &&
+        	ldapService.authenticateUser(userLogin[0], userLogin[1])) 
+        {
+//        	System.out.println("User is authenticate via LDAP!");
         	result = Verifier.RESULT_VALID;
         	request.getClientInfo().setUser(new User(userLogin[0]));
+            	
         	//TODO add role parameter if any...
 //            request.getHeaders().set(UtilsHeader.SELECTED_ROLE_PARAMETER, String.valueOf(""));
         } else {
+//        	System.out.println("User is not authenticated!...");
             result = Verifier.RESULT_INVALID;
         }
         return LOG.traceExit(result);
     }
-    
-    /**
-     * Check the user password via LDAP connection  
-     * @param userName 
-     * @param userPwd
-     * @return true if user authenticated, false otherwise
-     */
-    private boolean verifPwdLDAP(String userName, String userPwd) {
-    	
-    	return true;
-    }
-
-//    /**
-//     * Process token.
-//     *
-//     * @param request request
-//     * @param token token
-//     * @return the status given by {@link Verifier}
-//     */
-//    private int processToken(final Request request,
-//            final String token) {
-//        LOG.traceEntry(new JsonMessage(request));
-//        LOG.traceEntry(token);
-//        final int result;
-//        if (this.userDB.isExpired(token)) {
-//            LOG.info("token {} is expirated", token);
-//            result = Verifier.RESULT_INVALID;
-//        } else {
-//            result = Verifier.RESULT_VALID;
-//            final Jws<Claims> tokenInfo = TokenSecurity.getInstance().getTokenInformation(token);
-//            final Claims body = tokenInfo.getBody();
-//            final String userID = body.getSubject();
-//            final Integer projectID = (Integer) body.get(TokenSecurity.PROJECT_ID);
-//            LOG.info("token {} is valid, {} for {} are authenticated", token, userID, projectID);
-//            request.getClientInfo().setUser(new User(userID));
-//            request.getHeaders().set(UtilsHeader.SELECTED_ROLE_PARAMETER, String.valueOf(projectID));
-//        }
-//        return LOG.traceExit(result);
-//    }
 }

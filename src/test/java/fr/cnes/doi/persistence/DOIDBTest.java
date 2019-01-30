@@ -20,7 +20,7 @@ public class DOIDBTest {
 	
 	private Logger logger = LoggerFactory.getLogger(DOIDBTest.class);
 
-	private DOIDbDataAccessService das;
+	private DOIDbDataAccessService das = new DOIDbDataAccessServiceImpl(getClass().getClassLoader().getResource("config-test.properties").getFile());
     
 	private DOIUser testuser;
 	private DOIProject testProject;
@@ -39,7 +39,6 @@ public class DOIDBTest {
 		testProject.setSuffix(1010);
 		
 		
-		das = new DOIDbDataAccessServiceImpl();
 		try {
 			das.removeDOIUser(testuser.getUsername());
 			das.removeDOIProject(testProject.getSuffix());
