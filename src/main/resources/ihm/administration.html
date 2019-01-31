@@ -248,7 +248,7 @@
 				    	if(boo){
 					    	$("#listProjet option:selected").text( projet + 
 				    				"(" + idText + ")" );	
-					    	$("#titreProjet").text("Utilisateurs du projet: "+ projet + idText);
+					    	$("#titreProjet").text("Utilisateurs du projet: "+ projet + "(" + idText + ")");
 					    	
 					    	//if actual user is on this project, actualize project name
 					    	object = JSON.parse(sessionStorage.getItem("projects"));
@@ -373,8 +373,14 @@
 					    	$("#listUser").append("<option selected=\"selected\">" + user + "</option>");
 					    	if(user == actualUser){
 					    		object = JSON.parse(sessionStorage.getItem("projects"));
-					    		object[nameProject] = suffixProject;
-						    	sessionStorage.setItem("projects", JSON.stringify(object));
+					    		if(object == null){
+					    			object = {
+					    				nameProject : suffixProject	
+					    			};
+					    		}else{
+						    		object[nameProject] = suffixProject;
+					    		}
+							    	sessionStorage.setItem("projects", JSON.stringify(object));
 					    	}
 				    	}
 				    }
@@ -390,7 +396,6 @@
 			console.log(nameProject + " " + suffixProject);
 			
 			var user = $("#listUser").val();
-			
 			if(user == ""){
 				return;
 			}
@@ -416,8 +421,10 @@
 					    	$("#listUser option:selected").remove();
 					    	if(user == actualUser){
 					    		object = JSON.parse(sessionStorage.getItem("projects"));
+					    		console.log(object);
 					    		delete object[nameProject];
-						    	sessionStorage.setItem("projects", JSON.stringify(object));
+					    		console.log(object);
+					    		sessionStorage.setItem("projects", JSON.stringify(object));
 					    	}
 				    	}
 				    }

@@ -1,8 +1,7 @@
-CREATE USER doiserver WITH ENCRYPTED PASSWORD 'md5249656fe86cbd179a45c21703b0df719';
-CREATE DATABASE doidb;
-\connect doidb;
+CREATE USER test WITH ENCRYPTED PASSWORD 'md505a671c66aefea124cc08b76ea6d30bb';
+CREATE DATABASE doidbtest;
+\connect doidbtest;
 CREATE SCHEMA doi_schema;
-
 CREATE TABLE doi_schema.T_DOI_USERS (
  username varchar(255) NOT NULL,
  admin boolean NOT NULL,
@@ -27,6 +26,5 @@ CREATE TABLE doi_schema.T_DOI_TOKENS (
  PRIMARY KEY (token)
 );
 
-GRANT ALL PRIVILEGES ON SCHEMA doi_schema TO doiserver;
-GRANT INSERT,DELETE,SELECT,UPDATE ON ALL TABLES IN SCHEMA doi_schema TO doiserver;
-
+GRANT ALL PRIVILEGES ON SCHEMA doi_schema TO test;
+GRANT INSERT,DELETE,SELECT,UPDATE ON ALL TABLES IN SCHEMA doi_schema TO test;

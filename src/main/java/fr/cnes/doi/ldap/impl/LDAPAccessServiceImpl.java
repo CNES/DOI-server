@@ -13,19 +13,22 @@ import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 import javax.naming.ldap.InitialLdapContext;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import fr.cnes.doi.ldap.exceptions.LDAPAccessException;
 import fr.cnes.doi.ldap.service.ILDAPAcessService;
 import fr.cnes.doi.ldap.util.LDAPUser;
-import fr.cnes.doi.ldap.util.PasswordEncrypter;
+import fr.cnes.doi.security.UtilsCryptography;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 
 public class LDAPAccessServiceImpl implements ILDAPAcessService {
 
-	private Logger logger = LoggerFactory.getLogger(LDAPAccessServiceImpl.class);
+	/**
+     * Logger.
+     */
+    private static final Logger logger = LogManager.getLogger(LDAPAccessServiceImpl.class.getName());
 
 	private DoiSettings conf = DoiSettings.getInstance();
     
@@ -71,9 +74,9 @@ public class LDAPAccessServiceImpl implements ILDAPAcessService {
 		prop.put(Context.SECURITY_AUTHENTICATION, "simple");
 		try {
 			prop.put(Context.SECURITY_PRINCIPAL,
-					PasswordEncrypter.getInstance().decryptPasswd(conf.getString(Consts.LDAP_USER)));
+					UtilsCryptography.decrypt(conf.getString(Consts.LDAP_USER)));
 			prop.put(Context.SECURITY_CREDENTIALS,
-					PasswordEncrypter.getInstance().decryptPasswd(conf.getString(Consts.LDAP_PWD)));
+					UtilsCryptography.decrypt(conf.getString(Consts.LDAP_PWD)));
 		} catch (Exception e) {
 			logger.error("LDAPAccessImpl getContext: Unable to get Ldap password", e);
 		}
@@ -127,8 +130,8 @@ public class LDAPAccessServiceImpl implements ILDAPAcessService {
 		prop.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
 		prop.put(Context.PROVIDER_URL, conf.getString(Consts.LDAP_URL));
 		prop.put(Context.SECURITY_AUTHENTICATION, "simple");
-		prop.put(Context.SECURITY_PRINCIPAL, login);
 		prop.put(Context.SECURITY_CREDENTIALS, password);
+		prop.put(Context.SECURITY_PRINCIPAL,"uid=" + login + ",cn=users,cn=accounts,dc=sis,dc=cnes,dc=fr"); 
 		
 		InitialLdapContext context = null;
 		try {

@@ -95,8 +95,11 @@ public class DOIDBTest {
 			das.addDOIUser(testuser.getUsername(), testuser.getAdmin(), testuser.getEmail());
 			das.addDOIProjectToUser(testuser.getUsername(), testProject.getSuffix());
 			List<DOIProject> projectsFromDb =  das.getAllDOIProjectsForUser(testuser.getUsername());
+			List<DOIUser> userFromProject =  das.getAllDOIUsersForProject(testProject.getSuffix());
 			assertEquals(projectsFromDb.size(), 1);
+			assertEquals(userFromProject.size(), 1);
 			assertEquals(projectsFromDb.get(0).isEqualTo(testProject), true);
+			assertEquals(userFromProject.get(0).isEqualTo(testuser), true);
 			das.removeDOIProjectFromUser(testuser.getUsername(), testProject.getSuffix());
 			assertEquals(das.getAllDOIProjectsForUser(testuser.getUsername()).size(), 0);
 		} catch (DOIDbException e) {

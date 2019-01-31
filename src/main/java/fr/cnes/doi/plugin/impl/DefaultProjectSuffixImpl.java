@@ -130,7 +130,8 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
     public boolean isExistID(int projectID) {
     	Map<String, Integer> map = getProjects();
     	if(map.size() == 0) {
-    		throw new RuntimeException("The projects list is empty");
+//    		throw new RuntimeException("The projects list is empty");
+    		return false;
     	}
         return map.containsValue(projectID);
     }
@@ -140,7 +141,8 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
     public boolean isExistProjectName(String projectName) {
     	Map<String, Integer> map = getProjects();
     	if(map.size() == 0) {
-    		throw new RuntimeException("The projects list is empty");
+//    		throw new RuntimeException("The projects list is empty");
+    		return false;
     	}
         return map.containsKey(projectName);
     }

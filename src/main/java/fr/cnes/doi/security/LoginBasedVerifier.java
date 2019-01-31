@@ -121,14 +121,12 @@ public class LoginBasedVerifier implements Verifier {
         if(this.userDB.isUserExist(userLogin[0]) &&
         	ldapService.authenticateUser(userLogin[0], userLogin[1])) 
         {
-//        	System.out.println("User is authenticate via LDAP!");
         	result = Verifier.RESULT_VALID;
         	request.getClientInfo().setUser(new User(userLogin[0]));
-            	
+        	
         	//TODO add role parameter if any...
 //            request.getHeaders().set(UtilsHeader.SELECTED_ROLE_PARAMETER, String.valueOf(""));
         } else {
-//        	System.out.println("User is not authenticated!...");
             result = Verifier.RESULT_INVALID;
         }
         return LOG.traceExit(result);

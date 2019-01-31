@@ -4,13 +4,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import fr.cnes.doi.ldap.impl.LDAPAccessServiceImpl;
 import fr.cnes.doi.persistence.exceptions.DOIDbException;
 import fr.cnes.doi.persistence.model.DOIProject;
 import fr.cnes.doi.persistence.model.DOIUser;
@@ -19,7 +19,10 @@ import fr.cnes.doi.persistence.service.JDBCConnector;
 
 public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
 
-	private Logger logger = LoggerFactory.getLogger(DOIDbDataAccessServiceImpl.class);
+	/**
+     * Logger.
+     */
+    private static final Logger logger = LogManager.getLogger(LDAPAccessServiceImpl.class.getName());
 	private JDBCConnector dbConnector;
 
 	
@@ -165,11 +168,11 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
 		PreparedStatement usersStatement = null;
 		try {
 			conn = dbConnector.getConnection();
-			assignationsStatement = conn.prepareStatement("SELECT username, suffix, email FROM T_DOI_ASSIGNATIONS WHERE suffix=?");
+			assignationsStatement = conn.prepareStatement("SELECT username, suffix FROM T_DOI_ASSIGNATIONS WHERE suffix=?");
 			assignationsStatement.setInt(1, suffix);
 			ResultSet assignations = assignationsStatement.executeQuery();
 			while (assignations.next()) {
-				usersStatement = conn.prepareStatement("SELECT username, admin FROM T_DOI_USERS WHERE username=?");
+				usersStatement = conn.prepareStatement("SELECT username, admin, email FROM T_DOI_USERS WHERE username=?");
 				usersStatement.setString(1, assignations.getString("username"));
 				ResultSet rs = usersStatement.executeQuery();
 				while (rs.next()) {

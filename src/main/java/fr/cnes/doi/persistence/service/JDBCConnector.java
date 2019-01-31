@@ -4,16 +4,20 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import org.apache.commons.dbcp.BasicDataSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import fr.cnes.doi.persistence.util.PasswordEncrypter;
+import fr.cnes.doi.ldap.impl.LDAPAccessServiceImpl;
+import fr.cnes.doi.security.UtilsCryptography;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 
 public class JDBCConnector {
 
-	private Logger logger = LoggerFactory.getLogger(JDBCConnector.class); 
+	/**
+     * Logger.
+     */
+    private static final Logger logger = LogManager.getLogger(LDAPAccessServiceImpl.class.getName());
 	//private BasicDataSource ds = new BasicDataSource(); 
 	private BasicDataSource ds = new BasicDataSource(); 
 	private DoiSettings conf = DoiSettings.getInstance(); 
@@ -37,7 +41,7 @@ public class JDBCConnector {
 		ds.setUrl(conf.getString(Consts.DB_URL));
 		ds.setUsername(conf.getString(Consts.DB_USER));
 		try {
-			ds.setPassword(PasswordEncrypter.getInstance().decryptPasswd(conf.getString(Consts.DB_PWD)));
+			ds.setPassword(UtilsCryptography.decrypt(conf.getString(Consts.DB_PWD)));
 		} catch (Exception e) {
 			logger.error("Failure occored in JDBCConnector init()", e);
 		}
