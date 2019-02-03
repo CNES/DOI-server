@@ -105,9 +105,9 @@ public class MetadatasResourceTest {
 
     @AfterClass
     public static void tearDownClass() {
+    	InitDataBaseForTest.close();
         mdsServerStub.finish();
         InitServerForTest.close();
-        InitDataBaseForTest.close();
     }
 
     @Before

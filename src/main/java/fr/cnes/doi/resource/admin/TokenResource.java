@@ -189,6 +189,7 @@ public class TokenResource extends AbstractResource {
         try {
             final Jws<Claims> jws = TokenSecurity.getInstance()
                     .getTokenInformation(this.tokenParam);
+            // TODO new Representation instead?
             return LOG.traceExit(new JsonRepresentation(jws));
         } catch (DoiRuntimeException ex) {
             throw LOG.throwing(Level.DEBUG, new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST,

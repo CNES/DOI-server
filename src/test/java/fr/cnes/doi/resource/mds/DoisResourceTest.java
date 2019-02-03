@@ -18,6 +18,7 @@
  */
 package fr.cnes.doi.resource.mds;
 
+import fr.cnes.doi.InitDataBaseForTest;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.MdsSpec;
@@ -73,6 +74,7 @@ public class DoisResourceTest {
 
     @BeforeClass
     public static void setUpClass() {
+    	InitDataBaseForTest.init();
         InitServerForTest.init(InitSettingsForTest.CONFIG_TEST_PROPERTIES);
         cl = new Client(new Context(), Protocol.HTTPS);
         Series<Parameter> parameters = cl.getContext().getParameters();       
@@ -86,6 +88,7 @@ public class DoisResourceTest {
 
     @AfterClass
     public static void tearDownClass() throws IOException {
+    	InitDataBaseForTest.close();
         Form doiForm = new Form();
         doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b"));
         doiForm.add(new Parameter(DoisResource.URL_PARAMETER, "https://cfosat.cnes.fr/"));

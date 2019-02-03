@@ -19,6 +19,7 @@
 package fr.cnes.doi.integration;
 
 import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
+import fr.cnes.doi.InitDataBaseForTest;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.MdsSpec;
@@ -98,6 +99,7 @@ public class ITperformance {
 
     @BeforeClass
     public static void setUpClass() throws ClientMdsException {
+    	InitDataBaseForTest.init();
         InitServerForTest.init(InitSettingsForTest.CONFIG_IT_PROPERTIES);
         cl = new Client(new Context(), Protocol.HTTPS);
         Series<Parameter> parameters = cl.getContext().getParameters();
@@ -111,6 +113,7 @@ public class ITperformance {
 
     @AfterClass
     public static void tearDownClass() {
+    	InitDataBaseForTest.close();
         mdsServerStub.finish();
         InitServerForTest.close();
     }

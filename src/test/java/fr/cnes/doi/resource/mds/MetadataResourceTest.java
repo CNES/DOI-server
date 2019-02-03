@@ -18,6 +18,7 @@
  */
 package fr.cnes.doi.resource.mds;
 
+import fr.cnes.doi.InitDataBaseForTest;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.MdsSpec;
@@ -76,6 +77,7 @@ public class MetadataResourceTest {
 
     @BeforeClass
     public static void setUpClass() {
+    	InitDataBaseForTest.init();
         InitServerForTest.init(InitSettingsForTest.CONFIG_TEST_PROPERTIES);
         cl = new Client(new Context(), Protocol.HTTPS);
         Series<Parameter> parameters = cl.getContext().getParameters();
@@ -89,6 +91,7 @@ public class MetadataResourceTest {
 
     @AfterClass
     public static void tearDownClass() {
+    	InitDataBaseForTest.close();
         mdsServerStub.finish();
         InitServerForTest.close();
     }

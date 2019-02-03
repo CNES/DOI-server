@@ -18,6 +18,7 @@
  */
 package fr.cnes.doi.integration;
 
+import fr.cnes.doi.InitDataBaseForTest;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.client.ClientMDS;
@@ -77,6 +78,7 @@ public class ITauthentication {
 
     @BeforeClass
     public static void setUpClass() throws ClientMdsException {
+    	InitDataBaseForTest.init();
         InitServerForTest.init(InitSettingsForTest.CONFIG_IT_PROPERTIES);        
         cl = new Client(new Context(), Protocol.HTTPS);
         Series<Parameter> parameters = cl.getContext().getParameters();
@@ -90,6 +92,7 @@ public class ITauthentication {
 
     @AfterClass
     public static void tearDownClass() {
+    	InitDataBaseForTest.close();
         mockServer.stop();
         InitServerForTest.close();
     }

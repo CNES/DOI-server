@@ -21,10 +21,12 @@ package fr.cnes.doi.plugin.impl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.restlet.Application;
+import org.restlet.security.MemoryRealm;
 import org.restlet.security.Role;
 import org.restlet.security.User;
 
@@ -52,6 +54,11 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
      */
     private static final Logger LOG = LogManager.getLogger(DefaultUserRoleImpl.class.getName());
     private final String NAME = this.getClass().getName();
+    
+    /**
+     * User/Role realm
+     */
+    private final MemoryRealm REALM = getRealm();
     
     /**
      * Default constructor of the authentication plugin.
@@ -109,11 +116,10 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
 			das.addDOIProjectToUser(user, role);
 			isAdded = true;
 			
-			//TODO 
-			User userFromRealm = new User(user);
+			User userFromRealm = REALM.findUser(user);
 			final Role roleFromRealm = new Role(Application.getCurrent(), String.valueOf(role), "Role " + String.valueOf(
                     role) + " for " + Application.getCurrent().getName());
-			getRealm().map(userFromRealm, roleFromRealm);
+			REALM.map(userFromRealm, roleFromRealm);
 			
 		} catch (DOIDbException e) {
 			LOG.fatal("An error occured while trying to add user " + user + " to project " + role ,e);
@@ -128,11 +134,13 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
 			das.removeDOIProjectFromUser(user, role);
 			isRemoved = true;
 			
-			//TODO 
-			User userFromRealm = new User(user);
-			final Role roleFromRealm = new Role(Application.getCurrent(), String.valueOf(role), "Role " + String.valueOf(
-                    role) + " for " + Application.getCurrent().getName());
-			getRealm().unmap(userFromRealm, roleFromRealm);
+			User userFromRealm = REALM.findUser(user);
+			Set<Role> rolesFromRealm = REALM.findRoles(userFromRealm);
+			for(Role r : rolesFromRealm) {
+				if(r.getName().equals(String.valueOf(role))) {
+					REALM.unmap(userFromRealm, r);
+				}
+			}
 			
 		} catch (DOIDbException e) {
 			LOG.fatal("An error occured while trying to remove user " + user + " from project " + role ,e);
@@ -146,6 +154,13 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
 		try {
 			das.setAdmin(user);
 			isSetted = true;
+			
+			// TODO if user is added in DB while DOI server is running then user won't be in REALM /!\
+			User userFromRealm = REALM.findUser(user);
+			if(!REALM.getRootGroups().get(0).getMemberUsers().contains(userFromRealm)) {
+				REALM.getRootGroups().get(0).getMemberUsers().add(userFromRealm);
+			}
+			
 		} catch (DOIDbException e) {
 			LOG.fatal("An error occured while trying to add user " + user + " to admin group",e);
 		}
@@ -159,6 +174,12 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
 		try {
 			das.unsetAdmin(user);
 			isUnsetted = true;
+			
+			User userFromRealm = REALM.findUser(user);
+			if(REALM.getRootGroups().get(0).getMemberUsers().contains(userFromRealm)) {
+				REALM.getRootGroups().get(0).getMemberUsers().remove(userFromRealm);
+			}
+			
 		} catch (DOIDbException e) {
 			LOG.fatal("An error occured while trying to remove user " + user + " to admin group",e);
 		}

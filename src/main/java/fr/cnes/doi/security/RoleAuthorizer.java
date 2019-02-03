@@ -1,6 +1,27 @@
 
 package fr.cnes.doi.security;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.Set;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.restlet.Application;
+import org.restlet.Request;
+import org.restlet.Response;
+import org.restlet.data.Method;
+import org.restlet.data.Reference;
+import org.restlet.data.Status;
+import org.restlet.security.Group;
+import org.restlet.security.MemoryRealm;
+import org.restlet.security.Role;
+import org.restlet.security.User;
+
 import fr.cnes.doi.application.AdminApplication;
 import fr.cnes.doi.application.DoiMdsApplication;
 import fr.cnes.doi.db.AbstractProjectSuffixDBHelper;
@@ -11,21 +32,6 @@ import fr.cnes.doi.persistence.model.DOIUser;
 import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.utils.UniqueProjectName;
 import fr.cnes.doi.utils.spec.Requirement;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Set;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.restlet.Application;
-import org.restlet.security.Group;
-import org.restlet.security.MemoryRealm;
-import org.restlet.security.Role;
-import org.restlet.security.User;
 
 /**
  * Security class for authentication by REALM.
@@ -147,8 +153,10 @@ public class RoleAuthorizer implements Observer {
             List<DOIUser> doiUsers = USER_ROLE_PLUGIN.getUsersFromRole(projectID);
             List<User> usersFromProject = new ArrayList<User>();
             for(DOIUser doiUser : doiUsers) {
-            	User user = new User(doiUser.getUsername());
-            	usersFromProject.add(user);
+            	User user = REALM.findUser(doiUser.getUsername());
+            	if(user != null) {
+            		usersFromProject.add(user);
+            	}
             }
             
             // create a role authorizer for each user related to a project
@@ -352,4 +360,5 @@ public class RoleAuthorizer implements Observer {
          */
         private static final RoleAuthorizer INSTANCE = new RoleAuthorizer();
     }
+    
 }

@@ -24,11 +24,13 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import fr.cnes.doi.InitDataBaseForTest;
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.UnitTest;
 import fr.cnes.doi.exception.DoiRuntimeException;
@@ -56,7 +58,13 @@ public class UniqueProjectNameTest {
      */
     @BeforeClass
     public static void setUpClass() {
-        InitSettingsForTest.init(InitSettingsForTest.CONFIG_TEST_PROPERTIES);        
+        InitSettingsForTest.init(InitSettingsForTest.CONFIG_TEST_PROPERTIES);   
+        InitDataBaseForTest.init();
+    }
+    
+    @AfterClass
+    public static void tearDownClass() throws IOException {
+    	 InitDataBaseForTest.close();
     }
 
     /**
@@ -95,10 +103,9 @@ public class UniqueProjectNameTest {
         // New id
         int idSWOT = UniqueProjectName.getInstance().getShortName("SWOT", 6);
         Assert.assertTrue(UniqueProjectName.getInstance().getShortName("SWOT", 6) == idSWOT);
-
+        
         // Id already in the file
         Assert.assertTrue(UniqueProjectName.getInstance().getShortName("CFOSAT", 6) == 828606);
-
     }
 
     /**

@@ -18,6 +18,7 @@
  */
 package fr.cnes.doi.resource.admin;
 
+import fr.cnes.doi.InitDataBaseForTest;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.UnitTest;
@@ -77,6 +78,7 @@ public class SuffixProjectsResourceTest {
 
     @BeforeClass
     public static void setUpClass() {
+    	InitDataBaseForTest.init();
         InitServerForTest.init(InitSettingsForTest.CONFIG_TEST_PROPERTIES);
         cl = new Client(new Context(), Protocol.HTTPS);
         Series<Parameter> parameters = cl.getContext().getParameters();
@@ -89,6 +91,7 @@ public class SuffixProjectsResourceTest {
 
     @AfterClass
     public static void tearDownClass() {
+    	InitDataBaseForTest.close();
         InitServerForTest.close();
     }
 
@@ -120,7 +123,7 @@ public class SuffixProjectsResourceTest {
     @Test
     public void testGetProjectsNameAsJson() throws IOException {
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-        ClientResource client = new ClientResource("https://localhost:"+port+"/admin/suffixProject");
+        ClientResource client = new ClientResource("https://localhost:"+port+"/admin/projects");
         client.setNext(cl);
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
         Representation response = client.get(MediaType.APPLICATION_JSON); 
@@ -137,14 +140,14 @@ public class SuffixProjectsResourceTest {
     @Test
     public void testGetProjectsNameAsXml() throws IOException {
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-        ClientResource client = new ClientResource("https://localhost:"+port+"/admin/suffixProject");
+        ClientResource client = new ClientResource("https://localhost:"+port+"/admin/projects");
         client.setNext(cl);
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
         Representation response = client.get(MediaType.APPLICATION_XML); 
         String projects = response.getText();
         client.release();
         assertNotNull("Test if the response is not null",projects);
-        assertTrue("Test is the response is in XML format",projects.contains("<THEIA>"));
+        assertTrue("Test is the response is in XML format",projects.contains("<CFOSAT>"));
     }
 
     /**
@@ -155,7 +158,7 @@ public class SuffixProjectsResourceTest {
     @Test
     public void testCreateProject() throws IOException {
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-        ClientResource client = new ClientResource("https://localhost:"+port+"/admin/suffixProject");
+        ClientResource client = new ClientResource("https://localhost:"+port+"/admin/projects");
         client.setNext(cl);
         Form form = new Form();
         form.add("projectName", "Myphhfffcvdscsdfvdffff");
@@ -175,7 +178,7 @@ public class SuffixProjectsResourceTest {
     public void testCreateProjectWithWrongParameter() {       
         exceptions.expect(ResourceException.class);
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-        ClientResource client = new ClientResource("https://localhost:"+port+"/admin/suffixProject");
+        ClientResource client = new ClientResource("https://localhost:"+port+"/admin/projects");
         client.setNext(cl);
         Form form = new Form();
         form.add("project", "Myphhfffcvdscsdfvdffff");

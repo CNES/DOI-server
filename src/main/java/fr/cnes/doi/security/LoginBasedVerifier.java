@@ -122,7 +122,7 @@ public class LoginBasedVerifier implements Verifier {
         	ldapService.authenticateUser(userLogin[0], userLogin[1])) 
         {
         	result = Verifier.RESULT_VALID;
-        	request.getClientInfo().setUser(new User(userLogin[0]));
+        	request.getClientInfo().setUser(userDB.getRealm().findUser(userLogin[0]));
         	
         	//TODO add role parameter if any...
 //            request.getHeaders().set(UtilsHeader.SELECTED_ROLE_PARAMETER, String.valueOf(""));
