@@ -43,7 +43,7 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
     /**
      * Logger.
      */
-    private static final Logger LOG = LogManager.getLogger(DefaultTokenImplOLD.class.getName());
+    private static final Logger LOG = LogManager.getLogger(DefaultProjectSuffixImpl.class.getName());
 
     private static final String DESCRIPTION = "Provides a pre-defined list of users and groups";
     private static final String VERSION = "1.0.0";
@@ -51,15 +51,6 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
     private static final String AUTHOR = "Jean-Christophe Malapert";
     private static final String LICENSE = "LGPLV3";
     private final String NAME = this.getClass().getName();
-
-//    /**
-//     * Mapping between the identifiers and the projects
-//     */
-//    private final Map<Integer, String> idProjMap = new ConcurrentHashMap<>();
-//    /**
-//     * Mapping between the projects and the identifier
-//     */
-//    private final Map<String, Integer> projIdMap = new ConcurrentHashMap<>();
 
     /**
      * Default constructor of the project suffix database
@@ -80,15 +71,6 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
      */
     @Override
     public void init(Object configuration) {
-//    	try {
-//			List<DOIProject> doiProjects = das.getAllDOIProjects();
-//			for(DOIProject doiProject : doiProjects) {
-//				idProjMap.put(doiProject.getSuffix(), doiProject.getProjectname());
-//				projIdMap.put(doiProject.getProjectname(), doiProject.getSuffix());
-//			}
-//		} catch (DOIDbException e) {
-//			LOG.fatal("An error occured while trying to get all DOI projects" ,e);
-//		}
     }
 
     @Override
@@ -98,8 +80,6 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
         try {
         	LOG.info("Add projectSuffix in the database {} / {}", projectID, projectName);
 			das.addDOIProject(projectID, projectName);
-//			this.projIdMap.put(projectName, projectID);
-//			this.idProjMap.put(projectID, projectName);
 			setChanged();
 			notifyObservers(new String[]{ADD_RECORD, String.valueOf(projectID)});
 			isAdded = true;
@@ -125,23 +105,19 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
     	return isDeleted;
     }
 
-    //TODO
     @Override
     public boolean isExistID(int projectID) {
     	Map<String, Integer> map = getProjects();
     	if(map.size() == 0) {
-//    		throw new RuntimeException("The projects list is empty");
     		return false;
     	}
         return map.containsValue(projectID);
     }
 
-    //TODO
     @Override
     public boolean isExistProjectName(String projectName) {
     	Map<String, Integer> map = getProjects();
     	if(map.size() == 0) {
-//    		throw new RuntimeException("The projects list is empty");
     		return false;
     	}
         return map.containsKey(projectName);
@@ -158,7 +134,6 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
         return projectName;
     }
 
-    //TODO
     @Override
     public int getIDFrom(String projectName) {
     	Map<String, Integer> map = getProjects();
