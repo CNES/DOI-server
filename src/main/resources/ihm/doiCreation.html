@@ -47,9 +47,10 @@
 				<br>
 					
 				<div class="form-group">
-					<div class="col-sm-offset-2 col-sm-5">
+					<div class="col-sm-offset-2 col-sm-10">
 						<button type="button" class="btn btn-default" onclick="createDOI()">Créer le DOI</button>
-						<button type="button" class="col-sm-offset-1 btn btn-default" onclick="$('#xmlfile').click();">Importer des méta-données</button>
+						<button type="button" class="btn btn-default" onclick="$('#xmlfile').click();">Importer des méta-données</button>
+						<button type="button" class="btn btn-default" onclick="clearForm();">Vider le formulaire</button>
 						<input id="xmlfile" type="file" accept=".xml" style="position: fixed; top: -100em">
 					</div>
 				</div>  
@@ -88,6 +89,7 @@
 			<div title="creator" class="tag">
 				<div title="creatorName" class="tag">
 					<input class="full-width input-field tag-value" type="text" placeholder="[CREATOR NAME]" title="creatorName" value="" />
+					<select class="half-width input-field tag-attribute" title="nameType"></select>
 				</div>
 				<div title="givenName" class="tag">
 					<input class="half-width input-field tag-value" type="text" placeholder="[GIVEN NAME] (optional)" title="givenName" value="" />
@@ -157,6 +159,7 @@
 			<div title="contributor" class="tag">
 				<div title="contributorName" class="tag">
 					<input class="half-width input-field tag-value" type="text" placeholder="[CONTRIBUTOR NAME]" title="contributorName" value="" />
+					<select class="half-width input-field tag-attribute" title="nameType"></select>
 				</div>
 				<select class="half-width input-field tag-attribute" title="contributorType"></select>
 				<div title="givenName" class="tag">
@@ -184,6 +187,7 @@
 			<div title="date" class="tag">
 				<input class="half-width input-field tag-value" type="text" placeholder="[DATE]" title="date" value="" />
 				<select class="half-width input-field tag-attribute" title="dateType"></select>
+				<input class="full-width input-field tag-attribute" type="text" placeholder="[DATE INFORMATION]" title="dateInformation" value="" />
 			</div>
 		</div>
 	</div>
@@ -196,6 +200,7 @@
 				<input class="full-width input-field tag-value" type="text" placeholder="[RELATED IDENTIFIER]" title="relatedIdentifier" value="" />
 				<select class="half-width input-field tag-attribute" title="relatedIdentifierType"></select>
 				<select class="half-width input-field tag-attribute" title="relationType"></select>
+				<select class="half-width input-field tag-attribute" title="resourceTypeGeneral"></select>
 				<input class="half-width input-field tag-attribute" type="text" placeholder="[METADATA SCHEME]" title="relatedMetadataScheme" value="" />
 				<input class="half-width input-field tag-attribute" type="text" placeholder="[SCHEME TYPE]" title="schemeType" value="" />
 				<input class="full-width input-field tag-attribute" type="text" placeholder="[SCHEME URI]" title="schemeURI" value="" />
@@ -248,6 +253,7 @@
 				</div>
 				<span class="tag-group-label">Geo Location Polygon:</span>
 				<div title="geoLocationPolygon" class="tag">
+				<button type="button" class="add single-tag">+</button>
 					<div title="polygonPoint" class="tag">
 						<div title="pointLongitude" class="tag">
 							<input class="half-width-smaller input-field tag-value" type="text" placeholder="[POINT LONGITUDE]" title="pointLongitude" value="" />
@@ -279,6 +285,14 @@
 						<div title="pointLatitude" class="tag">
 							<input class="half-width-smaller input-field tag-value" type="text" placeholder="[POINT LATITUDE]" title="pointLatitude" value="" />
 						</div><button type="button" class="add single-tag">+</button>
+					</div>
+					<div title="inPolygonPoint" class="tag">
+						<div title="pointLongitude" class="tag">
+							<input class="half-width-smaller input-field tag-value" type="text" placeholder="[IN POINT LONGITUDE]" title="pointLongitude" value="" />
+						</div>
+						<div title="pointLatitude" class="tag">
+							<input class="half-width-smaller input-field tag-value" type="text" placeholder="[IN POINT LATITUDE]" title="pointLatitude" value="" />
+						</div>
 					</div>
 				</div>
 			</div>

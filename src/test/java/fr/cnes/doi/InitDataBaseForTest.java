@@ -75,6 +75,9 @@ public class InitDataBaseForTest {
 			for(DOIProject project : das.getAllDOIProjects()) {
 				das.removeDOIProject(project.getSuffix());
 			}
+			for(String token : das.getTokens()) {
+				das.deleteToken(token);
+			}
 		} catch (DOIDbException e) {
 			fail();
 		}
