@@ -1,33 +1,25 @@
 var xmlDoc;
 
-function loadXML(file) {
+function clearForm(){
 	var doi = $("#doi").val();
 	var projet = $("#selection").val();
 	
 	 $("button.delete").click();  	// Appuie sur tous boutons '-'
-	 $("input:visible").val("");		  	// reset les inputs
+	 $("input").val("");		  	// reset les inputs
 	 $("select").val("");		  	// reset les selects
 	 $("div.right code").text("");	// efface le xml
 	 
+	 $("input[title='identifierType'").val("DOI");
 	 $("#doi").val(doi);
 	 $("#selection").val(projet);
-	
-//	if(typeof file === 'string'  || file instanceof String){
-//		var xhttp = new XMLHttpRequest();
-//		xhttp.onreadystatechange = function() {
-//			if (this.readyState == 4 && this.status == 200) {
-//				// Typical action to be performed when the document is ready:
-//				xmlDoc = xhttp.responseXML;
-//				
-//				update();
-//			}
-//		};
-//		xhttp.open("GET", file, true);
-//		xhttp.send();
-//	} else {
-		xmlDoc = file;
-		update();
-//	}
+}
+
+function loadXML(file) {
+	clearForm();
+	xmlDoc = file;
+	update();
+	// just to show metadata as soon as the XML file is loaded
+	$("input[title='identifierType'").keyup();
 }
 var attributes;
 var tags;
@@ -45,7 +37,7 @@ function update() {
 				updateGeneral("titles", attributes);
 				break;
 			case "creators":
-				attributes = [ "nameIdentifierScheme", "schemeURI" ];
+				attributes = [ "nameIdentifierScheme", "schemeURI", "nameType" ];
 				updateGeneralSeveral("creators", "creator", attributes);
 				break;
 			case "publisher":
@@ -62,16 +54,16 @@ function update() {
 				break;
 			case "contributors":
 				attributes = [ "contributorType", "nameIdentifierScheme",
-						"schemeURI" ];
+						"schemeURI", "nameType" ];
 				updateGeneralSeveral("contributors", "contributor", attributes);
 				break;
 			case "dates":
-				attributes = [ "dateType" ];
+				attributes = [ "dateType", "dateInformation" ];
 				updateGeneral("dates", attributes);
 				break;
 			case "relatedIdentifiers":
 				attributes = [ "relatedIdentifierType", "relationType",
-						"schemeURI", "schemeType", "relatedMetadataScheme" ];
+						"schemeURI", "schemeType", "relatedMetadataScheme", "resourceTypeGeneral" ];
 				updateGeneral("relatedIdentifiers", attributes);
 				break;
 			case "descriptions":
@@ -147,20 +139,24 @@ function geoLocChild(node, source) {
 	var child = node.firstChild; // text !
 	var mySource;
 
-	var testsource;
+	var srcAddButton;
 
 	var index = 0;
 	var duplicate = "";
 	for (var i = 0; i < childrenLength; i++) {
 		if (child.nodeType == 1) {
 
-			testsource = $("div[title='" + child.nodeName + "']"
-					+ " button.add.single-tag");
+			srcAddButton = source.find($("div[title='" + child.nodeName + "']"
+					+ " > button.add.single-tag"));
 
 			if (child.nodeName == duplicate) {
 				index++;
-				if (index > 3) {
-					source.find(testsource).click();
+				if(child.nodeName == "polygonPoint"){
+					if (index > 3) {
+						srcAddButton.click();
+					}
+				} else {
+					srcAddButton.click();
 				}
 			} else {
 				index = 0;
@@ -169,7 +165,7 @@ function geoLocChild(node, source) {
 
 			mySource = $(source).find("div[title='" + child.nodeName + "']")
 					.eq(index);
-
+			
 			if (child.childNodes.length == 1) {
 				mySource.find("[title='" + child.nodeName + "']").val(
 						child.childNodes[0].nodeValue);
@@ -292,22 +288,20 @@ function updateGeneral(mainTag, attributes) {
 	var xlen = x.childNodes.length; // 5 7
 	var y = x.firstChild; // text
 
-	var source = "div[title='" + mainTag + "']";
+	var source = $("div[title='" + mainTag + "']");
 
 	for (var i = 0; i < (xlen - 3) / 2; i++) {
-		$(source + " button.add.group").click();
+		source.find("button.add.group").click();
 	}
 
 	var index = 0;
 	for (var i = 0; i < xlen; i++) { // 5
 		if (y.nodeType == 1) {
-			$(source).find("div[title='" + y.nodeName + "']").find(
-					"[title='" + y.nodeName + "']").eq(index).val(
-					y.childNodes[0].nodeValue);
+			source.find("input[title='" + y.nodeName + "']").eq(index).val(y.childNodes[0].nodeValue);
 			for (var j = 0; j < attributes.length; j++) {
 
 				if (y.getAttribute(attributes[j]) != null) {
-					$(source + " [title='" + attributes[j] + "']").eq(index)
+					source.find("[title='" + attributes[j] + "']").eq(index)
 							.val(y.getAttribute(attributes[j]));
 				}
 			}

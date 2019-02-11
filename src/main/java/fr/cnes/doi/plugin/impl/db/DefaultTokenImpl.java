@@ -57,7 +57,7 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
     private final String NAME = this.getClass().getName();
 
     private final DOIDbDataAccessService das = new DOIDbDataAccessServiceImpl();
-
+    
     /**
      * Default Constructor of the token database
      */
@@ -137,13 +137,11 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
         boolean isExpirated = true;
         Jws<Claims> jws = TokenSecurity.getInstance().getTokenInformation(jwt);
 
-        // TODO Cannot get token information of an expired token...
+        // Cannot get token information of an expired token...
         if (jws == null) {
             return isExpirated;
         }
 
-//        String projectSuffix = String.valueOf(jws.getBody()
-//                .get(TokenSecurity.PROJECT_ID, Integer.class));
         String expirationDate = jws.getBody().getExpiration().toString();
         try {
             // Precise "Locale.ENGLISH" otherwise unparsable exception occur for day in week and month

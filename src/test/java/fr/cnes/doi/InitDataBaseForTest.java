@@ -39,6 +39,12 @@ public class InitDataBaseForTest {
         admin.setUsername("admin");
         admin.setAdmin(true);
         admin.setEmail("admin@mail.com");
+        
+        // Test User
+    	DOIUser norole = new DOIUser();
+    	norole.setUsername("norole");
+    	norole.setAdmin(false);
+    	norole.setEmail("norole@mail.com");
 
         // Test Project
         testProject = new DOIProject();
@@ -54,6 +60,8 @@ public class InitDataBaseForTest {
             das.addDOIUser(testuser.getUsername(), testuser.getAdmin(), testuser.getEmail());
             // add admin
             das.addDOIUser(admin.getUsername(), admin.getAdmin(), admin.getEmail());
+            // add norole
+			das.addDOIUser(norole.getUsername(), norole.getAdmin(), norole.getEmail());
             // add project
             das.addDOIProject(testProject.getSuffix(), testProject.getProjectname());
             // assign user to project
@@ -76,6 +84,9 @@ public class InitDataBaseForTest {
             for (DOIProject project : das.getAllDOIProjects()) {
                 das.removeDOIProject(project.getSuffix());
             }
+            for(String token : das.getTokens()) {
+				das.deleteToken(token);
+			}
         } catch (DOIDbException e) {
             fail();
         }
