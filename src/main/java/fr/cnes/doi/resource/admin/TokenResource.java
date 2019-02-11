@@ -99,7 +99,7 @@ public class TokenResource extends AbstractResource {
         super.doInit();
         final AdminApplication app = (AdminApplication) getApplication();
         LOG = app.getLog();
-        LOG.traceEntry();       
+        LOG.traceEntry();
         setDescription("This resource handles the token");
         this.tokenParam = getAttribute(TOKEN_TEMPLATE);
         this.tokenDB = ((AdminApplication) this.getApplication()).getTokenDB();
@@ -196,14 +196,13 @@ public class TokenResource extends AbstractResource {
                     ex));
         }
     }
-    
+
     @Requirement(reqId = Requirement.DOI_INTER_040, reqName = Requirement.DOI_INTER_040_NAME)
     @Delete
     public void deleteToken() {
-    	LOG.traceEntry();
-    	this.tokenDB.deleteToken(this.tokenParam);
+        LOG.traceEntry();
+        this.tokenDB.deleteToken(this.tokenParam);
     }
-    
 
     /**
      * projects representation

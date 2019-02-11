@@ -60,6 +60,7 @@ public enum TitleType {
 
     /**
      * Returns the value
+     *
      * @return the value
      */
     public String value() {
@@ -68,6 +69,7 @@ public enum TitleType {
 
     /**
      * Returns the title type
+     *
      * @param v the value
      * @return the title type
      */

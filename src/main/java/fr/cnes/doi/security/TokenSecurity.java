@@ -85,7 +85,6 @@ public final class TokenSecurity {
      */
     private static final Logger LOG = LogManager.getLogger(TokenSecurity.class.getName());
 
-
     /**
      * Access to unique INSTANCE of Settings
      *
@@ -111,6 +110,7 @@ public final class TokenSecurity {
      * token key.
      */
     private String tokenKey;
+
     /**
      * Private constructor.
      */
@@ -130,7 +130,6 @@ public final class TokenSecurity {
         TokenSecurity.TOKEN_DB.init(null);
         LOG.traceExit();
     }
-
 
     /**
      * Creates a token.
@@ -175,10 +174,10 @@ public final class TokenSecurity {
         LOG.debug(String.format("token generated : %s", token));
         return LOG.traceExit(token);
     }
-    
+
     //TODO createToken surcharged
     /**
-     * Creates a token. (no project ID required) 
+     * Creates a token. (no project ID required)
      *
      * @param userID The user that creates the token
      * @param timeUnit The time unit for the date expiration
@@ -187,9 +186,9 @@ public final class TokenSecurity {
      */
     public String generate(final String userID,
             final TokenSecurity.TimeUnit timeUnit,
-            final int amount){
+            final int amount) {
         LOG.traceEntry("Parameters : {}, {} and {}", userID, timeUnit, amount);
-        
+
         final Date now = Date.from(Instant.now());
         final Date expirationTime = computeExpirationDate(now, timeUnit.getTimeUnit(), amount);
 
@@ -248,8 +247,8 @@ public final class TokenSecurity {
                 | IllegalArgumentException ex) {
             throw LOG.throwing(new DoiRuntimeException("Unable to get the token information", ex));
         } catch (ExpiredJwtException e) {
-        	LOG.info("Cannot get the token information because : "+ e.getMessage());
-        	return null;
+            LOG.info("Cannot get the token information because : " + e.getMessage());
+            return null;
         }
     }
 
@@ -292,6 +291,7 @@ public final class TokenSecurity {
          */
         private static final TokenSecurity INSTANCE = new TokenSecurity();
     }
+
     /**
      * Time unit.
      */
@@ -308,12 +308,12 @@ public final class TokenSecurity {
          * Year.
          */
         YEAR(Calendar.YEAR);
-        
+
         /**
          * time unit
          */
         private final int timeUnit;
-        
+
         /**
          * Constructor.
          *
@@ -322,7 +322,7 @@ public final class TokenSecurity {
         TimeUnit(final int timeUnit) {
             this.timeUnit = timeUnit;
         }
-        
+
         /**
          * Returns the time unit.
          *
@@ -331,7 +331,7 @@ public final class TokenSecurity {
         public int getTimeUnit() {
             return this.timeUnit;
         }
-        
+
         /**
          * Returns the time unit from a value.
          *

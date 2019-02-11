@@ -18,7 +18,9 @@
  */
 package fr.cnes.doi.db;
 
+import fr.cnes.doi.utils.DOIUser;
 import fr.cnes.doi.utils.spec.Requirement;
+import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 
@@ -39,7 +41,7 @@ public abstract class AbstractProjectSuffixDBHelper extends Observable {
      * Notification message when the record is added {@value #DELETE_RECORD}.
      */
     public static final String DELETE_RECORD = "DELETE";
-    
+
     /**
      * Notification message when the record is added {@value #RENAME_RECORD}.
      */
@@ -59,9 +61,8 @@ public abstract class AbstractProjectSuffixDBHelper extends Observable {
      * @param projectName project name
      * @return True when the suffix project is added otherwise False
      */
-    public abstract boolean addProjectSuffix(int projectID,
-            String projectName);
-    
+    public abstract boolean addProjectSuffix(int projectID, String projectName);
+
     /**
      * Rename a project in the database.
      *
@@ -69,8 +70,7 @@ public abstract class AbstractProjectSuffixDBHelper extends Observable {
      * @param newProjectName the new project name
      * @return True when the project has been renamed otherwise False
      */
-    public abstract boolean renameProject(int projectID,
-            String newProjectName);
+    public abstract boolean renameProject(int projectID, String newProjectName);
 
     /**
      * Deletes a suffix project from the database.
@@ -119,6 +119,8 @@ public abstract class AbstractProjectSuffixDBHelper extends Observable {
      */
     public abstract Map<String, Integer> getProjects();
 
-	public abstract Map<String, Integer> getProjectsFromUser(String userName);
+    public abstract Map<String, Integer> getProjectsFromUser(String userName);
+
+    public abstract List<DOIUser> getAllDOIUsersForProject(int doiSuffix);
 
 }

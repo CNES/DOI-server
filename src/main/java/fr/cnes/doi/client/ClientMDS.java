@@ -491,6 +491,7 @@ public class ClientMDS extends BaseClient {
 
     /**
      * Creates the request and requests the DOI creation
+     *
      * @param url url
      * @param form form
      * @return representation of the response
@@ -577,7 +578,7 @@ public class ClientMDS extends BaseClient {
             this.getClient().release();
             throw new ClientMdsException(ex.getStatus(), ex.getMessage(), this.getClient().
                     getResponseEntity(), ex);
-        } 
+        }
     }
 
     /**
@@ -633,7 +634,7 @@ public class ClientMDS extends BaseClient {
                             MediaType.APPLICATION_XML,
                             Language.ALL,
                             CharacterSet.UTF_8
-                    ) 
+                    )
             );
             return getText(response);
         } catch (ResourceException ex) {
@@ -765,7 +766,7 @@ public class ClientMDS extends BaseClient {
             this.getClient().release();
             throw new ClientMdsException(ex.getStatus(), ex.getMessage(), this.getClient().
                     getResponseEntity(), ex);
-        } 
+        }
     }
 
     /**
@@ -1014,6 +1015,7 @@ public class ClientMDS extends BaseClient {
 
         /**
          * Returns the status
+         *
          * @return the status
          */
         public Status getStatus() {
@@ -1022,6 +1024,7 @@ public class ClientMDS extends BaseClient {
 
         /**
          * Returns the short message
+         *
          * @return the short message
          */
         public String getShortMessage() {

@@ -164,7 +164,7 @@ public final class EmailSettings {
     public boolean isDebug() {
         return LOG.traceExit(this.debug);
     }
-    
+
     /**
      * Sends a message by email.
      *
@@ -178,7 +178,7 @@ public final class EmailSettings {
         boolean result;
         try {
             if (isConfigureForSendingEmail()) {
-            		result = processMessage(subject, msg, null);		
+                result = processMessage(subject, msg, null);
             } else {
                 LOG.warn("Cannot send the email, please fill the configuration file");
                 result = false;
@@ -194,8 +194,7 @@ public final class EmailSettings {
         }
         return LOG.traceExit(result);
     }
-    
-    
+
     /**
      * Sends a message by email to receiver.
      *
@@ -209,11 +208,11 @@ public final class EmailSettings {
         boolean result;
         try {
             if (isConfigureForSendingEmail()) {
-            	if (receiverEmail != null) { 
-            	 result = processMessage(subject, msg, receiverEmail);
-            	} else {
-            		result = processMessage(subject, msg, null);		
-            	}
+                if (receiverEmail != null) {
+                    result = processMessage(subject, msg, receiverEmail);
+                } else {
+                    result = processMessage(subject, msg, null);
+                }
             } else {
                 LOG.warn("Cannot send the email, please fill the configuration file");
                 result = false;
@@ -244,13 +243,13 @@ public final class EmailSettings {
         final Request request = new Request(Method.POST, getSmtpURL());
         setSmtpPassword(request);
         if (receiverEmail != null) {
-          return sendMail(Protocol.valueOf(getSmtpProtocol()), request, Boolean.getBoolean(
-                getTlsEnable()), subject, message, receiverEmail);
+            return sendMail(Protocol.valueOf(getSmtpProtocol()), request, Boolean.getBoolean(
+                    getTlsEnable()), subject, message, receiverEmail);
         } else {
-          return sendMail(Protocol.valueOf(getSmtpProtocol()), request, Boolean.getBoolean(
-                    getTlsEnable()), subject, message, null);	
+            return sendMail(Protocol.valueOf(getSmtpProtocol()), request, Boolean.getBoolean(
+                    getTlsEnable()), subject, message, null);
         }
-    }    
+    }
 
     /**
      * Sets the SMTP password
@@ -313,11 +312,12 @@ public final class EmailSettings {
         dataModel.put("from", settings.getString(Consts.SERVER_CONTACT_ADMIN,
                 "L-doi-support@cnes.fr"));
         if (to == null) {
-         dataModel.
-                put("to", settings.getString(Consts.SERVER_CONTACT_ADMIN, "L-doi-support@cnes.fr"));
+            dataModel.
+                    put("to", settings.getString(Consts.SERVER_CONTACT_ADMIN,
+                            "L-doi-support@cnes.fr"));
         } else {
-         dataModel.
-                put("to", to);	 
+            dataModel.
+                    put("to", to);
         }
         final Representation mailFtl = new ClientResource(LocalReference.createClapReference(
                 "class/email.ftl")).get();

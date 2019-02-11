@@ -2177,7 +2177,7 @@ public class Resource {
              *
              *
              * <p>
-             * Objects of the following type(s) are allowed in the list null null             {@link JAXBElement }{@code <}{@link String }{@code >}
+             * Objects of the following type(s) are allowed in the list null null null             {@link JAXBElement }{@code <}{@link String }{@code >}
              * {@link String }
              *
              *

@@ -42,10 +42,8 @@ import org.restlet.security.MethodAuthorizer;
 
 import fr.cnes.doi.client.ClientMDS;
 import fr.cnes.doi.db.AbstractTokenDBHelper;
-import fr.cnes.doi.db.AbstractUserRoleDBHelper;
 import fr.cnes.doi.exception.ClientMdsException;
 import fr.cnes.doi.exception.DoiRuntimeException;
-import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.resource.mds.DoiResource;
 import fr.cnes.doi.resource.mds.DoisResource;
 import fr.cnes.doi.resource.mds.MediaResource;
@@ -98,6 +96,7 @@ import fr.cnes.doi.utils.spec.Requirement;
  * |__ metadata/{doiName} (authorization)<br>
  * |__ media/{doiName} (authorization)<br>
  * </code>
+ *
  * @see #createInboundRoot the resources related to this application
  * @see <a href="http://www.doi.org/hb.html">DOI Handbook</a>
  * @see <a href="https://mds.datacite.org/static/apidoc">API Documentation</a>
@@ -155,7 +154,7 @@ public final class DoiMdsApplication extends AbstractApplication {
      * Logger.
      */
     private static final Logger LOG = LogManager.getLogger(DoiMdsApplication.class.getName());
-    
+
     /**
      * Client to query Mds Datacite.
      */
@@ -165,31 +164,27 @@ public final class DoiMdsApplication extends AbstractApplication {
      * Token DB that contains the set of generated token.
      */
     private final AbstractTokenDBHelper tokenDB;
-    
-    /**
-     * User database.
-     */
-    private final AbstractUserRoleDBHelper userDB;
-    
+
     /**
      * Creates the Digital Object Identifier server application.
+     *
      * @throws DoiRuntimeException When the DataCite schema is not available
      */
     public DoiMdsApplication() {
         super();
         try {
             setName(NAME);
-            setDescription("Provides an application for handling Data Object Identifier at CNES<br/>"
+            setDescription(
+                    "Provides an application for handling Data Object Identifier at CNES<br/>"
                     + "This application provides 3 API:" + "<ul>" + "<li>dois : DOI minting</li>"
                     + "<li>metadata : Registration of the associated metadata</li>"
                     + "<li>media : Possbility to obtain metadata in various formats and/or get "
                     + "automatic, direct access to an object rather than via the \"landing page\"</li>"
                     + "</ul>");
             final String contextMode = this.getConfig().getString(Consts.CONTEXT_MODE);
-            client = new ClientMDS(ClientMDS.Context.valueOf(contextMode), getLoginMds(), getPwdMds());
+            client = new ClientMDS(ClientMDS.Context.valueOf(contextMode), getLoginMds(),
+                    getPwdMds());
             this.tokenDB = TokenSecurity.getInstance().getTOKEN_DB();
-            this.userDB = PluginFactory.getUserManagement();
-            this.userDB.init(null);
         } catch (ClientMdsException ex) {
             throw LOG.throwing(new DoiRuntimeException(ex));
         }
@@ -219,15 +214,15 @@ public final class DoiMdsApplication extends AbstractApplication {
         //   - authentication with token
         final ChallengeAuthenticator challTokenAuth = createTokenAuthenticator();
         challTokenAuth.setOptional(true);
-        
+
         // Set specific authorization on method after checking authentication
         final MethodAuthorizer methodAuth = createMethodAuthorizer();
 
         //  create a pipeline of authentication
         challAuth.setNext(challTokenAuth);
-        
+
         challTokenAuth.setNext(methodAuth);
-        
+
         // Router
         methodAuth.setNext(createRouter());
 
@@ -278,7 +273,7 @@ public final class DoiMdsApplication extends AbstractApplication {
      */
     private MethodAuthorizer createMethodAuthorizer() {
         LOG.traceEntry();
-    	
+
         final MethodAuthorizer methodAuth = new MethodAuthorizer();
         methodAuth.getAnonymousMethods().add(Method.GET);
         methodAuth.getAnonymousMethods().add(Method.OPTIONS);
@@ -289,7 +284,7 @@ public final class DoiMdsApplication extends AbstractApplication {
 
         return LOG.traceExit(methodAuth);
     }
-    
+
     /**
      * Creates the authenticator based on a HTTP basic. Creates the user, role and mapping
      * user/role.
@@ -300,8 +295,7 @@ public final class DoiMdsApplication extends AbstractApplication {
     protected ChallengeAuthenticator createAuthenticator() {
         LOG.traceEntry();
         final ChallengeAuthenticator guard = new ChallengeAuthenticator(
-                getContext(), ChallengeScheme.HTTP_BASIC, "realm")
-        {
+                getContext(), ChallengeScheme.HTTP_BASIC, "realm") {
             /**
              * Cancel verification on pre-flight OPTIONS method
              *
@@ -312,17 +306,16 @@ public final class DoiMdsApplication extends AbstractApplication {
             @Override
             public int beforeHandle(final Request request,
                     final Response response) {
-            	if (request.getMethod().equals(Method.OPTIONS)){
-            		response.setStatus(Status.SUCCESS_OK);
-            		return CONTINUE;
-            	}
-            	else {
-            		return super.beforeHandle(request, response);
-            	}
+                if (request.getMethod().equals(Method.OPTIONS)) {
+                    response.setStatus(Status.SUCCESS_OK);
+                    return CONTINUE;
+                } else {
+                    return super.beforeHandle(request, response);
+                }
             }
         };
 
-        final LoginBasedVerifier verifier = new LoginBasedVerifier(getUserDB());
+        final LoginBasedVerifier verifier = new LoginBasedVerifier();
         guard.setVerifier(verifier);
 
         return LOG.traceExit(guard);
@@ -338,8 +331,7 @@ public final class DoiMdsApplication extends AbstractApplication {
     private ChallengeAuthenticator createTokenAuthenticator() {
         LOG.traceEntry();
         final ChallengeAuthenticator guard = new ChallengeAuthenticator(
-                getContext(), ChallengeScheme.HTTP_OAUTH_BEARER, "testRealm")
-        {
+                getContext(), ChallengeScheme.HTTP_OAUTH_BEARER, "testRealm") {
             /**
              * Verifies the token.
              *
@@ -350,13 +342,12 @@ public final class DoiMdsApplication extends AbstractApplication {
             @Override
             public int beforeHandle(final Request request,
                     final Response response) {
-            	if (request.getMethod().equals(Method.OPTIONS)){
-            		response.setStatus(Status.SUCCESS_OK);
-            		return CONTINUE;
-            	}
-            	else {
-            		return super.beforeHandle(request, response);
-            	}
+                if (request.getMethod().equals(Method.OPTIONS)) {
+                    response.setStatus(Status.SUCCESS_OK);
+                    return CONTINUE;
+                } else {
+                    return super.beforeHandle(request, response);
+                }
             }
         };
         final TokenBasedVerifier verifier = new TokenBasedVerifier(getTokenDB());
@@ -414,15 +405,6 @@ public final class DoiMdsApplication extends AbstractApplication {
         LOG.traceEntry();
         return LOG.traceExit(this.tokenDB);
     }
-    
-    /**
-     * Returns the user database.
-     *
-     * @return the user database
-     */
-    public AbstractUserRoleDBHelper getUserDB() {
-        return this.userDB;
-    }
 
     /**
      * Returns the logger.
@@ -433,7 +415,6 @@ public final class DoiMdsApplication extends AbstractApplication {
     public Logger getLog() {
         return LOG;
     }
-
 
     /**
      * Method to describe application in the WADL.
@@ -461,10 +442,10 @@ public final class DoiMdsApplication extends AbstractApplication {
         result.setGrammars(grammar);
         return result;
     }
-    
+
     /**
-     * API related only to the code in this webservice.
-     * Other codes can be returned by the {@link ClientMDS}
+     * API related only to the code in this webservice. Other codes can be returned by the
+     * {@link ClientMDS}
      */
     public enum API_MDS {
         /**
@@ -477,7 +458,7 @@ public final class DoiMdsApplication extends AbstractApplication {
          * to use this role"
          */
         SECURITY_USER_NOT_IN_SELECTED_ROLE(Status.CLIENT_ERROR_FORBIDDEN,
-        "Forbidden to use this role"),
+                "Forbidden to use this role"),
         /**
          * Fail to authorize the user. It happens when a client is authentified but unauthorized to
          * use the resource. CLIENT_ERROR_UNAUTHORIZED is used as status meaning "Fail to authorize
@@ -490,7 +471,7 @@ public final class DoiMdsApplication extends AbstractApplication {
          * user is associated to more than one role without setting selectedRole parameter"
          */
         SECURITY_USER_CONFLICT(Status.CLIENT_ERROR_CONFLICT,
-        "Error when an user is associated to more than one role without setting selectedRole "
+                "Error when an user is associated to more than one role without setting selectedRole "
                 + "parameter"),
         /**
          * Fail to create a DOI. It happens when a user try to create a DOI with the wrong role.
@@ -500,7 +481,7 @@ public final class DoiMdsApplication extends AbstractApplication {
          * operation"
          */
         SECURITY_USER_PERMISSION(Status.CLIENT_ERROR_FORBIDDEN,
-        "User is not allowed to make this operation"),
+                "User is not allowed to make this operation"),
         /**
          * Cannot access to Datacite. It happens when a network problem may happen with Datacite.
          * SERVER_ERROR_GATEWAY_TIMEOUT is used as status meaning "Cannot access to Datacite"
@@ -518,21 +499,21 @@ public final class DoiMdsApplication extends AbstractApplication {
          * parameters"
          */
         METADATA_VALIDATION(Status.CLIENT_ERROR_BAD_REQUEST,
-        "Failed to validate the user inputs parameters"),
+                "Failed to validate the user inputs parameters"),
         /**
          * Fail to create the media related to the DOI. CLIENT_ERROR_BAD_REQUEST is used as status
          * meaning "DOI not provided or one or more of the specified mime-types or urls are invalid
          * (e.g. non supported mime-type, not allowed url domain, etc.)"
          */
         MEDIA_VALIDATION(Status.CLIENT_ERROR_BAD_REQUEST,
-        "DOI not provided or one or more of the specified mime-types or urls are invalid "
+                "DOI not provided or one or more of the specified mime-types or urls are invalid "
                 + "(e.g. non supported mime-type, not allowed url domain, etc.)"),
         /**
          * Fail to create the landing page related to the DOI. CLIENT_ERROR_BAD_REQUEST is used as
          * status meaning "Validation error when defining the DOI and its landing page"
          */
         LANGING_PAGE_VALIDATION(Status.CLIENT_ERROR_BAD_REQUEST,
-        "Validation error when defining the DOI and its landing page"),
+                "Validation error when defining the DOI and its landing page"),
         /**
          * DOI validation error. CLIENT_ERROR_BAD_REQUEST is used as status meaning "Character or
          * prefix not allowed in the DOI"
@@ -544,41 +525,44 @@ public final class DoiMdsApplication extends AbstractApplication {
          * specification meaning "Interface problem between Datacite and DOI-Server"
          */
         DATACITE_PROBLEM(Status.SERVER_ERROR_INTERNAL,
-        "Interface problem between Datacite and DOI-Server");
-        
+                "Interface problem between Datacite and DOI-Server");
+
         private final Status status;
         private final String shortMessage;
-        
+
         API_MDS(final Status status,
                 final String shortMessage) {
             this.status = status;
             this.shortMessage = shortMessage;
         }
-        
+
         /**
          * Returns the status
+         *
          * @return the status
          */
         public Status getStatus() {
             return this.status;
         }
-        
+
         /**
          * Returns the short message.
+         *
          * @return the short message
          */
         public String getShortMessage() {
             return this.shortMessage;
         }
-        
+
     }
+
     /**
      * Post processing for specific authorization. Specific class to handle the case where the user
      * is authorized by oauth but non authorized by the service because the user's role is not
      * related to any projects
      */
     public static class SecurityPostProcessingFilter extends Filter {
-        
+
         /**
          * Constructor
          *
@@ -589,9 +573,10 @@ public final class DoiMdsApplication extends AbstractApplication {
                 final Restlet next) {
             super(context, next);
         }
-        
+
         /**
          * Fixed problem with Jetty response.
+         *
          * @param request request
          * @param response response
          */
@@ -600,7 +585,7 @@ public final class DoiMdsApplication extends AbstractApplication {
                 final Response response) {
             final Status status = response.getStatus();
             final String reason = status.getReasonPhrase();
-            if (status.getCode() == Status.CLIENT_ERROR_UNAUTHORIZED.getCode() 
+            if (status.getCode() == Status.CLIENT_ERROR_UNAUTHORIZED.getCode()
                     && API_MDS.SECURITY_USER_NO_ROLE.getShortMessage().equals(reason)) {
                 response.getHeaders().add("WWW-Authenticate",
                         "Basic realm=\"DOI Server access\", charset=\"UTF-8\"");

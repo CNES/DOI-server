@@ -119,19 +119,19 @@ public class ClientSearchDataCite extends BaseClient {
     public List<String> getDois() {
         return Collections.unmodifiableList(this.doiList);
     }
-    
+
     /**
      * Returns only the dois within the specified project from the search result.
      *
      * @return the search result
      */
     public List<String> getDois(String idProject) {
-    	List<String> doiListFiltered = new ArrayList<>();
-    	for(String doi : this.doiList) {
-    		if(doi.contains(idProject)) {
-    			doiListFiltered.add(doi);
-    		}
-    	}
+        List<String> doiListFiltered = new ArrayList<>();
+        for (String doi : this.doiList) {
+            if (doi.contains(idProject)) {
+                doiListFiltered.add(doi);
+            }
+        }
         return Collections.unmodifiableList(doiListFiltered);
     }
 

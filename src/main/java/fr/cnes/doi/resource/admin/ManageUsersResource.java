@@ -17,31 +17,31 @@ import fr.cnes.doi.utils.ManageUsers;
 import fr.cnes.doi.utils.spec.Requirement;
 
 public class ManageUsersResource extends AbstractResource {
-	
-	/**
+
+    /**
      * Logger.
      */
     private volatile Logger LOG;
-    
+
     /**
      * Suffix of the project.
      */
     private volatile String suffixProject;
-    
+
     /**
      * User name.
      */
     private volatile String userName;
-    
+
     /**
      * Parameter for the user name {@value #USER_NAME_PARAMETER}. This parameter is send to
      * associate an user to a project.
      */
     public static final String USER_NAME_PARAMETER = "user";
-    
+
     /**
      * Set-up method that can be overridden in order to initialize the state of the resource.
-     * 
+     *
      * @throws ResourceException - if a problem happens
      */
     @Override
@@ -55,18 +55,18 @@ public class ManageUsersResource extends AbstractResource {
         this.userName = getAttribute("userName");
         LOG.debug(this.suffixProject);
         LOG.debug(this.userName);
-        
+
         LOG.traceExit();
     }
-    
+
     //TODO requirement
     @Get
     public List<String> getUsers() {
-    	LOG.traceEntry();
-    	int idProject = Integer.parseInt(suffixProject);
-    	return LOG.traceExit(ManageUsers.getInstance().getAllUsersFromProject(idProject));
+        LOG.traceEntry();
+        int idProject = Integer.parseInt(suffixProject);
+        return LOG.traceExit(ManageUsers.getInstance().getAllUsersFromProject(idProject));
     }
-    
+
     //TODO requirement 
     /**
      *
@@ -74,24 +74,24 @@ public class ManageUsersResource extends AbstractResource {
     @Requirement(reqId = Requirement.DOI_SRV_140, reqName = Requirement.DOI_SRV_140_NAME)
     @Post
     public boolean addUserToProject(Form mediaForm) {
-    	 LOG.traceEntry();
-    	 checkInputs(mediaForm);
-    	 final String user = mediaForm.getFirstValue(USER_NAME_PARAMETER);
-    	 int idProject = Integer.parseInt(suffixProject);
-         return LOG.traceExit(ManageUsers.getInstance().addUserToProject(user, idProject));
+        LOG.traceEntry();
+        checkInputs(mediaForm);
+        final String user = mediaForm.getFirstValue(USER_NAME_PARAMETER);
+        int idProject = Integer.parseInt(suffixProject);
+        return LOG.traceExit(ManageUsers.getInstance().addUserToProject(user, idProject));
     }
-    
-  //TODO requirement
+
+    //TODO requirement
     /**
      */
     @Requirement(reqId = Requirement.DOI_SRV_140, reqName = Requirement.DOI_SRV_140_NAME)
     @Delete
     public boolean deleteProject() {
-    	LOG.traceEntry();
-   	 	int idProject = Integer.parseInt(suffixProject);
+        LOG.traceEntry();
+        int idProject = Integer.parseInt(suffixProject);
         return LOG.traceExit(ManageUsers.getInstance().deleteUserFromProject(idProject, userName));
     }
-    
+
     /**
      * Tests if the {@link #USER_NAME_PARAMETER} is set.
      *
@@ -102,10 +102,10 @@ public class ManageUsersResource extends AbstractResource {
         LOG.traceEntry("Parameter : {}", mediaForm);
         if (isValueNotExist(mediaForm, USER_NAME_PARAMETER)) {
             throw LOG.throwing(Level.DEBUG, new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST,
-            		USER_NAME_PARAMETER + " parameter must be set"));
+                    USER_NAME_PARAMETER + " parameter must be set"));
         }
         LOG.debug("The form is valid");
         LOG.traceExit();
     }
-    
+
 }

@@ -130,7 +130,8 @@ public final class ProxySettings {
         this.nonProxyHosts = settings.getString(Consts.SERVER_NONPROXY_HOSTS, "localhost");
         LOG.info("nonProxyHosts : {}", this.nonProxyHosts);
 
-        this.proxySet = !Type.NO_PROXY.toString().equals(settings.getString(Consts.SERVER_PROXY_TYPE));
+        this.proxySet = !Type.NO_PROXY.toString().equals(settings.
+                getString(Consts.SERVER_PROXY_TYPE));
         LOG.info("proxySet : {}", this.proxySet);
 
         this.proxyType = settings.getString(Consts.SERVER_PROXY_TYPE, Type.NO_PROXY.name());
@@ -238,7 +239,7 @@ public final class ProxySettings {
      */
     public void configureProxy() {
         Type type = Type.valueOf(this.getProxyType());
-        LOG.info("Starting with proxy : "+this.proxySet);
+        LOG.info("Starting with proxy : " + this.proxySet);
         if (this.proxySet) {
             switch (type) {
                 case PROXY_BASIC:
@@ -265,7 +266,7 @@ public final class ProxySettings {
                     ProxySPNegoJAASConfiguration.SERVICE_PROVIDER_NAME.setValue(this.proxySpn);
                     break;
                 default:
-                    throw new IllegalArgumentException("Proxy "+type+" is not implemented");               
+                    throw new IllegalArgumentException("Proxy " + type + " is not implemented");
             }
         }
     }

@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package fr.cnes.doi.plugin.impl;
+package fr.cnes.doi.plugin.impl.db;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -29,9 +29,9 @@ import java.util.Locale;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import fr.cnes.doi.persistence.exceptions.DOIDbException;
-import fr.cnes.doi.persistence.impl.DOIDbDataAccessServiceImpl;
-import fr.cnes.doi.persistence.service.DOIDbDataAccessService;
+import fr.cnes.doi.exception.DOIDbException;
+import fr.cnes.doi.plugin.impl.db.persistence.impl.DOIDbDataAccessServiceImpl;
+import fr.cnes.doi.plugin.impl.db.persistence.service.DOIDbDataAccessService;
 import fr.cnes.doi.plugin.AbstractTokenDBPluginHelper;
 import fr.cnes.doi.security.TokenSecurity;
 import io.jsonwebtoken.Claims;
@@ -57,7 +57,6 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
     private final String NAME = this.getClass().getName();
 
     private final DOIDbDataAccessService das = new DOIDbDataAccessServiceImpl();
-    
 
     /**
      * Default Constructor of the token database
@@ -100,54 +99,54 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
 //            });
             isAdded = true;
         } catch (DOIDbException e) {
-        	LOG.fatal("The token " + jwt + "cannot be saved in database", e);
-		}
+            LOG.fatal("The token " + jwt + "cannot be saved in database", e);
+        }
         return isAdded;
     }
 
     @Override
     public void deleteToken(String jwt) {
-    	try {
-			das.deleteToken(jwt);
-		} catch (DOIDbException e) {
-			LOG.fatal("The token " + jwt + "cannot be deleted in database", e);
-		}
+        try {
+            das.deleteToken(jwt);
+        } catch (DOIDbException e) {
+            LOG.fatal("The token " + jwt + "cannot be deleted in database", e);
+        }
     }
 
     @Override
     public boolean isExist(String jwt) {
-    	boolean isTokenExist = false;
-    	try {
-    		List<String> tokenList = das.getTokens();
-    		if(!tokenList.isEmpty()) {
-    			for(String token : tokenList) {
-    				if(token.equals(jwt)) {
-    					isTokenExist = true;
-    				}
-    			}
-    		}
-			
-		} catch (DOIDbException e) {
-			LOG.fatal("The token " + jwt + "cannot access to token database", e);
-		}
-    	return isTokenExist;
+        boolean isTokenExist = false;
+        try {
+            List<String> tokenList = das.getTokens();
+            if (!tokenList.isEmpty()) {
+                for (String token : tokenList) {
+                    if (token.equals(jwt)) {
+                        isTokenExist = true;
+                    }
+                }
+            }
+
+        } catch (DOIDbException e) {
+            LOG.fatal("The token " + jwt + "cannot access to token database", e);
+        }
+        return isTokenExist;
     }
 
     @Override
     public boolean isExpired(String jwt) {
         boolean isExpirated = true;
         Jws<Claims> jws = TokenSecurity.getInstance().getTokenInformation(jwt);
-        
+
         // TODO Cannot get token information of an expired token...
-        if(jws == null) {
-        	return isExpirated;
+        if (jws == null) {
+            return isExpirated;
         }
 
 //        String projectSuffix = String.valueOf(jws.getBody()
 //                .get(TokenSecurity.PROJECT_ID, Integer.class));
         String expirationDate = jws.getBody().getExpiration().toString();
         try {
-        	// Precise "Locale.ENGLISH" otherwise unparsable exception occur for day in week and month
+            // Precise "Locale.ENGLISH" otherwise unparsable exception occur for day in week and month
             DateFormat dateFormat = new SimpleDateFormat(TokenSecurity.DATE_FORMAT, Locale.ENGLISH);
             Date expDate = dateFormat.parse(expirationDate);
             isExpirated = new Date().after(expDate);
@@ -156,14 +155,14 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
         }
         return isExpirated;
     }
-    
-    public List<String> getTokens(){
-    	try {
-			return das.getTokens();
-		} catch (DOIDbException e) {
-			LOG.fatal("Cannot retrieve the token list from database", e);
-			return new ArrayList<>();
-		}
+
+    public List<String> getTokens() {
+        try {
+            return das.getTokens();
+        } catch (DOIDbException e) {
+            LOG.fatal("Cannot retrieve the token list from database", e);
+            return new ArrayList<>();
+        }
     }
 
     @Override

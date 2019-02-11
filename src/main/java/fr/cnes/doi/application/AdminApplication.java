@@ -20,7 +20,6 @@ package fr.cnes.doi.application;
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
@@ -33,22 +32,17 @@ import org.restlet.data.LocalReference;
 import org.restlet.data.Method;
 import org.restlet.data.Reference;
 import org.restlet.data.MediaType;
-import org.restlet.data.Metadata;
 import org.restlet.data.Status;
 import org.restlet.resource.Directory;
-import org.restlet.resource.Resource;
 import org.restlet.routing.Filter;
 import org.restlet.routing.Redirector;
 import org.restlet.routing.Router;
 import org.restlet.security.ChallengeAuthenticator;
-import org.restlet.security.MethodAuthorizer;
 import org.restlet.security.Role;
 import org.restlet.security.RoleAuthorizer;
-import org.restlet.service.MetadataService;
 import org.restlet.service.TaskService;
 
 import fr.cnes.doi.db.AbstractTokenDBHelper;
-import fr.cnes.doi.db.AbstractUserRoleDBHelper;
 import fr.cnes.doi.ldap.job.DOIUsersUpdate;
 import fr.cnes.doi.logging.business.JsonMessage;
 import fr.cnes.doi.plugin.PluginFactory;
@@ -153,32 +147,32 @@ public class AdminApplication extends AbstractApplication {
      * URI {@value #SUFFIX_PROJECT_URI} to create a project suffix.
      */
     public static final String SUFFIX_PROJECT_URI = "/projects";
-    
+
     /**
      * URI {@value #SUFFIX_PROJECT_NAME} to manage a project suffix.
      */
     public static final String SUFFIX_PROJECT_NAME = "/{suffixProject}";
-    
+
     /**
      * URI {@value #DOIS_URI} to get dois from a specific project.
      */
     public static final String DOIS_URI = "/dois";
-    
+
     /**
      * URI {@value #USERS_URI} to handle users.
      */
     public static final String USERS_URI = "/users";
-    
+
     /**
-    * URI {@value #SUPERUSERS_URI} to handle superusers.
-    */ 
+     * URI {@value #SUPERUSERS_URI} to handle superusers.
+     */
     public static final String SUPERUSERS_URI = "/superusers";
-    
+
     /**
      * URI {@value #USERS_NAME} to handle user.
      */
     public static final String USERS_NAME = "/{userName}";
-    
+
     /**
      * URI {@value #TOKEN_URI} to create a token.
      */
@@ -213,7 +207,7 @@ public class AdminApplication extends AbstractApplication {
      * The period between successive executions : {@value #PERIOD_SCHEDULER}.
      */
     private static final int PERIOD_SCHEDULER = 30;
-    
+
     /**
      * The period between successive executions : {@value #PERIOD_SCHEDULER_FOR_TOKEN_DB}.
      */
@@ -238,11 +232,6 @@ public class AdminApplication extends AbstractApplication {
      * Token database.
      */
     private final AbstractTokenDBHelper tokenDB;
-    
-    /**
-     * User database.
-     */
-    private final AbstractUserRoleDBHelper userDB;
 
     /**
      * Constructor.
@@ -252,9 +241,7 @@ public class AdminApplication extends AbstractApplication {
         setName(NAME);
         setDescription("Provides an application for handling features related to "
                 + "the administration system of the DOI server.");
-        this.tokenDB = TokenSecurity.getInstance().getTOKEN_DB();   
-        this.userDB = PluginFactory.getUserManagement();
-        this.userDB.init(null);
+        this.tokenDB = TokenSecurity.getInstance().getTOKEN_DB();
         this.setTaskService(createTaskService());
         this.setTaskService(createUpdateDataBaseTaskService());
         this.setTaskService(periodicalyDeleteExpiredTokenFromDB());
@@ -277,7 +264,7 @@ public class AdminApplication extends AbstractApplication {
         );
         return LOG.traceExit(checkLandingPageTask);
     }
-    
+
     /**
      * A task removing expired tokens in data base each days.
      *
@@ -286,15 +273,15 @@ public class AdminApplication extends AbstractApplication {
     private TaskService periodicalyDeleteExpiredTokenFromDB() {
         LOG.traceEntry();
         final TaskService checkExpiredTokenTask = new TaskService(true);
-        LOG.info("Sets checkExpiredTokenTask running at each {} {}", PERIOD_SCHEDULER_FOR_TOKEN_DB, PERIOD_UNIT);
+        LOG.info("Sets checkExpiredTokenTask running at each {} {}", PERIOD_SCHEDULER_FOR_TOKEN_DB,
+                PERIOD_UNIT);
         checkExpiredTokenTask.scheduleAtFixedRate(
                 new UpdateTokenDataBase(), 0,
                 PERIOD_SCHEDULER_FOR_TOKEN_DB, PERIOD_UNIT
         );
         return LOG.traceExit(checkExpiredTokenTask);
     }
-    
-    
+
     /**
      * A task updating database from ldap at each configurable period of time.
      *
@@ -333,37 +320,37 @@ public class AdminApplication extends AbstractApplication {
         //   - authentication with login/pwd
         final ChallengeAuthenticator challAuth = createAuthenticator();
         challAuth.setOptional(true);
-        
+
         //   - authentication with token
         final ChallengeAuthenticator challTokenAuth = createTokenAuthenticator();
         challTokenAuth.setOptional(false);
         //if already authenticate 
         challTokenAuth.setMultiAuthenticating(false);
-        
+
         // Defines the authorization
         final RoleAuthorizer authorizer = createRoleAuthorizer();
-        
+
         // Defines the admin router as private
         final AllowerIP blocker = new AllowerIP(getContext());
-        
+
         // Defines the routers
         final Router webSiteRouter = createWebSiteRouter();
         final Router adminRouter = createAdminRouter();
-        
+
         // pipeline of authentication and authorization
         challAuth.setNext(challTokenAuth);
         challTokenAuth.setNext(authorizer);
         authorizer.setNext(blocker);
         blocker.setNext(adminRouter);
-        
+
         final Router router = new Router(getContext());
         router.attachDefault(webSiteRouter);
-        
+
         router.attach(ADMIN_URI, challAuth);
-        
+
         return LOG.traceExit(router);
     }
-    
+
     /**
      * Creates an authentication by token.
      *
@@ -374,8 +361,7 @@ public class AdminApplication extends AbstractApplication {
     private ChallengeAuthenticator createTokenAuthenticator() {
         LOG.traceEntry();
         final ChallengeAuthenticator guard = new ChallengeAuthenticator(
-                getContext(), ChallengeScheme.HTTP_OAUTH_BEARER, "testRealm")
-        {
+                getContext(), ChallengeScheme.HTTP_OAUTH_BEARER, "testRealm") {
             /**
              * Verifies the token.
              *
@@ -386,13 +372,12 @@ public class AdminApplication extends AbstractApplication {
             @Override
             public int beforeHandle(final Request request,
                     final Response response) {
-            	if (request.getMethod().equals(Method.OPTIONS)){
-            		response.setStatus(Status.SUCCESS_OK);
-            		return CONTINUE;
-            	}
-            	else {
-            		return super.beforeHandle(request, response);
-            	}
+                if (request.getMethod().equals(Method.OPTIONS)) {
+                    response.setStatus(Status.SUCCESS_OK);
+                    return CONTINUE;
+                } else {
+                    return super.beforeHandle(request, response);
+                }
             }
         };
         final TokenBasedVerifier verifier = new TokenBasedVerifier(getTokenDB());
@@ -400,7 +385,7 @@ public class AdminApplication extends AbstractApplication {
 
         return LOG.traceExit(guard);
     }
-    
+
     /**
      * Creates the authenticator based on a HTTP basic. Creates the user, role and mapping
      * user/role.
@@ -411,8 +396,7 @@ public class AdminApplication extends AbstractApplication {
     protected ChallengeAuthenticator createAuthenticator() {
         LOG.traceEntry();
         final ChallengeAuthenticator guard = new ChallengeAuthenticator(
-                getContext(), ChallengeScheme.HTTP_BASIC, "realm")
-        {
+                getContext(), ChallengeScheme.HTTP_BASIC, "realm") {
             /**
              * Cancel verification on pre-flight OPTIONS method
              *
@@ -423,17 +407,16 @@ public class AdminApplication extends AbstractApplication {
             @Override
             public int beforeHandle(final Request request,
                     final Response response) {
-            	if (request.getMethod().equals(Method.OPTIONS)){
-            		response.setStatus(Status.SUCCESS_OK);
-            		return CONTINUE;
-            	}
-            	else {
-            		return super.beforeHandle(request, response);
-            	}
+                if (request.getMethod().equals(Method.OPTIONS)) {
+                    response.setStatus(Status.SUCCESS_OK);
+                    return CONTINUE;
+                } else {
+                    return super.beforeHandle(request, response);
+                }
             }
         };
 
-        final LoginBasedVerifier verifier = new LoginBasedVerifier(getUserDB());
+        final LoginBasedVerifier verifier = new LoginBasedVerifier();
         guard.setVerifier(verifier);
 
         return LOG.traceExit(guard);
@@ -450,7 +433,7 @@ public class AdminApplication extends AbstractApplication {
 
         final RoleAuthorizer roleAuth = new RoleAuthorizer() {
 
-        	/**
+            /**
              * Cancel verification on pre-flight OPTIONS method
              *
              * @param request request
@@ -460,36 +443,35 @@ public class AdminApplication extends AbstractApplication {
             @Override
             public int beforeHandle(final Request request,
                     final Response response) {
-            	Method requestMethod = request.getMethod();
-            	Reference requestReference = request.getOriginalRef();
-            	String lastSeg = requestReference.getLastSegment();
-            	
-            	boolean ignoreVerification = false;
-            	
-            	if (requestMethod.equals(Method.OPTIONS) || lastSeg.equals("admin")){
-            		ignoreVerification = true;
-            	}
-            	else if (requestMethod.equals(Method.GET)) {
-            		if(lastSeg.equals("projects") && requestReference.hasQuery()) {
-            			ignoreVerification = true;
-            		}
-            		if(requestReference.toString().contains("/admin/superusers/")) {
-            			ignoreVerification = true;
-            		}
-            		// ignore method GET dois from project
-            		if(lastSeg.equals("dois")) {
-            			ignoreVerification = true;
-            		}
-            	}
-            	
-            	if(ignoreVerification) {
-            		response.setStatus(Status.SUCCESS_OK);
-            		return CONTINUE;
-            	} else {
-            		return super.beforeHandle(request, response);
-            	}
+                Method requestMethod = request.getMethod();
+                Reference requestReference = request.getOriginalRef();
+                String lastSeg = requestReference.getLastSegment();
+
+                boolean ignoreVerification = false;
+
+                if (requestMethod.equals(Method.OPTIONS) || lastSeg.equals("admin")) {
+                    ignoreVerification = true;
+                } else if (requestMethod.equals(Method.GET)) {
+                    if (lastSeg.equals("projects") && requestReference.hasQuery()) {
+                        ignoreVerification = true;
+                    }
+                    if (requestReference.toString().contains("/admin/superusers/")) {
+                        ignoreVerification = true;
+                    }
+                    // ignore method GET dois from project
+                    if (lastSeg.equals("dois")) {
+                        ignoreVerification = true;
+                    }
+                }
+
+                if (ignoreVerification) {
+                    response.setStatus(Status.SUCCESS_OK);
+                    return CONTINUE;
+                } else {
+                    return super.beforeHandle(request, response);
+                }
             }
-        	
+
         };
         roleAuth.setAuthorizedRoles(
                 Arrays.asList(
@@ -500,7 +482,7 @@ public class AdminApplication extends AbstractApplication {
         return LOG.traceExit(roleAuth);
     }
 
-	/**
+    /**
      * Creates a router for REST services for the system administration. This router contains the
      * following resources :
      * <ul>
@@ -520,19 +502,21 @@ public class AdminApplication extends AbstractApplication {
         final Router router = new Router(getContext());
         //TODO AUTHENTICATION
         router.attachDefault(AuthenticationResource.class);
-        
+
         router.attach(SUFFIX_PROJECT_URI, SuffixProjectsResource.class);
-        
-        router.attach(SUFFIX_PROJECT_URI + SUFFIX_PROJECT_NAME , ManageProjectsResource.class);
-        router.attach(SUFFIX_PROJECT_URI + SUFFIX_PROJECT_NAME + DOIS_URI, SuffixProjectsDoisResource.class);
-        
-        router.attach(SUFFIX_PROJECT_URI + SUFFIX_PROJECT_NAME + USERS_URI, ManageUsersResource.class);
-        router.attach(SUFFIX_PROJECT_URI + SUFFIX_PROJECT_NAME + USERS_URI + USERS_NAME, ManageUsersResource.class);
+
+        router.attach(SUFFIX_PROJECT_URI + SUFFIX_PROJECT_NAME, ManageProjectsResource.class);
+        router.attach(SUFFIX_PROJECT_URI + SUFFIX_PROJECT_NAME + DOIS_URI,
+                SuffixProjectsDoisResource.class);
+
+        router.attach(SUFFIX_PROJECT_URI + SUFFIX_PROJECT_NAME + USERS_URI,
+                ManageUsersResource.class);
+        router.attach(SUFFIX_PROJECT_URI + SUFFIX_PROJECT_NAME + USERS_URI + USERS_NAME,
+                ManageUsersResource.class);
 
         router.attach(SUPERUSERS_URI, ManageSuperUsersResource.class);
         router.attach(SUPERUSERS_URI + USERS_NAME, ManageSuperUserResource.class);
-        
-        
+
         router.attach(TOKEN_URI, TokenResource.class);
         router.attach(TOKEN_URI + TOKEN_NAME_URI, TokenResource.class);
 
@@ -546,8 +530,8 @@ public class AdminApplication extends AbstractApplication {
      * page</li>
      * <li>the website resources attached by default when it is available</li>
      * </ul>
-     * The website is located to {@link AdminApplication#IHM_DIR} directory when it is distributed by
-     * the DOI server.
+     * The website is located to {@link AdminApplication#IHM_DIR} directory when it is distributed
+     * by the DOI server.
      *
      * @return The router for the public web site
      */
@@ -609,7 +593,7 @@ public class AdminApplication extends AbstractApplication {
             @Override
             protected int doHandle(final Request request, final Response response) {
                 response.setLocationRef(TARGET_URL);
-                response.setStatus(Status.REDIRECTION_PERMANENT);                
+                response.setStatus(Status.REDIRECTION_PERMANENT);
                 return super.doHandle(request, response);
             }
         };
@@ -644,9 +628,9 @@ public class AdminApplication extends AbstractApplication {
              * @return The continuation status. Either Filter.CONTINUE or Filter.STOP.
              */
             @Override
-            protected int doHandle(final Request request, final Response response) {                   
+            protected int doHandle(final Request request, final Response response) {
                 response.setLocationRef(TARGET_STATS_URL);
-                response.setStatus(Status.REDIRECTION_PERMANENT);                
+                response.setStatus(Status.REDIRECTION_PERMANENT);
                 return super.doHandle(request, response);
             }
         };
@@ -667,21 +651,21 @@ public class AdminApplication extends AbstractApplication {
 
         String pathApp = this.getConfig().getPathApp();
         //TODO pour se lancer depuis le .jar (getPathApp différent + .jar récupère ihm sur la vm)
-        if(!pathApp.contains("/classes")){
-        	pathApp = pathApp + "/classes";
+        if (!pathApp.contains("/classes")) {
+            pathApp = pathApp + "/classes";
         }
         final File file = new File(pathApp + File.separator + IHM_DIR);
         if (file.canRead()) {
             LOG.info("The website for DOI server is ready here {}", file.getPath());
             final Directory ihm = new Directory(getContext(), "file://" + file.getPath());
-            
+
             System.out.println(file.getPath() + "\n");
-            
+
             ihm.setListingAllowed(true);
             ihm.setDeeplyAccessible(true);
             ihm.setIndexName("authentication");
-            router.attach("/ihm",ihm);
-            
+            router.attach("/ihm", ihm);
+
         } else {
             LOG.warn("The website for DOI server is not installed");
         }
@@ -695,15 +679,6 @@ public class AdminApplication extends AbstractApplication {
      */
     public AbstractTokenDBHelper getTokenDB() {
         return this.tokenDB;
-    }
-    
-    /**
-     * Returns the user database.
-     *
-     * @return the user database
-     */
-    public AbstractUserRoleDBHelper getUserDB() {
-        return this.userDB;
     }
 
     /**

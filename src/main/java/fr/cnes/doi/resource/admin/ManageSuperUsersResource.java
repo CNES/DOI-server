@@ -19,21 +19,21 @@ import fr.cnes.doi.utils.UniqueProjectName;
 import fr.cnes.doi.utils.spec.Requirement;
 
 public class ManageSuperUsersResource extends AbstractResource {
-	
-	/**
+
+    /**
      * Logger.
      */
     private volatile Logger LOG;
-     
+
     /**
-     * Parameter for the SUPERUSER name {@value #SUPERUSER_NAME_PARAMETER}. This parameter is send to
-     * create a new identifier for the SUPERUSER.
+     * Parameter for the SUPERUSER name {@value #SUPERUSER_NAME_PARAMETER}. This parameter is send
+     * to create a new identifier for the SUPERUSER.
      */
     public static final String SUPERUSER_NAME_PARAMETER = "superUserName";
-    
+
     /**
      * Set-up method that can be overridden in order to initialize the state of the resource.
-     * 
+     *
      * @throws ResourceException - if a problem happens
      */
     @Override
@@ -45,8 +45,8 @@ public class ManageSuperUsersResource extends AbstractResource {
         setDescription("This resource handles super users");
         LOG.traceExit();
     }
-    
-  //TODO requirement
+
+    //TODO requirement
     /**
      * Rename the SUPERUSER from the SUPERUSER id sent in url.
      *
@@ -55,14 +55,14 @@ public class ManageSuperUsersResource extends AbstractResource {
     //@Requirement(reqId = Requirement.DOI_SRV_140, reqName = Requirement.DOI_SRV_140_NAME)
     @Post
     public boolean createSUPERUSER(final Form mediaForm) {
-    	 LOG.traceEntry();
-         checkInputs(mediaForm);
-         final String newSUPERUSERName = mediaForm.getFirstValue(SUPERUSER_NAME_PARAMETER);
-         boolean isAdded = ManageSuperUsers.getInstance().addSuperUser(newSUPERUSERName);
-         
-         return LOG.traceExit(isAdded);
+        LOG.traceEntry();
+        checkInputs(mediaForm);
+        final String newSUPERUSERName = mediaForm.getFirstValue(SUPERUSER_NAME_PARAMETER);
+        boolean isAdded = ManageSuperUsers.getInstance().addSuperUser(newSUPERUSERName);
+
+        return LOG.traceExit(isAdded);
     }
-    
+
     //TODO requirement
     /**
      * Returns the list of superusers as an array format.
@@ -75,8 +75,7 @@ public class ManageSuperUsersResource extends AbstractResource {
         LOG.traceEntry();
         return LOG.traceExit(ManageSuperUsers.getInstance().getSuperUsers());
     }
-    
-    
+
     /**
      * Tests if the {@link #SUPERUSER_NAME_PARAMETER} is set.
      *

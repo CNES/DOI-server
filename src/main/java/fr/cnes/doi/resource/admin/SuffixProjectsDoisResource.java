@@ -49,7 +49,7 @@ public class SuffixProjectsDoisResource extends AbstractResource {
      * Logger.
      */
     private volatile Logger LOG;
-    
+
     /**
      * Suffix of the project.
      */
@@ -57,7 +57,7 @@ public class SuffixProjectsDoisResource extends AbstractResource {
 
     /**
      * Set-up method that can be overridden in order to initialize the state of the resource.
-     * 
+     *
      * Init by getting the DOI name in the template URL.
      *
      * @throws ResourceException - if a problem happens
@@ -69,14 +69,15 @@ public class SuffixProjectsDoisResource extends AbstractResource {
         LOG = app.getLog();
         LOG.traceEntry();
         setDescription("This resource handles the project suffix in the DOI name");
-        this.suffixProject = getResourcePath().replace(AdminApplication.ADMIN_URI + AdminApplication.SUFFIX_PROJECT_URI + "/", "");
+        this.suffixProject = getResourcePath().replace(
+                AdminApplication.ADMIN_URI + AdminApplication.SUFFIX_PROJECT_URI + "/", "");
         int startIndex = this.suffixProject.indexOf(AdminApplication.DOIS_URI);
-        this.suffixProject = this.suffixProject.substring(0,startIndex);
+        this.suffixProject = this.suffixProject.substring(0, startIndex);
         LOG.debug(this.suffixProject);
-        
+
         LOG.traceExit();
     }
-    
+
     //TODO requirement
     /**
      * Returns the list of dois from the project suffix sent in url.
@@ -88,22 +89,22 @@ public class SuffixProjectsDoisResource extends AbstractResource {
     public List<String> getProjectsNameAsJson() {
         LOG.traceEntry();
 //        checkInput(this.suffixProject);
-        
+
         final ClientSearchDataCite client;
         List<String> response = new ArrayList<>();
-        
+
         try {
-	       client = new ClientSearchDataCite();
-	       response = client.getDois(this.suffixProject);
-        
+            client = new ClientSearchDataCite();
+            response = client.getDois(this.suffixProject);
+
         } catch (Exception ex) {
-        	LOG.error(ex + "\n" 
-        			+ "Error in SuffixProjectsDoisResource while searching for dois in project " 
-        			+ this.suffixProject);
+            LOG.error(ex + "\n"
+                    + "Error in SuffixProjectsDoisResource while searching for dois in project "
+                    + this.suffixProject);
         }
         return LOG.traceExit(response);
     }
-    
+
     /**
      * projects representation
      *
@@ -120,7 +121,6 @@ public class SuffixProjectsDoisResource extends AbstractResource {
         return repInfo;
     }
 
-    
     //TODO describres get method
     /**
      * Describes a GET method.

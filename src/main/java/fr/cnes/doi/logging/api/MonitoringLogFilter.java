@@ -94,16 +94,16 @@ public class MonitoringLogFilter extends LogFilter {
                 LogManager.getLogger(Utils.APP_LOGGER_NAME)
                         .info(MessageFormat.format(
                                 "{0}({1} {2}) - current speed average : {3} ms - "
-                                        + "current measure: {4} ms",
+                                + "current measure: {4} ms",
                                 monitoring.getDescription(method, path),
                                 method.getName(), path,
                                 monitoring.getCurrentAverage(method, path),
                                 duration)
                         );
                 sendAlertIfNeeded(
-                        monitoring.getCurrentAverage(method, path), 
-                        duration, 
-                        path, 
+                        monitoring.getCurrentAverage(method, path),
+                        duration,
+                        path,
                         method
                 );
             }

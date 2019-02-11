@@ -67,7 +67,7 @@ public class FormatCitationResource extends BaseCitationResource {
     @Override
     protected void doInit() throws ResourceException {
         super.doInit();
-        LOG.traceEntry(); 
+        LOG.traceEntry();
         this.doiName = getQueryValue(DOI_PARAMETER);
         this.language = getQueryValue(LANG_PARAMETER);
         this.style = getQueryValue(STYLE_PARAMETER);

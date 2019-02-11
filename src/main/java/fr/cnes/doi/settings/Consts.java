@@ -88,21 +88,21 @@ public class Consts {
     /**
      * HTTPS keystore password. The password is encrypted
      */
-    public static final String SERVER_HTTPS_KEYSTORE_PASSWD = 
-            "Starter.Server.HTTPS.keystorePassword";
+    public static final String SERVER_HTTPS_KEYSTORE_PASSWD
+            = "Starter.Server.HTTPS.keystorePassword";
 
     /**
      * Trust store path.
      */
-    public static final String SERVER_HTTPS_TRUST_STORE_PATH = 
-            "Starter.Server.HTTPS.TrustStorePath";
+    public static final String SERVER_HTTPS_TRUST_STORE_PATH
+            = "Starter.Server.HTTPS.TrustStorePath";
 
     /**
      * Trust store password. The password is encrypted
      */
-    public static final String SERVER_HTTPS_TRUST_STORE_PASSWD = 
-            "Starter.Server.HTTPS.TrustStorePassword";
-    
+    public static final String SERVER_HTTPS_TRUST_STORE_PASSWD
+            = "Starter.Server.HTTPS.TrustStorePassword";
+
     /**
      * TODO.
      */
@@ -132,17 +132,17 @@ public class Consts {
      * Set of hostname on which the authentication to the proxy is disabled.
      */
     public static final String SERVER_NONPROXY_HOSTS = "Starter.NoProxy.hosts";
-    
+
     /**
      * TODO.
      */
     public static final String SERVER_PROXY_JAAS_SPN = "Starter.Proxy.Jass.Spn";
-    
+
     /**
      * TODO.
      */
     public static final String SERVER_PROXY_JAAS_FILE = "Starter.Proxy.Jass.File";
-    
+
     /**
      * TODO.
      */
@@ -152,12 +152,12 @@ public class Consts {
      * Set token expiration delay during creation
      */
     public static final String TOKEN_EXPIRATION_DELAY = "Starter.Token.Delay";
-    
+
     /**
      * Set token expiration unit during creation
      */
     public static final String TOKEN_EXPIRATION_UNIT = "Starter.Token.Unit";
-    
+
     /**
      * LOG format.
      */
@@ -222,8 +222,8 @@ public class Consts {
     /**
      * Time in ms that connections will persist if listener is low on resources.
      */
-    public static final String JETTY_LOW_RESOURCES_MAX_IDLE_TIME_MS = 
-            "Starter.LOW_RESOURCES_MAX_IDLE_TIME_MS";
+    public static final String JETTY_LOW_RESOURCES_MAX_IDLE_TIME_MS
+            = "Starter.LOW_RESOURCES_MAX_IDLE_TIME_MS";
 
     /**
      * Low resource monitor period in milliseconds; when 0, low resource monitoring is disabled.
@@ -239,8 +239,8 @@ public class Consts {
     /**
      * Low resource monitor max connections; when 0, the check is disabled.
      */
-    public static final String JETTY_LOW_RESOURCES_MAX_CONNECTIONS = 
-            "Starter.LOW_RESOURCES_MAX_CONNECTIONS";
+    public static final String JETTY_LOW_RESOURCES_MAX_CONNECTIONS
+            = "Starter.LOW_RESOURCES_MAX_CONNECTIONS";
 
     /**
      * Low resource monitor, whether to check if we're low on threads.
@@ -356,7 +356,7 @@ public class Consts {
      * DataCite schema.
      */
     public static final String DATACITE_SCHEMA = "Starter.dataciteSchema";
-    
+
     /**
      * Update Database job period
      */
@@ -366,22 +366,22 @@ public class Consts {
      * Database url
      */
     public static final String DB_URL = "Starter.Database.Doidburl";
-    
+
     /**
      * Database user
      */
     public static final String DB_USER = "Starter.Database.User";
-    
+
     /**
      * Database password
      */
     public static final String DB_PWD = "Starter.Database.Pwd";
-    
+
     /**
      * Datasource Minimum opened connections
      */
     public static final String DB_MAX_IDLE_CONNECTIONS = "Starter.Database.MaxIdleConnections";
-    
+
     /**
      * Datasource Maximum opened connections
      */
@@ -391,20 +391,20 @@ public class Consts {
      * LDAP url
      */
     public static final String LDAP_URL = "ldapurl";
-    
+
     /**
      * LDAP user
      */
     public static final String LDAP_USER = "ldapuser";
-    
+
     /**
      * LDAP pwd
      */
     public static final String LDAP_PWD = "ldappassword";
-    
+
     /**
      * LDAP project
      */
     public static final String LDAP_PROJECT = "ldapdoiproject";
-    
+
 }

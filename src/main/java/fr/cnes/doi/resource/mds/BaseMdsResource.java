@@ -45,7 +45,6 @@ import org.restlet.util.Series;
  */
 public class BaseMdsResource extends AbstractResource {
 
-
     /**
      * The parameter that describes the DOI name {@value #DOI_PARAMETER}.
      */
@@ -72,7 +71,7 @@ public class BaseMdsResource extends AbstractResource {
      */
     @Override
     protected void doInit() throws DoiServerException {
-        super.doInit();         
+        super.doInit();
         this.doiApp = (DoiMdsApplication) getApplication();
         LOG = this.doiApp.getLog();
         LOG.traceEntry();
@@ -217,37 +216,38 @@ public class BaseMdsResource extends AbstractResource {
             final String selectedRole)
             throws DoiServerException {
         LOG.traceEntry("Parameters : {} and {}", doiName, selectedRole);
-        
+
         final String prefixCNES = this.getDoiApp().getDataCentrePrefix();
-        
+
         // Token-ihm isn't attached to any project, in this case, check role in database
-        if(selectedRole.equals("null")) {
-        	String user = getClientInfo().getUser().getIdentifier();
-        	Map<String, Integer> map = UniqueProjectName.getInstance().getProjectsFromUser(user);
-        	boolean isAuthorized = false;
-        	for(int suffixProject : map.values()) {
-        		 if (doiName.startsWith(prefixCNES + "/" + suffixProject + "/")){
-        			 isAuthorized = true;
-        			 break;
-        	     }
-        	}
-        	if(!isAuthorized) {
-        		LOG.debug("The DOI {}  does not match with any user's role", doiName);
-        		throw LOG.throwing(Level.DEBUG,
-        				new DoiServerException(getApplication(), API_MDS.SECURITY_USER_PERMISSION,
-        						"The DOI " + doiName + " does not match with any user's role")
-        				);
-        	}
+        if (selectedRole.equals("null")) {
+            String user = getClientInfo().getUser().getIdentifier();
+            Map<String, Integer> map = UniqueProjectName.getInstance().getProjectsFromUser(user);
+            boolean isAuthorized = false;
+            for (int suffixProject : map.values()) {
+                if (doiName.startsWith(prefixCNES + "/" + suffixProject + "/")) {
+                    isAuthorized = true;
+                    break;
+                }
+            }
+            if (!isAuthorized) {
+                LOG.debug("The DOI {}  does not match with any user's role", doiName);
+                throw LOG.throwing(Level.DEBUG,
+                        new DoiServerException(getApplication(), API_MDS.SECURITY_USER_PERMISSION,
+                                "The DOI " + doiName + " does not match with any user's role")
+                );
+            }
         } else {
-        	final String projectRole = getRoleName(selectedRole);
-        	
-        	if (!doiName.startsWith(prefixCNES + "/" + projectRole + "/")) {
-        		LOG.debug("The DOI {}  does not match with {}", doiName, prefixCNES + "/" + projectRole);
-        		throw LOG.throwing(Level.DEBUG,
-        				new DoiServerException(getApplication(), API_MDS.SECURITY_USER_PERMISSION,
-        						"The DOI " + doiName + " does not match with" + prefixCNES + "/" + projectRole)
-        				);
-        	}
+            final String projectRole = getRoleName(selectedRole);
+
+            if (!doiName.startsWith(prefixCNES + "/" + projectRole + "/")) {
+                LOG.debug("The DOI {}  does not match with {}", doiName,
+                        prefixCNES + "/" + projectRole);
+                throw LOG.throwing(Level.DEBUG,
+                        new DoiServerException(getApplication(), API_MDS.SECURITY_USER_PERMISSION,
+                                "The DOI " + doiName + " does not match with" + prefixCNES + "/" + projectRole)
+                );
+            }
         }
         LOG.traceExit();
     }

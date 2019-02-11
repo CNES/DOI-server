@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package fr.cnes.doi.plugin.impl;
+package fr.cnes.doi.plugin.impl.db;
 
 import fr.cnes.doi.plugin.AbstractDoiDBPluginHelper;
 import fr.cnes.doi.security.RoleAuthorizer;

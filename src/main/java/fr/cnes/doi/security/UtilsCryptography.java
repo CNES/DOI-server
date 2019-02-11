@@ -70,7 +70,6 @@ public final class UtilsCryptography {
      */
     private static final String MSG_TPL2 = "Parameters : {} and {}";
 
-
     /**
      * Decrypts the string with the DEFAULT_SECRET_KEY.
      *
@@ -150,6 +149,7 @@ public final class UtilsCryptography {
             throw LOG.throwing(new DoiRuntimeException(ex));
         }
     }
+
     /**
      * Private constructor
      */

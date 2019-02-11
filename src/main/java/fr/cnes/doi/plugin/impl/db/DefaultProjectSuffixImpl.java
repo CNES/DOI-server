@@ -16,22 +16,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package fr.cnes.doi.plugin.impl;
+package fr.cnes.doi.plugin.impl.db;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import fr.cnes.doi.persistence.exceptions.DOIDbException;
-import fr.cnes.doi.persistence.impl.DOIDbDataAccessServiceImpl;
-import fr.cnes.doi.persistence.model.DOIProject;
-import fr.cnes.doi.persistence.service.DOIDbDataAccessService;
+import fr.cnes.doi.exception.DOIDbException;
+import fr.cnes.doi.plugin.impl.db.persistence.impl.DOIDbDataAccessServiceImpl;
+import fr.cnes.doi.plugin.impl.db.persistence.model.DOIProject;
+import fr.cnes.doi.plugin.impl.db.persistence.service.DOIDbDataAccessService;
 import fr.cnes.doi.plugin.AbstractProjectSuffixPluginHelper;
+import fr.cnes.doi.utils.DOIUser;
+import java.util.ArrayList;
 
 /**
  * Default implementation of the project suffix database.
@@ -58,10 +59,9 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
     public DefaultProjectSuffixImpl() {
         super();
     }
-    
+
     private final DOIDbDataAccessService das = new DOIDbDataAccessServiceImpl();
-    
-    
+
     /**
      * Init the configuration with the configuration file. If the given file does not exist a new
      * file will be created. The file contains the mapping between the project name and the
@@ -78,115 +78,116 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
             String projectName) {
         boolean isAdded = false;
         try {
-        	LOG.info("Add projectSuffix in the database {} / {}", projectID, projectName);
-			das.addDOIProject(projectID, projectName);
-			setChanged();
-			notifyObservers(new String[]{ADD_RECORD, String.valueOf(projectID)});
-			isAdded = true;
-		} catch (DOIDbException e) {
-			LOG.fatal("The id " + projectID + " of the project " + projectName
+            LOG.info("Add projectSuffix in the database {} / {}", projectID, projectName);
+            das.addDOIProject(projectID, projectName);
+            setChanged();
+            notifyObservers(new String[]{ADD_RECORD, String.valueOf(projectID)});
+            isAdded = true;
+        } catch (DOIDbException e) {
+            LOG.fatal("The id " + projectID + " of the project " + projectName
                     + "cannot be saved in the file", e);
-		} 
-		return isAdded;
-		
+        }
+        return isAdded;
+
     }
 
     @Override
     public synchronized boolean deleteProject(int projectID) {
-    	boolean isDeleted = false;
-    	try {
-			das.removeDOIProject(projectID);
-			setChanged();
-			notifyObservers(new String[]{DELETE_RECORD, String.valueOf(projectID)});    
-			isDeleted = true;
-		} catch (DOIDbException e) {
-			LOG.fatal("The id " + projectID + " cannot be deleted or doest not exist", e);
-		}
-    	return isDeleted;
+        boolean isDeleted = false;
+        try {
+            das.removeDOIProject(projectID);
+            setChanged();
+            notifyObservers(new String[]{DELETE_RECORD, String.valueOf(projectID)});
+            isDeleted = true;
+        } catch (DOIDbException e) {
+            LOG.fatal("The id " + projectID + " cannot be deleted or doest not exist", e);
+        }
+        return isDeleted;
     }
 
     @Override
     public boolean isExistID(int projectID) {
-    	Map<String, Integer> map = getProjects();
-    	if(map.size() == 0) {
-    		return false;
-    	}
+        Map<String, Integer> map = getProjects();
+        if (map.isEmpty()) {
+            return false;
+        }
         return map.containsValue(projectID);
     }
 
     @Override
     public boolean isExistProjectName(String projectName) {
-    	Map<String, Integer> map = getProjects();
-    	if(map.size() == 0) {
-    		return false;
-    	}
+        Map<String, Integer> map = getProjects();
+        if (map.isEmpty()) {
+            return false;
+        }
         return map.containsKey(projectName);
     }
 
     @Override
     public String getProjectFrom(int projectID) {
-    	String projectName = "";
-    	try {
-			projectName = das.getDOIProjectName(projectID);
-		} catch (DOIDbException e) {
-			LOG.fatal("An error occured while trying to get the name of the project from the id "+ projectID ,e);
-		}
+        String projectName = "";
+        try {
+            projectName = das.getDOIProjectName(projectID);
+        } catch (DOIDbException e) {
+            LOG.fatal(
+                    "An error occured while trying to get the name of the project from the id " + projectID,
+                    e);
+        }
         return projectName;
     }
 
     @Override
     public int getIDFrom(String projectName) {
-    	Map<String, Integer> map = getProjects();
-    	if(map.size() == 0) {
-    		throw new RuntimeException("The projects list is empty");
-    	}
+        Map<String, Integer> map = getProjects();
+        if (map.isEmpty()) {
+            throw new RuntimeException("The projects list is empty");
+        }
         return map.get(projectName);
     }
 
     @Override
     public Map<String, Integer> getProjects() {
-    	Map<String, Integer> map = new HashMap<String, Integer>();
-    	try {
-			List<DOIProject> doiProjects = das.getAllDOIProjects();
-			for(DOIProject doiProject : doiProjects) {
-				map.put(doiProject.getProjectname(), doiProject.getSuffix());
-			}
-		} catch (DOIDbException e) {
-			LOG.fatal("An error occured while trying to get all DOI projects" ,e);
-		}
-    	
-    	return Collections.unmodifiableMap(map);
+        final Map<String, Integer> map = new HashMap<>();
+        try {
+            List<DOIProject> doiProjects = das.getAllDOIProjects();
+            for (DOIProject doiProject : doiProjects) {
+                map.put(doiProject.getProjectname(), doiProject.getSuffix());
+            }
+        } catch (DOIDbException e) {
+            LOG.fatal("An error occured while trying to get all DOI projects", e);
+        }
+
+        return Collections.unmodifiableMap(map);
     }
-    
+
     @Override
     public Map<String, Integer> getProjectsFromUser(String userName) {
-    	Map<String, Integer> map = new HashMap<String, Integer>();
-    	try {
-			List<DOIProject> doiProjects = das.getAllDOIProjectsForUser(userName);
-			for(DOIProject doiProject : doiProjects) {
-				map.put(doiProject.getProjectname(), doiProject.getSuffix());
-			}
-		} catch (DOIDbException e) {
-			LOG.fatal("An error occured while trying to get all DOI projects" ,e);
-		}
-    	
-    	return Collections.unmodifiableMap(map);
+        Map<String, Integer> map = new HashMap<>();
+        try {
+            List<DOIProject> doiProjects = das.getAllDOIProjectsForUser(userName);
+            for (DOIProject doiProject : doiProjects) {
+                map.put(doiProject.getProjectname(), doiProject.getSuffix());
+            }
+        } catch (DOIDbException e) {
+            LOG.fatal("An error occured while trying to get all DOI projects", e);
+        }
+
+        return Collections.unmodifiableMap(map);
     }
-    
+
     @Override
     public boolean renameProject(int projectId, String newProjectName) {
-    	boolean isRenamed = false;
-    	try {
-			das.renameDOIProject(projectId, newProjectName);
-			setChanged();
-			notifyObservers(new String[]{RENAME_RECORD, String.valueOf(projectId)});   
-			isRenamed = true;
-		} catch (DOIDbException e) {
-			LOG.fatal("An error occured while trying to rename the project " + projectId ,e);
-		}
-    	return isRenamed;
+        boolean isRenamed = false;
+        try {
+            das.renameDOIProject(projectId, newProjectName);
+            setChanged();
+            notifyObservers(new String[]{RENAME_RECORD, String.valueOf(projectId)});
+            isRenamed = true;
+        } catch (DOIDbException e) {
+            LOG.fatal("An error occured while trying to rename the project " + projectId, e);
+        }
+        return isRenamed;
     }
-    
 
     @Override
     public String getName() {
@@ -216,6 +217,19 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
     @Override
     public String getLicense() {
         return LICENSE;
+    }
+
+    @Override
+    public List<DOIUser> getAllDOIUsersForProject(int doiSuffix) {
+        final List<DOIUser> doiUsers = new ArrayList<>();
+        try {
+            doiUsers.addAll(this.das.getAllDOIUsersForProject(doiSuffix));
+        } catch (DOIDbException ex) {
+            LOG.
+                    fatal("An error occured while trying to get all DOI users from project " + doiSuffix,
+                            ex);
+        }
+        return doiUsers;
     }
 
 }

@@ -83,14 +83,14 @@ public class BaseClient {
     public final ClientResource getClient() {
         return client;
     }
-    
+
     /**
      * Returns the logger.
+     *
      * @return the logger
      */
     public Logger getLog() {
         return LOG;
     }
-    
 
 }

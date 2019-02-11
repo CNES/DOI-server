@@ -18,12 +18,13 @@
  */
 package fr.cnes.doi.db;
 
+import fr.cnes.doi.exception.DOIDbException;
 import java.util.List;
 import java.util.Observable;
 
 import org.restlet.security.MemoryRealm;
 
-import fr.cnes.doi.persistence.model.DOIUser;
+import fr.cnes.doi.utils.DOIUser;
 import fr.cnes.doi.utils.spec.Requirement;
 
 /**
@@ -88,7 +89,7 @@ public abstract class AbstractUserRoleDBHelper extends Observable {
      * @param role role
      */
     public abstract boolean addUserToRole(final String user,
-            final int role) ;
+            final int role);
 //    {
 //        REALM.map(user, role);
 //    }
@@ -100,7 +101,7 @@ public abstract class AbstractUserRoleDBHelper extends Observable {
      * @param role role
      */
     public abstract boolean removeUserToRole(final String user,
-            final int role); 
+            final int role);
 //    {
 //        REALM.unmap(user, role);
 //    }
@@ -111,7 +112,7 @@ public abstract class AbstractUserRoleDBHelper extends Observable {
      * @param adminGroup user to add
      */
     public abstract boolean setUserToAdminGroup(final String admin);
-    
+
     /**
      * Remove user to Administrators group
      *
@@ -119,9 +120,26 @@ public abstract class AbstractUserRoleDBHelper extends Observable {
      */
     public abstract boolean unsetUserFromAdminGroup(final String admin);
 
-	public abstract boolean isUserExist(String username);
+    /**
+     * Add a DOI user
+     *
+     * @throws DOIDbException
+     */
+    public abstract void addDOIUser(String username, Boolean admin) throws DOIDbException;
 
-	// "Boolean" and not "boolean" , because the first one can be null
-	public abstract Boolean isAdmin(String username);
+    /**
+     * Add a DOI user
+     *
+     * @throws DOIDbException
+     */
+    public abstract void addDOIUser(String username, Boolean admin, String email) throws
+            DOIDbException;
+
+    public abstract boolean isUserExist(String username);
+
+    // "Boolean" and not "boolean" , because the first one can be null
+    public abstract Boolean isAdmin(String username);
+
+    public abstract void removeDOIUser(String username);
 
 }

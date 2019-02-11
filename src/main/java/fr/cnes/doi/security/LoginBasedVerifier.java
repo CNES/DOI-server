@@ -20,23 +20,18 @@ package fr.cnes.doi.security;
 
 import java.util.Base64;
 
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.data.ChallengeResponse;
 import org.restlet.data.ChallengeScheme;
-import org.restlet.data.Form;
-import org.restlet.data.Status;
-import org.restlet.resource.ResourceException;
-import org.restlet.security.User;
 import org.restlet.security.Verifier;
 
-import fr.cnes.doi.db.AbstractUserRoleDBHelper;
 import fr.cnes.doi.ldap.impl.LDAPAccessServiceImpl;
 import fr.cnes.doi.ldap.service.ILDAPAcessService;
 import fr.cnes.doi.logging.business.JsonMessage;
+import fr.cnes.doi.utils.ManageUsers;
 
 /**
  * Security class for checking login/password.
@@ -51,25 +46,16 @@ public class LoginBasedVerifier implements Verifier {
     private static final Logger LOG = LogManager.getLogger(LoginBasedVerifier.class.getName());
 
     /**
-     * User DB.
-     */
-    private final AbstractUserRoleDBHelper userDB;
-    
-    /**
      * LDAP access instance.
      */
     private final ILDAPAcessService ldapService;
-    
-    
 
     /**
      * Constructor.
      *
      * @param userDB user DB
      */
-    public LoginBasedVerifier(final AbstractUserRoleDBHelper userDB) {
-        LOG.traceEntry(new JsonMessage(userDB));
-        this.userDB = userDB;
+    public LoginBasedVerifier() {
         this.ldapService = new LDAPAccessServiceImpl();
     }
 
@@ -86,11 +72,11 @@ public class LoginBasedVerifier implements Verifier {
         LOG.traceEntry(new JsonMessage(request));
         final int result;
         final ChallengeResponse challResponse = request.getChallengeResponse();
-        
+
         if (challResponse == null) {
             result = Verifier.RESULT_MISSING;
-        } else if (challResponse.getScheme().equals(ChallengeScheme.HTTP_OAUTH_BEARER)){
-        	result = Verifier.RESULT_MISSING;
+        } else if (challResponse.getScheme().equals(ChallengeScheme.HTTP_OAUTH_BEARER)) {
+            result = Verifier.RESULT_MISSING;
         } else {
             result = processAuthentication(request, challResponse);
         }
@@ -110,21 +96,21 @@ public class LoginBasedVerifier implements Verifier {
         final int result;
         final String login = challResponse.getRawValue();
         LOG.debug("User from challenge response : " + login);
-        
+
         if (login == null) {
             return LOG.traceExit(Verifier.RESULT_MISSING);
         }
-        
+
         final String decodedLogin = new String(Base64.getDecoder().decode(login));
         final String[] userLogin = decodedLogin.split(":");
-        
-        if(this.userDB.isUserExist(userLogin[0]) &&
-        	ldapService.authenticateUser(userLogin[0], userLogin[1])) 
-        {
-        	result = Verifier.RESULT_VALID;
-        	request.getClientInfo().setUser(userDB.getRealm().findUser(userLogin[0]));
-        	
-        	//TODO add role parameter if any...
+
+        if (ManageUsers.getInstance().isUserExist(userLogin[0])
+                && ldapService.authenticateUser(userLogin[0], userLogin[1])) {
+            result = Verifier.RESULT_VALID;
+            request.getClientInfo().setUser(ManageUsers.getInstance().getRealm().findUser(
+                    userLogin[0]));
+
+            //TODO add role parameter if any...
 //            request.getHeaders().set(UtilsHeader.SELECTED_ROLE_PARAMETER, String.valueOf(""));
         } else {
             result = Verifier.RESULT_INVALID;

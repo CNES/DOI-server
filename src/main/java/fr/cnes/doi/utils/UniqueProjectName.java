@@ -18,11 +18,7 @@
  */
 package fr.cnes.doi.utils;
 
-import fr.cnes.doi.db.AbstractProjectSuffixDBHelper;
 import fr.cnes.doi.exception.DoiRuntimeException;
-import fr.cnes.doi.plugin.PluginFactory;
-import fr.cnes.doi.settings.Consts;
-import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.utils.spec.Requirement;
 import java.util.Map;
 import java.util.Random;
@@ -46,7 +42,6 @@ public class UniqueProjectName {
      */
     private static final Logger LOGGER = Logger.getLogger(CLASS_NAME);
 
-
     /**
      * Access to unique INSTANCE of Settings
      *
@@ -55,19 +50,12 @@ public class UniqueProjectName {
     public static UniqueProjectName getInstance() {
         return UniqueProjectNameHolder.INSTANCE;
     }
-    /**
-     * Project Suffix database.
-     */
-    private final AbstractProjectSuffixDBHelper projectDB;
 
     /**
      * Constructor
      */
     private UniqueProjectName() {
         LOGGER.entering(CLASS_NAME, "Constructor");
-        final String path = DoiSettings.getInstance().getString(Consts.PROJECT_CONF_PATH);
-        this.projectDB = PluginFactory.getProjectSuffix();
-        this.projectDB.init(path);
         LOGGER.exiting(CLASS_NAME, "Constructor");
     }
 
@@ -77,18 +65,16 @@ public class UniqueProjectName {
      * @return the projects
      */
     public Map<String, Integer> getProjects() {
-        LOGGER.log(Level.CONFIG, "getProjects : {0}", this.projectDB.getProjects());
-        return this.projectDB.getProjects();
+        return ManageProjects.getInstance().getProjects();
     }
-    
+
     /**
      * Returns the projects associated to an user from the database.
      *
      * @return the projects
      */
     public Map<String, Integer> getProjectsFromUser(String userName) {
-        LOGGER.log(Level.CONFIG, "getProjectsFromUser : {0}", this.projectDB.getProjectsFromUser(userName));
-        return this.projectDB.getProjectsFromUser(userName);
+        return ManageProjects.getInstance().getProjectsFromUser(userName);
     }
 
     /**
@@ -117,14 +103,14 @@ public class UniqueProjectName {
     private int convert(final long input,
             final String projectName,
             final int maxNumber) {
-		LOGGER.entering(CLASS_NAME, "convert", new Object[] { input, projectName, maxNumber });
-		int result = (int) input;
-		do {
-			result = (int) (result ^ (projectName.hashCode() % maxNumber));
-		} while (result >maxNumber || result < 0 || !isIdUnique(result, projectName));
-		LOGGER.entering(CLASS_NAME, "convert", result);
-		return result;
-    } 
+        LOGGER.entering(CLASS_NAME, "convert", new Object[]{input, projectName, maxNumber});
+        int result = (int) input;
+        do {
+            result = (int) (result ^ (projectName.hashCode() % maxNumber));
+        } while (result > maxNumber || result < 0 || !isIdUnique(result, projectName));
+        LOGGER.entering(CLASS_NAME, "convert", result);
+        return result;
+    }
 
     /**
      * Build a unique String from the project name
@@ -143,9 +129,9 @@ public class UniqueProjectName {
                     "The short name cannot be build because the length requested is too big");
             LOGGER.throwing(CLASS_NAME, "getShortName", doiEx);
             throw doiEx;
-        } else if (this.projectDB.isExistProjectName(project)) {
+        } else if (ManageProjects.getInstance().isExistProjectName(project)) {
             // Si le projet a déjà un identifiant on ne le recalcule pas
-            suffixID = this.projectDB.getIDFrom(project);
+            suffixID = ManageProjects.getInstance().getIDFrom(project);
             LOGGER.log(Level.FINE, "The project {0} has already an id : {1}",
                     new Object[]{project, suffixID});
         } else {
@@ -171,21 +157,21 @@ public class UniqueProjectName {
             final String projectName) {
         LOGGER.entering(CLASS_NAME, "isIdUnique", new Object[]{idToCheck, projectName});
         final boolean result;
-        if (this.projectDB.isExistID(idToCheck)) {
+        if (ManageProjects.getInstance().isExistID(idToCheck)) {
             result = false;
         } else {
-            this.projectDB.addProjectSuffix(idToCheck, projectName);
-            result = true;
+            result = ManageProjects.getInstance().addProjectSuffix(idToCheck, projectName);
         }
         LOGGER.exiting(CLASS_NAME, "isIdUnique", result);
         return result;
     }
+
     /**
      * Class to handle the instance
      *
      */
     private static class UniqueProjectNameHolder {
-        
+
         /**
          * Unique Instance unique
          */
