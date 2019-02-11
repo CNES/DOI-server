@@ -99,7 +99,7 @@ public class DoisResource extends BaseMdsResource {
         }
         return LOG.traceExit(rep);
     }
-    
+
     /**
      * Creates a new DOI based on the doi and url parameters
      *
@@ -141,7 +141,7 @@ public class DoisResource extends BaseMdsResource {
     @Requirement(reqId = Requirement.DOI_AUTO_030, reqName = Requirement.DOI_AUTO_030_NAME)
     @Post("form")
     public String createDoi(final Form doiForm) throws DoiServerException {
-    	
+
         LOG.traceEntry("Parameter : {}", doiForm);
         checkInputs(doiForm);
         final String result;

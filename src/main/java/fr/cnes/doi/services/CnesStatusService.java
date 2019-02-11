@@ -43,7 +43,6 @@ import org.restlet.service.StatusService;
  */
 public class CnesStatusService extends StatusService {
 
-
     /**
      * Logger.
      */

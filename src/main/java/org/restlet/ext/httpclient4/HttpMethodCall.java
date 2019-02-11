@@ -197,7 +197,7 @@ public class HttpMethodCall extends ClientCall {
                     @Override
                     public void close() throws IOException {
                         super.close();
-                         EntityUtils.consume(getHttpResponse().getEntity());
+                        EntityUtils.consume(getHttpResponse().getEntity());
                     }
                 };
             }

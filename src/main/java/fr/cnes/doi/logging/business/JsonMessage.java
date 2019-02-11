@@ -43,6 +43,7 @@ public class JsonMessage implements Message {
 
     /**
      * Returns the formatted message.
+     *
      * @return the formatted message
      */
     @Override
@@ -59,6 +60,7 @@ public class JsonMessage implements Message {
 
     /**
      * Returns the format.
+     *
      * @return the format
      */
     @Override
@@ -68,6 +70,7 @@ public class JsonMessage implements Message {
 
     /**
      * Returns the parameters
+     *
      * @return the parameters
      */
     @Override
@@ -77,6 +80,7 @@ public class JsonMessage implements Message {
 
     /**
      * Returns the throwable
+     *
      * @return the throwable
      */
     @Override

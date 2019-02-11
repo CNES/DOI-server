@@ -76,12 +76,12 @@ public class TokenBasedVerifier implements Verifier {
         LOG.traceEntry(new JsonMessage(request));
         final int result;
         final ChallengeResponse challResponse = request.getChallengeResponse();
-        
+
         if (challResponse == null) {
             result = Verifier.RESULT_MISSING;
-        } else if(challResponse.getScheme().equals(ChallengeScheme.HTTP_BASIC)){
-        	result = Verifier.RESULT_MISSING;
-    	}else {
+        } else if (challResponse.getScheme().equals(ChallengeScheme.HTTP_BASIC)) {
+            result = Verifier.RESULT_MISSING;
+        } else {
             result = processAuthentication(request, challResponse);
         }
         return LOG.traceExit(result);
@@ -100,7 +100,7 @@ public class TokenBasedVerifier implements Verifier {
         final int result;
         final String token = challResponse.getRawValue();
         LOG.debug("Token from challenge response : " + token);
-        
+
         if (token == null) {
             result = Verifier.RESULT_MISSING;
         } else if (this.tokenDB.isExist(token)) {

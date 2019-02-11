@@ -75,10 +75,10 @@ public class DoiSecurityLogFilter extends Filter {
             final String profiles = computeProfiles(clientInfo);
             LogManager.getLogger(Utils.SECURITY_LOGGER_NAME).info(
                     "User: " + identifier + "\tProfile(s): " + profiles + "\t - "
-                            + "[" + upStreamIp + "] - [" + authenticationMethod + "] " 
-                            + method + " " + targetUri + " " + response.
+                    + "[" + upStreamIp + "] - [" + authenticationMethod + "] "
+                    + method + " " + targetUri + " " + response.
                             getStatus().getCode() + " - " + clientInfo.getAgent());
-        } 
+        }
     }
 
     /**

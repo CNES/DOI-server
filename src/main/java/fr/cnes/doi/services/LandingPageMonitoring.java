@@ -20,11 +20,12 @@ package fr.cnes.doi.services;
 
 import fr.cnes.doi.client.ClientLandingPage;
 import fr.cnes.doi.client.ClientSearchDataCite;
-import fr.cnes.doi.persistence.exceptions.DOIDbException;
-import fr.cnes.doi.persistence.impl.DOIDbDataAccessServiceImpl;
-import fr.cnes.doi.persistence.model.DOIUser;
-import fr.cnes.doi.persistence.service.DOIDbDataAccessService;
+import fr.cnes.doi.exception.DOIDbException;
+import fr.cnes.doi.plugin.impl.db.persistence.impl.DOIDbDataAccessServiceImpl;
+import fr.cnes.doi.utils.DOIUser;
+import fr.cnes.doi.plugin.impl.db.persistence.service.DOIDbDataAccessService;
 import fr.cnes.doi.settings.EmailSettings;
+import fr.cnes.doi.utils.ManageProjects;
 import fr.cnes.doi.utils.spec.Requirement;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -46,9 +47,6 @@ public class LandingPageMonitoring implements Runnable {
      */
     private static final Logger LOG = LogManager.getLogger(LandingPageMonitoring.class.getName());
 
-    private DOIDbDataAccessService dbAccessService = new DOIDbDataAccessServiceImpl();
-    
-    
     /**
      * run.
      */
@@ -77,33 +75,28 @@ public class LandingPageMonitoring implements Runnable {
                     // send message to all doi member
                     String body = "";
                     sendMessageToMembers(error, subject, body, email);
-                    
+
                 }
             }
             email.sendMessage(subject, msg.toString(), null);
-            
-            
+
             LOG.info("message to send : {}", msg.toString());
         } catch (Exception ex) {
-            email.sendMessage("Unrecoverable errors when checking landing pages", ex.toString(), null);
+            email.sendMessage("Unrecoverable errors when checking landing pages", ex.toString(),
+                    null);
         }
     }
 
-	private void sendMessageToMembers(String error, String subject, String body, EmailSettings email) {
-		try {
-			// parse project suffix from doi
-			String doiRegex = "^(.+)\\/(.+)\\/(.+)$";
-			Pattern doiPattern = Pattern.compile(doiRegex);
-			Matcher doiMatcher = doiPattern.matcher(error);
-			int doiSuffix = Integer.parseInt(doiMatcher.group(3));
-			List<DOIUser> members = dbAccessService.getAllDOIUsersForProject(doiSuffix);
-			for (DOIUser member: members) {
-				 email.sendMessage(subject, body, member.getEmail());
-			}
-		} catch (DOIDbException e) {
-			LOG.error("[LandingPageMonitoring] Failed to get members list of doi project (" + error + ") from doi database", e);
-		}
-		
-	}
-
+    private void sendMessageToMembers(String error, String subject, String body, EmailSettings email) {
+        // parse project suffix from doi
+        String doiRegex = "^(.+)\\/(.+)\\/(.+)$";
+        Pattern doiPattern = Pattern.compile(doiRegex);
+        Matcher doiMatcher = doiPattern.matcher(error);
+        int doiSuffix = Integer.parseInt(doiMatcher.group(3));
+        ManageProjects manageProjects = ManageProjects.getInstance();
+        List<DOIUser> members = manageProjects.getAllDOIUsersForProject(doiSuffix);
+        for (DOIUser member : members) {
+            email.sendMessage(subject, body, member.getEmail());
+        }
+    }
 }

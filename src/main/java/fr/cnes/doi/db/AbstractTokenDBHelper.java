@@ -68,7 +68,7 @@ public abstract class AbstractTokenDBHelper extends Observable {
      * @return True when the token is expirated otherwise False
      */
     public abstract boolean isExpired(String jwt);
-    
+
     /**
      * Return the token list from database.
      *

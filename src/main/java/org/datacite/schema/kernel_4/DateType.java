@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlType;
  *
  * <p>
  * The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;simpleType name="dateType"&gt; &lt;restriction
  * base="{http://www.w3.org/2001/XMLSchema}string"&gt; &lt;enumeration value="Accepted"/&gt;
@@ -97,6 +97,7 @@ public enum DateType {
 
     /**
      * Returns the value
+     *
      * @return the value
      */
     public String value() {
@@ -105,6 +106,7 @@ public enum DateType {
 
     /**
      * Finds DateType from value.
+     *
      * @param v value
      * @return datType
      */

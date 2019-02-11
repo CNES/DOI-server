@@ -47,7 +47,7 @@ import org.restlet.resource.ClientResource;
  * @author Jean-Christophe (jean-christophe.malapert@cnes.fr)
  */
 @Requirement(reqId = Requirement.DOI_CONFIG_010, reqName = Requirement.DOI_CONFIG_010_NAME)
-public final class DoiSettings {      
+public final class DoiSettings {
 
     /**
      * Configuration files in JAR.
@@ -78,7 +78,7 @@ public final class DoiSettings {
      * Path where the Java application inputStream located.
      */
     private volatile String pathApp;
-    
+
     /**
      * private constructor Loads the defautl configuration properties {@value #CONFIG_PROPERTIES}
      */
@@ -86,7 +86,6 @@ public final class DoiSettings {
         final Properties properties = loadConfigurationFile();
         init(properties, Level.OFF);
     }
-    
 
     /**
      * Loads configuration file and set it in memory.
@@ -103,7 +102,7 @@ public final class DoiSettings {
         PluginFactory.init(DoiSettings.MAP_PROPERTIES);
         LOG.log(level, "DOI settings have been loaded");
         LOG.log(level, "-------------------------");
-        LOG.info(properties.getProperty(Consts.NAME) + " loaded"); 
+        LOG.info(properties.getProperty(Consts.NAME) + " loaded");
         LOG.traceExit();
     }
 
@@ -154,7 +153,7 @@ public final class DoiSettings {
         LOG.traceEntry();
         return LOG.traceExit(DoiSettingsHolder.INSTANCE);
     }
-    
+
     /**
      * Validates the configuration file.
      */
@@ -230,7 +229,6 @@ public final class DoiSettings {
         }
         LOG.traceExit();
     }
-
 
     /**
      * Tests if the key has a value.
@@ -440,7 +438,7 @@ public final class DoiSettings {
         // So if we init DoiSettings, we need to init the following
         // singletons
         ProxySettings.getInstance().init();
-        EmailSettings.getInstance().init();        
+        EmailSettings.getInstance().init();
         LOG.traceExit();
     }
 
@@ -481,11 +479,12 @@ public final class DoiSettings {
         }
         LOG.traceExit();
     }
+
     /**
      * Holder
      */
     private static class DoiSettingsHolder {
-        
+
         /**
          * Unique Instance unique not pre-initiliaze
          */

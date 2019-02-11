@@ -18,26 +18,26 @@ import fr.cnes.doi.utils.ManageProjects;
 import fr.cnes.doi.utils.spec.Requirement;
 
 public class ManageProjectsResource extends AbstractResource {
-	
-	/**
+
+    /**
      * Logger.
      */
     private volatile Logger LOG;
-    
+
     /**
      * Suffix of the project.
      */
     private volatile String suffixProject;
-    
+
     /**
      * Parameter for the project name {@value #PROJECT_NAME_PARAMETER}. This parameter is send to
      * create a new identifier for the project.
      */
     public static final String PROJECT_NAME_PARAMETER = "newProjectName";
-    
+
     /**
      * Set-up method that can be overridden in order to initialize the state of the resource.
-     * 
+     *
      * @throws ResourceException - if a problem happens
      */
     @Override
@@ -50,11 +50,11 @@ public class ManageProjectsResource extends AbstractResource {
 //        this.suffixProject = getResourcePath().replace(AdminApplication.ADMIN_URI + AdminApplication.SUFFIX_PROJECT_URI + "/", "");
         this.suffixProject = getAttribute("suffixProject");
         LOG.debug(this.suffixProject);
-        
+
         LOG.traceExit();
     }
-    
-  //TODO requirement
+
+    //TODO requirement
     /**
      * Rename the project from the project id sent in url.
      *
@@ -63,16 +63,16 @@ public class ManageProjectsResource extends AbstractResource {
     @Requirement(reqId = Requirement.DOI_SRV_140, reqName = Requirement.DOI_SRV_140_NAME)
     @Post
     public boolean renameProject(final Form mediaForm) {
-    	 LOG.traceEntry();
-         checkInputs(mediaForm);
-         final String newProjectName = mediaForm.getFirstValue(PROJECT_NAME_PARAMETER);
-         boolean isRenamed = ManageProjects.getInstance().renameProject(
-        		 Integer.parseInt(suffixProject), newProjectName);
-         
-         return LOG.traceExit(isRenamed);
+        LOG.traceEntry();
+        checkInputs(mediaForm);
+        final String newProjectName = mediaForm.getFirstValue(PROJECT_NAME_PARAMETER);
+        boolean isRenamed = ManageProjects.getInstance().renameProject(
+                Integer.parseInt(suffixProject), newProjectName);
+
+        return LOG.traceExit(isRenamed);
     }
-    
-  //TODO requirement
+
+    //TODO requirement
     /**
      * Delete the project from database.
      *
@@ -81,32 +81,31 @@ public class ManageProjectsResource extends AbstractResource {
     @Requirement(reqId = Requirement.DOI_SRV_140, reqName = Requirement.DOI_SRV_140_NAME)
     @Delete
     public boolean deleteProject() {
-    	 LOG.traceEntry();
-    		
-    	 final ClientSearchDataCite client;
-         List<String> response = new ArrayList<>();
-         try {
- 	       client = new ClientSearchDataCite();
- 	       response = client.getDois(suffixProject);
-         
-         } catch (Exception ex) {
-         	LOG.error(ex + "\n" 
-         			+ "Error in SuffixProjectsDoisResource while searching for dois in project " 
-         			+ suffixProject);
-         }
-         
-         // No DOIs have to be attached to a project before deleting it
-         if(!response.isEmpty()) {
-        	 return LOG.traceExit(false);
-         }
-         
-         boolean isDeleted = ManageProjects.getInstance().deleteProject(
-        		 Integer.parseInt(suffixProject));
-         
-         return LOG.traceExit(isDeleted);
+        LOG.traceEntry();
+
+        final ClientSearchDataCite client;
+        List<String> response = new ArrayList<>();
+        try {
+            client = new ClientSearchDataCite();
+            response = client.getDois(suffixProject);
+
+        } catch (Exception ex) {
+            LOG.error(ex + "\n"
+                    + "Error in SuffixProjectsDoisResource while searching for dois in project "
+                    + suffixProject);
+        }
+
+        // No DOIs have to be attached to a project before deleting it
+        if (!response.isEmpty()) {
+            return LOG.traceExit(false);
+        }
+
+        boolean isDeleted = ManageProjects.getInstance().deleteProject(
+                Integer.parseInt(suffixProject));
+
+        return LOG.traceExit(isDeleted);
     }
-    
-    
+
     /**
      * Tests if the {@link #PROJECT_NAME_PARAMETER} is set.
      *

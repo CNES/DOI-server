@@ -79,16 +79,14 @@ import fr.cnes.doi.utils.spec.Requirement;
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-
-
-public class DoiServer extends Component {   
+public class DoiServer extends Component {
 
     static {
         final List<ConnectorHelper<Client>> registeredClients = Engine.getInstance().
                 getRegisteredClients();
         registeredClients.add(0, new HttpClientHelper(null));
-    } 
-    
+    }
+
     /**
      * Default value for {@link #SSL_CTX_FACTORY} parameter : {@value #DEFAULT_SSL_CTX}.
      */

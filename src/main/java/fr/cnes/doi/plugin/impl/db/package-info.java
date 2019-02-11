@@ -19,4 +19,4 @@
 /**
  * Provides concrete classes implementing the interfaces of the external databases.
  */
-package fr.cnes.doi.plugin.impl;
+package fr.cnes.doi.plugin.impl.db;

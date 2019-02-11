@@ -54,6 +54,7 @@ public abstract class AbstractResource extends WadlServerResource {
 
     /**
      * Init
+     *
      * @throws ResourceException When an Exception happens
      */
     @Override

@@ -58,7 +58,6 @@ import gnu.getopt.LongOpt;
 @Requirement(reqId = Requirement.DOI_DEV_020, reqName = Requirement.DOI_DEV_020_NAME)
 public class Starter {
 
-
     /**
      * Length of the secret key {@value #BITS_16}
      */
@@ -73,6 +72,7 @@ public class Starter {
      * DOI Server.
      */
     private static DoiServer doiServer;
+
     static {
         java.util.logging.Logger rootLogger = java.util.logging.LogManager.getLogManager().
                 getLogger("");
@@ -169,8 +169,8 @@ public class Starter {
      * @param settings Configuration
      */
     private static void launchServer(final DoiSettings settings) {
-        
-    	LOG.trace("Entering in launchServer");
+
+        LOG.trace("Entering in launchServer");
         settings.validConfigurationFile();
         LOG.info("launchServer, entering DOI server");
         doiServer = new DoiServer(settings);
@@ -273,7 +273,7 @@ public class Starter {
                     try {
                         launchServer(settings);
                     } catch (DoiRuntimeException ex) {
-                        LOG.fatal("Error when starting the server: "+ex.getMessage());
+                        LOG.fatal("Error when starting the server: " + ex.getMessage());
                     }
                     break;
                 //

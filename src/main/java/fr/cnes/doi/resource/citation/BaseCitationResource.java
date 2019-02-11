@@ -65,7 +65,7 @@ public class BaseCitationResource extends AbstractResource {
      */
     @Override
     protected void doInit() throws ResourceException {
-        super.doInit();         
+        super.doInit();
         this.app = (DoiCrossCiteApplication) getApplication();
         this.LOG = this.app.getLog();
     }

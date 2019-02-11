@@ -37,9 +37,6 @@ import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
 
 import fr.cnes.doi.application.AdminApplication;
-import fr.cnes.doi.persistence.exceptions.DOIDbException;
-import fr.cnes.doi.persistence.impl.DOIDbDataAccessServiceImpl;
-import fr.cnes.doi.persistence.service.DOIDbDataAccessService;
 import fr.cnes.doi.resource.AbstractResource;
 import fr.cnes.doi.utils.UniqueProjectName;
 import fr.cnes.doi.utils.spec.Requirement;
@@ -65,13 +62,13 @@ public class SuffixProjectsResource extends AbstractResource {
      * Logger.
      */
     private volatile Logger LOG;
-    
+
     public final String USER_PARAMETER = "user";
     /**
      * The user name
      */
     private volatile String userName;
-   
+
     /**
      * Set-up method that can be overridden in order to initialize the state of the resource.
      *
@@ -80,13 +77,13 @@ public class SuffixProjectsResource extends AbstractResource {
     @Override
     protected void doInit() throws ResourceException {
         super.doInit();
-        final AdminApplication app = (AdminApplication) getApplication();      
+        final AdminApplication app = (AdminApplication) getApplication();
         LOG = app.getLog();
         LOG.traceEntry();
-        
+
         this.userName = getQueryValue(USER_PARAMETER);
         LOG.debug("USER Parameter : " + this.userName);
-        
+
         setDescription("This resource handles the project suffix in the DOI name");
         LOG.traceExit();
     }
@@ -101,9 +98,9 @@ public class SuffixProjectsResource extends AbstractResource {
     public Map<String, Integer> getProjectsNameAsJson() {
         LOG.traceEntry();
         if (this.userName == null || this.userName.isEmpty()) {
-        	return LOG.traceExit(UniqueProjectName.getInstance().getProjects());
+            return LOG.traceExit(UniqueProjectName.getInstance().getProjects());
         } else {
-        	return LOG.traceExit(UniqueProjectName.getInstance().getProjectsFromUser(this.userName));
+            return LOG.traceExit(UniqueProjectName.getInstance().getProjectsFromUser(this.userName));
         }
     }
 
@@ -123,10 +120,10 @@ public class SuffixProjectsResource extends AbstractResource {
         checkInputs(mediaForm);
         final String projectName = mediaForm.getFirstValue(PROJECT_NAME_PARAMETER);
         final int digits = UniqueProjectName.getInstance().getShortName(projectName, NB_DIGITS);
-        
+
         return LOG.traceExit(new StringRepresentation(String.valueOf(digits)));
     }
-    
+
     /**
      * Tests if the {@link #PROJECT_NAME_PARAMETER} is set.
      *

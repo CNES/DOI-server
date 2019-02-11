@@ -46,7 +46,6 @@ public class UniqueDoi {
      */
     private static final Logger LOGGER = Logger.getLogger(CLASS_NAME);
 
-
     /**
      * Access to unique INSTANCE of Settings
      *
@@ -184,12 +183,13 @@ public class UniqueDoi {
         LOGGER.exiting(CLASS_NAME, "isIdUnique", result);
         return result;
     }
+
     /**
      * Class to handle the instance
      *
      */
     private static class UniqueDoiHolder {
-        
+
         /**
          * Unique Instance unique
          */
