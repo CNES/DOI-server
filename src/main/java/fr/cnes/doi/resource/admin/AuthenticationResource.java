@@ -64,7 +64,11 @@ public class AuthenticationResource extends AbstractResource {
         LOG.traceExit();
     }
     
-    //TODO commentaires
+    /**
+     * Delete an IHM token
+     * 
+     * @param mediaForm the token to be deleted
+     */
     @Delete
     public void deleteToken(final Form mediaForm) {
     	LOG.traceEntry();
@@ -72,6 +76,19 @@ public class AuthenticationResource extends AbstractResource {
     	this.tokenDB.deleteToken(token);
     }
     
+    /**
+     * Creates and stores an IHM token.
+     *
+     * The token creation is based on several actions :
+     * <ul>
+     * <li>{@link #checkInputs checks the input parameters}</li>
+     * <li>creates the {@link fr.cnes.doi.security.TokenSecurity#generate}</li>
+     * <li>stores the token in {@link fr.cnes.doi.db.AbstractTokenDBHelper token database}</li>
+     * </ul>
+     *
+     * @param info submitted information when requesting the token creation
+     * @return a String representation of the token
+     */
     @Post
     public Representation authenticate(final Form mediaForm){
     	 LOG.traceEntry("Paramater : {}", mediaForm);

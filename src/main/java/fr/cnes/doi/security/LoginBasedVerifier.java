@@ -37,6 +37,7 @@ import fr.cnes.doi.db.AbstractUserRoleDBHelper;
 import fr.cnes.doi.ldap.impl.LDAPAccessServiceImpl;
 import fr.cnes.doi.ldap.service.ILDAPAcessService;
 import fr.cnes.doi.logging.business.JsonMessage;
+import fr.cnes.doi.settings.DoiSettings;
 
 /**
  * Security class for checking login/password.
@@ -118,14 +119,19 @@ public class LoginBasedVerifier implements Verifier {
         final String decodedLogin = new String(Base64.getDecoder().decode(login));
         final String[] userLogin = decodedLogin.split(":");
         
-        if(this.userDB.isUserExist(userLogin[0]) &&
-        	ldapService.authenticateUser(userLogin[0], userLogin[1])) 
-        {
+        boolean isLDAPSetted = !DoiSettings.getInstance().getString("ldapurl").equals("");
+        
+        if(this.userDB.isUserExist(userLogin[0])) {
+        	// TODO if LDAP isn't setted don't check the pwd
+        	if(isLDAPSetted) {
+        		if(!ldapService.authenticateUser(userLogin[0], userLogin[1])) {
+        			return LOG.traceExit(Verifier.RESULT_INVALID);
+        		}
+        	}
+       
         	result = Verifier.RESULT_VALID;
         	request.getClientInfo().setUser(userDB.getRealm().findUser(userLogin[0]));
         	
-        	//TODO add role parameter if any...
-//            request.getHeaders().set(UtilsHeader.SELECTED_ROLE_PARAMETER, String.valueOf(""));
         } else {
             result = Verifier.RESULT_INVALID;
         }

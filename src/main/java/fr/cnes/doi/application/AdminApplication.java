@@ -518,7 +518,7 @@ public class AdminApplication extends AbstractApplication {
         LOG.traceEntry();
 
         final Router router = new Router(getContext());
-        //TODO AUTHENTICATION
+        // This route if for management of IHM tokens.
         router.attachDefault(AuthenticationResource.class);
         
         router.attach(SUFFIX_PROJECT_URI, SuffixProjectsResource.class);

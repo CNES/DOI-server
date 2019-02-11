@@ -37,7 +37,7 @@ function update() {
 				updateGeneral("titles", attributes);
 				break;
 			case "creators":
-				attributes = [ "nameIdentifierScheme", "schemeURI" ];
+				attributes = [ "nameIdentifierScheme", "schemeURI", "nameType" ];
 				updateGeneralSeveral("creators", "creator", attributes);
 				break;
 			case "publisher":
@@ -54,7 +54,7 @@ function update() {
 				break;
 			case "contributors":
 				attributes = [ "contributorType", "nameIdentifierScheme",
-						"schemeURI" ];
+						"schemeURI", "nameType" ];
 				updateGeneralSeveral("contributors", "contributor", attributes);
 				break;
 			case "dates":
@@ -63,7 +63,7 @@ function update() {
 				break;
 			case "relatedIdentifiers":
 				attributes = [ "relatedIdentifierType", "relationType",
-						"schemeURI", "schemeType", "relatedMetadataScheme" ];
+						"schemeURI", "schemeType", "relatedMetadataScheme", "resourceTypeGeneral" ];
 				updateGeneral("relatedIdentifiers", attributes);
 				break;
 			case "descriptions":
@@ -297,10 +297,7 @@ function updateGeneral(mainTag, attributes) {
 	var index = 0;
 	for (var i = 0; i < xlen; i++) { // 5
 		if (y.nodeType == 1) {
-//			source.find("div[title='" + y.nodeName + "']").find(
-//					"[title='" + y.nodeName + "']").eq(index).val(
-//					y.childNodes[0].nodeValue);
-			source.find("div[title='" + y.nodeName + "']").eq(index).val(y.childNodes[0].nodeValue);
+			source.find("input[title='" + y.nodeName + "']").eq(index).val(y.childNodes[0].nodeValue);
 			for (var j = 0; j < attributes.length; j++) {
 
 				if (y.getAttribute(attributes[j]) != null) {

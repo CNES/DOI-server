@@ -147,6 +147,8 @@ public class TokenResourceTest {
      */
     @Test
     public void testCreateTokenWithWrongCredentials() throws IOException {
+    	// if LDAP isn't setted, ignore the test
+    	org.junit.Assume.assumeTrue(!DoiSettings.getInstance().getString("ldapurl").equals(""));
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + "/admin/token");
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "test");
@@ -172,6 +174,8 @@ public class TokenResourceTest {
      */
     @Test
     public void testGetTokenInformationWithWrongCredentials() throws IOException {
+    	// if LDAP isn't setted, ignore the test
+    	org.junit.Assume.assumeTrue(!DoiSettings.getInstance().getString("ldapurl").equals(""));
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + "/admin/token");
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");

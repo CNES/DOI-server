@@ -39,6 +39,12 @@ public class InitDataBaseForTest {
     	admin.setAdmin(true);
     	admin.setEmail("admin@mail.com");
     	
+    	// Test User
+    	DOIUser norole = new DOIUser();
+    	norole.setUsername("norole");
+    	norole.setAdmin(false);
+    	norole.setEmail("norole@mail.com");
+    	
     	// Test Project
     	testProject = new DOIProject();
     	testProject.setProjectname("CFOSAT");
@@ -53,6 +59,8 @@ public class InitDataBaseForTest {
 			das.addDOIUser(testuser.getUsername(), testuser.getAdmin(), testuser.getEmail());
 			// add admin
 			das.addDOIUser(admin.getUsername(), admin.getAdmin(), admin.getEmail());
+			// add norole
+			das.addDOIUser(norole.getUsername(), norole.getAdmin(), norole.getEmail());
 			// add project
 			das.addDOIProject(testProject.getSuffix(), testProject.getProjectname());
 			// assign user to project
