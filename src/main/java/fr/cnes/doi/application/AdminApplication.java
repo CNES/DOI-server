@@ -45,7 +45,6 @@ import org.restlet.service.TaskService;
 import fr.cnes.doi.db.AbstractTokenDBHelper;
 import fr.cnes.doi.ldap.job.DOIUsersUpdate;
 import fr.cnes.doi.logging.business.JsonMessage;
-import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.resource.admin.AuthenticationResource;
 import fr.cnes.doi.resource.admin.ManageProjectsResource;
 import fr.cnes.doi.resource.admin.ManageSuperUserResource;

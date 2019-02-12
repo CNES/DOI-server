@@ -3,7 +3,8 @@
     <!-- to use add system property logback.configurationFile, for example: -Dlogback.configurationFile=/Users/james.bloom/git/mockserver/mockserver-netty/src/main/resources/example_logback.xml -->
 
     <!-- To completely disable all logging completely -Droot.logLevel=OFF -->
-
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
+    
     <!-- application console log (for errors and warnings) -->
     <appender name="STDERR" class="ch.qos.logback.core.ConsoleAppender">
         <target>System.err</target>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration xmlns="http://logging.apache.org/log4j/2.0/config">
-
+        
     <Appenders>
         <File name="PERFO" fileName="perfo.log" append="true">     
             <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} | [%t] %C{2} (%F:%L) | %m%n"/>   

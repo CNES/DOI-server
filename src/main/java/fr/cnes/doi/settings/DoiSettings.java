@@ -82,7 +82,7 @@ public final class DoiSettings {
     /**
      * private constructor Loads the defautl configuration properties {@value #CONFIG_PROPERTIES}
      */
-    private DoiSettings() {
+    private DoiSettings() {        
         final Properties properties = loadConfigurationFile();
         init(properties, Level.OFF);
     }
@@ -95,14 +95,17 @@ public final class DoiSettings {
      */
     private void init(final Properties properties,
             Level level) {
+        if(Level.OFF.equals(level)) {
+            level = null; // this fixes a bug in log4j2
+        } 
         LOG.traceEntry("Parameter : {}", properties);
-        LOG.log(level, "----- DOI parameters ----");
+        LOG.log(level,"----- DOI parameters ----");        
         fillConcurrentMap(properties, level);
         computePathOfTheApplication();
         PluginFactory.init(DoiSettings.MAP_PROPERTIES);
         LOG.log(level, "DOI settings have been loaded");
         LOG.log(level, "-------------------------");
-        LOG.info(properties.getProperty(Consts.NAME) + " loaded");
+        LOG.log(level, properties.getProperty(Consts.NAME) + " loaded");
         LOG.traceExit();
     }
 
@@ -133,7 +136,7 @@ public final class DoiSettings {
                 "class/config.properties"));
         final Representation configurationFile = client.get();
         try {
-            LOG.info("Loading " + CONFIG_PROPERTIES + " by default");
+            LOG.debug("Loading " + CONFIG_PROPERTIES + " by default");
             properties.load(configurationFile.getStream());
         } catch (IOException e) {
             LOG.fatal("Unable to load " + CONFIG_PROPERTIES);
@@ -150,7 +153,7 @@ public final class DoiSettings {
      * @return the configuration instance.
      */
     public static DoiSettings getInstance() {
-        LOG.traceEntry();
+        LOG.traceEntry();        
         return LOG.traceExit(DoiSettingsHolder.INSTANCE);
     }
 
@@ -222,7 +225,7 @@ public final class DoiSettings {
      */
     private void fillConcurrentMap(final Properties properties,
             final Level level) {
-        LOG.traceEntry("Paramete : {}", properties);
+        LOG.traceEntry("Parameters : {}", properties);
         for (final Entry<Object, Object> entry : properties.entrySet()) {
             MAP_PROPERTIES.put((String) entry.getKey(), (String) entry.getValue());
             LOG.log(level, "{} = {}", entry.getKey(), entry.getValue());

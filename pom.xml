@@ -363,7 +363,7 @@
             <groupId>org.restlet.jse</groupId>
             <artifactId>org.restlet.ext.slf4j</artifactId>
             <version>${restlet-version}</version>
-        </dependency>       
+    	</dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>

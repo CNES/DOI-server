@@ -193,12 +193,10 @@ public class HttpClientHelper extends org.restlet.engine.connector.HttpClientHel
     public synchronized void start() throws Exception {
         final Series<Parameter> parameters = getHelpedParameters();
         configure(parameters);
-        super.start();
     }
 
     @Override
     public synchronized void stop() throws Exception {
-        super.stop();
         if (this.httpClient != null) {
             this.getHttpClient().close();
             this.httpClient = null;

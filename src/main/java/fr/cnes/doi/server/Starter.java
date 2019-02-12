@@ -85,7 +85,7 @@ public class Starter {
         LOG.trace("Entering in displayHelp");
         DoiSettings settings = DoiSettings.getInstance();
         StringBuilder help = new StringBuilder();
-        help.append("------------ Help for DOI Server -----------\n");
+        help.append("\n------------ Help for DOI Server -----------\n");
         help.append("\n");
         help.append("Usage: java -jar ").append(settings.getString(Consts.APP_NAME)).append("-")
                 .append(settings.getString(Consts.VERSION)).append(
