@@ -42,6 +42,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Assume;
 import org.junit.experimental.categories.Category;
 import org.restlet.Client;
 import org.restlet.Context;
@@ -65,6 +66,8 @@ import org.restlet.util.Series;
 public class DoisResourceTest {
 
     private static Client cl;
+    private static boolean isDatabaseConfigured;
+    
     private static MdsSpec mdsSpecStub;   
     
     private static final String DOIS_SERVICE = "/mds/dois";
@@ -74,52 +77,62 @@ public class DoisResourceTest {
 
     @BeforeClass
     public static void setUpClass() {
-    	InitDataBaseForTest.init();
-        InitServerForTest.init(InitSettingsForTest.CONFIG_TEST_PROPERTIES);
-        cl = new Client(new Context(), Protocol.HTTPS);
-        Series<Parameter> parameters = cl.getContext().getParameters();       
-        parameters.set(RESTLET_MAX_TOTAL_CONNECTIONS, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_TOTAL_CONNECTIONS, DEFAULT_MAX_TOTAL_CONNECTIONS));        
-        parameters.set(RESTLET_MAX_CONNECTIONS_PER_HOST, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_CONNECTIONS_PER_HOST, DEFAULT_MAX_CONNECTIONS_PER_HOST));
-        parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
-        parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
-        parameters.add("truststoreType", "JKS");
+        try {
+            InitDataBaseForTest.init();
+            isDatabaseConfigured = true;
+            InitServerForTest.init(InitSettingsForTest.CONFIG_TEST_PROPERTIES);
+            cl = new Client(new Context(), Protocol.HTTPS);
+            Series<Parameter> parameters = cl.getContext().getParameters();       
+            parameters.set(RESTLET_MAX_TOTAL_CONNECTIONS, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_TOTAL_CONNECTIONS, DEFAULT_MAX_TOTAL_CONNECTIONS));        
+            parameters.set(RESTLET_MAX_CONNECTIONS_PER_HOST, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_CONNECTIONS_PER_HOST, DEFAULT_MAX_CONNECTIONS_PER_HOST));
+            parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
+            parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
+            parameters.add("truststoreType", "JKS");
+        } catch(Error ex) {
+            isDatabaseConfigured = false;
+        }
         mdsSpecStub = new MdsSpec(DATACITE_MOCKSERVER_PORT);
     }
 
     @AfterClass
     public static void tearDownClass() throws IOException {
-    	InitDataBaseForTest.close();
-        Form doiForm = new Form();
-        doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b"));
-        doiForm.add(new Parameter(DoisResource.URL_PARAMETER, "https://cfosat.cnes.fr/"));
-
-        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-        ClientResource client = new ClientResource("https://localhost:" + port + DOIS_SERVICE);
-        client.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "malapert", "pwd"));
-        final String RESTLET_HTTP_HEADERS = "org.restlet.http.headers";
-        Map<String, Object> reqAttribs = client.getRequestAttributes();
-        Series headers = (Series) reqAttribs.get(RESTLET_HTTP_HEADERS);
-        if (headers == null) {
-            headers = new Series<>(Header.class);
-            reqAttribs.put(RESTLET_HTTP_HEADERS, headers);
-        }
-        headers.add(UtilsHeader.SELECTED_ROLE_PARAMETER, "828606");
-        client.setNext(cl);
-        int code;
         try {
-            Representation rep = client.post(doiForm);
-            code = client.getStatus().getCode();
-            rep.exhaust();
-        } catch (ResourceException ex) {
-            code = ex.getStatus().getCode();
+            InitDataBaseForTest.close();
+            Form doiForm = new Form();
+            doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b"));
+            doiForm.add(new Parameter(DoisResource.URL_PARAMETER, "https://cfosat.cnes.fr/"));
+
+            String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
+            ClientResource client = new ClientResource("https://localhost:" + port + DOIS_SERVICE);
+            client.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "malapert", "pwd"));
+            final String RESTLET_HTTP_HEADERS = "org.restlet.http.headers";
+            Map<String, Object> reqAttribs = client.getRequestAttributes();
+            Series headers = (Series) reqAttribs.get(RESTLET_HTTP_HEADERS);
+            if (headers == null) {
+                headers = new Series<>(Header.class);
+                reqAttribs.put(RESTLET_HTTP_HEADERS, headers);
+            }
+            headers.add(UtilsHeader.SELECTED_ROLE_PARAMETER, "828606");
+            client.setNext(cl);
+            int code;
+            try {
+                Representation rep = client.post(doiForm);
+                code = client.getStatus().getCode();
+                rep.exhaust();
+            } catch (ResourceException ex) {
+                code = ex.getStatus().getCode();
+            }
+            client.release();
+            InitServerForTest.close();        
+        } catch(Error ex) {
+            
         }
-        client.release();
         mdsSpecStub.finish();
-        InitServerForTest.close();
     }
 
     @Before
-    public void setUp() {    
+    public void setUp() {  
+        Assume.assumeTrue("Database is not configured, please configure it and rerun the tests", isDatabaseConfigured);                                
         mdsSpecStub.reset();
     }
 

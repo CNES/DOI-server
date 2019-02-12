@@ -26,8 +26,6 @@ import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_CONNECTIONS_PER_HOST;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_TOTAL_CONNECTIONS;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
-import fr.cnes.doi.settings.DoiSettingsTest;
-import fr.cnes.doi.settings.ProxySettings;
 
 import static fr.cnes.doi.server.DoiServer.JKS_DIRECTORY;
 import static fr.cnes.doi.server.DoiServer.JKS_FILE;
@@ -60,6 +58,7 @@ import org.restlet.resource.ResourceException;
 import org.restlet.util.Series;
 import static fr.cnes.doi.client.BaseClient.DATACITE_MOCKSERVER_PORT;
 import fr.cnes.doi.exception.ClientMdsException;
+import org.junit.Assume;
 import org.junit.experimental.categories.Category;
 
 /**
@@ -70,6 +69,8 @@ import org.junit.experimental.categories.Category;
 public class ITauthentication {
 
     private static Client cl;
+    private static boolean isDatabaseConfigured;
+    
     public static final String DOI = "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b";
     private static ClientAndServer mockServer;
 
@@ -78,27 +79,37 @@ public class ITauthentication {
 
     @BeforeClass
     public static void setUpClass() throws ClientMdsException {
-    	InitDataBaseForTest.init();
-        InitServerForTest.init(InitSettingsForTest.CONFIG_IT_PROPERTIES);        
-        cl = new Client(new Context(), Protocol.HTTPS);
-        Series<Parameter> parameters = cl.getContext().getParameters();
-        parameters.set(RESTLET_MAX_TOTAL_CONNECTIONS, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_TOTAL_CONNECTIONS, DEFAULT_MAX_TOTAL_CONNECTIONS));        
-        parameters.set(RESTLET_MAX_CONNECTIONS_PER_HOST, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_CONNECTIONS_PER_HOST, DEFAULT_MAX_CONNECTIONS_PER_HOST));
-        parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
-        parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
-        parameters.add("truststoreType", "JKS");
+        try {
+            InitDataBaseForTest.init();
+            isDatabaseConfigured = true;
+            InitServerForTest.init(InitSettingsForTest.CONFIG_IT_PROPERTIES);        
+            cl = new Client(new Context(), Protocol.HTTPS);
+            Series<Parameter> parameters = cl.getContext().getParameters();
+            parameters.set(RESTLET_MAX_TOTAL_CONNECTIONS, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_TOTAL_CONNECTIONS, DEFAULT_MAX_TOTAL_CONNECTIONS));        
+            parameters.set(RESTLET_MAX_CONNECTIONS_PER_HOST, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_CONNECTIONS_PER_HOST, DEFAULT_MAX_CONNECTIONS_PER_HOST));
+            parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
+            parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
+            parameters.add("truststoreType", "JKS");
+        } catch(Error ex) {
+            isDatabaseConfigured = false;
+        }
         mockServer = startClientAndServer(DATACITE_MOCKSERVER_PORT);   
     }
 
     @AfterClass
     public static void tearDownClass() {
-    	InitDataBaseForTest.close();
-        mockServer.stop();
-        InitServerForTest.close();
+        try {
+            InitDataBaseForTest.close();
+            InitServerForTest.close();
+        } catch(Error ex) {
+            
+        }
+        mockServer.stop();        
     }
 
     @Before
     public void setUp() {
+       Assume.assumeTrue("Database is not configured, please configure it and rerun the tests", isDatabaseConfigured);                                                
        mockServer.reset();
     }
 

@@ -66,6 +66,7 @@ import fr.cnes.doi.client.ClientProxyTest;
 import fr.cnes.doi.security.UtilsHeader;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
+import org.junit.Assume;
 
 /**
  * Test class for {@link fr.cnes.doi.resource.mds.MetadatasResource}
@@ -78,6 +79,8 @@ public class MetadatasResourceTest {
     public ExpectedException exceptions = ExpectedException.none();     
 
     private static Client cl;
+    private static boolean isDatabaseConfigured;
+    
     private String result;
     private InputStream inputStream;
     private InputStream inputStreamFileError; 
@@ -90,31 +93,41 @@ public class MetadatasResourceTest {
 
     @BeforeClass
     public static void setUpClass() {
-    	InitDataBaseForTest.init();
-        InitServerForTest.init(InitSettingsForTest.CONFIG_TEST_PROPERTIES);
-        
-        cl = new Client(new Context(), Protocol.HTTPS);
-        Series<Parameter> parameters = cl.getContext().getParameters();
-        parameters.set(RESTLET_MAX_TOTAL_CONNECTIONS, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_TOTAL_CONNECTIONS, DEFAULT_MAX_TOTAL_CONNECTIONS));        
-        parameters.set(RESTLET_MAX_CONNECTIONS_PER_HOST, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_CONNECTIONS_PER_HOST, DEFAULT_MAX_CONNECTIONS_PER_HOST));
-        parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
-        parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
-        parameters.add("truststoreType", "JKS");
+        try {
+            InitDataBaseForTest.init();
+            isDatabaseConfigured = true;
+            InitServerForTest.init(InitSettingsForTest.CONFIG_TEST_PROPERTIES);
+
+            cl = new Client(new Context(), Protocol.HTTPS);
+            Series<Parameter> parameters = cl.getContext().getParameters();
+            parameters.set(RESTLET_MAX_TOTAL_CONNECTIONS, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_TOTAL_CONNECTIONS, DEFAULT_MAX_TOTAL_CONNECTIONS));        
+            parameters.set(RESTLET_MAX_CONNECTIONS_PER_HOST, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_CONNECTIONS_PER_HOST, DEFAULT_MAX_CONNECTIONS_PER_HOST));
+            parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
+            parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
+            parameters.add("truststoreType", "JKS");
+        }catch(Error ex) {
+            isDatabaseConfigured = false;
+        }
         mdsServerStub = new MdsSpec(DATACITE_MOCKSERVER_PORT);
     }
 
     @AfterClass
     public static void tearDownClass() {
-    	InitDataBaseForTest.close();
-        mdsServerStub.finish();
-        InitServerForTest.close();
+        try {
+            InitDataBaseForTest.close();
+            InitServerForTest.close();
+        } catch(Error ex) {
+            
+        }
+        mdsServerStub.finish();        
     }
 
     @Before
     public void setUp() throws IOException {
         mdsServerStub.reset();
         this.inputStream = ClientProxyTest.class.getResourceAsStream("/test.xml");
-        this.inputStreamFileError = ClientProxyTest.class.getResourceAsStream("/wrongFileTest.xml");        
+        this.inputStreamFileError = ClientProxyTest.class.getResourceAsStream("/wrongFileTest.xml");    
+        Assume.assumeTrue("Database is not configured, please configure it and rerun the tests", isDatabaseConfigured);                        
     }
 
     @After

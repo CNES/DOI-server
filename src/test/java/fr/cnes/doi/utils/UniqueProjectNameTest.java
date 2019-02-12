@@ -34,6 +34,7 @@ import fr.cnes.doi.InitDataBaseForTest;
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.UnitTest;
 import fr.cnes.doi.exception.DoiRuntimeException;
+import org.junit.Assume;
 import org.junit.Rule;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
@@ -48,6 +49,8 @@ public class UniqueProjectNameTest {
     @Rule
     public ExpectedException exceptions = ExpectedException.none();
 
+    private static boolean isDatabaseConfigured;
+    
     /**
      * Cache file for tests
      */
@@ -58,13 +61,22 @@ public class UniqueProjectNameTest {
      */
     @BeforeClass
     public static void setUpClass() {
-        InitSettingsForTest.init(InitSettingsForTest.CONFIG_TEST_PROPERTIES);   
-        InitDataBaseForTest.init();
+        try {
+            InitSettingsForTest.init(InitSettingsForTest.CONFIG_TEST_PROPERTIES);   
+            InitDataBaseForTest.init();
+            isDatabaseConfigured = true;
+        } catch(Error ex) {
+            isDatabaseConfigured = false;
+        }
     }
     
     @AfterClass
     public static void tearDownClass() throws IOException {
-    	 InitDataBaseForTest.close();
+        try {
+            InitDataBaseForTest.close();
+        } catch(Error ex) {
+            
+        }
     }
 
     /**
@@ -78,6 +90,7 @@ public class UniqueProjectNameTest {
                     new File(UniqueProjectNameTest.CACHE_FILE + ".bak").toPath(), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
         }
+        Assume.assumeTrue("Database is not configured, please configure it and rerun the tests", isDatabaseConfigured);                                
     }
 
     /**
