@@ -38,4 +38,9 @@ public class DOIUser {
                 && this.admin.equals(testuser.getAdmin())
                 && this.email.equals(testuser.getEmail());
     }
+    
+    @Override
+    public String toString( ) {
+      return this.getUsername() + "_" + this.getEmail();	
+    }
 }

@@ -52,7 +52,7 @@ public abstract class AbstractProjectSuffixDBHelper extends Observable {
      *
      * @param configuration connection configuration
      */
-    public abstract void init(Object configuration);
+    public abstract void init();
 
     /**
      * Adds a suffix project in the database.

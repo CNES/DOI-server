@@ -45,6 +45,12 @@ public class InitDataBaseForTest {
     	norole.setUsername("norole");
     	norole.setAdmin(false);
     	norole.setEmail("norole@mail.com");
+    	
+    	 // Test User
+    	DOIUser kerberos = new DOIUser();
+    	kerberos.setUsername("doi_kerberos");
+    	kerberos.setAdmin(false);
+    	kerberos.setEmail("kerberos@mail.com");
 
         // Test Project
         testProject = new DOIProject();
@@ -52,9 +58,7 @@ public class InitDataBaseForTest {
         testProject.setSuffix(828606);
 
         try {
-            das.removeDOIUser(testuser.getUsername());
-            das.removeDOIUser(admin.getUsername());
-            das.removeDOIProject(testProject.getSuffix());
+        	close();
 
             // add user
             das.addDOIUser(testuser.getUsername(), testuser.getAdmin(), testuser.getEmail());
@@ -62,6 +66,9 @@ public class InitDataBaseForTest {
             das.addDOIUser(admin.getUsername(), admin.getAdmin(), admin.getEmail());
             // add norole
 			das.addDOIUser(norole.getUsername(), norole.getAdmin(), norole.getEmail());
+			// add doi_kerberos
+            das.addDOIUser(kerberos.getUsername(), kerberos.getAdmin(), kerberos.getEmail());
+            
             // add project
             das.addDOIProject(testProject.getSuffix(), testProject.getProjectname());
             // assign user to project

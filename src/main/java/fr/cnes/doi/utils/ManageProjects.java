@@ -44,9 +44,8 @@ public class ManageProjects {
      */
     private ManageProjects() {
         LOGGER.entering(CLASS_NAME, "Constructor");
-        final String path = DoiSettings.getInstance().getString(Consts.PROJECT_CONF_PATH);
         this.projectDB = PluginFactory.getProjectSuffix();
-        this.projectDB.init(path);
+        this.projectDB.init();
         LOGGER.exiting(CLASS_NAME, "Constructor");
     }
 

@@ -75,8 +75,10 @@ public class LDAPAccessServiceImpl implements ILDAPAcessService {
         prop.put(Context.PROVIDER_URL, conf.getString(Consts.LDAP_URL));
         prop.put(Context.SECURITY_AUTHENTICATION, "simple");
         try {
-            prop.put(Context.SECURITY_PRINCIPAL,
-                    UtilsCryptography.decrypt(conf.getString(Consts.LDAP_USER)));
+            prop.put(Context.SECURITY_PRINCIPAL, "uid=" 
+            		+ UtilsCryptography.decrypt(conf.getString(Consts.LDAP_USER)) 
+            		+ ",cn=users,cn=accounts,dc=sis,dc=cnes,dc=fr"
+                   );
             prop.put(Context.SECURITY_CREDENTIALS,
                     UtilsCryptography.decrypt(conf.getString(Consts.LDAP_PWD)));
         } catch (Exception e) {

@@ -31,4 +31,9 @@ public class LDAPUser {
     public void setFullname(String fullname) {
         this.fullname = fullname;
     }
+    
+    @Override
+    public String toString( ) {
+      return this.getUsername() + "_" + this.getEmail();	
+    }
 }

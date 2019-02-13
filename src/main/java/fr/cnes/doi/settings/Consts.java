@@ -300,10 +300,6 @@ public class Consts {
      */
     public static final String JETTY_GRACEFUL_SHUTDOWN = "Starter.GRACEFUL_SHUTDOWN";
     /**
-     * Path of the cache file to store projects/id association
-     */
-    public static final String PROJECT_CONF_PATH = "Starter.UniqueProjectName.cache.file";
-    /**
      * Path of the cache file to store landingPage/DOI association
      */
     public static final String DOI_CONF_PATH = "Starter.UniqueDoi.cache.file";

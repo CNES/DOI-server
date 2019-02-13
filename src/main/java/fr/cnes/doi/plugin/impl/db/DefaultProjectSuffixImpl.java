@@ -70,7 +70,7 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
      * @param configuration The file that contains the database
      */
     @Override
-    public void init(Object configuration) {
+    public void init() {
     }
 
     @Override
