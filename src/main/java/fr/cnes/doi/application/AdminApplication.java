@@ -330,7 +330,9 @@ public class AdminApplication extends AbstractApplication {
         final RoleAuthorizer authorizer = createRoleAuthorizer();
 
         // Defines the admin router as private
-        final AllowerIP blocker = new AllowerIP(getContext());
+        final String ips = DoiSettings.getInstance().getString(Consts.ADMIN_IP_ALLOWER);
+        final boolean isEnabled = ips != null;
+        final AllowerIP blocker = new AllowerIP(getContext(), isEnabled);
 
         // Defines the routers
         final Router webSiteRouter = createWebSiteRouter();
