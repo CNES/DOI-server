@@ -91,10 +91,16 @@
   		<!-- JS library -->
 		<script src="js/jquery-min.js"></script>
 		<script src="js/bootstrap-min.js"></script>
-
+		<!-- Contain var 'config' as json -->
+		<script src="js/config.js"></script>
+		
 		<script>
-// 		var prefixCnes = "10.24400/";
-		var prefixCnes = "10.5072/";
+		var defaultUrl = 
+			config.dbProtocol + "://" 
+			+ config.dbHost + ":"
+			+ config.dbPort ;
+		
+		var prefixCnes = config.dbPrefix + "/";
 		
 		var identifier = "";
 		
@@ -121,7 +127,7 @@
 		function getStyle(){
 			$.ajax({
 			    type: "GET",
-			    url: "http://localhost:8182/citation/style",
+			    url: defaultUrl + "/citation/style",
 			    crossDomain: true,
 				cache : false,
 			    error : function (XMLHttpRequest, textStatus, errorThrown){ 
@@ -144,7 +150,7 @@
 		function getLanguage(){
 			$.ajax({
 			    type: "GET",
-			    url: "http://localhost:8182/citation/language",
+			    url: defaultUrl + "/citation/language",
 			    crossDomain: true,
 				cache : false,
 			    error : function (XMLHttpRequest, textStatus, errorThrown){ 
@@ -177,7 +183,7 @@
 			
 			$.ajax({
 			    type: "GET",
-			    url: "http://localhost:8182/citation/format?" + $.param(request),
+			    url: defaultUrl + "/citation/format?" + $.param(request),
 			    crossDomain: true,
 				cache : false,
 			    error : function (XMLHttpRequest, textStatus, errorThrown){ 
@@ -201,7 +207,7 @@
 			console.log(projectId);
 			$.ajax({
 			    type: "GET",
-			    url: "http://localhost:8182/admin/projects/" + projectId  + "/dois",
+			    url: defaultUrl + "/admin/projects/" + projectId  + "/dois",
 			    headers: {
 			    	'Authorization': "Bearer " + sessionStorage.getItem("token")
 			    },

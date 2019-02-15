@@ -408,10 +408,16 @@
   	
 	<script src="js/jquery-min.js"></script>
 	<script src="js/bootstrap-min.js"></script>
-	<script>
+	<!-- Contain var 'config' as json -->
+	<script src="js/config.js"></script>
 	
-// 	var prefixCnes = "10.24400/";
-	var prefixCnes = "10.5072/";
+	<script>
+	var defaultUrl = 
+		config.dbProtocol + "://" 
+		+ config.dbHost + ":"
+		+ config.dbPort ;
+	
+	var prefixCnes = config.dbPrefix + "/";
 	var identifier = "";
 	var url = "";
 	
@@ -476,7 +482,7 @@
 		}
 		
 		$(document).ajaxSuccess(function(e, xhr, opt){
-			if (opt.url == "http://localhost:8182/mds/metadata") {
+			if (opt.url == defaultUrl + "/mds/metadata") {
 				if(url != ""){
 					requestURL();
 				}
@@ -491,7 +497,7 @@
 			};
 			$.ajax({
 			    type: "POST",
-			    url: "http://localhost:8182/mds/dois",
+			    url: defaultUrl + "/mds/dois",
 			    data: formData,
 			    headers: {
 			    	'Authorization': "Bearer " + sessionStorage.getItem("token")
@@ -508,7 +514,7 @@
 			console.log("idProjet >> " + projectId);
 			$.ajax({
 			    type: "POST",
-			    url: "http://localhost:8182/mds/metadata",
+			    url: defaultUrl + "/mds/metadata",
 			    data: xml, 
 			    contentType: "text/xml",
 			    dataType: "xml",

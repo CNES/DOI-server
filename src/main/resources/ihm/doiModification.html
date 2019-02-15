@@ -405,10 +405,16 @@
 		<!-- JS library -->
 		<script src="js/jquery-min.js"></script>
 		<script src="js/bootstrap-min.js"></script>
+		<!-- Contain var 'config' as json -->
+		<script src="js/config.js"></script>
 		
 		<script>
-// 		var prefixCnes = "10.24400/";
-		var prefixCnes = "10.5072/";
+		var defaultUrl = 
+			config.dbProtocol + "://" 
+			+ config.dbHost + ":"
+			+ config.dbPort ;
+		
+		var prefixCnes = config.dbPrefix + "/";
 		
 		var identifier = "";
 		var url = "";
@@ -439,7 +445,7 @@
 				var fullDoiName = prefixCnes + projectId + "/" + identifier;
 				$.ajax({
 				    type: "GET",
-				    url: "http://localhost:8182/mds/metadata/" + fullDoiName,
+				    url: defaultUrl + "/mds/metadata/" + fullDoiName,
 				    headers: {
 				    	'Authorization': "Bearer " + sessionStorage.getItem("token")
 				    },
@@ -461,7 +467,7 @@
 				var fullName = prefixCnes + projectId + "/" + identifier;
 				$.ajax({
 				    type: "GET",
-				    url: "http://localhost:8182/mds/dois/" + fullName,
+				    url: defaultUrl + "/mds/dois/" + fullName,
 				    headers: {
 				    	'Authorization': "Bearer " + sessionStorage.getItem("token")
 				    },
@@ -480,7 +486,7 @@
 				console.log(projectId);
 				$.ajax({
 				    type: "GET",
-				    url: "http://localhost:8182/admin/projects/" + projectId  + "/dois",
+				    url: defaultUrl + "/admin/projects/" + projectId  + "/dois",
 				    headers: {
 				    	'Authorization': "Bearer " + sessionStorage.getItem("token")
 				    },
@@ -545,7 +551,7 @@
 				};
 				$.ajax({
 				    type: "POST",
-				    url: "http://localhost:8182/mds/dois",
+				    url: defaultUrl + "/mds/dois",
 				    data: formData,
 				    headers: {
 				    	'Authorization': "Bearer " + sessionStorage.getItem("token")
@@ -562,7 +568,7 @@
 				console.log("idProjet >> " + projectId);
 				$.ajax({
 				    type: "POST",
-				    url: "http://localhost:8182/mds/metadata",
+				    url: defaultUrl + "/mds/metadata",
 				    data: xml, 
 				    contentType: "text/xml",
 				    dataType: "xml",
