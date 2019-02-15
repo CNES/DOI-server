@@ -30,6 +30,7 @@ import org.restlet.security.MemoryRealm;
 import org.restlet.security.Role;
 import org.restlet.security.User;
 
+import fr.cnes.doi.db.MyMemoryRealm;
 import fr.cnes.doi.exception.DOIDbException;
 import fr.cnes.doi.plugin.impl.db.persistence.impl.DOIDbDataAccessServiceImpl;
 import fr.cnes.doi.utils.DOIUser;
@@ -59,7 +60,7 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
     /**
      * User/Role realm
      */
-    private final MemoryRealm REALM = getRealm();
+    private final MyMemoryRealm REALM = getRealm();
 
     /**
      * Default constructor of the authentication plugin.

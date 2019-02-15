@@ -18,12 +18,12 @@
  */
 package fr.cnes.doi.db;
 
-import fr.cnes.doi.exception.DOIDbException;
 import java.util.List;
 import java.util.Observable;
 
 import org.restlet.security.MemoryRealm;
 
+import fr.cnes.doi.exception.DOIDbException;
 import fr.cnes.doi.utils.DOIUser;
 import fr.cnes.doi.utils.spec.Requirement;
 
@@ -46,10 +46,11 @@ public abstract class AbstractUserRoleDBHelper extends Observable {
      */
     public static final String REMOVE_USER_NOTIFICATION = "RemoveUserNotification";
 
+    
     /**
      * Realm.
      */
-    private static final MemoryRealm REALM = new MemoryRealm();
+    private static final MyMemoryRealm REALM = new MyMemoryRealm();
 
     /**
      * Init the connection.
@@ -63,7 +64,7 @@ public abstract class AbstractUserRoleDBHelper extends Observable {
      *
      * @return the realm
      */
-    public MemoryRealm getRealm() {
+    public MyMemoryRealm getRealm() {
         return REALM;
     }
 

@@ -2,13 +2,13 @@ package fr.cnes.doi.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import fr.cnes.doi.db.AbstractUserRoleDBHelper;
+import fr.cnes.doi.db.MyMemoryRealm;
 import fr.cnes.doi.exception.DOIDbException;
 import fr.cnes.doi.plugin.PluginFactory;
-import java.util.logging.Level;
-import org.restlet.security.MemoryRealm;
 
 /**
  * Utils class to manage users from database
@@ -98,7 +98,7 @@ public class ManageUsers {
         }
     }
 
-    public MemoryRealm getRealm() {
+    public MyMemoryRealm getRealm() {
         return userDB.getRealm();
     }
 

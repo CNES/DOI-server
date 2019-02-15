@@ -12,13 +12,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.restlet.Application;
 import org.restlet.security.Group;
-import org.restlet.security.MemoryRealm;
 import org.restlet.security.Role;
 import org.restlet.security.User;
 
 import fr.cnes.doi.application.AdminApplication;
 import fr.cnes.doi.application.DoiMdsApplication;
 import fr.cnes.doi.db.AbstractProjectSuffixDBHelper;
+import fr.cnes.doi.db.MyMemoryRealm;
 import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.logging.business.JsonMessage;
 import fr.cnes.doi.utils.DOIUser;
@@ -57,7 +57,7 @@ public class RoleAuthorizer implements Observer {
     /**
      * Realm.
      */
-    private static final MemoryRealm REALM = ManageUsers.getInstance().getRealm();
+    private static final MyMemoryRealm REALM = ManageUsers.getInstance().getRealm();
 
     /**
      * Access to unique INSTANCE of role authorizer
