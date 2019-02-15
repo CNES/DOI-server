@@ -476,7 +476,7 @@
 		}
 		
 		$(document).ajaxSuccess(function(e, xhr, opt){
-			if (opt.url == "http://127.0.0.1:8182/mds/metadata") {
+			if (opt.url == "http://localhost:8182/mds/metadata") {
 				if(url != ""){
 					requestURL();
 				}
@@ -491,7 +491,7 @@
 			};
 			$.ajax({
 			    type: "POST",
-			    url: "http://127.0.0.1:8182/mds/dois",
+			    url: "http://localhost:8182/mds/dois",
 			    data: formData,
 			    headers: {
 			    	'Authorization': "Bearer " + sessionStorage.getItem("token")
@@ -508,7 +508,7 @@
 			console.log("idProjet >> " + projectId);
 			$.ajax({
 			    type: "POST",
-			    url: "http://127.0.0.1:8182/mds/metadata",
+			    url: "http://localhost:8182/mds/metadata",
 			    data: xml, 
 			    contentType: "text/xml",
 			    dataType: "xml",

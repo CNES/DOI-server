@@ -82,7 +82,7 @@
 			//isUserExist? save in session userName and admin(true or false)
 			$.ajax({
 			    type: "GET",
-			    url: "http://127.0.0.1:8182/admin/superusers/" + userId,
+			    url: "http://localhost:8182/admin/superusers/" + userId,
 			    headers: {
 			    	'Authorization': 'Basic ' + btoa(user)
 // 			    	'Authorization': "Bearer " + sessionStorage.getItem("token")
@@ -117,7 +117,7 @@
 			var admin = sessionStorage.getItem("admin");
 			$.ajax({
 			    type: "GET",
-			    url: "http://127.0.0.1:8182/admin/projects?user=" + userId,
+			    url: "http://localhost:8182/admin/projects?user=" + userId,
 			    headers: {
 			    	'Authorization': 'Basic ' + btoa(user)
 // 			    	'Authorization': "Bearer " + sessionStorage.getItem("token")
@@ -162,8 +162,8 @@
 			
 			$.ajax({
 			    type: "POST",
-			    url: "https://127.0.0.1:8183/admin",
-// 				url: "http://127.0.0.1:8182/admin",
+			    url: "https://localhost:8183/admin",
+// 				url: "http://localhost:8182/admin",
 				headers: {
 			    	'Authorization': 'Basic ' + btoa(user)
 // 			    	'Authorization': "Bearer " + sessionStorage.getItem("token")
@@ -192,8 +192,8 @@
 			
 			$.ajax({
 			    type: "DELETE",
-// 			    url: "https://127.0.0.1:8183/admin",
-				url: "http://127.0.0.1:8182/admin",
+// 			    url: "https://localhost:8183/admin",
+				url: "http://localhost:8182/admin",
 				headers: {
 	 				'Authorization': "Bearer " + sessionStorage.getItem("token")
 				},

@@ -136,7 +136,7 @@
 		function getListProjet(){
 			$.ajax({
 			    type: "GET",
-			    url: "http://127.0.0.1:8182/admin/projects",
+			    url: "http://localhost:8182/admin/projects",
 			    headers: {
 // 			    	'Authorization': 'Basic ' + btoa('malapert:pwd'), "Bearer " + sessionStorage.getItem("token")
 			    	'Authorization': "Bearer " + sessionStorage.getItem("token")
@@ -161,7 +161,7 @@
 		function getListAdmin(){
 			$.ajax({
 			    type: "GET",
-			    url: "http://127.0.0.1:8182/admin/superusers",
+			    url: "http://localhost:8182/admin/superusers",
 			    headers: {
 			    	'Authorization': "Bearer " + sessionStorage.getItem("token")
 			    },
@@ -189,7 +189,7 @@
 		    } else {
 		    	$.ajax({
 				    type: "POST",
-				    url: "http://127.0.0.1:8182/admin/projects",
+				    url: "http://localhost:8182/admin/projects",
 				    data: {
 				    	'projectName': projet
 				    },
@@ -229,7 +229,7 @@
 		    } else {
 		    	$.ajax({
 				    type: "POST",
-				    url: "http://127.0.0.1:8182/admin/projects/" + idText,
+				    url: "http://localhost:8182/admin/projects/" + idText,
 				    data: {
 				    	'newProjectName': projet
 				    },
@@ -277,7 +277,7 @@
 		    	
 		    	$.ajax({
 				    type: "DELETE",
-				    url: "http://127.0.0.1:8182/admin/projects/" + idText,
+				    url: "http://localhost:8182/admin/projects/" + idText,
 				    headers: {
 				    	'Authorization': "Bearer " + sessionStorage.getItem("token")
 				    },
@@ -315,7 +315,7 @@
 			
 			$.ajax({
 			    type: "GET",
-			    url: "http://127.0.0.1:8182/admin/projects/" + suffixProject + "/users",
+			    url: "http://localhost:8182/admin/projects/" + suffixProject + "/users",
 			    headers: {
 			    	'Authorization': "Bearer " + sessionStorage.getItem("token")
 			    },
@@ -353,7 +353,7 @@
 			} else {
 				$.ajax({
 				    type: "POST",
-				    url: "http://127.0.0.1:8182/admin/projects/" + suffixProject + "/users",
+				    url: "http://localhost:8182/admin/projects/" + suffixProject + "/users",
 				    headers: {
 				    	'Authorization': "Bearer " + sessionStorage.getItem("token")
 				    },
@@ -404,7 +404,7 @@
 			    
 				$.ajax({
 				    type: "DELETE",
-				    url: "http://127.0.0.1:8182/admin/projects/" + suffixProject + "/users/" + user,
+				    url: "http://localhost:8182/admin/projects/" + suffixProject + "/users/" + user,
 				    headers: {
 				    	'Authorization': "Bearer " + sessionStorage.getItem("token")
 				    },
@@ -440,7 +440,7 @@
 			} else {
 				$.ajax({
 				    type: "POST",
-				    url: "http://127.0.0.1:8182/admin/superusers",
+				    url: "http://localhost:8182/admin/superusers",
 				    headers: {
 				    	'Authorization': "Bearer " + sessionStorage.getItem("token")
 				    },
@@ -476,7 +476,7 @@
 		    if(confirm("Voulez-vous vraiment supprimer l'utilisateur "+ user + " du groupe Admin ?")){
 		    	$.ajax({
 				    type: "DELETE",
-				    url: "http://127.0.0.1:8182/admin/superusers/" + user,
+				    url: "http://localhost:8182/admin/superusers/" + user,
 				    headers: {
 				    	'Authorization': "Bearer " + sessionStorage.getItem("token")
 				    },

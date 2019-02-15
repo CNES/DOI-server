@@ -99,7 +99,7 @@
 	function requestDelete(){
 		$.ajax({
 		    type: "DELETE",
-		    url: "http://127.0.0.1:8182/mds/metadata/" + doi,
+		    url: "http://localhost:8182/mds/metadata/" + doi,
 		    headers: {
 		    	'Authorization': "Bearer " + sessionStorage.getItem("token")
 		    },
@@ -120,7 +120,7 @@
 		console.log(projectId);
 		$.ajax({
 		    type: "GET",
-		    url: "http://127.0.0.1:8182/admin/projects/" + projectId  + "/dois",
+		    url: "http://localhost:8182/admin/projects/" + projectId  + "/dois",
 		    headers: {
 		    	'Authorization': "Bearer " + sessionStorage.getItem("token")
 		    },

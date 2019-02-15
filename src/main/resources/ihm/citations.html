@@ -121,7 +121,7 @@
 		function getStyle(){
 			$.ajax({
 			    type: "GET",
-			    url: "http://127.0.0.1:8182/citation/style",
+			    url: "http://localhost:8182/citation/style",
 			    crossDomain: true,
 				cache : false,
 			    error : function (XMLHttpRequest, textStatus, errorThrown){ 
@@ -144,7 +144,7 @@
 		function getLanguage(){
 			$.ajax({
 			    type: "GET",
-			    url: "http://127.0.0.1:8182/citation/language",
+			    url: "http://localhost:8182/citation/language",
 			    crossDomain: true,
 				cache : false,
 			    error : function (XMLHttpRequest, textStatus, errorThrown){ 
@@ -177,7 +177,7 @@
 			
 			$.ajax({
 			    type: "GET",
-			    url: "http://127.0.0.1:8182/citation/format?" + $.param(request),
+			    url: "http://localhost:8182/citation/format?" + $.param(request),
 			    crossDomain: true,
 				cache : false,
 			    error : function (XMLHttpRequest, textStatus, errorThrown){ 
@@ -201,7 +201,7 @@
 			console.log(projectId);
 			$.ajax({
 			    type: "GET",
-			    url: "http://127.0.0.1:8182/admin/projects/" + projectId  + "/dois",
+			    url: "http://localhost:8182/admin/projects/" + projectId  + "/dois",
 			    headers: {
 			    	'Authorization': "Bearer " + sessionStorage.getItem("token")
 			    },
