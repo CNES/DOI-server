@@ -32,7 +32,11 @@ import org.restlet.Response;
 import org.restlet.data.Status;
 
 /**
- * IP filtering
+ * IP filtering.
+ * 
+ * When the service is disabled, no filtering is applied. When the service is enabled, the service
+ * allows IPs such as 127.0.0.1 and IPs coming from {@link fr.cnes.doi.security.AllowerIP#addCustomIP(java.util.Set) }
+ * Allowed IPs are set based on a parameter from the configuration file {@link fr.cnes.doi.settings.Consts#ADMIN_IP_ALLOWER}
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
@@ -56,15 +60,19 @@ public class AllowerIP extends org.restlet.routing.Filter {
      * List of allowed IPs addresses.
      */
     private final Set<String> allowedAddresses;
+    
+    private final boolean isEnabled;
 
     /**
-     * Constructor.
+     * Constructor based on the context and a parameter to make enabled/disabled the service
      *
      * @param context context
+     * @param isEnabled True when the service is enabled otherwise False
      */
-    public AllowerIP(final Context context) {
+    public AllowerIP(final Context context, final boolean isEnabled) {
         super(context);
         LOG.traceEntry();
+        this.isEnabled = isEnabled;
         this.allowedAddresses = new CopyOnWriteArraySet<>();
         this.allowedAddresses.add(LOCALHOST_IPV6);
         this.allowedAddresses.add(LOCALHOST_IPV4);
@@ -105,11 +113,14 @@ public class AllowerIP extends org.restlet.routing.Filter {
         LOG.traceEntry(new JsonMessage(request));
         int result = STOP;
         final String ipClient = request.getClientInfo().getAddress();
-        if (getAllowedAddresses().contains(ipClient)) {
+        if (this.isEnabled && getAllowedAddresses().contains(ipClient)) {
             result = CONTINUE;
-        } else {
+        } else if (this.isEnabled && !getAllowedAddresses().contains(ipClient)) {
             LOG.info("You IP address {} was blocked", ipClient);
-            response.setStatus(Status.CLIENT_ERROR_FORBIDDEN, "Your IP address was blocked");
+            response.setStatus(Status.CLIENT_ERROR_FORBIDDEN, "Your IP address "+ipClient+" was blocked");
+        } else {
+            // the service is disabled, then continue
+            result = CONTINUE;
         }
         return LOG.traceExit(result);
     }
@@ -122,6 +133,14 @@ public class AllowerIP extends org.restlet.routing.Filter {
     public Set<String> getAllowedAddresses() {
         LOG.traceEntry();
         return LOG.traceExit(allowedAddresses);
+    }
+    
+    /**
+     * Returns True when the service is enabled otherwise False.
+     * @return True when the service is enabled otherwise False
+     */
+    public boolean isEnabled() {
+        return this.isEnabled;
     }
 
 }
