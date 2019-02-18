@@ -44,6 +44,15 @@ keytool -export -v -alias doiServer -file doiServer.cer -keystore doiServerKey.j
  -file serverX.cer\
  -keystore "C:\\Program Files\\Java\\jre6\\lib\\security\\cacerts"\
  -storepass "changeit"
+ 
+ 
+# If you are using Python program instead of a browser, then you need 
+# add the certificate to the Python certificates file, which is
+# called 'cacert.pem' located in certifi directory.
+# for example: 
+# ...\Python\Python37-32\Lib\site-packages\certifi-2018.11.29-py3.7.egg\certifi\cacert.pem
+
+ 
 
 #  2. Add the following Java VM arguments to your Java client command line:
   -Djavax.net.ssl.trustStore=C:\\\\somedir\\\\serverX.jks -Djavax.net.ssl.trustStoreType=JKS\
