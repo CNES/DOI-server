@@ -30,7 +30,7 @@
 					<label class="col-sm-2 control-label" for="doi">DOI :</label>
 					<div class="col-sm-5">
 						<div class="input-group">
-							<span class="input-group-addon">10.24400/</span>
+							<span class="input-group-addon" id="prefix">prefixcnes/</span>
 							<span class="input-group-addon" id="idprojet">idprojet/</span>
 							<select class="form-control" id="doi">
 							</select>
@@ -61,7 +61,7 @@
 		<span class="tag-group-label">DOI:</span>
 		<div class="tag-group">
 			<div title="identifier" class="tag">
-				<input class="input-field full-width tag-value" type="text" placeholder="[DOI]" title="identifier" value="" />
+				<input class="input-field full-width tag-value" type="text" placeholder="[DOI]" title="identifier" value="" readonly/>
 				<input class="input-field tag-attribute" type="hidden" title="identifierType" value="DOI" />
 			</div>
 		</div>
@@ -415,7 +415,6 @@
 			+ config.dbPort ;
 		
 		var prefixCnes = config.dbPrefix + "/";
-		
 		var identifier = "";
 		var url = "";
 		
@@ -424,15 +423,19 @@
 				$("#navbar").load("navbar.txt", function(responseTxt, statusTxt, xhr){
 			        if(statusTxt == "success"){
 			        	setProjectID();
-// 			        	setDOIList();
 			        	getDoisFromProject();
 			        } else if(statusTxt == "error"){
 			            alert("Error: " + xhr.status + ": " + xhr.statusText);
 			        }
 			    });
 				
+				$("#prefix").text(prefixCnes);
+				
 				$("#doi").change(function(){
 					identifier = $("#doi").val();
+					$("input[title='identifier']").val(prefixCnes + projectId + "/" + identifier);
+					// just to show metadata
+					$("input[title='identifierType'").keyup();
 					getUrl();
 					loadMetaData();
 				});
@@ -481,7 +484,6 @@
 				}); 
 			}
 			
-			// TODO
 			function getDoisFromProject(){
 				console.log(projectId);
 				$.ajax({
@@ -504,8 +506,8 @@
 				    	for(var doi of list){
 				    		$("#doi").append("<option>" + doi + "</option>");	
 				    	}
-				    	// TODO has to be removed
-				    	$("#doi").append("<option>" + "test_jc" + "</option>");	
+				    	// TODO test_jc
+// 				    	$("#doi").append("<option>" + "test_jc" + "</option>");	
 				    }
 				}); 
 			}
@@ -515,17 +517,6 @@
 				projectId = sessionStorage.getItem("projectId");
 				$("#idprojet").text(projectId + "/");
 			}
-// 			function setDOIList(){
-// 				$("#doi").empty();
-// 				$("#doi").append("<option disabled selected>Choix d'un doi</option>");
-// 				if(projectId.includes("111")){
-// 					$("#doi").append("<option>" + "un DOI du projet A" + "</option>");	
-// 					$("#doi").append("<option>" + "un autre DOI du projet A" + "</option>");
-// 				} else {
-// 					$("#doi").append("<option>" + "un DOI du projet B" + "</option>");
-// 					$("#doi").append("<option>" + "un autre DOI du projet B" + "</option>");
-// 				}
-// 			}
 			
 			// call by pressing the modify button
 			function modifyDOI(){
@@ -564,8 +555,6 @@
 			}
 			
 			function requestPost(xml){
-				console.log("identifier >> " + identifier);
-				console.log("idProjet >> " + projectId);
 				$.ajax({
 				    type: "POST",
 				    url: defaultUrl + "/mds/metadata",

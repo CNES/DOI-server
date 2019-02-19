@@ -30,7 +30,7 @@
 					<label class="col-sm-2 control-label" for="doi">DOI :</label>
 					<div class="col-sm-5">
 						<div class="input-group">
-							<span class="input-group-addon">10.24400/</span>
+							<span class="input-group-addon" id="prefix">prefixcnes/</span>
 							<span class="input-group-addon" id="idprojet">idprojet/</span>
 							<select class="form-control" id="doi" >
 							</select>
@@ -83,6 +83,8 @@
 	            alert("Error: " + xhr.status + ": " + xhr.statusText);
 	        }
 	    });
+		
+		$("#prefix").text(prefixCnes);
 		
 		$("#doi").change(function(){
 			doi = prefixCnes + projectId + "/" + $("#doi").val();

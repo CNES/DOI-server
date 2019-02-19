@@ -30,10 +30,9 @@
 					<label class="col-sm-2 control-label" for="doi">DOI :</label>
 					<div class="col-sm-5">
 						<div class="input-group">
-							<span class="input-group-addon">10.24400/</span>
+							<span class="input-group-addon" id="prefix">prefixcnes/</span>
 							<span class="input-group-addon" id="idprojet">idprojet/</span>
-						 	<input id="doi" type="text" class="form-control" placeholder="Identifiant du DOI" readonly>
-					<!-- 	<span class="input-group-addon" id="doi">identifiant du DOI</span>   -->
+						 	<input id="doi" type="text" class="form-control" placeholder="Identifiant du DOI">
 						</div>
 					</div>
 				</div>
@@ -65,7 +64,7 @@
 		<span class="tag-group-label">DOI:</span>
 		<div class="tag-group">
 			<div title="identifier" class="tag">
-				<input class="input-field full-width tag-value" type="text" placeholder="[DOI]" title="identifier" value="" />
+				<input class="input-field full-width tag-value" type="text" placeholder="[DOI]" title="identifier" value="" readonly/>
 				<input class="input-field tag-attribute" type="hidden" title="identifierType" value="DOI" />
 			</div>
 		</div>
@@ -431,10 +430,14 @@
 		        }
 		    });
 			
+			$("#prefix").text(prefixCnes);
+			
 			// Save doi and url values as soon as its change
-			$("input[title='identifier']").change(function(){
-				identifier = $("input[title='identifier']").val();
-				$("#doi").val(identifier);
+			$("#doi").change(function(){
+				identifier = $("#doi").val();
+				$("input[title='identifier']").val(prefixCnes + projectId + "/" + identifier);
+				// just to show metadata
+				$("input[title='identifierType'").keyup();
 			});
 			$("#url").change(function(){
 				url = $("#url").val();
@@ -442,7 +445,7 @@
 			
 			// Chargement du fichier xml
 			$("#xmlfile").change(function(){
-				console.log("in change event!");
+// 				console.log("in change event!");
 				var xmlDoc = this.files[0];  
 				var readXml = null;
 				var xmlToSend = null;
@@ -452,7 +455,6 @@
 					var reader = new FileReader();
 		            reader.onload = function(e) {
 		                readXml=e.target.result;
-// 		                console.log(readXml);
 		                var parser = new DOMParser();
 		                var doc = parser.parseFromString(readXml, "application/xml");
 // 		                console.log(doc);
@@ -471,16 +473,18 @@
 		
 		function createDOI(){
 			var xml = $("pre code").text();
-			console.log(xml);
+// 			console.log(xml);
 			if(xml == "" || xml == null){
+				// Can add conditions here to verify the XML before sending a request
 				return;
 			}
 			// create metadata for this doi (identifier)
 			// if the doi already exist, then update metadata
 			requestPost(xml);
-// 			requestURL();
+			requestURL();
 		}
 		
+		// If DOI successfully created and URL is not null, then update URL
 		$(document).ajaxSuccess(function(e, xhr, opt){
 			if (opt.url == defaultUrl + "/mds/metadata") {
 				if(url != ""){
@@ -504,14 +508,20 @@
 			    },
 			    crossDomain: true,
 				cache : false,
-			    error : function (XMLHttpRequest, textStatus, errorThrown){ console.log("La requête POST(url) a échouée."); }, 
-			    success: function(xml) { console.log("URL "+ url + " a été modifiée."); }
+			    error : function (XMLHttpRequest, textStatus, errorThrown){ 
+			    	alert("Erreur d'ajout d'URL.\n"+
+			    			"errorThrown "+ errorThrown + "\n"+
+			    			"textStatus "+ textStatus + "\n"+
+			    			"xmlhttp... " + XMLHttpRequest
+			    	); 
+			    }, 
+			    success: function(xml) { 
+			    	alert("L'URL "+ url + " a été ajoutée."); 
+			    }
 			}); 
 		}
 		
 		function requestPost(xml){
-			console.log("identifier >> " + identifier);
-			console.log("idProjet >> " + projectId);
 			$.ajax({
 			    type: "POST",
 			    url: defaultUrl + "/mds/metadata",
@@ -524,8 +534,16 @@
 			    },
 			    crossDomain: true,
 				cache : false,
-			    error : function (XMLHttpRequest, textStatus, errorThrown){ console.log("La requête POST(metadata) a échouée."); }, 
-			    success: function() { console.log("DOI "+ identifier + " a été créé."); }
+			    error : function (XMLHttpRequest, textStatus, errorThrown){ 
+			    	alert("Erreur lors de la création du DOI.\n"+
+			    			"errorThrown "+ errorThrown + "\n"+
+			    			"textStatus "+ textStatus + "\n"+
+			    			"xmlhttp... " + XMLHttpRequest
+			    	);  
+			    }, 
+			    success: function() { 
+			    	alert("Le DOI "+ identifier + " a été créé."); 
+			    }
 			}); 
 		}
 		
