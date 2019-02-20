@@ -77,7 +77,6 @@
 		$("#navbar").load("navbar.txt", function(responseTxt, statusTxt, xhr){
 	        if(statusTxt == "success"){
 	        	setProjectID();
-// 	        	setDOIList();
 	        	getDoisFromProject();
 	        } else if(statusTxt == "error"){
 	            alert("Error: " + xhr.status + ": " + xhr.statusText);
@@ -113,8 +112,16 @@
 		    },
 		    crossDomain: true,
 			cache : false,
-		    error : function (XMLHttpRequest, textStatus, errorThrown){ console.log("La requête DELETE a échouée."); }, 
-		    success: function(xml) { console.log("DOI "+ doi + " a été supprimé."); }
+		    error : function (XMLHttpRequest, textStatus, errorThrown){
+		     	var parser = new DOMParser();
+		    	var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
+		    	var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
+		    	alert("Erreur lors de la désactivation du DOI.\n"+
+		    			"Erreur: " + XMLHttpRequest.status +", "+ XMLHttpRequest.statusText + "\n"
+		    	); 
+		    	console.log("Erreur lors de la désactivation du DOI.\n" + errMessage);
+		    }, 
+		    success: function(xml) { console.log("Le DOI, "+ doi + ", a été désactivé."); }
 		}); 
 	}
 	
@@ -123,9 +130,8 @@
 		projectId = sessionStorage.getItem("projectId");
 		$("#idprojet").text(projectId + "/");
 	}
-	// TODO
+	
 	function getDoisFromProject(){
-		console.log(projectId);
 		$.ajax({
 		    type: "GET",
 		    url: defaultUrl + "/admin/projects/" + projectId  + "/dois",
@@ -135,11 +141,16 @@
 		    crossDomain: true,
 			cache : false,
 		    error : function (XMLHttpRequest, textStatus, errorThrown){ 
-		    	console.log("La requête GET(dois) a échouée."); 
-		    	alert("GET doisFromProject : status = " + textStatus);
+		    	var parser = new DOMParser();
+		    	var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
+		    	var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
+		    	alert("Erreur lors du chargement des DOIs.\n"+
+		    			"Erreur: " + XMLHttpRequest.status +", "+ XMLHttpRequest.statusText + "\n"
+		    	); 
+		    	console.log("Erreur lors du chargement des DOIs.\n" + errMessage); 
 		    },
 		    success: function(list) {
-		    	console.log("GET doisFromProject est un succès.");
+		    	console.log("Le chargement des DOIs est un succès.");
 		    	$("#doi").empty();
 	    		$("#doi").append("<option disabled selected>Choix d'un doi</option>");
 		    	for(var doi of list){
@@ -147,18 +158,6 @@
 		    	}
 		    }
 		}); 
-	}
-	
-	function setDOIList(){
-		$("#doi").empty();
-		$("#doi").append("<option disabled selected>Choix d'un doi</option>");
-		if(projectID.includes("111")){
-			$("#doi").append("<option>" + "un DOI du projet A" + "</option>");	
-			$("#doi").append("<option>" + "un autre DOI du projet A" + "</option>");
-		} else {
-			$("#doi").append("<option>" + "un DOI du projet B" + "</option>");
-			$("#doi").append("<option>" + "un autre DOI du projet B" + "</option>");
-		}
 	}
 	</script>
 	

@@ -150,12 +150,16 @@
 			    crossDomain: true,
 				cache : false,
 			    error : function (XMLHttpRequest, textStatus, errorThrown){ 
-			    	console.log("La requête GET(listProjet) a échouée."); 
-			    	alert("GET getListProjet : status = " + textStatus);
+			    	var parser = new DOMParser();
+			    	var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
+			    	var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
+			    	alert("Erreur lors de la récupération des projets.\n"+
+			    			"Erreur: " + XMLHttpRequest.status +", "+ XMLHttpRequest.statusText + "\n"
+			    	); 
+			    	console.log("Erreur lors de la récupération des projets.\n" + errMessage); 
 			    },
 			    success: function(json) {
-			    	console.log(json);
-			    	console.log("GET getListProjet est un succès.");
+			    	console.log("La récupération des projets est un succès.");
 			    	for(project in json){
 			    		$("#listProjet").append("<option>" + project + 
 			    				"(" + json[project] + ")" + "</option>");	
@@ -174,12 +178,16 @@
 			    crossDomain: true,
 				cache : false,
 			    error : function (XMLHttpRequest, textStatus, errorThrown){ 
-			    	console.log("La requête GET(getListAdmin) a échouée."); 
-			    	alert("GET getListAdmin : status = " + textStatus);
+			    	var parser = new DOMParser();
+			    	var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
+			    	var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
+			    	alert("Erreur lors de la récupération de la liste administrateur.\n"+
+			    			"Erreur: " + XMLHttpRequest.status +", "+ XMLHttpRequest.statusText + "\n"
+			    	); 
+			    	console.log("Erreur lors de la récupération de la liste administrateur.\n" + errMessage); 
 			    },
 			    success: function(array) {
-			    	console.log(array);
-			    	console.log("GET getListAdmin est un succès.");
+			    	console.log("La récupération de la liste administrateur est un succès.");
 			    	array.forEach(function(admin, index, array){
 			    		$("#listAdmin").append("<option>" + admin + "</option>");	
 			    	});
@@ -189,7 +197,7 @@
 		
 		// modification Projets
 		function addProject() {
-		    var projet = prompt("Entrer le nom du projet:", "PROJET X");
+		    var projet = prompt("Entrer le nom du projet:", "projet");
 		    if (projet == null || projet == "") {
 		        return;
 		    } else {
@@ -205,12 +213,16 @@
 				    crossDomain: true,
 					cache : false,
 				    error : function (XMLHttpRequest, textStatus, errorThrown){ 
-				    	console.log("La requête POST(addProject) a échouée."); 
-				    	alert("POST addProject : status = " + textStatus);
+				    	var parser = new DOMParser();
+				    	var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
+				    	var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
+				    	alert("Erreur lors de la création d'un projet.\n"+
+				    			"Erreur: " + XMLHttpRequest.status +", "+ XMLHttpRequest.statusText + "\n"
+				    	); 
+				    	console.log("Erreur lors de la création d'un projet.\n" + errMessage); 
 				    },
 				    success: function(suffixeProjet) {
-				    	console.log(suffixeProjet);
-				    	console.log("POST addProject est un succès.");
+				    	console.log("La création d'un projet est un succès.");
 			    		$("#listProjet").append("<option selected=\"selected\">" + projet + 
 			    				"(" + suffixeProjet + ")" + "</option>");	
 			    		modifyListUser();
@@ -227,7 +239,7 @@
 			
 			var idText = text.substring(text.indexOf('(')+1, text.length -1);
 			var nomText = text.substring(0, text.indexOf('('));
-			console.log(nomText + " " + idText);
+// 			console.log("Projet : "nomText + " " + idText);
 			
 		    var projet = prompt("Renomer le projet:", nomText);
 		    if (projet == null || projet == "") {
@@ -245,13 +257,18 @@
 				    crossDomain: true,
 					cache : false,
 				    error : function (XMLHttpRequest, textStatus, errorThrown){ 
-				    	console.log("La requête POST(renameProject) a échouée."); 
-				    	alert("POST renameProject : status = " + textStatus);
+				    	var parser = new DOMParser();
+				    	var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
+				    	var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
+				    	alert("Erreur lors du renommage du projet.\n"+
+				    			"Erreur: " + XMLHttpRequest.status +", "+ XMLHttpRequest.statusText + "\n"
+				    	); 
+				    	console.log("Erreur lors du renommage du projet.\n" + errMessage); 
 				    },
 				    success: function(boo) {
-				    	console.log("POST renameProject est un succès.");
-				    	console.log("isRenamed = "+ boo);
+// 				    	console.log("isRenamed = "+ boo);
 				    	if(boo){
+				    		console.log("Le renommage du projet est un succès.");
 					    	$("#listProjet option:selected").text( projet + 
 				    				"(" + idText + ")" );	
 					    	$("#titreProjet").text("Utilisateurs du projet: "+ projet + "(" + idText + ")");
@@ -264,20 +281,23 @@
 					    		}
 					    	}
 					    	sessionStorage.setItem("projects", JSON.stringify(object));
+				    	} else {
+				    		console.log("Echec du renommage du projet.");
 				    	}
+				    	
 				    }
 				});
 		    }
 		}
 		
-		function deleteProject() {  // ATTENTION manque la vérification des DOIs sur le projet
+		function deleteProject() {
 			var text = $("#listProjet option:selected").text();
 			if(text == ""){
 				return;
 			}
 			var idText = text.substring(text.indexOf('(')+1, text.length -1);
 			var nomText = text.substring(0, text.indexOf('('));
-			console.log(nomText + " " + idText);
+// 			console.log("Projet : " +nomText + " " + idText);
 			
 		    if(confirm("Voulez-vous vraiment supprimer le projet "+ nomText)){
 		    	
@@ -290,13 +310,18 @@
 				    crossDomain: true,
 					cache : false,
 				    error : function (XMLHttpRequest, textStatus, errorThrown){ 
-				    	console.log("La requête DELETE(deleteProject) a échouée."); 
-				    	alert("DELETE deleteProject : status = " + textStatus);
+				    	var parser = new DOMParser();
+				    	var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
+				    	var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
+				    	alert("Erreur lors de la suppréssion du projet.\n"+
+				    			"Erreur: " + XMLHttpRequest.status +", "+ XMLHttpRequest.statusText + "\n"
+				    	); 
+				    	console.log("Erreur lors de la supprésion du projet.\n" + errMessage); 
 				    },
 				    success: function(boo) {
-				    	console.log("DELETE deleteProject est un succès.");
-				    	console.log("isDeleted = "+ boo);
+// 				    	console.log("isDeleted = "+ boo);
 				    	if(boo){
+				    		console.log("La supprésion du projet est un succès.");
 					    	$("#listProjet option:selected").remove();
 					    	$("#titreProjet").text("Utilisateurs du projet: ");
 							$("#listUser").empty();	
@@ -305,6 +330,8 @@
 					    	object = JSON.parse(sessionStorage.getItem("projects"));
 							delete object[nomText];
 					    	sessionStorage.setItem("projects", JSON.stringify(object));
+				    	} else {
+				    		console.log("Echec de la suppréssion du projet.");
 				    	}
 				    }
 				});
@@ -317,7 +344,7 @@
 			
 			var suffixProject = project.substring(project.indexOf('(')+1, project.length -1);
 			var nameProject = project.substring(0, project.indexOf('('));
-			console.log(nameProject + " " + suffixProject);
+// 			console.log("Projet : " + nameProject + " " + suffixProject);
 			
 			$.ajax({
 			    type: "GET",
@@ -328,12 +355,16 @@
 			    crossDomain: true,
 				cache : false,
 			    error : function (XMLHttpRequest, textStatus, errorThrown){ 
-			    	console.log("La requête GET(modifyListUser) a échouée."); 
-			    	alert("GET modifyListUser : status = " + textStatus);
+			    	var parser = new DOMParser();
+			    	var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
+			    	var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
+			    	alert("Erreur lors de la récupération de la liste des utilisateurs.\n"+
+			    			"Erreur: " + XMLHttpRequest.status +", "+ XMLHttpRequest.statusText + "\n"
+			    	); 
+			    	console.log("Erreur lors de la récupération de la liste des utilisateurs.\n" + errMessage); 
 			    },
 			    success: function(array) {
-			    	console.log(array);
-			    	console.log("GET modifyListUser est un succès.");
+			    	console.log("La récupération de la liste des utilisateurs est un succès.");
 			    	array.forEach(function(user, index, array){
 			    		$("#listUser").append("<option>" + user + "</option>");	
 			    	});
@@ -345,12 +376,11 @@
 		function addUser(){
 			var project = $("#listProjet").val();
 			
-			
 			var suffixProject = project.substring(project.indexOf('(')+1, project.length -1);
 			var nameProject = project.substring(0, project.indexOf('('));
-			console.log(nameProject + " " + suffixProject);
+// 			console.log("Projet : " + nameProject + " " + suffixProject);
 			
-			var user = prompt("Entrer le \"nom.prenom\" de l'utilisateur qui sera associé à ce projet:", "toto.toto");
+			var user = prompt("Entrer le \"nom.prenom\" de l'utilisateur qui sera associé à ce projet:", "utilisateur");
 			if (user == null || user == "") {
 		        return;
 // 			} else if (!user.includes(".")) {
@@ -369,13 +399,18 @@
 				    crossDomain: true,
 					cache : false,
 				    error : function (XMLHttpRequest, textStatus, errorThrown){ 
-				    	console.log("La requête POST(addUser) a échouée."); 
-				    	alert("POST addUser : status = " + textStatus);
+				    	var parser = new DOMParser();
+				    	var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
+				    	var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
+				    	alert("Erreur lors de l'ajout d'un utilisateur.\n"+
+				    			"Erreur: " + XMLHttpRequest.status +", "+ XMLHttpRequest.statusText + "\n"
+				    	); 
+				    	console.log("Erreur lors de l'ajout d'un utilisateur.\n" + errMessage); 
 				    },
 				    success: function(boo) {
-				    	console.log("POST addUser est un succès.");
-				    	console.log(boo);
+// 				    	console.log(boo);
 				    	if(boo){
+				    		console.log("L'ajout d'un utilisateur est un succès.");
 					    	$("#listUser").append("<option selected=\"selected\">" + user + "</option>");
 					    	if(user == actualUser){
 					    		object = JSON.parse(sessionStorage.getItem("projects"));
@@ -383,11 +418,14 @@
 					    			object = {
 					    				nameProject : suffixProject	
 					    			};
-					    		}else{
+					    		} else {
 						    		object[nameProject] = suffixProject;
 					    		}
 							    	sessionStorage.setItem("projects", JSON.stringify(object));
 					    	}
+				    	} else {
+				    		alert("Utilisateur incorrect.");
+				    		console.log("Echec d'ajout d'un utilisateur.");
 				    	}
 				    }
 				});
@@ -399,7 +437,7 @@
 			
 			var suffixProject = project.substring(project.indexOf('(')+1, project.length -1);
 			var nameProject = project.substring(0, project.indexOf('('));
-			console.log(nameProject + " " + suffixProject);
+// 			console.log("Projet : " + nameProject + " " + suffixProject);
 			
 			var user = $("#listUser").val();
 			if(user == ""){
@@ -417,21 +455,26 @@
 				    crossDomain: true,
 					cache : false,
 				    error : function (XMLHttpRequest, textStatus, errorThrown){ 
-				    	console.log("La requête DELETE(deleteUser) a échouée."); 
-				    	alert("DELETE deleteUser : status = " + textStatus);
+				    	var parser = new DOMParser();
+				    	var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
+				    	var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
+				    	alert("Erreur lors de la suppréssion d'un utilisateur.\n"+
+				    			"Erreur: " + XMLHttpRequest.status +", "+ XMLHttpRequest.statusText + "\n"
+				    	); 
+				    	console.log("Erreur lors de la suppréssion d'un utilisateur.\n" + errMessage); 
 				    },
 				    success: function(boo) {
-				    	console.log("DELETE deleteUser est un succès.");
-				    	console.log(boo);
+// 				    	console.log(boo);
 				    	if(boo){
+					    	console.log("La suppréssion de l'utilisateur est un succès.");
 					    	$("#listUser option:selected").remove();
 					    	if(user == actualUser){
 					    		object = JSON.parse(sessionStorage.getItem("projects"));
-					    		console.log(object);
 					    		delete object[nameProject];
-					    		console.log(object);
 					    		sessionStorage.setItem("projects", JSON.stringify(object));
 					    	}
+				    	} else {
+				    		console.log("Echec de la suppréssion de l'utilisateur.");
 				    	}
 				    }
 				});
@@ -440,7 +483,7 @@
 			
 		// modification Admin   //TODO maybe show up a hidden select button that allow to find any user...
 		function addAdmin(){
-			var user = prompt("Entrer le \"nom.prenom\" de l'utilisateur qui passera Admin:", "toto.toto");
+			var user = prompt("Entrer le \"nom.prenom\" de l'utilisateur qui passera Admin:", "utilisateur");
 			if (user == null || user == "") {
 		        return;
 			} else {
@@ -456,19 +499,27 @@
 				    crossDomain: true,
 					cache : false,
 				    error : function (XMLHttpRequest, textStatus, errorThrown){ 
-				    	console.log("La requête POST(addAdmin) a échouée."); 
-				    	alert("POST addAdmin : status = " + textStatus);
+				    	var parser = new DOMParser();
+				    	var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
+				    	var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
+				    	alert("Erreur lors de l'ajout d'un super-utilisateur.\n"+
+				    			"Erreur: " + XMLHttpRequest.status +", "+ XMLHttpRequest.statusText + "\n"
+				    	); 
+				    	console.log("Erreur lors de l'ajout d'un super-utilisateur.\n" + errMessage); 
 				    },
 				    success: function(boo) {
-				    	console.log("POST addAdmin est un succès.");
-				    	console.log(boo);
+// 				    	console.log(boo);
 				    	if(boo){
+					    	console.log("L'ajout d'un super-utilisateur est un succès.");
 					    	$("#listAdmin").append("<option selected=\"selected\">" + user + "</option>");	
 					    	if(user == actualUser){
 					    		//in case user remove himself from superuser list, 
 					    		//and put himself back into the list before reloading the page
 					    		sessionStorage.setItem("admin", "true");
 					    	}
+				    	} else {
+				    		alert("Utilisateur incorrect.");
+					    	console.log("Echec de l'ajout d'un super-utilisateur.");
 				    	}
 				    }
 				});
@@ -489,17 +540,24 @@
 				    crossDomain: true,
 					cache : false,
 				    error : function (XMLHttpRequest, textStatus, errorThrown){ 
-				    	console.log("La requête DELETE(deleteAdmin) a échouée."); 
-				    	alert("DELETE deleteAdmin : status = " + textStatus);
+				    	var parser = new DOMParser();
+				    	var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
+				    	var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
+				    	alert("Erreur lors de la suppréssion d'un super-utilisateur.\n"+
+				    			"Erreur: " + XMLHttpRequest.status +", "+ XMLHttpRequest.statusText + "\n"
+				    	); 
+				    	console.log("Erreur lors de la suppréssion d'un super-utilisateur.\n" + errMessage); 
 				    },
 				    success: function(boo) {
-				    	console.log("DELETE deleteAdmin est un succès.");
-				    	console.log(boo);
+// 				    	console.log(boo);
 				    	if(boo){
+					    	console.log("La suppréssion du super-utilisateur est un succès.");
 					    	$("#listAdmin option:selected").remove();
 					    	if(user == actualUser){
 					    		sessionStorage.setItem("admin", "false");
 					    	}
+				    	} else {
+					    	console.log("Echec de la suppréssion du super-utilisateur.");
 				    	}
 				    }
 				});

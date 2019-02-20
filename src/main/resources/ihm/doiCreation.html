@@ -445,11 +445,10 @@
 			
 			// Chargement du fichier xml
 			$("#xmlfile").change(function(){
-// 				console.log("in change event!");
 				var xmlDoc = this.files[0];  
 				var readXml = null;
 				var xmlToSend = null;
-				console.log("xmlDOC.name " +xmlDoc.name);
+// 				console.log("xmlDOC.name " +xmlDoc.name);
 				
 				if(xmlDoc != undefined){
 					var reader = new FileReader();
@@ -459,6 +458,20 @@
 		                var doc = parser.parseFromString(readXml, "application/xml");
 // 		                console.log(doc);
 		                loadXML(doc);
+		                
+		                // Can only import doi metadata from a project where the user has rights
+		                var prefix = prefixCnes + projectId + "/";
+		                if($("input[title='identifier']").val().includes(prefix)){
+			                var doiName = $("input[title='identifier']").val().replace(prefix,"");
+			                $("#doi").val(doiName);
+			                identifier = doiName;
+		                } else {
+		                	alert("Les métadonnées ne sont pas sur le projet " +
+		                			sessionStorage.getItem("project") + "(" +
+		                			sessionStorage.getItem("projectId") + ")."
+		                	);
+		                	clearForm();
+		                }
 		           }
 		            reader.readAsText(xmlDoc);
 				}
@@ -481,7 +494,6 @@
 			// create metadata for this doi (identifier)
 			// if the doi already exist, then update metadata
 			requestPost(xml);
-			requestURL();
 		}
 		
 		// If DOI successfully created and URL is not null, then update URL
@@ -509,11 +521,13 @@
 			    crossDomain: true,
 				cache : false,
 			    error : function (XMLHttpRequest, textStatus, errorThrown){ 
-			    	alert("Erreur d'ajout d'URL.\n"+
-			    			"errorThrown "+ errorThrown + "\n"+
-			    			"textStatus "+ textStatus + "\n"+
-			    			"xmlhttp... " + XMLHttpRequest
-			    	); 
+			    	var parser = new DOMParser();
+			    	var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
+			    	var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
+			    	alert("Erreur lors de l'ajout d'un URL.\n"+
+			    			"Erreur: " + XMLHttpRequest.status +", "+ XMLHttpRequest.statusText + "\n"
+			    	);
+			    	console.log("Erreur lors de l'ajout d'un URL.\n" + errMessage);
 			    }, 
 			    success: function(xml) { 
 			    	alert("L'URL "+ url + " a été ajoutée."); 
@@ -535,11 +549,13 @@
 			    crossDomain: true,
 				cache : false,
 			    error : function (XMLHttpRequest, textStatus, errorThrown){ 
+			    	var parser = new DOMParser();
+			    	var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
+			    	var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
 			    	alert("Erreur lors de la création du DOI.\n"+
-			    			"errorThrown "+ errorThrown + "\n"+
-			    			"textStatus "+ textStatus + "\n"+
-			    			"xmlhttp... " + XMLHttpRequest
-			    	);  
+			    			"Erreur: " + XMLHttpRequest.status +", "+ XMLHttpRequest.statusText + "\n"
+			    	); 
+			    	console.log("Erreur lors de la création du DOI.\n" + errMessage);
 			    }, 
 			    success: function() { 
 			    	alert("Le DOI "+ identifier + " a été créé."); 

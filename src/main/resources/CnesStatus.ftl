@@ -19,7 +19,7 @@
                     Oops!</h1>
                 <h2>
                     ${statusCode} ${statusName}</h2>
-                <div class="error-details">
+                <div id="error" class="error-details">
                     Sorry, an error has occured, ${statusDescription}!
                 </div>
                 <div class="error-actions">                    

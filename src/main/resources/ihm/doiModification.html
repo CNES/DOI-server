@@ -454,13 +454,24 @@
 				    },
 				    crossDomain: true,
 					cache : false,
-				    error : function (XMLHttpRequest, textStatus, errorThrown){ console.log("La requête GET(metadata) a échouée."); }, 
+				    error : function (XMLHttpRequest, textStatus, errorThrown){
+				    	var parser = new DOMParser();
+				    	var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
+				    	var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
+				    	alert("Erreur lors du chargement des métadonnées.\n"+
+				    			"Erreur: " + XMLHttpRequest.status +", "+ XMLHttpRequest.statusText + "\n"
+				    	); 
+				    	console.log("Erreur lors du chargement des métadonnées.\n" + errMessage); 
+				    }, 
 				    success: function(xml) { 
-				    	console.log("Get MetaData est un succés."); 
+				    	console.log("Le chargement des métadonnées est un succés."); 
 				    	console.log("xml : " + xml); 
 				    	if(xml != undefined || xml != null){
+// 				    		 var parser = new DOMParser();
+// 				             var doc = parser.parseFromString(xml, "application/xml");
 				    		//TODO xml type? If doesn't work, check and convert xml 
 							loadXML(xml);
+// 				    		loadXML(doc);
 						}
 			    	}
 				}); 
@@ -476,16 +487,24 @@
 				    },
 				    crossDomain: true,
 					cache : false,
-				    error : function (XMLHttpRequest, textStatus, errorThrown){ console.log("La requête GET(url) a échouée."); }, 
-				    success: function(list) { 
-				    	$("#url").val(list);
-				    	console.log("GET "+ url + " a été modifiée."); 
+				    error : function (XMLHttpRequest, textStatus, errorThrown){
+				    	var parser = new DOMParser();
+				    	var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
+				    	var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
+				    	alert("Erreur lors de la récupération de l'URL.\n"+
+				    			"Erreur: " + XMLHttpRequest.status +", "+ XMLHttpRequest.statusText + "\n"
+				    	); 
+				    	console.log("Erreur lors de la récupération de l'URL.\n" + errMessage); 
+				    }, 
+				    success: function(url) { 
+				    	$("#url").val(url);
+				    	console.log("L'URL, "+ url + ", a été chargée."); 
 				    	}
 				}); 
 			}
 			
 			function getDoisFromProject(){
-				console.log(projectId);
+// 				console.log(projectId);
 				$.ajax({
 				    type: "GET",
 				    url: defaultUrl + "/admin/projects/" + projectId  + "/dois",
@@ -495,12 +514,16 @@
 				    crossDomain: true,
 					cache : false,
 				    error : function (XMLHttpRequest, textStatus, errorThrown){ 
-				    	console.log("La requête GET(dois) a échouée."); 
-				    	alert("GET doisFromProject : status = " + textStatus);
+				    	var parser = new DOMParser();
+				    	var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
+				    	var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
+				    	alert("Erreur lors du chargement des DOIs.\n"+
+				    			"Erreur: " + XMLHttpRequest.status +", "+ XMLHttpRequest.statusText + "\n"
+				    	); 
+				    	console.log("Erreur lors du chargement des DOIs.\n" + errMessage); 
 				    },
 				    success: function(list) {
-				    	console.log("GET doisFromProject est un succès.");
-				    	console.log(list);
+				    	console.log("Le chargement des DOIs est un succès.");
 				    	$("#doi").empty();
 			    		$("#doi").append("<option disabled selected>Choix d'un doi</option>");
 				    	for(var doi of list){
@@ -521,7 +544,7 @@
 			// call by pressing the modify button
 			function modifyDOI(){
 				var xml = $("pre code").text();
-				console.log(xml);
+// 				console.log(xml);
 				if(xml != "" && xml != null){
 					if(confirm("Voulez-vous vraiment modifier les métadonnées du doi "+ identifier + " ?")){
 						requestPost(xml);
@@ -549,8 +572,16 @@
 				    },
 				    crossDomain: true,
 					cache : false,
-				    error : function (XMLHttpRequest, textStatus, errorThrown){ console.log("La requête POST(url) a échouée."); }, 
-				    success: function(xml) { console.log("URL "+ url + " a été modifiée."); }
+				    error : function (XMLHttpRequest, textStatus, errorThrown){
+				    	var parser = new DOMParser();
+				    	var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
+				    	var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
+				    	alert("Erreur lors de la modification de l'URL.\n"+
+				    			"Erreur: " + XMLHttpRequest.status +", "+ XMLHttpRequest.statusText + "\n"
+				    	); 
+				    	console.log("Erreur lors de la modification de l'URL.\n" + errMessage); 
+				    }, 
+				    success: function(url) { console.log("L'URL, "+ url + ", a été modifiée."); }
 				}); 
 			}
 			
@@ -566,8 +597,18 @@
 				    },
 				    crossDomain: true,
 					cache : false,
-				    error : function (XMLHttpRequest, textStatus, errorThrown){ console.log("La requête POST(metadata) a échouée."); }, 
-				    success: function() { console.log("DOI "+ identifier + " a été créé."); }
+				    error : function (XMLHttpRequest, textStatus, errorThrown){
+				       	var parser = new DOMParser();
+				    	var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
+				    	var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
+				    	alert("Erreur lors de la modification de des métadonnées.\n"+
+				    			"Erreur: " + XMLHttpRequest.status +", "+ XMLHttpRequest.statusText + "\n"
+				    	); 
+				    	console.log("Erreur lors de la modification de des métadonnées.\n" + errMessage); 
+				    }, 
+				    success: function() { 
+				    	console.log("Les métadonnées du DOI "+ identifier + " ont été modifiées."); 
+				    }
 				}); 
 			}
 			
