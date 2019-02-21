@@ -37,6 +37,7 @@ import java.util.stream.Collectors;
 
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -57,7 +58,6 @@ import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
 import org.restlet.util.Series;
 
-import fr.cnes.doi.InitDataBaseForTest;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.MdsSpec;
@@ -66,7 +66,6 @@ import fr.cnes.doi.client.ClientProxyTest;
 import fr.cnes.doi.security.UtilsHeader;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
-import org.junit.Assume;
 
 /**
  * Test class for {@link fr.cnes.doi.resource.mds.MetadatasResource}
@@ -94,7 +93,6 @@ public class MetadatasResourceTest {
     @BeforeClass
     public static void setUpClass() {
         try {
-            InitDataBaseForTest.init();
             isDatabaseConfigured = true;
             InitServerForTest.init(InitSettingsForTest.CONFIG_TEST_PROPERTIES);
 
@@ -114,7 +112,6 @@ public class MetadatasResourceTest {
     @AfterClass
     public static void tearDownClass() {
         try {
-            InitDataBaseForTest.close();
             InitServerForTest.close();
         } catch(Error ex) {
             

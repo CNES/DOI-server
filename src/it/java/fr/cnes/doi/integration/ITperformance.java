@@ -18,24 +18,14 @@
  */
 package fr.cnes.doi.integration;
 
-import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
-import fr.cnes.doi.InitDataBaseForTest;
-import fr.cnes.doi.InitServerForTest;
-import fr.cnes.doi.InitSettingsForTest;
-import fr.cnes.doi.MdsSpec;
 import static fr.cnes.doi.client.BaseClient.DATACITE_MOCKSERVER_PORT;
-import fr.cnes.doi.client.ClientProxyTest;
-import fr.cnes.doi.exception.ClientMdsException;
-import fr.cnes.doi.resource.mds.DoisResource;
-import fr.cnes.doi.security.UtilsHeader;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_CONNECTIONS_PER_HOST;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_TOTAL_CONNECTIONS;
 import static fr.cnes.doi.server.DoiServer.JKS_DIRECTORY;
 import static fr.cnes.doi.server.DoiServer.JKS_FILE;
 import static fr.cnes.doi.server.DoiServer.RESTLET_MAX_CONNECTIONS_PER_HOST;
 import static fr.cnes.doi.server.DoiServer.RESTLET_MAX_TOTAL_CONNECTIONS;
-import fr.cnes.doi.settings.Consts;
-import fr.cnes.doi.settings.DoiSettings;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -48,6 +38,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -72,6 +63,17 @@ import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
 import org.restlet.util.Series;
+
+import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
+import fr.cnes.doi.InitServerForTest;
+import fr.cnes.doi.InitSettingsForTest;
+import fr.cnes.doi.MdsSpec;
+import fr.cnes.doi.client.ClientProxyTest;
+import fr.cnes.doi.exception.ClientMdsException;
+import fr.cnes.doi.resource.mds.DoisResource;
+import fr.cnes.doi.security.UtilsHeader;
+import fr.cnes.doi.settings.Consts;
+import fr.cnes.doi.settings.DoiSettings;
 
 /**
  *
@@ -103,7 +105,6 @@ public class ITperformance {
     @BeforeClass
     public static void setUpClass() throws ClientMdsException {
         try {
-            InitDataBaseForTest.init();
             isDatabaseConfigured = true;
             InitServerForTest.init(InitSettingsForTest.CONFIG_IT_PROPERTIES);
             cl = new Client(new Context(), Protocol.HTTPS);
@@ -122,7 +123,6 @@ public class ITperformance {
     @AfterClass
     public static void tearDownClass() {
         try {
-            InitDataBaseForTest.close();
             InitServerForTest.close();
         } catch(Error ex) {
         }

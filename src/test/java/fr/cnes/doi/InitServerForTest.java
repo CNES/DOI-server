@@ -116,7 +116,8 @@ public class InitServerForTest {
      * @param configProperties config properties
      */
     public static void init(final String configProperties) {
-        InitSettingsForTest.init(configProperties);        
+    	InitDataBaseForTest.init();
+        InitSettingsForTest.init(configProperties); 
         try {
             doiServer = new DoiServer(DoiSettings.getInstance());
             doiServer.start();
@@ -134,6 +135,7 @@ public class InitServerForTest {
      */
     public static void close() {
         try {
+        	InitDataBaseForTest.close();
             doiServer.stop();
             while(!doiServer.isStopped()) {
                 Thread.sleep(1000);

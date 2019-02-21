@@ -18,28 +18,25 @@
  */
 package fr.cnes.doi.resource.admin;
 
-import fr.cnes.doi.InitDataBaseForTest;
-import fr.cnes.doi.InitServerForTest;
-import fr.cnes.doi.InitSettingsForTest;
-import fr.cnes.doi.UnitTest;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_CONNECTIONS_PER_HOST;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_TOTAL_CONNECTIONS;
 import static fr.cnes.doi.server.DoiServer.JKS_DIRECTORY;
 import static fr.cnes.doi.server.DoiServer.JKS_FILE;
 import static fr.cnes.doi.server.DoiServer.RESTLET_MAX_CONNECTIONS_PER_HOST;
 import static fr.cnes.doi.server.DoiServer.RESTLET_MAX_TOTAL_CONNECTIONS;
-import fr.cnes.doi.settings.Consts;
-import fr.cnes.doi.settings.DoiSettings;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.io.File;
 import java.io.IOException;
+
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import org.junit.Assume;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.restlet.Client;
@@ -53,6 +50,12 @@ import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
 import org.restlet.util.Series;
+
+import fr.cnes.doi.InitServerForTest;
+import fr.cnes.doi.InitSettingsForTest;
+import fr.cnes.doi.UnitTest;
+import fr.cnes.doi.settings.Consts;
+import fr.cnes.doi.settings.DoiSettings;
 
 /**
  * Tests Token resource of the Administation application.
@@ -76,7 +79,6 @@ public class TokenResourceTest {
     @BeforeClass
     public static void setUpClass() {
         try {
-            InitDataBaseForTest.init();
             isDatabaseConfigured = true;
             InitServerForTest.init(InitSettingsForTest.CONFIG_TEST_PROPERTIES);
             cl = new Client(new Context(), Protocol.HTTPS);
@@ -94,7 +96,6 @@ public class TokenResourceTest {
     @AfterClass
     public static void tearDownClass() {
         try{
-            InitDataBaseForTest.close();
             InitServerForTest.close();
         }catch(Error ex) {
             

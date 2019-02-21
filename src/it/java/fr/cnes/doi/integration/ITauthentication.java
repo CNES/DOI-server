@@ -18,29 +18,27 @@
  */
 package fr.cnes.doi.integration;
 
-import fr.cnes.doi.InitDataBaseForTest;
-import fr.cnes.doi.InitServerForTest;
-import fr.cnes.doi.InitSettingsForTest;
-import fr.cnes.doi.client.ClientMDS;
+import static fr.cnes.doi.client.BaseClient.DATACITE_MOCKSERVER_PORT;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_CONNECTIONS_PER_HOST;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_TOTAL_CONNECTIONS;
-import fr.cnes.doi.settings.Consts;
-import fr.cnes.doi.settings.DoiSettings;
-
 import static fr.cnes.doi.server.DoiServer.JKS_DIRECTORY;
 import static fr.cnes.doi.server.DoiServer.JKS_FILE;
 import static fr.cnes.doi.server.DoiServer.RESTLET_MAX_CONNECTIONS_PER_HOST;
 import static fr.cnes.doi.server.DoiServer.RESTLET_MAX_TOTAL_CONNECTIONS;
+import static org.junit.Assert.assertEquals;
+import static org.mockserver.integration.ClientAndServer.startClientAndServer;
+
 import java.io.File;
 import java.io.IOException;
+
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.experimental.categories.Category;
 import org.mockserver.integration.ClientAndServer;
-import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
 import org.mockserver.verify.VerificationTimes;
@@ -56,10 +54,13 @@ import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
 import org.restlet.util.Series;
-import static fr.cnes.doi.client.BaseClient.DATACITE_MOCKSERVER_PORT;
+
+import fr.cnes.doi.InitServerForTest;
+import fr.cnes.doi.InitSettingsForTest;
+import fr.cnes.doi.client.ClientMDS;
 import fr.cnes.doi.exception.ClientMdsException;
-import org.junit.Assume;
-import org.junit.experimental.categories.Category;
+import fr.cnes.doi.settings.Consts;
+import fr.cnes.doi.settings.DoiSettings;
 
 /**
  *
@@ -80,7 +81,6 @@ public class ITauthentication {
     @BeforeClass
     public static void setUpClass() throws ClientMdsException {
         try {
-            InitDataBaseForTest.init();
             isDatabaseConfigured = true;
             InitServerForTest.init(InitSettingsForTest.CONFIG_IT_PROPERTIES);        
             cl = new Client(new Context(), Protocol.HTTPS);
@@ -99,7 +99,6 @@ public class ITauthentication {
     @AfterClass
     public static void tearDownClass() {
         try {
-            InitDataBaseForTest.close();
             InitServerForTest.close();
         } catch(Error ex) {
             

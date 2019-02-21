@@ -18,31 +18,26 @@
  */
 package fr.cnes.doi.resource.mds;
 
-import fr.cnes.doi.InitDataBaseForTest;
-import fr.cnes.doi.InitServerForTest;
-import fr.cnes.doi.InitSettingsForTest;
-import fr.cnes.doi.MdsSpec;
-import fr.cnes.doi.UnitTest;
 import static fr.cnes.doi.client.BaseClient.DATACITE_MOCKSERVER_PORT;
-import fr.cnes.doi.security.UtilsHeader;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_CONNECTIONS_PER_HOST;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_TOTAL_CONNECTIONS;
 import static fr.cnes.doi.server.DoiServer.JKS_DIRECTORY;
 import static fr.cnes.doi.server.DoiServer.JKS_FILE;
 import static fr.cnes.doi.server.DoiServer.RESTLET_MAX_CONNECTIONS_PER_HOST;
 import static fr.cnes.doi.server.DoiServer.RESTLET_MAX_TOTAL_CONNECTIONS;
-import fr.cnes.doi.settings.Consts;
-import fr.cnes.doi.settings.DoiSettings;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
+
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
-import org.junit.Assume;
 import org.junit.experimental.categories.Category;
 import org.restlet.Client;
 import org.restlet.Context;
@@ -57,6 +52,14 @@ import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
 import org.restlet.util.Series;
+
+import fr.cnes.doi.InitServerForTest;
+import fr.cnes.doi.InitSettingsForTest;
+import fr.cnes.doi.MdsSpec;
+import fr.cnes.doi.UnitTest;
+import fr.cnes.doi.security.UtilsHeader;
+import fr.cnes.doi.settings.Consts;
+import fr.cnes.doi.settings.DoiSettings;
 
 /**
  * Tests the DoisResource
@@ -78,7 +81,6 @@ public class DoisResourceTest {
     @BeforeClass
     public static void setUpClass() {
         try {
-            InitDataBaseForTest.init();
             isDatabaseConfigured = true;
             InitServerForTest.init(InitSettingsForTest.CONFIG_TEST_PROPERTIES);
             cl = new Client(new Context(), Protocol.HTTPS);
@@ -97,7 +99,6 @@ public class DoisResourceTest {
     @AfterClass
     public static void tearDownClass() throws IOException {
         try {
-            InitDataBaseForTest.close();
             Form doiForm = new Form();
             doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b"));
             doiForm.add(new Parameter(DoisResource.URL_PARAMETER, "https://cfosat.cnes.fr/"));

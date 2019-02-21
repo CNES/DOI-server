@@ -76,7 +76,7 @@ public abstract class AbstractUserRoleDBHelper extends Observable {
     public abstract List<DOIUser> getUsers();
 
     /**
-     * Adds users to a specific role.
+     * Get users from a specific role.
      *
      * @param roleName role name
      * @return The users related to a specific role

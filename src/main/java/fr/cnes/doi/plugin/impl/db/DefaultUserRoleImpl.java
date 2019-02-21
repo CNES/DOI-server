@@ -224,6 +224,7 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
 
     @Override
     public void addDOIUser(String username, Boolean admin, String email) throws DOIDbException {
+    	// TODO also add user in realm if this method is used while server is started
         this.das.addDOIUser(username, admin, email);
     }
 
@@ -260,6 +261,7 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
     @Override
     public void removeDOIUser(String username) {
         try {
+        	// TODO also remove user in realm if this method is used while server is started
             this.das.removeDOIUser(username);
         } catch (DOIDbException ex) {
             LOG.fatal("Cannot remove user" + username, ex);
