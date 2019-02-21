@@ -409,10 +409,10 @@
 		<script src="js/config.js"></script>
 		
 		<script>
-		var defaultUrl = 
-			config.dbProtocol + "://" 
-			+ config.dbHost + ":"
-			+ config.dbPort ;
+// 		var defaultUrl = 
+// 			config.dbProtocol + "://" 
+// 			+ config.dbHost + ":"
+// 			+ config.dbPort ;
 		
 		var prefixCnes = config.dbPrefix + "/";
 		var identifier = "";
@@ -448,7 +448,7 @@
 				var fullDoiName = prefixCnes + projectId + "/" + identifier;
 				$.ajax({
 				    type: "GET",
-				    url: defaultUrl + "/mds/metadata/" + fullDoiName,
+				    url: "/mds/metadata/" + fullDoiName,
 				    headers: {
 				    	'Authorization': "Bearer " + sessionStorage.getItem("token")
 				    },
@@ -481,7 +481,7 @@
 				var fullName = prefixCnes + projectId + "/" + identifier;
 				$.ajax({
 				    type: "GET",
-				    url: defaultUrl + "/mds/dois/" + fullName,
+				    url: "/mds/dois/" + fullName,
 				    headers: {
 				    	'Authorization': "Bearer " + sessionStorage.getItem("token")
 				    },
@@ -507,7 +507,7 @@
 // 				console.log(projectId);
 				$.ajax({
 				    type: "GET",
-				    url: defaultUrl + "/admin/projects/" + projectId  + "/dois",
+				    url: "/admin/projects/" + projectId  + "/dois",
 				    headers: {
 				    	'Authorization': "Bearer " + sessionStorage.getItem("token")
 				    },
@@ -565,7 +565,7 @@
 				};
 				$.ajax({
 				    type: "POST",
-				    url: defaultUrl + "/mds/dois",
+				    url: "/mds/dois",
 				    data: formData,
 				    headers: {
 				    	'Authorization': "Bearer " + sessionStorage.getItem("token")
@@ -588,7 +588,7 @@
 			function requestPost(xml){
 				$.ajax({
 				    type: "POST",
-				    url: defaultUrl + "/mds/metadata",
+				    url: "/mds/metadata",
 				    data: xml, 
 				    contentType: "text/xml",
 				    dataType: "xml",
