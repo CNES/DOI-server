@@ -78,14 +78,14 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
             String projectName) {
         boolean isAdded = false;
         try {
-            LOG.info("Add projectSuffix in the database {} / {}", projectID, projectName);
             das.addDOIProject(projectID, projectName);
+            LOG.info("Add projectSuffix in the database {} / {}", projectID, projectName);
             setChanged();
             notifyObservers(new String[]{ADD_RECORD, String.valueOf(projectID)});
             isAdded = true;
         } catch (DOIDbException e) {
             LOG.fatal("The id " + projectID + " of the project " + projectName
-                    + "cannot be saved in the file", e);
+                    + "cannot be saved in the database", e);
         }
         return isAdded;
 
@@ -96,6 +96,7 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
         boolean isDeleted = false;
         try {
             das.removeDOIProject(projectID);
+            LOG.info("Delete projectSuffix in the database {} ", projectID);
             setChanged();
             notifyObservers(new String[]{DELETE_RECORD, String.valueOf(projectID)});
             isDeleted = true;
@@ -180,6 +181,7 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
         boolean isRenamed = false;
         try {
             das.renameDOIProject(projectId, newProjectName);
+            LOG.info("Rename project in the database {} to {}", projectId, newProjectName);
             setChanged();
             notifyObservers(new String[]{RENAME_RECORD, String.valueOf(projectId)});
             isRenamed = true;

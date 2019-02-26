@@ -95,10 +95,10 @@
 		<script src="js/config.js"></script>
 		
 		<script>
-// 		var defaultUrl = 
-// 			config.dbProtocol + "://" 
-// 			+ config.dbHost + ":"
-// 			+ config.dbPort ;
+		var defaultUrl = 
+			config.dbProtocol + "://" 
+			+ config.dbHost + ":"
+			+ config.dbPort ;
 		
 		var prefixCnes = config.dbPrefix + "/";
 		
@@ -128,7 +128,7 @@
 		function getStyle(){
 			$.ajax({
 			    type: "GET",
-			    url: "/citation/style",
+			    url: defaultUrl+"/citation/style",
 			    crossDomain: true,
 				cache : false,
 			    error : function (XMLHttpRequest, textStatus, errorThrown){ 
@@ -156,7 +156,7 @@
 		function getLanguage(){
 			$.ajax({
 			    type: "GET",
-			    url: "/citation/language",
+			    url: defaultUrl+"/citation/language",
 			    crossDomain: true,
 				cache : false,
 			    error : function (XMLHttpRequest, textStatus, errorThrown){ 
@@ -193,7 +193,7 @@
 			
 			$.ajax({
 			    type: "GET",
-			    url: "/citation/format?" + $.param(request),
+			    url: defaultUrl+"/citation/format?" + $.param(request),
 			    crossDomain: true,
 				cache : false,
 			    error : function (XMLHttpRequest, textStatus, errorThrown){ 
@@ -221,7 +221,7 @@
 		function getDoisFromProject(){
 			$.ajax({
 			    type: "GET",
-			    url: "/admin/projects/" + projectId  + "/dois",
+			    url: defaultUrl+"/admin/projects/" + projectId  + "/dois",
 			    headers: {
 			    	'Authorization': "Bearer " + sessionStorage.getItem("token")
 			    },

@@ -662,7 +662,7 @@ public class AdminApplication extends AbstractApplication {
 
             System.out.println(file.getPath() + "\n");
 
-            ihm.setListingAllowed(true);
+            ihm.setListingAllowed(false);
             ihm.setDeeplyAccessible(true);
             ihm.setIndexName("authentication");
             router.attach("/ihm", ihm);

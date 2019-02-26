@@ -74,29 +74,8 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
 
         boolean isAdded = false;
         try {
-//            Jws<Claims> jws = TokenSecurity.getInstance().getTokenInformation(jwt);
-//
-//            String projectSuffix = String.valueOf(jws.getBody()
-//                    .get(TokenSecurity.PROJECT_ID, Integer.class));
-//            String expirationDate = jws.getBody().getExpiration().toString();
-//
-//            // should be fine, the JWT representation does not contain ;
-//            String line = jwt + ";" + projectSuffix + ";" + expirationDate + "\n";
-//            LOG.info("token inserted : " + line);
-//            Files.write(
-//                    new File(this.tokenConf).toPath(),
-//                    line.getBytes(StandardCharsets.UTF_8),
-//                    StandardOpenOption.APPEND
-//            );
             das.addToken(jwt);
-//            this.db.put(jwt, new ConcurrentHashMap<String, Object>() {
-//                private static final long serialVersionUID = 3109256773218160485L;
-//
-//                {
-//                    put("projectSuffix", projectSuffix);
-//                    put("expirationDate", expirationDate);
-//                }
-//            });
+            LOG.info("token added : " + jwt);
             isAdded = true;
         } catch (DOIDbException e) {
             LOG.fatal("The token " + jwt + "cannot be saved in database", e);
@@ -108,6 +87,7 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
     public void deleteToken(String jwt) {
         try {
             das.deleteToken(jwt);
+            LOG.info("token deleted : " + jwt);
         } catch (DOIDbException e) {
             LOG.fatal("The token " + jwt + "cannot be deleted in database", e);
         }
@@ -151,6 +131,7 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
         } catch (ParseException ex) {
             LOG.fatal(ex);
         }
+        //TODO delete an expired token?
         return isExpirated;
     }
 

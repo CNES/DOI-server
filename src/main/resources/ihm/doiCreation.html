@@ -411,10 +411,10 @@
 	<script src="js/config.js"></script>
 	
 	<script>
-// 	var defaultUrl = 
-// 		config.dbProtocol + "://" 
-// 		+ config.dbHost + ":"
-// 		+ config.dbPort ;
+	var defaultUrl = 
+		config.dbProtocol + "://" 
+		+ config.dbHost + ":"
+		+ config.dbPort ;
 	
 	var prefixCnes = config.dbPrefix + "/";
 	var identifier = "";
@@ -515,7 +515,7 @@
 			};
 			$.ajax({
 			    type: "POST",
-			    url: "/mds/dois",
+			    url: defaultUrl+"/mds/dois",
 			    data: formData,
 			    headers: {
 			    	'Authorization': "Bearer " + sessionStorage.getItem("token")
@@ -540,7 +540,7 @@
 		function requestPost(xml){
 			$.ajax({
 			    type: "POST",
-			    url: "/mds/metadata",
+			    url: defaultUrl+"/mds/metadata",
 			    data: xml, 
 			    contentType: "text/xml",
 			    dataType: "xml",

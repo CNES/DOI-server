@@ -73,20 +73,6 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
 
     @Override
     public void init(Object configuration) {
-//        LOG.info("Init the database");
-//        users.clear();
-//        User admin = new User("admin", "admin");
-//        User jcm = new User("malapert", "pwd", "Jean-Christophe", "Malapert", "jcmalapert@gmail.com");
-//        User cc = new User("caillet", "pppp", "Claire", "Caillet", "claire.caillet@cnes.fr");
-//        User test1 = new User("test1", "test1");
-//        User test2 = new User("test2", "test2");
-//        User userWithNoRole = new User("norole", "norole");
-//        users.add(admin);
-//        users.add(jcm);
-//        users.add(cc);
-//        users.add(test1);
-//        users.add(test2);
-//        users.add(userWithNoRole);
     }
 
     @Override
@@ -118,6 +104,7 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
         try {
             das.addDOIProjectToUser(user, role);
             isAdded = true;
+            LOG.info("The user {} is added to role {}.",user ,role);
 
             User userFromRealm = REALM.findUser(user);
             final Role roleFromRealm = new Role(Application.getCurrent(), String.valueOf(role),
@@ -139,6 +126,7 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
         try {
             das.removeDOIProjectFromUser(user, role);
             isRemoved = true;
+            LOG.info("The user {} is removed to role {}.",user ,role);
 
             User userFromRealm = REALM.findUser(user);
             Set<Role> rolesFromRealm = REALM.findRoles(userFromRealm);
@@ -162,8 +150,8 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
         try {
             das.setAdmin(user);
             isSetted = true;
+            LOG.info("The user {} is added to admin group.",user );
 
-            // TODO if user is added in DB while DOI server is running then user won't be in REALM /!\
             User userFromRealm = REALM.findUser(user);
             if (!REALM.getRootGroups().get(0).getMemberUsers().contains(userFromRealm)) {
                 REALM.getRootGroups().get(0).getMemberUsers().add(userFromRealm);
@@ -181,6 +169,7 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
         try {
             das.unsetAdmin(user);
             isUnsetted = true;
+            LOG.info("The user {} is removed to admin group.",user );
 
             User userFromRealm = REALM.findUser(user);
             if (REALM.getRootGroups().get(0).getMemberUsers().contains(userFromRealm)) {
@@ -220,12 +209,25 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
     @Override
     public void addDOIUser(String username, Boolean admin) throws DOIDbException {
         this.das.addDOIUser(username, admin);
+        LOG.info("The user {} is added to database.", username );
     }
 
     @Override
     public void addDOIUser(String username, Boolean admin, String email) throws DOIDbException {
     	// TODO also add user in realm if this method is used while server is started
         this.das.addDOIUser(username, admin, email);
+        LOG.info("The user {} is added to database.", username );
+    }
+    
+    @Override
+    public void removeDOIUser(String username) {
+    	try {
+    		// TODO also remove user in realm if this method is used while server is started
+    		this.das.removeDOIUser(username);
+    		LOG.info("The user {} is removed from database.", username );
+    	} catch (DOIDbException ex) {
+    		LOG.fatal("Cannot remove user" + username, ex);
+    	}
     }
 
     @Override
@@ -256,15 +258,5 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
     @Override
     public String getLicense() {
         return LICENSE;
-    }
-
-    @Override
-    public void removeDOIUser(String username) {
-        try {
-        	// TODO also remove user in realm if this method is used while server is started
-            this.das.removeDOIUser(username);
-        } catch (DOIDbException ex) {
-            LOG.fatal("Cannot remove user" + username, ex);
-        }
     }
 }

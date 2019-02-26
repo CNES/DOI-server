@@ -33,9 +33,6 @@
         <Logger name="fr.cnes.doi.logging.shell" level="info">
              <AppenderRef ref="SHELL"/>
         </Logger>
-        <Logger name="fr.cnes.doi.application" level="info">
-            <AppenderRef ref="FILE"/>            
-        </Logger>        
         <Root level="info">
             <!--<AppenderRef ref="CONSOLE"/>-->
             <AppenderRef ref="FILE"/>
