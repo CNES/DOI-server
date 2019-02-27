@@ -63,10 +63,6 @@
 	<script src="js/config.js"></script>
 	
 	<script>
-	var defaultUrl = 
-		config.dbProtocol + "://" 
-		+ config.dbHost + ":"
-		+ config.dbPort ;
 	
 	var prefixCnes = config.dbPrefix + "/";
 	
@@ -106,7 +102,7 @@
 	function requestDelete(){
 		$.ajax({
 		    type: "DELETE",
-		    url: defaultUrl+ "/mds/metadata/" + doi,
+		    url: "/mds/metadata/" + doi,
 		    headers: {
 		    	'Authorization': "Bearer " + sessionStorage.getItem("token")
 		    },
@@ -134,7 +130,7 @@
 	function getDoisFromProject(){
 		$.ajax({
 		    type: "GET",
-		    url: defaultUrl+"/admin/projects/" + projectId  + "/dois",
+		    url: "/admin/projects/" + projectId  + "/dois",
 		    headers: {
 		    	'Authorization': "Bearer " + sessionStorage.getItem("token")
 		    },

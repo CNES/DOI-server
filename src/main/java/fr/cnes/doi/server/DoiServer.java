@@ -148,10 +148,10 @@ public class DoiServer extends Component {
      */
     public static final String STATUS_URI = "/status";
 
-    /**
-     * Default port HTTP server.
-     */
-    public static final String DEFAULT_HTTP_PORT = "8182";
+//    /**
+//     * Default port HTTP server.
+//     */
+//    public static final String DEFAULT_HTTP_PORT = "8182";
 
     /**
      * Default port for HTTPS server.
@@ -253,11 +253,12 @@ public class DoiServer extends Component {
      */
     private void initHttpServer() {
         LOG.traceEntry();
-        final Server serverHttp = startHttpServer(
-                settings.getInt(Consts.SERVER_HTTP_PORT, DEFAULT_HTTP_PORT)
-        );
-        this.getServers().add(serverHttp);
-        initJettyConfiguration(serverHttp);
+        String httpPort = settings.getString(Consts.SERVER_HTTP_PORT);
+        if(httpPort != null && !httpPort.isEmpty()) {
+        	final Server serverHttp = startHttpServer(Integer.parseInt(httpPort));
+        	this.getServers().add(serverHttp);
+        	initJettyConfiguration(serverHttp);
+        }
         LOG.traceExit();
     }
 

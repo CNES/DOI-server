@@ -63,10 +63,6 @@
 		<!-- Contain var 'config' as json -->
 		<script src="js/config.js"></script>
 		<script>
-		var defaultUrl = 
-			config.dbProtocol + "://" 
-			+ config.dbHost + ":"
-			+ config.dbPort ;
 
 		$(document).ready(function(){
 			$("#footer").load("footer.txt");
@@ -88,7 +84,7 @@
 			//isUserExist? save in session userName and admin(true or false)
 			$.ajax({
 			    type: "GET",
-			    url: defaultUrl+"/admin/superusers/" + userId,
+			    url: "/admin/superusers/" + userId,
 			    headers: {
 			    	'Authorization': 'Basic ' + btoa(user)
 			    },
@@ -127,7 +123,7 @@
 			var admin = sessionStorage.getItem("admin");
 			$.ajax({
 			    type: "GET",
-			    url: defaultUrl+"/admin/projects?user=" + userId,
+			    url: "/admin/projects?user=" + userId,
 			    headers: {
 			    	'Authorization': 'Basic ' + btoa(user)
 			    },
@@ -176,7 +172,7 @@
 			}
 			$.ajax({
 			    type: "POST",
-			    url: defaultUrl+"/admin",
+			    url: "/admin",
 				headers: {
 			    	'Authorization': 'Basic ' + btoa(user)
 			    },
@@ -208,7 +204,7 @@
 			
 			$.ajax({
 			    type: "DELETE",
-				url: defaultUrl+"/admin",
+				url: "/admin",
 				headers: {
 	 				'Authorization': "Bearer " + sessionStorage.getItem("token")
 				},
