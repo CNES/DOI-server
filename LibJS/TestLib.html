@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Library Test</title>
+</head>
+<body>
+	<h1>Doi js library tests:</h1>
+	
+	<h3>identifier</h3>
+	<p id="identifier"> identifier 1 </p>
+	<h3>titles</h3>
+	<p id="titles"> titles 2 </p>
+	<h3>creators</h3>
+	<p id="creators"> creators 3 </p>
+	<h3>publisher</h3>
+	<p id="publisher"> publisher 4 </p>
+	<h3>publicationYear</h3>
+	<p id="publicationYear"> publicationYear 5 </p>
+	<h3>resourceType</h3>
+	<p id="resourceType"> resourceType 6 </p>
+	<h3>subjects</h3>
+	<p id="subjects"> subjects 7</p>
+	<h3>contributors</h3>
+	<p id="contributors"> contributors 8 </p>
+	<h3>dates</h3>
+	<p id="dates"> dates 9 </p>
+	<h3>relatedIdentifiers</h3>
+	<p id="relatedIdentifiers"> relatedIdentifiers 10 </p> 
+	<h3>descriptions</h3>
+	<p id="descriptions"> descriptions 11 </p>
+	<h3>geoLocations</h3>
+	<p id="geoLocations"> geoLocations 12 </p>
+	<h3>geo location place</h3>   
+	<p id="geoLocationPlace"> geoLocationPlace 12b </p>
+	<h3>geo location polygon point</h3>
+	<p id="geoLocationPolygonPoint"> geoLocations 12c </p>
+	<h3>language</h3>
+	<p id="language"> language 13 </p>
+	<h3>alternateIdentifiers</h3>
+	<p id="alternateIdentifiers"> alternateIdentifiers 14 </p>   
+	<h3>alternateIdentifier type</h3>
+	<p id="alternateIdentifierType"> alternateIdentifiers 14b </p>
+	<h3>sizes</h3>
+	<p id="sizes"> sizes 15 </p>
+	<h3>formats</h3>
+	<p id="formats"> formats 16 </p>
+	<h3>version</h3>
+	<p id="version"> version 17 </p>
+	<h3>rightsList</h3>
+	<p id="rightsList"> rightsList 18 </p>
+	<h3>fundingReferences</h3>
+	<p id="fundingReferences"> fundingReferences 19 </p>
+	
+	<!-- used for ajax call -->
+	<script src="jquery-min.js"></script>
+	
+	<!-- used for xml to json conversion -->
+	<script src="xmlToJson.js"></script>
+	
+<!-- 	WARNING : Has to be type="module" to used the js library -->
+	<script type="module">
+	// Pour importer la classe Resource de la librairie JS
+	import {Resource} from './org.datacite.schema.kernel_4.1/Resource.js';
+	
+	// Pour récupérer un XML depuis un fichier
+	$.ajax({
+		type: "GET",
+		url: "xml_test_kernel_4.1.xml",
+		cache: false,
+		dataType: "xml",
+		success: function(xml) {
+			// console.log(xml);
+      
+      
+     
+      
+			// Pour convertir un objet XML en un string JSON
+			var json = xml2json(xml, " ");
+			
+			// console.log(json);
+			// console.log(JSON.parse(json));
+			
+			// Creer l'objet JavaScript. Il faut en amont tranformer le string JSON en un objet JSON.
+			var resource = new Resource(JSON.parse(json));
+			
+			document.getElementById("identifier").innerHTML = JSON.stringify(resource.getIdentifier());
+			document.getElementById("titles").innerHTML = JSON.stringify(resource.getTitles());
+			document.getElementById("creators").innerHTML = JSON.stringify(resource.getCreators());
+			document.getElementById("publisher").innerHTML = JSON.stringify(resource.getPublisher());
+			document.getElementById("publicationYear").innerHTML = JSON.stringify(resource.getPublicationYear());
+			document.getElementById("resourceType").innerHTML = JSON.stringify(resource.getResourceType());
+			document.getElementById("subjects").innerHTML = JSON.stringify(resource.getSubjects());
+			document.getElementById("contributors").innerHTML = JSON.stringify(resource.getContributors());
+			document.getElementById("dates").innerHTML = JSON.stringify(resource.getDates());
+			document.getElementById("relatedIdentifiers").innerHTML = JSON.stringify(resource.getRelatedIdentifiers());
+			document.getElementById("descriptions").innerHTML = JSON.stringify(resource.getDescriptions());
+			document.getElementById("geoLocations").innerHTML = JSON.stringify(resource.getGeoLocations()); 
+			document.getElementById("language").innerHTML = JSON.stringify(resource.getLanguage());
+			document.getElementById("alternateIdentifiers").innerHTML = JSON.stringify(resource.getAlternateIdentifiers());   
+			document.getElementById("sizes").innerHTML = JSON.stringify(resource.getSizes());
+			document.getElementById("formats").innerHTML = JSON.stringify(resource.getFormats());
+			document.getElementById("version").innerHTML = JSON.stringify(resource.getVersion());
+			document.getElementById("rightsList").innerHTML = JSON.stringify(resource.getRightsList());
+			document.getElementById("fundingReferences").innerHTML = JSON.stringify(resource.getFundingReferences());
+      
+      // Exemple d'acces a des sous objets      
+			document.getElementById("geoLocationPlace").innerHTML = JSON.stringify(resource.getGeoLocations()[1].getGeoLocationPlace());
+			document.getElementById("geoLocationPolygonPoint").innerHTML = JSON.stringify(resource.getGeoLocations()[0].getGeoLocationPolygon()[1].getPolygonPoint()[1].getPointLongitude());     
+          
+      // Exemple d'acces a un attribut
+			document.getElementById("alternateIdentifierType").innerHTML = JSON.stringify(resource.getAlternateIdentifiers()[0].getAlternateIdentifierType());
+      
+      
+      // Exemple d'import d'un DOI sous forme de chaine de caracteres
+      var otherdoi = '<?xml version="1.0" encoding="UTF-8"?> <resource> <!-- <resource xmlns="http://datacite.org/schema/kernel-4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://datacite.org/schema/kernel-4 http://schema.datacite.org/meta/kernel-4/metadata.xsd"> --> <identifier identifierType="DOI">10/identifier/otherdoi</identifier> <titles> 	<title titleType="AlternativeTitle">Title</title> </titles> <creators> 	<creator> 	<creatorName nameType="Organizational">Creator Name</creatorName> 	<givenName>Creator given name</givenName> 	<familyName>Creator family name</familyName> 	<nameIdentifier nameIdentifierScheme="Creator id scheme" schemeURI="Creator scheme URI">Creator name identifier</nameIdentifier> 	<nameIdentifier nameIdentifierScheme="Creator id scheme 2" schemeURI="Creator scheme URI 2">Creator name identifier 2</nameIdentifier> 	<affiliation>Creator affiliation</affiliation> 	<affiliation>Creator affiliation 2</affiliation> 	</creator> </creators> <publisher>The publisher</publisher> <publicationYear>1991</publicationYear> <resourceType resourceTypeGeneral="DataPaper">The resource type</resourceType> <subjects> 	<subject subjectScheme="Subject scheme" schemeURI="Subject scheme URI" valueURI="Subject value URI">Subject</subject> 	<subject subjectScheme="Subject scheme 2" schemeURI="Subject scheme URI 2" valueURI="Subject value URI 2">Subject 2</subject> </subjects> <contributors> 	<contributor contributorType="ContactPerson"> 	<contributorName nameType="Personal">Contributor name</contributorName> 	<givenName>his given name</givenName> 	<familyName>his family name</familyName> 	<nameIdentifier nameIdentifierScheme="his id scheme" schemeURI="his scheme URI">his name identifier</nameIdentifier> 	<affiliation>his affiliation</affiliation> 	</contributor> 	<contributor contributorType="DataCurator"> 	<contributorName nameType="Organizational">Contributor name 2</contributorName> 	<givenName>his given name 2</givenName> 	<familyName>his family name 2</familyName> 	<nameIdentifier nameIdentifierScheme="his id scheme 2" schemeURI="his scheme URI 2">his name identifier 2</nameIdentifier> 	<affiliation>his affiliation 2</affiliation> 	<affiliation>another affiliation</affiliation> 	</contributor> </contributors> <dates> 	<date dateType="Other" dateInformation="the date info">11/11/1991</date> 	<date dateType="Other" dateInformation="the second date info">10/10/1991</date> 	<date dateType="Other" dateInformation="the second date info">10/10/1991</date> 	<date dateType="Other" dateInformation="the second date info">10/10/1991</date> </dates> <relatedIdentifiers> 	<relatedIdentifier relatedIdentifierType="ARK" relationType="IsDescribedBy" resourceTypeGeneral="DataPaper" relatedMetadataScheme="Mds scheme" schemeType="Mds scheme type" schemeURI="Mds scheme URI">An identifier</relatedIdentifier> 	<relatedIdentifier relatedIdentifierType="PMID" relationType="HasVersion" resourceTypeGeneral="DataPaper" relatedMetadataScheme="Second scheme" schemeType="Second scheme type" schemeURI="Second scheme URI">Second identifier</relatedIdentifier> </relatedIdentifiers> <descriptions> 	<description descriptionType="TechnicalInfo">this is a description</description> 	<description descriptionType="Abstract">Another description</description> </descriptions> <geoLocations> 	<geoLocation> 	<geoLocationPlace>Geo Location Place</geoLocationPlace> 	<geoLocationPoint> 	<pointLongitude>Geo Location Point LONG</pointLongitude> 	<pointLatitude>Geo Location Point LAT</pointLatitude> 	</geoLocationPoint> 	<geoLocationBox> 	<westBoundLongitude>Geo Location Box WEST</westBoundLongitude> 	<eastBoundLongitude>Geo Location Box EAST</eastBoundLongitude> 	<southBoundLatitude>Geo Location Box SOUTH</southBoundLatitude> 	<northBoundLatitude>Geo Location Box NORTH</northBoundLatitude> 	</geoLocationBox> 	<geoLocationPolygon> 	<polygonPoint> 	<pointLongitude>Pol LONG 1</pointLongitude> 	<pointLatitude>Pol LAT 1</pointLatitude> 	</polygonPoint> 	<polygonPoint> 	<pointLongitude>Pol LONG 2</pointLongitude> 	<pointLatitude>Pol LAT 2</pointLatitude> 	</polygonPoint> 	<polygonPoint> 	<pointLongitude>Pol LONG 3</pointLongitude> 	<pointLatitude>Pol LAT 3</pointLatitude> 	</polygonPoint> 	<polygonPoint> 	<pointLongitude>Pol LONG 4</pointLongitude> 	<pointLatitude>Pol LAT 4</pointLatitude> 	</polygonPoint> 	<polygonPoint> 	<pointLongitude>Pol LONG 5</pointLongitude> 	<pointLatitude>Pol LAT 5</pointLatitude> 	</polygonPoint> 	<inPolygonPoint> 	<pointLongitude>In Point LONG</pointLongitude> 	<pointLatitude>In Point LAT</pointLatitude> 	</inPolygonPoint> 	</geoLocationPolygon> 	<geoLocationPolygon> 	<polygonPoint> 	<pointLongitude>Pol LONG 1 bis</pointLongitude> 	<pointLatitude>Pol LAT 1 bis</pointLatitude> 	</polygonPoint> 	<polygonPoint> 	<pointLongitude>Pol LONG 2 bis</pointLongitude> 	<pointLatitude>Pol LAT 2 bis</pointLatitude> 	</polygonPoint> 	<polygonPoint> 	<pointLongitude>Pol LONG 3 bis</pointLongitude> 	<pointLatitude>Pol LAT 3 bis</pointLatitude> 	</polygonPoint> 	<polygonPoint> 	<pointLongitude>Pol LONG 4 bis</pointLongitude> 	<pointLatitude>Pol LAT 4 bis</pointLatitude> 	</polygonPoint> 	<inPolygonPoint> 	<pointLongitude>In Point LONG bis</pointLongitude> 	<pointLatitude>In Point LAT bis</pointLatitude> 	</inPolygonPoint> 	</geoLocationPolygon> 	</geoLocation> 	<geoLocation> 	<geoLocationPlace>Sec Geo Location Place</geoLocationPlace> 	<geoLocationPoint> 	<pointLongitude>Sec Geo Location Point LONG</pointLongitude> 	<pointLatitude>Sec Geo Location Point LAT</pointLatitude> 	</geoLocationPoint> 	<geoLocationBox> 	<westBoundLongitude>Sec Geo Location Box WEST</westBoundLongitude> 	<eastBoundLongitude>Sec Geo Location Box EAST</eastBoundLongitude> 	<southBoundLatitude>Sec Geo Location Box SOUTH</southBoundLatitude> 	<northBoundLatitude>Sec Geo Location Box NORTH</northBoundLatitude> 	</geoLocationBox> 	<geoLocationPolygon> 	<polygonPoint> 	<pointLongitude>Sec Pol LONG 1</pointLongitude> 	<pointLatitude>Sec Pol LAT 1</pointLatitude> 	</polygonPoint> 	<polygonPoint> 	<pointLongitude>Sec Pol LONG 2</pointLongitude> 	<pointLatitude>Sec Pol LAT 2</pointLatitude> 	</polygonPoint> 	<polygonPoint> 	<pointLongitude>Sec Pol LONG 3</pointLongitude> 	<pointLatitude>Sec Pol LAT 3</pointLatitude> 	</polygonPoint> 	<polygonPoint> 	<pointLongitude>Sec Pol LONG 4</pointLongitude> 	<pointLatitude>Sec Pol LAT 4</pointLatitude> 	</polygonPoint> 	<polygonPoint> 	<pointLongitude>Sec Pol LONG 5</pointLongitude> 	<pointLatitude>Sec Pol LAT 5</pointLatitude> 	</polygonPoint> 	<inPolygonPoint> 	<pointLongitude>Sec In Point LONG</pointLongitude> 	<pointLatitude>Sec In Point LONG</pointLatitude> 	</inPolygonPoint> 	</geoLocationPolygon> 	<geoLocationPolygon> 	<polygonPoint> 	<pointLongitude>Sec Pol LONG 1 bis</pointLongitude> 	<pointLatitude>Sec Pol LAT 1 bis</pointLatitude> 	</polygonPoint> 	<polygonPoint> 	<pointLongitude>Sec Pol LONG 2 bis</pointLongitude> 	<pointLatitude>Sec Pol LAT 2 bis</pointLatitude> 	</polygonPoint> 	<polygonPoint> 	<pointLongitude>Sec Pol LONG 3 bis</pointLongitude> 	<pointLatitude>Sec Pol LAT 3 bis</pointLatitude> 	</polygonPoint> 	<polygonPoint> 	<pointLongitude>Sec Pol LONG 4 bis</pointLongitude> 	<pointLatitude>Sec Pol LAT 4 bis</pointLatitude> 	</polygonPoint> 	<polygonPoint> 	<pointLongitude>Sec Pol LONG 5 bis</pointLongitude> 	<pointLatitude>Sec Pol LAT 5 bis</pointLatitude> 	</polygonPoint> 	<inPolygonPoint> 	<pointLongitude>Sec In Point LONG bis</pointLongitude> 	<pointLatitude>Sec In Point LONG bis</pointLatitude> 	</inPolygonPoint> 	</geoLocationPolygon> 	</geoLocation> </geoLocations> <language>language</language> <alternateIdentifiers> 	<alternateIdentifier alternateIdentifierType="Alternate type">Alternate identifier</alternateIdentifier> 	<alternateIdentifier alternateIdentifierType="Alternate type 2">Alternate identifier 2</alternateIdentifier> </alternateIdentifiers> <!-- <sizes> --> <!-- 	<size>Siize</size> --> <!-- 	<size>Sec Siize</size> --> <!-- </sizes> --> <!-- <formats> --> <!-- 	<format>the format</format> --> <!-- 	<format>the sec format</format> --> <!-- </formats> --> <version>the version</version> <rightsList> 	<rights rightsURI="ritghts uri">rights list</rights> 	<rights rightsURI="ritghts uri 3">rights list 2</rights> </rightsList> <fundingReferences> 	<fundingReference> 	<funderName>funder name</funderName> 	<funderIdentifier funderIdentifierType="Crossref Funder ID">funder identifier</funderIdentifier> 	<awardNumber awardURI="award uri">award number</awardNumber> 	<awardTitle>award title</awardTitle> 	</fundingReference> 	<fundingReference> 	<funderName>sec funder name</funderName> 	<funderIdentifier funderIdentifierType="Other">sec funder identifier</funderIdentifier> 	<awardNumber awardURI="sec award uri">sec award number</awardNumber> 	<awardTitle>sec award title</awardTitle> 	</fundingReference> </fundingReferences> </resource>';		
+      var parser = new DOMParser();
+      var otherxml = parser.parseFromString(otherdoi, "application/xml"); 
+      var otherjson = xml2json(otherxml, " ");
+      var otherresource = new Resource(JSON.parse(otherjson));  
+		}
+	});
+	</script>
+
+</body>
+</html>

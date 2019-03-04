@@ -1,9 +1,12 @@
 /**
  * 
  */
-module.exports = class Subject{
+export class Subject{
 	
 	constructor(json){
+		if(json == undefined){
+			return;
+		}
 		this.subject = json.$t;
 		this.subjectScheme = json.subjectScheme;
 		this.schemeURI = json.schemeURI;

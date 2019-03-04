@@ -1,9 +1,12 @@
 /**
  * 
  */
-module.exports = class RelatedIdentifier{
+export class RelatedIdentifier{
 	
 	constructor(json){
+		if(json == undefined){
+			return;
+		}
 		this.relatedIdentifier = json.$t;
 		this.relatedIdentifierType = json.relatedIdentifierType;
 		this.relationType = json.relationType;

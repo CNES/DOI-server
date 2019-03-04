@@ -1,9 +1,12 @@
 /**
  * 
  */
-module.exports = class Date{
+export class Date{
 	
 	constructor(json){
+		if(json == undefined){
+			return;
+		}
 		this.date = json.$t;
 		this.dateType = json.dateType;
 		this.dateInformation = json.dateInformation;

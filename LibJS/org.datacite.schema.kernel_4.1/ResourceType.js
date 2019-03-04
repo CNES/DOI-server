@@ -1,9 +1,12 @@
 /**
  * 
  */
-module.exports = class ResourceType{
+export class ResourceType{
 	
 	constructor(json){
+		if(json == undefined){
+			return;
+		}
 		this.resourceType = json.$t;
 		this.resourceTypeGeneral = json.resourceTypeGeneral;
 	}

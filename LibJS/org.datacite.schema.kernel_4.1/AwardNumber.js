@@ -1,9 +1,12 @@
 /**
  * 
  */
-module.exports = class AwardNumber{
+export class AwardNumber{
 	
 	constructor(json){
+		if(json == undefined){
+			return;
+		}
 		this.awardNumber = json.$t;
 		this.awardURI = json.awardURI;
 	}

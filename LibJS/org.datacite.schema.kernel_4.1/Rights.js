@@ -1,9 +1,12 @@
 /**
  * 
  */
-module.exports = class Rights{
+export class Rights{
 	
 	constructor(json){
+		if(json == undefined){
+			return;
+		}
 		this.rights = json.$t;
 		this.rightsURI = json.rightsURI;
 	}

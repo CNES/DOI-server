@@ -3,26 +3,29 @@
  * Contain getter and setter for every elements in XML from 
  * https://schema.datacite.org/meta/kernel-4.1/metadata.xsd
  */
-// --- required fields --- \\
-var Identifier = require("./Identifier.js");
-var Creator = require("./Creator.js");
-var Title = require("./Title.js");
-var ResourceType = require("./ResourceType.js");
+	// --- required fields --- \\
+import { Identifier } from './Identifier.js';
+import { Creator } from './Creator.js';
+import { Title } from './Title.js';
+import { ResourceType } from './ResourceType.js';
 
-//--- optional fields --- \\
-var Subject = require("./Subject.js");
-var Contributor = require("./Contributor.js");
-var Date = require("./Date.js");
-var AlternateIdentifier = require("./AlternateIdentifier.js");
-var RelatedIdentifier = require("./RelatedIdentifier.js");
-var Rights = require("./Rights.js");
-var Description = require("./Description.js");
-var GeoLocation = require("./GeoLocation.js");
-var FundingReference = require("./FundingReference.js");
+	//--- optional fields --- \\
+import { Subject } from './Subject.js';
+import { Contributor } from './Contributor.js';
+import { Date } from './Date.js';
+import { AlternateIdentifier } from './AlternateIdentifier.js';
+import { RelatedIdentifier } from './RelatedIdentifier.js';
+import { Rights } from './Rights.js';
+import { Description } from './Description.js';
+import { GeoLocation } from './GeoLocation.js';
+import { FundingReference } from './FundingReference.js';
 
-module.exports = class Resource{
+export class Resource{
 	
 	constructor(data){
+		if(data == undefined){
+			return;
+		}
 		// --- required fields --- \\
 //		console.log(data);
 		
@@ -31,22 +34,26 @@ module.exports = class Resource{
 		
 		// Creators
 		this.creators = [];
-		if (data["resource"].creators.creator instanceof Array) {
-			for(var i = 0; i < data["resource"].creators.creator.length; i++){
-				this.creators.push(new Creator(data["resource"].creators.creator[i]));
+		if(data["resource"].creators != undefined){
+			if (data["resource"].creators.creator instanceof Array) {
+				for(var i = 0; i < data["resource"].creators.creator.length; i++){
+					this.creators.push(new Creator(data["resource"].creators.creator[i]));
+				}
+			} else {
+				this.creators.push(new Creator(data["resource"].creators.creator));
 			}
-		} else {
-			this.creators.push(new Creator(data["resource"].creators.creator));
 		}
 		
 		// Titles
 		this.titles = [];
-		if(data["resource"].titles.title instanceof Array){
-			for(var i = 0; i < data["resource"].titles.title.length; i++){
-				this.titles.push(new Title(data["resource"].titles.title[i]));
+		if(data["resource"].titles != undefined){
+			if(data["resource"].titles.title instanceof Array){
+				for(var i = 0; i < data["resource"].titles.title.length; i++){
+					this.titles.push(new Title(data["resource"].titles.title[i]));
+				}
+			} else {
+				this.titles.push(new Title(data["resource"].titles.title));
 			}
-		} else {
-			this.titles.push(new Title(data["resource"].titles.title));
 		}
 		
 		// Publisher
@@ -61,32 +68,38 @@ module.exports = class Resource{
 		// --- optional fields --- \\
 		// Subjects
 		this.subjects = [];
-		if(data["resource"].subjects.subject instanceof Array){
-			for(var i = 0; i < data["resource"].subjects.subject.length; i++){
-				this.subjects.push(new Subject(data["resource"].subjects.subject[i]));
+		if(data["resource"].subjects != undefined){
+			if(data["resource"].subjects.subject instanceof Array){
+				for(var i = 0; i < data["resource"].subjects.subject.length; i++){
+					this.subjects.push(new Subject(data["resource"].subjects.subject[i]));
+				}
+			} else {
+				this.subjects.push(new Subject(data["resource"].subjects.subject));
 			}
-		} else {
-			this.subjects.push(new Subject(data["resource"].subjects.subject));
 		}
 		
 		// Contributors
 		this.contributors = [];
-		if(data["resource"].contributors.contributor instanceof Array){
-			for(var i = 0; i < data["resource"].contributors.contributor.length; i++){
-				this.contributors.push(new Contributor(data["resource"].contributors.contributor[i]));
+		if(data["resource"].contributors != undefined){
+			if(data["resource"].contributors.contributor instanceof Array){
+				for(var i = 0; i < data["resource"].contributors.contributor.length; i++){
+					this.contributors.push(new Contributor(data["resource"].contributors.contributor[i]));
+				}
+			} else {
+				this.contributors.push(new Contributor(data["resource"].contributors.contributor));
 			}
-		} else {
-			this.contributors.push(new Contributor(data["resource"].contributors.contributor));
 		}
 		
 		// Dates
 		this.dates = [];
-		if(data["resource"].dates.date instanceof Array){
-			for(var i = 0; i < data["resource"].dates.date.length; i++){
-				this.dates.push(new Date(data["resource"].dates.date[i]));
+		if(data["resource"].dates != undefined){
+			if(data["resource"].dates.date instanceof Array){
+				for(var i = 0; i < data["resource"].dates.date.length; i++){
+					this.dates.push(new Date(data["resource"].dates.date[i]));
+				}
+			} else {
+				this.dates.push(new Date(data["resource"].dates.date));
 			}
-		} else {
-			this.dates.push(new Date(data["resource"].dates.date));
 		}
 		
 		// Language
@@ -94,46 +107,54 @@ module.exports = class Resource{
 		
 		// AlternateIdentifiers
 		this.alternateIdentifiers = [];
-		if(data["resource"].alternateIdentifiers.alternateIdentifier instanceof Array){
-			for(var i = 0; i < data["resource"].alternateIdentifiers.alternateIdentifier.length; i++){
+		if(data["resource"].alternateIdentifiers != undefined){
+			if(data["resource"].alternateIdentifiers.alternateIdentifier instanceof Array){
+				for(var i = 0; i < data["resource"].alternateIdentifiers.alternateIdentifier.length; i++){
+					this.alternateIdentifiers.push(
+							new AlternateIdentifier(data["resource"].alternateIdentifiers.alternateIdentifier[i]));
+				}
+			} else {
 				this.alternateIdentifiers.push(
-						new AlternateIdentifier(data["resource"].alternateIdentifiers.alternateIdentifier[i]));
+						new AlternateIdentifier(data["resource"].alternateIdentifiers.alternateIdentifier));
 			}
-		} else {
-			this.alternateIdentifiers.push(
-					new AlternateIdentifier(data["resource"].alternateIdentifiers.alternateIdentifier));
 		}
 		
 		// RelatedIdentifiers
 		this.relatedIdentifiers = [];
-		if(data["resource"].relatedIdentifiers.relatedIdentifier instanceof Array){
-			for(var i = 0; i < data["resource"].relatedIdentifiers.relatedIdentifier.length; i++){
+		if(data["resource"].relatedIdentifiers != undefined){
+			if(data["resource"].relatedIdentifiers.relatedIdentifier instanceof Array){
+				for(var i = 0; i < data["resource"].relatedIdentifiers.relatedIdentifier.length; i++){
+					this.relatedIdentifiers.push(
+							new RelatedIdentifier(data["resource"].relatedIdentifiers.relatedIdentifier[i]));
+				}
+			} else {
 				this.relatedIdentifiers.push(
-						new RelatedIdentifier(data["resource"].relatedIdentifiers.relatedIdentifier[i]));
+						new RelatedIdentifier(data["resource"].relatedIdentifiers.relatedIdentifier));
 			}
-		} else {
-			this.relatedIdentifiers.push(
-					new RelatedIdentifier(data["resource"].relatedIdentifiers.relatedIdentifier));
 		}
 		
 		// Sizes
 		this.sizes = [];
-		if(data["resource"].sizes.size instanceof Array){
-			for(var i = 0; i < data["resource"].sizes.size.length; i++){
-				this.sizes.push(data["resource"].sizes.size[i]);
+		if(data["resource"].sizes != undefined){
+			if(data["resource"].sizes.size instanceof Array){
+				for(var i = 0; i < data["resource"].sizes.size.length; i++){
+					this.sizes.push(data["resource"].sizes.size[i]);
+				}
+			} else {
+				this.sizes.push(data["resource"].sizes.size);
 			}
-		} else {
-			this.sizes.push(data["resource"].sizes.sizes);
 		}
 		
 		// Formats
 		this.formats = [];
-		if(data["resource"].formats.format instanceof Array){
-			for(var i = 0; i < data["resource"].formats.format.length; i++){
-				this.formats.push(data["resource"].formats.format[i]);
+		if(data["resource"].formats != undefined){
+			if(data["resource"].formats.format instanceof Array){
+				for(var i = 0; i < data["resource"].formats.format.length; i++){
+					this.formats.push(data["resource"].formats.format[i]);
+				}
+			} else {
+				this.formats.push(data["resource"].formats.format);
 			}
-		} else {
-			this.formats.push(data["resource"].formats.format);
 		}
 		
 		// Version
@@ -141,42 +162,50 @@ module.exports = class Resource{
 		
 		// RightsList
 		this.rightsList = [];
-		if(data["resource"].rightsList.rights instanceof Array){
-			for(var i = 0; i < data["resource"].rightsList.rights.length; i++){
-				this.rightsList.push(new Rights(data["resource"].rightsList.rights[i]));
+		if(data["resource"].rightsList != undefined){
+			if(data["resource"].rightsList.rights instanceof Array){
+				for(var i = 0; i < data["resource"].rightsList.rights.length; i++){
+					this.rightsList.push(new Rights(data["resource"].rightsList.rights[i]));
+				}
+			} else {
+				this.rightsList.push(new Rights(data["resource"].rightsList.rights));
 			}
-		} else {
-			this.rightsList.push(new Rights(data["resource"].rightsList.rights));
 		}
 		
 		// Descriptions
 		this.descriptions = [];
-		if(data["resource"].descriptions.description instanceof Array){
-			for(var i = 0; i < data["resource"].descriptions.description.length; i++){
-				this.descriptions.push(new Description(data["resource"].descriptions.description[i]));
+		if(data["resource"].descriptions != undefined){
+			if(data["resource"].descriptions.description instanceof Array){
+				for(var i = 0; i < data["resource"].descriptions.description.length; i++){
+					this.descriptions.push(new Description(data["resource"].descriptions.description[i]));
+				}
+			} else {
+				this.descriptions.push(new Description(data["resource"].descriptions.description));
 			}
-		} else {
-			this.descriptions.push(new Description(data["resource"].descriptions.description));
 		}
 		
 		// GeoLocations
 		this.geoLocations = [];
-		if(data["resource"].geoLocations.geoLocation instanceof Array){
-			for(var i = 0; i < data["resource"].geoLocations.geoLocation.length; i++){
-				this.geoLocations.push(new GeoLocation(data["resource"].geoLocations.geoLocation[i]));
+		if(data["resource"].geoLocations != undefined){
+			if(data["resource"].geoLocations.geoLocation instanceof Array){
+				for(var i = 0; i < data["resource"].geoLocations.geoLocation.length; i++){
+					this.geoLocations.push(new GeoLocation(data["resource"].geoLocations.geoLocation[i]));
+				}
+			} else {
+				this.geoLocations.push(new GeoLocation(data["resource"].geoLocations.geoLocation));
 			}
-		} else {
-			this.geoLocations.push(new GeoLocation(data["resource"].geoLocations.geoLocation));
 		}
 		
 		// FundingReferences
 		this.fundingReferences = [];
-		if(data["resource"].fundingReferences.fundingReference instanceof Array){
-			for(var i = 0; i < data["resource"].fundingReferences.fundingReference.length; i++){
-				this.fundingReferences.push(new FundingReference(data["resource"].fundingReferences.fundingReference[i]));
+		if(data["resource"].fundingReferences != undefined){
+			if(data["resource"].fundingReferences.fundingReference instanceof Array){
+				for(var i = 0; i < data["resource"].fundingReferences.fundingReference.length; i++){
+					this.fundingReferences.push(new FundingReference(data["resource"].fundingReferences.fundingReference[i]));
+				}
+			} else {
+				this.fundingReferences.push(new FundingReference(data["resource"].fundingReferences.fundingReference));
 			}
-		} else {
-			this.fundingReferences.push(new FundingReference(data["resource"].fundingReferences.fundingReference));
 		}
 	}
 	
@@ -390,4 +419,5 @@ module.exports = class Resource{
 	}
 	
 }
+
 

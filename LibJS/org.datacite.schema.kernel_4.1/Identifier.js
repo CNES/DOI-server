@@ -1,9 +1,12 @@
 /**
  * 
  */
-module.exports = class Identifier{
+export class Identifier{
 	
 	constructor(json){
+		if(json == undefined){
+			return;
+		}
 		this.identifier = json.$t;
 		this.identifierType = json.identifierType;
 	}
@@ -19,7 +22,7 @@ module.exports = class Identifier{
 		this.identifier = id;
 	}
 	setIdentifierType(idType){
-//		this.identifierType = idType;
+//		TODO this.identifierType = idType;
 		this.identifierType = "DOI";
 	}
 }

@@ -1,13 +1,16 @@
 /**
  * 
  */
-var Point = require("./Point.js");
-var Box = require("./Box.js");
-var GeoLocationPolygon = require("./GeoLocationPolygon.js");
+import { Point } from './Point.js';
+import { Box } from './Box.js';
+import { GeoLocationPolygon } from './GeoLocationPolygon.js';
 
-module.exports = class GeoLocation{
+export class GeoLocation{
 	
 	constructor(json){
+		if(json == undefined){
+			return;
+		}
 		
 		this.geoLocationPlace = json.geoLocationPlace;
 		

@@ -1,11 +1,14 @@
 /**
  * 
  */
-var Point = require("./Point.js");
+import { Point } from './Point.js';
 
-module.exports = class GeoLocationPolygon{
+export class GeoLocationPolygon{
 	
 	constructor(json){
+		if(json == undefined){
+			return;
+		}
 		this.polygonPoint = [];
 		if(json.polygonPoint instanceof Array){
 			for(var i = 0; i < json.polygonPoint.length; i++){

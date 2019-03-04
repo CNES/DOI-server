@@ -1,9 +1,12 @@
 /**
  * 
  */
-module.exports = class Title{
+export class Title{
 	
 	constructor(json){
+		if(json == undefined){
+			return;
+		}
 		this.title = json.$t;
 		this.titleType = json.titleType;
 	}

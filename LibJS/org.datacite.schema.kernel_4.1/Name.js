@@ -1,9 +1,12 @@
 /**
  * 
  */
-module.exports = class Name{
+export class Name{
 	
 	constructor(json){
+		if(json == undefined){
+			return;
+		}
 		this.name = json.$t;
 		this.nameType = json.nameType;
 	}

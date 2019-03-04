@@ -1,9 +1,12 @@
 /**
  * 
  */
-module.exports = class Description{
+export class Description{
 	
 	constructor(json){
+		if(json == undefined){
+			return;
+		}
 		this.description = json.$t;
 		this.descriptionType = json.descriptionType;
 	}

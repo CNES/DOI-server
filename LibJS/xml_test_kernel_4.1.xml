@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resource>
+<!-- <resource xmlns="http://datacite.org/schema/kernel-4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://datacite.org/schema/kernel-4 http://schema.datacite.org/meta/kernel-4/metadata.xsd"> -->
 <identifier identifierType="DOI">10/identifier/doi</identifier>
 <titles>
 	<title titleType="AlternativeTitle">Title</title>
@@ -186,14 +187,14 @@
 	<alternateIdentifier alternateIdentifierType="Alternate type">Alternate identifier</alternateIdentifier>
 	<alternateIdentifier alternateIdentifierType="Alternate type 2">Alternate identifier 2</alternateIdentifier>
 </alternateIdentifiers>
-<sizes>
-	<size>Siize</size>
-	<size>Sec Siize</size>
-</sizes>
-<formats>
-	<format>the format</format>
-	<format>the sec format</format>
-</formats>
+<!-- <sizes> -->
+<!-- 	<size>Siize</size> -->
+<!-- 	<size>Sec Siize</size> -->
+<!-- </sizes> -->
+<!-- <formats> -->
+<!-- 	<format>the format</format> -->
+<!-- 	<format>the sec format</format> -->
+<!-- </formats> -->
 <version>the version</version>
 <rightsList>
 	<rights rightsURI="ritghts uri">rights list</rights>

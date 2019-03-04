@@ -1,9 +1,12 @@
 /**
  * 
  */
-module.exports = class FunderIdentifier{
+export class FunderIdentifier{
 	
 	constructor(json){
+		if(json == undefined){
+			return;
+		}
 		this.funderIdentifier = json.$t;
 		this.funderIdentifierType = json.funderIdentifierType;
 	}

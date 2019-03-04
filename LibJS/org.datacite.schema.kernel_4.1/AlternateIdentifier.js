@@ -1,9 +1,12 @@
 /**
  * 
  */
-module.exports = class AlternateIdentifier{
+export class AlternateIdentifier{
 	
 	constructor(json){
+		if(json == undefined){
+			return;
+		}
 		this.alternateIdentifier = json.$t;
 		this.alternateIdentifierType = json.alternateIdentifierType;
 	}

@@ -1,9 +1,12 @@
 /**
  * 
  */
-module.exports = class Point{
+export class Point{
 	
 	constructor(json){
+		if(json == undefined){
+			return;
+		}
 		this.pointLongitude = json.pointLongitude;
 		this.pointLatitude = json.pointLatitude;
 	}

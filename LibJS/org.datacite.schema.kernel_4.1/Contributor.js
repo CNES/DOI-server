@@ -1,12 +1,15 @@
 /**
  * 
  */
-var Name = require("./Name.js");
-var NameIdentifier = require("./NameIdentifier.js");
+import { Name } from './Name.js';
+import { NameIdentifier } from './NameIdentifier.js';
 
-module.exports = class Contributor{
+export class Contributor{
 	
 	constructor(json){
+		if(json == undefined){
+			return;
+		}
 		this.contributorName = new Name(json.contributorName);
 //		{contributorName:"",nameType:""}; 
 		

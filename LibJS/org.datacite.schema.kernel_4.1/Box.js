@@ -1,9 +1,12 @@
 /**
  * 
  */
-module.exports = class Box{
+export class Box{
 	
 	constructor(json){
+		if(json == undefined){
+			return;
+		}
 		this.westBoundLongitude = json.westBoundLongitude;
 		this.eastBoundLongitude = json.eastBoundLongitude;
 		this.southBoundLatitude = json.southBoundLatitude;

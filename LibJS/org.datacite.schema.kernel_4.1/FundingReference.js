@@ -1,12 +1,15 @@
 /**
  * 
  */
-var AwardNumber = require("./AwardNumber.js");
-var FunderIdentifier = require("./FunderIdentifier.js");
+import { AwardNumber } from './AwardNumber.js';
+import { FunderIdentifier } from './FunderIdentifier.js';
 
-module.exports = class FundingReference{
+export class FundingReference{
 	
 	constructor(json){
+		if(json == undefined){
+			return;
+		}
 		this.funderName = json.funderName;
 		this.funderIdentifier = new FunderIdentifier(json.funderIdentifier);
 		this.awardNumber = new AwardNumber(json.awardNumber);

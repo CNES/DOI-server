@@ -1,9 +1,12 @@
 /**
  * 
  */
-module.exports = class NameIdentifier{
+export class NameIdentifier{
 	
 	constructor(json){
+		if(json == undefined){
+			return;
+		}
 		this.nameIdentifier = json.$t;
 		this.nameIdentifierScheme = json.nameIdentifierScheme;
 		this.schemeURI = json.schemeURI;
