@@ -56,7 +56,7 @@ import gnu.getopt.LongOpt;
  */
 @Requirement(reqId = Requirement.DOI_DEV_010, reqName = Requirement.DOI_DEV_010_NAME)
 @Requirement(reqId = Requirement.DOI_DEV_020, reqName = Requirement.DOI_DEV_020_NAME)
-public class Starter {
+public final class Starter {
 
     /**
      * Length of the secret key {@value #BITS_16}
@@ -72,328 +72,336 @@ public class Starter {
      * DOI Server.
      */
     private static DoiServer doiServer;
+    
+    /**
+     * "Static" class cannot be instantiated
+     */
+    private Starter() {
+    }
 
     static {
-        java.util.logging.Logger rootLogger = java.util.logging.LogManager.getLogManager().
-                getLogger("");
-        java.util.logging.Handler[] handlers = rootLogger.getHandlers();
-        rootLogger.removeHandler(handlers[0]);
-        SLF4JBridgeHandler.install();
+	java.util.logging.Logger rootLogger = java.util.logging.LogManager.getLogManager()
+		.getLogger("");
+	java.util.logging.Handler[] handlers = rootLogger.getHandlers();
+	rootLogger.removeHandler(handlers[0]);
+	SLF4JBridgeHandler.install();
     }
 
     private static void displayHelp() {
-        LOG.trace("Entering in displayHelp");
-        DoiSettings settings = DoiSettings.getInstance();
-        StringBuilder help = new StringBuilder();
-        help.append("\n------------ Help for DOI Server -----------\n");
-        help.append("\n");
-        help.append("Usage: java -jar ").append(settings.getString(Consts.APP_NAME)).append("-")
-                .append(settings.getString(Consts.VERSION)).append(
-                ".jar [--secret <key>] [OPTIONS] [-s]\n");
-        help.append("\n\n");
-        help.append("with :\n");
-        help.append("  --doi \"<INIST_prefix> <projectName> <landingPage>\" : Creates a DOI\n");
-        help.append("  --secret <key>               : The 16 bits secret key to crypt/decrypt\n");
-        help.append("  --key-sign-secret <key>      : The key to sign the token\n");
-        help.append("                                 If not provided, a default one is used\n");
-        help.append("  -s                           : Starts the server\n");
-        help.append("with OPTIONS:\n");
-        help.append("  -h|--help                    : This output\n");
-        help.append("  -k|--key-sign                : Creates a key to sign JWT token\n");
-        help.append("  -c <string>                  : Crypts a string in the standard output\n");
-        help.append("  -e <string>                  : Decrypts a string in the standard output\n");
-        help.append("  -d                           : Displays the configuration file\n");
-        help.append("  -f <path>                    : Loads the configuation file\n");
-        help.append(
-                "  -y|--cryptProperties <path>  : crypts the properties file on the output standard\n");
-        help.append(
-                "  -z|--decryptProperties <path>: Decrypts the properties on the output standard\n");
-        help.append("  -v|--version                 : DOI server version\n");
-        help.append("\n");
-        help.append("\n");
-        LOG.info(help.toString());
-        LOG.trace("Exiting from displayHelp");
+	LOG.trace("Entering in displayHelp");
+	DoiSettings settings = DoiSettings.getInstance();
+	StringBuilder help = new StringBuilder();
+	help.append("\n------------ Help for DOI Server -----------\n");
+	help.append("\n");
+	help.append("Usage: java -jar ").append(settings.getString(Consts.APP_NAME)).append("-")
+		.append(settings.getString(Consts.VERSION))
+		.append(".jar [--secret <key>] [OPTIONS] [-s]\n");
+	help.append("\n\n");
+	help.append("with :\n");
+	help.append("  --doi \"<INIST_prefix> <projectName> <landingPage>\" : Creates a DOI\n");
+	help.append("  --secret <key>               : The 16 bits secret key to crypt/decrypt\n");
+	help.append("  --key-sign-secret <key>      : The key to sign the token\n");
+	help.append("                                 If not provided, a default one is used\n");
+	help.append("  -s                           : Starts the server\n");
+	help.append("with OPTIONS:\n");
+	help.append("  -h|--help                    : This output\n");
+	help.append("  -k|--key-sign                : Creates a key to sign JWT token\n");
+	help.append("  -c <string>                  : Crypts a string in the standard output\n");
+	help.append("  -e <string>                  : Decrypts a string in the standard output\n");
+	help.append("  -d                           : Displays the configuration file\n");
+	help.append("  -f <path>                    : Loads the configuation file\n");
+	help.append(
+		"  -y|--cryptProperties <path>  : crypts the properties file on the output standard\n");
+	help.append(
+		"  -z|--decryptProperties <path>: Decrypts the properties on the output standard\n");
+	help.append("  -v|--version                 : DOI server version\n");
+	help.append("\n");
+	help.append("\n");
+	LOG.info(help.toString());
+	LOG.trace("Exiting from displayHelp");
     }
 
     /**
      * Stops the server
      *
-     * @param server HTTP or HTTPS server
+     * @param server
+     *            HTTP or HTTPS server
      */
     private static void stopServer(final Thread server) {
-        LOG.trace("Entering in stopServer");
-        try {
-            try {
-                LOG.info("Stopping the server ...");
-                doiServer.stop();
-                LOG.info("Server stopped");
-            } catch (Exception ex) {
-                LOG.fatal("Unable to stop the server", ex);
-            } finally {
-                LOG.info("Interrups the server, which is stopping");
-                EmailSettings.getInstance().sendMessage("[DOI] Stopping Server",
-                        "Ther server has been interrupted");
-                server.interrupt();
-                server.join();
-            }
-        } catch (InterruptedException e) {
-            LOG.debug("Cannot interrupt the server", e);
-        }
-        LOG.trace("Exiting from stopServer");
+	LOG.trace("Entering in stopServer");
+	try {
+	    try {
+		LOG.info("Stopping the server ...");
+		doiServer.stop();
+		LOG.info("Server stopped");
+	    } catch (Exception ex) {
+		LOG.fatal("Unable to stop the server", ex);
+	    } finally {
+		LOG.info("Interrups the server, which is stopping");
+		EmailSettings.getInstance().sendMessage("[DOI] Stopping Server",
+			"Ther server has been interrupted");
+		server.interrupt();
+		server.join();
+	    }
+	} catch (InterruptedException e) {
+	    LOG.debug("Cannot interrupt the server", e);
+	}
+	LOG.trace("Exiting from stopServer");
     }
 
     /**
      * Starts the server
      *
-     * @param server the server
+     * @param server
+     *            the server
      */
     @Requirement(reqId = Requirement.DOI_ARCHI_040, reqName = Requirement.DOI_ARCHI_040_NAME)
     private static void startServer(final DoiServer server) {
-        LOG.trace("Entering in startServer");
-        try {
-            fr.cnes.doi.plugin.Utils.addPath(
-                    DoiSettings.getInstance().getPathApp() + File.separatorChar + "plugins"
-            );
-            LOG.info("Starting server ...");
-            server.start();
-            LOG.info("Server started");
-        } catch (Exception ex) {
-            LOG.fatal("Unable to start the server");
-        }
-        LOG.trace("Exiting from startServer");
+	LOG.trace("Entering in startServer");
+	try {
+	    fr.cnes.doi.plugin.Utils.addPath(
+		    DoiSettings.getInstance().getPathApp() + File.separatorChar + "plugins");
+	    LOG.info("Starting server ...");
+	    server.start();
+	    LOG.info("Server started");
+	} catch (Exception ex) {
+	    LOG.fatal("Unable to start the server");
+	}
+	LOG.trace("Exiting from startServer");
     }
 
     /**
      * Launches the server.
      *
-     * @param settings Configuration
+     * @param settings
+     *            Configuration
      */
     private static void launchServer(final DoiSettings settings) {
 
-        LOG.trace("Entering in launchServer");
-        settings.validConfigurationFile();
-        LOG.info("launchServer, entering DOI server");
-        doiServer = new DoiServer(settings);
-        final Thread server = new Thread() {
-            @Override
-            public void run() {
-                startServer(doiServer);
-            }
-        };
+	LOG.trace("Entering in launchServer");
+	settings.validConfigurationFile();
+	LOG.info("launchServer, entering DOI server");
+	doiServer = new DoiServer(settings);
+	final Thread server = new Thread() {
+	    @Override
+	    public void run() {
+		startServer(doiServer);
+	    }
+	};
 
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            @Override
-            public void run() {
-                LOG.info("interrupt received, killing server…");
-                stopServer(server);
-            }
-        });
+	Runtime.getRuntime().addShutdownHook(new Thread() {
+	    @Override
+	    public void run() {
+		LOG.info("interrupt received, killing server…");
+		stopServer(server);
+	    }
+	});
 
-        server.start();
-        LOG.trace("Exiting from launchServer");
+	server.start();
+	LOG.trace("Exiting from launchServer");
     }
 
     /**
      * Displays version.
      */
     private static void displayVersion() {
-        LOG.trace("Entering in displayVersion");
-        final DoiSettings settings = DoiSettings.getInstance();
-        final String appName = settings.getString(Consts.APP_NAME);
-        final String version = settings.getString(Consts.VERSION);
-        final String copyright = settings.getString(Consts.COPYRIGHT);
-        LOG.info("{} ({}) - Version:{}\n", appName, copyright, version);
-        LOG.trace("Exiting from displayVersion");
+	LOG.trace("Entering in displayVersion");
+	final DoiSettings settings = DoiSettings.getInstance();
+	final String appName = settings.getString(Consts.APP_NAME);
+	final String version = settings.getString(Consts.VERSION);
+	final String copyright = settings.getString(Consts.COPYRIGHT);
+	LOG.info("{} ({}) - Version:{}\n", appName, copyright, version);
+	LOG.trace("Exiting from displayVersion");
     }
 
     /**
      * Main.
      *
-     * @param argv command line arguments
+     * @param argv
+     *            command line arguments
      */
     public static void main(final String[] argv) {
-        final DoiSettings settings = DoiSettings.getInstance();
-        final String progName = "java -jar " + settings.getString(Consts.APP_NAME) + "-"
-                + settings.getString(Consts.VERSION) + ".jar";
+	final DoiSettings settings = DoiSettings.getInstance();
+	final String progName = "java -jar " + settings.getString(Consts.APP_NAME) + "-"
+		+ settings.getString(Consts.VERSION) + ".jar";
 
-        int c;
-        String arg;
+	int c;
+	String arg;
 
-        StringBuffer sb = new StringBuffer();
-        LongOpt[] longopts = new LongOpt[8];
-        longopts[0] = new LongOpt("help", LongOpt.NO_ARGUMENT, null, 'h');
-        longopts[1] = new LongOpt("version", LongOpt.NO_ARGUMENT, null, 'v');
-        longopts[2] = new LongOpt("secret", LongOpt.REQUIRED_ARGUMENT, sb, 0);
-        longopts[3] = new LongOpt("decryptProperties", LongOpt.REQUIRED_ARGUMENT, null, 'z');
-        longopts[4] = new LongOpt("cryptProperties", LongOpt.REQUIRED_ARGUMENT, null, 'y');
-        longopts[5] = new LongOpt("key-sign", LongOpt.NO_ARGUMENT, null, 'k');
-        longopts[6] = new LongOpt("key-sign-secret", LongOpt.REQUIRED_ARGUMENT, null, 'a');
-        longopts[7] = new LongOpt("doi", LongOpt.REQUIRED_ARGUMENT, null, 'b');
+	StringBuffer sb = new StringBuffer();
+	LongOpt[] longopts = new LongOpt[8];
+	longopts[0] = new LongOpt("help", LongOpt.NO_ARGUMENT, null, 'h');
+	longopts[1] = new LongOpt("version", LongOpt.NO_ARGUMENT, null, 'v');
+	longopts[2] = new LongOpt("secret", LongOpt.REQUIRED_ARGUMENT, sb, 0);
+	longopts[3] = new LongOpt("decryptProperties", LongOpt.REQUIRED_ARGUMENT, null, 'z');
+	longopts[4] = new LongOpt("cryptProperties", LongOpt.REQUIRED_ARGUMENT, null, 'y');
+	longopts[5] = new LongOpt("key-sign", LongOpt.NO_ARGUMENT, null, 'k');
+	longopts[6] = new LongOpt("key-sign-secret", LongOpt.REQUIRED_ARGUMENT, null, 'a');
+	longopts[7] = new LongOpt("doi", LongOpt.REQUIRED_ARGUMENT, null, 'b');
 
-        //
-        Getopt g = new Getopt(progName, argv, "hvdske:c:f:y:z:a:b:", longopts);
-        //
-        while ((c = g.getopt()) != -1) {
-            switch (c) {
-                case 0:
-                    String secretKey = g.getOptarg();
-                    if (secretKey.length() != BITS_16) {
-                        throw new IllegalArgumentException("The secret key must have 16 characters.");
-                    } else {
-                        settings.setSecretKey(secretKey);
-                    }
-                    break;
-                //
-                case 'a':
-                    String secretSignToken = g.getOptarg();
-                    TokenSecurity.getInstance().setTokenKey(secretSignToken);
-                    break;
-                case 'b':
-                    String[] arguments = g.getOptarg().split(" ");
-                    String prefix = arguments[0];
-                    String projectName = arguments[1];
-                    String landingPage = arguments[2];
-                     {
-                        try {
-                            String doi = UniqueDoi.getInstance().createDOI(prefix, projectName,
-                                    new URI(landingPage), SuffixProjectsResource.NB_DIGITS);
-                            LOG.info(doi);
-                        } catch (URISyntaxException ex) {
-                            throw new IllegalArgumentException(ex.getMessage());
-                        }
-                    }
-                    break;
-                case 'h':
-                    LOG.debug("h option is selected");
-                    displayHelp();
-                    break;
-                //
-                case 's':
-                    LOG.debug("s option is selected");
-                    try {
-                        launchServer(settings);
-                    } catch (DoiRuntimeException ex) {
-                        LOG.fatal("Error when starting the server: " + ex.getMessage());
-                    }
-                    break;
-                //
-                case 'k':
-                    LOG.debug("k option is selected");
-                    LOG.info(TokenSecurity.createKeySignatureHS256());
-                    break;
-                //
-                case 'e':
-                    LOG.debug("e option is selected");
-                    arg = g.getOptarg();
-                    try {
-                        LOG.info(UtilsCryptography.decrypt(arg, settings.getSecretKey()));
-                    } catch (DoiRuntimeException ex) {
-                        LOG.fatal("Unable to decrypt {} : {}", arg, ex.getMessage());
-                    }
-                    break;
-                //
-                case 'c':
-                    LOG.debug("c option is selected");
-                    arg = g.getOptarg();
-                    try {
-                        LOG.info(UtilsCryptography.encrypt(arg, settings.getSecretKey()));
-                    } catch (DoiRuntimeException ex) {
-                        LOG.fatal("Unable to encrypt {} : {}", arg, ex.getMessage());
-                    }
-                    break;
-                //
-                case 'd':
-                    LOG.debug("d option is selected");
-                    settings.displayConfigFile();
-                    break;
-                //
-                case 'f':
-                    LOG.debug("f option is selected");
-                    arg = g.getOptarg();
-                     {
-                        try {
-                            settings.setPropertiesFile(arg);
-                        } catch (IOException ex) {
-                            LOG.fatal(ex.getMessage());
-                        }
-                    }
-                    break;
-                //
-                case 'v':
-                    LOG.debug("v option is selected");
-                    displayVersion();
-                    break;
-                //
-                case 'y':
-                    arg = g.getOptarg();
-                    try {
-                        byte[] encodedFile = Files.readAllBytes(Paths.get(arg));
-                        String contentFile = new String(encodedFile, StandardCharsets.UTF_8);
-                        contentFile = UtilsCryptography.
-                                encrypt(contentFile, settings.getSecretKey());
-                        LOG.info(contentFile);
-                    } catch (IOException ex) {
-                        LOG.fatal("Error: {}", ex.getMessage());
-                    }
-                    break;
-                //
-                case 'z':
-                    arg = g.getOptarg();
-                    InputStream inputStream = null;
-                    BufferedReader reader = null;
-                    Reader inputReader = null;
+	//
+	final Getopt g = new Getopt(progName, argv, "hvdske:c:f:y:z:a:b:", longopts);
+	//
+	while ((c = g.getopt()) != -1) {
+	    switch (c) {
+		case 0:
+		    final String secretKey = g.getOptarg();
+		    if (secretKey.length() != BITS_16) {
+			throw new IllegalArgumentException(
+				"The secret key must have 16 characters.");
+		    } else {
+			settings.setSecretKey(secretKey);
+		    }
+		    break;
+		//
+		case 'a':
+		    String secretSignToken = g.getOptarg();
+		    TokenSecurity.getInstance().setTokenKey(secretSignToken);
+		    break;
+		case 'b':
+		    String[] arguments = g.getOptarg().split(" ");
+		    String prefix = arguments[0];
+		    String projectName = arguments[1];
+		    String landingPage = arguments[2]; {
+		    try {
+			String doi = UniqueDoi.getInstance().createDOI(prefix, projectName,
+				new URI(landingPage), SuffixProjectsResource.NB_DIGITS);
+			LOG.info(doi);
+		    } catch (URISyntaxException ex) {
+			throw new IllegalArgumentException(ex.getMessage());
+		    }
+		}
+		    break;
+		case 'h':
+		    LOG.debug("h option is selected");
+		    displayHelp();
+		    break;
+		//
+		case 's':
+		    LOG.debug("s option is selected");
+		    try {
+			launchServer(settings);
+		    } catch (DoiRuntimeException ex) {
+			LOG.fatal("Error when starting the server: " + ex.getMessage());
+		    }
+		    break;
+		//
+		case 'k':
+		    LOG.debug("k option is selected");
+		    LOG.info(TokenSecurity.createKeySignatureHS256());
+		    break;
+		//
+		case 'e':
+		    LOG.debug("e option is selected");
+		    arg = g.getOptarg();
+		    try {
+			LOG.info(UtilsCryptography.decrypt(arg, settings.getSecretKey()));
+		    } catch (DoiRuntimeException ex) {
+			LOG.fatal("Unable to decrypt {} : {}", arg, ex.getMessage());
+		    }
+		    break;
+		//
+		case 'c':
+		    LOG.debug("c option is selected");
+		    arg = g.getOptarg();
+		    try {
+			LOG.info(UtilsCryptography.encrypt(arg, settings.getSecretKey()));
+		    } catch (DoiRuntimeException ex) {
+			LOG.fatal("Unable to encrypt {} : {}", arg, ex.getMessage());
+		    }
+		    break;
+		//
+		case 'd':
+		    LOG.debug("d option is selected");
+		    settings.displayConfigFile();
+		    break;
+		//
+		case 'f':
+		    LOG.debug("f option is selected");
+		    arg = g.getOptarg(); {
+		    try {
+			settings.setPropertiesFile(arg);
+		    } catch (IOException ex) {
+			LOG.fatal(ex.getMessage());
+		    }
+		}
+		    break;
+		//
+		case 'v':
+		    LOG.debug("v option is selected");
+		    displayVersion();
+		    break;
+		//
+		case 'y':
+		    arg = g.getOptarg();
+		    try {
+			byte[] encodedFile = Files.readAllBytes(Paths.get(arg));
+			String contentFile = new String(encodedFile, StandardCharsets.UTF_8);
+			contentFile = UtilsCryptography.encrypt(contentFile,
+				settings.getSecretKey());
+			LOG.info(contentFile);
+		    } catch (IOException ex) {
+			LOG.fatal("Error: {}", ex.getMessage());
+		    }
+		    break;
+		//
+		case 'z':
+		    arg = g.getOptarg();
+		    InputStream inputStream = null;
+		    BufferedReader reader = null;
+		    Reader inputReader = null;
 
-                    try {
-                        inputStream = new FileInputStream(arg);
-                        inputReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
-                        reader = new BufferedReader(inputReader);
-                        String content = reader.lines().collect(Collectors.joining("\n"));
-                        content = UtilsCryptography.decrypt(content, settings.getSecretKey());
-                        LOG.info(content);
-                    } catch (FileNotFoundException ex) {
-                        LOG.fatal("Error: {}", ex.getMessage());
-                    } finally {
-                        if (inputStream != null) {
-                            try {
-                                inputStream.close();
+		    try {
+			inputStream = new FileInputStream(arg);
+			inputReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+			reader = new BufferedReader(inputReader);
+			String content = reader.lines().collect(Collectors.joining("\n"));
+			content = UtilsCryptography.decrypt(content, settings.getSecretKey());
+			LOG.info(content);
+		    } catch (FileNotFoundException ex) {
+			LOG.fatal("Error: {}", ex.getMessage());
+		    } finally {
+			if (inputStream != null) {
+			    try {
+				inputStream.close();
 
-                            } catch (IOException e) {
-                                LOG.fatal("Error closing inputstream: {}", e.getMessage(), e);
-                            }
+			    } catch (IOException e) {
+				LOG.fatal("Error closing inputstream: {}", e.getMessage(), e);
+			    }
 
-                        }
-                        if (inputReader != null) {
-                            try {
-                                inputReader.close();
-                            } catch (IOException ex) {
-                                LOG.fatal("Error closing inputReader: {}", ex.getMessage(), ex);
-                            }
-                        }
-                        if (reader != null) {
-                            try {
-                                reader.close();
-                            } catch (IOException ex) {
-                                LOG.fatal("Error closing reader: {}", ex.getMessage(), ex);
-                            }
+			}
+			if (inputReader != null) {
+			    try {
+				inputReader.close();
+			    } catch (IOException ex) {
+				LOG.fatal("Error closing inputReader: {}", ex.getMessage(), ex);
+			    }
+			}
+			if (reader != null) {
+			    try {
+				reader.close();
+			    } catch (IOException ex) {
+				LOG.fatal("Error closing reader: {}", ex.getMessage(), ex);
+			    }
 
-                        }
-                    }
-                    break;
-                case '?':
-                    break; // getopt() already printed an error
-                //
-                default:
-                    LOG.debug("getopt() returned {}\n", c);
-            }
-        }
-        //
-        for (int i = g.getOptind(); i < argv.length; i++) {
-            LOG.info("Non option argv element: {}\n", argv[i]);
-        }
+			}
+		    }
+		    break;
+		case '?':
+		    break; // getopt() already printed an error
+		//
+		default:
+		    LOG.debug("getopt() returned {}\n", c);
+	    }
+	}
+	//
+	for (int i = g.getOptind(); i < argv.length; i++) {
+	    LOG.info("Non option argv element: {}\n", argv[i]);
+	}
 
-        if (argv.length == 0) {
-            displayHelp();
-        }
+	if (argv.length == 0) {
+	    displayHelp();
+	}
 
     }
 

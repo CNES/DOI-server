@@ -74,21 +74,32 @@ import fr.cnes.doi.settings.DoiSettings;
 @Category(UnitTest.class)
 public class MetadatasResourceTest {
     
-    @Rule
-    public ExpectedException exceptions = ExpectedException.none();     
-
+    /**
+     * Client
+     */
     private static Client cl;
+    
+    /**
+     * Is databse configured
+     */
     private static boolean isDatabaseConfigured;
     
+    /**
+     * Specification Metadata Store
+     */
+    private static MdsSpec mdsServerStub;
+    
+    /**
+     * URI metadata
+     */
+    private static final String METADATA_SERVICE = "/mds/metadata";
+
     private String result;
     private InputStream inputStream;
     private InputStream inputStreamFileError; 
-    private static MdsSpec mdsServerStub;
     
-    private static final String METADATA_SERVICE = "/mds/metadata";
-
-    public MetadatasResourceTest() {
-    }
+    @Rule
+    public ExpectedException exceptions = ExpectedException.none();     
 
     @BeforeClass
     public static void setUpClass() {

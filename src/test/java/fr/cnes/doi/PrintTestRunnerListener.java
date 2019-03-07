@@ -18,7 +18,6 @@
  */
 package fr.cnes.doi;
 
-
 import fr.cnes.doi.InitServerForTest.ColorStatus;
 import static fr.cnes.doi.InitServerForTest.mavenInfoRun;
 import static fr.cnes.doi.InitServerForTest.mavenSkipMessage;
@@ -40,46 +39,47 @@ public class PrintTestRunnerListener extends RunListener {
     private static final Description FAILED = Description.createTestDescription("failed", "failed");
     private static final Description SKIP = Description.createTestDescription("skip", "skip");
     private int nbTotalTestCases;
-    //private int nbSkips = 0;
-    //private int nbErrors = 0;
-    
+    // private int nbSkips = 0;
+    // private int nbErrors = 0;
+
     public PrintTestRunnerListener() {
-        super();
+	super();
     }
 
     @Override
     public void testRunStarted(Description description) throws Exception {
-        this.nbTotalTestCases = description.testCount();
-        mavenInfoRun(this.nbTotalTestCases);
+	this.nbTotalTestCases = description.testCount();
+	mavenInfoRun(this.nbTotalTestCases);
     }
 
     @Override
     public void testFailure(Failure failure) throws Exception {
-        testTitle(failure.getDescription().getMethodName(),ColorStatus.FAILED);
-        failure.getDescription().addChild(FAILED);
+	testTitle(failure.getDescription().getMethodName(), ColorStatus.FAILED);
+	failure.getDescription().addChild(FAILED);
     }
 
     @Override
     public void testIgnored(Description description) throws Exception {
-        Ignore ignore = description.getAnnotation(Ignore.class);
-        System.out.println(ignore.value());
-        testTitle(description.getDisplayName(), ColorStatus.SKIP, ignore.value());
+	Ignore ignore = description.getAnnotation(Ignore.class);
+	System.out.println(ignore.value());
+	testTitle(description.getDisplayName(), ColorStatus.SKIP, ignore.value());
     }
 
     @Override
     public void testAssumptionFailure(Failure failure) {
-        int testCount = failure.getDescription().testCount();
-        if (testCount == 1) {
-            testTitle(failure.getDescription().getMethodName(), ColorStatus.SKIP, failure.getMessage());
-            failure.getDescription().addChild(SKIP);
-        } else {
-            mavenTitle(failure);
-            List<Description> children = failure.getDescription().getChildren();
-            for (Description it : children) {
-                testTitle(it.getMethodName(), ColorStatus.SKIP);
-            }
-            mavenSkipMessage(failure);
-        }
+	int testCount = failure.getDescription().testCount();
+	if (testCount == 1) {
+	    testTitle(failure.getDescription().getMethodName(), ColorStatus.SKIP,
+		    failure.getMessage());
+	    failure.getDescription().addChild(SKIP);
+	} else {
+	    mavenTitle(failure);
+	    final List<Description> children = failure.getDescription().getChildren();
+	    for (Description it : children) {
+		testTitle(it.getMethodName(), ColorStatus.SKIP);
+	    }
+	    mavenSkipMessage(failure);
+	}
 
     }
 
@@ -89,24 +89,24 @@ public class PrintTestRunnerListener extends RunListener {
 
     @Override
     public void testFinished(Description description) throws Exception {
-        if (description.getChildren().contains(FAILED)) {
-        } else if (description.getChildren().contains(SKIP)) {
-        } else {
-            testTitle(description.getMethodName(), ColorStatus.OK);
-        }
+	if (!description.getChildren().contains(FAILED)
+		&& !description.getChildren().contains(SKIP)) {
+	    testTitle(description.getMethodName(), ColorStatus.OK);
+	} 
     }
 
     @Override
     public void testRunFinished(Result result) throws Exception {
-        //super.testRunFinished(result);
-//        int count = result.getFailureCount();
-//        int ignoreCount = result.getIgnoreCount();
-//        boolean isSuccess = result.wasSuccessful();
-//        //System.out.println("count:"+count+" ignore:"+ignoreCount+" isSuc:"+isSuccess+ " "+result.getRunCount());
-//        List<Failure> fails = result.getFailures();
-//        for (Failure fail : fails) {
-//            //System.out.println(fail.getDescription().getClassName());
-//        }
+	// super.testRunFinished(result);
+	// int count = result.getFailureCount();
+	// int ignoreCount = result.getIgnoreCount();
+	// boolean isSuccess = result.wasSuccessful();
+	// //System.out.println("count:"+count+" ignore:"+ignoreCount+"
+	// isSuc:"+isSuccess+ " "+result.getRunCount());
+	// List<Failure> fails = result.getFailures();
+	// for (Failure fail : fails) {
+	// //System.out.println(fail.getDescription().getClassName());
+	// }
     }
 
 }

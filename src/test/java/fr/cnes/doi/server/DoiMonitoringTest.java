@@ -66,9 +66,9 @@ public class DoiMonitoringTest {
      */
     @Test
     public void testRegister() {
-        Method name = Method.GET;
-        String path = "/test";
-        String description = "myTest";        
+	final Method name = Method.GET;
+	final String path = "/test";
+	final String description = "myTest";        
         instance.register(name, path, description);
         assertTrue(true);
     }
@@ -78,9 +78,9 @@ public class DoiMonitoringTest {
      */
     @Test
     public void testAddMeasurement() {
-        Method name = Method.GET;
-        String path = "/test";
-        float duration = 10.0F;
+	final Method name = Method.GET;
+	final String path = "/test";
+	final float duration = 10.0F;
         instance.addMeasurement(name, path, duration);
         assertTrue(true);
     }
@@ -90,11 +90,11 @@ public class DoiMonitoringTest {
      */
     @Test
     public void testIsRegistered() {
-        Method name = Method.POST;
-        String path = "/registered";
+	final Method name = Method.POST;
+	final String path = "/registered";
         instance.register(name, path, "my description");
-        boolean expResult = true;
-        boolean result = instance.isRegistered(name, path);
+        final boolean expResult = true;
+        final boolean result = instance.isRegistered(name, path);
         assertEquals(expResult, result);
     }
 
@@ -103,13 +103,13 @@ public class DoiMonitoringTest {
      */
     @Test
     public void testGetCurrentMean() {
-        Method name = Method.POST;
-        String path = "/mean";
-        float expResult = 9.0F;
+        final Method name = Method.POST;
+        final String path = "/mean";
+        final float expResult = 9.0F;
         instance.register(name, path, "test");
         instance.addMeasurement(name, path, 10);
         instance.addMeasurement(name, path, 8);
-        float result = instance.getCurrentAverage(name, path);
+        final float result = instance.getCurrentAverage(name, path);
         assertEquals(expResult, result, 0.001);
     }
 
@@ -118,11 +118,11 @@ public class DoiMonitoringTest {
      */
     @Test
     public void testGetDescription() {
-        Method name = Method.HEAD;
-        String path = "/test";
-        instance.register(name, path, "description");
-        String expResult = "description";
-        String result = instance.getDescription(name, path);
+	final Method name = Method.HEAD;
+	final String path = "/test";
+	final String expResult = "description";
+        instance.register(name, path, expResult);
+        final String result = instance.getDescription(name, path);
         assertEquals(expResult, result);
     }
     

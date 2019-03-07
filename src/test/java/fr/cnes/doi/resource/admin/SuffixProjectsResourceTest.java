@@ -67,146 +67,161 @@ import fr.cnes.doi.settings.DoiSettings;
 @Category(UnitTest.class)
 public class SuffixProjectsResourceTest {
 
-    @Rule
-    public ExpectedException exceptions = ExpectedException.none();
-
     /**
      * Cache file for tests.
      */
-    private static final String cacheFile = "src" + File.separatorChar + "test" + File.separatorChar + "resources" + File.separatorChar + "projects.conf";
+    private static final String cacheFile = "src" + File.separatorChar + "test" + File.separatorChar
+	    + "resources" + File.separatorChar + "projects.conf";
 
+    /**
+     * Client
+     */
     private static Client cl;
 
+    /**
+     * Is database configured
+     */
     private static boolean isDatabaseConfigured;
 
-    public SuffixProjectsResourceTest() {
-    }
+    @Rule
+    public ExpectedException exceptions = ExpectedException.none();
 
     @BeforeClass
     public static void setUpClass() {
-        try {
-            isDatabaseConfigured = true;
-            InitServerForTest.init(InitSettingsForTest.CONFIG_TEST_PROPERTIES);
-            cl = new Client(new Context(), Protocol.HTTPS);
-            Series<Parameter> parameters = cl.getContext().getParameters();
-            parameters.set(RESTLET_MAX_TOTAL_CONNECTIONS, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_TOTAL_CONNECTIONS,DEFAULT_MAX_TOTAL_CONNECTIONS));
-            parameters.set(RESTLET_MAX_CONNECTIONS_PER_HOST, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_CONNECTIONS_PER_HOST,DEFAULT_MAX_CONNECTIONS_PER_HOST));
-            parameters.add("truststorePath", JKS_DIRECTORY + File.separatorChar + JKS_FILE);
-            parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
-            parameters.add("truststoreType", "JKS");
-        } catch (Error ex) {
-            isDatabaseConfigured = false;
-        }
+	try {
+	    isDatabaseConfigured = true;
+	    InitServerForTest.init(InitSettingsForTest.CONFIG_TEST_PROPERTIES);
+	    cl = new Client(new Context(), Protocol.HTTPS);
+	    Series<Parameter> parameters = cl.getContext().getParameters();
+	    parameters.set(RESTLET_MAX_TOTAL_CONNECTIONS,
+		    DoiSettings.getInstance().getString(
+			    fr.cnes.doi.settings.Consts.RESTLET_MAX_TOTAL_CONNECTIONS,
+			    DEFAULT_MAX_TOTAL_CONNECTIONS));
+	    parameters.set(RESTLET_MAX_CONNECTIONS_PER_HOST,
+		    DoiSettings.getInstance().getString(
+			    fr.cnes.doi.settings.Consts.RESTLET_MAX_CONNECTIONS_PER_HOST,
+			    DEFAULT_MAX_CONNECTIONS_PER_HOST));
+	    parameters.add("truststorePath", JKS_DIRECTORY + File.separatorChar + JKS_FILE);
+	    parameters.add("truststorePassword",
+		    DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
+	    parameters.add("truststoreType", "JKS");
+	} catch (Error ex) {
+	    isDatabaseConfigured = false;
+	}
     }
 
     @AfterClass
     public static void tearDownClass() {
-        try {
-            InitServerForTest.close();
-        } catch(Error ex) {            
-        }
+	try {
+	    InitServerForTest.close();
+	} catch (Error ex) {
+	}
     }
 
     @Before
     public void setUp() {
-        // Save the projects.conf file
-        try {
-            Files.copy(new File(SuffixProjectsResourceTest.cacheFile).toPath(),
-                    new File(SuffixProjectsResourceTest.cacheFile + ".bak").toPath(),
-                    StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-        }
-        Assume.assumeTrue("Database is not configured, please configure it and rerun the tests", isDatabaseConfigured);        
+	// Save the projects.conf file
+	try {
+	    Files.copy(new File(SuffixProjectsResourceTest.cacheFile).toPath(),
+		    new File(SuffixProjectsResourceTest.cacheFile + ".bak").toPath(),
+		    StandardCopyOption.REPLACE_EXISTING);
+	} catch (IOException e) {
+	}
+	Assume.assumeTrue("Database is not configured, please configure it and rerun the tests",
+		isDatabaseConfigured);
     }
 
     @After
     public void tearDown() {
-        // restore the cache file
-        try {
-            Files.copy(new File(SuffixProjectsResourceTest.cacheFile + ".bak").toPath(),
-                    new File(SuffixProjectsResourceTest.cacheFile).toPath(),
-                    StandardCopyOption.REPLACE_EXISTING);
-            Files.delete(new File(SuffixProjectsResourceTest.cacheFile + ".bak").toPath());
-        } catch (IOException e) {
-        }
+	// restore the cache file
+	try {
+	    Files.copy(new File(SuffixProjectsResourceTest.cacheFile + ".bak").toPath(),
+		    new File(SuffixProjectsResourceTest.cacheFile).toPath(),
+		    StandardCopyOption.REPLACE_EXISTING);
+	    Files.delete(new File(SuffixProjectsResourceTest.cacheFile + ".bak").toPath());
+	} catch (IOException e) {
+	}
     }
 
     /**
      * Test of getProjectsNameAsJson method, of class SuffixProjectsResource.
      *
-     * @throws java.io.IOException - if OutOfMemoryErrors
+     * @throws java.io.IOException
+     *             - if OutOfMemoryErrors
      */
     @Test
     public void testGetProjectsNameAsJson() throws IOException {
-        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-        ClientResource client = new ClientResource("https://localhost:" + port + "/admin/projects");
-        client.setNext(cl);
-        client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
-        Representation response = client.get(MediaType.APPLICATION_JSON);
-        String projects = response.getText();
-        client.release();
-        assertNotNull("Test if the response is not null", projects);
-        assertTrue("Test if the response is a JSON format", projects.contains("{"));
+	String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
+	ClientResource client = new ClientResource("https://localhost:" + port + "/admin/projects");
+	client.setNext(cl);
+	client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
+	Representation response = client.get(MediaType.APPLICATION_JSON);
+	String projects = response.getText();
+	client.release();
+	assertNotNull("Test if the response is not null", projects);
+	assertTrue("Test if the response is a JSON format", projects.contains("{"));
     }
 
     /**
      * Test of getProjectsNameAsXml method, of class SuffixProjectsResource.
      *
-     * @throws java.io.IOException - if OutOfMemoryErrors
+     * @throws java.io.IOException
+     *             - if OutOfMemoryErrors
      */
     @Test
     public void testGetProjectsNameAsXml() throws IOException {
-        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-        ClientResource client = new ClientResource("https://localhost:" + port + "/admin/projects");
-        client.setNext(cl);
-        client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
-        Representation response = client.get(MediaType.APPLICATION_XML);
-        String projects = response.getText();
-        client.release();
-        assertNotNull("Test if the response is not null", projects);
-        assertTrue("Test is the response is in XML format", projects.contains("<CFOSAT>"));
+	String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
+	ClientResource client = new ClientResource("https://localhost:" + port + "/admin/projects");
+	client.setNext(cl);
+	client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
+	Representation response = client.get(MediaType.APPLICATION_XML);
+	String projects = response.getText();
+	client.release();
+	assertNotNull("Test if the response is not null", projects);
+	assertTrue("Test is the response is in XML format", projects.contains("<CFOSAT>"));
     }
 
     /**
-     * Test of createProject method, of class SuffixProjectsResource. This method is used to create
-     * a short DOI suffix given for a specific project.
+     * Test of createProject method, of class SuffixProjectsResource. This method is
+     * used to create a short DOI suffix given for a specific project.
      *
-     * @throws java.io.IOException - if OutOfMemoryErrors
+     * @throws java.io.IOException
+     *             - if OutOfMemoryErrors
      */
     @Test
     public void testCreateProject() throws IOException {
-        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-        ClientResource client = new ClientResource("https://localhost:" + port + "/admin/projects");
-        client.setNext(cl);
-        Form form = new Form();
-        form.add("projectName", "Myphhfffcvdscsdfvdffff");
-        client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
-        Representation response = client.post(form);
-        String projectID = response.getText();
-        client.release();
-        assertNotNull("Test is the server returns the DOI suffix", projectID);
+	String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
+	ClientResource client = new ClientResource("https://localhost:" + port + "/admin/projects");
+	client.setNext(cl);
+	Form form = new Form();
+	form.add("projectName", "Myphhfffcvdscsdfvdffff");
+	client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
+	Representation response = client.post(form);
+	String projectID = response.getText();
+	client.release();
+	assertNotNull("Test is the server returns the DOI suffix", projectID);
     }
 
     /**
-     * Test of createProject method, of class SuffixProjectsResource. A ResourceException is thrown
-     * because the submitted parameters are wrongs.
+     * Test of createProject method, of class SuffixProjectsResource. A
+     * ResourceException is thrown because the submitted parameters are wrongs.
      *
      * @throws ResourceException
      */
     @Test
     public void testCreateProjectWithWrongParameter() {
-        exceptions.expect(ResourceException.class);
-        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-        ClientResource client = new ClientResource("https://localhost:" + port + "/admin/projects");
-        client.setNext(cl);
-        Form form = new Form();
-        form.add("project", "Myphhfffcvdscsdfvdffff");
-        client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
-        try {
-            Representation response = client.post(form);
-        } finally {
-            client.release();
-        }
+	exceptions.expect(ResourceException.class);
+	String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
+	ClientResource client = new ClientResource("https://localhost:" + port + "/admin/projects");
+	client.setNext(cl);
+	Form form = new Form();
+	form.add("project", "Myphhfffcvdscsdfvdffff");
+	client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
+	try {
+	    Representation response = client.post(form);
+	} finally {
+	    client.release();
+	}
     }
 
 }

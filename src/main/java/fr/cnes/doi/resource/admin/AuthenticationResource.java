@@ -26,21 +26,21 @@ import fr.cnes.doi.utils.spec.Requirement;
  *
  */
 public class AuthenticationResource extends AbstractResource {
+    
+    /**
+     * Parameter for the user name {@value #USER_NAME}.
+     */
+    public static final String USER_NAME = "user";
+    
+    /**
+     * Parameter for the user token {@value #USER_TOKEN}.
+     */
+    public static final String USER_TOKEN = "token";
 
     /**
      * Logger.
      */
     private volatile Logger LOG;
-
-    /**
-     * Parameter for the user name {@value #USER_NAME}.
-     */
-    public static final String USER_NAME = "user";
-
-    /**
-     * Parameter for the user token {@value #USER_TOKEN}.
-     */
-    public static final String USER_TOKEN = "token";
 
     /**
      * Instance of settings to get token properties {@value #doiSetting}.

@@ -6,6 +6,9 @@ import fr.cnes.doi.exception.DOIDbException;
 import fr.cnes.doi.plugin.impl.db.persistence.model.DOIProject;
 import fr.cnes.doi.utils.DOIUser;
 
+/**
+ * Interface between server and database
+ */
 public interface DOIDbDataAccessService {
 
     /**

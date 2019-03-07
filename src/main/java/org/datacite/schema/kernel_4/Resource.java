@@ -3150,16 +3150,17 @@ public class Resource {
     })
     public static class Identifier {
 
+	/**
+	 * 
+	 * 
+	 */
+	@XmlAttribute(name = "identifierType", required = true)
+	@XmlSchemaType(name = "anySimpleType")
+	public final static String IDENTIFIER_TYPE = "DOI";
+	
         @XmlValue
         @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
         protected String value;
-        /**
-         * 
-         * 
-         */
-        @XmlAttribute(name = "identifierType", required = true)
-        @XmlSchemaType(name = "anySimpleType")
-        public final static String IDENTIFIER_TYPE = "DOI";
 
         /**
          * Gets the value of the value property.

@@ -23,7 +23,7 @@ package fr.cnes.doi.settings;
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-public class Consts {
+public final class Consts {
 
     /**
      * Application's name.
@@ -402,5 +402,10 @@ public class Consts {
      * LDAP project
      */
     public static final String LDAP_PROJECT = "ldapdoiproject";
+    
+    /**
+     * "Static" class cannot be instantiated
+     */
+    private Consts() {}
 
 }

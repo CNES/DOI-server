@@ -54,73 +54,77 @@ public class LoginBasedVerifier implements Verifier {
     /**
      * Constructor.
      *
-     * @param userDB user DB
+     * @param userDB
+     *            user DB
      */
     public LoginBasedVerifier() {
-        this.ldapService = new LDAPAccessServiceImpl();
+	this.ldapService = new LDAPAccessServiceImpl();
     }
 
     /**
      * Verifies the user name and his password.
      *
-     * @param request request
-     * @param response response
+     * @param request
+     *            request
+     * @param response
+     *            response
      * @return the result
      */
     @Override
-    public int verify(final Request request,
-            final Response response) {
-        LOG.traceEntry(new JsonMessage(request));
-        final int result;
-        final ChallengeResponse challResponse = request.getChallengeResponse();
+    public int verify(final Request request, final Response response) {
+	LOG.traceEntry(new JsonMessage(request));
+	final int result;
+	final ChallengeResponse challResponse = request.getChallengeResponse();
 
-        if (challResponse == null) {
-            result = Verifier.RESULT_MISSING;
-        } else if (challResponse.getScheme().equals(ChallengeScheme.HTTP_OAUTH_BEARER)) {
-            result = Verifier.RESULT_MISSING;
-        } else {
-            result = processAuthentication(request, challResponse);
-        }
-        return LOG.traceExit(result);
+	if (challResponse == null) {
+	    result = Verifier.RESULT_MISSING;
+	} else if (challResponse.getScheme().equals(ChallengeScheme.HTTP_OAUTH_BEARER)) {
+	    result = Verifier.RESULT_MISSING;
+	} else {
+	    result = processAuthentication(request, challResponse);
+	}
+	return LOG.traceExit(result);
     }
 
     /**
      * Process Authentication.
      *
-     * @param request request
-     * @param challResponse authentication object
+     * @param request
+     *            request
+     * @param challResponse
+     *            authentication object
      * @return the authentication status
      */
     private int processAuthentication(final Request request,
-            final ChallengeResponse challResponse) {
-        LOG.traceEntry(new JsonMessage(request));
-        final int result;
-        final String login = challResponse.getRawValue();
-        LOG.debug("User from challenge response : " + login);
+	    final ChallengeResponse challResponse) {
+	LOG.traceEntry(new JsonMessage(request));
+	final int result;
+	final String login = challResponse.getRawValue();
+	LOG.debug("User from challenge response : " + login);
 
-        if (login == null) {
-            return LOG.traceExit(Verifier.RESULT_MISSING);
-        }
+	if (login == null) {
+	    return LOG.traceExit(Verifier.RESULT_MISSING);
+	}
 
-        final String decodedLogin = new String(Base64.getDecoder().decode(login));
-        final String[] userLogin = decodedLogin.split(":");
-        
-        boolean isLDAPSetted = !DoiSettings.getInstance().getString("ldapurl").equals("");
+	final String decodedLogin = new String(Base64.getDecoder().decode(login));
+	final String[] userLogin = decodedLogin.split(":");
 
-        if (ManageUsers.getInstance().isUserExist(userLogin[0])){
-        	// TODO if LDAP isn't setted don't check the pwd
-        	if(isLDAPSetted) {
-        		if(!ldapService.authenticateUser(userLogin[0], userLogin[1])) {
-        			return LOG.traceExit(Verifier.RESULT_INVALID);
-        		}
-        	}
-            result = Verifier.RESULT_VALID;
-            request.getClientInfo().setUser(ManageUsers.getInstance().getRealm().findUser(
-                    userLogin[0]));
+	final boolean isLDAPSetted = !DoiSettings.getInstance().getString("ldapurl").equals("");
 
-        } else {
-            result = Verifier.RESULT_INVALID;
-        }
-        return LOG.traceExit(result);
+	if (ManageUsers.getInstance().isUserExist(userLogin[0])) {
+	    // TODO if LDAP isn't setted don't check the pwd
+	    if (isLDAPSetted) {
+		if (!ldapService.authenticateUser(userLogin[0], userLogin[1])) {
+		    return LOG.traceExit(Verifier.RESULT_INVALID);
+		}
+	    }
+	    result = Verifier.RESULT_VALID;
+	    request.getClientInfo()
+		    .setUser(ManageUsers.getInstance().getRealm().findUser(userLogin[0]));
+
+	} else {
+	    result = Verifier.RESULT_INVALID;
+	}
+	return LOG.traceExit(result);
     }
 }

@@ -15,8 +15,16 @@ import fr.cnes.doi.application.AdminApplication;
 import fr.cnes.doi.resource.AbstractResource;
 import fr.cnes.doi.utils.ManageUsers;
 import fr.cnes.doi.utils.spec.Requirement;
-
+/**
+ * Provide resources to get all users, bind or delete a user to/from a project.
+ */
 public class ManageUsersResource extends AbstractResource {
+    
+    /**
+     * Parameter for the user name {@value #USER_NAME_PARAMETER}. This parameter is send to
+     * associate an user to a project.
+     */
+    public static final String USER_NAME_PARAMETER = "user";
 
     /**
      * Logger.
@@ -32,12 +40,6 @@ public class ManageUsersResource extends AbstractResource {
      * User name.
      */
     private volatile String userName;
-
-    /**
-     * Parameter for the user name {@value #USER_NAME_PARAMETER}. This parameter is send to
-     * associate an user to a project.
-     */
-    public static final String USER_NAME_PARAMETER = "user";
 
     /**
      * Set-up method that can be overridden in order to initialize the state of the resource.
