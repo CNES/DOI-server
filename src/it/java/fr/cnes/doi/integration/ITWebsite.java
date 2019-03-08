@@ -52,9 +52,9 @@ public class ITWebsite {
     }
 
     @Test
-    @Ignore("TO DO for web site")
-    public void shouldSayHelloWorld() {
-        driver.get("http://localhost:8182/");
-        assertEquals("Hello World!", driver.findElement(By.tagName("body")).getText());
+    public void TestIHM() {
+        driver.get("https://localhost:8182/ihm");
+        String text = driver.findElement(By.tagName("body")).getText();
+        assertTrue("Test is the IHM is available", text.contains("Se connecter"));
     }
 }

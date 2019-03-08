@@ -1,3 +1,30 @@
+<!--
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                          https://maven.apache.org/xsd/settings-1.0.0.xsd">
+      <servers>
+        <server>
+          <id>dbpostgresql</id>
+          <username>myUsername</username>
+          <password>myPassword</password>
+        </server>
+      </servers>
+
+      <profiles>
+        <profile>
+             <id>inject-doiserver-pwd</id>
+             <properties>
+                <doiserver-pwd>myPassword</doiserver-pwd>
+             </properties>
+        </profile>
+      </profiles>
+
+     <activeProfiles>
+        <activeProfile>inject-doiserver-pwd</activeProfile>
+     </activeProfiles>
+ </settings>
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
@@ -17,7 +44,7 @@
                 <updatePolicy>always</updatePolicy>
             </snapshots>
         </repository>         
-    </repositories>
+    </repositories>    
     <properties>
         <timestamp>${maven.build.timestamp}</timestamp>
         <maven.build.timestamp.format>dd-MM-yyyy HH:mm</maven.build.timestamp.format>
@@ -26,7 +53,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <skip.unit.tests>false</skip.unit.tests>
         <skip.integration.tests>true</skip.integration.tests>
-        <dependency.locations.enabled>false</dependency.locations.enabled>        
+        <dependency.locations.enabled>false</dependency.locations.enabled>   
     </properties>
     <profiles>
         <profile>
@@ -74,9 +101,143 @@
                     <include> **/*.jks </include>
                     <include> **/*.cert </include>
                 </includes>
-            </resource>                        
+            </resource>                    
         </resources>       
         <plugins>  
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>sql-maven-plugin</artifactId>
+                <version>1.5</version>
+
+                <dependencies>
+                    <!-- specify the dependent jdbc driver here -->
+                    <dependency>
+                        <groupId>org.postgresql</groupId>
+                        <artifactId>postgresql</artifactId>
+                        <version>42.2.5</version>
+                    </dependency>
+                </dependencies>
+
+                <!-- common configuration shared by all executions -->
+                <configuration>
+                    <driver>org.postgresql.Driver</driver>
+                    <url>jdbc:postgresql://localhost:5432/doidb</url>
+                    <username>${dbpostgresql.username}</username>
+                    <password>${dbpostgresql.password}</password>
+                    <!-- You can comment out username/password configurations and
+                         have maven to look them up in your settings.xml using ${settingsKey}
+                    -->
+                    <settingsKey>dbpostgresql</settingsKey>
+                    <!--all executions are ignored if -Dmaven.test.skip=true-->
+                    <skip>${maven.test.skip}</skip>
+                </configuration>
+
+                <executions>
+                    <execution>
+                        <id>create-db</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <url>jdbc:postgresql://localhost:5432/postgres</url>
+                            <!-- no transaction -->
+                            <autocommit>true</autocommit>
+                            <sqlCommand>CREATE DATABASE doidb</sqlCommand>
+                            <!-- ignore error when database exits -->
+                            <onError>continue</onError>                              
+                        </configuration>
+                    </execution>
+                    
+                    <execution>
+                        <id>create-user-prod</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <url>jdbc:postgresql://localhost:5432/postgres</url>
+                            <!-- no transaction -->
+                            <autocommit>true</autocommit>
+                            <sqlCommand>CREATE USER doiserver WITH ENCRYPTED PASSWORD '${doiserver-pwd}'</sqlCommand>
+                            <!-- ignore error when user exits -->
+                            <onError>continue</onError>                              
+                        </configuration>
+                    </execution>                
+
+                    <execution>
+                        <id>create-user-test</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <url>jdbc:postgresql://localhost:5432/postgres</url>
+                            <!-- no transaction -->
+                            <autocommit>true</autocommit>
+                            <sqlCommand>CREATE USER doiserver_test WITH ENCRYPTED PASSWORD 'test'</sqlCommand>
+                            <!-- ignore error when user exits -->
+                            <onError>continue</onError>                              
+                        </configuration>
+                    </execution> 
+
+                    <execution>
+                        <id>create-schema-prod</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <autocommit>true</autocommit>
+                            <srcFiles>
+                                <srcFile>src/main/resources/db/dbSchema_prod.sql</srcFile>
+                            </srcFiles>
+                            <!-- ignore error when the tables are already created -->
+                            <onError>continue</onError>                              
+                        </configuration>
+                    </execution>
+                    
+                    <execution>
+                        <id>create-schema-test</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <autocommit>true</autocommit>
+                            <srcFiles>
+                                <srcFile>src/main/resources/db/dbSchema_test.sql</srcFile>
+                            </srcFiles>
+                        </configuration>
+                    </execution>                    
+
+                    <!-- drop schema after test -->
+                    <execution>
+                        <id>drop-schema_test-after-test</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <autocommit>true</autocommit>
+                            <sqlCommand>DROP SCHEMA IF EXISTS doi_schema_test CASCADE</sqlCommand>
+                        </configuration>
+                    </execution>
+
+                    <!-- drop user_test after test -->
+                    <execution>
+                        <id>drop-user_test-after-test</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <autocommit>true</autocommit>
+                            <sqlCommand>DROP USER IF EXISTS doiserver_test</sqlCommand>
+                        </configuration>
+                    </execution>                    
+                </executions>
+            </plugin>            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -103,7 +264,7 @@
                 <version>2.21.0</version>
                 <configuration>
                     <groups>fr.cnes.doi.integration.IntegrationTest</groups>
-                   <!--
+                    <!--
                         Fix problem with the new JDK version : 
                         https://stackoverflow.com/questions/53010200/maven-surefire-could-not-find-forkedbooter-class                                            
                     -->                    
@@ -363,7 +524,7 @@
             <groupId>org.restlet.jse</groupId>
             <artifactId>org.restlet.ext.slf4j</artifactId>
             <version>${restlet-version}</version>
-    	</dependency>
+        </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
@@ -419,15 +580,16 @@
             <scope>test</scope>            
         </dependency>   
         <dependency>
-        	<groupId>org.postgresql</groupId>
-        	<artifactId>postgresql</artifactId>
-        	<version>42.2.5</version>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.2.5</version>
         </dependency>
         <dependency>
-        	<groupId>commons-dbcp</groupId>
-        	<artifactId>commons-dbcp</artifactId>
-        	<version>1.4</version>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+            <version>1.4</version>
         </dependency>
+        
     </dependencies>
     <groupId>fr.cnes.doi</groupId>
     <name>Digital Object Identifier Server</name>

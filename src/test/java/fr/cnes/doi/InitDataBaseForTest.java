@@ -11,6 +11,9 @@ import fr.cnes.doi.plugin.impl.db.persistence.impl.DOIDbDataAccessServiceImpl;
 import fr.cnes.doi.plugin.impl.db.persistence.model.DOIProject;
 import fr.cnes.doi.utils.DOIUser;
 import fr.cnes.doi.plugin.impl.db.persistence.service.DOIDbDataAccessService;
+import fr.cnes.doi.settings.Consts;
+import fr.cnes.doi.settings.DoiSettings;
+import fr.cnes.doi.settings.DoiSettingsTest;
 
 public class InitDataBaseForTest {
 
@@ -39,18 +42,18 @@ public class InitDataBaseForTest {
         admin.setUsername("admin");
         admin.setAdmin(true);
         admin.setEmail("admin@mail.com");
-        
+
         // Test User
-    	DOIUser norole = new DOIUser();
-    	norole.setUsername("norole");
-    	norole.setAdmin(false);
-    	norole.setEmail("norole@mail.com");
-    	
-    	 // Test User
-    	DOIUser kerberos = new DOIUser();
-    	kerberos.setUsername("doi_kerberos");
-    	kerberos.setAdmin(false);
-    	kerberos.setEmail("kerberos@mail.com");
+        DOIUser norole = new DOIUser();
+        norole.setUsername("norole");
+        norole.setAdmin(false);
+        norole.setEmail("norole@mail.com");
+
+        // Test User
+        DOIUser kerberos = new DOIUser();
+        kerberos.setUsername("doi_kerberos");
+        kerberos.setAdmin(false);
+        kerberos.setEmail("kerberos@mail.com");
 
         // Test Project
         testProject = new DOIProject();
@@ -58,17 +61,17 @@ public class InitDataBaseForTest {
         testProject.setSuffix(828606);
 
         try {
-        	close();
+            close();
 
             // add user
             das.addDOIUser(testuser.getUsername(), testuser.getAdmin(), testuser.getEmail());
             // add admin
             das.addDOIUser(admin.getUsername(), admin.getAdmin(), admin.getEmail());
             // add norole
-			das.addDOIUser(norole.getUsername(), norole.getAdmin(), norole.getEmail());
-			// add doi_kerberos
+            das.addDOIUser(norole.getUsername(), norole.getAdmin(), norole.getEmail());
+            // add doi_kerberos
             das.addDOIUser(kerberos.getUsername(), kerberos.getAdmin(), kerberos.getEmail());
-            
+
             // add project
             das.addDOIProject(testProject.getSuffix(), testProject.getProjectname());
             // assign user to project
@@ -91,11 +94,14 @@ public class InitDataBaseForTest {
             for (DOIProject project : das.getAllDOIProjects()) {
                 das.removeDOIProject(project.getSuffix());
             }
-            for(String token : das.getTokens()) {
-				das.deleteToken(token);
-			}
+            for (String token : das.getTokens()) {
+                das.deleteToken(token);
+            }
         } catch (DOIDbException e) {
-            fail();
+            fail("Please create the database with the following informations:\nURL:" + DoiSettings.
+                    getInstance().getString(Consts.DB_URL) + "\nUser: " + DoiSettings.getInstance().
+                    getString(Consts.DB_USER) + "\nPwd: " + DoiSettings.getInstance().getSecret(
+                    Consts.DB_PWD));
         }
     }
 
