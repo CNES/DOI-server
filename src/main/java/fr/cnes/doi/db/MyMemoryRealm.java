@@ -28,6 +28,7 @@ public class MyMemoryRealm extends Realm{
      */
     private class DefaultEnroler implements Enroler {
 
+        @Override
         public void enrole(ClientInfo clientInfo) {
             User user = findUser(clientInfo.getUser().getIdentifier());
 
@@ -91,13 +92,13 @@ public class MyMemoryRealm extends Realm{
     }
 
     /** The modifiable list of role mappings. */
-    private final List<RoleMapping> roleMappings = new CopyOnWriteArrayList<RoleMapping>();
+    private final List<RoleMapping> roleMappings = new CopyOnWriteArrayList<>();
 
     /** The modifiable list of root groups. */
     private final List<Group> rootGroups = new CopyOnWriteArrayList<Group>();
 
     /** The modifiable list of users. */
-    private final List<User> users = new CopyOnWriteArrayList<User>();
+    private final List<User> users = new CopyOnWriteArrayList<>();
 
     /**
      * Constructor.
@@ -171,12 +172,12 @@ public class MyMemoryRealm extends Realm{
      * @return The set of groups.
      */
     public Set<Group> findGroups(User user, boolean inheritOnly) {
-        Set<Group> result = new HashSet<Group>();
+        Set<Group> result = new HashSet<>();
         List<Group> stack;
 
         // Recursively find user groups
         for (Group group : getRootGroups()) {
-            stack = new ArrayList<Group>();
+            stack = new ArrayList<>();
             addGroups(user, result, group, stack, inheritOnly);
         }
 
@@ -200,7 +201,7 @@ public class MyMemoryRealm extends Realm{
                     "The application argument can't be null");
         }
 
-        Set<Role> result = new HashSet<Role>();
+        Set<Role> result = new HashSet<>();
         Object source;
 
         for (RoleMapping mapping : getRoleMappings()) {
@@ -233,7 +234,7 @@ public class MyMemoryRealm extends Realm{
                     "The application argument can't be null");
         }
 
-        Set<Role> result = new HashSet<Role>();
+        Set<Role> result = new HashSet<>();
         Object source;
 
         for (RoleMapping mapping : getRoleMappings()) {
@@ -266,7 +267,7 @@ public class MyMemoryRealm extends Realm{
                     "The application argument can't be null");
         }
 
-        Set<Role> result = new HashSet<Role>();
+        Set<Role> result = new HashSet<>();
         Object source;
 
         for (RoleMapping mapping : getRoleMappings()) {
@@ -290,7 +291,7 @@ public class MyMemoryRealm extends Realm{
      * @return The roles found.
      */
     public Set<Role> findRoles(Group userGroup) {
-        Set<Role> result = new HashSet<Role>();
+        Set<Role> result = new HashSet<>();
         Object source;
 
         for (RoleMapping mapping : getRoleMappings()) {
@@ -312,7 +313,7 @@ public class MyMemoryRealm extends Realm{
      * @return The roles found.
      */
     public Set<Role> findRoles(Set<Group> userGroups) {
-        Set<Role> result = new HashSet<Role>();
+        Set<Role> result = new HashSet<>();
         Object source;
 
         for (RoleMapping mapping : getRoleMappings()) {
@@ -334,7 +335,7 @@ public class MyMemoryRealm extends Realm{
      * @return The roles found.
      */
     public Set<Role> findRoles(User user) {
-        Set<Role> result = new HashSet<Role>();
+        Set<Role> result = new HashSet<>();
         Object source;
 
         for (RoleMapping mapping : getRoleMappings()) {
@@ -509,10 +510,8 @@ public class MyMemoryRealm extends Realm{
      * Unmaps an element (user, group or organization) defined in a component
      * from a role defined in the application.
      * 
-     * @param group
-     *            The source group.
-     * @param role
-     *            The target role.
+     * @param source The source group.
+     * @param role The target role.
      */
     private void unmap(Object source, Role role) {
         RoleMapping mapping;

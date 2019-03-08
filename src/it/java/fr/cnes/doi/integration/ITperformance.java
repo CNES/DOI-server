@@ -82,20 +82,45 @@ import fr.cnes.doi.settings.DoiSettings;
 @Category(IntegrationTest.class)
 public class ITperformance {
 
+    /**
+     * Logger
+     */
     private static final Logger LOG = Logger.getLogger(ITperformance.class.getName());
-    private final ExecutorService clientExec = Executors.newFixedThreadPool(200);
 
+    /**
+     * Client
+     */
     private static Client cl;
+    
+    /**
+     * Is database configured
+     */
     private static boolean isDatabaseConfigured;
     
+    /**
+     * Specification Metadata Store
+     */
     private static MdsSpec mdsServerStub;
-    private InputStream inputStream;
-    private String metadata;
 
+    /**
+     * URI metadata
+     */
     private static final String METADATA_SERVICE = "/mds/metadata";
+    
+    /**
+     * URI dois
+     */
     private static final String DOIS_SERVICE = "/mds/dois";
+    
+    /**
+     * Number of iteration
+     */
     private static final int NB_ITERS = 100;
 
+    private final ExecutorService clientExec = Executors.newFixedThreadPool(200);
+    private InputStream inputStream;
+    private String metadata;
+    
     @Rule
     public ExpectedException exceptions = ExpectedException.none();
 

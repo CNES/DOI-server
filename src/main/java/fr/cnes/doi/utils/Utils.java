@@ -30,7 +30,7 @@ import java.util.Set;
  * @author Jean-Christophe Malapert
  * @author Claire
  */
-public class Utils {
+public final class Utils {
 
     /**
      * An empty immutable {@code Object} array.
@@ -57,6 +57,11 @@ public class Utils {
      */
     public static final String SECURITY_LOGGER_NAME = "fr.cnes.doi.logging.security";
 
+    /**
+     * "Static" class cannot be instantiated
+     */
+    private Utils() {}
+    
     /**
      * Checks whether the char sequence is empty.
      *

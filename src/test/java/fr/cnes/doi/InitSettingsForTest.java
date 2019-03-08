@@ -35,18 +35,13 @@ import fr.cnes.doi.security.UtilsCryptography;
 import fr.cnes.doi.settings.DoiSettings;
 
 /**
- * Class to read the settings from the crypted config file and to enable the proxy if the system
- * property has been sets
+ * Class to read the settings from the crypted config file and to enable the
+ * proxy if the system property has been sets
  *
  * @author Claire
  *
  */
-public class InitSettingsForTest {                
-
-    /**
-     * Init loggers.
-     */
-    private static final Logger LOGGER = Engine.getLogger(InitSettingsForTest.class);
+public final class InitSettingsForTest {
 
     /**
      * Properties file for tests.
@@ -59,39 +54,52 @@ public class InitSettingsForTest {
     public static final String CONFIG_IT_PROPERTIES = "config-it.properties";
 
     /**
+     * Init loggers.
+     */
+    private static final Logger LOGGER = Engine.getLogger(InitSettingsForTest.class);
+
+    /**
+     * "Static" class cannot be instantiated
+     */
+    private InitSettingsForTest() {
+    }
+
+    /**
      * Reads the settings.
      *
-     * @param configProperties config properties
+     * @param configProperties
+     *            config properties
      */
     public static void init(final String configProperties) {
-        try {
-            String secretKey = System.getProperty("private.key");
-            String result;
-            try (InputStream inputStream = ClientProxyTest.class.getResourceAsStream(
-                    "/" + configProperties)) {
-                result = new BufferedReader(new InputStreamReader(inputStream)).lines()
-                        .collect(Collectors.joining("\n"));
-            }
-            if (secretKey != null) {
-                result = UtilsCryptography.decrypt(result, secretKey);
-            } else {
-                LOGGER.log(Level.WARNING,
-                        "No private.key provided, the configuration is not crypted");
-            }
-            // Replace the value to use the proxy by the system property
-            String useProxy = System.getProperty("proxy.use");
-            if (useProxy != null) {
-                result = result.replace("Starter.Proxy.used=false",
-                        "Starter.Proxy.used=" + useProxy);
-            } else {
-                LOGGER.log(Level.INFO, "The key proxy.use is not set, default param applied");
-            }
-            InputStream stream = new ByteArrayInputStream(result.getBytes(StandardCharsets.UTF_8));
-            DoiSettings.getInstance().setPropertiesFile(stream);
+	try {
+	    final String secretKey = System.getProperty("private.key");
+	    String result;
+	    try (InputStream inputStream = ClientProxyTest.class
+		    .getResourceAsStream("/" + configProperties)) {
+		result = new BufferedReader(new InputStreamReader(inputStream)).lines()
+			.collect(Collectors.joining("\n"));
+	    }
+	    if (secretKey != null) {
+		result = UtilsCryptography.decrypt(result, secretKey);
+	    } else {
+		LOGGER.log(Level.WARNING,
+			"No private.key provided, the configuration is not crypted");
+	    }
+	    // Replace the value to use the proxy by the system property
+	    final String useProxy = System.getProperty("proxy.use");
+	    if (useProxy != null) {
+		result = result.replace("Starter.Proxy.used=false",
+			"Starter.Proxy.used=" + useProxy);
+	    } else {
+		LOGGER.log(Level.INFO, "The key proxy.use is not set, default param applied");
+	    }
+	    final InputStream stream = new ByteArrayInputStream(
+		    result.getBytes(StandardCharsets.UTF_8));
+	    DoiSettings.getInstance().setPropertiesFile(stream);
 
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Error during initialisation of the settings", e);
-        }
+	} catch (IOException e) {
+	    LOGGER.log(Level.SEVERE, "Error during initialisation of the settings", e);
+	}
     }
 
     /**
@@ -99,7 +107,7 @@ public class InitSettingsForTest {
      *
      */
     public static void init() {
-        init(DoiSettings.CONFIG_PROPERTIES);
+	init(DoiSettings.CONFIG_PROPERTIES);
     }
 
 }

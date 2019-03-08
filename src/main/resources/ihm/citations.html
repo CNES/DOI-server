@@ -237,7 +237,8 @@
 			    	$("#doi").empty();
 		    		$("#doi").append("<option disabled selected>Choix d'un doi</option>");
 			    	for(var doi of list){
-			    		$("#doi").append("<option>" + doi + "</option>");	
+			    		var identifierDOI = doi.replace(prefixCnes + projectId + "/","");
+			    		$("#doi").append("<option>" + identifierDOI + "</option>");	
 			    	}
 			    }
 			}); 

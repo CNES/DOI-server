@@ -41,42 +41,51 @@ import org.junit.rules.ExpectedException;
 
 /**
  * Test class for {@link fr.cnes.doi.utils.UniqueProjectName}
- * @author Claire Caillet 
+ * 
+ * @author Claire Caillet
  */
 @Category(UnitTest.class)
 public class UniqueProjectNameTest {
 
-    @Rule
-    public ExpectedException exceptions = ExpectedException.none();
-
+    /**
+     * Is database configured
+     */
     private static boolean isDatabaseConfigured;
-    
+
     /**
      * Cache file for tests
      */
-    private static final String CACHE_FILE = "src"+File.separatorChar+"test"+File.separatorChar+"resources"+File.separatorChar+"projects.conf";
+    private static final String CACHE_FILE = "src" + File.separatorChar + "test"
+	    + File.separatorChar + "resources" + File.separatorChar + "projects.conf";
+    
+    /**
+     * Expected exception
+     */
+    @Rule
+    public ExpectedException exceptions = ExpectedException.none();
+
 
     /**
      * Init the settings
      */
     @BeforeClass
     public static void setUpClass() {
-        try {
-            InitSettingsForTest.init(InitSettingsForTest.CONFIG_TEST_PROPERTIES);   
-            InitDataBaseForTest.init();
-            isDatabaseConfigured = true;
-        } catch(Error ex) {
-            isDatabaseConfigured = false;
-        }
+	try {
+	    InitSettingsForTest.init(InitSettingsForTest.CONFIG_TEST_PROPERTIES);
+	    InitDataBaseForTest.init();
+	    isDatabaseConfigured = true;
+	} catch (Error ex) {
+	    isDatabaseConfigured = false;
+	}
     }
-    
+
     @AfterClass
     public static void tearDownClass() throws IOException {
-        try {
-            InitDataBaseForTest.close();
-        } catch(Error ex) {
-            
-        }
+	try {
+	    InitDataBaseForTest.close();
+	} catch (Error ex) {
+
+	}
     }
 
     /**
@@ -84,13 +93,15 @@ public class UniqueProjectNameTest {
      */
     @Before
     public void setUp() {
-        // Save the projects.conf file
-        try {
-            Files.copy(new File(UniqueProjectNameTest.CACHE_FILE).toPath(),
-                    new File(UniqueProjectNameTest.CACHE_FILE + ".bak").toPath(), StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-        }
-        Assume.assumeTrue("Database is not configured, please configure it and rerun the tests", isDatabaseConfigured);                                
+	// Save the projects.conf file
+	try {
+	    Files.copy(new File(UniqueProjectNameTest.CACHE_FILE).toPath(),
+		    new File(UniqueProjectNameTest.CACHE_FILE + ".bak").toPath(),
+		    StandardCopyOption.REPLACE_EXISTING);
+	} catch (IOException e) {
+	}
+	Assume.assumeTrue("Database is not configured, please configure it and rerun the tests",
+		isDatabaseConfigured);
     }
 
     /**
@@ -98,40 +109,40 @@ public class UniqueProjectNameTest {
      */
     @After
     public void tearDown() {
-        // restore the cache file
-        try {
-            Files.copy(new File(UniqueProjectNameTest.CACHE_FILE + ".bak").toPath(),
-                    new File(UniqueProjectNameTest.CACHE_FILE).toPath(), StandardCopyOption.REPLACE_EXISTING);
-            Files.delete(new File(UniqueProjectNameTest.CACHE_FILE + ".bak").toPath());
-        } catch (IOException e) {
-        }
+	// restore the cache file
+	try {
+	    Files.copy(new File(UniqueProjectNameTest.CACHE_FILE + ".bak").toPath(),
+		    new File(UniqueProjectNameTest.CACHE_FILE).toPath(),
+		    StandardCopyOption.REPLACE_EXISTING);
+	    Files.delete(new File(UniqueProjectNameTest.CACHE_FILE + ".bak").toPath());
+	} catch (IOException e) {
+	}
     }
 
     /**
-     * Test method for
-     * {@link fr.cnes.doi.utils.UniqueProjectName#getShortName}
+     * Test method for {@link fr.cnes.doi.utils.UniqueProjectName#getShortName}
      */
     @Test
     public void testGetShortName() {
-        // New id
-        int idSWOT = UniqueProjectName.getInstance().getShortName("SWOT", 6);
-        Assert.assertTrue(UniqueProjectName.getInstance().getShortName("SWOT", 6) == idSWOT);
-        
-        // Id already in the file
-        Assert.assertTrue(UniqueProjectName.getInstance().getShortName("CFOSAT", 6) == 828606);
+	// New id
+	final int idSWOT = UniqueProjectName.getInstance().getShortName("SWOT", 6);
+	Assert.assertTrue(UniqueProjectName.getInstance().getShortName("SWOT", 6) == idSWOT);
+
+	// Id already in the file
+	Assert.assertTrue(UniqueProjectName.getInstance().getShortName("CFOSAT", 6) == 828606);
     }
 
     /**
-     * Test method for
-     * {@link fr.cnes.doi.utils.UniqueProjectName#getShortName}
+     * Test method for {@link fr.cnes.doi.utils.UniqueProjectName#getShortName}
      */
     @Test
     public void testGetShortNameWithLongName() {
-        exceptions.expect(DoiRuntimeException.class);
-        exceptions.expectMessage("The short name cannot be build because the length requested is too big");
+	exceptions.expect(DoiRuntimeException.class);
+	exceptions.expectMessage(
+		"The short name cannot be build because the length requested is too big");
 
-        // lenght requested out of range
-        UniqueProjectName.getInstance().getShortName("CFOSAT", 10);
+	// lenght requested out of range
+	UniqueProjectName.getInstance().getShortName("CFOSAT", 10);
     }
 
 }

@@ -21,7 +21,6 @@ package fr.cnes.doi.db;
 import java.util.List;
 import java.util.Observable;
 
-import org.restlet.security.MemoryRealm;
 
 import fr.cnes.doi.exception.DOIDbException;
 import fr.cnes.doi.utils.DOIUser;
@@ -88,50 +87,51 @@ public abstract class AbstractUserRoleDBHelper extends Observable {
      *
      * @param user user to add
      * @param role role
+     * @return True when the user is added otherwise False
      */
-    public abstract boolean addUserToRole(final String user,
-            final int role);
-//    {
-//        REALM.map(user, role);
-//    }
+    public abstract boolean addUserToRole(final String user, final int role);
 
     /**
      * Removes an user from a specific role.
      *
      * @param user user to remove
      * @param role role
+     * @return True when the user is removed otherwise False
      */
-    public abstract boolean removeUserToRole(final String user,
-            final int role);
-//    {
-//        REALM.unmap(user, role);
-//    }
+    public abstract boolean removeUserToRole(final String user, final int role);
 
     /**
      * Add user to Administrators group
      *
-     * @param adminGroup user to add
+     * @param admin user to add
+     * @return True when the user is added in the admin group otherwise False
      */
     public abstract boolean setUserToAdminGroup(final String admin);
 
     /**
      * Remove user to Administrators group
      *
-     * @param adminGroup user to add
+     * @param admin user to add
+     * @return True when the user is removed from the admin group otherwise False
      */
     public abstract boolean unsetUserFromAdminGroup(final String admin);
 
     /**
      * Add a DOI user
      *
-     * @throws DOIDbException
+     * @param username username
+     * @param admin True when the user must be added in the admin group otherwise False
+     * @throws DOIDbException When a database problem happens
      */
     public abstract void addDOIUser(String username, Boolean admin) throws DOIDbException;
 
     /**
      * Add a DOI user
      *
-     * @throws DOIDbException
+     * @param username username
+     * @param admin True when the user must be added in the admin group otherwise False
+     * @param email email
+     * @throws DOIDbException When a database problem happens
      */
     public abstract void addDOIUser(String username, Boolean admin, String email) throws
             DOIDbException;

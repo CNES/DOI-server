@@ -71,7 +71,7 @@ public class ITauthentication {
 
     private static Client cl;
     private static boolean isDatabaseConfigured;
-    
+
     public static final String DOI = "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b";
     private static ClientAndServer mockServer;
 
@@ -80,46 +80,56 @@ public class ITauthentication {
 
     @BeforeClass
     public static void setUpClass() throws ClientMdsException {
-        try {
-            isDatabaseConfigured = true;
-            InitServerForTest.init(InitSettingsForTest.CONFIG_IT_PROPERTIES);        
-            cl = new Client(new Context(), Protocol.HTTPS);
-            Series<Parameter> parameters = cl.getContext().getParameters();
-            parameters.set(RESTLET_MAX_TOTAL_CONNECTIONS, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_TOTAL_CONNECTIONS, DEFAULT_MAX_TOTAL_CONNECTIONS));        
-            parameters.set(RESTLET_MAX_CONNECTIONS_PER_HOST, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_CONNECTIONS_PER_HOST, DEFAULT_MAX_CONNECTIONS_PER_HOST));
-            parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
-            parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
-            parameters.add("truststoreType", "JKS");
-        } catch(Error ex) {
-            isDatabaseConfigured = false;
-        }
-        mockServer = startClientAndServer(DATACITE_MOCKSERVER_PORT);   
+	try {
+	    isDatabaseConfigured = true;
+	    InitServerForTest.init(InitSettingsForTest.CONFIG_IT_PROPERTIES);
+	    cl = new Client(new Context(), Protocol.HTTPS);
+	    Series<Parameter> parameters = cl.getContext().getParameters();
+	    parameters.set(RESTLET_MAX_TOTAL_CONNECTIONS,
+		    DoiSettings.getInstance().getString(
+			    fr.cnes.doi.settings.Consts.RESTLET_MAX_TOTAL_CONNECTIONS,
+			    DEFAULT_MAX_TOTAL_CONNECTIONS));
+	    parameters.set(RESTLET_MAX_CONNECTIONS_PER_HOST,
+		    DoiSettings.getInstance().getString(
+			    fr.cnes.doi.settings.Consts.RESTLET_MAX_CONNECTIONS_PER_HOST,
+			    DEFAULT_MAX_CONNECTIONS_PER_HOST));
+	    parameters.add("truststorePath", JKS_DIRECTORY + File.separatorChar + JKS_FILE);
+	    parameters.add("truststorePassword",
+		    DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
+	    parameters.add("truststoreType", "JKS");
+	} catch (Error ex) {
+	    isDatabaseConfigured = false;
+	}
+	mockServer = startClientAndServer(DATACITE_MOCKSERVER_PORT);
     }
 
     @AfterClass
     public static void tearDownClass() {
-        try {
-            InitServerForTest.close();
-        } catch(Error ex) {
-            
-        }
-        mockServer.stop();        
+	try {
+	    InitServerForTest.close();
+	} catch (Error ex) {
+
+	}
+	mockServer.stop();
     }
 
     @Before
     public void setUp() {
-       Assume.assumeTrue("Database is not configured, please configure it and rerun the tests", isDatabaseConfigured);                                                
-       mockServer.reset();
+	Assume.assumeTrue("Database is not configured, please configure it and rerun the tests",
+		isDatabaseConfigured);
+	mockServer.reset();
     }
 
     @After
     public void tearDown() {
-        
-    }    
+
+    }
 
     /**
      * Test of getTokenInformation method, of class TokenResource.
-     * @throws java.io.IOException - if OutOfMemoryErrors
+     * 
+     * @throws java.io.IOException
+     *             - if OutOfMemoryErrors
      */
 //    @Test
 //    public void testTokenAuthenticationWithBadRole() throws IOException {
@@ -161,10 +171,12 @@ public class ITauthentication {
 //        mockServer.verify(HttpRequest.request("/mds/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)
 //                .withMethod("POST"), VerificationTimes.exactly(0));        
 //    }
-    
+        
     /**
      * Test of getTokenInformation method, of class TokenResource.
-     * @throws java.io.IOException - if OutOfMemoryErrors
+     * 
+     * @throws java.io.IOException
+     *             - if OutOfMemoryErrors
      */
 //    @Test
 //    public void testTokenAuthenticationWithRightRole() throws IOException {
@@ -210,7 +222,9 @@ public class ITauthentication {
     
     /**
      * Test of getTokenInformation method, of class TokenResource.
-     * @throws java.io.IOException - if OutOfMemoryErrors
+     * 
+     * @throws java.io.IOException
+     *             - if OutOfMemoryErrors
      */
     @Test
     public void testTokenAuthenticationWithWrongToken() throws IOException {        

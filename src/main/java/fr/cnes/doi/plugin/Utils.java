@@ -34,12 +34,18 @@ import org.apache.logging.log4j.Logger;
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-public class Utils {
+public final class Utils {
 
     /**
      * Logger.
      */
     private static final Logger LOG = LogManager.getLogger(Utils.class.getName());
+    
+    /**
+     * "Static" class cannot be instantiated
+     */
+    private Utils() {
+    }
 
     /**
      * Adds a path in the classPath.

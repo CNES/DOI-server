@@ -1,7 +1,6 @@
 var xmlDoc;
 
 function clearForm(){
-	var doi = $("#doi").val();
 	var projet = $("#selection").val();
 	
 	 $("button.delete").click();  	// Appuie sur tous boutons '-'
@@ -10,7 +9,6 @@ function clearForm(){
 	 $("div.right code").text("");	// efface le xml
 	 
 	 $("input[title='identifierType'").val("DOI");
-	 $("#doi").val(doi);
 	 $("#selection").val(projet);
 }
 

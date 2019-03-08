@@ -12,13 +12,11 @@ import org.restlet.resource.ResourceException;
 
 import fr.cnes.doi.application.AdminApplication;
 import fr.cnes.doi.db.AbstractTokenDBHelper;
-import fr.cnes.doi.exception.TokenSecurityException;
 import fr.cnes.doi.resource.AbstractResource;
 import fr.cnes.doi.security.TokenSecurity;
 import fr.cnes.doi.security.TokenSecurity.TimeUnit;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
-import fr.cnes.doi.utils.spec.Requirement;
 
 /**
  * Handle the creation and deletion of a token generated after authentication by login/password.
@@ -26,6 +24,16 @@ import fr.cnes.doi.utils.spec.Requirement;
  *
  */
 public class AuthenticationResource extends AbstractResource {
+    
+    /**
+     * Parameter for the user name {@value #USER_NAME}.
+     */
+    public static final String USER_NAME = "user";
+    
+    /**
+     * Parameter for the user token {@value #USER_TOKEN}.
+     */
+    public static final String USER_TOKEN = "token";
 
     /**
      * Logger.
@@ -33,17 +41,7 @@ public class AuthenticationResource extends AbstractResource {
     private volatile Logger LOG;
 
     /**
-     * Parameter for the user name {@value #USER_NAME}.
-     */
-    public static final String USER_NAME = "user";
-
-    /**
-     * Parameter for the user token {@value #USER_TOKEN}.
-     */
-    public static final String USER_TOKEN = "token";
-
-    /**
-     * Instance of settings to get token properties {@value #doiSetting}.
+     * Instance of settings to get token properties.
      */
     private final DoiSettings doiSetting = DoiSettings.getInstance();
 
@@ -86,7 +84,7 @@ public class AuthenticationResource extends AbstractResource {
      * <li>stores the token in {@link fr.cnes.doi.db.AbstractTokenDBHelper token database}</li>
      * </ul>
      *
-     * @param info submitted information when requesting the token creation
+     * @param mediaForm submitted information when requesting the token creation
      * @return a String representation of the token
      */
     @Post

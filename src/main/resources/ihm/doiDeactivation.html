@@ -117,7 +117,7 @@
 		    	); 
 		    	console.log("Erreur lors de la désactivation du DOI.\n" + errMessage);
 		    }, 
-		    success: function(xml) { console.log("Le DOI, "+ doi + ", a été désactivé."); }
+		    success: function(xml) { alert("Le DOI, "+ doi + ", a été désactivé."); }
 		}); 
 	}
 	
@@ -150,7 +150,8 @@
 		    	$("#doi").empty();
 	    		$("#doi").append("<option disabled selected>Choix d'un doi</option>");
 		    	for(var doi of list){
-		    		$("#doi").append("<option>" + doi + "</option>");	
+		    		var identifierDOI = doi.replace(prefixCnes + projectId + "/","");
+		    		$("#doi").append("<option>" + identifierDOI + "</option>");	
 		    	}
 		    }
 		}); 

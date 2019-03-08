@@ -425,6 +425,7 @@
 		            alert("Error: " + xhr.status + ": " + xhr.statusText);
 		        }
 		    });
+			clearForm();
 			
 			$("#prefix").text(prefixCnes);
 			
@@ -492,7 +493,7 @@
 			requestPost(xml);
 		}
 		
-		// If DOI successfully created and URL is not null, then update URL
+		// If the DOI is successfully created and URL is not null, then update URL
 		$(document).ajaxSuccess(function(e, xhr, opt){
 			//TODO
 // 			console.log(opt.url.includes("/mds/metadata"));
@@ -556,7 +557,8 @@
 			    	console.log("Erreur lors de la création du DOI.\n" + errMessage);
 			    }, 
 			    success: function() { 
-			    	alert("Le DOI "+ identifier + " a été créé."); 
+			    	alert("Le DOI "+ identifier + " a été créé.");
+			    	clearForm();
 			    }
 			}); 
 		}

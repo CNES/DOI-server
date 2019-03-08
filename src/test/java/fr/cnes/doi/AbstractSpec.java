@@ -36,9 +36,15 @@ import org.mockserver.verify.VerificationTimes;
  *
  * @author Jean-Christophe Malapert
  */
-public class AbstractSpec {
+public abstract class AbstractSpec {
 
+    /**
+     * MockServer
+     */
     private static ClientAndServer mockServer;
+    /**
+     * MockProxy
+     */
     private static ClientAndProxy mockProxy;
 
     /**
@@ -46,102 +52,81 @@ public class AbstractSpec {
      * @author Jean-Christophe Malapert
      */
     protected class MockupServer {
-        
-        private final boolean hasProxy;
 
-        public MockupServer(int port) {
-            this(port, -1);
-        }
+	private final boolean hasProxy;
 
-        public MockupServer(int port, int proxyPort) {
-            this.hasProxy = proxyPort != -1;
-            mockServer = startClientAndServer(port);
-            while (!mockServer.isRunning()) {
-                try {
-                    // wait the server starts.
-                    sleep(1000);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(MockupServer.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-            if (hasProxy) {
-                mockProxy = startClientAndDirectProxy(proxyPort, "localhost", port);                
-                while (!mockProxy.isRunning()) {
-                    try {
-                        // wait the server starts.
-                        sleep(1000);
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(MockupServer.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }
-        }
+	public MockupServer(int port) {
+	    this(port, -1);
+	}
 
-        public void createSpec(String verb, String path, int statusCode, String body) {
-            mockServer
-                    .when(
-                            request()
-                                    .withPath(path)
-                                    .withMethod(verb)
-                    )
-                    .respond(
-                            response()
-                                    .withBody(body, StandardCharsets.UTF_8)
-                                    .withStatusCode(statusCode)
-                    );
-        }
+	public MockupServer(int port, int proxyPort) {
+	    this.hasProxy = proxyPort != -1;
+	    mockServer = startClientAndServer(port);
+	    while (!mockServer.isRunning()) {
+		try {
+		    // wait the server starts.
+		    sleep(1000);
+		} catch (InterruptedException ex) {
+		    Logger.getLogger(MockupServer.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	    }
+	    if (hasProxy) {
+		mockProxy = startClientAndDirectProxy(proxyPort, "localhost", port);
+		while (!mockProxy.isRunning()) {
+		    try {
+			// wait the server starts.
+			sleep(1000);
+		    } catch (InterruptedException ex) {
+			Logger.getLogger(MockupServer.class.getName()).log(Level.SEVERE, null, ex);
+		    }
+		}
+	    }
+	}
 
-        public void verifySpec(String verb, String path) {
-            if(hasProxy) {
-                mockProxy.verify(
-                    request()
-                            .withMethod(verb)
-                            .withPath(path), VerificationTimes.exactly(1)                        
-                );
-            }            
-            mockServer.verify(
-                    request()
-                            .withMethod(verb)
-                            .withPath(path), VerificationTimes.atLeast(1)
-            );
-        }
+	public void createSpec(String verb, String path, int statusCode, String body) {
+	    mockServer.when(request().withPath(path).withMethod(verb)).respond(
+		    response().withBody(body, StandardCharsets.UTF_8).withStatusCode(statusCode));
+	}
 
-        public void verifySpec(String verb, String path, int exactly) {
-            if(hasProxy) {
-                mockProxy.verify(
-                    request()
-                            .withMethod(verb)
-                            .withPath(path), VerificationTimes.exactly(exactly)                        
-                );
-            }
-            mockServer.verify(
-                    request()
-                            .withMethod(verb)
-                            .withPath(path), VerificationTimes.exactly(exactly)
-            );
-        }
+	public void verifySpec(String verb, String path) {
+	    if (hasProxy) {
+		mockProxy.verify(request().withMethod(verb).withPath(path),
+			VerificationTimes.exactly(1));
+	    }
+	    mockServer.verify(request().withMethod(verb).withPath(path),
+		    VerificationTimes.atLeast(1));
+	}
 
-        public void close() {
-            if(hasProxy) {
-                try {
-                    mockProxy.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(AbstractSpec.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }            
-            try {
-                mockServer.close();
-            } catch (IOException ex) {
-                Logger.getLogger(MockupServer.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+	public void verifySpec(String verb, String path, int exactly) {
+	    if (hasProxy) {
+		mockProxy.verify(request().withMethod(verb).withPath(path),
+			VerificationTimes.exactly(exactly));
+	    }
+	    mockServer.verify(request().withMethod(verb).withPath(path),
+		    VerificationTimes.exactly(exactly));
+	}
 
-        void reset() {
-            if(hasProxy) {
-                mockProxy.reset();
-            }
-            mockServer.reset();
-        }
+	public void close() {
+	    if (hasProxy) {
+		try {
+		    mockProxy.close();
+		} catch (IOException ex) {
+		    Logger.getLogger(AbstractSpec.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	    }
+	    try {
+		mockServer.close();
+	    } catch (IOException ex) {
+		Logger.getLogger(MockupServer.class.getName()).log(Level.SEVERE, null, ex);
+	    }
+	}
+
+	void reset() {
+	    if (hasProxy) {
+		mockProxy.reset();
+	    }
+	    mockServer.reset();
+	}
 
     }
 

@@ -50,7 +50,6 @@ public abstract class AbstractProjectSuffixDBHelper extends Observable {
     /**
      * Init the connection.
      *
-     * @param configuration connection configuration
      */
     public abstract void init();
 

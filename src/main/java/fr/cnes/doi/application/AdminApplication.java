@@ -444,23 +444,23 @@ public class AdminApplication extends AbstractApplication {
             @Override
             public int beforeHandle(final Request request,
                     final Response response) {
-                Method requestMethod = request.getMethod();
-                Reference requestReference = request.getOriginalRef();
-                String lastSeg = requestReference.getLastSegment();
+                final Method requestMethod = request.getMethod();
+                final Reference requestReference = request.getOriginalRef();
+                final String lastSeg = requestReference.getLastSegment();
 
                 boolean ignoreVerification = false;
 
-                if (requestMethod.equals(Method.OPTIONS) || lastSeg.equals("admin")) {
+                if (requestMethod.equals(Method.OPTIONS) || "admin".equals(lastSeg)) {
                     ignoreVerification = true;
                 } else if (requestMethod.equals(Method.GET)) {
-                    if (lastSeg.equals("projects") && requestReference.hasQuery()) {
+                    if ("projects".equals(lastSeg) && requestReference.hasQuery()) {
                         ignoreVerification = true;
                     }
                     if (requestReference.toString().contains("/admin/superusers/")) {
                         ignoreVerification = true;
                     }
                     // ignore method GET dois from project
-                    if (lastSeg.equals("dois")) {
+                    if ("dois".equals(lastSeg)) {
                         ignoreVerification = true;
                     }
                 }

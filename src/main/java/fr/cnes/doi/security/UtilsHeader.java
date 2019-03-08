@@ -26,13 +26,18 @@ import fr.cnes.doi.utils.spec.Requirement;
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 @Requirement(reqId = Requirement.DOI_AUTO_020, reqName = Requirement.DOI_AUTO_020_NAME)
-public class UtilsHeader {
+public final class UtilsHeader {
 
     /**
      * The parameter to select the role of the operator when he is implied in different groups
      * {@value #SELECTED_ROLE_PARAMETER}.
      */
     public static final String SELECTED_ROLE_PARAMETER = "selectedRole";
+    
+    /**
+     * "Static" class cannot be instantiated
+     */
+    private UtilsHeader() {}
 
 //    /**
 //     * The parameter to select the token of the operator

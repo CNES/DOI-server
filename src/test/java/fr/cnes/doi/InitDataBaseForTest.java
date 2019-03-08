@@ -13,18 +13,28 @@ import fr.cnes.doi.utils.DOIUser;
 import fr.cnes.doi.plugin.impl.db.persistence.service.DOIDbDataAccessService;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
-import fr.cnes.doi.settings.DoiSettingsTest;
 
-public class InitDataBaseForTest {
+/**
+ * Class to initialize database with test users and project
+ */
+public final class InitDataBaseForTest {
 
+    /**
+     * Logger
+     */
     private static Logger logger = LoggerFactory.getLogger(DOIDBTest.class);
 
+    /**
+     * Database access
+     */
     private static DOIDbDataAccessService das = new DOIDbDataAccessServiceImpl(
-            InitDataBaseForTest.class.getClassLoader().getResource("config-test.properties").
-                    getFile());
-
-    private static DOIUser testuser;
-    private static DOIProject testProject;
+	    InitDataBaseForTest.class.getClassLoader().getResource("config-test.properties")
+		    .getFile());
+    
+    /**
+     * "Static" class cannot be instantiated
+     */
+    private InitDataBaseForTest() {}
 
     /**
      * Init the database for test by adding test user and role.
@@ -32,7 +42,7 @@ public class InitDataBaseForTest {
     public static void init() {
 
         // Test User
-        testuser = new DOIUser();
+        final DOIUser testuser = new DOIUser();
         testuser.setUsername("malapert");
         testuser.setAdmin(true);
         testuser.setEmail("doidbuser@mail.com");
@@ -56,7 +66,7 @@ public class InitDataBaseForTest {
         kerberos.setEmail("kerberos@mail.com");
 
         // Test Project
-        testProject = new DOIProject();
+        final DOIProject  testProject = new DOIProject();
         testProject.setProjectname("CFOSAT");
         testProject.setSuffix(828606);
 
@@ -80,13 +90,13 @@ public class InitDataBaseForTest {
             logger.error("testDoiUsers failed: unexpected exception: ", e);
             fail();
         }
+
     }
 
     /**
      * Stops the server.
      */
     public static void close() {
-
         try {
             for (DOIUser user : das.getAllDOIusers()) {
                 das.removeDOIUser(user.getUsername());

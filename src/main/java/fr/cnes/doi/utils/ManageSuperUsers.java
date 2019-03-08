@@ -67,7 +67,7 @@ public class ManageSuperUsers {
 
     public List<String> getSuperUsers() {
         LOGGER.entering(CLASS_NAME, "getSuperUsers");
-        ArrayList<String> result = new ArrayList();
+        ArrayList<String> result = new ArrayList<String>();
 
         List<DOIUser> users = userDB.getUsers();
         for (DOIUser doiUser : users) {

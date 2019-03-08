@@ -67,7 +67,6 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
      * file will be created. The file contains the mapping between the project name and the
      * identifiers
      *
-     * @param configuration The file that contains the database
      */
     @Override
     public void init() {

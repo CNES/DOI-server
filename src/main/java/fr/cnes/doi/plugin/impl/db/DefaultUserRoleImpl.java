@@ -39,8 +39,8 @@ import fr.cnes.doi.plugin.AbstractUserRolePluginHelper;
 import java.util.logging.Level;
 
 /**
- * Default implementation of the authentication plugin. This implementation defines
- * users/groups/roles.
+ * Default implementation of the authentication plugin. This implementation
+ * defines users/groups/roles.
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
@@ -66,7 +66,7 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
      * Default constructor of the authentication plugin.
      */
     public DefaultUserRoleImpl() {
-        super();
+	super();
     }
 
     private final DOIDbDataAccessService das = new DOIDbDataAccessServiceImpl();
@@ -77,194 +77,191 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
 
     @Override
     public List<DOIUser> getUsers() {
-        List<DOIUser> listUser = new ArrayList<DOIUser>();
-        try {
-            listUser = das.getAllDOIusers();
-        } catch (DOIDbException e) {
-            LOG.fatal("An error occured while trying to get all DOI users", e);
-        }
-        return Collections.unmodifiableList(listUser);
+	List<DOIUser> listUser = new ArrayList<DOIUser>();
+	try {
+	    listUser = das.getAllDOIusers();
+	} catch (DOIDbException e) {
+	    LOG.fatal("An error occured while trying to get all DOI users", e);
+	}
+	return Collections.unmodifiableList(listUser);
     }
 
     @Override
     public List<DOIUser> getUsersFromRole(final int roleName) {
-        List<DOIUser> listUser = new ArrayList<DOIUser>();
-        try {
-            listUser = das.getAllDOIUsersForProject(roleName);
-        } catch (DOIDbException e) {
-            LOG.fatal("An error occured while trying to get all DOI users from project " + roleName,
-                    e);
-        }
-        return Collections.unmodifiableList(listUser);
+	List<DOIUser> listUser = new ArrayList<DOIUser>();
+	try {
+	    listUser = das.getAllDOIUsersForProject(roleName);
+	} catch (DOIDbException e) {
+	    LOG.fatal("An error occured while trying to get all DOI users from project " + roleName,
+		    e);
+	}
+	return Collections.unmodifiableList(listUser);
     }
 
     @Override
     public boolean addUserToRole(String user, int role) {
-        boolean isAdded = false;
-        try {
-            das.addDOIProjectToUser(user, role);
-            isAdded = true;
-            LOG.info("The user {} is added to role {}.",user ,role);
+	boolean isAdded = false;
+	try {
+	    das.addDOIProjectToUser(user, role);
+	    isAdded = true;
+	    LOG.info("The user {} is added to role {}.", user, role);
 
-            User userFromRealm = REALM.findUser(user);
-            final Role roleFromRealm = new Role(Application.getCurrent(), String.valueOf(role),
-                    "Role " + String.valueOf(
-                            role) + " for " + Application.getCurrent().getName());
-            REALM.map(userFromRealm, roleFromRealm);
+	    User userFromRealm = REALM.findUser(user);
+	    final Role roleFromRealm = new Role(Application.getCurrent(), String.valueOf(role),
+		    "Role " + String.valueOf(role) + " for " + Application.getCurrent().getName());
+	    REALM.map(userFromRealm, roleFromRealm);
 
-        } catch (DOIDbException e) {
-            LOG.
-                    fatal("An error occured while trying to add user " + user + " to project " + role,
-                            e);
-        }
-        return isAdded;
+	} catch (DOIDbException e) {
+	    LOG.fatal("An error occured while trying to add user " + user + " to project " + role,
+		    e);
+	}
+	return isAdded;
     }
 
     @Override
     public boolean removeUserToRole(String user, int role) {
-        boolean isRemoved = false;
-        try {
-            das.removeDOIProjectFromUser(user, role);
-            isRemoved = true;
-            LOG.info("The user {} is removed to role {}.",user ,role);
+	boolean isRemoved = false;
+	try {
+	    das.removeDOIProjectFromUser(user, role);
+	    isRemoved = true;
+	    LOG.info("The user {} is removed to role {}.", user, role);
 
-            User userFromRealm = REALM.findUser(user);
-            Set<Role> rolesFromRealm = REALM.findRoles(userFromRealm);
-            for (Role r : rolesFromRealm) {
-                if (r.getName().equals(String.valueOf(role))) {
-                    REALM.unmap(userFromRealm, r);
-                }
-            }
+	    User userFromRealm = REALM.findUser(user);
+	    Set<Role> rolesFromRealm = REALM.findRoles(userFromRealm);
+	    for (Role r : rolesFromRealm) {
+		if (r.getName().equals(String.valueOf(role))) {
+		    REALM.unmap(userFromRealm, r);
+		}
+	    }
 
-        } catch (DOIDbException e) {
-            LOG.fatal(
-                    "An error occured while trying to remove user " + user + " from project " + role,
-                    e);
-        }
-        return isRemoved;
+	} catch (DOIDbException e) {
+	    LOG.fatal("An error occured while trying to remove user " + user + " from project "
+		    + role, e);
+	}
+	return isRemoved;
     }
 
     @Override
     public boolean setUserToAdminGroup(String user) {
-        boolean isSetted = false;
-        try {
-            das.setAdmin(user);
-            isSetted = true;
-            LOG.info("The user {} is added to admin group.",user );
+	boolean isSetted = false;
+	try {
+	    das.setAdmin(user);
+	    isSetted = true;
+	    LOG.info("The user {} is added to admin group.", user);
 
-            User userFromRealm = REALM.findUser(user);
-            if (!REALM.getRootGroups().get(0).getMemberUsers().contains(userFromRealm)) {
-                REALM.getRootGroups().get(0).getMemberUsers().add(userFromRealm);
-            }
+	    User userFromRealm = REALM.findUser(user);
+	    if (!REALM.getRootGroups().get(0).getMemberUsers().contains(userFromRealm)) {
+		REALM.getRootGroups().get(0).getMemberUsers().add(userFromRealm);
+	    }
 
-        } catch (DOIDbException e) {
-            LOG.fatal("An error occured while trying to add user " + user + " to admin group", e);
-        }
-        return isSetted;
+	} catch (DOIDbException e) {
+	    LOG.fatal("An error occured while trying to add user " + user + " to admin group", e);
+	}
+	return isSetted;
     }
 
     @Override
     public boolean unsetUserFromAdminGroup(String user) {
-        boolean isUnsetted = false;
-        try {
-            das.unsetAdmin(user);
-            isUnsetted = true;
-            LOG.info("The user {} is removed to admin group.",user );
+	boolean isUnsetted = false;
+	try {
+	    das.unsetAdmin(user);
+	    isUnsetted = true;
+	    LOG.info("The user {} is removed to admin group.", user);
 
-            User userFromRealm = REALM.findUser(user);
-            if (REALM.getRootGroups().get(0).getMemberUsers().contains(userFromRealm)) {
-                REALM.getRootGroups().get(0).getMemberUsers().remove(userFromRealm);
-            }
+	    User userFromRealm = REALM.findUser(user);
+	    if (REALM.getRootGroups().get(0).getMemberUsers().contains(userFromRealm)) {
+		REALM.getRootGroups().get(0).getMemberUsers().remove(userFromRealm);
+	    }
 
-        } catch (DOIDbException e) {
-            LOG.fatal("An error occured while trying to remove user " + user + " to admin group", e);
-        }
-        return isUnsetted;
+	} catch (DOIDbException e) {
+	    LOG.fatal("An error occured while trying to remove user " + user + " to admin group",
+		    e);
+	}
+	return isUnsetted;
     }
 
     @Override
     public boolean isUserExist(String username) {
-        boolean isExist = false;
-        try {
-            isExist = das.isUserExist(username);
-        } catch (DOIDbException e) {
-            LOG.fatal("An error occured while trying to know if user " + username + " exist", e);
-        }
-        return isExist;
+	boolean isExist = false;
+	try {
+	    isExist = das.isUserExist(username);
+	} catch (DOIDbException e) {
+	    LOG.fatal("An error occured while trying to know if user " + username + " exist", e);
+	}
+	return isExist;
     }
 
     @Override
     public Boolean isAdmin(String username) {
-        Boolean isExist = null;
-        try {
-            isExist = das.isAdmin(username);
-        } catch (DOIDbException e) {
-            LOG.fatal(
-                    "An error occured while trying to know if user " + username + " exist and is admin",
-                    e);
-        }
-        return isExist;
+	Boolean isExist = null;
+	try {
+	    isExist = das.isAdmin(username);
+	} catch (DOIDbException e) {
+	    LOG.fatal("An error occured while trying to know if user " + username
+		    + " exist and is admin", e);
+	}
+	return isExist;
     }
 
     @Override
     public void addDOIUser(String username, Boolean admin) throws DOIDbException {
-        this.das.addDOIUser(username, admin);
-        if(REALM.findUser(username) == null) {
-        	REALM.getUsers().add(new User(username));
-        }
-        LOG.info("The user {} is added to database.", username );
+	this.das.addDOIUser(username, admin);
+	if (REALM.findUser(username) == null) {
+	    REALM.getUsers().add(new User(username));
+	}
+	LOG.info("The user {} is added to database.", username);
     }
 
     @Override
     public void addDOIUser(String username, Boolean admin, String email) throws DOIDbException {
-        this.das.addDOIUser(username, admin, email);
-        if(REALM.findUser(username) == null) {
-        	REALM.getUsers().add(new User(username));
-        }
-        LOG.info("The user {} is added to database.", username );
+	this.das.addDOIUser(username, admin, email);
+	if (REALM.findUser(username) == null) {
+	    REALM.getUsers().add(new User(username));
+	}
+	LOG.info("The user {} is added to database.", username);
     }
-    
+
     @Override
     public void removeDOIUser(String username) {
-    	try {
-    		this.das.removeDOIUser(username);
-    		User userFromRealm = REALM.findUser(username);
-    		if(userFromRealm != null) {
-    			REALM.getUsers().remove(userFromRealm);
-    		}
-    		LOG.info("The user {} is removed from database.", username );
-    	} catch (DOIDbException ex) {
-    		LOG.fatal("Cannot remove user" + username, ex);
-    	}
+	try {
+	    this.das.removeDOIUser(username);
+	    final User userFromRealm = REALM.findUser(username);
+	    if (userFromRealm != null) {
+		REALM.getUsers().remove(userFromRealm);
+	    }
+	    LOG.info("The user {} is removed from database.", username);
+	} catch (DOIDbException ex) {
+	    LOG.fatal("Cannot remove user" + username, ex);
+	}
     }
 
     @Override
     public String getName() {
-        return NAME;
+	return NAME;
     }
 
     @Override
     public String getDescription() {
-        return DESCRIPTION;
+	return DESCRIPTION;
     }
 
     @Override
     public String getVersion() {
-        return VERSION;
+	return VERSION;
     }
 
     @Override
     public String getAuthor() {
-        return AUTHOR;
+	return AUTHOR;
     }
 
     @Override
     public String getOwner() {
-        return OWNER;
+	return OWNER;
     }
 
     @Override
     public String getLicense() {
-        return LICENSE;
+	return LICENSE;
     }
 }

@@ -424,6 +424,7 @@
 			            alert("Error: " + xhr.status + ": " + xhr.statusText);
 			        }
 			    });
+				clearForm();
 				
 				$("#prefix").text(prefixCnes);
 				
@@ -523,10 +524,9 @@
 				    	$("#doi").empty();
 			    		$("#doi").append("<option disabled selected>Choix d'un doi</option>");
 				    	for(var doi of list){
-				    		$("#doi").append("<option>" + doi + "</option>");	
+				    		var identifierDOI = doi.replace(prefixCnes + projectId + "/","");
+				    		$("#doi").append("<option>" + identifierDOI + "</option>");	
 				    	}
-				    	// TODO test_jc
-// 				    	$("#doi").append("<option>" + "test_jc" + "</option>");	
 				    }
 				}); 
 			}
@@ -577,7 +577,7 @@
 				    	); 
 				    	console.log("Erreur lors de la modification de l'URL.\n" + errMessage); 
 				    }, 
-				    success: function(url) { console.log("L'URL, "+ url + ", a été modifiée."); }
+				    success: function(url) { alert("L'URL, "+ url + ", a été modifiée."); }
 				}); 
 			}
 			
@@ -603,7 +603,8 @@
 				    	console.log("Erreur lors de la modification de des métadonnées.\n" + errMessage); 
 				    }, 
 				    success: function() { 
-				    	console.log("Les métadonnées du DOI "+ identifier + " ont été modifiées."); 
+				    	alert("Les métadonnées du DOI "+ identifier + " ont été modifiées.");
+				    	clearForm();
 				    }
 				}); 
 			}
