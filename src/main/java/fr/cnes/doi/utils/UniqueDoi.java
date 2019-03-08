@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017-2018 Centre National d'Etudes Spatiales (CNES).
+ * Copyright (C) 2017-2019 Centre National d'Etudes Spatiales (CNES).
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -105,11 +105,8 @@ public class UniqueDoi {
      * @param maxNumber Number max to generate
      * @return the DOI
      */
-    private String convert(final String inistPrefix,
-            final int projectID,
-            final long input,
-            final URI landingPage,
-            final int maxNumber) {
+    private String convert(final String inistPrefix, final int projectID, final long input,
+            final URI landingPage, final int maxNumber) {
         LOGGER.entering(CLASS_NAME, "convert", new Object[]{input, landingPage, maxNumber});
         String doi = null;
         do {
@@ -130,10 +127,8 @@ public class UniqueDoi {
      * length cannot be up to 9)
      * @return the DOI
      */
-    public String createDOI(final String inist_prefix,
-            final String projectName,
-            final URI landingPage,
-            final int length) {
+    public String createDOI(final String inist_prefix, final String projectName, 
+            final URI landingPage, final int length) {
         LOGGER.entering(CLASS_NAME, "getShortName", new Object[]{projectName, landingPage, length});
         final String doi;
         if (length > 9) {
@@ -170,8 +165,7 @@ public class UniqueDoi {
      * @param landingPage LAnding page related to the DOI
      * @return true if the Id is OK, false otherwise
      */
-    private synchronized boolean isIdUnique(final String doiToCheck,
-            final URI landingPage) {
+    private synchronized boolean isIdUnique(final String doiToCheck, final URI landingPage) {
         LOGGER.entering(CLASS_NAME, "isIdUnique", new Object[]{doiToCheck, landingPage});
         final boolean result;
         if (this.doiDB.isExistDOI(doiToCheck)) {

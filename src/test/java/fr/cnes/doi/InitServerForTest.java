@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Centre National d'Etudes Spatiales (CNES).
+ * Copyright (C) 2017-2019 Centre National d'Etudes Spatiales (CNES).
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,20 +20,13 @@ package fr.cnes.doi;
 
 import fr.cnes.doi.server.DoiServer;
 import fr.cnes.doi.settings.DoiSettings;
-import fr.cnes.httpclient.HttpClient;
-import fr.cnes.httpclient.HttpClientFactory;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Level;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.restlet.Client;
-import org.restlet.Context;
-import org.restlet.data.Protocol;
 import org.restlet.engine.Engine;
-import org.restlet.service.CorsService;
 import org.restlet.engine.connector.ConnectorHelper;
 import org.restlet.ext.httpclient4.HttpClientHelper;
 import org.slf4j.bridge.SLF4JBridgeHandler;
@@ -114,7 +107,7 @@ public final class InitServerForTest {
 
     /**
      * Init the settings and starts the server with the default configuration
-     * properties {@value DoiSettings#CONFIG_PROPERTIES}.
+     * properties.
      */
     public static void init() {
 	init(DoiSettings.CONFIG_PROPERTIES);

@@ -1,558 +1,558 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>Administration</title>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
+    <head>
+        <title>Administration</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<!-- Bootstrap -->
-		<link href="css/bootstrap-min.css" rel="stylesheet">
+        <!-- Bootstrap -->
+        <link href="css/bootstrap-min.css" rel="stylesheet">
 
-		<!-- Css -->
-		<link href="css/doi.css" rel="stylesheet">
-		<link href="css/navbar.css" rel="stylesheet">
-		
-		<script src="js/checkAuth.js"></script>
+        <!-- Css -->
+        <link href="css/doi.css" rel="stylesheet">
+        <link href="css/navbar.css" rel="stylesheet">
 
-	</head>
+        <script src="js/checkAuth.js"></script>
 
-	<body>
-		<div class="container">
+    </head>
 
-			<div id="navbar"></div>
+    <body>
+        <div class="container">
 
-			<h2>Administration</h2><hr>
+            <div id="navbar"></div>
 
-			<div class="row">
-				<div class="col-md-6">
-					<div class="panel panel-primary">
-						<div class="panel-heading"><h3 class="panel-title">Projets</h3></div>
-						<div class="panel-body">
-							<div class="col-md-6">
-								<button type="button" onclick="addProject()" class="btn btn-default btn-md btn-block">Créer un projet</button>
-								<button type="button" onclick="renameProject()" class="btn btn-default btn-md btn-block">Renommer un projet</button>
-								<button type="button" onclick="deleteProject()" class="btn btn-default btn-md btn-block">Supprimer un projet</button>
-							</div>	
-							<div class="col-md-6">	
-								<label>Projets</label>
-								<select class="form-control" size="4" id="listProjet"></select>
-							</div>			
-						</div>
-					</div> <!-- /panel -->
-				</div>
-			
-				<div class="col-md-6">
-					<div class="panel panel-primary">
-						<div class="panel-heading"><h3 class="panel-title" id="titreProjet">Utilisateurs du projet:</h3></div>
-						<div class="panel-body">
-							<div class="col-md-6">	
-								<label>Utilisateurs</label>
-								<select id="listUser" class="form-control" size="4">
-							<!--  		<option>bob.doe</option>
-									<option>bill.doret</option>
-									<option>tom.hash</option>  -->
-								</select>
-							</div>			
-							<div class="col-md-6">
-								<button type="button" onclick="addUser()" class="btn btn-default btn-md btn-block">Ajouter un utilisateur</button>
-								<button type="button" onclick="deleteUser()" class="btn btn-default btn-md btn-block">Retirer un utilisateur</button>
-							</div>	
-						</div>
-					</div> <!-- /panel -->
-				</div>
-			</div> <!-- /row -->
-			<br>
+            <h2>Administration</h2><hr>
 
-			<div class="row">
-				<div class="col-md-6">
-					<div class="panel panel-primary">
-						<div class="panel-heading"><h3 class="panel-title">Groupe Admin</h3></div>
-						<div class="panel-body">
-							<div class="col-md-6">	
-								<label>Utilisateurs Admin</label>
-								<select id="listAdmin" class="form-control" size="4">
-						<!--  			<option>bob.doe</option>
-									<option>bill.doret</option>   -->
-								</select>
-							</div>			
-							<div class="col-md-6">
-								<button type="button" onclick="addAdmin()" class="btn btn-default btn-md btn-block">Ajouter un utilisateur</button>
-								<button type="button" onclick="deleteAdmin()" class="btn btn-default btn-md btn-block">Retirer un utilisateur</button>
-							</div>	
-						</div>
-					</div> <!-- /panel -->
-				</div>
-			</div> <!-- /row -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading"><h3 class="panel-title">Projets</h3></div>
+                        <div class="panel-body">
+                            <div class="col-md-6">
+                                <button type="button" onclick="addProject()" class="btn btn-default btn-md btn-block">Créer un projet</button>
+                                <button type="button" onclick="renameProject()" class="btn btn-default btn-md btn-block">Renommer un projet</button>
+                                <button type="button" onclick="deleteProject()" class="btn btn-default btn-md btn-block">Supprimer un projet</button>
+                            </div>	
+                            <div class="col-md-6">	
+                                <label>Projets</label>
+                                <select class="form-control" size="4" id="listProjet"></select>
+                            </div>			
+                        </div>
+                    </div> <!-- /panel -->
+                </div>
 
-			<hr>
-			<div id="footer"></div>
+                <div class="col-md-6">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading"><h3 class="panel-title" id="titreProjet">Utilisateurs du projet:</h3></div>
+                        <div class="panel-body">
+                            <div class="col-md-6">	
+                                <label>Utilisateurs</label>
+                                <select id="listUser" class="form-control" size="4">
+                                    <!--  		<option>bob.doe</option>
+                                                    <option>bill.doret</option>
+                                                    <option>tom.hash</option>  -->
+                                </select>
+                            </div>			
+                            <div class="col-md-6">
+                                <button type="button" onclick="addUser()" class="btn btn-default btn-md btn-block">Ajouter un utilisateur</button>
+                                <button type="button" onclick="deleteUser()" class="btn btn-default btn-md btn-block">Retirer un utilisateur</button>
+                            </div>	
+                        </div>
+                    </div> <!-- /panel -->
+                </div>
+            </div> <!-- /row -->
+            <br>
 
-		</div> <!-- /container -->
-			 
-  	</body>
-  	
-  		<!-- JS library -->
-		<script src="js/jquery-min.js"></script>
-		<script src="js/bootstrap-min.js"></script>
-		<!-- Contain var 'config' as json -->
-		<script src="js/config.js"></script>
-		<script>
-		
-		var actualUser = sessionStorage.getItem("user");
-		
-		$(document).ready(function(){
-			$("#footer").load("footer.txt");
-			$("#navbar").load("navbar.txt", function(responseTxt, statusTxt, xhr){
-		        if(statusTxt == "success"){
-		        	$("#selection").parent().remove();
-		        	
-					// remove selected project
-					sessionStorage.setItem("project", null);
-					sessionStorage.setItem("projectId", null);
-					
-		        } else if(statusTxt == "error"){
-		            alert("Error: " + xhr.status + ": " + xhr.statusText);
-		        }
-		    });
-			
-			getListProjet();
-			getListAdmin();
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading"><h3 class="panel-title">Groupe Admin</h3></div>
+                        <div class="panel-body">
+                            <div class="col-md-6">	
+                                <label>Utilisateurs Admin</label>
+                                <select id="listAdmin" class="form-control" size="4">
+                                    <!--  			<option>bob.doe</option>
+                                                            <option>bill.doret</option>   -->
+                                </select>
+                            </div>			
+                            <div class="col-md-6">
+                                <button type="button" onclick="addAdmin()" class="btn btn-default btn-md btn-block">Ajouter un utilisateur</button>
+                                <button type="button" onclick="deleteAdmin()" class="btn btn-default btn-md btn-block">Retirer un utilisateur</button>
+                            </div>	
+                        </div>
+                    </div> <!-- /panel -->
+                </div>
+            </div> <!-- /row -->
 
-			$("#listProjet").click(function(){
-				if($("#listProjet").val() == null){
-					return;
-				}
-				modifyListUser();
-			});
-			
-		});
-		
-		function getListProjet(){
-			$.ajax({
-			    type: "GET",
-			    url: "/admin/projects",
-			    headers: {
+            <hr>
+            <div id="footer"></div>
+
+        </div> <!-- /container -->
+
+
+        <!-- JS library -->
+        <script src="js/jquery-min.js"></script>
+        <script src="js/bootstrap-min.js"></script>
+        <!-- Contain var 'config' as json -->
+        <script src="js/config.js"></script>
+        <script>
+
+            var actualUser = sessionStorage.getItem("user");
+
+            $(document).ready(function () {
+                $("#footer").load("footer.txt");
+                $("#navbar").load("navbar.txt", function (responseTxt, statusTxt, xhr) {
+                    if (statusTxt === "success") {
+                        $("#selection").parent().remove();
+
+                        // remove selected project
+                        sessionStorage.setItem("project", null);
+                        sessionStorage.setItem("projectId", null);
+
+                    } else if (statusTxt === "error") {
+                        alert("Error: " + xhr.status + ": " + xhr.statusText);
+                    }
+                });
+
+                getListProjet();
+                getListAdmin();
+
+                $("#listProjet").click(function () {
+                    if ($("#listProjet").val() == null) {
+                        return;
+                    }
+                    modifyListUser();
+                });
+
+            });
+
+            function getListProjet() {
+                $.ajax({
+                    type: "GET",
+                    url: "/admin/projects",
+                    headers: {
 // 			    	'Authorization': 'Basic ' + btoa('malapert:pwd'), "Bearer " + sessionStorage.getItem("token")
-			    	'Authorization': "Bearer " + sessionStorage.getItem("token")
-			    },
-			    crossDomain: true,
-				cache : false,
-			    error : function (XMLHttpRequest, textStatus, errorThrown){ 
-			    	var parser = new DOMParser();
-			    	var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
-			    	var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
-			    	alert("Erreur lors de la récupération des projets.\n"+
-			    			"Erreur: " + XMLHttpRequest.status +", "+ XMLHttpRequest.statusText + "\n"
-			    	); 
-			    	console.log("Erreur lors de la récupération des projets.\n" + errMessage); 
-			    },
-			    success: function(json) {
-			    	console.log("La récupération des projets est un succès.");
-			    	for(project in json){
-			    		$("#listProjet").append("<option>" + project + 
-			    				"(" + json[project] + ")" + "</option>");	
-			    	}
-			    }
-			});
-		}
-		
-		function getListAdmin(){
-			$.ajax({
-			    type: "GET",
-			    url: "/admin/superusers",
-			    headers: {
-			    	'Authorization': "Bearer " + sessionStorage.getItem("token")
-			    },
-			    crossDomain: true,
-				cache : false,
-			    error : function (XMLHttpRequest, textStatus, errorThrown){ 
-			    	var parser = new DOMParser();
-			    	var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
-			    	var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
-			    	alert("Erreur lors de la récupération de la liste administrateur.\n"+
-			    			"Erreur: " + XMLHttpRequest.status +", "+ XMLHttpRequest.statusText + "\n"
-			    	); 
-			    	console.log("Erreur lors de la récupération de la liste administrateur.\n" + errMessage); 
-			    },
-			    success: function(array) {
-			    	console.log("La récupération de la liste administrateur est un succès.");
-			    	array.forEach(function(admin, index, array){
-			    		$("#listAdmin").append("<option>" + admin + "</option>");	
-			    	});
-			    }
-			});
-		}
-		
-		// modification Projets
-		function addProject() {
-		    var projet = prompt("Entrer le nom du projet:", "projet");
-		    if (projet == null || projet == "") {
-		        return;
-		    } else {
-		    	$.ajax({
-				    type: "POST",
-				    url: "/admin/projects",
-				    data: {
-				    	'projectName': projet
-				    },
-				    headers: {
-				    	'Authorization': "Bearer " + sessionStorage.getItem("token")
-				    },
-				    crossDomain: true,
-					cache : false,
-				    error : function (XMLHttpRequest, textStatus, errorThrown){ 
-				    	var parser = new DOMParser();
-				    	var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
-				    	var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
-				    	alert("Erreur lors de la création d'un projet.\n"+
-				    			"Erreur: " + XMLHttpRequest.status +", "+ XMLHttpRequest.statusText + "\n"
-				    	); 
-				    	console.log("Erreur lors de la création d'un projet.\n" + errMessage); 
-				    },
-				    success: function(suffixeProjet) {
-				    	console.log("La création d'un projet est un succès.");
-			    		$("#listProjet").append("<option selected=\"selected\">" + projet + 
-			    				"(" + suffixeProjet + ")" + "</option>");	
-			    		modifyListUser();
-				    }
-				});
-		    }
-		}
-		
-		function renameProject() {
-			var text = $("#listProjet option:selected").text();
-			if(text == ""){
-				return;
-			}
-			
-			var idText = text.substring(text.indexOf('(')+1, text.length -1);
-			var nomText = text.substring(0, text.indexOf('('));
+                        'Authorization': "Bearer " + sessionStorage.getItem("token")
+                    },
+                    crossDomain: true,
+                    cache: false,
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        var parser = new DOMParser();
+                        var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
+                        var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
+                        alert("Erreur lors de la récupération des projets.\n" +
+                                "Erreur: " + XMLHttpRequest.status + ", " + XMLHttpRequest.statusText + "\n"
+                                );
+                        console.log("Erreur lors de la récupération des projets.\n" + errMessage);
+                    },
+                    success: function (json) {
+                        console.log("La récupération des projets est un succès.");
+                        for (project in json) {
+                            $("#listProjet").append("<option>" + project +
+                                    "(" + json[project] + ")" + "</option>");
+                        }
+                    }
+                });
+            }
+
+            function getListAdmin() {
+                $.ajax({
+                    type: "GET",
+                    url: "/admin/superusers",
+                    headers: {
+                        'Authorization': "Bearer " + sessionStorage.getItem("token")
+                    },
+                    crossDomain: true,
+                    cache: false,
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        var parser = new DOMParser();
+                        var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
+                        var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
+                        alert("Erreur lors de la récupération de la liste administrateur.\n" +
+                                "Erreur: " + XMLHttpRequest.status + ", " + XMLHttpRequest.statusText + "\n"
+                                );
+                        console.log("Erreur lors de la récupération de la liste administrateur.\n" + errMessage);
+                    },
+                    success: function (array) {
+                        console.log("La récupération de la liste administrateur est un succès.");
+                        array.forEach(function (admin, index, array) {
+                            $("#listAdmin").append("<option>" + admin + "</option>");
+                        });
+                    }
+                });
+            }
+
+            // modification Projets
+            function addProject() {
+                var projet = prompt("Entrer le nom du projet:", "projet");
+                if (projet == null || projet === "") {
+                    return;
+                } else {
+                    $.ajax({
+                        type: "POST",
+                        url: "/admin/projects",
+                        data: {
+                            'projectName': projet
+                        },
+                        headers: {
+                            'Authorization': "Bearer " + sessionStorage.getItem("token")
+                        },
+                        crossDomain: true,
+                        cache: false,
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            var parser = new DOMParser();
+                            var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
+                            var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
+                            alert("Erreur lors de la création d'un projet.\n" +
+                                    "Erreur: " + XMLHttpRequest.status + ", " + XMLHttpRequest.statusText + "\n"
+                                    );
+                            console.log("Erreur lors de la création d'un projet.\n" + errMessage);
+                        },
+                        success: function (suffixeProjet) {
+                            console.log("La création d'un projet est un succès.");
+                            $("#listProjet").append("<option selected=\"selected\">" + projet +
+                                    "(" + suffixeProjet + ")" + "</option>");
+                            modifyListUser();
+                        }
+                    });
+                }
+            }
+
+            function renameProject() {
+                var text = $("#listProjet option:selected").text();
+                if (text === "") {
+                    return;
+                }
+
+                var idText = text.substring(text.indexOf('(') + 1, text.length - 1);
+                var nomText = text.substring(0, text.indexOf('('));
 // 			console.log("Projet : "nomText + " " + idText);
-			
-		    var projet = prompt("Renomer le projet:", nomText);
-		    if (projet == null || projet == "") {
-		        return;
-		    } else {
-		    	$.ajax({
-				    type: "POST",
-				    url: "/admin/projects/" + idText,
-				    data: {
-				    	'newProjectName': projet
-				    },
-				    headers: {
-				    	'Authorization': "Bearer " + sessionStorage.getItem("token")
-				    },
-				    crossDomain: true,
-					cache : false,
-				    error : function (XMLHttpRequest, textStatus, errorThrown){ 
-				    	var parser = new DOMParser();
-				    	var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
-				    	var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
-				    	alert("Erreur lors du renommage du projet.\n"+
-				    			"Erreur: " + XMLHttpRequest.status +", "+ XMLHttpRequest.statusText + "\n"
-				    	); 
-				    	console.log("Erreur lors du renommage du projet.\n" + errMessage); 
-				    },
-				    success: function(boo) {
+
+                var projet = prompt("Renomer le projet:", nomText);
+                if (projet == null || projet === "") {
+                    return;
+                } else {
+                    $.ajax({
+                        type: "POST",
+                        url: "/admin/projects/" + idText,
+                        data: {
+                            'newProjectName': projet
+                        },
+                        headers: {
+                            'Authorization': "Bearer " + sessionStorage.getItem("token")
+                        },
+                        crossDomain: true,
+                        cache: false,
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            var parser = new DOMParser();
+                            var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
+                            var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
+                            alert("Erreur lors du renommage du projet.\n" +
+                                    "Erreur: " + XMLHttpRequest.status + ", " + XMLHttpRequest.statusText + "\n"
+                                    );
+                            console.log("Erreur lors du renommage du projet.\n" + errMessage);
+                        },
+                        success: function (boo) {
 // 				    	console.log("isRenamed = "+ boo);
-				    	if(boo){
-				    		console.log("Le renommage du projet est un succès.");
-					    	$("#listProjet option:selected").text( projet + 
-				    				"(" + idText + ")" );	
-					    	$("#titreProjet").text("Utilisateurs du projet: "+ projet + "(" + idText + ")");
-					    	
-					    	//if actual user is on this project, actualize project name
-					    	object = JSON.parse(sessionStorage.getItem("projects"));
-					    	for(pro in object){
-					    		if(pro == nomText){
-					    			pro = projet;
-					    		}
-					    	}
-					    	sessionStorage.setItem("projects", JSON.stringify(object));
-				    	} else {
-				    		console.log("Echec du renommage du projet.");
-				    	}
-				    	
-				    }
-				});
-		    }
-		}
-		
-		function deleteProject() {
-			var text = $("#listProjet option:selected").text();
-			if(text == ""){
-				return;
-			}
-			var idText = text.substring(text.indexOf('(')+1, text.length -1);
-			var nomText = text.substring(0, text.indexOf('('));
+                            if (boo) {
+                                console.log("Le renommage du projet est un succès.");
+                                $("#listProjet option:selected").text(projet +
+                                        "(" + idText + ")");
+                                $("#titreProjet").text("Utilisateurs du projet: " + projet + "(" + idText + ")");
+
+                                //if actual user is on this project, actualize project name
+                                object = JSON.parse(sessionStorage.getItem("projects"));
+                                for (pro in object) {
+                                    if (pro === nomText) {
+                                        pro = projet;
+                                    }
+                                }
+                                sessionStorage.setItem("projects", JSON.stringify(object));
+                            } else {
+                                console.log("Echec du renommage du projet.");
+                            }
+
+                        }
+                    });
+                }
+            }
+
+            function deleteProject() {
+                var text = $("#listProjet option:selected").text();
+                if (text === "") {
+                    return;
+                }
+                var idText = text.substring(text.indexOf('(') + 1, text.length - 1);
+                var nomText = text.substring(0, text.indexOf('('));
 // 			console.log("Projet : " +nomText + " " + idText);
-			
-		    if(confirm("Voulez-vous vraiment supprimer le projet "+ nomText)){
-		    	
-		    	$.ajax({
-				    type: "DELETE",
-				    url: "/admin/projects/" + idText,
-				    headers: {
-				    	'Authorization': "Bearer " + sessionStorage.getItem("token")
-				    },
-				    crossDomain: true,
-					cache : false,
-				    error : function (XMLHttpRequest, textStatus, errorThrown){ 
-				    	var parser = new DOMParser();
-				    	var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
-				    	var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
-				    	alert("Erreur lors de la suppréssion du projet.\n"+
-				    			"Erreur: " + XMLHttpRequest.status +", "+ XMLHttpRequest.statusText + "\n"
-				    	); 
-				    	console.log("Erreur lors de la supprésion du projet.\n" + errMessage); 
-				    },
-				    success: function(boo) {
+
+                if (confirm("Voulez-vous vraiment supprimer le projet " + nomText)) {
+
+                    $.ajax({
+                        type: "DELETE",
+                        url: "/admin/projects/" + idText,
+                        headers: {
+                            'Authorization': "Bearer " + sessionStorage.getItem("token")
+                        },
+                        crossDomain: true,
+                        cache: false,
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            var parser = new DOMParser();
+                            var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
+                            var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
+                            alert("Erreur lors de la suppréssion du projet.\n" +
+                                    "Erreur: " + XMLHttpRequest.status + ", " + XMLHttpRequest.statusText + "\n"
+                                    );
+                            console.log("Erreur lors de la supprésion du projet.\n" + errMessage);
+                        },
+                        success: function (boo) {
 // 				    	console.log("isDeleted = "+ boo);
-				    	if(boo){
-				    		console.log("La supprésion du projet est un succès.");
-					    	$("#listProjet option:selected").remove();
-					    	$("#titreProjet").text("Utilisateurs du projet: ");
-							$("#listUser").empty();	
-							
-							//if actual user is on this project, remove project from session
-					    	object = JSON.parse(sessionStorage.getItem("projects"));
-							delete object[nomText];
-					    	sessionStorage.setItem("projects", JSON.stringify(object));
-				    	} else {
-				    		console.log("Echec de la suppréssion du projet.");
-				    	}
-				    }
-				});
-		    } 
-		}
-		function modifyListUser(){
-			var project = $("#listProjet").val();
-			$("#titreProjet").text("Utilisateurs du projet: "+project);
-			$("#listUser").empty();
-			
-			var suffixProject = project.substring(project.indexOf('(')+1, project.length -1);
-			var nameProject = project.substring(0, project.indexOf('('));
+                            if (boo) {
+                                console.log("La supprésion du projet est un succès.");
+                                $("#listProjet option:selected").remove();
+                                $("#titreProjet").text("Utilisateurs du projet: ");
+                                $("#listUser").empty();
+
+                                //if actual user is on this project, remove project from session
+                                object = JSON.parse(sessionStorage.getItem("projects"));
+                                delete object[nomText];
+                                sessionStorage.setItem("projects", JSON.stringify(object));
+                            } else {
+                                console.log("Echec de la suppréssion du projet.");
+                            }
+                        }
+                    });
+                }
+            }
+            function modifyListUser() {
+                var project = $("#listProjet").val();
+                $("#titreProjet").text("Utilisateurs du projet: " + project);
+                $("#listUser").empty();
+
+                var suffixProject = project.substring(project.indexOf('(') + 1, project.length - 1);
+                var nameProject = project.substring(0, project.indexOf('('));
 // 			console.log("Projet : " + nameProject + " " + suffixProject);
-			
-			$.ajax({
-			    type: "GET",
-			    url: "/admin/projects/" + suffixProject + "/users",
-			    headers: {
-			    	'Authorization': "Bearer " + sessionStorage.getItem("token")
-			    },
-			    crossDomain: true,
-				cache : false,
-			    error : function (XMLHttpRequest, textStatus, errorThrown){ 
-			    	var parser = new DOMParser();
-			    	var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
-			    	var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
-			    	alert("Erreur lors de la récupération de la liste des utilisateurs.\n"+
-			    			"Erreur: " + XMLHttpRequest.status +", "+ XMLHttpRequest.statusText + "\n"
-			    	); 
-			    	console.log("Erreur lors de la récupération de la liste des utilisateurs.\n" + errMessage); 
-			    },
-			    success: function(array) {
-			    	console.log("La récupération de la liste des utilisateurs est un succès.");
-			    	array.forEach(function(user, index, array){
-			    		$("#listUser").append("<option>" + user + "</option>");	
-			    	});
-			    }
-			});
-		}
-			
-		// modification users
-		function addUser(){
-			var project = $("#listProjet").val();
-			
-			var suffixProject = project.substring(project.indexOf('(')+1, project.length -1);
-			var nameProject = project.substring(0, project.indexOf('('));
+
+                $.ajax({
+                    type: "GET",
+                    url: "/admin/projects/" + suffixProject + "/users",
+                    headers: {
+                        'Authorization': "Bearer " + sessionStorage.getItem("token")
+                    },
+                    crossDomain: true,
+                    cache: false,
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        var parser = new DOMParser();
+                        var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
+                        var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
+                        alert("Erreur lors de la récupération de la liste des utilisateurs.\n" +
+                                "Erreur: " + XMLHttpRequest.status + ", " + XMLHttpRequest.statusText + "\n"
+                                );
+                        console.log("Erreur lors de la récupération de la liste des utilisateurs.\n" + errMessage);
+                    },
+                    success: function (array) {
+                        console.log("La récupération de la liste des utilisateurs est un succès.");
+                        array.forEach(function (user, index, array) {
+                            $("#listUser").append("<option>" + user + "</option>");
+                        });
+                    }
+                });
+            }
+
+            // modification users
+            function addUser() {
+                var project = $("#listProjet").val();
+
+                var suffixProject = project.substring(project.indexOf('(') + 1, project.length - 1);
+                var nameProject = project.substring(0, project.indexOf('('));
 // 			console.log("Projet : " + nameProject + " " + suffixProject);
-			
-			var user = prompt("Entrer le \"nom.prenom\" de l'utilisateur qui sera associé à ce projet:", "utilisateur");
-			if (user == null || user == "") {
-		        return;
+
+                var user = prompt("Entrer le \"nom.prenom\" de l'utilisateur qui sera associé à ce projet:", "utilisateur");
+                if (user == null || user === "") {
+                    return;
 // 			} else if (!user.includes(".")) {
 // 				alert("Format invalide.");
 // 				return;
-			} else {
-				$.ajax({
-				    type: "POST",
-				    url: "/admin/projects/" + suffixProject + "/users",
-				    headers: {
-				    	'Authorization': "Bearer " + sessionStorage.getItem("token")
-				    },
-				    data: {
-				    	"user": user
-				    },
-				    crossDomain: true,
-					cache : false,
-				    error : function (XMLHttpRequest, textStatus, errorThrown){ 
-				    	var parser = new DOMParser();
-				    	var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
-				    	var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
-				    	alert("Erreur lors de l'ajout d'un utilisateur.\n"+
-				    			"Erreur: " + XMLHttpRequest.status +", "+ XMLHttpRequest.statusText + "\n"
-				    	); 
-				    	console.log("Erreur lors de l'ajout d'un utilisateur.\n" + errMessage); 
-				    },
-				    success: function(boo) {
+                } else {
+                    $.ajax({
+                        type: "POST",
+                        url: "/admin/projects/" + suffixProject + "/users",
+                        headers: {
+                            'Authorization': "Bearer " + sessionStorage.getItem("token")
+                        },
+                        data: {
+                            "user": user
+                        },
+                        crossDomain: true,
+                        cache: false,
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            var parser = new DOMParser();
+                            var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
+                            var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
+                            alert("Erreur lors de l'ajout d'un utilisateur.\n" +
+                                    "Erreur: " + XMLHttpRequest.status + ", " + XMLHttpRequest.statusText + "\n"
+                                    );
+                            console.log("Erreur lors de l'ajout d'un utilisateur.\n" + errMessage);
+                        },
+                        success: function (boo) {
 // 				    	console.log(boo);
-				    	if(boo){
-				    		console.log("L'ajout d'un utilisateur est un succès.");
-					    	$("#listUser").append("<option selected=\"selected\">" + user + "</option>");
-					    	if(user == actualUser){
-					    		object = JSON.parse(sessionStorage.getItem("projects"));
-					    		if(object == null){
-					    			object = {
-					    				nameProject : suffixProject	
-					    			};
-					    		} else {
-						    		object[nameProject] = suffixProject;
-					    		}
-							    	sessionStorage.setItem("projects", JSON.stringify(object));
-					    	}
-				    	} else {
-				    		alert("Utilisateur incorrect.");
-				    		console.log("Echec d'ajout d'un utilisateur.");
-				    	}
-				    }
-				});
-			}
-		}
-		
-		function deleteUser(){
-			var project = $("#listProjet").val();
-			
-			var suffixProject = project.substring(project.indexOf('(')+1, project.length -1);
-			var nameProject = project.substring(0, project.indexOf('('));
+                            if (boo) {
+                                console.log("L'ajout d'un utilisateur est un succès.");
+                                $("#listUser").append("<option selected=\"selected\">" + user + "</option>");
+                                if (user === actualUser) {
+                                    object = JSON.parse(sessionStorage.getItem("projects"));
+                                    if (object == null) {
+                                        object = {
+                                            nameProject: suffixProject
+                                        };
+                                    } else {
+                                        object[nameProject] = suffixProject;
+                                    }
+                                    sessionStorage.setItem("projects", JSON.stringify(object));
+                                }
+                            } else {
+                                alert("Utilisateur incorrect.");
+                                console.log("Echec d'ajout d'un utilisateur.");
+                            }
+                        }
+                    });
+                }
+            }
+
+            function deleteUser() {
+                var project = $("#listProjet").val();
+
+                var suffixProject = project.substring(project.indexOf('(') + 1, project.length - 1);
+                var nameProject = project.substring(0, project.indexOf('('));
 // 			console.log("Projet : " + nameProject + " " + suffixProject);
-			
-			var user = $("#listUser").val();
-			if(user == ""){
-				return;
-			}
-			
-			if(confirm("Voulez-vous vraiment supprimer l'utilisateur "+ user + " du projet " + nameProject + " ?")){
-			    
-				$.ajax({
-				    type: "DELETE",
-				    url: "/admin/projects/" + suffixProject + "/users/" + user,
-				    headers: {
-				    	'Authorization': "Bearer " + sessionStorage.getItem("token")
-				    },
-				    crossDomain: true,
-					cache : false,
-				    error : function (XMLHttpRequest, textStatus, errorThrown){ 
-				    	var parser = new DOMParser();
-				    	var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
-				    	var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
-				    	alert("Erreur lors de la suppréssion d'un utilisateur.\n"+
-				    			"Erreur: " + XMLHttpRequest.status +", "+ XMLHttpRequest.statusText + "\n"
-				    	); 
-				    	console.log("Erreur lors de la suppréssion d'un utilisateur.\n" + errMessage); 
-				    },
-				    success: function(boo) {
+
+                var user = $("#listUser").val();
+                if (user === "") {
+                    return;
+                }
+
+                if (confirm("Voulez-vous vraiment supprimer l'utilisateur " + user + " du projet " + nameProject + " ?")) {
+
+                    $.ajax({
+                        type: "DELETE",
+                        url: "/admin/projects/" + suffixProject + "/users/" + user,
+                        headers: {
+                            'Authorization': "Bearer " + sessionStorage.getItem("token")
+                        },
+                        crossDomain: true,
+                        cache: false,
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            var parser = new DOMParser();
+                            var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
+                            var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
+                            alert("Erreur lors de la suppréssion d'un utilisateur.\n" +
+                                    "Erreur: " + XMLHttpRequest.status + ", " + XMLHttpRequest.statusText + "\n"
+                                    );
+                            console.log("Erreur lors de la suppréssion d'un utilisateur.\n" + errMessage);
+                        },
+                        success: function (boo) {
 // 				    	console.log(boo);
-				    	if(boo){
-					    	console.log("La suppréssion de l'utilisateur est un succès.");
-					    	$("#listUser option:selected").remove();
-					    	if(user == actualUser){
-					    		object = JSON.parse(sessionStorage.getItem("projects"));
-					    		delete object[nameProject];
-					    		sessionStorage.setItem("projects", JSON.stringify(object));
-					    	}
-				    	} else {
-				    		console.log("Echec de la suppréssion de l'utilisateur.");
-				    	}
-				    }
-				});
-		    } 
-		}
-			
-		// modification Admin   //TODO maybe show up a hidden select button that allow to find any user...
-		function addAdmin(){
-			var user = prompt("Entrer le \"nom.prenom\" de l'utilisateur qui passera Admin:", "utilisateur");
-			if (user == null || user == "") {
-		        return;
-			} else {
-				$.ajax({
-				    type: "POST",
-				    url: "/admin/superusers",
-				    headers: {
-				    	'Authorization': "Bearer " + sessionStorage.getItem("token")
-				    },
-				    data: {
-				    	"superUserName": user
-				    },
-				    crossDomain: true,
-					cache : false,
-				    error : function (XMLHttpRequest, textStatus, errorThrown){ 
-				    	var parser = new DOMParser();
-				    	var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
-				    	var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
-				    	alert("Erreur lors de l'ajout d'un super-utilisateur.\n"+
-				    			"Erreur: " + XMLHttpRequest.status +", "+ XMLHttpRequest.statusText + "\n"
-				    	); 
-				    	console.log("Erreur lors de l'ajout d'un super-utilisateur.\n" + errMessage); 
-				    },
-				    success: function(boo) {
+                            if (boo) {
+                                console.log("La suppréssion de l'utilisateur est un succès.");
+                                $("#listUser option:selected").remove();
+                                if (user === actualUser) {
+                                    object = JSON.parse(sessionStorage.getItem("projects"));
+                                    delete object[nameProject];
+                                    sessionStorage.setItem("projects", JSON.stringify(object));
+                                }
+                            } else {
+                                console.log("Echec de la suppréssion de l'utilisateur.");
+                            }
+                        }
+                    });
+                }
+            }
+
+            // modification Admin   //TODO maybe show up a hidden select button that allow to find any user...
+            function addAdmin() {
+                var user = prompt("Entrer le \"nom.prenom\" de l'utilisateur qui passera Admin:", "utilisateur");
+                if (user == null || user === "") {
+                    return;
+                } else {
+                    $.ajax({
+                        type: "POST",
+                        url: "/admin/superusers",
+                        headers: {
+                            'Authorization': "Bearer " + sessionStorage.getItem("token")
+                        },
+                        data: {
+                            "superUserName": user
+                        },
+                        crossDomain: true,
+                        cache: false,
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            var parser = new DOMParser();
+                            var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
+                            var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
+                            alert("Erreur lors de l'ajout d'un super-utilisateur.\n" +
+                                    "Erreur: " + XMLHttpRequest.status + ", " + XMLHttpRequest.statusText + "\n"
+                                    );
+                            console.log("Erreur lors de l'ajout d'un super-utilisateur.\n" + errMessage);
+                        },
+                        success: function (boo) {
 // 				    	console.log(boo);
-				    	if(boo){
-					    	console.log("L'ajout d'un super-utilisateur est un succès.");
-					    	$("#listAdmin").append("<option selected=\"selected\">" + user + "</option>");	
-					    	if(user == actualUser){
-					    		//in case user remove himself from superuser list, 
-					    		//and put himself back into the list before reloading the page
-					    		sessionStorage.setItem("admin", "true");
-					    	}
-				    	} else {
-				    		alert("Utilisateur incorrect.");
-					    	console.log("Echec de l'ajout d'un super-utilisateur.");
-				    	}
-				    }
-				});
-		    }
-		}
-		function deleteAdmin() {
-			var user = $("#listAdmin option:selected").text();
-			if(user == ""){
-				return;
-			}
-		    if(confirm("Voulez-vous vraiment supprimer l'utilisateur "+ user + " du groupe Admin ?")){
-		    	$.ajax({
-				    type: "DELETE",
-				    url: "/admin/superusers/" + user,
-				    headers: {
-				    	'Authorization': "Bearer " + sessionStorage.getItem("token")
-				    },
-				    crossDomain: true,
-					cache : false,
-				    error : function (XMLHttpRequest, textStatus, errorThrown){ 
-				    	var parser = new DOMParser();
-				    	var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
-				    	var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
-				    	alert("Erreur lors de la suppréssion d'un super-utilisateur.\n"+
-				    			"Erreur: " + XMLHttpRequest.status +", "+ XMLHttpRequest.statusText + "\n"
-				    	); 
-				    	console.log("Erreur lors de la suppréssion d'un super-utilisateur.\n" + errMessage); 
-				    },
-				    success: function(boo) {
+                            if (boo) {
+                                console.log("L'ajout d'un super-utilisateur est un succès.");
+                                $("#listAdmin").append("<option selected=\"selected\">" + user + "</option>");
+                                if (user === actualUser) {
+                                    //in case user remove himself from superuser list, 
+                                    //and put himself back into the list before reloading the page
+                                    sessionStorage.setItem("admin", "true");
+                                }
+                            } else {
+                                alert("Utilisateur incorrect.");
+                                console.log("Echec de l'ajout d'un super-utilisateur.");
+                            }
+                        }
+                    });
+                }
+            }
+            function deleteAdmin() {
+                var user = $("#listAdmin option:selected").text();
+                if (user === "") {
+                    return;
+                }
+                if (confirm("Voulez-vous vraiment supprimer l'utilisateur " + user + " du groupe Admin ?")) {
+                    $.ajax({
+                        type: "DELETE",
+                        url: "/admin/superusers/" + user,
+                        headers: {
+                            'Authorization': "Bearer " + sessionStorage.getItem("token")
+                        },
+                        crossDomain: true,
+                        cache: false,
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            var parser = new DOMParser();
+                            var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
+                            var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
+                            alert("Erreur lors de la suppréssion d'un super-utilisateur.\n" +
+                                    "Erreur: " + XMLHttpRequest.status + ", " + XMLHttpRequest.statusText + "\n"
+                                    );
+                            console.log("Erreur lors de la suppréssion d'un super-utilisateur.\n" + errMessage);
+                        },
+                        success: function (boo) {
 // 				    	console.log(boo);
-				    	if(boo){
-					    	console.log("La suppréssion du super-utilisateur est un succès.");
-					    	$("#listAdmin option:selected").remove();
-					    	if(user == actualUser){
-					    		sessionStorage.setItem("admin", "false");
-					    	}
-				    	} else {
-					    	console.log("Echec de la suppréssion du super-utilisateur.");
-				    	}
-				    }
-				});
-		    } 
-		}
-		
-		</script>
-		
+                            if (boo) {
+                                console.log("La suppréssion du super-utilisateur est un succès.");
+                                $("#listAdmin option:selected").remove();
+                                if (user === actualUser) {
+                                    sessionStorage.setItem("admin", "false");
+                                }
+                            } else {
+                                console.log("Echec de la suppréssion du super-utilisateur.");
+                            }
+                        }
+                    });
+                }
+            }
+
+        </script>
+    </body>
+
 </html>

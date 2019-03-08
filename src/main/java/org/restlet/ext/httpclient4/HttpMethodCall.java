@@ -1,7 +1,20 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2017-2019 Centre National d'Etudes Spatiales (CNES).
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3.0 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301  USA
  */
 package org.restlet.ext.httpclient4;
 
@@ -40,10 +53,10 @@ import org.restlet.representation.Representation;
 import org.restlet.util.Series;
 
 /**
- *
- * @author malapert
+ * Facade between HTTP call and the HTTP plugin.
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-public class HttpMethodCall extends ClientCall {
+public class HttpMethodCall extends ClientCall {   
 
     /**
      * The associated HTTP client.
@@ -93,7 +106,10 @@ public class HttpMethodCall extends ClientCall {
                 if (hasEntity) {
                     getLogger()
                             .warning(
-                                    "The current DELETE request provides an entity that may be not supported by the Apache HTTP Client library. If you face such issues, you can still move to another HTTP client connector.");
+                                    "The current DELETE request provides an entity that may be not "
+                                            + "supported by the Apache HTTP Client library. If you "
+                                            + "face such issues, you can still move to another HTTP"
+                                            + " client connector.");
                 }
             } else if (method.equalsIgnoreCase(Method.OPTIONS.getName())) {
                 this.httpRequest = new HttpOptions(requestUri);
@@ -147,11 +163,9 @@ public class HttpMethodCall extends ClientCall {
         return this.httpResponse;
     }
 
-    /**
-     * Returns the response reason phrase.
-     *
-     * @return The response reason phrase.
-     */
+   /**
+    * {@inheritDoc}
+    */
     @Override
     public String getReasonPhrase() {
         if ((getHttpResponse() != null)
@@ -161,26 +175,45 @@ public class HttpMethodCall extends ClientCall {
         return null;
     }
 
+   /**
+    * {@inheritDoc}
+    * @return null
+    */    
     @Override
     public WritableByteChannel getRequestEntityChannel() {
         return null;
     }
 
+   /**
+    * {@inheritDoc}
+    * @return null
+    */    
     @Override
     public OutputStream getRequestEntityStream() {
         return null;
     }
 
+   /**
+    * {@inheritDoc}
+    * @return null
+    */    
     @Override
     public OutputStream getRequestHeadStream() {
         return null;
     }
 
+   /**
+    * {@inheritDoc}
+    * @return null
+    */    
     @Override
     public ReadableByteChannel getResponseEntityChannel(long size) {
         return null;
     }
 
+   /**
+    * {@inheritDoc}
+    */    
     @Override
     public InputStream getResponseEntityStream(long size) {
         InputStream result = null;
@@ -202,20 +235,22 @@ public class HttpMethodCall extends ClientCall {
                 };
             }
         } catch (IOException ioe) {
-            System.out.println(ioe);
+            this.clientHelper
+                    .getLogger()
+                    .log(Level.WARNING,
+                            "An error occurred during the communication with the remote HTTP server.",
+                            ioe);        
         }
 
         return result;
     }
 
-    /**
-     * Returns the modifiable list of response headers.
-     *
-     * @return The modifiable list of response headers.
-     */
+   /**
+    * {@inheritDoc}
+    */
     @Override
     public Series<org.restlet.data.Header> getResponseHeaders() {
-        Series<org.restlet.data.Header> result = super.getResponseHeaders();
+        final Series<org.restlet.data.Header> result = super.getResponseHeaders();
 
         if (!this.responseHeadersAdded) {
             if ((getHttpResponse() != null)
@@ -231,22 +266,17 @@ public class HttpMethodCall extends ClientCall {
         return result;
     }
 
-    /**
-     * Returns the response address.<br>
-     * Corresponds to the IP address of the responding server.
-     *
-     * @return The response address.
-     */
+   /**
+    * {@inheritDoc}
+    */
     @Override
     public String getServerAddress() {
         return getHttpRequest().getURI().getHost();
     }
 
-    /**
-     * Returns the response status code.
-     *
-     * @return The response status code.
-     */
+   /**
+    * {@inheritDoc}
+    */
     @Override
     public int getStatusCode() {
         if (getHttpResponse() != null
@@ -256,13 +286,9 @@ public class HttpMethodCall extends ClientCall {
         return Status.CONNECTOR_ERROR_COMMUNICATION.getCode();
     }
 
-    /**
-     * Sends the request to the client. Commits the request line, headers and optional entity and
-     * send them over the network.
-     *
-     * @param request The high-level request.
-     * @return The result status.
-     */
+   /**
+    * {@inheritDoc}
+    */
     @Override
     public Status sendRequest(Request request) {
         Status result = null;
@@ -284,17 +310,26 @@ public class HttpMethodCall extends ClientCall {
                     && (getHttpRequest() instanceof HttpEntityEnclosingRequestBase)) {
                 final HttpEntityEnclosingRequestBase eem = (HttpEntityEnclosingRequestBase) getHttpRequest();
                 eem.setEntity(new AbstractHttpEntity() {
+                    /**
+                     * {@inheritDoc}
+                     */                    
                     @Override
                     public InputStream getContent() throws IOException,
                             IllegalStateException {
                         return entity.getStream();
                     }
 
+                    /**
+                     * {@inheritDoc}
+                     */                    
                     @Override
                     public long getContentLength() {
                         return entity.getSize();
                     }
 
+                    /**
+                     * {@inheritDoc}
+                     */                    
                     @Override
                     public Header getContentType() {
                         return new BasicHeader(
@@ -303,16 +338,25 @@ public class HttpMethodCall extends ClientCall {
                                                 .getMediaType().toString() : null);
                     }
 
+                    /**
+                     * {@inheritDoc}
+                     */                    
                     @Override
                     public boolean isRepeatable() {
                         return !entity.isTransient();
                     }
 
+                    /**
+                     * {@inheritDoc}
+                     */                    
                     @Override
                     public boolean isStreaming() {
                         return (entity.getSize() == Representation.UNKNOWN_SIZE);
                     }
 
+                    /**
+                     * {@inheritDoc}
+                     */                    
                     @Override
                     public void writeTo(OutputStream os) throws IOException {
                         entity.write(os);
@@ -343,9 +387,11 @@ public class HttpMethodCall extends ClientCall {
         return result;
     }
 
+   /**
+    * {@inheritDoc}
+    */    
     @Override
-    public void sendRequest(Request request, Response response, Uniform callback)
-            throws Exception {
+    public void sendRequest(Request request, Response response, Uniform callback) throws Exception {
         sendRequest(request);
 
         if (request.getOnSent() != null) {

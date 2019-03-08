@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017-2018 Centre National d'Etudes Spatiales (CNES).
+ * Copyright (C) 2017-2019 Centre National d'Etudes Spatiales (CNES).
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -226,7 +226,7 @@ public final class DoiMdsApplication extends AbstractApplication {
         // Router
         methodAuth.setNext(createRouter());
 
-        Filter filter = new SecurityPostProcessingFilter(getContext(), challAuth);
+        final Filter filter = new SecurityPostProcessingFilter(getContext(), challAuth);
         return LOG.traceExit(filter);
     }
 
@@ -292,6 +292,7 @@ public final class DoiMdsApplication extends AbstractApplication {
      * @return Authenticator based on a challenge scheme
      */
     @Requirement(reqId = Requirement.DOI_AUTH_010, reqName = Requirement.DOI_AUTH_010_NAME)
+    @Override
     protected ChallengeAuthenticator createAuthenticator() {
         LOG.traceEntry();
         final ChallengeAuthenticator guard = new ChallengeAuthenticator(
@@ -527,11 +528,16 @@ public final class DoiMdsApplication extends AbstractApplication {
         DATACITE_PROBLEM(Status.SERVER_ERROR_INTERNAL,
                 "Interface problem between Datacite and DOI-Server");
 
+        /**
+         * Message status.
+         */
         private final Status status;
+        /**
+         * Short message.
+         */
         private final String shortMessage;
 
-        API_MDS(final Status status,
-                final String shortMessage) {
+        API_MDS(final Status status, final String shortMessage) {
             this.status = status;
             this.shortMessage = shortMessage;
         }
@@ -569,8 +575,7 @@ public final class DoiMdsApplication extends AbstractApplication {
          * @param context context
          * @param next gard
          */
-        public SecurityPostProcessingFilter(final Context context,
-                final Restlet next) {
+        public SecurityPostProcessingFilter(final Context context, final Restlet next) {
             super(context, next);
         }
 
@@ -581,8 +586,7 @@ public final class DoiMdsApplication extends AbstractApplication {
          * @param response response
          */
         @Override
-        protected void afterHandle(final Request request,
-                final Response response) {
+        protected void afterHandle(final Request request, final Response response) {
             final Status status = response.getStatus();
             final String reason = status.getReasonPhrase();
             if (status.getCode() == Status.CLIENT_ERROR_UNAUTHORIZED.getCode()

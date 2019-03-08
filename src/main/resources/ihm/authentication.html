@@ -1,237 +1,240 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>Authentification</title>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <head>
+        <title>Authentication</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-		<!-- Bootstrap -->
-		<link href="css/bootstrap-min.css" rel="stylesheet">
+        <!-- Bootstrap -->
+        <link href="css/bootstrap-min.css" rel="stylesheet">
 
-		<style type="text/css">
-		      body {
-			padding-top: 40px;
-			padding-bottom: 40px;
-			background-color: #f5f5f5;
-		      }
+        <style type="text/css">
+            body {
+                padding-top: 40px;
+                padding-bottom: 40px;
+                background-color: #f5f5f5;
+            }
 
-		      .form-signin {
-			max-width: 300px;
-			padding: 19px 29px 29px;
-			margin: 0 auto 20px;
-			background-color: #fff;
-			border: 1px solid #e5e5e5;
-			-webkit-border-radius: 5px;
-			   -moz-border-radius: 5px;
-				border-radius: 5px;
-			-webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
-			   -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
-				box-shadow: 0 1px 2px rgba(0,0,0,.05);
-		      }
-		      .form-signin .form-signin-heading,
-		      .form-signin .checkbox {
-			margin-bottom: 10px;
-		      }
-		      .form-signin input[type="text"],
-		      .form-signin input[type="password"] {
-			font-size: 16px;
-			height: auto;
-			margin-bottom: 15px;
-			padding: 7px 9px;
-		      }
-		</style>
+            .form-signin {
+                max-width: 300px;
+                padding: 19px 29px 29px;
+                margin: 0 auto 20px;
+                background-color: #fff;
+                border: 1px solid #e5e5e5;
+                -webkit-border-radius: 5px;
+                -moz-border-radius: 5px;
+                border-radius: 5px;
+                -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+                -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+                box-shadow: 0 1px 2px rgba(0,0,0,.05);
+            }
+            .form-signin .form-signin-heading,
+            .form-signin .checkbox {
+                margin-bottom: 10px;
+            }
+            .form-signin input[type="text"],
+            .form-signin input[type="password"] {
+                font-size: 16px;
+                height: auto;
+                margin-bottom: 15px;
+                padding: 7px 9px;
+            }
+        </style>
 
-	</head>
-	<body>
-		<div class="container">
+    </head>
+    <body>
+        <div class="container">
 
-			<form class="form-signin">  
-				<h2 class="form-signin-heading" style="color:#005191">Connexion</h2>
-				<input id="user" type="text" class="input-block-level" placeholder="Nom utilisateur">
-				<input id="password" type="password" class="input-block-level" placeholder="Mot de passe">
-				<button type="button" class="btn btn-large btn-primary" onclick="authentication()">Se connecter</button>
-			</form>
-				
-			<hr>
-			<div id="footer"></div>
-		</div>
-  	</body>
-  	
-		<script src="js/jquery-min.js"></script>
-		<script src="js/bootstrap-min.js"></script>
-		<!-- Contain var 'config' as json -->
-		<script src="js/config.js"></script>
-		<script>
+            <form class="form-signin">  
+                <h2 class="form-signin-heading" style="color:#005191">Connexion</h2>
+                <input id="user" type="text" class="input-block-level" placeholder="Nom utilisateur">
+                <input id="password" type="password" class="input-block-level" placeholder="Mot de passe">
+                <button type="button" class="btn btn-large btn-primary" onclick="authentication()">Se connecter</button>
+            </form>
 
-		$(document).ready(function(){
-			$("#footer").load("footer.txt");
-			
-			if(sessionStorage.getItem("user") != null){
-				deleteToken();
-			}
-		});
+            <hr>
+            <div id="footer"></div>
+        </div>
 
-		var userId;
-		var userPwd;
-		var user; //userId + userPwd
-		
-		function authentication(){
-			userId = $("#user").val();
-			userPwd = $("#password").val();
-			user = userId +":"+userPwd;
-			
-			//isUserExist? save in session userName and admin(true or false)
-			$.ajax({
-			    type: "GET",
-			    url: "/admin/superusers/" + userId,
-			    headers: {
-			    	'Authorization': 'Basic ' + btoa(user)
-			    },
-			    crossDomain: true,
-				cache : false,
-			    error : function (XMLHttpRequest, textStatus, errorThrown){
-			       	var parser = new DOMParser();
-			    	var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
-			    	var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
-			    	alert("Erreur d'authentification.\n"+
-			    			"Erreur: " + XMLHttpRequest.status +", "+ XMLHttpRequest.statusText + "\n"
-			    	); 
-			    	console.log("Erreur d'authentification.\n" + errMessage); 
-			    }, 
-			    success: function(boo) {
-			    	console.log("Authentification réussie.");
-			    	console.log(boo);
-			    	if(boo == null){
-			    		alert("Utilisateur ou mot de passe incorrect.");
-			    	} else {
-			    		sessionStorage.setItem("user", userId);
-			    		if(boo){
-			    			sessionStorage.setItem("admin", "true");
-			    		} else {
-			    			sessionStorage.setItem("admin", "false");
-			    		}
-			    		
-						//get project associated to this user
-			    		getAssociatedProject();
-			    	}
-		    	}
-			});
-		}
-			
-		function getAssociatedProject(){
-			var admin = sessionStorage.getItem("admin");
-			$.ajax({
-			    type: "GET",
-			    url: "/admin/projects?user=" + userId,
-			    headers: {
-			    	'Authorization': 'Basic ' + btoa(user)
-			    },
-			    crossDomain: true,
-				cache : false,
-			    error : function (XMLHttpRequest, textStatus, errorThrown){
-			    	sessionStorage.clear();
-			       	var parser = new DOMParser();
-			    	var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
-			    	var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
-			    	alert("Erreur d'authentification.\n"+
-			    			"Erreur: " + XMLHttpRequest.status +", "+ XMLHttpRequest.statusText + "\n"
-			    	); 
-			    	console.log("Erreur d'authentification.\n" + errMessage); 
-			    }, 
-			    success: function(array) {
-			    	console.log("Projet(s) utilisateur récupéré(s).");
-			    	console.log(array);
-			    	
-			    	if(!isEmpty(array)){
-			    		sessionStorage.setItem("projects", JSON.stringify(array));
-						generateToken("doiCreation.html");
-			    	} else {
-			    		sessionStorage.setItem("projects", null);
-			    		if(admin == "true"){
-			    			generateToken("administration.html");
-			    		}else{
-			    			alert("L'utilisateur n'est rattaché à aucun projets.")
-			    			//user is not attached to any project nor is admin
-			    			sessionStorage.clear();
-			    		}
-			    	}
-		    	}
-			});
-		}
-		function isEmpty(object){
-			for(key in object){
-				return false;
-			}
-			return true;
-		}
-		
-		function generateToken(redirection){
-			var dataForm = {
-					"user":userId
-			}
-			$.ajax({
-			    type: "POST",
-			    url: "/admin",
-				headers: {
-			    	'Authorization': 'Basic ' + btoa(user)
-			    },
-				data: dataForm,
-			    crossDomain: true,
-				cache : false,
-			    error : function (XMLHttpRequest, textStatus, errorThrown){
-			    	sessionStorage.clear();
-			     	var parser = new DOMParser();
-			    	var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
-			    	var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
-			    	alert("Erreur d'authentification.\n"+
-			    			"Erreur: " + XMLHttpRequest.status +", "+ XMLHttpRequest.statusText + "\n"
-			    	); 
-			    	console.log("Erreur d'authentification.\n" + errMessage); 
-			    }, 
-			    success: function(token) {
-			    	console.log("Token généré.");
-			    	console.log(token);
-			    	
-		    		sessionStorage.setItem("token", token);
-		    		window.location.href = redirection;
-		    	}
-			});
-		}
-		
-		function deleteToken(){
-			token = sessionStorage.getItem("token");
-			
-			$.ajax({
-			    type: "DELETE",
-				url: "/admin",
-				headers: {
-	 				'Authorization': "Bearer " + sessionStorage.getItem("token")
-				},
-				data: {
-					"token":token
-				},
-			    crossDomain: true,
-				cache : false,
-			    error : function (XMLHttpRequest, textStatus, errorThrown){
-			    	//if the request fail then token won't be deleted. 
-			    	//tokens are still deleted periodicaly if expired.
-			    	sessionStorage.clear();
-			    	var parser = new DOMParser();
-			    	var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
-			    	var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
-			    	console.log("Erreur lors de la suppréssion du token.\n"+
-			    			"Erreur: " + XMLHttpRequest.status +", "+ XMLHttpRequest.statusText + "\n"
-			    	); 
-			    	console.log("Erreur lors de la suppréssion du token.\n" + errMessage); 
-			    }, 
-			    success: function() {
-			    	sessionStorage.clear();
-			    	console.log("Le token utilisateur a été supprimé.");
-		    	}
-			});
-		}
-		
 
-		</script>
+        <script src="js/jquery-min.js"></script>
+        <script src="js/bootstrap-min.js"></script>
+        <!-- Contain var 'config' as json -->
+        <script src="js/config.js"></script>
+        <script>
+
+                    $(document).ready(function () {
+                        $("#footer").load("footer.txt");
+
+                        if (sessionStorage.getItem("user") != null) {
+                            deleteToken();
+                        }
+                    });
+
+                    var userId;
+                    var userPwd;
+                    var user; //userId + userPwd
+
+                    function authentication() {
+                        userId = $("#user").val();
+                        userPwd = $("#password").val();
+                        user = userId + ":" + userPwd;
+
+                        //isUserExist? save in session userName and admin(true or false)
+                        $.ajax({
+                            type: "GET",
+                            url: "/admin/superusers/" + userId,
+                            headers: {
+                                'Authorization': 'Basic ' + btoa(user)
+                            },
+                            crossDomain: true,
+                            cache: false,
+                            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                var parser = new DOMParser();
+                                var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
+                                var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
+                                if(XMLHttpRequest.status === 404) {
+                                    alert("Utilisateur ou mot de passe incorrect.");
+                                } else {
+                                    alert("Erreur d'authentification.\n" +
+                                            "Erreur: " + XMLHttpRequest.status + ", " + XMLHttpRequest.statusText + "\n"
+                                            );                                    
+                                }
+
+                                console.log("Erreur d'authentification.\n" + errMessage);
+                            },
+                            success: function (boo) {
+                                console.log("Authentification réussie.");
+                                console.log(boo);
+                                sessionStorage.setItem("user", userId);
+                                if (boo) {
+                                    sessionStorage.setItem("admin", "true");
+                                } else {
+                                    sessionStorage.setItem("admin", "false");
+                                }
+
+                                //get project associated to this user
+                                getAssociatedProject();
+                                
+                            }
+                        });
+                    }
+
+                    function getAssociatedProject() {
+                        var admin = sessionStorage.getItem("admin");
+                        $.ajax({
+                            type: "GET",
+                            url: "/admin/projects?user=" + userId,
+                            headers: {
+                                'Authorization': 'Basic ' + btoa(user)
+                            },
+                            crossDomain: true,
+                            cache: false,
+                            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                sessionStorage.clear();
+                                var parser = new DOMParser();
+                                var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
+                                var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
+                                alert("Erreur d'authentification.\n" +
+                                        "Erreur: " + XMLHttpRequest.status + ", " + XMLHttpRequest.statusText + "\n"
+                                        );
+                                console.log("Erreur d'authentification.\n" + errMessage);
+                            },
+                            success: function (array) {
+                                console.log("Projet(s) utilisateur récupéré(s).");
+                                console.log(array);
+
+                                if (!isEmpty(array)) {
+                                    sessionStorage.setItem("projects", JSON.stringify(array));
+                                    generateToken("doiCreation.html");
+                                } else {
+                                    sessionStorage.setItem("projects", null);
+                                    if (admin === "true") {
+                                        generateToken("administration.html");
+                                    } else {
+                                        alert("L'utilisateur n'est rattaché à aucun projets.")
+                                        //user is not attached to any project nor is admin
+                                        sessionStorage.clear();
+                                    }
+                                }
+                            }
+                        });
+                    }
+                    function isEmpty(object) {
+                        for (key in object) {
+                            return false;
+                        }
+                        return true;
+                    }
+
+                    function generateToken(redirection) {
+                        var dataForm = {
+                            "user": userId
+                        }
+                        $.ajax({
+                            type: "POST",
+                            url: "/admin",
+                            headers: {
+                                'Authorization': 'Basic ' + btoa(user)
+                            },
+                            data: dataForm,
+                            crossDomain: true,
+                            cache: false,
+                            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                sessionStorage.clear();
+                                var parser = new DOMParser();
+                                var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
+                                var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
+                                alert("Erreur d'authentification.\n" +
+                                        "Erreur: " + XMLHttpRequest.status + ", " + XMLHttpRequest.statusText + "\n"
+                                        );
+                                console.log("Erreur d'authentification.\n" + errMessage);
+                            },
+                            success: function (token) {
+                                console.log("Token généré.");
+                                console.log(token);
+
+                                sessionStorage.setItem("token", token);
+                                window.location.href = redirection;
+                            }
+                        });
+                    }
+
+                    function deleteToken() {
+                        token = sessionStorage.getItem("token");
+
+                        $.ajax({
+                            type: "DELETE",
+                            url: "/admin",
+                            headers: {
+                                'Authorization': "Bearer " + sessionStorage.getItem("token")
+                            },
+                            data: {
+                                "token": token
+                            },
+                            crossDomain: true,
+                            cache: false,
+                            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                //if the request fail then token won't be deleted. 
+                                //tokens are still deleted periodicaly if expired.
+                                sessionStorage.clear();
+                                var parser = new DOMParser();
+                                var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
+                                var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
+                                console.log("Erreur lors de la suppréssion du token.\n" +
+                                        "Erreur: " + XMLHttpRequest.status + ", " + XMLHttpRequest.statusText + "\n"
+                                        );
+                                console.log("Erreur lors de la suppréssion du token.\n" + errMessage);
+                            },
+                            success: function () {
+                                sessionStorage.clear();
+                                console.log("Le token utilisateur a été supprimé.");
+                            }
+                        });
+                    }
+
+
+        </script>
+    </body>
 </html>

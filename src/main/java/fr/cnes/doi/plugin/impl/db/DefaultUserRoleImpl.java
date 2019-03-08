@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017-2018 Centre National d'Etudes Spatiales (CNES).
+ * Copyright (C) 2017-2019 Centre National d'Etudes Spatiales (CNES).
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,7 +26,6 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.restlet.Application;
-import org.restlet.security.MemoryRealm;
 import org.restlet.security.Role;
 import org.restlet.security.User;
 
@@ -36,7 +35,6 @@ import fr.cnes.doi.plugin.impl.db.persistence.impl.DOIDbDataAccessServiceImpl;
 import fr.cnes.doi.utils.DOIUser;
 import fr.cnes.doi.plugin.impl.db.persistence.service.DOIDbDataAccessService;
 import fr.cnes.doi.plugin.AbstractUserRolePluginHelper;
-import java.util.logging.Level;
 
 /**
  * Default implementation of the authentication plugin. This implementation
@@ -192,8 +190,8 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
     }
 
     @Override
-    public Boolean isAdmin(String username) {
-	Boolean isExist = null;
+    public boolean isAdmin(String username) {
+	boolean isExist = false;
 	try {
 	    isExist = das.isAdmin(username);
 	} catch (DOIDbException e) {
