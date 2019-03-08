@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2017-2019 Centre National d'Etudes Spatiales (CNES).
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3.0 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301  USA
+ */
 package fr.cnes.doi.utils;
 
 import java.util.ArrayList;
@@ -50,9 +68,9 @@ public class ManageUsers {
         LOGGER.exiting(CLASS_NAME, "Constructor");
     }
 
-    public List<String> getAllUsersFromProject(int projectId) {
+    public List<String> getAllUsersFromProject(final int projectId) {
         LOGGER.entering(CLASS_NAME, "getAllUsersFromProject", projectId);
-        List<String> users = new ArrayList<String>();
+        final List<String> users = new ArrayList<>();
         List<DOIUser> doiUsers = userDB.getUsersFromRole(projectId);
         for (DOIUser doiUser : doiUsers) {
             users.add(doiUser.getUsername());
@@ -60,7 +78,7 @@ public class ManageUsers {
         return users;
     }
 
-    public boolean addUserToProject(String username, int projectId) {
+    public boolean addUserToProject(final String username, final int projectId) {
         LOGGER.entering(CLASS_NAME, "addUserToProject", new Object[]{username, projectId});
         final boolean isAdded;
         if (this.isUserExist(username)) {
@@ -71,12 +89,12 @@ public class ManageUsers {
         return isAdded;
     }
 
-    public boolean deleteUserFromProject(int projectId, String username) {
+    public boolean deleteUserFromProject(final int projectId, final String username) {
         LOGGER.entering(CLASS_NAME, "deleteUserFromProject", new Object[]{projectId, username});
         return userDB.removeUserToRole(username, projectId);
     }
 
-    public boolean isUserExist(String userName) {
+    public boolean isUserExist(final String userName) {
         LOGGER.entering(CLASS_NAME, "isUserExist", userName);
         return userDB.isUserExist(userName);
     }
@@ -85,12 +103,12 @@ public class ManageUsers {
         return userDB.getUsers();
     }
 
-    public void removeDOIUser(String username) {
+    public void removeDOIUser(final String username) {
         userDB.removeDOIUser(username);
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public void addDOIUser(String username, boolean b, String email) {
+    public void addDOIUser(final String username, final boolean b, final String email) {
         try {
             userDB.addDOIUser(username, b, email);
         } catch (DOIDbException ex) {
@@ -102,7 +120,7 @@ public class ManageUsers {
         return userDB.getRealm();
     }
 
-    public List<DOIUser> getUsersFromRole(Integer projectID) {
+    public List<DOIUser> getUsersFromRole(final Integer projectID) {
         return userDB.getUsersFromRole(projectID);
     }
 

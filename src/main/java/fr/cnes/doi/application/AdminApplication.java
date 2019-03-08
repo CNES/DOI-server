@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017-2018 Centre National d'Etudes Spatiales (CNES).
+ * Copyright (C) 2017-2019 Centre National d'Etudes Spatiales (CNES).
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -394,6 +394,7 @@ public class AdminApplication extends AbstractApplication {
      * @return Authenticator based on a challenge scheme
      */
     @Requirement(reqId = Requirement.DOI_AUTH_010, reqName = Requirement.DOI_AUTH_010_NAME)
+    @Override
     protected ChallengeAuthenticator createAuthenticator() {
         LOG.traceEntry();
         final ChallengeAuthenticator guard = new ChallengeAuthenticator(
@@ -659,9 +660,6 @@ public class AdminApplication extends AbstractApplication {
         if (file.canRead()) {
             LOG.info("The website for DOI server is ready here {}", file.getPath());
             final Directory ihm = new Directory(getContext(), "file://" + file.getPath());
-
-            System.out.println(file.getPath() + "\n");
-
             ihm.setListingAllowed(false);
             ihm.setDeeplyAccessible(true);
             ihm.setIndexName("authentication");

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017-2018 Centre National d'Etudes Spatiales (CNES).
+ * Copyright (C) 2017-2019 Centre National d'Etudes Spatiales (CNES).
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -31,8 +31,10 @@ import org.restlet.security.Verifier;
 import fr.cnes.doi.ldap.impl.LDAPAccessServiceImpl;
 import fr.cnes.doi.ldap.service.ILDAPAcessService;
 import fr.cnes.doi.logging.business.JsonMessage;
+import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.utils.ManageUsers;
 import fr.cnes.doi.settings.DoiSettings;
+import java.nio.charset.Charset;
 
 /**
  * Security class for checking login/password.
@@ -106,7 +108,7 @@ public class LoginBasedVerifier implements Verifier {
 	final String decodedLogin = new String(Base64.getDecoder().decode(login));
 	final String[] userLogin = decodedLogin.split(":");
 
-	final boolean isLDAPSetted = !DoiSettings.getInstance().getString("ldapurl").equals("");
+	final boolean isLDAPSetted = !DoiSettings.getInstance().getString(Consts.LDAP_URL).equals("");
 
 	if (ManageUsers.getInstance().isUserExist(userLogin[0])) {
 	    // TODO if LDAP isn't setted don't check the pwd

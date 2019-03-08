@@ -1,7 +1,20 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2017-2019 Centre National d'Etudes Spatiales (CNES).
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3.0 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301  USA
  */
 package org.restlet.ext.httpclient4;
 
@@ -24,8 +37,8 @@ import org.restlet.engine.util.ReferenceUtils;
 import org.restlet.util.Series;
 
 /**
- *
- * @author malapert
+ * HttpClient configuration.
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class HttpClientHelper extends org.restlet.engine.connector.HttpClientHelper {
 
@@ -34,8 +47,15 @@ public class HttpClientHelper extends org.restlet.engine.connector.HttpClientHel
      */
     private static final Logger LOG = LogManager.getLogger(HttpClientHelper.class.getName());
 
+    /**
+     * Http client.
+     */
     private volatile HttpClient httpClient;
 
+    /**
+     * Constructor.
+     * @param client client
+     */
     public HttpClientHelper(Client client) {
         super(client);
         getProtocols().add(Protocol.HTTP);
@@ -137,11 +157,18 @@ public class HttpClientHelper extends org.restlet.engine.connector.HttpClientHel
         return Integer.parseInt(getHelpedParameters().getFirstValue(HttpClient.MAX_RETRY, "3"));
     }
 
+    /**
+     * Returns true if the SSL is disabled otherwise false.
+     * @return true if the SSL is disabled otherwise false
+     */
     public boolean isDisabledSSL() {
         return Boolean.parseBoolean(getHelpedParameters().getFirstValue(HttpClient.IS_DISABLED_SSL,
                 "false"));
     }
 
+   /**
+    * {@inheritDoc}
+    */    
     @Override
     public ClientCall create(Request request) {
         ClientCall result = null;
@@ -167,6 +194,10 @@ public class HttpClientHelper extends org.restlet.engine.connector.HttpClientHel
         return this.httpClient;
     }
 
+    /**
+     * Configures the http client.
+     * @param parameters parameters
+     */
     private void configure(final Series<Parameter> parameters) {
         final Map<String, String> config = new HashMap<>();
         config.put(HttpClient.CONNECTION_MAX_PER_ROUTE, String.valueOf(this.
@@ -189,12 +220,18 @@ public class HttpClientHelper extends org.restlet.engine.connector.HttpClientHel
         this.httpClient = HttpClientFactory.create(type, this.isDisabledSSL(), config);
     }
 
+   /**
+    * {@inheritDoc}
+    */    
     @Override
     public synchronized void start() throws Exception {
         final Series<Parameter> parameters = getHelpedParameters();
         configure(parameters);
     }
 
+   /**
+    * {@inheritDoc}
+    */    
     @Override
     public synchronized void stop() throws Exception {
         if (this.httpClient != null) {

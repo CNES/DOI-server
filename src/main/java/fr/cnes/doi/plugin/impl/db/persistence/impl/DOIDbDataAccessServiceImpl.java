@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2017-2019 Centre National d'Etudes Spatiales (CNES).
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3.0 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301  USA
+ */
 package fr.cnes.doi.plugin.impl.db.persistence.impl;
 
 import java.sql.Connection;
@@ -41,14 +59,15 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
         try {
             conn = dbConnector.getConnection();
             statement = conn.prepareStatement("SELECT username, admin, email FROM T_DOI_USERS");
-            ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                DOIUser doiuser = new DOIUser();
-                doiuser.setAdmin(rs.getBoolean("admin"));
-                doiuser.setUsername(rs.getString("username"));
-                doiuser.setEmail(rs.getString("email"));
-                users.add(doiuser);
-            }
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    DOIUser doiuser = new DOIUser();
+                    doiuser.setAdmin(rs.getBoolean("admin"));
+                    doiuser.setUsername(rs.getString("username"));
+                    doiuser.setEmail(rs.getString("email"));
+                    users.add(doiuser);
+                }
+            } 
         } catch (SQLException e) {
             LOGGER.error("An exception occured when calling getAllDOIusers", e);
             throw new DOIDbException("An exception occured when calling getAllDOIusers", e);
@@ -79,12 +98,13 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
         try {
             conn = dbConnector.getConnection();
             statement = conn.prepareStatement("SELECT suffix, projectname FROM T_DOI_PROJECT");
-            ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                DOIProject doiproject = new DOIProject();
-                doiproject.setSuffix(rs.getInt("suffix"));
-                doiproject.setProjectname(rs.getString("projectname"));
-                projects.add(doiproject);
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    DOIProject doiproject = new DOIProject();
+                    doiproject.setSuffix(rs.getInt("suffix"));
+                    doiproject.setProjectname(rs.getString("projectname"));
+                    projects.add(doiproject);
+                }
             }
         } catch (SQLException e) {
             LOGGER.error("An exception occured when calling getAllDOIProjects", e);
@@ -121,18 +141,19 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
             assignationsStatement = conn.prepareStatement(
                     "SELECT username, suffix FROM T_DOI_ASSIGNATIONS WHERE username=?");
             assignationsStatement.setString(1, username);
-            ResultSet assignations = assignationsStatement
-                    .executeQuery();
-            while (assignations.next()) {
-                projectsStatement = conn.prepareStatement(
-                        "SELECT suffix, projectname FROM T_DOI_PROJECT WHERE suffix=?");
-                projectsStatement.setInt(1, assignations.getInt("suffix"));
-                ResultSet rs = projectsStatement.executeQuery();
-                while (rs.next()) {
-                    DOIProject doiproject = new DOIProject();
-                    doiproject.setSuffix(rs.getInt("suffix"));
-                    doiproject.setProjectname(rs.getString("projectname"));
-                    projects.add(doiproject);
+            try (ResultSet assignations = assignationsStatement.executeQuery()) {
+                while (assignations.next()) {
+                    projectsStatement = conn.prepareStatement(
+                            "SELECT suffix, projectname FROM T_DOI_PROJECT WHERE suffix=?");
+                    projectsStatement.setInt(1, assignations.getInt("suffix"));
+                    try (ResultSet rs = projectsStatement.executeQuery()) {
+                        while (rs.next()) {
+                            DOIProject doiproject = new DOIProject();
+                            doiproject.setSuffix(rs.getInt("suffix"));
+                            doiproject.setProjectname(rs.getString("projectname"));
+                            projects.add(doiproject);
+                        }
+                    }
                 }
             }
         } catch (SQLException e) {
@@ -175,18 +196,19 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
             assignationsStatement = conn.prepareStatement(
                     "SELECT username, suffix FROM T_DOI_ASSIGNATIONS WHERE suffix=?");
             assignationsStatement.setInt(1, suffix);
-            ResultSet assignations = assignationsStatement.executeQuery();
-            while (assignations.next()) {
-                usersStatement = conn.prepareStatement(
-                        "SELECT username, admin, email FROM T_DOI_USERS WHERE username=?");
-                usersStatement.setString(1, assignations.getString("username"));
-                ResultSet rs = usersStatement.executeQuery();
-                while (rs.next()) {
-                    DOIUser doiuser = new DOIUser();
-                    doiuser.setUsername(rs.getString("username"));
-                    doiuser.setAdmin(rs.getBoolean("admin"));
-                    doiuser.setEmail(rs.getString("email"));
-                    users.add(doiuser);
+            try (ResultSet assignations = assignationsStatement.executeQuery()) {
+                while (assignations.next()) {
+                    usersStatement = conn.prepareStatement(
+                            "SELECT username, admin, email FROM T_DOI_USERS WHERE username=?");
+                    usersStatement.setString(1, assignations.getString("username"));
+                    ResultSet rs = usersStatement.executeQuery();
+                    while (rs.next()) {
+                        DOIUser doiuser = new DOIUser();
+                        doiuser.setUsername(rs.getString("username"));
+                        doiuser.setAdmin(rs.getBoolean("admin"));
+                        doiuser.setEmail(rs.getString("email"));
+                        users.add(doiuser);
+                    }
                 }
             }
         } catch (SQLException e) {
@@ -293,11 +315,17 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
             userStatement = conn.prepareStatement(
                     "SELECT username, admin FROM T_DOI_USERS WHERE username=?");
             userStatement.setString(1, username);
-            Boolean userExist = userStatement.executeQuery().next();
+            Boolean userExist;
+            try (ResultSet resultSet = userStatement.executeQuery()) {
+                userExist = resultSet.next();
+            }
             projectStatement = conn.prepareStatement(
                     "SELECT suffix, projectname FROM T_DOI_PROJECT WHERE suffix=?");
             projectStatement.setInt(1, suffix);
-            Boolean projectExist = projectStatement.executeQuery().next();
+            Boolean projectExist;
+            try (ResultSet resultSet = projectStatement.executeQuery()) {
+                projectExist = resultSet.next();
+            }
             if (!userExist || !projectExist) {
                 throw new DOIDbException(
                         "An exception occured when calling addDOIProjectToUser:" + "user " + username
@@ -389,7 +417,10 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
             userStatement = conn.prepareStatement(
                     "SELECT username, admin FROM T_DOI_USERS WHERE username=?");
             userStatement.setString(1, username);
-            Boolean userExist = userStatement.executeQuery().next();
+            Boolean userExist;
+            try (ResultSet resultSet = userStatement.executeQuery()) {
+                userExist = resultSet.next();
+            }
             if (userExist) {
                 updateStatement = conn.prepareStatement(
                         "UPDATE T_DOI_USERS SET admin = true WHERE username =?");
@@ -506,11 +537,11 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
             statement = conn.prepareStatement(
                     "SELECT suffix, projectname FROM T_DOI_PROJECT WHERE suffix=?");
             statement.setInt(1, suffix);
-            ResultSet rs = statement
-                    .executeQuery();
-            while (rs.next()) {
-                projectNameResult = rs.getString("projectname");
-                break;
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    projectNameResult = rs.getString("projectname");
+                    break;
+                }
             }
         } catch (SQLException e) {
             LOGGER.error("An exception occured when calling getDOIProjectName", e);
@@ -604,9 +635,10 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
         try {
             conn = dbConnector.getConnection();
             statement = conn.prepareStatement("SELECT token FROM T_DOI_TOKENS");
-            ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                tokens.add(rs.getString("token"));
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    tokens.add(rs.getString("token"));
+                }
             }
         } catch (SQLException e) {
             LOGGER.error("An exception occured when calling getToken", e);
@@ -757,35 +789,43 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
     }
 
     @Override
-    public Boolean isAdmin(String username) throws DOIDbException {
-        DOIUser user = getDoiUserFromDb(username);
+    public boolean isAdmin(String username) throws DOIDbException {
+        boolean isAdmin = false;
+        DOIUser user = getDoiUserFromDb(username);        
         if (user != null) {
-            return getDoiUserFromDb(username).getAdmin();
-        } else {
-            return null;
+            isAdmin = getDoiUserFromDb(username).getAdmin();
         }
+        return isAdmin;
     }
 
     private DOIUser getDoiUserFromDb(String username) throws DOIDbException {
         Connection conn = null;
+        PreparedStatement statement = null;
         DOIUser doiuser = null;
         try {
             conn = dbConnector.getConnection();
-            PreparedStatement statement = conn.prepareStatement(
+            statement = conn.prepareStatement(
                     "SELECT username, admin, email FROM T_DOI_USERS WHERE username=?");
             statement.setString(1, username);
-            ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                doiuser = new DOIUser();
-                doiuser.setAdmin(rs.getBoolean("admin"));
-                doiuser.setUsername(rs.getString("username"));
-                doiuser.setEmail(rs.getString("email"));
-                break;
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    doiuser = new DOIUser();
+                    doiuser.setAdmin(rs.getBoolean("admin"));
+                    doiuser.setUsername(rs.getString("username"));
+                    doiuser.setEmail(rs.getString("email"));
+                }
             }
         } catch (SQLException e) {
             LOGGER.error("An exception occured when calling getAllDOIusers", e);
             throw new DOIDbException("An exception occured when calling getAllDOIusers", e);
         } finally {
+            if(statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                    LOGGER.error("Unable to close the statement to database", ex);
+                }
+            }
             if (conn != null) {
                 try {
                     conn.close();

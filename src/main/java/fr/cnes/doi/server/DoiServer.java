@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017-2018 Centre National d'Etudes Spatiales (CNES).
+ * Copyright (C) 2017-2019 Centre National d'Etudes Spatiales (CNES).
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,20 +18,6 @@
  */
 package fr.cnes.doi.server;
 
-import fr.cnes.doi.application.AdminApplication;
-import fr.cnes.doi.application.DoiCrossCiteApplication;
-import fr.cnes.doi.application.DoiMdsApplication;
-import fr.cnes.doi.logging.api.DoiLogDataServer;
-import fr.cnes.doi.logging.business.JsonMessage;
-import fr.cnes.doi.logging.security.DoiSecurityLogFilter;
-import fr.cnes.doi.security.RoleAuthorizer;
-import fr.cnes.doi.settings.Consts;
-import fr.cnes.doi.settings.DoiSettings;
-import fr.cnes.doi.settings.EmailSettings;
-import fr.cnes.doi.settings.JettySettings;
-import fr.cnes.doi.settings.ProxySettings;
-import fr.cnes.doi.utils.Utils;
-import fr.cnes.doi.utils.spec.Requirement;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -65,7 +51,6 @@ import fr.cnes.doi.logging.api.DoiLogDataServer;
 import fr.cnes.doi.logging.business.JsonMessage;
 import fr.cnes.doi.logging.security.DoiSecurityLogFilter;
 import fr.cnes.doi.security.RoleAuthorizer;
-//import fr.cnes.doi.security.RoleAuthorizer;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.settings.EmailSettings;

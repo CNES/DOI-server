@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017-2018 Centre National d'Etudes Spatiales (CNES).
+ * Copyright (C) 2017-2019 Centre National d'Etudes Spatiales (CNES).
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,9 +20,7 @@ package fr.cnes.doi.client;
 
 import static fr.cnes.doi.client.ClientMDS.METADATA_RESOURCE;
 import fr.cnes.doi.exception.ClientMdsException;
-import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
-import fr.cnes.doi.utils.WebProxyResourceResolver;
 import fr.cnes.doi.utils.spec.Requirement;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -33,14 +31,12 @@ import java.util.Map;
 import java.util.logging.Level;
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.ValidationEvent;
 import javax.xml.bind.ValidationEventHandler;
 import javax.xml.bind.ValidationException;
-import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import org.datacite.schema.kernel_4.Resource;
 import org.datacite.schema.kernel_4.Resource.Identifier;
@@ -55,7 +51,6 @@ import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ResourceException;
-import org.xml.sax.SAXException;
 
 /**
  * Client to query Metadata store service at

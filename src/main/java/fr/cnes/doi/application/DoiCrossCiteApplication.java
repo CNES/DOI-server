@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017-2018 Centre National d'Etudes Spatiales (CNES).
+ * Copyright (C) 2017-2019 Centre National d'Etudes Spatiales (CNES).
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -173,6 +173,7 @@ public class DoiCrossCiteApplication extends AbstractApplication {
      *
      * @return the logger
      */
+    @Override
     public Logger getLog() {
         return LOG;
     }

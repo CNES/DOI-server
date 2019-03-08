@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Centre National d'Etudes Spatiales (CNES).
+ * Copyright (C) 2017-2019 Centre National d'Etudes Spatiales (CNES).
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,7 +25,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.restlet.data.ChallengeResponse;
 
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.UnitTest;

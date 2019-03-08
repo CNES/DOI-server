@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017-2018 Centre National d'Etudes Spatiales (CNES).
+ * Copyright (C) 2017-2019 Centre National d'Etudes Spatiales (CNES).
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,10 +20,7 @@ package fr.cnes.doi.services;
 
 import fr.cnes.doi.client.ClientLandingPage;
 import fr.cnes.doi.client.ClientSearchDataCite;
-import fr.cnes.doi.exception.DOIDbException;
-import fr.cnes.doi.plugin.impl.db.persistence.impl.DOIDbDataAccessServiceImpl;
 import fr.cnes.doi.utils.DOIUser;
-import fr.cnes.doi.plugin.impl.db.persistence.service.DOIDbDataAccessService;
 import fr.cnes.doi.settings.EmailSettings;
 import fr.cnes.doi.utils.ManageProjects;
 import fr.cnes.doi.utils.spec.Requirement;

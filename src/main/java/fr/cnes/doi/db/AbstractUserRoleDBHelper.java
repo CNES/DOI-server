@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017-2018 Centre National d'Etudes Spatiales (CNES).
+ * Copyright (C) 2017-2019 Centre National d'Etudes Spatiales (CNES).
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -138,8 +138,7 @@ public abstract class AbstractUserRoleDBHelper extends Observable {
 
     public abstract boolean isUserExist(String username);
 
-    // "Boolean" and not "boolean" , because the first one can be null
-    public abstract Boolean isAdmin(String username);
+    public abstract boolean isAdmin(String username);
 
     public abstract void removeDOIUser(String username);
 
