@@ -39,9 +39,7 @@ public class DOIUsersUpdate implements Runnable {
         LOG.info("executing task that updates database from ldap !");
         try {
             service.updateDoiServerDataBaseFromLdap();
-        } catch (LDAPAccessException e) {
-            LOG.error("error occured when calling DOIUsersUpdate job", e);
-        } catch (DOIDbException e) {
+        } catch (LDAPAccessException | DOIDbException e) {
             LOG.error("error occured when calling DOIUsersUpdate job", e);
         }
 

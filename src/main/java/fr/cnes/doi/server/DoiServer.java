@@ -133,16 +133,6 @@ public class DoiServer extends Component {
      */
     public static final String STATUS_URI = "/status";
 
-//    /**
-//     * Default port HTTP server.
-//     */
-//    public static final String DEFAULT_HTTP_PORT = "8182";
-
-    /**
-     * Default port for HTTPS server.
-     */
-    public static final String DEFAULT_HTTPS_PORT = "8183";
-
     /**
      * Number total connections.
      */
@@ -226,38 +216,54 @@ public class DoiServer extends Component {
     @Requirement(reqId = Requirement.DOI_ARCHI_010, reqName = Requirement.DOI_ARCHI_010_NAME)
     private void configureServer() {
         LOG.traceEntry();
-        initHttpServer();
-        initHttpsServer();
-        initClients();
-        initAttachApplication();
+        final boolean isHttpStarted = initHttpServer();
+        final boolean isHttpsStarted = initHttpsServer();
+        if (isHttpStarted || isHttpsStarted) {
+            initClients();
+            initAttachApplication();            
+        } else {
+            LOG.warn("No server is configured, please check your configuration file");
+        }
+
         LOG.traceExit();
     }
 
     /**
      * Inits the HTTP server.
+     * @return True when the Http server is configured to start.
      */
-    private void initHttpServer() {
+    private boolean initHttpServer() {
         LOG.traceEntry();
-        String httpPort = settings.getString(Consts.SERVER_HTTP_PORT);
-        if(httpPort != null && !httpPort.isEmpty()) {
-        	final Server serverHttp = startHttpServer(Integer.parseInt(httpPort));
-        	this.getServers().add(serverHttp);
-        	initJettyConfiguration(serverHttp);
+        final boolean isConfigured;
+        if (settings.hasValue(Consts.SERVER_HTTP_PORT)) {
+            String httpPort = settings.getString(Consts.SERVER_HTTP_PORT);
+            final Server serverHttp = startHttpServer(Integer.parseInt(httpPort));
+            this.getServers().add(serverHttp);
+            initJettyConfiguration(serverHttp);
+            isConfigured = true;
+        } else {
+            isConfigured = false;
         }
-        LOG.traceExit();
+        return LOG.traceExit(isConfigured);        
     }
 
     /**
      * Inits the HTTPS server.
+     * @return True when the Https server is configured to start.
      */
-    private void initHttpsServer() {
+    private boolean initHttpsServer() {
         LOG.traceEntry();
-        final Server serverHttps = startHttpsServer(
-                settings.getInt(Consts.SERVER_HTTPS_PORT, DEFAULT_HTTPS_PORT)
-        );
-        this.getServers().add(serverHttps);
-        initJettyConfiguration(serverHttps);
-        LOG.traceExit();
+        final boolean isConfigured;
+        if (settings.hasValue(Consts.SERVER_HTTPS_PORT)) {
+            String httpsPort = settings.getString(Consts.SERVER_HTTPS_PORT);
+            final Server serverHttps = startHttpsServer(Integer.parseInt(httpsPort));
+            this.getServers().add(serverHttps);
+            initJettyConfiguration(serverHttps);
+            isConfigured = true;
+        } else {
+            isConfigured = false;
+        }
+        return LOG.traceExit(isConfigured);
     }
 
     /**
