@@ -123,6 +123,7 @@ public class ClientSearchDataCite extends BaseClient {
     /**
      * Returns only the dois within the specified project from the search result.
      *
+     * @param idProject project ID
      * @return the search result
      */
     public List<String> getDois(String idProject) {

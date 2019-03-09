@@ -29,8 +29,8 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;enumeration value="Submitted"/&gt;
  *     &lt;enumeration value="Updated"/&gt;
  *     &lt;enumeration value="Valid"/&gt;
- *   &lt;/restriction>
- * &lt;/simpleType>
+ *   &lt;/restriction&gt;
+ * &lt;/simpleType&gt;
  * </pre>
  *
  */

@@ -45,8 +45,8 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;enumeration value="Sponsor"/&gt;
  *     &lt;enumeration value="Supervisor"/&gt;
  *     &lt;enumeration value="WorkPackageLeader"/&gt;
- *   &lt;/restriction>
- * &lt;/simpleType>
+ *   &lt;/restriction&gt;
+ * &lt;/simpleType&gt;
  * </pre>
  *
  */

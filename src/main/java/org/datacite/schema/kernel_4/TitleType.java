@@ -23,8 +23,8 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;enumeration value="Subtitle"/&gt;
  *     &lt;enumeration value="TranslatedTitle"/&gt;
  *     &lt;enumeration value="Other"/&gt;
- *   &lt;/restriction>
- * &lt;/simpleType>
+ *   &lt;/restriction&gt;
+ * &lt;/simpleType&gt;
  * </pre>
  *
  */

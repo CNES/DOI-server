@@ -23,8 +23,8 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;enumeration value="GRID"/&gt;
  *     &lt;enumeration value="Crossref Funder ID"/&gt;
  *     &lt;enumeration value="Other"/&gt;
- *   &lt;/restriction>
- * &lt;/simpleType>
+ *   &lt;/restriction&gt;
+ * &lt;/simpleType&gt;
  * </pre>
  *
  */

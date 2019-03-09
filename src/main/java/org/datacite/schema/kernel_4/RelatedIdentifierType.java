@@ -37,8 +37,8 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;enumeration value="UPC"/&gt;
  *     &lt;enumeration value="URL"/&gt;
  *     &lt;enumeration value="URN"/&gt;
- *   &lt;/restriction>
- * &lt;/simpleType>
+ *   &lt;/restriction&gt;
+ * &lt;/simpleType&gt;
  * </pre>
  *
  */

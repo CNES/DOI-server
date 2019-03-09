@@ -38,8 +38,8 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;enumeration value="Text"/&gt;
  *     &lt;enumeration value="Workflow"/&gt;
  *     &lt;enumeration value="Other"/&gt;
- *   &lt;/restriction>
- * &lt;/simpleType>
+ *   &lt;/restriction&gt;
+ * &lt;/simpleType&gt;
  * </pre>
  *
  */

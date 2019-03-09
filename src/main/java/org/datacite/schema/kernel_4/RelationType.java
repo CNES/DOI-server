@@ -50,8 +50,8 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;enumeration value="IsVersionOf"/&gt;
  *     &lt;enumeration value="Requires"/&gt;
  *     &lt;enumeration value="IsRequiredBy"/&gt;
- *   &lt;/restriction>
- * &lt;/simpleType>
+ *   &lt;/restriction&gt;
+ * &lt;/simpleType&gt;
  * </pre>
  *
  */
