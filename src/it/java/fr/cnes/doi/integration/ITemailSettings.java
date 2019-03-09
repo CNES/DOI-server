@@ -80,7 +80,7 @@ public class ITemailSettings {
     @Test
     public void testGetAuthUser() {
         String result = instance.getAuthUser();
-        assertNotNull(result);
+        assertTrue(result!=null && !result.isEmpty());
     }
 
     /**
@@ -89,7 +89,7 @@ public class ITemailSettings {
     @Test
     public void testGetAuthPwd() {
         String result = instance.getAuthPwd();
-        assertNotNull(result);
+        assertTrue(result!=null && !result.isEmpty());
     }
 
     /**
@@ -147,9 +147,8 @@ public class ITemailSettings {
      */
     @Test
     public void testGetSmtpURL() {
-        String expResult = "smtp://smtp-relay.gmail.com";
         String result = instance.getSmtpURL();
-        assertEquals(expResult, result);
+        assertTrue(result != null && !result.isEmpty());
     }
 
     /**

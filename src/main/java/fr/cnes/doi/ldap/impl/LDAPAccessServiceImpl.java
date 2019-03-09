@@ -59,7 +59,7 @@ public class LDAPAccessServiceImpl implements ILDAPAcessService {
 	try {
 	    context = getContext();
             if(context == null) {
-                throw new LDAPAccessException("Configuration problem wit the LAP", new Exception());
+                throw new LDAPAccessException("Configuration problem with the LDAP", new Exception());
             } else {
                 return LOGGER.traceExit(getAllDOIProjectMembers((InitialLdapContext) context));
             }	    

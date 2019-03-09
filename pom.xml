@@ -264,6 +264,7 @@
                 <version>2.21.0</version>
                 <configuration>
                     <groups>fr.cnes.doi.integration.IntegrationTest</groups>
+                    <skipTests>${skip.integration.tests}</skipTests>
                     <!--
                         Fix problem with the new JDK version : 
                         https://stackoverflow.com/questions/53010200/maven-surefire-could-not-find-forkedbooter-class                                            

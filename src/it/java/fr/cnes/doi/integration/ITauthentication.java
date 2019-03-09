@@ -59,8 +59,17 @@ import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.client.ClientMDS;
 import fr.cnes.doi.exception.ClientMdsException;
+import fr.cnes.doi.ldap.exceptions.LDAPAccessException;
+import fr.cnes.doi.ldap.impl.LDAPAccessServiceImpl;
+import fr.cnes.doi.ldap.impl.LdapDoidbIntegrationImpl;
+import fr.cnes.doi.ldap.persistence.LdapDoidbIntegration;
+import fr.cnes.doi.ldap.service.ILDAPAcessService;
+import fr.cnes.doi.ldap.util.LDAPUser;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
+import java.util.List;
+import org.junit.Assert;
+import static org.junit.Assert.assertTrue;
 
 /**
  *
@@ -255,5 +264,12 @@ public class ITauthentication {
         mockServer.verify(HttpRequest.request("/mds/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)
                 .withMethod("POST"), VerificationTimes.exactly(0));         
     }    
+    
+    @Test
+    public void testLDAPWithDoiGroup() throws LDAPAccessException {
+        ILDAPAcessService ldapaccessservice = new LDAPAccessServiceImpl();
+        List<LDAPUser> ldap = ldapaccessservice.getDOIProjectMembers();
+        assertTrue(!ldap.isEmpty());
+    }
 
 }
