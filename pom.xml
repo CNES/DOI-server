@@ -441,7 +441,7 @@
                     <groups>
                         <group>
                             <title>Core Packages</title>
-                            <packages>fr.cnes.doi.server:fr.cnes.doi.application*:fr.cnes.doi.resource*:fr.cnes.doi.security*:fr.cnes.doi.services</packages>
+                            <packages>fr.cnes.doi.server:fr.cnes.doi.application*:fr.cnes.doi.resource*:fr.cnes.doi.security*:fr.cnes.doi.services*:fr.cnes.doi.ldap*</packages>
                         </group>                                             
                         <group>
                             <title>Extension Packages</title>
@@ -449,7 +449,7 @@
                         </group>
                         <group>
                             <title>Utility Packages</title>
-                            <packages>fr.cnes.doi.settings:fr.cnes.doi.exception:fr.cnes.doi.logging*:fr.cnes.doi.client:org.datacite.*:fr.cnes.doi.utils</packages>
+                            <packages>fr.cnes.doi.settings:fr.cnes.doi.exception:fr.cnes.doi.logging*:fr.cnes.doi.client:org.datacite.*:fr.cnes.doi.utils:org.restlet.ext.httpclient</packages>
                         </group>                          
                     </groups>
                 </configuration>                

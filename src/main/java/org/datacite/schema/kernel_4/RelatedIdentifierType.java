@@ -15,7 +15,7 @@ import javax.xml.bind.annotation.XmlType;
  * <p>Java class for relatedIdentifierType.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
- * <p>
+ * <p>&nbsp;
  * <pre>
  * &lt;simpleType name="relatedIdentifierType"&gt;
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"&gt;

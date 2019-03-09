@@ -372,7 +372,7 @@ public class ObjectFactory {
      */
     @XmlElementDecl(namespace = "http://datacite.org/schema/kernel-4", name = "br", scope = Resource.Descriptions.Description.class)
     public JAXBElement<String> createResourceDescriptionsDescriptionBr(String value) {
-        return new JAXBElement<String>(_ResourceDescriptionsDescriptionBr_QNAME, String.class, Resource.Descriptions.Description.class, value);
+        return new JAXBElement<>(_ResourceDescriptionsDescriptionBr_QNAME, String.class, Resource.Descriptions.Description.class, value);
     }
 
 }
