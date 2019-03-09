@@ -17,39 +17,39 @@ import javax.xml.bind.annotation.XmlType;
  * <p>The following schema fragment specifies the expected content contained within this class.
  * <p>
  * <pre>
- * &lt;simpleType name="relationType">
- *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
- *     &lt;enumeration value="IsCitedBy"/>
- *     &lt;enumeration value="Cites"/>
- *     &lt;enumeration value="IsSupplementTo"/>
- *     &lt;enumeration value="IsSupplementedBy"/>
- *     &lt;enumeration value="IsContinuedBy"/>
- *     &lt;enumeration value="Continues"/>
- *     &lt;enumeration value="IsNewVersionOf"/>
- *     &lt;enumeration value="IsPreviousVersionOf"/>
- *     &lt;enumeration value="IsPartOf"/>
- *     &lt;enumeration value="HasPart"/>
- *     &lt;enumeration value="IsReferencedBy"/>
- *     &lt;enumeration value="References"/>
- *     &lt;enumeration value="IsDocumentedBy"/>
- *     &lt;enumeration value="Documents"/>
- *     &lt;enumeration value="IsCompiledBy"/>
- *     &lt;enumeration value="Compiles"/>
- *     &lt;enumeration value="IsVariantFormOf"/>
- *     &lt;enumeration value="IsOriginalFormOf"/>
- *     &lt;enumeration value="IsIdenticalTo"/>
- *     &lt;enumeration value="HasMetadata"/>
- *     &lt;enumeration value="IsMetadataFor"/>
- *     &lt;enumeration value="Reviews"/>
- *     &lt;enumeration value="IsReviewedBy"/>
- *     &lt;enumeration value="IsDerivedFrom"/>
- *     &lt;enumeration value="IsSourceOf"/>
- *     &lt;enumeration value="Describes"/>
- *     &lt;enumeration value="IsDescribedBy"/>
- *     &lt;enumeration value="HasVersion"/>
- *     &lt;enumeration value="IsVersionOf"/>
- *     &lt;enumeration value="Requires"/>
- *     &lt;enumeration value="IsRequiredBy"/>
+ * &lt;simpleType name="relationType"&gt;
+ *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"&gt;
+ *     &lt;enumeration value="IsCitedBy"/&gt;
+ *     &lt;enumeration value="Cites"/&gt;
+ *     &lt;enumeration value="IsSupplementTo"/&gt;
+ *     &lt;enumeration value="IsSupplementedBy"/&gt;
+ *     &lt;enumeration value="IsContinuedBy"/&gt;
+ *     &lt;enumeration value="Continues"/&gt;
+ *     &lt;enumeration value="IsNewVersionOf"/&gt;
+ *     &lt;enumeration value="IsPreviousVersionOf"/&gt;
+ *     &lt;enumeration value="IsPartOf"/&gt;
+ *     &lt;enumeration value="HasPart"/&gt;
+ *     &lt;enumeration value="IsReferencedBy"/&gt;
+ *     &lt;enumeration value="References"/&gt;
+ *     &lt;enumeration value="IsDocumentedBy"/&gt;
+ *     &lt;enumeration value="Documents"/&gt;
+ *     &lt;enumeration value="IsCompiledBy"/&gt;
+ *     &lt;enumeration value="Compiles"/&gt;
+ *     &lt;enumeration value="IsVariantFormOf"/&gt;
+ *     &lt;enumeration value="IsOriginalFormOf"/&gt;
+ *     &lt;enumeration value="IsIdenticalTo"/&gt;
+ *     &lt;enumeration value="HasMetadata"/&gt;
+ *     &lt;enumeration value="IsMetadataFor"/&gt;
+ *     &lt;enumeration value="Reviews"/&gt;
+ *     &lt;enumeration value="IsReviewedBy"/&gt;
+ *     &lt;enumeration value="IsDerivedFrom"/&gt;
+ *     &lt;enumeration value="IsSourceOf"/&gt;
+ *     &lt;enumeration value="Describes"/&gt;
+ *     &lt;enumeration value="IsDescribedBy"/&gt;
+ *     &lt;enumeration value="HasVersion"/&gt;
+ *     &lt;enumeration value="IsVersionOf"/&gt;
+ *     &lt;enumeration value="Requires"/&gt;
+ *     &lt;enumeration value="IsRequiredBy"/&gt;
  *   &lt;/restriction>
  * &lt;/simpleType>
  * </pre>

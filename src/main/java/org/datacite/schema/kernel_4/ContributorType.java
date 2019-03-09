@@ -22,29 +22,29 @@ import javax.xml.bind.annotation.XmlType;
  * <p>
  * 
  * <pre>
- * &lt;simpleType name="contributorType">
- *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
- *     &lt;enumeration value="ContactPerson"/>
- *     &lt;enumeration value="DataCollector"/>
- *     &lt;enumeration value="DataCurator"/>
- *     &lt;enumeration value="DataManager"/>
- *     &lt;enumeration value="Distributor"/>
- *     &lt;enumeration value="Editor"/>
- *     &lt;enumeration value="HostingInstitution"/>
- *     &lt;enumeration value="Other"/>
- *     &lt;enumeration value="Producer"/>
- *     &lt;enumeration value="ProjectLeader"/>
- *     &lt;enumeration value="ProjectManager"/>
- *     &lt;enumeration value="ProjectMember"/>
- *     &lt;enumeration value="RegistrationAgency"/>
- *     &lt;enumeration value="RegistrationAuthority"/>
- *     &lt;enumeration value="RelatedPerson"/>
- *     &lt;enumeration value="ResearchGroup"/>
- *     &lt;enumeration value="RightsHolder"/>
- *     &lt;enumeration value="Researcher"/>
- *     &lt;enumeration value="Sponsor"/>
- *     &lt;enumeration value="Supervisor"/>
- *     &lt;enumeration value="WorkPackageLeader"/>
+ * &lt;simpleType name="contributorType"&gt;
+ *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"&gt;
+ *     &lt;enumeration value="ContactPerson"/&gt;
+ *     &lt;enumeration value="DataCollector"/&gt;
+ *     &lt;enumeration value="DataCurator"/&gt;
+ *     &lt;enumeration value="DataManager"/&gt;
+ *     &lt;enumeration value="Distributor"/&gt;
+ *     &lt;enumeration value="Editor"/&gt;
+ *     &lt;enumeration value="HostingInstitution"/&gt;
+ *     &lt;enumeration value="Other"/&gt;
+ *     &lt;enumeration value="Producer"/&gt;
+ *     &lt;enumeration value="ProjectLeader"/&gt;
+ *     &lt;enumeration value="ProjectManager"/&gt;
+ *     &lt;enumeration value="ProjectMember"/&gt;
+ *     &lt;enumeration value="RegistrationAgency"/&gt;
+ *     &lt;enumeration value="RegistrationAuthority"/&gt;
+ *     &lt;enumeration value="RelatedPerson"/&gt;
+ *     &lt;enumeration value="ResearchGroup"/&gt;
+ *     &lt;enumeration value="RightsHolder"/&gt;
+ *     &lt;enumeration value="Researcher"/&gt;
+ *     &lt;enumeration value="Sponsor"/&gt;
+ *     &lt;enumeration value="Supervisor"/&gt;
+ *     &lt;enumeration value="WorkPackageLeader"/&gt;
  *   &lt;/restriction>
  * &lt;/simpleType>
  * </pre>

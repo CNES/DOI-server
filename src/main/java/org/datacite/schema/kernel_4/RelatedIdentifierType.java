@@ -19,24 +19,24 @@ import javax.xml.bind.annotation.XmlType;
  * <pre>
  * &lt;simpleType name="relatedIdentifierType">
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
- *     &lt;enumeration value="ARK"/>
- *     &lt;enumeration value="arXiv"/>
- *     &lt;enumeration value="bibcode"/>
- *     &lt;enumeration value="DOI"/>
- *     &lt;enumeration value="EAN13"/>
- *     &lt;enumeration value="EISSN"/>
- *     &lt;enumeration value="Handle"/>
- *     &lt;enumeration value="IGSN"/>
- *     &lt;enumeration value="ISBN"/>
- *     &lt;enumeration value="ISSN"/>
- *     &lt;enumeration value="ISTC"/>
- *     &lt;enumeration value="LISSN"/>
- *     &lt;enumeration value="LSID"/>
- *     &lt;enumeration value="PMID"/>
- *     &lt;enumeration value="PURL"/>
- *     &lt;enumeration value="UPC"/>
- *     &lt;enumeration value="URL"/>
- *     &lt;enumeration value="URN"/>
+ *     &lt;enumeration value="ARK"/&gt;
+ *     &lt;enumeration value="arXiv"/&gt;
+ *     &lt;enumeration value="bibcode"/&gt;
+ *     &lt;enumeration value="DOI"/&gt;
+ *     &lt;enumeration value="EAN13"/&gt;
+ *     &lt;enumeration value="EISSN"/&gt;
+ *     &lt;enumeration value="Handle"/&gt;
+ *     &lt;enumeration value="IGSN"/&gt;
+ *     &lt;enumeration value="ISBN"/&gt;
+ *     &lt;enumeration value="ISSN"/&gt;
+ *     &lt;enumeration value="ISTC"/&gt;
+ *     &lt;enumeration value="LISSN"/&gt;
+ *     &lt;enumeration value="LSID"/&gt;
+ *     &lt;enumeration value="PMID"/&gt;
+ *     &lt;enumeration value="PURL"/&gt;
+ *     &lt;enumeration value="UPC"/&gt;
+ *     &lt;enumeration value="URL"/&gt;
+ *     &lt;enumeration value="URN"/&gt;
  *   &lt;/restriction>
  * &lt;/simpleType>
  * </pre>
