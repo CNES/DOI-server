@@ -59,16 +59,16 @@ public class DOIUser {
      * Returns True when the user is administrator otherwise False.
      * @return True when the user is administrator otherwise False
      */
-    public Boolean getAdmin() {
+    public Boolean isAdmin() {
         return admin;
     }
 
     /**
      * Sets an administrator as admin.
-     * @param admin 
+     * @param isAdmin True when the user is administrator otherwise False
      */
-    public void setAdmin(final Boolean admin) {
-        this.admin = admin;
+    public void setAdmin(final Boolean isAdmin) {
+        this.admin = isAdmin;
     }
 
     /**
@@ -94,7 +94,7 @@ public class DOIUser {
      */
     public Boolean isEqualTo(DOIUser testuser) {
         return this.username.equals(testuser.getUsername())
-                && this.admin.equals(testuser.getAdmin())
+                && this.admin.equals(testuser.isAdmin())
                 && this.email.equals(testuser.getEmail());
     }
     

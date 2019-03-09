@@ -793,7 +793,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
         boolean isAdmin = false;
         DOIUser user = getDoiUserFromDb(username);        
         if (user != null) {
-            isAdmin = getDoiUserFromDb(username).getAdmin();
+            isAdmin = getDoiUserFromDb(username).isAdmin();
         }
         return isAdmin;
     }

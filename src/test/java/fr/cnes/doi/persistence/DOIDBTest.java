@@ -70,18 +70,18 @@ public class DOIDBTest {
     public void testDoiUsers() {
 	try {
 
-	    das.addDOIUser(testuser.getUsername(), testuser.getAdmin(), testuser.getEmail());
+	    das.addDOIUser(testuser.getUsername(), testuser.isAdmin(), testuser.getEmail());
 	    final List<DOIUser> userFromDb = das.getAllDOIusers();
 	    assertEquals(userFromDb.size(), 1);
 	    assertEquals(userFromDb.get(0).isEqualTo(testuser), true);
 
 	    // test setAdmin
 	    das.setAdmin(testuser.getUsername());
-	    assertEquals(das.getAllDOIusers().get(0).getAdmin(), true);
+	    assertEquals(das.getAllDOIusers().get(0).isAdmin(), true);
 
 	    // test unsetAdmin
 	    das.unsetAdmin(testuser.getUsername());
-	    assertEquals(das.getAllDOIusers().get(0).getAdmin(), false);
+	    assertEquals(das.getAllDOIusers().get(0).isAdmin(), false);
 
 	    // remove user from testing database
 	    das.removeDOIUser(testuser.getUsername());
@@ -113,7 +113,7 @@ public class DOIDBTest {
 	try {
 	    // should assign a user to a project when both exist in database
 	    das.addDOIProject(testProject.getSuffix(), testProject.getProjectname());
-	    das.addDOIUser(testuser.getUsername(), testuser.getAdmin(), testuser.getEmail());
+	    das.addDOIUser(testuser.getUsername(), testuser.isAdmin(), testuser.getEmail());
 	    das.addDOIProjectToUser(testuser.getUsername(), testProject.getSuffix());
 	    List<DOIProject> projectsFromDb = das.getAllDOIProjectsForUser(testuser.getUsername());
 	    List<DOIUser> userFromProject = das.getAllDOIUsersForProject(testProject.getSuffix());

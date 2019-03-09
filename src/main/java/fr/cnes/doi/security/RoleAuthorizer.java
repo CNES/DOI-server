@@ -111,7 +111,7 @@ public class RoleAuthorizer implements Observer {
             users.add(user);
 
             // Create list of admin
-            if (doiUser.getAdmin()) {
+            if (doiUser.isAdmin()) {
                 admins.add(user);
             }
         }

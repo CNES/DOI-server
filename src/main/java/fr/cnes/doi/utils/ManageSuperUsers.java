@@ -118,7 +118,7 @@ public class ManageSuperUsers {
 
         final List<DOIUser> users = userDB.getUsers();
         for (DOIUser doiUser : users) {
-            if (doiUser.getAdmin()) {
+            if (doiUser.isAdmin()) {
                 result.add(doiUser.getUsername());
             }
         }

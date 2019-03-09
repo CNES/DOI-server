@@ -29,10 +29,10 @@ import fr.cnes.doi.exception.DOIDbException;
 public class DOIUsersUpdate implements Runnable {
 
     // ldap and doidb integration service
-    private LdapDoidbIntegration service = new LdapDoidbIntegrationImpl();
+    private final LdapDoidbIntegration service = new LdapDoidbIntegrationImpl();
 
     // logger
-    private Logger LOG = LogManager.getLogger(DOIUsersUpdate.class.getName());
+    private final Logger LOG = LogManager.getLogger(DOIUsersUpdate.class.getName());
 
     @Override
     public void run() {

@@ -59,6 +59,12 @@ public final class InitDataBaseForTest {
      */
     public static void init() {
 
+        // Test LAPD User
+        final DOIUser testLdapUser = new DOIUser();
+        testLdapUser.setUsername("malapertjc");
+        testLdapUser.setAdmin(true);
+        testLdapUser.setEmail("doidbuser@mail.com");        
+        
         // Test User
         final DOIUser testuser = new DOIUser();
         testuser.setUsername("malapert");
@@ -91,14 +97,15 @@ public final class InitDataBaseForTest {
         try {
             close();
 
+            das.addDOIUser(testLdapUser.getUsername(), testLdapUser.isAdmin(), testLdapUser.getEmail());
             // add user
-            das.addDOIUser(testuser.getUsername(), testuser.getAdmin(), testuser.getEmail());
+            das.addDOIUser(testuser.getUsername(), testuser.isAdmin(), testuser.getEmail());
             // add admin
-            das.addDOIUser(admin.getUsername(), admin.getAdmin(), admin.getEmail());
+            das.addDOIUser(admin.getUsername(), admin.isAdmin(), admin.getEmail());
             // add norole
-            das.addDOIUser(norole.getUsername(), norole.getAdmin(), norole.getEmail());
+            das.addDOIUser(norole.getUsername(), norole.isAdmin(), norole.getEmail());
             // add doi_kerberos
-            das.addDOIUser(kerberos.getUsername(), kerberos.getAdmin(), kerberos.getEmail());
+            das.addDOIUser(kerberos.getUsername(), kerberos.isAdmin(), kerberos.getEmail());
 
             // add project
             das.addDOIProject(testProject.getSuffix(), testProject.getProjectname());
