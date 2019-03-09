@@ -45,6 +45,7 @@ public class Point {
     /**
      * Gets the value of the pointLongitude property.
      * 
+     * @return the longitude
      */
     public float getPointLongitude() {
         return pointLongitude;
@@ -53,6 +54,7 @@ public class Point {
     /**
      * Sets the value of the pointLongitude property.
      * 
+     * @param value the longitude
      */
     public void setPointLongitude(float value) {
         this.pointLongitude = value;
@@ -61,6 +63,7 @@ public class Point {
     /**
      * Gets the value of the pointLatitude property.
      * 
+     * @return the latitude
      */
     public float getPointLatitude() {
         return pointLatitude;
@@ -69,6 +72,7 @@ public class Point {
     /**
      * Sets the value of the pointLatitude property.
      * 
+     * @param value the latitude
      */
     public void setPointLatitude(float value) {
         this.pointLatitude = value;

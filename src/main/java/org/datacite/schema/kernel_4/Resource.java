@@ -972,6 +972,7 @@ public class Resource {
          * {@link Resource.AlternateIdentifiers.AlternateIdentifier }
          * 
          * 
+         * @return the alternateIdentifier
          */
         public List<Resource.AlternateIdentifiers.AlternateIdentifier> getAlternateIdentifier() {
             if (alternateIdentifier == null) {
@@ -1143,6 +1144,7 @@ public class Resource {
          * {@link Resource.Contributors.Contributor }
          * 
          * 
+         * @return the contributor
          */
         public List<Resource.Contributors.Contributor> getContributor() {
             if (contributor == null) {
@@ -1305,10 +1307,11 @@ public class Resource {
              * {@link Resource.Contributors.Contributor.NameIdentifier }
              * 
              * 
+             * @return the nameIdentifier
              */
             public List<Resource.Contributors.Contributor.NameIdentifier> getNameIdentifier() {
                 if (nameIdentifier == null) {
-                    nameIdentifier = new ArrayList<Resource.Contributors.Contributor.NameIdentifier>();
+                    nameIdentifier = new ArrayList<>();
                 }
                 return this.nameIdentifier;
             }
@@ -1334,10 +1337,11 @@ public class Resource {
              * {@link Object }
              * 
              * 
+             * @return the affiliation
              */
             public List<Object> getAffiliation() {
                 if (affiliation == null) {
-                    affiliation = new ArrayList<Object>();
+                    affiliation = new ArrayList<>();
                 }
                 return this.affiliation;
             }
@@ -1638,10 +1642,11 @@ public class Resource {
          * {@link Resource.Creators.Creator }
          * 
          * 
+         * @return the creator
          */
         public List<Resource.Creators.Creator> getCreator() {
             if (creator == null) {
-                creator = new ArrayList<Resource.Creators.Creator>();
+                creator = new ArrayList<>();
             }
             return this.creator;
         }
@@ -1797,10 +1802,11 @@ public class Resource {
              * {@link Resource.Creators.Creator.NameIdentifier }
              * 
              * 
+             * @return the nameIdentifier
              */
             public List<Resource.Creators.Creator.NameIdentifier> getNameIdentifier() {
                 if (nameIdentifier == null) {
-                    nameIdentifier = new ArrayList<Resource.Creators.Creator.NameIdentifier>();
+                    nameIdentifier = new ArrayList<>();
                 }
                 return this.nameIdentifier;
             }
@@ -1826,10 +1832,11 @@ public class Resource {
              * {@link Object }
              * 
              * 
+             * @return the affiliation
              */
             public List<Object> getAffiliation() {
                 if (affiliation == null) {
-                    affiliation = new ArrayList<Object>();
+                    affiliation = new ArrayList<>();
                 }
                 return this.affiliation;
             }
@@ -2083,10 +2090,11 @@ public class Resource {
          * {@link Resource.Dates.Date }
          * 
          * 
+         * @return the date
          */
         public List<Resource.Dates.Date> getDate() {
             if (date == null) {
-                date = new ArrayList<Resource.Dates.Date>();
+                date = new ArrayList<>();
             }
             return this.date;
         }
@@ -2234,7 +2242,7 @@ public class Resource {
      *     &lt;/restriction&gt;
      *   &lt;/complexContent&gt;
      * &lt;/complexType&gt;
-     * </pre&gt;
+     * </pre>
      * 
      * 
      */
@@ -2267,10 +2275,11 @@ public class Resource {
          * {@link Resource.Descriptions.Description }
          * 
          * 
+         * @return the description
          */
         public List<Resource.Descriptions.Description> getDescription() {
             if (description == null) {
-                description = new ArrayList<Resource.Descriptions.Description>();
+                description = new ArrayList<>();
             }
             return this.description;
         }
@@ -2339,10 +2348,11 @@ public class Resource {
              * {@link JAXBElement }{@code <}{@link String }{@code >}
              * 
              * 
+             * @return the content
              */
             public List<Serializable> getContent() {
                 if (content == null) {
-                    content = new ArrayList<Serializable>();
+                    content = new ArrayList<>();
                 }
                 return this.content;
             }
@@ -2448,6 +2458,7 @@ public class Resource {
          * {@link String }
          * 
          * 
+         * @return the format
          */
         public List<String> getFormat() {
             if (format == null) {
@@ -2546,10 +2557,11 @@ public class Resource {
          * {@link Resource.FundingReferences.FundingReference }
          * 
          * 
+         * @return the fundingReference
          */
         public List<Resource.FundingReferences.FundingReference> getFundingReference() {
             if (fundingReference == null) {
-                fundingReference = new ArrayList<Resource.FundingReferences.FundingReference>();
+                fundingReference = new ArrayList<>();
             }
             return this.fundingReference;
         }
@@ -2947,10 +2959,11 @@ public class Resource {
          * {@link Resource.GeoLocations.GeoLocation }
          * 
          * 
+         * @return the geoLocation
          */
         public List<Resource.GeoLocations.GeoLocation> getGeoLocation() {
             if (geoLocation == null) {
-                geoLocation = new ArrayList<Resource.GeoLocations.GeoLocation>();
+                geoLocation = new ArrayList<>();
             }
             return this.geoLocation;
         }
@@ -3027,10 +3040,11 @@ public class Resource {
              * {@link Resource.GeoLocations.GeoLocation.GeoLocationPolygon }
              * 
              * 
+             * @return the geoLocationPlaceOrGeoLocationPointOrGeoLocationBox
              */
             public List<Object> getGeoLocationPlaceOrGeoLocationPointOrGeoLocationBox() {
                 if (geoLocationPlaceOrGeoLocationPointOrGeoLocationBox == null) {
-                    geoLocationPlaceOrGeoLocationPointOrGeoLocationBox = new ArrayList<Object>();
+                    geoLocationPlaceOrGeoLocationPointOrGeoLocationBox = new ArrayList<>();
                 }
                 return this.geoLocationPlaceOrGeoLocationPointOrGeoLocationBox;
             }
@@ -3088,10 +3102,11 @@ public class Resource {
                  * {@link Point }
                  * 
                  * 
+                 * @return the polygon
                  */
                 public List<Point> getPolygonPoint() {
                     if (polygonPoint == null) {
-                        polygonPoint = new ArrayList<Point>();
+                        polygonPoint = new ArrayList<>();
                     }
                     return this.polygonPoint;
                 }
@@ -3250,10 +3265,11 @@ public class Resource {
          * {@link Resource.RelatedIdentifiers.RelatedIdentifier }
          * 
          * 
+         * @return the relatedIdentifier
          */
         public List<Resource.RelatedIdentifiers.RelatedIdentifier> getRelatedIdentifier() {
             if (relatedIdentifier == null) {
-                relatedIdentifier = new ArrayList<Resource.RelatedIdentifiers.RelatedIdentifier>();
+                relatedIdentifier = new ArrayList<>();
             }
             return this.relatedIdentifier;
         }
@@ -3614,10 +3630,11 @@ public class Resource {
          * {@link Resource.RightsList.Rights }
          * 
          * 
+         * @return the rights
          */
         public List<Resource.RightsList.Rights> getRights() {
             if (rights == null) {
-                rights = new ArrayList<Resource.RightsList.Rights>();
+                rights = new ArrayList<>();
             }
             return this.rights;
         }
@@ -3780,10 +3797,11 @@ public class Resource {
          * {@link String }
          * 
          * 
+         * @return the size
          */
         public List<String> getSize() {
             if (size == null) {
-                size = new ArrayList<String>();
+                size = new ArrayList<>();
             }
             return this.size;
         }
@@ -3850,12 +3868,13 @@ public class Resource {
          * {@link Resource.Subjects.Subject }
          * 
          * 
+         * @return the subject
          */
         public List<Resource.Subjects.Subject> getSubject() {
             if (subject == null) {
-                subject = new ArrayList<Resource.Subjects.Subject>();
+                subject = new ArrayList<>();
             }
-            return this.subject;
+            return subject;
         }
 
 
@@ -4082,10 +4101,11 @@ public class Resource {
          * {@link Resource.Titles.Title }
          * 
          * 
+         * @return the title
          */
         public List<Resource.Titles.Title> getTitle() {
             if (title == null) {
-                title = new ArrayList<Resource.Titles.Title>();
+                title = new ArrayList<>();
             }
             return this.title;
         }
