@@ -139,7 +139,7 @@ public class LDAPAccessServiceImpl implements ILDAPAcessService {
      * Search on LDAP all users which are in the group Consts.LDAP_PROJECT.
      * @param context context
      * @return all LDAP users which are in the group Consts.LDAP_PROJECT
-     * @throws LDAPAccessException 
+     * @throws LDAPAccessException Exception
      */
     public List<LDAPUser> getAllDOIProjectMembers(final InitialLdapContext context)
 	    throws LDAPAccessException {
@@ -169,7 +169,7 @@ public class LDAPAccessServiceImpl implements ILDAPAcessService {
      * @param context context
      * @param gidNumber LDAP group ID
      * @return all LDAP users which are in the group Consts.LDAP_PROJECT for a specific LDAP group
-     * @throws NamingException 
+     * @throws NamingException Exception
      */
     private List<LDAPUser> getLdapUsers(final DirContext context, final String gidNumber)
 	    throws NamingException {

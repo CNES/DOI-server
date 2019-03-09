@@ -71,9 +71,10 @@ public class UniqueProjectName {
     /**
      * Returns the projects associated to an user from the database.
      *
+     * @param userName user name
      * @return the projects
      */
-    public Map<String, Integer> getProjectsFromUser(String userName) {
+    public Map<String, Integer> getProjectsFromUser(final String userName) {
         return ManageProjects.getInstance().getProjectsFromUser(userName);
     }
 
@@ -100,9 +101,7 @@ public class UniqueProjectName {
      * @param maxNumber Number max to generate
      * @return the input that is converted to the base
      */
-    private int convert(final long input,
-            final String projectName,
-            final int maxNumber) {
+    private int convert(final long input, final String projectName, final int maxNumber) {
         LOGGER.entering(CLASS_NAME, "convert", new Object[]{input, projectName, maxNumber});
         int result = (int) input;
         do {
@@ -120,8 +119,7 @@ public class UniqueProjectName {
      * length cannot be up to 9)
      * @return the unique string
      */
-    public int getShortName(final String project,
-            final int length) {
+    public int getShortName(final String project, final int length) {
         LOGGER.entering(CLASS_NAME, "getShortName", new Object[]{project, length});
         final int suffixID;
         if (length > 9) {
@@ -153,8 +151,7 @@ public class UniqueProjectName {
      * @param projectName Project associated to the suffixID
      * @return true if the Id is OK, false otherwise
      */
-    private synchronized boolean isIdUnique(final int idToCheck,
-            final String projectName) {
+    private synchronized boolean isIdUnique(final int idToCheck, final String projectName) {
         LOGGER.entering(CLASS_NAME, "isIdUnique", new Object[]{idToCheck, projectName});
         final boolean result;
         if (ManageProjects.getInstance().isExistID(idToCheck)) {

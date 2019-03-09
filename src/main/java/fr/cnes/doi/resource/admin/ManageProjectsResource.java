@@ -81,7 +81,8 @@ public class ManageProjectsResource extends AbstractResource {
     /**
      * Rename the project from the project id sent in url.
      *
-     * @return the list of dois
+     * @param mediaForm form
+     * @return True when the project is renamed otherwise false
      */
     @Requirement(reqId = Requirement.DOI_SRV_140, reqName = Requirement.DOI_SRV_140_NAME)
     @Post

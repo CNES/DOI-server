@@ -118,15 +118,10 @@ public class AuthenticationResource extends AbstractResource {
         final TimeUnit unit = TokenSecurity.TimeUnit.getTimeUnitFrom(timeUnit);
 
         String token;
-        token = TokenSecurity.getInstance().generate(
-                userName,
-                unit,
-                amount
-        );
+        token = TokenSecurity.getInstance().generate(userName, unit, amount);
         boolean boo = this.tokenDB.addToken(token);
 
-        LOG.info("Token created {} during {} {}",
-                token, amount, unit.name());
+        LOG.info("Token created {} during {} {}", token, amount, unit.name());
         if (boo) {
             LOG.info("Token saved in data base.");
         } else {

@@ -89,7 +89,9 @@ public class ManageUsersResource extends AbstractResource {
 
     //TODO requirement 
     /**
-     *
+     * Adds user to project
+     * @param mediaForm form
+     * @return True when the user is added to the project otherwise False
      */
     @Requirement(reqId = Requirement.DOI_SRV_140, reqName = Requirement.DOI_SRV_140_NAME)
     @Post
@@ -103,6 +105,8 @@ public class ManageUsersResource extends AbstractResource {
 
     //TODO requirement
     /**
+     * Delete the project
+     * @return true when the project is deleted otherwise false
      */
     @Requirement(reqId = Requirement.DOI_SRV_140, reqName = Requirement.DOI_SRV_140_NAME)
     @Delete

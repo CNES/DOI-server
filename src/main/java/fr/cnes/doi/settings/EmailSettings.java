@@ -200,11 +200,11 @@ public final class EmailSettings {
      *
      * @param subject Email's subject
      * @param msg Email's message
+     * @param receiverEmail receiver
      * @return True when the message is sent
      */
-    public boolean sendMessage(final String subject,
-            final String msg, String receiverEmail) {
-        LOG.traceEntry("Parameters : {} and {}", subject, msg);
+    public boolean sendMessage(final String subject, final String msg, String receiverEmail) {
+        LOG.traceEntry("Parameters : {}, {} and {}", subject, msg, receiverEmail);
         boolean result;
         try {
             if (isConfigureForSendingEmail()) {
@@ -234,6 +234,7 @@ public final class EmailSettings {
      *
      * @param subject subject of the email
      * @param message message
+     * @param receiverEmail receiver
      * @return true when the message has been send otherwise false
      * @throws Exception when an error happens
      */
@@ -294,6 +295,7 @@ public final class EmailSettings {
      * @param startTls startTls
      * @param subject Email's subject
      * @param msg Email's message
+     * @param to receiver
      * @return True when the message is sent
      * @throws Exception - if an error happens when stopping the request
      */
