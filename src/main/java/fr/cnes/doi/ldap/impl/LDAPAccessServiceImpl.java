@@ -46,8 +46,7 @@ public class LDAPAccessServiceImpl implements ILDAPAcessService {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = LogManager
-	    .getLogger(LDAPAccessServiceImpl.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(LDAPAccessServiceImpl.class.getName());
     /**
      * Configuration file.
      */
@@ -55,24 +54,33 @@ public class LDAPAccessServiceImpl implements ILDAPAcessService {
 
     @Override
     public List<LDAPUser> getDOIProjectMembers() throws LDAPAccessException {
+        LOGGER.traceEntry();
 	DirContext context = null;
 	try {
 	    context = getContext();
-	    return getAllDOIProjectMembers((InitialLdapContext) context);
+            if(context == null) {
+                throw new LDAPAccessException("Configuration problem wit the LAP", new Exception());
+            } else {
+                return LOGGER.traceExit(getAllDOIProjectMembers((InitialLdapContext) context));
+            }	    
 	} finally {
 	    if (context != null) {
 		try {
 		    context.close();
 		} catch (NamingException e) {
-		    e.printStackTrace();
+                    LOGGER.warn("LDAPAccessImpl getDOIProjectMembers: Unable to close the context",e);
 		}
 	    }
 	}
     }
 
-    /* Methodes utilitaires */
+    /**
+     * Init LDAP context.
+     * @return the context or null when a LDAP configuration is missing
+     */
     private InitialLdapContext getContext() {
-	Hashtable<String, String> prop = new Hashtable<>();
+        LOGGER.traceEntry();
+	final Hashtable<String, String> prop = new Hashtable<>();
 	prop.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
 	prop.put(Context.PROVIDER_URL, conf.getString(Consts.LDAP_URL));
 	prop.put(Context.SECURITY_AUTHENTICATION, "simple");
@@ -91,13 +99,13 @@ public class LDAPAccessServiceImpl implements ILDAPAcessService {
 	} catch (NamingException e) {
 	    LOGGER.error("LDAPAccessImpl getContext: Unable to connect to Ldap", e);
 	}
-	return context;
+	return LOGGER.traceExit(context);
     }
 
     @Override
-    public boolean authenticateUser(String login, String password) {
+    public boolean authenticateUser(final String login, final String password) {
 	boolean result = false;
-	Hashtable<String, String> prop = new Hashtable<>();
+	final Hashtable<String, String> prop = new Hashtable<>();
 	prop.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
 	prop.put(Context.PROVIDER_URL, conf.getString(Consts.LDAP_URL));
 	prop.put(Context.SECURITY_AUTHENTICATION, "simple");
@@ -127,36 +135,52 @@ public class LDAPAccessServiceImpl implements ILDAPAcessService {
 
     }
 
-    public List<LDAPUser> getAllDOIProjectMembers(InitialLdapContext context)
+    /**
+     * Search on LDAP all users which are in the group Consts.LDAP_PROJECT.
+     * @param context context
+     * @return all LDAP users which are in the group Consts.LDAP_PROJECT
+     * @throws LDAPAccessException 
+     */
+    public List<LDAPUser> getAllDOIProjectMembers(final InitialLdapContext context)
 	    throws LDAPAccessException {
 	try {
-	    SearchControls constraints = new SearchControls();
+            LOGGER.traceEntry("Parameters : {}", context);
+	    final SearchControls constraints = new SearchControls();
 	    constraints.setSearchScope(SearchControls.SUBTREE_SCOPE);
-	    String[] attrIDs = { "gidNumber", };
-	    constraints.setReturningAttributes(attrIDs);
-	    NamingEnumeration answer = context.search("cn=groups,cn=accounts,dc=sis,dc=cnes,dc=fr",
+	    final String[] attrIDs = { "gidNumber", };
+	    constraints.setReturningAttributes(attrIDs);            
+	    final NamingEnumeration answer = context.search("cn=groups,cn=accounts,dc=sis,dc=cnes,dc=fr",
 		    "cn=" + conf.getString(Consts.LDAP_PROJECT), constraints);
-	    List<LDAPUser> members = new ArrayList<LDAPUser>();
+	    List<LDAPUser> members = new ArrayList<>();
 	    if (answer.hasMore()) {
 		NamingEnumeration<?> attrs = ((SearchResult) answer.next()).getAttributes()
 			.get("gidNumber").getAll();
-		members = getLdapUsers(context, attrs.next().toString());
+		members.addAll(getLdapUsers(context, attrs.next().toString()));
 	    }
-	    return members;
-	} catch (Exception e) {
+	    return LOGGER.traceExit(members);
+	} catch (NamingException e) {
+            LOGGER.error(e);
 	    throw new LDAPAccessException("", e);
 	}
     }
 
-    private List<LDAPUser> getLdapUsers(DirContext context, String gidNumber)
+    /**
+     * Search on LDAP all users which are in the group Consts.LDAP_PROJECT in a LDAP group
+     * @param context context
+     * @param gidNumber LDAP group ID
+     * @return all LDAP users which are in the group Consts.LDAP_PROJECT for a specific LDAP group
+     * @throws NamingException 
+     */
+    private List<LDAPUser> getLdapUsers(final DirContext context, final String gidNumber)
 	    throws NamingException {
-	List<LDAPUser> ldapuserList = new ArrayList<LDAPUser>();
-	SearchControls controls = new SearchControls();
+        LOGGER.traceEntry("Parameters : {}", context, gidNumber);
+	final List<LDAPUser> ldapuserList = new ArrayList<>();
+	final SearchControls controls = new SearchControls();
 	controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-	String[] attrIDs = { "uid", "mail", "cn" };
+	final String[] attrIDs = { "uid", "mail", "cn" };
 	controls.setReturningAttributes(attrIDs);
 
-	NamingEnumeration answer = context.search("cn=users,cn=accounts,dc=sis,dc=cnes,dc=fr",
+	final NamingEnumeration answer = context.search("cn=users,cn=accounts,dc=sis,dc=cnes,dc=fr",
 		"(|(gidNumber=" + gidNumber + ")(memberOf=cn=" + conf.getString(Consts.LDAP_PROJECT)
 			+ ",cn=groups,cn=accounts,dc=sis,dc=cnes,dc=fr))",
 		controls);
@@ -165,39 +189,45 @@ public class LDAPAccessServiceImpl implements ILDAPAcessService {
 		    .getAttributes().getAll();
 	    String fullname = null;
 	    String uid = null;
-	    String mail = null;
-	    LDAPUser ldapuser = new LDAPUser();
+	    String mail = null;	    
 	    while (attrbs.hasMore()) {
 		final Attribute att = attrbs.next();
 		final String attId = att.getID();
-		if ("cn".equals(attId)) {
-		    final NamingEnumeration<?> values = att.getAll();
-		    while (values.hasMoreElements()) {
-			fullname = values.next().toString();
-			break;
-		    }
-		} else if ("mail".equals(attId)) {
-		    final NamingEnumeration<?> values = att.getAll();
-		    while (values.hasMoreElements()) {
-			mail = values.next().toString();
-			break;
-		    }
-		} else if ("uid".equals(attId)) {
-		    final NamingEnumeration<?> values = att.getAll();
-		    while (values.hasMoreElements()) {
-			uid = values.next().toString();
-			break;
-		    }
-		}
-		if ((mail != null) && (uid != null)) {
-		    ldapuser = new LDAPUser();
-		    ldapuser.setFullname(fullname);
-		    ldapuser.setEmail(mail);
-		    ldapuser.setUsername(uid);
-		}
+		if (null != attId) switch (attId) {
+                    case "cn":{
+                        final NamingEnumeration<?> values = att.getAll();
+                        while (values.hasMoreElements()) {
+                            fullname = values.next().toString();
+                            break;
+                        }       break;
+                        }
+                    case "mail":{
+                        final NamingEnumeration<?> values = att.getAll();
+                        while (values.hasMoreElements()) {
+                            mail = values.next().toString();
+                            break;
+                        }       break;
+                        }
+                    case "uid":{
+                        final NamingEnumeration<?> values = att.getAll();
+                        while (values.hasMoreElements()) {
+                            uid = values.next().toString();
+                            break;
+                        }       break;
+                        }
+                    default:
+                        break;
+                }
 	    }
-	    ldapuserList.add(ldapuser);
+            if ((mail != null) && (uid != null)) {
+                final LDAPUser ldapuser = new LDAPUser();
+                ldapuser.setFullname(fullname);
+                ldapuser.setEmail(mail);
+                ldapuser.setUsername(uid);
+                ldapuserList.add(ldapuser);
+                LOGGER.debug("Create LDAP user : {}", ldapuser);
+            }            	    
 	}
-	return ldapuserList;
+	return LOGGER.traceExit(ldapuserList);
     }
 }

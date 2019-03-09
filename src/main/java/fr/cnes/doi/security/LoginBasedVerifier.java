@@ -34,7 +34,6 @@ import fr.cnes.doi.logging.business.JsonMessage;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.utils.ManageUsers;
 import fr.cnes.doi.settings.DoiSettings;
-import java.nio.charset.Charset;
 
 /**
  * Security class for checking login/password.
@@ -108,22 +107,31 @@ public class LoginBasedVerifier implements Verifier {
 	final String decodedLogin = new String(Base64.getDecoder().decode(login));
 	final String[] userLogin = decodedLogin.split(":");
 
-	final boolean isLDAPSetted = !DoiSettings.getInstance().getString(Consts.LDAP_URL).equals("");
+	final boolean isLDAPSetted = DoiSettings.getInstance().hasValue(Consts.LDAP_URL);
+        final boolean isProdContext = DoiSettings.getInstance().getString(Consts.CONTEXT_MODE).equals("PROD");
 
-	if (ManageUsers.getInstance().isUserExist(userLogin[0])) {
-	    // TODO if LDAP isn't setted don't check the pwd
-	    if (isLDAPSetted) {
-		if (!ldapService.authenticateUser(userLogin[0], userLogin[1])) {
-		    return LOG.traceExit(Verifier.RESULT_INVALID);
-		}
-	    }
-	    result = Verifier.RESULT_VALID;
-	    request.getClientInfo()
-		    .setUser(ManageUsers.getInstance().getRealm().findUser(userLogin[0]));
-
+	if (ManageUsers.getInstance().isUserExist(userLogin[0])) {            
+	    if (isLDAPSetted) { 
+                LOG.debug("LDAP is configured");
+                result = ldapService.authenticateUser(userLogin[0], userLogin[1]) 
+                        ? Verifier.RESULT_VALID : Verifier.RESULT_INVALID;
+	    } else if(isProdContext) {
+                LOG.warn("LDAP is not configured for PROD context, authentication is invalid");
+                result = Verifier.RESULT_INVALID;
+            } else {
+                LOG.warn("LDAP is not configured for PROD context, we skip authentication because"
+                        + "we do not have the infrastructure to test");                
+                result = Verifier.RESULT_VALID;
+            }
 	} else {
 	    result = Verifier.RESULT_INVALID;
 	}
+        if (result == Verifier.RESULT_VALID) {
+            LOG.info("{} is authenticated, set it in get client info {}", 
+                    userLogin[0], ManageUsers.getInstance().getRealm().findUser(userLogin[0]));
+	    request.getClientInfo()
+		    .setUser(ManageUsers.getInstance().getRealm().findUser(userLogin[0]));
+        }
 	return LOG.traceExit(result);
     }
 }
