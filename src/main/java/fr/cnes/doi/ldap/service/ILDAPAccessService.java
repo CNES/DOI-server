@@ -16,28 +16,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package fr.cnes.doi.plugin.impl.db.persistence.model;
+package fr.cnes.doi.ldap.service;
 
-public class DOIMetadata {
+import java.util.List;
 
-    private String urlLandingPage;
+import fr.cnes.doi.ldap.exceptions.LDAPAccessException;
+import fr.cnes.doi.ldap.util.LDAPUser;
 
-    private String email;
+public interface ILDAPAccessService {
 
-    public String getUrlLandingPage() {
-        return urlLandingPage;
-    }
+    public List<LDAPUser> getDOIProjectMembers() throws LDAPAccessException;
 
-    public void setUrlLandingPage(String urlLandingPage) {
-        this.urlLandingPage = urlLandingPage;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    public boolean authenticateUser(String login, String password);
 
 }

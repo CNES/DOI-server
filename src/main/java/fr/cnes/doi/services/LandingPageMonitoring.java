@@ -20,7 +20,7 @@ package fr.cnes.doi.services;
 
 import fr.cnes.doi.client.ClientLandingPage;
 import fr.cnes.doi.client.ClientSearchDataCite;
-import fr.cnes.doi.utils.DOIUser;
+import fr.cnes.doi.db.persistence.model.DOIUser;
 import fr.cnes.doi.settings.EmailSettings;
 import fr.cnes.doi.utils.ManageProjects;
 import fr.cnes.doi.utils.spec.Requirement;

@@ -18,6 +18,7 @@
  */
 package fr.cnes.doi.utils;
 
+import fr.cnes.doi.db.persistence.model.DOIUser;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

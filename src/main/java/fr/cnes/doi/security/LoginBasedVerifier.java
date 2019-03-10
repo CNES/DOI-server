@@ -18,6 +18,7 @@
  */
 package fr.cnes.doi.security;
 
+import fr.cnes.doi.db.DatabaseSingleton;
 import java.util.Base64;
 
 import org.apache.logging.log4j.LogManager;
@@ -28,12 +29,11 @@ import org.restlet.data.ChallengeResponse;
 import org.restlet.data.ChallengeScheme;
 import org.restlet.security.Verifier;
 
-import fr.cnes.doi.ldap.impl.LDAPAccessServiceImpl;
-import fr.cnes.doi.ldap.service.ILDAPAcessService;
 import fr.cnes.doi.logging.business.JsonMessage;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.utils.ManageUsers;
 import fr.cnes.doi.settings.DoiSettings;
+import fr.cnes.doi.ldap.service.ILDAPAccessService;
 
 /**
  * Security class for checking login/password.
@@ -50,13 +50,13 @@ public class LoginBasedVerifier implements Verifier {
     /**
      * LDAP access instance.
      */
-    private final ILDAPAcessService ldapService;
+    private final ILDAPAccessService ldapService;
 
     /**
      * Constructor.
      */
     public LoginBasedVerifier() {
-	this.ldapService = new LDAPAccessServiceImpl();
+	this.ldapService = DatabaseSingleton.getInstance().getLdapAccess();
     }
 
     /**

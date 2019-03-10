@@ -16,13 +16,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package fr.cnes.doi.plugin.impl.db.persistence.service;
+package fr.cnes.doi.db.persistence.service;
 
 import java.util.List;
 
 import fr.cnes.doi.exception.DOIDbException;
-import fr.cnes.doi.plugin.impl.db.persistence.model.DOIProject;
-import fr.cnes.doi.utils.DOIUser;
+import fr.cnes.doi.db.persistence.model.DOIProject;
+import fr.cnes.doi.db.persistence.model.DOIUser;
 
 /**
  * Interface between server and database
@@ -200,5 +200,12 @@ public interface DOIDbDataAccessService {
      * @throws fr.cnes.doi.exception.DOIDbException When an Database exception happens
      */
     public List<String> getTokens() throws DOIDbException;
+    
+    
+    /**
+     * Close and release all the Data access connections.
+     * @throws DOIDbException When an error occurs
+     */
+    public void close() throws DOIDbException;
 
 }

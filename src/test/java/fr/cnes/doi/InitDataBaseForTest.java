@@ -18,6 +18,7 @@
  */
 package fr.cnes.doi;
 
+import fr.cnes.doi.db.DatabaseSingleton;
 import static org.junit.Assert.fail;
 
 import org.slf4j.Logger;
@@ -25,10 +26,10 @@ import org.slf4j.LoggerFactory;
 
 import fr.cnes.doi.persistence.DOIDBTest;
 import fr.cnes.doi.exception.DOIDbException;
-import fr.cnes.doi.plugin.impl.db.persistence.impl.DOIDbDataAccessServiceImpl;
-import fr.cnes.doi.plugin.impl.db.persistence.model.DOIProject;
-import fr.cnes.doi.utils.DOIUser;
-import fr.cnes.doi.plugin.impl.db.persistence.service.DOIDbDataAccessService;
+import fr.cnes.doi.db.persistence.impl.DOIDbDataAccessServiceImpl;
+import fr.cnes.doi.db.persistence.model.DOIProject;
+import fr.cnes.doi.db.persistence.model.DOIUser;
+import fr.cnes.doi.db.persistence.service.DOIDbDataAccessService;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 
@@ -45,9 +46,7 @@ public final class InitDataBaseForTest {
     /**
      * Database access
      */
-    private static DOIDbDataAccessService das = new DOIDbDataAccessServiceImpl(
-	    InitDataBaseForTest.class.getClassLoader().getResource("config-test.properties")
-		    .getFile());
+    private static DOIDbDataAccessService das;
     
     /**
      * "Static" class cannot be instantiated
@@ -59,6 +58,8 @@ public final class InitDataBaseForTest {
      */
     public static void init() {
 
+        das = DatabaseSingleton.getInstance().getDatabaseAccess();
+        
         // Test LAPD User
         final DOIUser testLdapUser = new DOIUser();
         testLdapUser.setUsername("malapertjc");
@@ -111,6 +112,7 @@ public final class InitDataBaseForTest {
             das.addDOIProject(testProject.getSuffix(), testProject.getProjectname());
             // assign user to project
             das.addDOIProjectToUser(testuser.getUsername(), testProject.getSuffix());
+            das.addDOIProjectToUser(testLdapUser.getUsername(), testProject.getSuffix());
         } catch (DOIDbException e) {
             logger.error("testDoiUsers failed: unexpected exception: ", e);
             fail();
@@ -132,6 +134,7 @@ public final class InitDataBaseForTest {
             for (String token : das.getTokens()) {
                 das.deleteToken(token);
             }
+            
         } catch (DOIDbException e) {
             fail("Please create the database with the following informations:\nURL:" + DoiSettings.
                     getInstance().getString(Consts.DB_URL) + "\nUser: " + DoiSettings.getInstance().

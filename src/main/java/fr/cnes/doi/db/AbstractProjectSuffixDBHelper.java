@@ -18,7 +18,7 @@
  */
 package fr.cnes.doi.db;
 
-import fr.cnes.doi.utils.DOIUser;
+import fr.cnes.doi.db.persistence.model.DOIUser;
 import fr.cnes.doi.utils.spec.Requirement;
 import java.util.List;
 import java.util.Map;

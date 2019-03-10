@@ -39,7 +39,7 @@ import fr.cnes.doi.db.AbstractProjectSuffixDBHelper;
 import fr.cnes.doi.db.MyMemoryRealm;
 import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.logging.business.JsonMessage;
-import fr.cnes.doi.utils.DOIUser;
+import fr.cnes.doi.db.persistence.model.DOIUser;
 import fr.cnes.doi.utils.ManageUsers;
 import fr.cnes.doi.utils.UniqueProjectName;
 import fr.cnes.doi.utils.spec.Requirement;

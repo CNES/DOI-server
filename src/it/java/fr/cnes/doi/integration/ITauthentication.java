@@ -63,13 +63,13 @@ import fr.cnes.doi.ldap.exceptions.LDAPAccessException;
 import fr.cnes.doi.ldap.impl.LDAPAccessServiceImpl;
 import fr.cnes.doi.ldap.impl.LdapDoidbIntegrationImpl;
 import fr.cnes.doi.ldap.persistence.LdapDoidbIntegration;
-import fr.cnes.doi.ldap.service.ILDAPAcessService;
 import fr.cnes.doi.ldap.util.LDAPUser;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import java.util.List;
 import org.junit.Assert;
 import static org.junit.Assert.assertTrue;
+import fr.cnes.doi.ldap.service.ILDAPAccessService;
 
 /**
  *
@@ -267,9 +267,16 @@ public class ITauthentication {
     
     @Test
     public void testLDAPWithDoiGroup() throws LDAPAccessException {
-        ILDAPAcessService ldapaccessservice = new LDAPAccessServiceImpl();
+        ILDAPAccessService ldapaccessservice = new LDAPAccessServiceImpl();
         List<LDAPUser> ldap = ldapaccessservice.getDOIProjectMembers();
         assertTrue(!ldap.isEmpty());
     }
+    
+    @Test
+    public void testLDAPAuthentication() throws LDAPAccessException {
+        ILDAPAccessService ldapaccessservice = new LDAPAccessServiceImpl();
+        boolean isAuthenticated = ldapaccessservice.authenticateUser("malapertjc","Bremagne100378!!!");
+        assertTrue(isAuthenticated);
+    }    
 
 }

@@ -23,7 +23,7 @@ import java.util.Observable;
 
 
 import fr.cnes.doi.exception.DOIDbException;
-import fr.cnes.doi.utils.DOIUser;
+import fr.cnes.doi.db.persistence.model.DOIUser;
 import fr.cnes.doi.utils.spec.Requirement;
 
 /**

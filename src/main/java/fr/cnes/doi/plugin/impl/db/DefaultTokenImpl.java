@@ -18,6 +18,7 @@
  */
 package fr.cnes.doi.plugin.impl.db;
 
+import fr.cnes.doi.db.DatabaseSingleton;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -30,8 +31,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import fr.cnes.doi.exception.DOIDbException;
-import fr.cnes.doi.plugin.impl.db.persistence.impl.DOIDbDataAccessServiceImpl;
-import fr.cnes.doi.plugin.impl.db.persistence.service.DOIDbDataAccessService;
+import fr.cnes.doi.db.persistence.service.DOIDbDataAccessService;
 import fr.cnes.doi.plugin.AbstractTokenDBPluginHelper;
 import fr.cnes.doi.security.TokenSecurity;
 import io.jsonwebtoken.Claims;
@@ -56,7 +56,7 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
 
     private final String NAME = this.getClass().getName();
 
-    private final DOIDbDataAccessService das = new DOIDbDataAccessServiceImpl();
+    private final DOIDbDataAccessService das = DatabaseSingleton.getInstance().getDatabaseAccess();
     
     /**
      * Default Constructor of the token database

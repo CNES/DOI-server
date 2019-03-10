@@ -373,35 +373,45 @@ public final class Consts {
      */
     public static final String DB_PWD = "Starter.Database.Pwd";
 
-    /**
-     * Datasource Minimum opened connections
+    /**     
+     * Minimum number of connection object that are to be kept alive in the pool
      */
-    public static final String DB_MAX_IDLE_CONNECTIONS = "Starter.Database.MaxIdleConnections";
+    public static final String DB_MIN_IDLE_CONNECTIONS = "Starter.Database.MinIdleConnections";
+    
+    /**     
+     * Minimum number of connection object that are to be kept alive in the pool
+     */
+    public static final String DB_MAX_IDLE_CONNECTIONS = "Starter.Database.MaxIdleConnections";    
 
     /**
-     * Datasource Maximum opened connections
+     * Maximum number of active connections that can be allocated at the same time.
      */
     public static final String DB_MAX_ACTIVE_CONNECTIONS = "Starter.Database.MaxActiveConnections";
 
     /**
      * LDAP url
      */
-    public static final String LDAP_URL = "ldapurl";
+    public static final String LDAP_URL = "Starter.LDAP.url";
 
     /**
      * LDAP user
      */
-    public static final String LDAP_USER = "ldapuser";
+    public static final String LDAP_USER = "Starter.LDAP.user";
 
     /**
      * LDAP pwd
      */
-    public static final String LDAP_PWD = "ldappassword";
+    public static final String LDAP_PWD = "Starter.LDAP.password";
 
     /**
      * LDAP project
      */
-    public static final String LDAP_PROJECT = "ldapdoiproject";
+    public static final String LDAP_PROJECT = "Starter.LDAP.project";
+    
+    /**
+     * LDAP username who is the administrator of the DOI server
+     */
+    public static final String LDAP_DOI_Admin = "Starter.LDAP.user.admin";    
     
     /**
      * "Static" class cannot be instantiated

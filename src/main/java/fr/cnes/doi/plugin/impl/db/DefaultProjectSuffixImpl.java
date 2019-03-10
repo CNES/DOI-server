@@ -18,6 +18,7 @@
  */
 package fr.cnes.doi.plugin.impl.db;
 
+import fr.cnes.doi.db.DatabaseSingleton;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -27,11 +28,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import fr.cnes.doi.exception.DOIDbException;
-import fr.cnes.doi.plugin.impl.db.persistence.impl.DOIDbDataAccessServiceImpl;
-import fr.cnes.doi.plugin.impl.db.persistence.model.DOIProject;
-import fr.cnes.doi.plugin.impl.db.persistence.service.DOIDbDataAccessService;
+import fr.cnes.doi.db.persistence.model.DOIProject;
+import fr.cnes.doi.db.persistence.service.DOIDbDataAccessService;
 import fr.cnes.doi.plugin.AbstractProjectSuffixPluginHelper;
-import fr.cnes.doi.utils.DOIUser;
+import fr.cnes.doi.db.persistence.model.DOIUser;
 import java.util.ArrayList;
 
 /**
@@ -52,6 +52,7 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
     private static final String AUTHOR = "Jean-Christophe Malapert";
     private static final String LICENSE = "LGPLV3";
     private final String NAME = this.getClass().getName();
+    private final DOIDbDataAccessService das = DatabaseSingleton.getInstance().getDatabaseAccess();
 
     /**
      * Default constructor of the project suffix database
@@ -59,8 +60,6 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
     public DefaultProjectSuffixImpl() {
         super();
     }
-
-    private final DOIDbDataAccessService das = new DOIDbDataAccessServiceImpl();
 
     /**
      * Init the configuration with the configuration file. If the given file does not exist a new

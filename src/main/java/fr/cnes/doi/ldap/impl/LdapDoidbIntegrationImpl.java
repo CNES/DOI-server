@@ -18,17 +18,18 @@
  */
 package fr.cnes.doi.ldap.impl;
 
+import fr.cnes.doi.db.DatabaseSingleton;
 import java.util.List;
 
 import fr.cnes.doi.ldap.exceptions.LDAPAccessException;
 import fr.cnes.doi.ldap.persistence.LdapDoidbIntegration;
-import fr.cnes.doi.ldap.service.ILDAPAcessService;
 import fr.cnes.doi.ldap.util.LDAPUser;
 import fr.cnes.doi.exception.DOIDbException;
-import fr.cnes.doi.utils.DOIUser;
+import fr.cnes.doi.db.persistence.model.DOIUser;
 import fr.cnes.doi.utils.ManageUsers;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import fr.cnes.doi.ldap.service.ILDAPAccessService;
 
 public class LdapDoidbIntegrationImpl implements LdapDoidbIntegration {
 
@@ -37,7 +38,7 @@ public class LdapDoidbIntegrationImpl implements LdapDoidbIntegration {
      */
     private static final Logger LOG = LogManager.getLogger(LdapDoidbIntegrationImpl.class.getName());
 
-    ILDAPAcessService ldapaccessservice = new LDAPAccessServiceImpl();
+    ILDAPAccessService ldapaccessservice = DatabaseSingleton.getInstance().getLdapAccess();
 
     @Override
     public void updateDoiServerDataBaseFromLdap() throws LDAPAccessException, DOIDbException {

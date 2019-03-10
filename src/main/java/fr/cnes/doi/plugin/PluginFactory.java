@@ -93,16 +93,6 @@ public final class PluginFactory {
     }
 
     /**
-     * Returns the concrete implementation of the DOI db.
-     *
-     * @return the plugin
-     */
-    public static AbstractDoiDBPluginHelper getDoi() {
-	final String implClassName = PLUGINS_IMPL.get(Consts.PLUGIN_DOI);
-	return (AbstractDoiDBPluginHelper) buildObject(implClassName);
-    }
-
-    /**
      * instantiates the plugin.
      *
      * @param aClassName
