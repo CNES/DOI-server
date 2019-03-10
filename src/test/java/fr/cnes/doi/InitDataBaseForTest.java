@@ -94,6 +94,10 @@ public final class InitDataBaseForTest {
         final DOIProject  testProject = new DOIProject();
         testProject.setProjectname("CFOSAT");
         testProject.setSuffix(828606);
+        
+        final DOIProject  testProject2 = new DOIProject();
+        testProject2.setProjectname("TestProj");
+        testProject2.setSuffix(100378);        
 
         try {
             close();
@@ -110,9 +114,11 @@ public final class InitDataBaseForTest {
 
             // add project
             das.addDOIProject(testProject.getSuffix(), testProject.getProjectname());
+            das.addDOIProject(testProject2.getSuffix(), testProject2.getProjectname());
             // assign user to project
             das.addDOIProjectToUser(testuser.getUsername(), testProject.getSuffix());
             das.addDOIProjectToUser(testLdapUser.getUsername(), testProject.getSuffix());
+            das.addDOIProjectToUser(testLdapUser.getUsername(), testProject2.getSuffix());            
         } catch (DOIDbException e) {
             logger.error("testDoiUsers failed: unexpected exception: ", e);
             fail();
