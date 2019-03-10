@@ -261,13 +261,16 @@ public class ITperformance {
         @Override
         public void run() {
             
+            final String userAdmin = DoiSettings.getInstance().getString(Consts.LDAP_DOI_Admin);
+            final String password = System.getProperty("doi-admin-pwd");
+            
             Form doiForm = new Form();
             doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b"));
             doiForm.add(new Parameter(DoisResource.URL_PARAMETER, "http://www.cnes.fr"));
 
             String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);
             ClientResource client = new ClientResource("http://localhost:" + port + DOIS_SERVICE);
-            client.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "malapert", "pwd"));
+            client.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, userAdmin, password));
             final String RESTLET_HTTP_HEADERS = "org.restlet.http.headers";
 
             Map<String, Object> reqAttribs = client.getRequestAttributes();
@@ -295,7 +298,7 @@ public class ITperformance {
 
             client = new ClientResource("http://localhost:" + port + METADATA_SERVICE);
             client.setNext(cl);
-            client.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "malapert", "pwd"));
+            client.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, userAdmin, password));
             reqAttribs = client.getRequestAttributes();
             headers = (Series) reqAttribs.get(RESTLET_HTTP_HEADERS);
             if (headers == null) {

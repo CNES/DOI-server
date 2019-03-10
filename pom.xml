@@ -16,12 +16,13 @@
              <id>inject-doiserver-pwd</id>
              <properties>
                 <doiserver-pwd>myPassword</doiserver-pwd>
+                <doi-admin-pwd>myPassword</doi-admin-pwd>
              </properties>
         </profile>
       </profiles>
 
      <activeProfiles>
-        <activeProfile>inject-doiserver-pwd</activeProfile>
+        <activeProfile>inject-doiserver-pwd</activeProfile>        
      </activeProfiles>
  </settings>
 -->
@@ -275,7 +276,10 @@
                             <name>listener</name>
                             <value>fr.cnes.doi.PrintTestRunnerListener</value>
                         </property>
-                    </properties>                                         
+                    </properties>  
+                    <systemPropertyVariables>
+                        <doi-admin-pwd>${doi-admin-pwd}</doi-admin-pwd>
+                    </systemPropertyVariables>                                       
                 </configuration>
                 <executions>
                     <execution>
