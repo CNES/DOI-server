@@ -66,11 +66,11 @@ public class ManageProjectsResource extends AbstractResource {
      */
     @Override
     protected void doInit() throws ResourceException {
-        super.doInit();
-        LOG.traceEntry();         	
-        setDescription("This resource handles deletion and renaming of a project");
+        super.doInit();        
 	final AdminApplication app = (AdminApplication) getApplication();
 	LOG = app.getLog();        
+        LOG.traceEntry();
+        setDescription("This resource handles deletion and renaming of a project");
 	this.suffixProject = getAttribute("suffixProject");
 	LOG.debug(this.suffixProject);
 
