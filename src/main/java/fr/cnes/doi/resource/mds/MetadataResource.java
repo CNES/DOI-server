@@ -25,11 +25,14 @@ import fr.cnes.doi.client.ClientMDS.DATACITE_API_RESPONSE;
 import fr.cnes.doi.exception.ClientMdsException;
 import fr.cnes.doi.exception.DoiServerException;
 import fr.cnes.doi.utils.spec.Requirement;
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.logging.Logger;
 import org.apache.logging.log4j.Level;
 import org.datacite.schema.kernel_4.Resource;
 import org.restlet.data.Method;
 import org.restlet.data.Status;
+import org.restlet.ext.jaxb.JaxbRepresentation;
 import org.restlet.ext.wadl.MethodInfo;
 import org.restlet.ext.wadl.ParameterStyle;
 import org.restlet.representation.Representation;
@@ -126,6 +129,9 @@ public class MetadataResource extends BaseMdsResource {
         try {
             setStatus(Status.SUCCESS_OK);            
             resource = this.getDoiApp().getClient().getMetadataAsObject(this.doiName);
+            JaxbRepresentation<Resource> result = new JaxbRepresentation<Resource>(resource);
+            result.setFormattedOutput(true);   
+            System.out.println(result.getText());
         } catch (ClientMdsException ex) {
             if (ex.getStatus().getCode() == Status.CLIENT_ERROR_NOT_FOUND.getCode()) {
                 throw LOG.throwing(
@@ -145,6 +151,11 @@ public class MetadataResource extends BaseMdsResource {
                         new DoiServerException(getApplication(), API_MDS.DATACITE_PROBLEM, ex)
                 );
             }
+        } catch (IOException ex) {
+                throw LOG.throwing(
+                        Level.DEBUG,
+                        new DoiServerException(getApplication(), API_MDS.DATACITE_PROBLEM, ex)
+                );
         }
         return LOG.traceExit(resource);
     }
