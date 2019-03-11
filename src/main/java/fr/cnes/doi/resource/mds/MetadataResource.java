@@ -151,6 +151,11 @@ public class MetadataResource extends BaseMdsResource {
         return LOG.traceExit(resource);
     }
     
+    /**
+     * Returns the metadata as JSON.
+     * @return JSON representation.
+     * @throws IOException 
+     */
     @Get("json")
     public Resource getMetadataAsJson() throws IOException {
         final Representation rep = getMetadata();
