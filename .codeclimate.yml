@@ -1,0 +1,40 @@
+--- 
+engines:
+  csslint: 
+    enabled: true
+  duplication: 
+    config: 
+      languages: 
+        - java
+    enabled: true
+    checks:
+      Similar code:
+        enabled: true
+  eslint: 
+    enabled: true
+  golint: 
+    enabled: true
+  fixme:
+    enabled: true      
+  git-legal:
+    enabled: true  
+  rubocop: 
+    enabled: true
+exclude_paths: 
+  - ConTools/**/*
+  - LibJS/**/*
+  - installBDD/**/*
+  - scripts/**
+  - licenses-3rd/**/*
+  - shaders/**/*
+  - tests/**/*
+  - tutorials/**/*
+  - pom.xml
+  - src/it/**/*
+  - src/site/**/*
+  - src/test/**/* 
+  - src/main/javadoc/**/*
+  - src/main/resource/**/*  
+ratings: 
+  paths: 
+    - src/**
