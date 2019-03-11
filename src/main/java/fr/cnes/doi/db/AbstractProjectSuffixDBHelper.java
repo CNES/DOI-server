@@ -118,8 +118,18 @@ public abstract class AbstractProjectSuffixDBHelper extends Observable {
      */
     public abstract Map<String, Integer> getProjects();
 
-    public abstract Map<String, Integer> getProjectsFromUser(String userName);
+    /**
+     * Returns the projects related to a specific user.
+     * @param userName username
+     * @return the projected to an user
+     */
+    public abstract Map<String, Integer> getProjectsFromUser(final String userName);
 
-    public abstract List<DOIUser> getAllDOIUsersForProject(int doiSuffix);
+    /**
+     * Returns the users related to a project.
+     * @param doiSuffix project
+     * @return the users
+     */
+    public abstract List<DOIUser> getAllDOIUsersForProject(final int doiSuffix);
 
 }

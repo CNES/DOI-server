@@ -18,29 +18,60 @@
  */
 package fr.cnes.doi.db.model;
 
+/**
+ * Data model for a DOI project.
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
+ */
 public class DOIProject {
 
+    /**
+     * Suffix of the project name.
+     */
     private int suffix;
 
+    /**
+     * project name.
+     */
     private String projectname;
 
+    /**
+     * Returns the suffix.
+     * @return the suffix
+     */
     public int getSuffix() {
         return suffix;
     }
 
-    public void setSuffix(int suffix) {
+    /**
+     * Sets the suffix.
+     * @param suffix 
+     */
+    public void setSuffix(final int suffix) {
         this.suffix = suffix;
     }
 
+    /**
+     * Returns the project name.
+     * @return the project name
+     */
     public String getProjectname() {
         return projectname;
     }
 
-    public void setProjectname(String projectname) {
+    /**
+     * Sets the project name.
+     * @param projectname  the project name
+     */
+    public void setProjectname(final String projectname) {
         this.projectname = projectname;
     }
 
-    public Boolean isEqualTo(DOIProject doiProject) {
+    /**
+     * Tests a doiProject is equal to this one. 
+     * @param doiProject doi project
+     * @return True when there are equals otherwise False
+     */
+    public Boolean isEqualTo(final DOIProject doiProject) {
         return (this.suffix == doiProject.getSuffix())
                 && this.projectname.equals(doiProject.getProjectname());
     }

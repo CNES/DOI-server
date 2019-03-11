@@ -68,6 +68,9 @@ public class AuthenticationResource extends AbstractResource {
      */
     private volatile AbstractTokenDBHelper tokenDB;
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     protected void doInit() throws ResourceException {
         super.doInit();
@@ -116,13 +119,11 @@ public class AuthenticationResource extends AbstractResource {
         // unit = HOURS
         final int timeUnit = doiSetting.getInt(Consts.TOKEN_EXPIRATION_UNIT, "10");
         final TimeUnit unit = TokenSecurity.TimeUnit.getTimeUnitFrom(timeUnit);
-
-        String token;
-        token = TokenSecurity.getInstance().generate(userName, unit, amount);
-        boolean boo = this.tokenDB.addToken(token);
+        final String token = TokenSecurity.getInstance().generate(userName, unit, amount);
+        final boolean isTokenAdded = this.tokenDB.addToken(token);
 
         LOG.info("Token created {} during {} {}", token, amount, unit.name());
-        if (boo) {
+        if (isTokenAdded) {
             LOG.info("Token saved in data base.");
         } else {
             LOG.info("Token coud not be saved in data base.");

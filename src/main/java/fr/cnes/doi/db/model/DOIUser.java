@@ -92,7 +92,7 @@ public class DOIUser {
      * @param testuser DOIUser to test
      * @return True when testuser is the same à this DOIUser
      */
-    public Boolean isEqualTo(DOIUser testuser) {
+    public Boolean isEqualTo(final DOIUser testuser) {
         return this.username.equals(testuser.getUsername())
                 && this.admin.equals(testuser.isAdmin())
                 && this.email.equals(testuser.getEmail());

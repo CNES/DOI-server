@@ -38,8 +38,7 @@ public class DoiServerException extends ResourceException {
      * @param app MDS application
      * @param error MDS error
      */
-    public DoiServerException(final Application app,
-            API_MDS error) {
+    public DoiServerException(final Application app, final API_MDS error) {
         super(error.getStatus().getCode(), error.getShortMessage());
     }
 
@@ -50,9 +49,7 @@ public class DoiServerException extends ResourceException {
      * @param error MDS error
      * @param ex Exception
      */
-    public DoiServerException(final Application app,
-            API_MDS error,
-            Exception ex) {
+    public DoiServerException(final Application app, final API_MDS error, final Exception ex) {
         super(error.getStatus(), error.getShortMessage(), ex);
     }
 
@@ -63,9 +60,7 @@ public class DoiServerException extends ResourceException {
      * @param error MDS error
      * @param description Description
      */
-    public DoiServerException(final Application app,
-            API_MDS error,
-            final String description) {
+    public DoiServerException(final Application app, final API_MDS error, final String description){
         super(error.getStatus().getCode(), error.getShortMessage(), description);
     }
 
@@ -78,7 +73,7 @@ public class DoiServerException extends ResourceException {
      * @param cause Exception
      */
     public DoiServerException(final Application app,
-            API_MDS error,
+            final API_MDS error,
             final String description,
             final Throwable cause) {
         super(error.getStatus().getCode(), cause, error.getShortMessage(), description);
@@ -90,8 +85,7 @@ public class DoiServerException extends ResourceException {
      * @param app MDS application
      * @param error Datacite error
      */
-    public DoiServerException(final Application app,
-            DATACITE_API_RESPONSE error) {
+    public DoiServerException(final Application app, final DATACITE_API_RESPONSE error) {
         super(error.getStatus().getCode(), error.getShortMessage());
         if (DATACITE_API_RESPONSE.INTERNAL_SERVER_ERROR.getStatus().getCode() == error.getStatus().
                 getCode()) {
@@ -106,9 +100,9 @@ public class DoiServerException extends ResourceException {
      * @param error Datacite error
      * @param ex Exception
      */
-    public DoiServerException(final Application app,
-            DATACITE_API_RESPONSE error,
-            Exception ex) {
+    public DoiServerException(final Application app, 
+            final DATACITE_API_RESPONSE error,
+            final Exception ex) {
         super(error.getStatus(), error.getShortMessage(), ex);
         if (DATACITE_API_RESPONSE.INTERNAL_SERVER_ERROR.getStatus().getCode() == error.getStatus().
                 getCode()) {
@@ -123,8 +117,8 @@ public class DoiServerException extends ResourceException {
      * @param error Datacite error
      * @param description description
      */
-    public DoiServerException(final Application app,
-            DATACITE_API_RESPONSE error,
+    public DoiServerException(final Application app, 
+            final DATACITE_API_RESPONSE error,
             final String description) {
         super(error.getStatus().getCode(), error.getShortMessage(), description);
         if (DATACITE_API_RESPONSE.INTERNAL_SERVER_ERROR.getStatus().getCode() == error.getStatus().
@@ -142,7 +136,7 @@ public class DoiServerException extends ResourceException {
      * @param cause Exception
      */
     public DoiServerException(final Application app,
-            DATACITE_API_RESPONSE error,
+            final DATACITE_API_RESPONSE error,
             final String description,
             final Throwable cause) {
         super(error.getStatus().getCode(), cause, error.getShortMessage(), description);

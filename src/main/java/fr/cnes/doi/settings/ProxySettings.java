@@ -238,7 +238,7 @@ public final class ProxySettings {
      * Configure the proxy.
      */
     public void configureProxy() {
-        Type type = Type.valueOf(this.getProxyType());
+        final Type type = Type.valueOf(this.getProxyType());
         LOG.info("Starting with proxy : " + this.proxySet);
         if (this.proxySet) {
             switch (type) {

@@ -61,18 +61,21 @@ public class AllowerIP extends org.restlet.routing.Filter {
      */
     private final Set<String> allowedAddresses;
     
+    /**
+     * Service enabled/disabled.
+     */
     private final boolean isEnabled;
 
     /**
      * Constructor based on the context and a parameter to make enabled/disabled the service
      *
      * @param context context
-     * @param isEnabled True when the service is enabled otherwise False
+     * @param isEnabledIP True when the service is enabled otherwise False
      */
-    public AllowerIP(final Context context, final boolean isEnabled) {
+    public AllowerIP(final Context context, final boolean isEnabledIP) {
         super(context);
         LOG.traceEntry();
-        this.isEnabled = isEnabled;
+        this.isEnabled = isEnabledIP;
         this.allowedAddresses = new CopyOnWriteArraySet<>();
         this.allowedAddresses.add(LOCALHOST_IPV6);
         this.allowedAddresses.add(LOCALHOST_IPV4);

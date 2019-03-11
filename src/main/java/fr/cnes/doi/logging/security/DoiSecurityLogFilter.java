@@ -31,8 +31,8 @@ import org.restlet.routing.Filter;
 import org.restlet.security.Role;
 
 /**
- *
- * @author malapert
+ * Log filter for DOI security
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 @Requirement(reqId = Requirement.DOI_ARCHI_020, reqName = Requirement.DOI_ARCHI_020_NAME)
 public class DoiSecurityLogFilter extends Filter {

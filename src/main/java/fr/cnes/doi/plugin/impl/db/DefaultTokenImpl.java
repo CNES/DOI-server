@@ -44,18 +44,39 @@ import io.jsonwebtoken.Jws;
  */
 public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
 
+    /**
+     * Plugin description.
+     */
     private static final String DESCRIPTION = "Provides a pre-defined list of users and groups";
+    /**
+     * Plugin version.
+     */
     private static final String VERSION = "1.0.0";
+    /**
+     * Plugin owner.
+     */
     private static final String OWNER = "CNES";
+    /**
+     * Plugin author.
+     */
     private static final String AUTHOR = "Jean-Christophe Malapert";
+    /**
+     * Plugin license.
+     */
     private static final String LICENSE = "LGPLV3";
     /**
      * Logger.
      */
     private static final Logger LOG = LogManager.getLogger(DefaultTokenImpl.class.getName());
 
+    /**
+     * Name of the class.
+     */
     private final String NAME = this.getClass().getName();
 
+    /**
+     * Database access.
+     */
     private final DOIDbDataAccessService das = DatabaseSingleton.getInstance().getDatabaseAccess();
     
     /**
@@ -65,12 +86,18 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
         super();
     }
 
+    /**
+     * {@inheritDoc }      
+     */
     @Override
-    public void setConfiguration(Object configuration) {
+    public void setConfiguration(final Object configuration) {
     }
 
+    /**
+     * {@inheritDoc }      
+     */    
     @Override
-    public boolean addToken(String jwt) {
+    public boolean addToken(final String jwt) {
 
         boolean isAdded = false;
         try {
@@ -83,8 +110,11 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
         return isAdded;
     }
 
+    /**
+     * {@inheritDoc }      
+     */    
     @Override
-    public void deleteToken(String jwt) {
+    public void deleteToken(final String jwt) {
         try {
             das.deleteToken(jwt);
             LOG.info("token deleted : " + jwt);
@@ -93,40 +123,45 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
         }
     }
 
+    /**
+     * {@inheritDoc }      
+     */    
     @Override
-    public boolean isExist(String jwt) {
+    public boolean isExist(final String jwt) {
         boolean isTokenExist = false;
         try {
-            List<String> tokenList = das.getTokens();
+            final List<String> tokenList = das.getTokens();
             if (!tokenList.isEmpty()) {
-                for (String token : tokenList) {
+                for (final String token : tokenList) {
                     if (token.equals(jwt)) {
                         isTokenExist = true;
                     }
                 }
             }
-
         } catch (DOIDbException e) {
             LOG.fatal("The token " + jwt + "cannot access to token database", e);
         }
         return isTokenExist;
     }
 
+    /**
+     * {@inheritDoc }      
+     */     
     @Override
-    public boolean isExpired(String jwt) {
+    public boolean isExpired(final String jwt) {
         boolean isExpirated = true;
-        Jws<Claims> jws = TokenSecurity.getInstance().getTokenInformation(jwt);
+        final Jws<Claims> jws = TokenSecurity.getInstance().getTokenInformation(jwt);
 
         // Cannot get token information of an expired token...
         if (jws == null) {
             return isExpirated;
         }
 
-        String expirationDate = jws.getBody().getExpiration().toString();
+        final String expirationDate = jws.getBody().getExpiration().toString();
         try {
             // Precise "Locale.ENGLISH" otherwise unparsable exception occur for day in week and month
-            DateFormat dateFormat = new SimpleDateFormat(TokenSecurity.DATE_FORMAT, Locale.ENGLISH);
-            Date expDate = dateFormat.parse(expirationDate);
+            final DateFormat dateFormat = new SimpleDateFormat(TokenSecurity.DATE_FORMAT, Locale.ENGLISH);
+            final Date expDate = dateFormat.parse(expirationDate);
             isExpirated = new Date().after(expDate);
         } catch (ParseException ex) {
             LOG.fatal(ex);
@@ -135,41 +170,63 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
         return isExpirated;
     }
 
+    /**
+     * {@inheritDoc }      
+     */     
     @Override
     public List<String> getTokens() {
+        final List<String> tokens = new ArrayList<>();
         try {
-            return das.getTokens();
+            tokens.addAll(das.getTokens()) ;
         } catch (DOIDbException e) {
             LOG.fatal("Cannot retrieve the token list from database", e);
-            return new ArrayList<>();
         }
+        return tokens;
     }
 
+    /**
+     * {@inheritDoc }      
+     */     
     @Override
     public String getName() {
         return NAME;
     }
 
+    /**
+     * {@inheritDoc }      
+     */     
     @Override
     public String getDescription() {
         return DESCRIPTION;
     }
 
+    /**
+     * {@inheritDoc }      
+     */     
     @Override
     public String getVersion() {
         return VERSION;
     }
 
+    /**
+     * {@inheritDoc }      
+     */     
     @Override
     public String getAuthor() {
         return AUTHOR;
     }
 
+    /**
+     * {@inheritDoc }      
+     */    
     @Override
     public String getOwner() {
         return OWNER;
     }
 
+    /**
+     * {@inheritDoc }      
+     */    
     @Override
     public String getLicense() {
         return LICENSE;

@@ -58,6 +58,17 @@ import org.restlet.resource.ResourceException;
  */
 @Requirement(reqId = Requirement.DOI_INTER_010, reqName = Requirement.DOI_INTER_010_NAME)
 public class ClientMDS extends BaseClient {
+    
+    /**
+     * Selected test mode.
+     */
+    private final Parameter testMode;
+
+    /**
+     * Context.
+     */
+    private final Context context;
+    
 
     /**
      * Metadata store service endpoint {@value #DATA_CITE_URL}.
@@ -150,16 +161,6 @@ public class ClientMDS extends BaseClient {
                     + "0-9a-zA-Z\\-._+:/ in a DOI name");
         }
     }
-
-    /**
-     * Selected test mode.
-     */
-    private final Parameter testMode;
-
-    /**
-     * Context.
-     */
-    private final Context context;
 
     /**
      * Creates a client to handle DataCite server.
@@ -440,7 +441,6 @@ public class ClientMDS extends BaseClient {
      */
     public String createDoi(final Form form) throws ClientMdsException {
         try {
-            final String result;
             this.checkInputForm(form);
             final Reference url = createReference(DOI_RESOURCE);
             this.getLog().debug("POST {0}", url.toString());
@@ -921,11 +921,22 @@ public class ClientMDS extends BaseClient {
          */
         INTERNAL_SERVER_ERROR(Status.SERVER_ERROR_INTERNAL, "Internal server error");
 
+        /**
+         * HTTP status.
+         */
         private final Status status;
+        
+        /**
+         * message.
+         */
         private final String message;
 
-        DATACITE_API_RESPONSE(final Status status,
-                final String message) {
+        /**
+         * Creates enumeration
+         * @param status status
+         * @param message message
+         */
+        DATACITE_API_RESPONSE(final Status status, final String message) {
             this.status = status;
             this.message = message;
         }
@@ -957,9 +968,9 @@ public class ClientMDS extends BaseClient {
         public static String getMessageFromStatus(final Status statusToFind) {
             String result = "";
             final int codeToFind = statusToFind.getCode();
-            DATACITE_API_RESPONSE[] values = DATACITE_API_RESPONSE.values();
+            final DATACITE_API_RESPONSE[] values = DATACITE_API_RESPONSE.values();
             for (int i = 0; i <= values.length; i++) {
-                DATACITE_API_RESPONSE value = values[i];
+                final DATACITE_API_RESPONSE value = values[i];
                 final int codeValue = value.getStatus().getCode();
                 if (codeValue == codeToFind) {
                     result = value.message;

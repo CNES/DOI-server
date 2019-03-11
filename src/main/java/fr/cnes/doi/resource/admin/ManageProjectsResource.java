@@ -32,7 +32,6 @@ import org.restlet.resource.ResourceException;
 import fr.cnes.doi.application.AdminApplication;
 import fr.cnes.doi.client.ClientSearchDataCite;
 import fr.cnes.doi.db.AbstractProjectSuffixDBHelper;
-import fr.cnes.doi.db.AbstractUserRoleDBHelper;
 import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.resource.AbstractResource;
 import fr.cnes.doi.utils.spec.Requirement;
@@ -61,8 +60,7 @@ public class ManageProjectsResource extends AbstractResource {
      * Set-up method that can be overridden in order to initialize the state of the
      * resource.
      *
-     * @throws ResourceException
-     *             - if a problem happens
+     * @throws ResourceException - if a problem happens
      */
     @Override
     protected void doInit() throws ResourceException {

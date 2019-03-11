@@ -18,38 +18,78 @@
  */
 package fr.cnes.doi.ldap.util;
 
+/**
+ * LDAP user model.
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
+ */
 public class LDAPUser {
 
+    /**
+     * username.
+     */
     private String username;
 
+    /**
+     * email.
+     */
     private String email;
 
+    /**
+     * full name.
+     */
     private String fullname;
 
+    /**
+     * Returns the username.
+     * @return the username
+     */
     public String getUsername() {
         return username;
     }
 
-    public void setUsername(String username) {
+    /**
+     * Sets the username
+     * @param username the username
+     */
+    public void setUsername(final String username) {
         this.username = username;
     }
 
+    /**
+     * Returns the email.
+     * @return the email
+     */
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
+    /**
+     * Sets the email.
+     * @param email the email
+     */
+    public void setEmail(final String email) {
         this.email = email;
     }
 
+    /**
+     * Returns the full name.
+     * @return the full name
+     */
     public String getFullname() {
         return fullname;
     }
 
-    public void setFullname(String fullname) {
+    /**
+     * Sets the full name.
+     * @param fullname the full name
+     */
+    public void setFullname(final String fullname) {
         this.fullname = fullname;
     }
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString( ) {
       return this.getUsername() + "_" + this.getEmail();	

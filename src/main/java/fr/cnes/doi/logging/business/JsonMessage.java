@@ -28,8 +28,17 @@ import org.apache.logging.log4j.status.StatusLogger;
  */
 public class JsonMessage implements Message {
 
+    /**
+     * version.
+     */
     private static final long serialVersionUID = 1L;
-    private static final ObjectMapper mapper = new ObjectMapper();
+    /**
+     * MAPPER.
+     */
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+    /**
+     * object to map.
+     */
     private final Object object;
 
     /**
@@ -42,15 +51,13 @@ public class JsonMessage implements Message {
     }
 
     /**
-     * Returns the formatted message.
-     *
-     * @return the formatted message
+     * {@inheritDoc}
      */
     @Override
     public String getFormattedMessage() {
         String result;
         try {
-            result = mapper.writeValueAsString(object);
+            result = MAPPER.writeValueAsString(object);
         } catch (final JsonProcessingException e) {
             StatusLogger.getLogger().catching(e);
             result = object.toString();
@@ -59,9 +66,7 @@ public class JsonMessage implements Message {
     }
 
     /**
-     * Returns the format.
-     *
-     * @return the format
+     * {@inheritDoc}
      */
     @Override
     public String getFormat() {
@@ -69,9 +74,7 @@ public class JsonMessage implements Message {
     }
 
     /**
-     * Returns the parameters
-     *
-     * @return the parameters
+     * {@inheritDoc}
      */
     @Override
     public Object[] getParameters() {
@@ -79,9 +82,7 @@ public class JsonMessage implements Message {
     }
 
     /**
-     * Returns the throwable
-     *
-     * @return the throwable
+     * {@inheritDoc}
      */
     @Override
     public Throwable getThrowable() {

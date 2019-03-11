@@ -46,12 +46,33 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
      */
     private static final Logger LOG = LogManager.getLogger(DefaultProjectSuffixImpl.class.getName());
 
+    /**
+     * Plugin description.
+     */
     private static final String DESCRIPTION = "Provides a pre-defined list of users and groups";
+    /**
+     * Plugin version.
+     */
     private static final String VERSION = "1.0.0";
+    /**
+     * Plugin owner.
+     */
     private static final String OWNER = "CNES";
+    /**
+     * Plugin author.
+     */
     private static final String AUTHOR = "Jean-Christophe Malapert";
+    /**
+     * Plugin license.
+     */
     private static final String LICENSE = "LGPLV3";
+    /**
+     * Plugin name.
+     */
     private final String NAME = this.getClass().getName();
+    /**
+     * DOI database access.
+     */
     private final DOIDbDataAccessService das = DatabaseSingleton.getInstance().getDatabaseAccess();
 
     /**
@@ -62,17 +83,17 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
     }
 
     /**
-     * Init the configuration with the configuration file. If the given file does not exist a new
-     * file will be created. The file contains the mapping between the project name and the
-     * identifiers
-     *
+     *{@inheritDoc}
      */
     @Override
-    public void setConfiguration(Object configuration) {
+    public void setConfiguration(final Object configuration) {
     }
 
+    /**
+     *{@inheritDoc}
+     */    
     @Override
-    public synchronized boolean addProjectSuffix(int projectID, String projectName) {
+    public synchronized boolean addProjectSuffix(final int projectID, final String projectName) {
         boolean isAdded = false;
         try {
             das.addDOIProject(projectID, projectName);
@@ -88,8 +109,11 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
 
     }
 
+    /**
+     *{@inheritDoc}
+     */    
     @Override
-    public synchronized boolean deleteProject(int projectID) {
+    public synchronized boolean deleteProject(final int projectID) {
         boolean isDeleted = false;
         try {
             das.removeDOIProject(projectID);
@@ -103,26 +127,41 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
         return isDeleted;
     }
 
+    /**
+     *{@inheritDoc}
+     */    
     @Override
-    public boolean isExistID(int projectID) {
-        Map<String, Integer> map = getProjects();
+    public boolean isExistID(final int projectID) {
+        final Map<String, Integer> map = getProjects();
+        final boolean isExist;
         if (map.isEmpty()) {
-            return false;
+            isExist = false;
+        } else {
+            isExist = map.containsValue(projectID);
         }
-        return map.containsValue(projectID);
+        return isExist;
     }
 
+    /**
+     *{@inheritDoc}
+     */     
     @Override
-    public boolean isExistProjectName(String projectName) {
-        Map<String, Integer> map = getProjects();
+    public boolean isExistProjectName(final String projectName) {
+        final Map<String, Integer> map = getProjects();
+        final boolean isExist;
         if (map.isEmpty()) {
-            return false;
+            isExist = false;
+        } else {
+            isExist = map.containsKey(projectName);
         }
-        return map.containsKey(projectName);
+        return isExist;
     }
 
+    /**
+     *{@inheritDoc}
+     */     
     @Override
-    public String getProjectFrom(int projectID) {
+    public String getProjectFrom(final int projectID) {
         String projectName = "";
         try {
             projectName = das.getDOIProjectName(projectID);
@@ -134,21 +173,27 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
         return projectName;
     }
 
+    /**
+     *{@inheritDoc}
+     */     
     @Override
-    public int getIDFrom(String projectName) {
-        Map<String, Integer> map = getProjects();
+    public int getIDFrom(final String projectName) {
+        final Map<String, Integer> map = getProjects();
         if (map.isEmpty()) {
             throw new RuntimeException("The projects list is empty");
         }
         return map.get(projectName);
     }
 
+    /**
+     *{@inheritDoc}
+     */     
     @Override
     public Map<String, Integer> getProjects() {
         final Map<String, Integer> map = new HashMap<>();
         try {
-            List<DOIProject> doiProjects = das.getAllDOIProjects();
-            for (DOIProject doiProject : doiProjects) {
+            final List<DOIProject> doiProjects = das.getAllDOIProjects();
+            for (final DOIProject doiProject : doiProjects) {
                 map.put(doiProject.getProjectname(), doiProject.getSuffix());
             }
         } catch (DOIDbException e) {
@@ -158,12 +203,15 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
         return Collections.unmodifiableMap(map);
     }
 
+    /**
+     *{@inheritDoc}
+     */     
     @Override
-    public Map<String, Integer> getProjectsFromUser(String userName) {
-        Map<String, Integer> map = new HashMap<>();
+    public Map<String, Integer> getProjectsFromUser(final String userName) {
+        final Map<String, Integer> map = new HashMap<>();
         try {
-            List<DOIProject> doiProjects = das.getAllDOIProjectsForUser(userName);
-            for (DOIProject doiProject : doiProjects) {
+            final List<DOIProject> doiProjects = das.getAllDOIProjectsForUser(userName);
+            for (final DOIProject doiProject : doiProjects) {
                 map.put(doiProject.getProjectname(), doiProject.getSuffix());
             }
         } catch (DOIDbException e) {
@@ -173,8 +221,11 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
         return Collections.unmodifiableMap(map);
     }
 
+    /**
+     *{@inheritDoc}
+     */     
     @Override
-    public boolean renameProject(int projectId, String newProjectName) {
+    public boolean renameProject(final int projectId, final String newProjectName) {
         boolean isRenamed = false;
         try {
             das.renameDOIProject(projectId, newProjectName);
@@ -188,45 +239,65 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
         return isRenamed;
     }
 
+    /**
+     *{@inheritDoc}
+     */     
     @Override
     public String getName() {
         return NAME;
     }
 
+    /**
+     *{@inheritDoc}
+     */     
     @Override
     public String getDescription() {
         return DESCRIPTION;
     }
 
+    /**
+     *{@inheritDoc}
+     */     
     @Override
     public String getVersion() {
         return VERSION;
     }
 
+    /**
+     *{@inheritDoc}
+     */     
     @Override
     public String getAuthor() {
         return AUTHOR;
     }
 
+    /**
+     *{@inheritDoc}
+     */     
     @Override
     public String getOwner() {
         return OWNER;
     }
 
+    /**
+     *{@inheritDoc}
+     */     
     @Override
     public String getLicense() {
         return LICENSE;
     }
 
+    /**
+     *{@inheritDoc}
+     */     
     @Override
-    public List<DOIUser> getAllDOIUsersForProject(int doiSuffix) {
+    public List<DOIUser> getAllDOIUsersForProject(final int doiSuffix) {
         final List<DOIUser> doiUsers = new ArrayList<>();
         try {
             doiUsers.addAll(this.das.getAllDOIUsersForProject(doiSuffix));
         } catch (DOIDbException ex) {
-            LOG.
-                    fatal("An error occured while trying to get all DOI users from project " + doiSuffix,
-                            ex);
+            LOG.fatal("An error occured while trying to get all DOI users from project " + doiSuffix,
+                      ex);
         }
         return doiUsers;
     }

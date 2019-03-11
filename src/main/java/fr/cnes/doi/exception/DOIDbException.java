@@ -20,10 +20,19 @@ package fr.cnes.doi.exception;
 
 import java.sql.SQLException;
 
+/**
+ * Database Exception for DOI.
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
+ */
 public class DOIDbException extends Exception {
 
-    public DOIDbException(String string, SQLException e) {
-        super(string, e);
+    /**
+     * Constructor.
+     * @param message message about the exception
+     * @param ex SQL exception 
+     */
+    public DOIDbException(final String message, final SQLException ex) {
+        super(message, ex);
     }
 
 }

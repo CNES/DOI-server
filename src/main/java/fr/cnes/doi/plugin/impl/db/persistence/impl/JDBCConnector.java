@@ -97,14 +97,14 @@ public class JDBCConnector {
      * @param customDbConfigFile configuration file.
      * @throws RuntimeException Cannot retrieve the configuration file
      */
-    public JDBCConnector(String customDbConfigFile) {
+    public JDBCConnector(final String customDbConfigFile) {
         LOGGER.traceEntry("Parameter\n  customDbConfigFile: {} ",customDbConfigFile);
 	try {
 	    conf.setPropertiesFile(customDbConfigFile);
-	} catch (IOException e) {
+	} catch (IOException ex) {
 	    LOGGER.error("Cannot retrieve the configuration file {}", customDbConfigFile);
             throw LOGGER.throwing(new RuntimeException("Cannot retrieve the configuration "
-                    + "file "+customDbConfigFile));
+                    + "file "+customDbConfigFile, ex));
 	}
 	init();
         LOGGER.traceExit();

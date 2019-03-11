@@ -28,7 +28,7 @@ import org.restlet.resource.ClientResource;
 /**
  * Base client
  *
- * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr(
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class BaseClient {
 

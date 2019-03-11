@@ -33,6 +33,10 @@ import fr.cnes.doi.db.model.DOIProject;
 import fr.cnes.doi.db.model.DOIUser;
 import fr.cnes.doi.plugin.impl.db.persistence.service.DOIDbDataAccessService;
 
+/**
+ * Implementation of the {@link DOIDbDataAccessService} using JDBC.
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
+ */
 public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
 
     /**
@@ -77,7 +81,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
             conn = dbConnector.getConnection();
             LOGGER.debug("SELECT username, admin, email FROM T_DOI_USERS");
             statement = conn.prepareStatement("SELECT username, admin, email FROM T_DOI_USERS");
-            try (ResultSet rs = statement.executeQuery()) {
+            try (final ResultSet rs = statement.executeQuery()) {
                 while (rs.next()) {
                     final DOIUser doiuser = new DOIUser();
                     doiuser.setAdmin(rs.getBoolean("admin"));
@@ -124,9 +128,9 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
             conn = dbConnector.getConnection();
             LOGGER.debug("SELECT suffix, projectname FROM T_DOI_PROJECT");
             statement = conn.prepareStatement("SELECT suffix, projectname FROM T_DOI_PROJECT");
-            try (ResultSet rs = statement.executeQuery()) {
+            try (final ResultSet rs = statement.executeQuery()) {
                 while (rs.next()) {
-                    DOIProject doiproject = new DOIProject();
+                    final DOIProject doiproject = new DOIProject();
                     doiproject.setSuffix(rs.getInt("suffix"));
                     doiproject.setProjectname(rs.getString("projectname"));
                     projects.add(doiproject);
@@ -175,13 +179,13 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
                     "SELECT username, suffix FROM T_DOI_ASSIGNATIONS WHERE username=?");
             assignationsStatement.setString(1, username);
             LOGGER.debug("SELECT username, suffix FROM T_DOI_ASSIGNATIONS WHERE username={}",username);
-            try (ResultSet assignations = assignationsStatement.executeQuery()) {
+            try (final ResultSet assignations = assignationsStatement.executeQuery()) {
                 while (assignations.next()) {
                     projectsStatement = conn.prepareStatement(
                             "SELECT suffix, projectname FROM T_DOI_PROJECT WHERE suffix=?");
                     projectsStatement.setInt(1, assignations.getInt("suffix"));
                     LOGGER.debug("SELECT suffix, projectname FROM T_DOI_PROJECT WHERE suffix={}",assignations.getInt("suffix"));
-                    try (ResultSet rs = projectsStatement.executeQuery()) {
+                    try (final ResultSet rs = projectsStatement.executeQuery()) {
                         while (rs.next()) {
                             final DOIProject doiproject = new DOIProject();
                             doiproject.setSuffix(rs.getInt("suffix"));
@@ -225,7 +229,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      * {@inheritDoc}
      */     
     @Override
-    public List<DOIUser> getAllDOIUsersForProject(int suffix) throws DOIDbException {
+    public List<DOIUser> getAllDOIUsersForProject(final int suffix) throws DOIDbException {
         LOGGER.traceEntry("Parameter : {}", suffix);
         final List<DOIUser> users = new ArrayList<>();
         Connection conn = null;
@@ -237,16 +241,16 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
                     "SELECT username, suffix FROM T_DOI_ASSIGNATIONS WHERE suffix=?");
             assignationsStatement.setInt(1, suffix);
             LOGGER.debug("SELECT username, suffix FROM T_DOI_ASSIGNATIONS WHERE suffix={}",suffix);
-            try (ResultSet assignations = assignationsStatement.executeQuery()) {
+            try (final ResultSet assignations = assignationsStatement.executeQuery()) {
                 while (assignations.next()) {
                     usersStatement = conn.prepareStatement(
                             "SELECT username, admin, email FROM T_DOI_USERS WHERE username=?");
                     usersStatement.setString(1, assignations.getString("username"));
                     LOGGER.debug("SELECT username, admin, email FROM T_DOI_USERS WHERE username={}",
                             assignations.getString("username"));
-                    try (ResultSet rs = usersStatement.executeQuery()) {
+                    try (final ResultSet rs = usersStatement.executeQuery()) {
                         while (rs.next()) {
-                            DOIUser doiuser = new DOIUser();
+                            final DOIUser doiuser = new DOIUser();
                             doiuser.setUsername(rs.getString("username"));
                             doiuser.setAdmin(rs.getBoolean("admin"));
                             doiuser.setEmail(rs.getString("email"));
@@ -378,7 +382,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
             userStatement.setString(1, username);
             LOGGER.debug("SELECT username, admin FROM T_DOI_USERS WHERE username={}",username);
             Boolean userExist;
-            try (ResultSet resultSet = userStatement.executeQuery()) {
+            try (final ResultSet resultSet = userStatement.executeQuery()) {
                 userExist = resultSet.next();                
             }
             LOGGER.debug(userExist);
@@ -387,7 +391,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
             projectStatement.setInt(1, suffix);
             LOGGER.debug("SELECT suffix, projectname FROM T_DOI_PROJECT WHERE suffix={}", suffix);
             Boolean projectExist;
-            try (ResultSet resultSet = projectStatement.executeQuery()) {
+            try (final ResultSet resultSet = projectStatement.executeQuery()) {
                 projectExist = resultSet.next();
             }
             LOGGER.debug(projectExist);
@@ -498,7 +502,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
             userStatement.setString(1, username);
             LOGGER.debug("SELECT username, admin FROM T_DOI_USERS WHERE username={}", username);
             Boolean userExist;
-            try (ResultSet resultSet = userStatement.executeQuery()) {
+            try (final ResultSet resultSet = userStatement.executeQuery()) {
                 userExist = resultSet.next();
             }
             LOGGER.debug(userExist);
@@ -876,7 +880,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      * {@inheritDoc}
      */     
     @Override
-    public void removeDOIProject(int suffix) throws DOIDbException {
+    public void removeDOIProject(final int suffix) throws DOIDbException {
         LOGGER.traceEntry("Parameters:\n  suffix:{}", suffix);
         Connection conn = null;
         PreparedStatement projectStatement = null;
