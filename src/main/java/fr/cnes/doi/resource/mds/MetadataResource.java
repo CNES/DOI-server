@@ -119,13 +119,13 @@ public class MetadataResource extends BaseMdsResource {
     @Requirement(reqId = Requirement.DOI_SRV_060, reqName = Requirement.DOI_SRV_060_NAME)
     @Requirement(reqId = Requirement.DOI_MONIT_020, reqName = Requirement.DOI_MONIT_020_NAME)
     @Get("xml|json")
-    public Representation getMetadata() throws DoiServerException {
+    public Resource getMetadata() throws DoiServerException {
         LOG.traceEntry();
         checkInputs(doiName);
-        final Representation resource;
+        final Resource resource;
         try {
-            setStatus(Status.SUCCESS_OK);
-            resource = this.getDoiApp().getClient().getMetadata(this.doiName);
+            setStatus(Status.SUCCESS_OK);            
+            resource = this.getDoiApp().getClient().getMetadataAsObject(this.doiName);
         } catch (ClientMdsException ex) {
             if (ex.getStatus().getCode() == Status.CLIENT_ERROR_NOT_FOUND.getCode()) {
                 throw LOG.throwing(

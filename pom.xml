@@ -530,6 +530,11 @@
             <version>${restlet-version}</version>
         </dependency>
         <dependency>
+            <groupId>org.restlet.jee</groupId>
+            <artifactId>org.restlet.ext.jaxb</artifactId>
+            <version>${restlet-version}</version>
+        </dependency>        
+        <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
             <version>0.9.1</version>
