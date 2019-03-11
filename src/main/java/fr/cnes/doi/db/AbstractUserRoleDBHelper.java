@@ -18,12 +18,12 @@
  */
 package fr.cnes.doi.db;
 
+import fr.cnes.doi.db.model.DOIUser;
 import java.util.List;
 import java.util.Observable;
 
 
 import fr.cnes.doi.exception.DOIDbException;
-import fr.cnes.doi.utils.DOIUser;
 import fr.cnes.doi.utils.spec.Requirement;
 
 /**
@@ -52,11 +52,10 @@ public abstract class AbstractUserRoleDBHelper extends Observable {
     private static final MyMemoryRealm REALM = new MyMemoryRealm();
 
     /**
-     * Init the connection.
-     *
-     * @param configuration the connection configuration
+     * Sets the configuration.     
+     * @param configuration configuration parameters
      */
-    public abstract void init(Object configuration);
+    public abstract void setConfiguration(final Object configuration);
 
     /**
      * Returns the realm.

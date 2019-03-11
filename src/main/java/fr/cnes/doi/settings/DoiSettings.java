@@ -72,12 +72,12 @@ public final class DoiSettings {
     /**
      * Secret key to decrypt login and password.
      */
-    private volatile String secretKey = UtilsCryptography.DEFAULT_SECRET_KEY;
+    private String secretKey = UtilsCryptography.DEFAULT_SECRET_KEY;
 
     /**
      * Path where the Java application inputStream located.
      */
-    private volatile String pathApp;
+    private String pathApp;
 
     /**
      * private constructor Loads the defautl configuration properties {@value #CONFIG_PROPERTIES}
@@ -93,8 +93,7 @@ public final class DoiSettings {
      * @param properties Configuration file
      * @param level LOG level
      */
-    private void init(final Properties properties,
-            Level level) {
+    private void init(final Properties properties, Level level) {
         if(Level.OFF.equals(level)) {
             level = null; // this fixes a bug in log4j2
         } 

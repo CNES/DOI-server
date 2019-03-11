@@ -25,11 +25,13 @@ import fr.cnes.doi.client.ClientMDS.DATACITE_API_RESPONSE;
 import fr.cnes.doi.exception.ClientMdsException;
 import fr.cnes.doi.exception.DoiServerException;
 import fr.cnes.doi.utils.spec.Requirement;
+import java.io.IOException;
 import java.util.Arrays;
 import org.apache.logging.log4j.Level;
 import org.datacite.schema.kernel_4.Resource;
 import org.restlet.data.Method;
 import org.restlet.data.Status;
+import org.restlet.ext.jaxb.JaxbRepresentation;
 import org.restlet.ext.wadl.MethodInfo;
 import org.restlet.ext.wadl.ParameterStyle;
 import org.restlet.representation.Representation;
@@ -68,7 +70,7 @@ public class MetadataResource extends BaseMdsResource {
         super.doInit();
         LOG.traceEntry();
         setDescription("This resource handles a metadata : retrieve, delete");
-        this.doiName = getResourcePath().replace(DoiMdsApplication.METADATAS_URI + "/", "");
+        this.doiName = getAttributePath(DoiMdsApplication.METADATAS_URI);
         LOG.debug("DOI name " + this.doiName);
         LOG.traceExit();
     }
@@ -118,14 +120,14 @@ public class MetadataResource extends BaseMdsResource {
      */
     @Requirement(reqId = Requirement.DOI_SRV_060, reqName = Requirement.DOI_SRV_060_NAME)
     @Requirement(reqId = Requirement.DOI_MONIT_020, reqName = Requirement.DOI_MONIT_020_NAME)
-    @Get("xml|json")
-    public Resource getMetadata() throws DoiServerException {
+    @Get("xml")
+    public Representation getMetadata() throws DoiServerException {
         LOG.traceEntry();
         checkInputs(doiName);
-        final Resource resource;
+        final Representation resource;
         try {
-            setStatus(Status.SUCCESS_OK);
-            resource = this.getDoiApp().getClient().getMetadataAsObject(this.doiName);
+            setStatus(Status.SUCCESS_OK);            
+            resource = this.getDoiApp().getClient().getMetadata(this.doiName);  
         } catch (ClientMdsException ex) {
             if (ex.getStatus().getCode() == Status.CLIENT_ERROR_NOT_FOUND.getCode()) {
                 throw LOG.throwing(
@@ -147,6 +149,18 @@ public class MetadataResource extends BaseMdsResource {
             }
         }
         return LOG.traceExit(resource);
+    }
+    
+    /**
+     * Returns the metadata as JSON.
+     * @return JSON representation.
+     * @throws IOException 
+     */
+    @Get("json")
+    public Resource getMetadataAsJson() throws IOException {
+        final Representation rep = getMetadata();
+        JaxbRepresentation<Resource> resourceEntity = new JaxbRepresentation<>(rep, Resource.class);
+        return resourceEntity.getObject();
     }
 
     /**

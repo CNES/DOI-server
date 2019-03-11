@@ -32,6 +32,7 @@ import fr.cnes.doi.settings.DoiSettings;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import org.datacite.schema.kernel_4.Resource;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -42,9 +43,12 @@ import org.junit.experimental.categories.Category;
 import org.restlet.Client;
 import org.restlet.Context;
 import org.restlet.data.ChallengeScheme;
+import org.restlet.data.MediaType;
 import org.restlet.data.Parameter;
 import org.restlet.data.Protocol;
+import org.restlet.ext.jaxb.JaxbRepresentation;
 import org.restlet.representation.Representation;
+import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ClientResource;
 import org.restlet.util.Series;
 
@@ -133,5 +137,5 @@ public class AdminApplicationTest {
             writer.flush();
         }
         assertTrue("HTML API through HTTPS",txt!=null && !txt.isEmpty() && txt.contains("html"));
-    }    
+    }       
 }

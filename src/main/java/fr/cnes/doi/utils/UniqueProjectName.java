@@ -19,6 +19,7 @@
 package fr.cnes.doi.utils;
 
 import fr.cnes.doi.exception.DoiRuntimeException;
+import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.utils.spec.Requirement;
 import java.util.Map;
 import java.util.Random;
@@ -65,7 +66,7 @@ public class UniqueProjectName {
      * @return the projects
      */
     public Map<String, Integer> getProjects() {
-        return ManageProjects.getInstance().getProjects();
+        return PluginFactory.getProjectSuffix().getProjects();
     }
 
     /**
@@ -75,7 +76,7 @@ public class UniqueProjectName {
      * @return the projects
      */
     public Map<String, Integer> getProjectsFromUser(final String userName) {
-        return ManageProjects.getInstance().getProjectsFromUser(userName);
+        return PluginFactory.getProjectSuffix().getProjectsFromUser(userName);
     }
 
     /**
@@ -127,9 +128,9 @@ public class UniqueProjectName {
                     "The short name cannot be build because the length requested is too big");
             LOGGER.throwing(CLASS_NAME, "getShortName", doiEx);
             throw doiEx;
-        } else if (ManageProjects.getInstance().isExistProjectName(project)) {
+        } else if (PluginFactory.getProjectSuffix().isExistProjectName(project)) {
             // Si le projet a déjà un identifiant on ne le recalcule pas
-            suffixID = ManageProjects.getInstance().getIDFrom(project);
+            suffixID = PluginFactory.getProjectSuffix().getIDFrom(project);
             LOGGER.log(Level.FINE, "The project {0} has already an id : {1}",
                     new Object[]{project, suffixID});
         } else {
@@ -154,10 +155,10 @@ public class UniqueProjectName {
     private synchronized boolean isIdUnique(final int idToCheck, final String projectName) {
         LOGGER.entering(CLASS_NAME, "isIdUnique", new Object[]{idToCheck, projectName});
         final boolean result;
-        if (ManageProjects.getInstance().isExistID(idToCheck)) {
+        if (PluginFactory.getProjectSuffix().isExistID(idToCheck)) {
             result = false;
         } else {
-            result = ManageProjects.getInstance().addProjectSuffix(idToCheck, projectName);
+            result = PluginFactory.getProjectSuffix().addProjectSuffix(idToCheck, projectName);
         }
         LOGGER.exiting(CLASS_NAME, "isIdUnique", result);
         return result;

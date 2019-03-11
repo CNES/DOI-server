@@ -18,6 +18,8 @@
  */
 package fr.cnes.doi.plugin.impl.db;
 
+import fr.cnes.doi.plugin.impl.db.persistence.service.DatabaseSingleton;
+import fr.cnes.doi.plugin.impl.db.persistence.service.DOIDbDataAccessService;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,9 +33,7 @@ import org.restlet.security.User;
 
 import fr.cnes.doi.db.MyMemoryRealm;
 import fr.cnes.doi.exception.DOIDbException;
-import fr.cnes.doi.plugin.impl.db.persistence.impl.DOIDbDataAccessServiceImpl;
-import fr.cnes.doi.utils.DOIUser;
-import fr.cnes.doi.plugin.impl.db.persistence.service.DOIDbDataAccessService;
+import fr.cnes.doi.db.model.DOIUser;
 import fr.cnes.doi.plugin.AbstractUserRolePluginHelper;
 
 /**
@@ -67,10 +67,10 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
 	super();
     }
 
-    private final DOIDbDataAccessService das = new DOIDbDataAccessServiceImpl();
+    private final DOIDbDataAccessService das = DatabaseSingleton.getInstance().getDatabaseAccess();
 
     @Override
-    public void init(Object configuration) {
+    public void setConfiguration(Object configuration) {
     }
 
     @Override

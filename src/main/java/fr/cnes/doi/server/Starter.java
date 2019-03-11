@@ -26,8 +26,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -38,13 +36,11 @@ import org.apache.logging.log4j.Logger;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import fr.cnes.doi.exception.DoiRuntimeException;
-import fr.cnes.doi.resource.admin.SuffixProjectsResource;
 import fr.cnes.doi.security.TokenSecurity;
 import fr.cnes.doi.security.UtilsCryptography;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.settings.EmailSettings;
-import fr.cnes.doi.utils.UniqueDoi;
 import fr.cnes.doi.utils.spec.Requirement;
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
@@ -98,7 +94,6 @@ public final class Starter {
 		.append(".jar [--secret <key>] [OPTIONS] [-s]\n");
 	help.append("\n\n");
 	help.append("with :\n");
-	help.append("  --doi \"<INIST_prefix> <projectName> <landingPage>\" : Creates a DOI\n");
 	help.append("  --secret <key>               : The 16 bits secret key to crypt/decrypt\n");
 	help.append("  --key-sign-secret <key>      : The key to sign the token\n");
 	help.append("                                 If not provided, a default one is used\n");
@@ -229,7 +224,7 @@ public final class Starter {
 	String arg;
 
 	StringBuffer sb = new StringBuffer();
-	LongOpt[] longopts = new LongOpt[8];
+	LongOpt[] longopts = new LongOpt[7];
 	longopts[0] = new LongOpt("help", LongOpt.NO_ARGUMENT, null, 'h');
 	longopts[1] = new LongOpt("version", LongOpt.NO_ARGUMENT, null, 'v');
 	longopts[2] = new LongOpt("secret", LongOpt.REQUIRED_ARGUMENT, sb, 0);
@@ -237,7 +232,6 @@ public final class Starter {
 	longopts[4] = new LongOpt("cryptProperties", LongOpt.REQUIRED_ARGUMENT, null, 'y');
 	longopts[5] = new LongOpt("key-sign", LongOpt.NO_ARGUMENT, null, 'k');
 	longopts[6] = new LongOpt("key-sign-secret", LongOpt.REQUIRED_ARGUMENT, null, 'a');
-	longopts[7] = new LongOpt("doi", LongOpt.REQUIRED_ARGUMENT, null, 'b');
 
 	//
 	final Getopt g = new Getopt(progName, argv, "hvdske:c:f:y:z:a:b:", longopts);
@@ -256,21 +250,7 @@ public final class Starter {
 		//
 		case 'a':
 		    String secretSignToken = g.getOptarg();
-		    TokenSecurity.getInstance().setTokenKey(secretSignToken);
-		    break;
-		case 'b':
-		    String[] arguments = g.getOptarg().split(" ");
-		    String prefix = arguments[0];
-		    String projectName = arguments[1];
-		    String landingPage = arguments[2]; {
-		    try {
-			String doi = UniqueDoi.getInstance().createDOI(prefix, projectName,
-				new URI(landingPage), SuffixProjectsResource.NB_DIGITS);
-			LOG.info(doi);
-		    } catch (URISyntaxException ex) {
-			throw new IllegalArgumentException(ex.getMessage());
-		    }
-		}
+		    TokenSecurity.getInstance().setTokenKey(secretSignToken);		    
 		    break;
 		case 'h':
 		    LOG.debug("h option is selected");

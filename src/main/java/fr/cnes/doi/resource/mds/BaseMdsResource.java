@@ -344,6 +344,19 @@ public class BaseMdsResource extends AbstractResource {
     }
 
     /**
+     * Retrieves path by cleaning query parameters.
+     * @param basePath base path to remove
+     * @return the path value
+     */
+    public String getAttributePath(final String basePath) {
+        String resourcePath = getResourcePath();
+        int questionMark = resourcePath.indexOf("?");
+        questionMark  = (questionMark == -1) ? resourcePath.length() : questionMark;
+        resourcePath = resourcePath.substring(0, questionMark);
+        return resourcePath.replace(basePath + "/", "");        
+    }  
+    
+    /**
      * Returns the Mds application.
      *
      * @return the doiApp

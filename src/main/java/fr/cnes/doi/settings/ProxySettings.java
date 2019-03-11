@@ -39,65 +39,55 @@ public final class ProxySettings {
     private static final Logger LOG = LogManager.getLogger(ProxySettings.class.getName());
 
     /**
-     * Access to unique INSTANCE of Settings
-     *
-     * @return the configuration instance.
-     */
-    public static ProxySettings getInstance() {
-        LOG.traceEntry();
-        return LOG.traceExit(ProxySettingsHolder.INSTANCE);
-    }
-
-    /**
      * Proxy configuration - host
      */
-    private volatile String proxyHost;
+    private String proxyHost;
 
     /**
      * Proxy configuration - port
      */
-    private volatile String proxyPort;
+    private String proxyPort;
 
     /**
      * Proxy configuration - user
      */
-    private volatile String proxyUser;
+    private String proxyUser;
 
     /**
      * Proxy configuration - password
      */
-    private volatile String proxyPassword;
+    private String proxyPassword;
 
     /**
      * Proxy configuration - password
      */
-    private volatile String nonProxyHosts;
+    private String nonProxyHosts;
 
     /**
      * Proxy configuration enable / disable
      */
-    private volatile boolean proxySet = false;
+    private boolean proxySet = false;
 
     /**
      * Proxy type.
      */
-    private volatile String proxyType;
+    private String proxyType;
 
     /**
      * Service provider name for SPNEGO protocol.
      */
-    private volatile String proxySpn;
+    private String proxySpn;
 
     /**
      * Jaas file where configuration for SPNego is described.
      */
-    private volatile String proxyJaasFile;
+    private String proxyJaasFile;
 
     /**
      * Jaas context, which is described in Jaas file.
      */
-    private volatile String proxyJaasCtx;
-
+    private String proxyJaasCtx;
+        
     /**
      * Private constructor
      */
@@ -106,6 +96,16 @@ public final class ProxySettings {
         init();
         LOG.traceExit();
     }
+    
+    /**
+     * Access to unique INSTANCE of Settings
+     *
+     * @return the configuration instance.
+     */
+    public static ProxySettings getInstance() {
+        LOG.traceEntry();
+        return LOG.traceExit(ProxySettingsHolder.INSTANCE);
+    }    
 
     /**
      * Init the proxy setting

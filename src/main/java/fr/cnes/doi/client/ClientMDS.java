@@ -23,17 +23,13 @@ import fr.cnes.doi.exception.ClientMdsException;
 import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.utils.spec.Requirement;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Level;
 import javax.xml.XMLConstants;
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.ValidationEvent;
 import javax.xml.bind.ValidationEventHandler;
 import javax.xml.bind.ValidationException;
@@ -48,6 +44,7 @@ import org.restlet.data.MediaType;
 import org.restlet.data.Parameter;
 import org.restlet.data.Reference;
 import org.restlet.data.Status;
+import org.restlet.ext.jaxb.JaxbRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ResourceException;
@@ -115,7 +112,7 @@ public class ClientMDS extends BaseClient {
     /**
      * Default XML schema for Datacite: {@value #SCHEMA_DATACITE}
      */
-    public static final String SCHEMA_DATACITE = "https://schema.datacite.org/meta/kernel-4.0/metadata.xsd";
+    public static final String SCHEMA_DATACITE = "https://schema.datacite.org/meta/kernel-4-1/metadata.xsd";
 
     /**
      * SCHEMA_FACTORY.
@@ -165,16 +162,6 @@ public class ClientMDS extends BaseClient {
     private final Context context;
 
     /**
-     * Marshaller.
-     */
-    private final Marshaller marshaller;
-
-    /**
-     * Unarshall.
-     */
-    private final Unmarshaller unMarshaller;
-
-    /**
      * Creates a client to handle DataCite server.
      *
      * There is special test prefix 10.5072 available to all datacentres. Please use it for all your
@@ -200,25 +187,8 @@ public class ClientMDS extends BaseClient {
      */
     public ClientMDS(final Context context) throws ClientMdsException {
         super(context.getDataCiteUrl());
-        try {
-            this.context = context;
-            this.testMode = this.context.hasTestMode() ? TEST_MODE : null;
-//            final String schemaUrl = ClientMDS.DOI_SETTINGS.getString(Consts.DATACITE_SCHEMA,
-//                    SCHEMA_DATACITE);
-//            SCHEMA_FACTORY.setResourceResolver(new WebProxyResourceResolver(this.getClient(),
-//                    schemaUrl));
-//            final Schema schema = SCHEMA_FACTORY.newSchema();
-            final JAXBContext ctx = JAXBContext.newInstance(new Class[]{Resource.class});
-            this.marshaller = ctx.createMarshaller();
-            this.marshaller.setProperty(Marshaller.JAXB_SCHEMA_LOCATION,
-                    "http://datacite.org/schema/kernel-4 "
-                    + "http://schema.datacite.org/meta/kernel-4/metadata.xsd");
-            this.unMarshaller = ctx.createUnmarshaller();
-//            this.unMarshaller.setSchema(schema);
-        } catch (JAXBException ex) {
-            throw new ClientMdsException(Status.SERVER_ERROR_INTERNAL,
-                    "Cannot get the Datacite schema", ex);
-        }
+        this.context = context;
+        this.testMode = this.context.hasTestMode() ? TEST_MODE : null;
     }
 
     /**
@@ -515,13 +485,12 @@ public class ClientMDS extends BaseClient {
      */
     private synchronized Resource parseDataciteResource(final Representation rep) throws
             ClientMdsException {
-        final Resource resource;
+        final JaxbRepresentation<Resource> resource = new JaxbRepresentation<>(rep, Resource.class);
         try {
-            resource = (Resource) this.unMarshaller.unmarshal(rep.getStream());
-        } catch (JAXBException | IOException ex) {
+            return resource.getObject();
+        } catch (IOException ex) {
             throw new ClientMdsException(Status.SERVER_ERROR_INTERNAL, ex);
         }
-        return resource;
     }
 
     /**
@@ -619,68 +588,20 @@ public class ClientMDS extends BaseClient {
             identifier.setValue(getDoiAccorgindToContext(identifier.getValue()));
             final Reference url = createReference(METADATA_RESOURCE);
             this.getLog().debug("PUT {0}", url.toString());
-            final OutputStream output = streamMetadata(entity);
+            final JaxbRepresentation<Resource> result = new JaxbRepresentation<>(entity);
+            result.setCharacterSet(CharacterSet.UTF_8);
+            result.setMediaType(MediaType.APPLICATION_XML);            
             this.getClient().setReference(url);
             this.getClient().getRequestAttributes().put("charset", "UTF-8");
             this.getClient().setMethod(null);
-            final Representation response = this.getClient().post(
-                    new StringRepresentation(
-                            output.toString(),
-                            MediaType.APPLICATION_XML,
-                            Language.ALL,
-                            CharacterSet.UTF_8
-                    )
-            );
+            final Representation response = this.getClient().post(result);
             return getText(response);
         } catch (ResourceException ex) {
             throw new ClientMdsException(ex.getStatus(), ex.getMessage(), this.getClient().
                     getResponseEntity(), ex);
-        } catch (JAXBException ex) {
-            throw new ClientMdsException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex);
         } finally {
             this.getClient().release();
         }
-    }
-
-    /**
-     * Stream a DataCite Resource Object to XML.
-     *
-     * Use synchronized to have a thread-safe operation
-     *
-     * @param entity DataCite Resource
-     * @return XML
-     * @throws JAXBException when an problem occurs
-     */
-    private synchronized OutputStream streamMetadata(final Resource entity) throws JAXBException {
-        final OutputStream output = new OutputStream() {
-            /**
-             * Output stream.
-             */
-            private final StringBuilder response = new StringBuilder();
-
-            /**
-             * Write into output stream
-             *
-             * @param b char
-             * @throws IOException - if a problem happens
-             */
-            @Override
-            public void write(final int b) throws IOException {
-                this.response.append((char) b);
-            }
-
-            /**
-             * Transforms toString.
-             *
-             * @return response as String
-             */
-            @Override
-            public String toString() {
-                return this.response.toString();
-            }
-        };
-        marshaller.marshal(entity, output);
-        return output;
     }
 
     /**
@@ -696,10 +617,11 @@ public class ClientMDS extends BaseClient {
             ValidationException {
 
         try {
+            final JaxbRepresentation<Resource> resourceEntity = new JaxbRepresentation<>(entity, Resource.class);
             final MyValidationEventHandler validationHandler = new MyValidationEventHandler(this.
                     getClient().getLogger());
-            this.unMarshaller.setEventHandler(validationHandler);
-            final Resource resource = (Resource) this.unMarshaller.unmarshal(entity.getStream());
+            resourceEntity.setValidationEventHandler(validationHandler);
+            final Resource resource = resourceEntity.getObject();
             if (validationHandler.isValid()) {
                 return resource;
             } else {

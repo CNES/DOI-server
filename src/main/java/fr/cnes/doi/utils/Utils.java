@@ -197,4 +197,17 @@ public final class Utils {
         }
         return length;
     }
+    
+    /**
+     * Transform password to stars
+     * @param password password to transform
+     * @return stars
+     */
+    public static String transformPasswordToStars(final String password) {
+        final StringBuilder passStars = new StringBuilder();
+        for (int i=0 ; i<password.length(); i++) {
+            passStars.append("*");
+        }
+        return passStars.toString();
+    }
 }

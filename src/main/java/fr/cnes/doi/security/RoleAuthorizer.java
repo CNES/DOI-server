@@ -36,11 +36,12 @@ import org.restlet.security.User;
 import fr.cnes.doi.application.AdminApplication;
 import fr.cnes.doi.application.DoiMdsApplication;
 import fr.cnes.doi.db.AbstractProjectSuffixDBHelper;
+import fr.cnes.doi.db.AbstractUserRoleDBHelper;
 import fr.cnes.doi.db.MyMemoryRealm;
 import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.logging.business.JsonMessage;
-import fr.cnes.doi.utils.DOIUser;
-import fr.cnes.doi.utils.ManageUsers;
+import fr.cnes.doi.db.model.DOIUser;
+import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.utils.UniqueProjectName;
 import fr.cnes.doi.utils.spec.Requirement;
 
@@ -75,7 +76,7 @@ public class RoleAuthorizer implements Observer {
     /**
      * Realm.
      */
-    private static final MyMemoryRealm REALM = ManageUsers.getInstance().getRealm();
+    private static final MyMemoryRealm REALM = PluginFactory.getUserManagement().getRealm();
 
     /**
      * Access to unique INSTANCE of role authorizer
@@ -101,7 +102,8 @@ public class RoleAuthorizer implements Observer {
 
         // Add users
         LOG.debug("Add users to REALM");
-        List<DOIUser> doiUsers = ManageUsers.getInstance().getUsers();
+        final AbstractUserRoleDBHelper manageUsers = PluginFactory.getUserManagement();
+        List<DOIUser> doiUsers = manageUsers.getUsers();
         List<User> users = new ArrayList<>();
         List<User> admins = new ArrayList<>();
         for (DOIUser doiUser : doiUsers) {
@@ -143,6 +145,7 @@ public class RoleAuthorizer implements Observer {
 //        initForAdmin(app);
         // we load projects from database
         final Map<String, Integer> projects = UniqueProjectName.getInstance().getProjects();
+        final AbstractUserRoleDBHelper manageUsers = PluginFactory.getUserManagement();
         LOG.debug("{} projects have already been registered", projects.size());
         for (final Map.Entry<String, Integer> entry : projects.entrySet()) {
             // for each project, create a role as the project name
@@ -151,7 +154,7 @@ public class RoleAuthorizer implements Observer {
                     projectID) + " for " + app.getName());
 
             // get the users for a role.
-            List<DOIUser> doiUsers = ManageUsers.getInstance().getUsersFromRole(projectID);
+            List<DOIUser> doiUsers = manageUsers.getUsersFromRole(projectID);
             List<User> usersFromProject = new ArrayList<>();
             for (DOIUser doiUser : doiUsers) {
                 User user = REALM.findUser(doiUser.getUsername());
@@ -293,9 +296,9 @@ public class RoleAuthorizer implements Observer {
 
             final String operation = message[0];
             final String roleName = message[1];
-            List<DOIUser> doiUsers = ManageUsers.getInstance().getUsersFromRole(Integer.parseInt(
-                    roleName));
-            List<User> usersFromProject = new ArrayList<User>();
+            final AbstractUserRoleDBHelper manageUsers = PluginFactory.getUserManagement();
+            List<DOIUser> doiUsers = manageUsers.getUsersFromRole(Integer.parseInt(roleName));
+            List<User> usersFromProject = new ArrayList<>();
             for (DOIUser doiUser : doiUsers) {
                 User user = new User(doiUser.getUsername());
                 usersFromProject.add(user);

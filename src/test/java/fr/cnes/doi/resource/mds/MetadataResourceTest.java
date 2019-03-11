@@ -138,7 +138,7 @@ public class MetadataResourceTest {
         client.setNext(cl);
         int code;
         String doi;
-        try {
+        try {            
             Resource resource = client.get(Resource.class);
             code = client.getStatus().getCode();
             doi = resource.getIdentifier().getValue();
@@ -153,8 +153,6 @@ public class MetadataResourceTest {
         mdsServerStub.verifySpec(MdsSpec.Spec.GET_METADATA_200);
     }
     
-    
-
     /**
      * Test of getMetadata method throw a HTTPS server with a Json response, of
      * class MetadataResource. Status.SUCCESS_OK is expected when the metadata

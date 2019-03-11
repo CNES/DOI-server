@@ -30,8 +30,8 @@ import org.slf4j.LoggerFactory;
 
 import fr.cnes.doi.exception.DOIDbException;
 import fr.cnes.doi.plugin.impl.db.persistence.impl.DOIDbDataAccessServiceImpl;
-import fr.cnes.doi.plugin.impl.db.persistence.model.DOIProject;
-import fr.cnes.doi.utils.DOIUser;
+import fr.cnes.doi.db.model.DOIProject;
+import fr.cnes.doi.db.model.DOIUser;
 import fr.cnes.doi.plugin.impl.db.persistence.service.DOIDbDataAccessService;
 
 public class DOIDBTest {

@@ -35,13 +35,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import fr.cnes.doi.ldap.exceptions.LDAPAccessException;
-import fr.cnes.doi.ldap.service.ILDAPAcessService;
 import fr.cnes.doi.ldap.util.LDAPUser;
 import fr.cnes.doi.security.UtilsCryptography;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
+import fr.cnes.doi.ldap.service.ILDAPAccessService;
 
-public class LDAPAccessServiceImpl implements ILDAPAcessService {
+public class LDAPAccessServiceImpl implements ILDAPAccessService {
 
     /**
      * Logger.

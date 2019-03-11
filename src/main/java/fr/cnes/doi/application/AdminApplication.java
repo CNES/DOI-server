@@ -43,8 +43,10 @@ import org.restlet.security.RoleAuthorizer;
 import org.restlet.service.TaskService;
 
 import fr.cnes.doi.db.AbstractTokenDBHelper;
+import fr.cnes.doi.db.AbstractUserRoleDBHelper;
 import fr.cnes.doi.ldap.job.DOIUsersUpdate;
 import fr.cnes.doi.logging.business.JsonMessage;
+import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.resource.admin.AuthenticationResource;
 import fr.cnes.doi.resource.admin.ManageProjectsResource;
 import fr.cnes.doi.resource.admin.ManageSuperUserResource;
@@ -231,7 +233,7 @@ public class AdminApplication extends AbstractApplication {
      * Token database.
      */
     private final AbstractTokenDBHelper tokenDB;
-
+    
     /**
      * Constructor.
      */
@@ -240,7 +242,7 @@ public class AdminApplication extends AbstractApplication {
         setName(NAME);
         setDescription("Provides an application for handling features related to "
                 + "the administration system of the DOI server.");
-        this.tokenDB = TokenSecurity.getInstance().getTOKEN_DB();
+        this.tokenDB = TokenSecurity.getInstance().getTOKEN_DB();       
         this.setTaskService(createTaskService());
         this.setTaskService(createUpdateDataBaseTaskService());
         this.setTaskService(periodicalyDeleteExpiredTokenFromDB());

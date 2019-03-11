@@ -50,7 +50,6 @@ import org.restlet.data.Form;
 import org.restlet.data.Parameter;
 import org.restlet.data.Protocol;
 import org.restlet.data.Status;
-import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
 import org.restlet.util.Series;
@@ -61,15 +60,13 @@ import fr.cnes.doi.client.ClientMDS;
 import fr.cnes.doi.exception.ClientMdsException;
 import fr.cnes.doi.ldap.exceptions.LDAPAccessException;
 import fr.cnes.doi.ldap.impl.LDAPAccessServiceImpl;
-import fr.cnes.doi.ldap.impl.LdapDoidbIntegrationImpl;
-import fr.cnes.doi.ldap.persistence.LdapDoidbIntegration;
-import fr.cnes.doi.ldap.service.ILDAPAcessService;
 import fr.cnes.doi.ldap.util.LDAPUser;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import java.util.List;
-import org.junit.Assert;
 import static org.junit.Assert.assertTrue;
+import fr.cnes.doi.ldap.service.ILDAPAccessService;
+import org.restlet.representation.Representation;
 
 /**
  *
@@ -83,6 +80,9 @@ public class ITauthentication {
 
     public static final String DOI = "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b";
     private static ClientAndServer mockServer;
+    
+    private static String userAdmin;
+    private static String password;
 
     public ITauthentication() {
     }
@@ -106,6 +106,8 @@ public class ITauthentication {
 	    parameters.add("truststorePassword",
 		    DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
 	    parameters.add("truststoreType", "JKS");
+            userAdmin = DoiSettings.getInstance().getString(Consts.LDAP_DOI_ADMIN);
+            password = System.getProperty("doi-admin-pwd");
 	} catch (Error ex) {
 	    isDatabaseConfigured = false;
 	}
@@ -140,46 +142,46 @@ public class ITauthentication {
      * @throws java.io.IOException
      *             - if OutOfMemoryErrors
      */
-//    @Test
-//    public void testTokenAuthenticationWithBadRole() throws IOException {
-//        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-//        ClientResource client = new ClientResource("https://localhost:" + port + "/admin/token");
-//        client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
-//        client.setNext(cl);
-//        Form form = new Form();
-//        form.add("identifier", "jcm");
-//        form.add("projectID", "828606");
-//        Representation response = client.post(form);
-//        String token = response.getText();
-//        client.release();
-//
-//        mockServer.when(HttpRequest.request("/mds/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)
-//                .withMethod("POST")).respond(HttpResponse.response().withStatusCode(403));
-//        
-//        Form mediaForm = new Form();
-//        mediaForm.add("image/fits", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
-//        mediaForm.add("image/jpeg", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
-//        mediaForm.add("image/png", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
-//
-//        client = new ClientResource("https://localhost:" + port + "/mds/media/" + DOI);
-//        client.setNext(cl);
-//        ChallengeResponse cr = new ChallengeResponse(ChallengeScheme.HTTP_OAUTH_BEARER);
-//        cr.setRawValue(token);
-//        client.setChallengeResponse(cr);
-//
-//        Status status;
-//        try {
-//            client.post(mediaForm);
-//            status = client.getStatus();
-//        } catch (ResourceException ex) {
-//            status = ex.getStatus();
-//        }
-//        client.release();
-//        assertEquals("Test ITauthentication", Status.CLIENT_ERROR_FORBIDDEN.getCode(), status.getCode());
-//        
-//        mockServer.verify(HttpRequest.request("/mds/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)
-//                .withMethod("POST"), VerificationTimes.exactly(0));        
-//    }
+    @Test
+    public void testTokenAuthenticationWithBadRole() throws IOException {
+        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
+        ClientResource client = new ClientResource("https://localhost:" + port + "/admin/token");
+        client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, userAdmin, password);
+        client.setNext(cl);
+        Form form = new Form();
+        form.add("identifier", userAdmin);
+        form.add("projectID", "031177");
+        Representation response = client.post(form);
+        String token = response.getText();
+        client.release();
+
+        mockServer.when(HttpRequest.request("/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)
+                .withMethod("POST")).respond(HttpResponse.response().withStatusCode(403));
+        
+        Form mediaForm = new Form();
+        mediaForm.add("image/fits", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
+        mediaForm.add("image/jpeg", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
+        mediaForm.add("image/png", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
+
+        client = new ClientResource("https://localhost:" + port + "/mds/media/" + DOI);
+        client.setNext(cl);
+        ChallengeResponse cr = new ChallengeResponse(ChallengeScheme.HTTP_OAUTH_BEARER);
+        cr.setRawValue(token);
+        client.setChallengeResponse(cr);
+
+        Status status;
+        try {
+            client.post(mediaForm);
+            status = client.getStatus();
+        } catch (ResourceException ex) {
+            status = ex.getStatus();
+        }
+        client.release();
+        assertEquals("Test ITauthentication", Status.CLIENT_ERROR_FORBIDDEN.getCode(), status.getCode());
+        
+        mockServer.verify(HttpRequest.request("/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)
+                .withMethod("POST"), VerificationTimes.exactly(0));        
+    }
         
     /**
      * Test of getTokenInformation method, of class TokenResource.
@@ -187,47 +189,47 @@ public class ITauthentication {
      * @throws java.io.IOException
      *             - if OutOfMemoryErrors
      */
-//    @Test
-//    public void testTokenAuthenticationWithRightRole() throws IOException {
-//        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-//        ClientResource client = new ClientResource("https://localhost:" + port + "/admin/token");
-//        client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
-//        client.setNext(cl);
-//       
-//        Form form = new Form();
-//        form.add("identifier", "malapert");
-//        form.add("projectID", "828606");
-//        Representation response = client.post(form);
-//        String token = response.getText();
-//        client.release();
-//
-//        mockServer.when(HttpRequest.request("/mds/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)
-//                .withMethod("POST")).respond(HttpResponse.response().withStatusCode(200).withBody("operation successful"));
-//        
-//        Form mediaForm = new Form();
-//        mediaForm.add("image/fits", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
-//        mediaForm.add("image/jpeg", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
-//        mediaForm.add("image/png", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
-//
-//        client = new ClientResource("https://localhost:" + port + "/mds/media/" + DOI);
-//        client.setNext(cl);
-//        ChallengeResponse cr = new ChallengeResponse(ChallengeScheme.HTTP_OAUTH_BEARER);
-//        cr.setRawValue(token);
-//        client.setChallengeResponse(cr);
-//
-//        Status status;
-//        try {
-//            client.post(mediaForm);
-//            status = client.getStatus();
-//        } catch (ResourceException ex) {
-//            status = ex.getStatus();
-//        }
-//        client.release();
-//        assertEquals(Status.SUCCESS_OK.getCode(), status.getCode());   
-//        
-//        mockServer.verify(HttpRequest.request("/mds/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)
-//                .withMethod("POST"), VerificationTimes.once());          
-//    }    
+    @Test
+    public void testTokenAuthenticationWithRightRole() throws IOException {
+        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
+        ClientResource client = new ClientResource("https://localhost:" + port + "/admin/token");
+        client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, userAdmin, password);
+        client.setNext(cl);
+       
+        Form form = new Form();
+        form.add("identifier", userAdmin);
+        form.add("projectID", "828606");
+        Representation response = client.post(form);
+        String token = response.getText();
+        client.release();
+
+        mockServer.when(HttpRequest.request("/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)
+                .withMethod("POST")).respond(HttpResponse.response().withStatusCode(200).withBody("operation successful"));
+        
+        Form mediaForm = new Form();
+        mediaForm.add("image/fits", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
+        mediaForm.add("image/jpeg", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
+        mediaForm.add("image/png", "https://cnes.fr/sites/default/files/drupal/201508/default/is_cnesmag65-interactif-fr.pdf");
+
+        client = new ClientResource("https://localhost:" + port + "/mds/media/" + DOI);
+        client.setNext(cl);
+        ChallengeResponse cr = new ChallengeResponse(ChallengeScheme.HTTP_OAUTH_BEARER);
+        cr.setRawValue(token);
+        client.setChallengeResponse(cr);
+
+        Status status;
+        try {
+            client.post(mediaForm);
+            status = client.getStatus();
+        } catch (ResourceException ex) {
+            status = ex.getStatus();
+        }
+        client.release();
+        assertEquals(Status.SUCCESS_OK.getCode(), status.getCode());   
+        
+        mockServer.verify(HttpRequest.request("/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)
+                .withMethod("POST"), VerificationTimes.once());          
+    }    
     
     /**
      * Test of getTokenInformation method, of class TokenResource.
@@ -261,15 +263,22 @@ public class ITauthentication {
         client.release();
         assertEquals(Status.CLIENT_ERROR_FORBIDDEN.getCode(), status.getCode());
         
-        mockServer.verify(HttpRequest.request("/mds/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)
+        mockServer.verify(HttpRequest.request("/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)
                 .withMethod("POST"), VerificationTimes.exactly(0));         
     }    
     
     @Test
     public void testLDAPWithDoiGroup() throws LDAPAccessException {
-        ILDAPAcessService ldapaccessservice = new LDAPAccessServiceImpl();
+        ILDAPAccessService ldapaccessservice = new LDAPAccessServiceImpl();
         List<LDAPUser> ldap = ldapaccessservice.getDOIProjectMembers();
         assertTrue(!ldap.isEmpty());
     }
+    
+    @Test
+    public void testLDAPAuthentication() throws LDAPAccessException {
+        ILDAPAccessService ldapaccessservice = new LDAPAccessServiceImpl();
+        boolean isAuthenticated = ldapaccessservice.authenticateUser(userAdmin,password);
+        assertTrue(isAuthenticated);
+    }    
 
 }

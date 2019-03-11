@@ -31,8 +31,10 @@ import org.restlet.resource.ResourceException;
 
 import fr.cnes.doi.application.AdminApplication;
 import fr.cnes.doi.client.ClientSearchDataCite;
+import fr.cnes.doi.db.AbstractProjectSuffixDBHelper;
+import fr.cnes.doi.db.AbstractUserRoleDBHelper;
+import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.resource.AbstractResource;
-import fr.cnes.doi.utils.ManageProjects;
 import fr.cnes.doi.utils.spec.Requirement;
 /**
  * Provide a resource to delete and rename a project from database.
@@ -64,13 +66,11 @@ public class ManageProjectsResource extends AbstractResource {
      */
     @Override
     protected void doInit() throws ResourceException {
-	super.doInit();
+        super.doInit();        
 	final AdminApplication app = (AdminApplication) getApplication();
-	LOG = app.getLog();
-	LOG.traceEntry();
-	setDescription("This resource handles deletion and renaming of a project");
-	// this.suffixProject = getResourcePath().replace(AdminApplication.ADMIN_URI +
-	// AdminApplication.SUFFIX_PROJECT_URI + "/", "");
+	LOG = app.getLog();        
+        LOG.traceEntry();
+        setDescription("This resource handles deletion and renaming of a project");
 	this.suffixProject = getAttribute("suffixProject");
 	LOG.debug(this.suffixProject);
 
@@ -90,8 +90,8 @@ public class ManageProjectsResource extends AbstractResource {
 	LOG.traceEntry();
 	checkInputs(mediaForm);
 	final String newProjectName = mediaForm.getFirstValue(PROJECT_NAME_PARAMETER);
-	return LOG.traceExit(ManageProjects.getInstance()
-		.renameProject(Integer.parseInt(suffixProject), newProjectName));
+        final AbstractProjectSuffixDBHelper manageProjects = PluginFactory.getProjectSuffix();
+	return LOG.traceExit(manageProjects.renameProject(Integer.parseInt(suffixProject), newProjectName));
     }
 
     // TODO requirement
@@ -121,9 +121,8 @@ public class ManageProjectsResource extends AbstractResource {
 	if (!response.isEmpty()) {
 	    return LOG.traceExit(false);
 	}
-
-	return LOG.traceExit(ManageProjects.getInstance()
-		.deleteProject(Integer.parseInt(suffixProject)));
+        final AbstractProjectSuffixDBHelper manageProjects = PluginFactory.getProjectSuffix();
+	return LOG.traceExit(manageProjects.deleteProject(Integer.parseInt(suffixProject)));
     }
 
     /**

@@ -67,7 +67,7 @@ public class DoiResource extends BaseMdsResource {
         super.doInit();
         LOG.traceEntry();
         setDescription("The resource can retrieve a DOI");
-        this.doiName = getResourcePath().replace(DoiMdsApplication.DOI_URI + "/", "");
+        this.doiName = getAttributePath(DoiMdsApplication.DOI_URI);
         LOG.debug(this.doiName);
         LOG.traceExit();
     }

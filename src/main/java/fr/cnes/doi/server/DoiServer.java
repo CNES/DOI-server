@@ -47,9 +47,14 @@ import org.restlet.util.Series;
 import fr.cnes.doi.application.AdminApplication;
 import fr.cnes.doi.application.DoiCrossCiteApplication;
 import fr.cnes.doi.application.DoiMdsApplication;
+import fr.cnes.doi.db.AbstractUserRoleDBHelper;
+import fr.cnes.doi.exception.DOIDbException;
+import fr.cnes.doi.ldap.exceptions.LDAPAccessException;
+import fr.cnes.doi.ldap.util.LDAPUser;
 import fr.cnes.doi.logging.api.DoiLogDataServer;
 import fr.cnes.doi.logging.business.JsonMessage;
 import fr.cnes.doi.logging.security.DoiSecurityLogFilter;
+import fr.cnes.doi.ldap.impl.LDAPAccessServiceImpl;
 import fr.cnes.doi.security.RoleAuthorizer;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
@@ -58,6 +63,8 @@ import fr.cnes.doi.settings.JettySettings;
 import fr.cnes.doi.settings.ProxySettings;
 import fr.cnes.doi.utils.Utils;
 import fr.cnes.doi.utils.spec.Requirement;
+import fr.cnes.doi.ldap.service.ILDAPAccessService;
+import fr.cnes.doi.plugin.PluginFactory;
 
 /**
  * DoiServer contains the configuration of this server and the methods to start/stop it.
@@ -220,7 +227,7 @@ public class DoiServer extends Component {
         final boolean isHttpsStarted = initHttpsServer();
         if (isHttpStarted || isHttpsStarted) {
             initClients();
-            initAttachApplication();            
+            initAttachApplication();         
         } else {
             LOG.warn("No server is configured, please check your configuration file");
         }
@@ -303,6 +310,41 @@ public class DoiServer extends Component {
         // Set authentication 
         RoleAuthorizer.getInstance().createRealmFor(appDoiProject);
         RoleAuthorizer.getInstance().createRealmFor(appAdmin);
+        // Set LDAP user as admin
+        final String doiAdmin = DoiSettings.getInstance().getString(Consts.LDAP_DOI_ADMIN);
+        addLdapUserAsAdmin(doiAdmin);
+        LOG.traceExit();
+    }
+    
+    /**
+     * Adds LDAP user as administrator of the DOI server
+     * @param username username
+     */
+    private void addLdapUserAsAdmin(final String username) {
+        LOG.traceEntry("Parameter\n   username: {}", username);
+        final ILDAPAccessService ldapaccessservice = new LDAPAccessServiceImpl();
+        final AbstractUserRoleDBHelper manageUsers = PluginFactory.getUserManagement();        
+        try {        
+            boolean isFound = false;
+            final List<LDAPUser> ldapUsers = ldapaccessservice.getDOIProjectMembers();    
+            for (LDAPUser ldapUser:ldapUsers) {
+                if(ldapUser.getUsername().equals(username)) {
+                    manageUsers.setUserToAdminGroup(ldapUser.getUsername());
+                    isFound = true;                                       
+                    break;
+                }
+            }   
+            if(!isFound) {
+                LOG.warn("{} is not registered in the LDAP with the group {} - Cannot create "
+                        + "the administrator", 
+                        username, DoiSettings.getInstance().getString(Consts.LDAP_PROJECT)
+                );
+            }
+        } catch (LDAPAccessException ex) {
+            LOG.catching(ex);
+            LOG.warn("Cannot create an administrator: {}", ex);
+        }        
+        
         LOG.traceExit();
     }
 
@@ -442,5 +484,4 @@ public class DoiServer extends Component {
         }
         return LOG.traceExit(result);
     }
-
 }

@@ -65,37 +65,37 @@ public final class EmailSettings {
     /**
      * SMTP URL.
      */
-    private volatile String smtpUrl;
+    private String smtpUrl;
 
     /**
      * SMTP protocol.
      */
-    private volatile String smtpProtocol;
+    private String smtpProtocol;
 
     /**
      * TLS.
      */
-    private volatile String tlsEnable;
+    private String tlsEnable;
 
     /**
      * login.
      */
-    private volatile String authUser;
+    private String authUser;
 
     /**
      * Password.
      */
-    private volatile String authPwd;
+    private String authPwd;
 
     /**
      * Contact admin uRL.
      */
-    private volatile String contactAdmin;
+    private String contactAdmin;
 
     /**
      * debug.
      */
-    private volatile boolean debug = DEFAULT_DEBUG;
+    private boolean debug = DEFAULT_DEBUG;
 
     /**
      * Constructor

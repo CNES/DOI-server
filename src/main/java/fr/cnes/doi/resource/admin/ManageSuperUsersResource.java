@@ -29,8 +29,11 @@ import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
 
 import fr.cnes.doi.application.AdminApplication;
+import fr.cnes.doi.db.AbstractUserRoleDBHelper;
+import fr.cnes.doi.db.model.DOIUser;
+import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.resource.AbstractResource;
-import fr.cnes.doi.utils.ManageSuperUsers;
+import java.util.ArrayList;
 
 /**
  * Provide a resource to get all super users and add a user to the super user
@@ -81,7 +84,11 @@ public class ManageSuperUsersResource extends AbstractResource {
 	LOG.traceEntry();
 	checkInputs(mediaForm);
 	final String newSUPERUSERName = mediaForm.getFirstValue(SUPERUSER_NAME_PARAMETER);
-	return LOG.traceExit(ManageSuperUsers.getInstance().addSuperUser(newSUPERUSERName));
+        final AbstractUserRoleDBHelper manageUsers = PluginFactory.getUserManagement();
+        if (!manageUsers.isUserExist(newSUPERUSERName)) {
+            return false;
+        }
+	return LOG.traceExit(manageUsers.setUserToAdminGroup(newSUPERUSERName));
     }
 
     // TODO requirement
@@ -95,7 +102,15 @@ public class ManageSuperUsersResource extends AbstractResource {
     @Get
     public List<String> getSuperUsersAsJson() {
 	LOG.traceEntry();
-	return LOG.traceExit(ManageSuperUsers.getInstance().getSuperUsers());
+        final ArrayList<String> result = new ArrayList<>();
+        final AbstractUserRoleDBHelper manageUsers = PluginFactory.getUserManagement();
+        final List<DOIUser> users = manageUsers.getUsers();
+        for (DOIUser doiUser : users) {
+            if (doiUser.isAdmin()) {
+                result.add(doiUser.getUsername());
+            }
+        }
+	return LOG.traceExit(result);
     }
 
     /**

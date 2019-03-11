@@ -121,8 +121,8 @@ public final class InitServerForTest {
      *            config properties
      */
     public static void init(final String configProperties) {
-	InitDataBaseForTest.init();
 	InitSettingsForTest.init(configProperties);
+        InitDataBaseForTest.init();
 	try {
 	    doiServer = new DoiServer(DoiSettings.getInstance());
 	    doiServer.start();
