@@ -68,7 +68,7 @@ public class MetadataResource extends BaseMdsResource {
         super.doInit();
         LOG.traceEntry();
         setDescription("This resource handles a metadata : retrieve, delete");
-        this.doiName = getResourcePath().replace(DoiMdsApplication.METADATAS_URI + "/", "");
+        this.doiName = getAttributePath(DoiMdsApplication.METADATAS_URI);
         LOG.debug("DOI name " + this.doiName);
         LOG.traceExit();
     }
