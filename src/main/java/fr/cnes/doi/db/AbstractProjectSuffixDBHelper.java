@@ -18,7 +18,7 @@
  */
 package fr.cnes.doi.db;
 
-import fr.cnes.doi.db.persistence.model.DOIUser;
+import fr.cnes.doi.db.model.DOIUser;
 import fr.cnes.doi.utils.spec.Requirement;
 import java.util.List;
 import java.util.Map;
@@ -48,10 +48,10 @@ public abstract class AbstractProjectSuffixDBHelper extends Observable {
     public static final String RENAME_RECORD = "RENAME";
 
     /**
-     * Init the connection.
-     *
+     * Sets the configuration.     
+     * @param configuration configuration parameters
      */
-    public abstract void init();
+    public abstract void setConfiguration(final Object configuration);
 
     /**
      * Adds a suffix project in the database.

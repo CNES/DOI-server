@@ -30,9 +30,12 @@ import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
 
 import fr.cnes.doi.application.AdminApplication;
+import fr.cnes.doi.db.AbstractUserRoleDBHelper;
+import fr.cnes.doi.db.model.DOIUser;
+import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.resource.AbstractResource;
-import fr.cnes.doi.utils.ManageUsers;
 import fr.cnes.doi.utils.spec.Requirement;
+import java.util.ArrayList;
 /**
  * Provide resources to get all users, bind or delete a user to/from a project.
  */
@@ -84,7 +87,13 @@ public class ManageUsersResource extends AbstractResource {
     public List<String> getUsers() {
         LOG.traceEntry();
         int idProject = Integer.parseInt(suffixProject);
-        return LOG.traceExit(ManageUsers.getInstance().getAllUsersFromProject(idProject));
+        final List<String> users = new ArrayList<>();
+        final AbstractUserRoleDBHelper manageUsers = PluginFactory.getUserManagement();
+        List<DOIUser> doiUsers = manageUsers.getUsersFromRole(idProject);
+        for (DOIUser doiUser : doiUsers) {
+            users.add(doiUser.getUsername());
+        }        
+        return LOG.traceExit(users);
     }
 
     //TODO requirement 
@@ -100,7 +109,14 @@ public class ManageUsersResource extends AbstractResource {
         checkInputs(mediaForm);
         final String user = mediaForm.getFirstValue(USER_NAME_PARAMETER);
         int idProject = Integer.parseInt(suffixProject);
-        return LOG.traceExit(ManageUsers.getInstance().addUserToProject(user, idProject));
+        final AbstractUserRoleDBHelper manageUsers = PluginFactory.getUserManagement();
+        final boolean isAdded;
+        if (manageUsers.isUserExist(user)) {
+            isAdded = manageUsers.addUserToRole(user, idProject);
+        } else {
+            isAdded = false;
+        }
+        return isAdded;        
     }
 
     //TODO requirement
@@ -113,7 +129,8 @@ public class ManageUsersResource extends AbstractResource {
     public boolean deleteProject() {
         LOG.traceEntry();
         int idProject = Integer.parseInt(suffixProject);
-        return LOG.traceExit(ManageUsers.getInstance().deleteUserFromProject(idProject, userName));
+        final AbstractUserRoleDBHelper manageUsers = PluginFactory.getUserManagement();
+        return LOG.traceExit(manageUsers.removeUserToRole(userName, idProject));
     }
 
     /**

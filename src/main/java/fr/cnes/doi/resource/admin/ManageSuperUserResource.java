@@ -24,8 +24,9 @@ import org.restlet.resource.Get;
 import org.restlet.resource.ResourceException;
 
 import fr.cnes.doi.application.AdminApplication;
+import fr.cnes.doi.db.AbstractUserRoleDBHelper;
+import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.resource.AbstractResource;
-import fr.cnes.doi.utils.ManageSuperUsers;
 import org.restlet.data.Status;
 
 /**
@@ -73,10 +74,11 @@ public class ManageSuperUserResource extends AbstractResource {
     @Get
     public boolean isUserExistAndAdmin() {
 	LOG.traceEntry();
-        if(!ManageSuperUsers.getInstance().isSuperUserExist(userName)) {
+        final AbstractUserRoleDBHelper manageUsers = PluginFactory.getUserManagement();
+        if(!manageUsers.isUserExist(userName)) {
             throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "The user "+userName+" does not exist");
         }         
-	return LOG.traceExit(ManageSuperUsers.getInstance().isSuperUser(userName));
+	return LOG.traceExit(manageUsers.isAdmin(userName));
     }
 
     // TODO requirement
@@ -90,7 +92,8 @@ public class ManageSuperUserResource extends AbstractResource {
     @Delete
     public boolean deleteSUPERUSER() {
 	LOG.traceEntry();
-	return LOG.traceExit(ManageSuperUsers.getInstance().deleteSuperUser(userName));
+        final AbstractUserRoleDBHelper manageUsers = PluginFactory.getUserManagement();
+	return LOG.traceExit(manageUsers.unsetUserFromAdminGroup(userName));
     }
 
 }

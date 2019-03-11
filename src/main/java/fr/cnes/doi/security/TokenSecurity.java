@@ -127,7 +127,7 @@ public final class TokenSecurity {
         LOG.traceEntry();
         final String token = DoiSettings.getInstance().getString(Consts.TOKEN_KEY);
         this.tokenKey = (token == null) ? DEFAULT_TOKEN_KEY : token;
-        TokenSecurity.TOKEN_DB.init(null);
+        TokenSecurity.TOKEN_DB.setConfiguration(null);
         LOG.traceExit();
     }
 

@@ -106,7 +106,7 @@ public class ITauthentication {
 	    parameters.add("truststorePassword",
 		    DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
 	    parameters.add("truststoreType", "JKS");
-            userAdmin = DoiSettings.getInstance().getString(Consts.LDAP_DOI_Admin);
+            userAdmin = DoiSettings.getInstance().getString(Consts.LDAP_DOI_ADMIN);
             password = System.getProperty("doi-admin-pwd");
 	} catch (Error ex) {
 	    isDatabaseConfigured = false;
@@ -155,7 +155,7 @@ public class ITauthentication {
         String token = response.getText();
         client.release();
 
-        mockServer.when(HttpRequest.request("/mds/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)
+        mockServer.when(HttpRequest.request("/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)
                 .withMethod("POST")).respond(HttpResponse.response().withStatusCode(403));
         
         Form mediaForm = new Form();
@@ -179,7 +179,7 @@ public class ITauthentication {
         client.release();
         assertEquals("Test ITauthentication", Status.CLIENT_ERROR_FORBIDDEN.getCode(), status.getCode());
         
-        mockServer.verify(HttpRequest.request("/mds/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)
+        mockServer.verify(HttpRequest.request("/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)
                 .withMethod("POST"), VerificationTimes.exactly(0));        
     }
         
@@ -203,7 +203,7 @@ public class ITauthentication {
         String token = response.getText();
         client.release();
 
-        mockServer.when(HttpRequest.request("/mds/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)
+        mockServer.when(HttpRequest.request("/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)
                 .withMethod("POST")).respond(HttpResponse.response().withStatusCode(200).withBody("operation successful"));
         
         Form mediaForm = new Form();
@@ -227,7 +227,7 @@ public class ITauthentication {
         client.release();
         assertEquals(Status.SUCCESS_OK.getCode(), status.getCode());   
         
-        mockServer.verify(HttpRequest.request("/mds/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)
+        mockServer.verify(HttpRequest.request("/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)
                 .withMethod("POST"), VerificationTimes.once());          
     }    
     
@@ -263,7 +263,7 @@ public class ITauthentication {
         client.release();
         assertEquals(Status.CLIENT_ERROR_FORBIDDEN.getCode(), status.getCode());
         
-        mockServer.verify(HttpRequest.request("/mds/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)
+        mockServer.verify(HttpRequest.request("/" + ClientMDS.MEDIA_RESOURCE+"/"+DOI)
                 .withMethod("POST"), VerificationTimes.exactly(0));         
     }    
     
@@ -277,7 +277,7 @@ public class ITauthentication {
     @Test
     public void testLDAPAuthentication() throws LDAPAccessException {
         ILDAPAccessService ldapaccessservice = new LDAPAccessServiceImpl();
-        boolean isAuthenticated = ldapaccessservice.authenticateUser("malapertjc","Bremagne100378!!!");
+        boolean isAuthenticated = ldapaccessservice.authenticateUser(userAdmin,password);
         assertTrue(isAuthenticated);
     }    
 

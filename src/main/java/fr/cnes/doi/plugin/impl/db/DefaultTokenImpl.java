@@ -18,7 +18,8 @@
  */
 package fr.cnes.doi.plugin.impl.db;
 
-import fr.cnes.doi.db.DatabaseSingleton;
+import fr.cnes.doi.plugin.impl.db.persistence.service.DatabaseSingleton;
+import fr.cnes.doi.plugin.impl.db.persistence.service.DOIDbDataAccessService;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -31,7 +32,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import fr.cnes.doi.exception.DOIDbException;
-import fr.cnes.doi.db.persistence.service.DOIDbDataAccessService;
 import fr.cnes.doi.plugin.AbstractTokenDBPluginHelper;
 import fr.cnes.doi.security.TokenSecurity;
 import io.jsonwebtoken.Claims;
@@ -66,7 +66,7 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
     }
 
     @Override
-    public void init(Object configuration) {
+    public void setConfiguration(Object configuration) {
     }
 
     @Override
@@ -135,6 +135,7 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
         return isExpirated;
     }
 
+    @Override
     public List<String> getTokens() {
         try {
             return das.getTokens();

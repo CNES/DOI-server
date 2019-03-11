@@ -412,7 +412,6 @@
                     <archive>
                         <manifest>
                             <mainClass>fr.cnes.doi.server.Starter</mainClass>
-                            <!--<mainClass>fr.cnes.doi.utils.DoiGUI<mainClass>-->
                         </manifest>
                     </archive>
                 </configuration>
@@ -445,11 +444,11 @@
                     <groups>
                         <group>
                             <title>Core Packages</title>
-                            <packages>fr.cnes.doi.server:fr.cnes.doi.application*:fr.cnes.doi.resource*:fr.cnes.doi.security*:fr.cnes.doi.services*:fr.cnes.doi.ldap*</packages>
+                            <packages>fr.cnes.doi.server:fr.cnes.doi.db*:fr.cnes.doi.application*:fr.cnes.doi.resource*:fr.cnes.doi.security*:fr.cnes.doi.services*:fr.cnes.doi.ldap*</packages>
                         </group>                                             
                         <group>
                             <title>Extension Packages</title>
-                            <packages>fr.cnes.doi.plugin*:fr.cnes.doi.db</packages>
+                            <packages>fr.cnes.doi.plugin*</packages>
                         </group>
                         <group>
                             <title>Utility Packages</title>

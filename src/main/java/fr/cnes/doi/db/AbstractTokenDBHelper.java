@@ -32,11 +32,10 @@ import fr.cnes.doi.utils.spec.Requirement;
 public abstract class AbstractTokenDBHelper extends Observable {
 
     /**
-     * Init the connection.
-     *
-     * @param configuration connection configuration
+     * Sets the configuration.     
+     * @param configuration configuration parameters
      */
-    public abstract void init(Object configuration);
+    public abstract void setConfiguration(final Object configuration);
 
     /**
      * Adds a token in the database

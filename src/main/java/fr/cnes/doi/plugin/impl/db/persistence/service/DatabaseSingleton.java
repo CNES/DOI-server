@@ -16,12 +16,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package fr.cnes.doi.db;
+package fr.cnes.doi.plugin.impl.db.persistence.service;
 
-import fr.cnes.doi.ldap.impl.LDAPAccessServiceImpl;
-import fr.cnes.doi.db.persistence.impl.DOIDbDataAccessServiceImpl;
-import fr.cnes.doi.db.persistence.service.DOIDbDataAccessService;
-import fr.cnes.doi.ldap.service.ILDAPAccessService;
+import fr.cnes.doi.plugin.impl.db.persistence.impl.DOIDbDataAccessServiceImpl;
 
 /**
  * Database singleton for accessing to the LDAP and DOI database.
@@ -29,10 +26,6 @@ import fr.cnes.doi.ldap.service.ILDAPAccessService;
  */
 public final class DatabaseSingleton {
     
-    /**
-     * LDAP access.
-     */
-    private final ILDAPAccessService ldapaccessservice;
     /**
      * DOI db access.
      */
@@ -42,7 +35,6 @@ public final class DatabaseSingleton {
      * Initialize the LDAP and DOI database.
      */
     private DatabaseSingleton() {
-        this.ldapaccessservice = new LDAPAccessServiceImpl();
         this.das = new DOIDbDataAccessServiceImpl();
     }
     
@@ -53,14 +45,6 @@ public final class DatabaseSingleton {
     public static DatabaseSingleton getInstance() {
         return DatabaseSingletonHolder.INSTANCE;
     } 
-    
-    /**
-     * Returns the LDAP access.
-     * @return the LDAP access
-     */
-    public ILDAPAccessService getLdapAccess() {
-        return this.ldapaccessservice;
-    }
     
     /**
      * Returns the database access.

@@ -261,7 +261,7 @@ public class ITperformance {
         @Override
         public void run() {
             
-            final String userAdmin = DoiSettings.getInstance().getString(Consts.LDAP_DOI_Admin);
+            final String userAdmin = DoiSettings.getInstance().getString(Consts.LDAP_DOI_ADMIN);
             final String password = System.getProperty("doi-admin-pwd");
             
             Form doiForm = new Form();

@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package fr.cnes.doi.db.persistence.model;
+package fr.cnes.doi.db.model;
 
 /**
  * DOI user model

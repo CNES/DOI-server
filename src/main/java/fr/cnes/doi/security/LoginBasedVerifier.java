@@ -18,7 +18,8 @@
  */
 package fr.cnes.doi.security;
 
-import fr.cnes.doi.db.DatabaseSingleton;
+import fr.cnes.doi.db.AbstractUserRoleDBHelper;
+import fr.cnes.doi.ldap.impl.LDAPAccessServiceImpl;
 import java.util.Base64;
 
 import org.apache.logging.log4j.LogManager;
@@ -31,9 +32,9 @@ import org.restlet.security.Verifier;
 
 import fr.cnes.doi.logging.business.JsonMessage;
 import fr.cnes.doi.settings.Consts;
-import fr.cnes.doi.utils.ManageUsers;
 import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.ldap.service.ILDAPAccessService;
+import fr.cnes.doi.plugin.PluginFactory;
 
 /**
  * Security class for checking login/password.
@@ -56,7 +57,7 @@ public class LoginBasedVerifier implements Verifier {
      * Constructor.
      */
     public LoginBasedVerifier() {
-	this.ldapService = DatabaseSingleton.getInstance().getLdapAccess();
+	this.ldapService = new LDAPAccessServiceImpl();
     }
 
     /**
@@ -93,8 +94,7 @@ public class LoginBasedVerifier implements Verifier {
      *            authentication object
      * @return the authentication status
      */
-    private int processAuthentication(final Request request,
-	    final ChallengeResponse challResponse) {
+    private int processAuthentication(final Request request, final ChallengeResponse challResponse){
 	LOG.traceEntry(new JsonMessage(request));
 	final int result;
 	final String login = challResponse.getRawValue();
@@ -110,7 +110,8 @@ public class LoginBasedVerifier implements Verifier {
 	final boolean isLDAPSetted = DoiSettings.getInstance().hasValue(Consts.LDAP_URL);
         final boolean isProdContext = DoiSettings.getInstance().getString(Consts.CONTEXT_MODE).equals("PROD");
 
-	if (ManageUsers.getInstance().isUserExist(userLogin[0])) {            
+        final AbstractUserRoleDBHelper manageUsers = PluginFactory.getUserManagement();
+	if (manageUsers.isUserExist(userLogin[0])) {            
 	    if (isLDAPSetted) { 
                 LOG.debug("LDAP is configured");
                 result = ldapService.authenticateUser(userLogin[0], userLogin[1]) 
@@ -127,10 +128,8 @@ public class LoginBasedVerifier implements Verifier {
 	    result = Verifier.RESULT_INVALID;
 	}
         if (result == Verifier.RESULT_VALID) {
-            LOG.info("{} is authenticated, set it in get client info {}", 
-                    userLogin[0], ManageUsers.getInstance().getRealm().findUser(userLogin[0]));
-	    request.getClientInfo()
-		    .setUser(ManageUsers.getInstance().getRealm().findUser(userLogin[0]));
+            LOG.info("{} is authenticated, set it in get client info {}", userLogin[0], manageUsers.getRealm().findUser(userLogin[0]));
+	    request.getClientInfo().setUser(manageUsers.getRealm().findUser(userLogin[0]));
         }
 	return LOG.traceExit(result);
     }

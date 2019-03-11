@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package fr.cnes.doi.db.persistence.impl;
+package fr.cnes.doi.plugin.impl.db.persistence.impl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -29,10 +29,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import fr.cnes.doi.exception.DOIDbException;
-import fr.cnes.doi.db.persistence.model.DOIProject;
-import fr.cnes.doi.db.persistence.model.DOIUser;
-import fr.cnes.doi.db.persistence.service.DOIDbDataAccessService;
-import fr.cnes.doi.db.persistence.service.JDBCConnector;
+import fr.cnes.doi.db.model.DOIProject;
+import fr.cnes.doi.db.model.DOIUser;
+import fr.cnes.doi.plugin.impl.db.persistence.service.DOIDbDataAccessService;
 
 public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
 

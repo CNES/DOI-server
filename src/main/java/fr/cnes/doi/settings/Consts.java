@@ -411,7 +411,7 @@ public final class Consts {
     /**
      * LDAP username who is the administrator of the DOI server
      */
-    public static final String LDAP_DOI_Admin = "Starter.LDAP.user.admin";    
+    public static final String LDAP_DOI_ADMIN = "Starter.LDAP.user.admin";    
     
     /**
      * "Static" class cannot be instantiated

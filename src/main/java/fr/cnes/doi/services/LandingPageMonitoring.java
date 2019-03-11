@@ -20,9 +20,10 @@ package fr.cnes.doi.services;
 
 import fr.cnes.doi.client.ClientLandingPage;
 import fr.cnes.doi.client.ClientSearchDataCite;
-import fr.cnes.doi.db.persistence.model.DOIUser;
+import fr.cnes.doi.db.AbstractProjectSuffixDBHelper;
+import fr.cnes.doi.db.model.DOIUser;
+import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.settings.EmailSettings;
-import fr.cnes.doi.utils.ManageProjects;
 import fr.cnes.doi.utils.spec.Requirement;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -90,7 +91,7 @@ public class LandingPageMonitoring implements Runnable {
         Pattern doiPattern = Pattern.compile(doiRegex);
         Matcher doiMatcher = doiPattern.matcher(error);
         int doiSuffix = Integer.parseInt(doiMatcher.group(3));
-        ManageProjects manageProjects = ManageProjects.getInstance();
+        AbstractProjectSuffixDBHelper manageProjects = PluginFactory.getProjectSuffix();
         List<DOIUser> members = manageProjects.getAllDOIUsersForProject(doiSuffix);
         for (DOIUser member : members) {
             email.sendMessage(subject, body, member.getEmail());

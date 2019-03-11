@@ -18,7 +18,8 @@
  */
 package fr.cnes.doi.plugin.impl.db;
 
-import fr.cnes.doi.db.DatabaseSingleton;
+import fr.cnes.doi.plugin.impl.db.persistence.service.DatabaseSingleton;
+import fr.cnes.doi.plugin.impl.db.persistence.service.DOIDbDataAccessService;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -28,10 +29,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import fr.cnes.doi.exception.DOIDbException;
-import fr.cnes.doi.db.persistence.model.DOIProject;
-import fr.cnes.doi.db.persistence.service.DOIDbDataAccessService;
+import fr.cnes.doi.db.model.DOIProject;
 import fr.cnes.doi.plugin.AbstractProjectSuffixPluginHelper;
-import fr.cnes.doi.db.persistence.model.DOIUser;
+import fr.cnes.doi.db.model.DOIUser;
 import java.util.ArrayList;
 
 /**
@@ -68,12 +68,11 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
      *
      */
     @Override
-    public void init() {
+    public void setConfiguration(Object configuration) {
     }
 
     @Override
-    public synchronized boolean addProjectSuffix(int projectID,
-            String projectName) {
+    public synchronized boolean addProjectSuffix(int projectID, String projectName) {
         boolean isAdded = false;
         try {
             das.addDOIProject(projectID, projectName);
