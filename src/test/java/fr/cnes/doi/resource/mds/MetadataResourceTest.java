@@ -138,7 +138,7 @@ public class MetadataResourceTest {
         client.setNext(cl);
         int code;
         String doi;
-        try {
+        try {            
             Resource resource = client.get(Resource.class);
             code = client.getStatus().getCode();
             doi = resource.getIdentifier().getValue();

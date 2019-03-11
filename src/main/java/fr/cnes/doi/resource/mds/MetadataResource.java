@@ -27,7 +27,6 @@ import fr.cnes.doi.exception.DoiServerException;
 import fr.cnes.doi.utils.spec.Requirement;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.logging.Logger;
 import org.apache.logging.log4j.Level;
 import org.datacite.schema.kernel_4.Resource;
 import org.restlet.data.Method;
@@ -121,17 +120,14 @@ public class MetadataResource extends BaseMdsResource {
      */
     @Requirement(reqId = Requirement.DOI_SRV_060, reqName = Requirement.DOI_SRV_060_NAME)
     @Requirement(reqId = Requirement.DOI_MONIT_020, reqName = Requirement.DOI_MONIT_020_NAME)
-    @Get("xml|json")
-    public Resource getMetadata() throws DoiServerException {
+    @Get("xml")
+    public Representation getMetadata() throws DoiServerException {
         LOG.traceEntry();
         checkInputs(doiName);
-        final Resource resource;
+        final Representation resource;
         try {
             setStatus(Status.SUCCESS_OK);            
-            resource = this.getDoiApp().getClient().getMetadataAsObject(this.doiName);
-            JaxbRepresentation<Resource> result = new JaxbRepresentation<Resource>(resource);
-            result.setFormattedOutput(true);   
-            System.out.println(result.getText());
+            resource = this.getDoiApp().getClient().getMetadata(this.doiName);  
         } catch (ClientMdsException ex) {
             if (ex.getStatus().getCode() == Status.CLIENT_ERROR_NOT_FOUND.getCode()) {
                 throw LOG.throwing(
@@ -151,13 +147,15 @@ public class MetadataResource extends BaseMdsResource {
                         new DoiServerException(getApplication(), API_MDS.DATACITE_PROBLEM, ex)
                 );
             }
-        } catch (IOException ex) {
-                throw LOG.throwing(
-                        Level.DEBUG,
-                        new DoiServerException(getApplication(), API_MDS.DATACITE_PROBLEM, ex)
-                );
         }
         return LOG.traceExit(resource);
+    }
+    
+    @Get("json")
+    public Resource getMetadataAsJson() throws IOException {
+        final Representation rep = getMetadata();
+        JaxbRepresentation<Resource> resourceEntity = new JaxbRepresentation<>(rep, Resource.class);
+        return resourceEntity.getObject();
     }
 
     /**
