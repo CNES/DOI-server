@@ -66,8 +66,8 @@ public class ManageProjectsResource extends AbstractResource {
      */
     @Override
     protected void doInit() throws ResourceException {
-        LOG.traceEntry();         
-	super.doInit();
+        super.doInit();
+        LOG.traceEntry();         	
         setDescription("This resource handles deletion and renaming of a project");
 	final AdminApplication app = (AdminApplication) getApplication();
 	LOG = app.getLog();        

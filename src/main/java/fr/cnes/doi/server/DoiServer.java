@@ -329,13 +329,8 @@ public class DoiServer extends Component {
             final List<LDAPUser> ldapUsers = ldapaccessservice.getDOIProjectMembers();    
             for (LDAPUser ldapUser:ldapUsers) {
                 if(ldapUser.getUsername().equals(username)) {
-                    try {
-                        manageUsers.addDOIUser(ldapUser.getUsername(), true, ldapUser.getEmail());
-                        isFound = true;
-                    } catch (DOIDbException ex) {
-                        LOG.error("Cannot add {}", ldapUser.getUsername(), ex);
-                        isFound = false;
-                    }                                         
+                    manageUsers.setUserToAdminGroup(ldapUser.getUsername());
+                    isFound = true;                                       
                     break;
                 }
             }   
