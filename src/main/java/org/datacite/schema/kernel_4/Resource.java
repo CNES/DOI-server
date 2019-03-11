@@ -1207,10 +1207,10 @@ public class Resource {
 
             @XmlElement(required = true)
             protected Resource.Contributors.Contributor.ContributorName contributorName;
-            protected Object givenName;
-            protected Object familyName;
+            protected String givenName;
+            protected String familyName;
             protected List<Resource.Contributors.Contributor.NameIdentifier> nameIdentifier;
-            protected List<Object> affiliation;
+            protected List<String> affiliation;
             @XmlAttribute(name = "contributorType", required = true)
             protected ContributorType contributorType;
 
@@ -1243,10 +1243,10 @@ public class Resource {
              * 
              * @return
              *     possible object is
-             *     {@link Object }
+             *     {@link String }
              *     
              */
-            public Object getGivenName() {
+            public String getGivenName() {
                 return givenName;
             }
 
@@ -1255,10 +1255,10 @@ public class Resource {
              * 
              * @param value
              *     allowed object is
-             *     {@link Object }
+             *     {@link String }
              *     
              */
-            public void setGivenName(Object value) {
+            public void setGivenName(String value) {
                 this.givenName = value;
             }
 
@@ -1267,10 +1267,10 @@ public class Resource {
              * 
              * @return
              *     possible object is
-             *     {@link Object }
+             *     {@link String }
              *     
              */
-            public Object getFamilyName() {
+            public String getFamilyName() {
                 return familyName;
             }
 
@@ -1279,10 +1279,10 @@ public class Resource {
              * 
              * @param value
              *     allowed object is
-             *     {@link Object }
+             *     {@link String }
              *     
              */
-            public void setFamilyName(Object value) {
+            public void setFamilyName(String value) {
                 this.familyName = value;
             }
 
@@ -1334,12 +1334,12 @@ public class Resource {
              * 
              * <p>
              * Objects of the following type(s) are allowed in the list
-             * {@link Object }
+             * {@link String }
              * 
              * 
              * @return the affiliation
              */
-            public List<Object> getAffiliation() {
+            public List<String> getAffiliation() {
                 if (affiliation == null) {
                     affiliation = new ArrayList<>();
                 }
@@ -1704,10 +1704,10 @@ public class Resource {
 
             @XmlElement(required = true)
             protected Resource.Creators.Creator.CreatorName creatorName;
-            protected Object givenName;
-            protected Object familyName;
+            protected String givenName;
+            protected String familyName;
             protected List<Resource.Creators.Creator.NameIdentifier> nameIdentifier;
-            protected List<Object> affiliation;
+            protected List<String> affiliation;
 
             /**
              * Gets the value of the creatorName property.
@@ -1741,7 +1741,7 @@ public class Resource {
              *     {@link Object }
              *     
              */
-            public Object getGivenName() {
+            public String getGivenName() {
                 return givenName;
             }
 
@@ -1750,10 +1750,10 @@ public class Resource {
              * 
              * @param value
              *     allowed object is
-             *     {@link Object }
+             *     {@link String }
              *     
              */
-            public void setGivenName(Object value) {
+            public void setGivenName(String value) {
                 this.givenName = value;
             }
 
@@ -1762,10 +1762,10 @@ public class Resource {
              * 
              * @return
              *     possible object is
-             *     {@link Object }
+             *     {@link String }
              *     
              */
-            public Object getFamilyName() {
+            public String getFamilyName() {
                 return familyName;
             }
 
@@ -1774,10 +1774,10 @@ public class Resource {
              * 
              * @param value
              *     allowed object is
-             *     {@link Object }
+             *     {@link String }
              *     
              */
-            public void setFamilyName(Object value) {
+            public void setFamilyName(String value) {
                 this.familyName = value;
             }
 
@@ -1829,12 +1829,12 @@ public class Resource {
              * 
              * <p>
              * Objects of the following type(s) are allowed in the list
-             * {@link Object }
+             * {@link String }
              * 
              * 
              * @return the affiliation
              */
-            public List<Object> getAffiliation() {
+            public List<String> getAffiliation() {
                 if (affiliation == null) {
                     affiliation = new ArrayList<>();
                 }
