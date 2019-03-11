@@ -445,6 +445,8 @@
                 $.ajax({
                     type: "GET",
                     url: "/mds/metadata/" + fullDoiName,
+                    contentType: "text/xml",
+                    dataType: "xml",                     
                     headers: {
                         'Authorization': "Bearer " + sessionStorage.getItem("token")
                     },

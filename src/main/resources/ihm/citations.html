@@ -190,6 +190,8 @@
                     type: "GET",
                     url: "/citation/format?" + $.param(request),
                     crossDomain: true,
+                    contentType: "text/plain",
+                    dataType: "text",                    
                     cache: false,
                     error: function (XMLHttpRequest, textStatus, errorThrown) {
                         var parser = new DOMParser();
