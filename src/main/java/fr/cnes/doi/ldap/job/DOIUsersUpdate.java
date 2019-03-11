@@ -26,14 +26,25 @@ import fr.cnes.doi.ldap.impl.LdapDoidbIntegrationImpl;
 import fr.cnes.doi.ldap.persistence.LdapDoidbIntegration;
 import fr.cnes.doi.exception.DOIDbException;
 
+/**
+ * Updates the DOI database from the LDAP. 
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
+ */
 public class DOIUsersUpdate implements Runnable {
-
-    // ldap and doidb integration service
+    
+    /**
+     * ldap and doidb integration service.
+     */
     private final LdapDoidbIntegration service = new LdapDoidbIntegrationImpl();
 
-    // logger
+    /**
+     * logger.
+     */
     private final Logger LOG = LogManager.getLogger(DOIUsersUpdate.class.getName());
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public void run() {
         LOG.info("executing task that updates database from ldap !");

@@ -48,7 +48,6 @@ import fr.cnes.doi.application.AdminApplication;
 import fr.cnes.doi.application.DoiCrossCiteApplication;
 import fr.cnes.doi.application.DoiMdsApplication;
 import fr.cnes.doi.db.AbstractUserRoleDBHelper;
-import fr.cnes.doi.exception.DOIDbException;
 import fr.cnes.doi.ldap.exceptions.LDAPAccessException;
 import fr.cnes.doi.ldap.util.LDAPUser;
 import fr.cnes.doi.logging.api.DoiLogDataServer;
@@ -243,7 +242,7 @@ public class DoiServer extends Component {
         LOG.traceEntry();
         final boolean isConfigured;
         if (settings.hasValue(Consts.SERVER_HTTP_PORT)) {
-            String httpPort = settings.getString(Consts.SERVER_HTTP_PORT);
+            final String httpPort = settings.getString(Consts.SERVER_HTTP_PORT);
             final Server serverHttp = startHttpServer(Integer.parseInt(httpPort));
             this.getServers().add(serverHttp);
             initJettyConfiguration(serverHttp);
@@ -262,7 +261,7 @@ public class DoiServer extends Component {
         LOG.traceEntry();
         final boolean isConfigured;
         if (settings.hasValue(Consts.SERVER_HTTPS_PORT)) {
-            String httpsPort = settings.getString(Consts.SERVER_HTTPS_PORT);
+            final String httpsPort = settings.getString(Consts.SERVER_HTTPS_PORT);
             final Server serverHttps = startHttpsServer(Integer.parseInt(httpsPort));
             this.getServers().add(serverHttps);
             initJettyConfiguration(serverHttps);

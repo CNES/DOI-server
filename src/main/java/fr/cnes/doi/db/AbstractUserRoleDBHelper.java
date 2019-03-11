@@ -122,7 +122,7 @@ public abstract class AbstractUserRoleDBHelper extends Observable {
      * @param admin True when the user must be added in the admin group otherwise False
      * @throws DOIDbException When a database problem happens
      */
-    public abstract void addDOIUser(String username, Boolean admin) throws DOIDbException;
+    public abstract void addDOIUser(final String username, final Boolean admin) throws DOIDbException;
 
     /**
      * Add a DOI user
@@ -130,15 +130,29 @@ public abstract class AbstractUserRoleDBHelper extends Observable {
      * @param username username
      * @param admin True when the user must be added in the admin group otherwise False
      * @param email email
+     * @throws DOIDbException When a database problem occurs
+     */
+    public abstract void addDOIUser(final String username, final Boolean admin, final String email) throws DOIDbException;
+
+    /**
+     * Tests if the user exists.
+     * @param username the user
+     * @return True when the user exists otherwise False
+     */
+    public abstract boolean isUserExist(final String username);
+
+    /**
+     * Tests is the user is an administrator.
+     * @param username user
+     * @return True when the user is an administrator otherwise False
+     */
+    public abstract boolean isAdmin(final String username);
+
+    /**
+     * Removes the user
+     * @param username user
      * @throws DOIDbException When a database problem happens
      */
-    public abstract void addDOIUser(String username, Boolean admin, String email) throws
-            DOIDbException;
-
-    public abstract boolean isUserExist(String username);
-
-    public abstract boolean isAdmin(String username);
-
-    public abstract void removeDOIUser(String username);
+    public abstract void removeDOIUser(final String username) throws DOIDbException;
 
 }

@@ -18,9 +18,18 @@
  */
 package fr.cnes.doi.ldap.exceptions;
 
+/**
+ * Exception created by a LDAP.
+ * @author Jean-Chritophe Malapert (Jean-Christophe.malapert@cnes.fr)
+ */
 public class LDAPAccessException extends Exception {
 
-    public LDAPAccessException(String string, Exception e) {
-        super(string, e);
+    /**
+     * Constructor
+     * @param message Message explaining the exception
+     * @param ex exception
+     */
+    public LDAPAccessException(final String message, final Exception ex) {
+        super(message, ex);
     }
 }

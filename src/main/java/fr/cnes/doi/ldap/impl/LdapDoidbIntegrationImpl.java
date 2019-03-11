@@ -31,6 +31,10 @@ import org.apache.logging.log4j.Logger;
 import fr.cnes.doi.ldap.service.ILDAPAccessService;
 import fr.cnes.doi.plugin.PluginFactory;
 
+/**
+ * Concrete implementation of {@link LdapDoidbIntegration}.
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
+ */
 public class LdapDoidbIntegrationImpl implements LdapDoidbIntegration {
 
     /**
@@ -38,7 +42,10 @@ public class LdapDoidbIntegrationImpl implements LdapDoidbIntegration {
      */
     private static final Logger LOG = LogManager.getLogger(LdapDoidbIntegrationImpl.class.getName());
 
-    private ILDAPAccessService ldapaccessservice = new LDAPAccessServiceImpl();
+    /**
+     * Access to the LDAP.
+     */
+    private final ILDAPAccessService ldapaccessservice = new LDAPAccessServiceImpl();
 
     @Override
     public void updateDoiServerDataBaseFromLdap() throws LDAPAccessException, DOIDbException {
@@ -49,14 +56,14 @@ public class LdapDoidbIntegrationImpl implements LdapDoidbIntegration {
         final List<DOIUser> dbusers = manageUsers.getUsers();
         LOG.debug("Users from database: {}", dbusers);
         LOG.debug("remove from database, users that are no longer members of doi_server project");
-        for (DOIUser dbuser : dbusers) {
+        for (final DOIUser dbuser : dbusers) {
             if (!isContained(dbuser, ldapmembers)) {               
                 LOG.debug("User {} is removed from database", dbuser.getUsername());
                 manageUsers.removeDOIUser(dbuser.getUsername());
             }
         }
         LOG.debug("add to database users that are new members of doi_server project");
-        for (LDAPUser ldapmember : ldapmembers) {
+        for (final LDAPUser ldapmember : ldapmembers) {
             if (!isContained(ldapmember, dbusers)) {
                 // add ldapmember to doi database
                 LOG.debug("ldapmember {} is added to database as simple user", ldapmember.getUsername());
@@ -76,10 +83,10 @@ public class LdapDoidbIntegrationImpl implements LdapDoidbIntegration {
      * @param dbusers users database
      * @return True when the LDAP user is contained in the users from database otherwise false
      */
-    private boolean isContained(LDAPUser ldapmember, List<DOIUser> dbusers) {
+    private boolean isContained(final LDAPUser ldapmember, final List<DOIUser> dbusers) {
         LOG.traceEntry("Parameters {},", ldapmember, dbusers);
         boolean isContained = false;
-        for (DOIUser dbuser : dbusers) {
+        for (final DOIUser dbuser : dbusers) {
             if (dbuser.getUsername().equals(ldapmember.getUsername())) {
                 isContained = true;
                 break;
@@ -97,7 +104,7 @@ public class LdapDoidbIntegrationImpl implements LdapDoidbIntegration {
     private boolean isContained(DOIUser dbuser, List<LDAPUser> ldapmembers) {
         LOG.traceEntry("Parameters {},", dbuser, ldapmembers);
         boolean isContained = false;
-        for (LDAPUser ldapuser : ldapmembers) {
+        for (final LDAPUser ldapuser : ldapmembers) {
             if (ldapuser.getUsername().equals(dbuser.getUsername())) {
                 isContained = true;
                 break;

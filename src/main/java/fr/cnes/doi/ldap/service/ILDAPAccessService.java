@@ -23,10 +23,25 @@ import java.util.List;
 import fr.cnes.doi.ldap.exceptions.LDAPAccessException;
 import fr.cnes.doi.ldap.util.LDAPUser;
 
+/**
+ * This interfaces handles LDAP operations.
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
+ */
 public interface ILDAPAccessService {
 
+    /**
+     * Returns the LDAP members having doiserver as group.
+     * @return the LDAP members
+     * @throws LDAPAccessException When a problem occurs 
+     */
     public List<LDAPUser> getDOIProjectMembers() throws LDAPAccessException;
 
-    public boolean authenticateUser(String login, String password);
+    /**
+     * Authenticate an user via the LDAP.
+     * @param login login
+     * @param password password
+     * @return True when the user is authenticated otherwise False.
+     */
+    public boolean authenticateUser(final String login, final String password);
 
 }

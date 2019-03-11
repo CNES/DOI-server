@@ -40,31 +40,44 @@ import org.restlet.security.User;
  * Had to change method "unmap" l.520, which threw ArrayIndexOutOfBoundsException
  * @author disto
  */
-public class MyMemoryRealm extends Realm{
+public class MyMemoryRealm extends Realm {
+    
+    /** The modifiable list of role mappings. */
+    private final List<RoleMapping> roleMappings = new CopyOnWriteArrayList<>();
+
+    /** The modifiable list of root groups. */
+    private final List<Group> rootGroups = new CopyOnWriteArrayList<>();
+
+    /** The modifiable list of users. */
+    private final List<User> users = new CopyOnWriteArrayList<>();
+    
     /**
      * Enroler based on the default security model.
      */
     private class DefaultEnroler implements Enroler {
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public void enrole(ClientInfo clientInfo) {
-            User user = findUser(clientInfo.getUser().getIdentifier());
+        public void enrole(final ClientInfo clientInfo) {
+            final User user = findUser(clientInfo.getUser().getIdentifier());
 
             if (user != null) {
                 // Find all the inherited groups of this user
-                Set<Group> userGroups = findGroups(user);
+                final Set<Group> userGroups = findGroups(user);
 
                 // Add roles specific to this user
-                Set<Role> userRoles = findRoles(user);
+                final Set<Role> userRoles = findRoles(user);
 
-                for (Role role : userRoles) {
+                for (final Role role : userRoles) {
                     clientInfo.getRoles().add(role);
                 }
 
                 // Add roles common to group members
-                Set<Role> groupRoles = findRoles(userGroups);
+                final Set<Role> groupRoles = findRoles(userGroups);
 
-                for (Role role : groupRoles) {
+                for (final Role role : groupRoles) {
                     clientInfo.getRoles().add(role);
                 }
             }
@@ -72,18 +85,21 @@ public class MyMemoryRealm extends Realm{
     }
 
     /**
-     * Verifier based on the default security model. It looks up users in the
-     * mapped organizations.
+     * Verifier based on the default security model. 
+     * It looks up users in the mapped organizations.
      */
     private class DefaultVerifier extends SecretVerifier {
 
+        
+        /**
+         * {@inheritDoc}
+         */        
         @Override
-        protected User createUser(String identifier, Request request,
-                Response response) {
-            User result = new User(identifier);
+        protected User createUser(final String identifier, final Request request, final Response response) {
+            final User result = new User(identifier);
 
             // Find the reference user
-            User user = findUser(identifier);
+            final User user = findUser(identifier);
 
             if (user != null) {
                 // Copy the properties of the reference user
@@ -95,28 +111,21 @@ public class MyMemoryRealm extends Realm{
             return result;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public int verify(String identifier, char[] secret) {
+        public int verify(final String identifier, final char[] secret) {
             char[] actualSecret = null;
-            User user = findUser(identifier);
+            final User user = findUser(identifier);
 
             if (user != null) {
                 actualSecret = user.getSecret();
             }
 
-            return compare(secret, actualSecret) ? RESULT_VALID
-                    : RESULT_INVALID;
+            return compare(secret, actualSecret) ? RESULT_VALID : RESULT_INVALID;
         }
     }
-
-    /** The modifiable list of role mappings. */
-    private final List<RoleMapping> roleMappings = new CopyOnWriteArrayList<>();
-
-    /** The modifiable list of root groups. */
-    private final List<Group> rootGroups = new CopyOnWriteArrayList<Group>();
-
-    /** The modifiable list of users. */
-    private final List<User> users = new CopyOnWriteArrayList<>();
 
     /**
      * Constructor.
@@ -141,8 +150,8 @@ public class MyMemoryRealm extends Realm{
      *            Indicates if only the ancestors groups that have their
      *            "inheritRoles" property enabled should be added.
      */
-    private void addGroups(User user, Set<Group> userGroups,
-            Group currentGroup, List<Group> stack, boolean inheritOnly) {
+    private void addGroups(final User user, final Set<Group> userGroups,
+            final Group currentGroup, final List<Group> stack, final boolean inheritOnly) {
         if ((currentGroup != null) && !stack.contains(currentGroup)) {
             stack.add(currentGroup);
 
@@ -161,7 +170,7 @@ public class MyMemoryRealm extends Realm{
                 }
             }
 
-            for (Group group : currentGroup.getMemberGroups()) {
+            for (final Group group : currentGroup.getMemberGroups()) {
                 addGroups(user, userGroups, group, stack, inheritOnly);
             }
         }
@@ -175,7 +184,7 @@ public class MyMemoryRealm extends Realm{
      *            The member user.
      * @return The set of groups.
      */
-    public Set<Group> findGroups(User user) {
+    public Set<Group> findGroups(final User user) {
         return findGroups(user, true);
     }
 
@@ -189,12 +198,12 @@ public class MyMemoryRealm extends Realm{
      *            "inheritRoles" property enabled should be added.
      * @return The set of groups.
      */
-    public Set<Group> findGroups(User user, boolean inheritOnly) {
-        Set<Group> result = new HashSet<>();
+    public Set<Group> findGroups(final User user, final boolean inheritOnly) {
+        final Set<Group> result = new HashSet<>();
         List<Group> stack;
 
         // Recursively find user groups
-        for (Group group : getRootGroups()) {
+        for (final Group group : getRootGroups()) {
             stack = new ArrayList<>();
             addGroups(user, result, group, stack, inheritOnly);
         }
@@ -213,16 +222,16 @@ public class MyMemoryRealm extends Realm{
      * @throws IllegalArgumentException
      *             If application is null.
      */
-    public Set<Role> findRoles(Application application, Group userGroup) {
+    public Set<Role> findRoles(final Application application, final Group userGroup) {
         if (application == null) {
             throw new IllegalArgumentException(
                     "The application argument can't be null");
         }
 
-        Set<Role> result = new HashSet<>();
+        final Set<Role> result = new HashSet<>();
         Object source;
 
-        for (RoleMapping mapping : getRoleMappings()) {
+        for (final RoleMapping mapping : getRoleMappings()) {
             source = mapping.getSource();
 
             if ((userGroup != null) && userGroup.equals(source)) {
@@ -238,27 +247,24 @@ public class MyMemoryRealm extends Realm{
     /**
      * Finds the roles mapped to given user groups.
      * 
-     * @param application
-     *            The parent application. Can't be null.
-     * @param userGroups
-     *            The user groups.
+     * @param application The parent application. Can't be null.
+     * @param userGroups  The user groups.
      * @return The roles found.
-     * @throws IllegalArgumentException
-     *             If application is null.
+     * @throws IllegalArgumentException If application is null.
      */
-    public Set<Role> findRoles(Application application, Set<Group> userGroups) {
+    public Set<Role> findRoles(final Application application, final Set<Group> userGroups) {
         if (application == null) {
             throw new IllegalArgumentException(
                     "The application argument can't be null");
         }
 
-        Set<Role> result = new HashSet<>();
+        final Set<Role> result = new HashSet<>();
         Object source;
 
-        for (RoleMapping mapping : getRoleMappings()) {
+        for (final RoleMapping mapping : getRoleMappings()) {
             source = mapping.getSource();
 
-            if ((userGroups != null) && userGroups.contains(source)) {
+            if (userGroups != null && userGroups.contains(source)) {
                 if (mapping.getTarget().getApplication() == application) {
                     result.add(mapping.getTarget());
                 }
@@ -271,24 +277,21 @@ public class MyMemoryRealm extends Realm{
     /**
      * Finds the roles mapped to a given user, for a specific application.
      * 
-     * @param application
-     *            The parent application. Can't be null.
-     * @param user
-     *            The user.
+     * @param application The parent application. Can't be null.
+     * @param user The user.
      * @return The roles found.
-     * @throws IllegalArgumentException
-     *             If application is null.
+     * @throws IllegalArgumentException If application is null.
      */
-    public Set<Role> findRoles(Application application, User user) {
+    public Set<Role> findRoles(final Application application, final User user) {
         if (application == null) {
             throw new IllegalArgumentException(
                     "The application argument can't be null");
         }
 
-        Set<Role> result = new HashSet<>();
+        final Set<Role> result = new HashSet<>();
         Object source;
 
-        for (RoleMapping mapping : getRoleMappings()) {
+        for (final RoleMapping mapping : getRoleMappings()) {
             source = mapping.getSource();
 
             if ((user != null) && user.equals(source)) {
@@ -308,11 +311,11 @@ public class MyMemoryRealm extends Realm{
      *            The user group.
      * @return The roles found.
      */
-    public Set<Role> findRoles(Group userGroup) {
-        Set<Role> result = new HashSet<>();
+    public Set<Role> findRoles(final Group userGroup) {
+        final Set<Role> result = new HashSet<>();
         Object source;
 
-        for (RoleMapping mapping : getRoleMappings()) {
+        for (final RoleMapping mapping : getRoleMappings()) {
             source = mapping.getSource();
 
             if ((userGroup != null) && userGroup.equals(source)) {
@@ -330,14 +333,14 @@ public class MyMemoryRealm extends Realm{
      *            The user groups.
      * @return The roles found.
      */
-    public Set<Role> findRoles(Set<Group> userGroups) {
-        Set<Role> result = new HashSet<>();
+    public Set<Role> findRoles(final Set<Group> userGroups) {
+        final Set<Role> result = new HashSet<>();
         Object source;
 
-        for (RoleMapping mapping : getRoleMappings()) {
+        for (final RoleMapping mapping : getRoleMappings()) {
             source = mapping.getSource();
 
-            if ((userGroups != null) && userGroups.contains(source)) {
+            if (userGroups != null && userGroups.contains(source)) {
                 result.add(mapping.getTarget());
             }
         }
@@ -348,18 +351,17 @@ public class MyMemoryRealm extends Realm{
     /**
      * Finds the roles mapped to a given user.
      * 
-     * @param user
-     *            The user.
+     * @param user The user.            
      * @return The roles found.
      */
-    public Set<Role> findRoles(User user) {
-        Set<Role> result = new HashSet<>();
+    public Set<Role> findRoles(final User user) {
+        final Set<Role> result = new HashSet<>();
         Object source;
 
-        for (RoleMapping mapping : getRoleMappings()) {
+        for (final RoleMapping mapping : getRoleMappings()) {
             source = mapping.getSource();
 
-            if ((user != null) && user.equals(source)) {
+            if (user != null && user.equals(source)) {
                 result.add(mapping.getTarget());
             }
         }
@@ -370,11 +372,10 @@ public class MyMemoryRealm extends Realm{
     /**
      * Finds a user in the organization based on its identifier.
      * 
-     * @param userIdentifier
-     *            The identifier to match.
+     * @param userIdentifier The identifier to match.
      * @return The matched user or null.
      */
-    public User findUser(String userIdentifier) {
+    public User findUser(final String userIdentifier) {
         User result = null;
         User user;
 
@@ -419,40 +420,32 @@ public class MyMemoryRealm extends Realm{
     /**
      * Maps a group defined in a component to a role defined in the application.
      * 
-     * @param group
-     *            The source group.
-     * @param role
-     *            The target role.
+     * @param group The source group.
+     * @param role The target role.
      */
-    public void map(Group group, Role role) {
+    public void map(final Group group, final Role role) {
         getRoleMappings().add(new RoleMapping(group, role));
     }
 
     /**
      * Maps a user defined in a component to a role defined in the application.
      * 
-     * @param user
-     *            The source user.
-     * @param application
-     *            The parent application. Can't be null.
-     * @param roleName
-     *            The target role name.
-     * @throws IllegalArgumentException
-     *             If application is null.
+     * @param user The source user.
+     * @param application The parent application. Can't be null.
+     * @param roleName he target role name.
+     * @throws IllegalArgumentException If application is null.
      */
-    public void map(User user, Application application, String roleName) {
+    public void map(final User user, final Application application, final String roleName) {
         map(user, Role.get(application, roleName, null));
     }
 
     /**
      * Maps a user defined in a component to a role defined in the application.
      * 
-     * @param user
-     *            The source user.
-     * @param role
-     *            The target role.
+     * @param user The source user.
+     * @param role The target role.
      */
-    public void map(User user, Role role) {
+    public void map(final User user, final Role role) {
         getRoleMappings().add(new RoleMapping(user, role));
     }
 
@@ -463,7 +456,7 @@ public class MyMemoryRealm extends Realm{
      * @param rootGroups
      *            A list of root groups.
      */
-    public void setRootGroups(List<Group> rootGroups) {
+    public void setRootGroups(final List<Group> rootGroups) {
         synchronized (getRootGroups()) {
             if (rootGroups != getRootGroups()) {
                 getRootGroups().clear();
@@ -482,7 +475,7 @@ public class MyMemoryRealm extends Realm{
      * @param users
      *            A list of users.
      */
-    public void setUsers(List<User> users) {
+    public void setUsers(final List<User> users) {
         synchronized (getUsers()) {
             if (users != getUsers()) {
                 getUsers().clear();
@@ -498,16 +491,12 @@ public class MyMemoryRealm extends Realm{
      * Unmaps a group defined in a component from a role defined in the
      * application.
      * 
-     * @param group
-     *            The source group.
-     * @param application
-     *            The parent application. Can't be null.
-     * @param roleName
-     *            The target role name.
-     * @throws IllegalArgumentException
-     *             If application is null.
+     * @param group The source group.
+     * @param application The parent application. Can't be null.
+     * @param roleName The target role name.
+     * @throws IllegalArgumentException  If application is null.
      */
-    public void unmap(Group group, Application application, String roleName) {
+    public void unmap(final Group group, final Application application, final String roleName) {
         unmap(group, Role.get(application, roleName, null));
     }
 
@@ -515,12 +504,10 @@ public class MyMemoryRealm extends Realm{
      * Unmaps a group defined in a component from a role defined in the
      * application.
      * 
-     * @param group
-     *            The source group.
-     * @param role
-     *            The target role.
+     * @param group The source group.
+     * @param role The target role.
      */
-    public void unmap(Group group, Role role) {
+    public void unmap(final Group group, final Role role) {
         unmap((Object) group, role);
     }
 
@@ -531,14 +518,13 @@ public class MyMemoryRealm extends Realm{
      * @param source The source group.
      * @param role The target role.
      */
-    private void unmap(Object source, Role role) {
+    private void unmap(final Object source, final Role role) {
         RoleMapping mapping;
 
         for (int i = getRoleMappings().size() - 1; i >= 0; i--) {
             mapping = getRoleMappings().get(i);
 
-            if (mapping.getSource().equals(source)
-                    && mapping.getTarget().equals(role)) {
+            if (mapping.getSource().equals(source) && mapping.getTarget().equals(role)) {
                 getRoleMappings().remove(i);
             }
         }
@@ -548,16 +534,12 @@ public class MyMemoryRealm extends Realm{
      * Unmaps a user defined in a component from a role defined in the
      * application.
      * 
-     * @param user
-     *            The source user.
-     * @param application
-     *            The parent application. Can't be null.
-     * @param roleName
-     *            The target role name.
-     * @throws IllegalArgumentException
-     *             If application is null.
+     * @param user The source user.
+     * @param application The parent application. Can't be null.
+     * @param roleName The target role name.
+     * @throws IllegalArgumentException If application is null.
      */
-    public void unmap(User user, Application application, String roleName) {
+    public void unmap(final User user, final Application application, final String roleName) {
         unmap(user, Role.get(application, roleName, null));
     }
 
@@ -565,12 +547,10 @@ public class MyMemoryRealm extends Realm{
      * Unmaps a user defined in a component from a role defined in the
      * application.
      * 
-     * @param user
-     *            The source user.
-     * @param role
-     *            The target role.
+     * @param user The source user.
+     * @param role The target role.
      */
-    public void unmap(User user, Role role) {
+    public void unmap(final User user, final Role role) {
         unmap((Object) user, role);
     }
 }

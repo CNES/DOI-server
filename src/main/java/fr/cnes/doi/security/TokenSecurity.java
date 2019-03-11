@@ -54,6 +54,11 @@ import org.restlet.data.Status;
  */
 @Requirement(reqId = Requirement.DOI_AUTH_020, reqName = Requirement.DOI_AUTH_020_NAME)
 public final class TokenSecurity {
+    
+    /**
+     * token key.
+     */
+    private String tokenKey;    
 
     /**
      * Project ID name in token.
@@ -106,10 +111,7 @@ public final class TokenSecurity {
         final Key key = MacProvider.generateKey(SignatureAlgorithm.HS256);
         return LOG.traceExit(TextCodec.BASE64.encode(key.getEncoded()));
     }
-    /**
-     * token key.
-     */
-    private String tokenKey;
+
 
     /**
      * Private constructor.
@@ -237,19 +239,21 @@ public final class TokenSecurity {
      */
     public Jws<Claims> getTokenInformation(final String jwtToken) throws DoiRuntimeException {
         LOG.traceEntry("Parameter : {}", jwtToken);
+        Jws<Claims> token;
         try {
-            return LOG.traceExit(Jwts.parser()
+            token = Jwts.parser()
                     .requireIssuer(DoiSettings.getInstance().getString(Consts.APP_NAME))
                     .setSigningKey(TextCodec.BASE64.decode(getTokenKey()))
-                    .parseClaimsJws(jwtToken));
+                    .parseClaimsJws(jwtToken);
         } catch (UnsupportedJwtException
                 | MalformedJwtException | SignatureException
                 | IllegalArgumentException ex) {
             throw LOG.throwing(new DoiRuntimeException("Unable to get the token information", ex));
         } catch (ExpiredJwtException e) {
             LOG.info("Cannot get the token information because : " + e.getMessage());
-            return null;
+            token = null;
         }
+        return LOG.traceExit(token);
     }
 
     /**

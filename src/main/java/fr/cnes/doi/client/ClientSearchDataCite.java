@@ -126,9 +126,9 @@ public class ClientSearchDataCite extends BaseClient {
      * @param idProject project ID
      * @return the search result
      */
-    public List<String> getDois(String idProject) {
-        List<String> doiListFiltered = new ArrayList<>();
-        for (String doi : this.doiList) {
+    public List<String> getDois(final String idProject) {
+        final List<String> doiListFiltered = new ArrayList<>();
+        for (final String doi : this.doiList) {
             if (doi.contains(idProject)) {
                 doiListFiltered.add(doi);
             }

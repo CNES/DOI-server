@@ -87,7 +87,7 @@ public class HttpMethodCall extends ClientCall {
      * @param hasEntity Indicates if the call will have an entity to send to the server.
      * @throws IOException when an error happens
      */
-    public HttpMethodCall(HttpClientHelper helper, final String method,
+    public HttpMethodCall(final HttpClientHelper helper, final String method,
             final String requestUri, boolean hasEntity) throws IOException {
         super(helper, method, requestUri);
         this.clientHelper = helper;
@@ -118,11 +118,17 @@ public class HttpMethodCall extends ClientCall {
             } else {
                 this.httpRequest = new HttpEntityEnclosingRequestBase() {
 
+                    /**
+                     * {@inheritDoc }                     
+                     */
                     @Override
                     public String getMethod() {
                         return method;
                     }
 
+                    /**
+                     * {@inheritDoc }                     
+                     */                    
                     @Override
                     public URI getURI() {
                         try {
@@ -176,7 +182,7 @@ public class HttpMethodCall extends ClientCall {
     }
 
    /**
-    * {@inheritDoc}
+    * Not used.
     * @return null
     */    
     @Override
@@ -185,7 +191,7 @@ public class HttpMethodCall extends ClientCall {
     }
 
    /**
-    * {@inheritDoc}
+    * Not used.
     * @return null
     */    
     @Override
@@ -194,7 +200,7 @@ public class HttpMethodCall extends ClientCall {
     }
 
    /**
-    * {@inheritDoc}
+    * Not used.
     * @return null
     */    
     @Override
@@ -203,9 +209,9 @@ public class HttpMethodCall extends ClientCall {
     }
 
    /**
-    * {@inheritDoc}
+    * Not used.
     * @return null
-    */    
+    */   
     @Override
     public ReadableByteChannel getResponseEntityChannel(long size) {
         return null;
@@ -215,14 +221,14 @@ public class HttpMethodCall extends ClientCall {
     * {@inheritDoc}
     */    
     @Override
-    public InputStream getResponseEntityStream(long size) {
+    public InputStream getResponseEntityStream(final long size) {
         InputStream result = null;
 
         try {
             //EntityUtils.toString(getHttpResponse().getEntity());
             // Return a wrapper filter that will release the connection when
             // needed
-            InputStream responseStream = (getHttpResponse() == null) ? null
+            final InputStream responseStream = (getHttpResponse() == null) ? null
                     : (getHttpResponse().getEntity() == null) ? null
                     : getHttpResponse().getEntity().getContent();
             if (responseStream != null) {
@@ -290,14 +296,14 @@ public class HttpMethodCall extends ClientCall {
     * {@inheritDoc}
     */
     @Override
-    public Status sendRequest(Request request) {
+    public Status sendRequest(final Request request) {
         Status result = null;
 
         try {
             final Representation entity = request.getEntity();
 
             // Set the request headers
-            for (org.restlet.data.Header header : getRequestHeaders()) {
+            for (final org.restlet.data.Header header : getRequestHeaders()) {
                 if (!header.getName().equals(
                         HeaderConstants.HEADER_CONTENT_LENGTH)) {
                     getHttpRequest().addHeader(header.getName(),
@@ -391,7 +397,7 @@ public class HttpMethodCall extends ClientCall {
     * {@inheritDoc}
     */    
     @Override
-    public void sendRequest(Request request, Response response, Uniform callback) throws Exception {
+    public void sendRequest(final Request request, final Response response, final Uniform callback) throws Exception {
         sendRequest(request);
 
         if (request.getOnSent() != null) {

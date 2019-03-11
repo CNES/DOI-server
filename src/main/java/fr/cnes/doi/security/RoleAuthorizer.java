@@ -103,11 +103,11 @@ public class RoleAuthorizer implements Observer {
         // Add users
         LOG.debug("Add users to REALM");
         final AbstractUserRoleDBHelper manageUsers = PluginFactory.getUserManagement();
-        List<DOIUser> doiUsers = manageUsers.getUsers();
-        List<User> users = new ArrayList<>();
-        List<User> admins = new ArrayList<>();
-        for (DOIUser doiUser : doiUsers) {
-            User user = new User(doiUser.getUsername());
+        final List<DOIUser> doiUsers = manageUsers.getUsers();
+        final List<User> users = new ArrayList<>();
+        final List<User> admins = new ArrayList<>();
+        for (final DOIUser doiUser : doiUsers) {
+            final User user = new User(doiUser.getUsername());
 
             // Create list of user
             users.add(user);
@@ -154,10 +154,10 @@ public class RoleAuthorizer implements Observer {
                     projectID) + " for " + app.getName());
 
             // get the users for a role.
-            List<DOIUser> doiUsers = manageUsers.getUsersFromRole(projectID);
-            List<User> usersFromProject = new ArrayList<>();
-            for (DOIUser doiUser : doiUsers) {
-                User user = REALM.findUser(doiUser.getUsername());
+            final List<DOIUser> doiUsers = manageUsers.getUsersFromRole(projectID);
+            final List<User> usersFromProject = new ArrayList<>();
+            for (final DOIUser doiUser : doiUsers) {
+                final User user = REALM.findUser(doiUser.getUsername());
                 if (user != null) {
                     usersFromProject.add(user);
                 }
@@ -297,10 +297,10 @@ public class RoleAuthorizer implements Observer {
             final String operation = message[0];
             final String roleName = message[1];
             final AbstractUserRoleDBHelper manageUsers = PluginFactory.getUserManagement();
-            List<DOIUser> doiUsers = manageUsers.getUsersFromRole(Integer.parseInt(roleName));
-            List<User> usersFromProject = new ArrayList<>();
-            for (DOIUser doiUser : doiUsers) {
-                User user = new User(doiUser.getUsername());
+            final List<DOIUser> doiUsers = manageUsers.getUsersFromRole(Integer.parseInt(roleName));
+            final List<User> usersFromProject = new ArrayList<>();
+            for (final DOIUser doiUser : doiUsers) {
+                final User user = new User(doiUser.getUsername());
                 usersFromProject.add(user);
             }
             final List<User> users = usersFromProject;

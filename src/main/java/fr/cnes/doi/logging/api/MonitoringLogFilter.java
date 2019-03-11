@@ -30,7 +30,6 @@ import org.restlet.Context;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.data.Method;
-import org.restlet.engine.Engine;
 import org.restlet.engine.log.LogFilter;
 import org.restlet.service.LogService;
 

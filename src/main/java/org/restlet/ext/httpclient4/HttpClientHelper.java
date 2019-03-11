@@ -56,7 +56,7 @@ public class HttpClientHelper extends org.restlet.engine.connector.HttpClientHel
      * Constructor.
      * @param client client
      */
-    public HttpClientHelper(Client client) {
+    public HttpClientHelper(final Client client) {
         super(client);
         getProtocols().add(Protocol.HTTP);
         getProtocols().add(Protocol.HTTPS);
@@ -170,7 +170,7 @@ public class HttpClientHelper extends org.restlet.engine.connector.HttpClientHel
     * {@inheritDoc}
     */    
     @Override
-    public ClientCall create(Request request) {
+    public ClientCall create(final Request request) {
         ClientCall result = null;
 
         try {
@@ -214,7 +214,7 @@ public class HttpClientHelper extends org.restlet.engine.connector.HttpClientHel
 
         LOG.info("Http Config : {}", config);
 
-        Type type = HttpClientFactory.Type.valueOf(ProxySettings.getInstance().getProxyType());
+        final Type type = HttpClientFactory.Type.valueOf(ProxySettings.getInstance().getProxyType());
         ProxySettings.getInstance().configureProxy();
         LOG.info("Httpclient type : {}", type);
         this.httpClient = HttpClientFactory.create(type, this.isDisabledSSL(), config);

@@ -71,7 +71,7 @@ public class LandingPageMonitoring implements Runnable {
                 for (final String error : errors) {
                     msg.append("- ").append(error).append("\n");
                     // send message to all doi member
-                    String body = "";
+                    final String body = "";
                     sendMessageToMembers(error, subject, body, email);
 
                 }
@@ -85,15 +85,22 @@ public class LandingPageMonitoring implements Runnable {
         }
     }
 
-    private void sendMessageToMembers(String error, String subject, String body, EmailSettings email) {
+    /**
+     * Send message by email
+     * @param error error message
+     * @param subject email subject
+     * @param body email body
+     * @param email email settings
+     */
+    private void sendMessageToMembers(final String error, final String subject, final String body, final EmailSettings email) {
         // parse project suffix from doi
-        String doiRegex = "^(.+)\\/(.+)\\/(.+)$";
-        Pattern doiPattern = Pattern.compile(doiRegex);
-        Matcher doiMatcher = doiPattern.matcher(error);
-        int doiSuffix = Integer.parseInt(doiMatcher.group(3));
-        AbstractProjectSuffixDBHelper manageProjects = PluginFactory.getProjectSuffix();
-        List<DOIUser> members = manageProjects.getAllDOIUsersForProject(doiSuffix);
-        for (DOIUser member : members) {
+        final String doiRegex = "^(.+)\\/(.+)\\/(.+)$";
+        final Pattern doiPattern = Pattern.compile(doiRegex);
+        final Matcher doiMatcher = doiPattern.matcher(error);
+        final int doiSuffix = Integer.parseInt(doiMatcher.group(3));
+        final AbstractProjectSuffixDBHelper manageProjects = PluginFactory.getProjectSuffix();
+        final List<DOIUser> members = manageProjects.getAllDOIUsersForProject(doiSuffix);
+        for (final DOIUser member : members) {
             email.sendMessage(subject, body, member.getEmail());
         }
     }

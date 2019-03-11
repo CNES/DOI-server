@@ -44,15 +44,33 @@ import fr.cnes.doi.plugin.AbstractUserRolePluginHelper;
  */
 public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
 
+    /**
+     * Plugin description.
+     */
     private static final String DESCRIPTION = "Provides a pre-defined list of users and groups";
+    /**
+     * Plugin version.
+     */
     private static final String VERSION = "1.0.0";
+    /**
+     * Plugin owner.
+     */
     private static final String OWNER = "CNES";
+    /**
+     * Plugin author.
+     */
     private static final String AUTHOR = "Jean-Christophe Malapert";
+    /**
+     * Plugin license.
+     */
     private static final String LICENSE = "LGPLV3";
     /**
      * Logger.
      */
     private static final Logger LOG = LogManager.getLogger(DefaultUserRoleImpl.class.getName());
+    /**
+     * Class name.
+     */
     private final String NAME = this.getClass().getName();
 
     /**
@@ -69,26 +87,35 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
 
     private final DOIDbDataAccessService das = DatabaseSingleton.getInstance().getDatabaseAccess();
 
+    /**
+     * {@inheritDoc }      
+     */     
     @Override
-    public void setConfiguration(Object configuration) {
+    public void setConfiguration(final Object configuration) {
     }
 
+    /**
+     * {@inheritDoc }      
+     */     
     @Override
     public List<DOIUser> getUsers() {
-	List<DOIUser> listUser = new ArrayList<DOIUser>();
+	final List<DOIUser> listUser = new ArrayList<>();
 	try {
-	    listUser = das.getAllDOIusers();
+	    listUser.addAll(das.getAllDOIusers());
 	} catch (DOIDbException e) {
 	    LOG.fatal("An error occured while trying to get all DOI users", e);
 	}
 	return Collections.unmodifiableList(listUser);
     }
 
+    /**
+     * {@inheritDoc }      
+     */     
     @Override
     public List<DOIUser> getUsersFromRole(final int roleName) {
-	List<DOIUser> listUser = new ArrayList<DOIUser>();
+	final List<DOIUser> listUser = new ArrayList<>();
 	try {
-	    listUser = das.getAllDOIUsersForProject(roleName);
+	    listUser.addAll(das.getAllDOIUsersForProject(roleName));
 	} catch (DOIDbException e) {
 	    LOG.fatal("An error occured while trying to get all DOI users from project " + roleName,
 		    e);
@@ -96,6 +123,9 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
 	return Collections.unmodifiableList(listUser);
     }
 
+    /**
+     * {@inheritDoc }      
+     */     
     @Override
     public boolean addUserToRole(String user, int role) {
 	boolean isAdded = false;
@@ -116,6 +146,9 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
 	return isAdded;
     }
 
+    /**
+     * {@inheritDoc }      
+     */     
     @Override
     public boolean removeUserToRole(String user, int role) {
 	boolean isRemoved = false;
@@ -124,8 +157,8 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
 	    isRemoved = true;
 	    LOG.info("The user {} is removed to role {}.", user, role);
 
-	    User userFromRealm = REALM.findUser(user);
-	    Set<Role> rolesFromRealm = REALM.findRoles(userFromRealm);
+	    final User userFromRealm = REALM.findUser(user);
+	    final Set<Role> rolesFromRealm = REALM.findRoles(userFromRealm);
 	    for (Role r : rolesFromRealm) {
 		if (r.getName().equals(String.valueOf(role))) {
 		    REALM.unmap(userFromRealm, r);
@@ -139,15 +172,18 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
 	return isRemoved;
     }
 
+    /**
+     * {@inheritDoc }      
+     */     
     @Override
-    public boolean setUserToAdminGroup(String user) {
+    public boolean setUserToAdminGroup(final String user) {
 	boolean isSetted = false;
 	try {
 	    das.setAdmin(user);
 	    isSetted = true;
 	    LOG.info("The user {} is added to admin group.", user);
 
-	    User userFromRealm = REALM.findUser(user);
+	    final User userFromRealm = REALM.findUser(user);
 	    if (!REALM.getRootGroups().get(0).getMemberUsers().contains(userFromRealm)) {
 		REALM.getRootGroups().get(0).getMemberUsers().add(userFromRealm);
 	    }
@@ -159,7 +195,7 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
     }
 
     @Override
-    public boolean unsetUserFromAdminGroup(String user) {
+    public boolean unsetUserFromAdminGroup(final String user) {
 	boolean isUnsetted = false;
 	try {
 	    das.unsetAdmin(user);
@@ -178,19 +214,25 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
 	return isUnsetted;
     }
 
+    /**
+     * {@inheritDoc }      
+     */     
     @Override
-    public boolean isUserExist(String username) {
+    public boolean isUserExist(final String username) {
 	boolean isExist = false;
 	try {
-	    isExist = das.isUserExist(username);
+	    isExist =  das.isUserExist(username);
 	} catch (DOIDbException e) {
 	    LOG.fatal("An error occured while trying to know if user " + username + " exist", e);
 	}
 	return isExist;
     }
 
+    /**
+     * {@inheritDoc }      
+     */     
     @Override
-    public boolean isAdmin(String username) {
+    public boolean isAdmin(final String username) {
 	boolean isExist = false;
 	try {
 	    isExist = das.isAdmin(username);
@@ -201,8 +243,11 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
 	return isExist;
     }
 
+    /**
+     * {@inheritDoc }      
+     */     
     @Override
-    public void addDOIUser(String username, Boolean admin) throws DOIDbException {
+    public void addDOIUser(final String username, final Boolean admin) throws DOIDbException {
 	this.das.addDOIUser(username, admin);
 	if (REALM.findUser(username) == null) {
 	    REALM.getUsers().add(new User(username));
@@ -210,8 +255,11 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
 	LOG.info("The user {} is added to database.", username);
     }
 
+    /**
+     * {@inheritDoc }      
+     */     
     @Override
-    public void addDOIUser(String username, Boolean admin, String email) throws DOIDbException {
+    public void addDOIUser(final String username, final Boolean admin, final String email) throws DOIDbException {
 	this.das.addDOIUser(username, admin, email);
 	if (REALM.findUser(username) == null) {
 	    REALM.getUsers().add(new User(username));
@@ -219,8 +267,11 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
 	LOG.info("The user {} is added to database.", username);
     }
 
+    /**
+     * {@inheritDoc }      
+     */    
     @Override
-    public void removeDOIUser(String username) {
+    public void removeDOIUser(final String username) {
 	try {
 	    this.das.removeDOIUser(username);
 	    final User userFromRealm = REALM.findUser(username);
@@ -233,31 +284,49 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
 	}
     }
 
+    /**
+     * {@inheritDoc }      
+     */    
     @Override
     public String getName() {
 	return NAME;
     }
 
+    /**
+     * {@inheritDoc }      
+     */    
     @Override
     public String getDescription() {
 	return DESCRIPTION;
     }
 
+    /**
+     * {@inheritDoc }      
+     */    
     @Override
     public String getVersion() {
 	return VERSION;
     }
 
+    /**
+     * {@inheritDoc }      
+     */    
     @Override
     public String getAuthor() {
 	return AUTHOR;
     }
 
+    /**
+     * {@inheritDoc }      
+     */    
     @Override
     public String getOwner() {
 	return OWNER;
     }
 
+    /**
+     * {@inheritDoc }      
+     */    
     @Override
     public String getLicense() {
 	return LICENSE;
