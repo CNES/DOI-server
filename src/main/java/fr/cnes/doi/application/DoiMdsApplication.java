@@ -208,7 +208,7 @@ public final class DoiMdsApplication extends AbstractApplication {
 
         // Defines the strategy of authentication (authentication is not required)
         //   - authentication with login/pwd
-        final ChallengeAuthenticator challAuth = createAuthenticator();
+        final ChallengeAuthenticator challAuth = createAuthenticatorLoginBased();
         challAuth.setOptional(true);
 
         //   - authentication with token

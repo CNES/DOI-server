@@ -163,8 +163,7 @@ public abstract class AbstractApplication extends WadlApplication {
              * @return the result
              */
             @Override
-            public int beforeHandle(final Request request,
-                    final Response response) {
+            public int beforeHandle(final Request request, final Response response) {
                 if (request.getMethod().equals(Method.OPTIONS)) {
                     response.setStatus(Status.SUCCESS_OK);
                     return CONTINUE;
@@ -199,8 +198,7 @@ public abstract class AbstractApplication extends WadlApplication {
              * @return the result
              */
             @Override
-            public int beforeHandle(final Request request,
-                    final Response response) {
+            public int beforeHandle(final Request request, final Response response) {
                 if (request.getMethod().equals(Method.OPTIONS)) {
                     response.setStatus(Status.SUCCESS_OK);
                     return CONTINUE;

@@ -1,41 +1,58 @@
---- 
-engines:
-  csslint: 
+version: "2"
+checks:
+  argument-count:
     enabled: true
-  duplication: 
-    config: 
-      languages: 
-        - java
+    config:
+      threshold: 
+  complex-logic:
     enabled: true
-    checks:
-      Similar code:
-        enabled: true
-  eslint: 
+    config:
+      threshold: 
+  file-lines:
     enabled: true
-  golint: 
+    config:
+      threshold: 250
+  method-complexity:
     enabled: true
-  fixme:
-    enabled: true      
-  git-legal:
-    enabled: true  
-  rubocop: 
+    config:
+      threshold: 
+  method-count:
     enabled: true
-exclude_paths: 
-  - ConTools/**/*
-  - LibJS/**/*
-  - installBDD/**/*
-  - scripts/**
-  - licenses-3rd/**/*
-  - shaders/**/*
-  - tests/**/*
-  - tutorials/**/*
-  - pom.xml
-  - src/it/**/*
-  - src/site/**/*
-  - src/test/**/* 
-  - src/main/javadoc/**/*
-  - src/main/resource/**/*
-  - **/*.js  
-ratings: 
-  paths: 
-    - src/**
+    config:
+      threshold: 
+  method-lines:
+    enabled: true
+    config:
+      threshold: 
+  nested-control-flow:
+    enabled: true
+    config:
+      threshold: 
+  return-statements:
+    enabled: true
+    config:
+      threshold: 
+  similar-code:
+    enabled: true
+    config:
+      threshold: #language-specific defaults. overrides affect all languages.
+  identical-code:
+    enabled: true
+    config:
+      threshold: #language-specific defaults. overrides affect all languages.
+plugins:
+ rubocop:
+  enabled: true
+ eslint:
+  enabled: true
+exclude_patterns:
+- "ConfTools/"
+- "installBDD/"
+- "LibJS/"
+- "scripts/"
+- "src/it/"
+- "src/test/"
+- "src/site"
+- "src/main/javadoc"
+- "src/main/resources"
+
