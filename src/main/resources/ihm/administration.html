@@ -222,6 +222,7 @@
             function renameProject() {
                 var text = $("#listProjet option:selected").text();
                 if (text === "") {
+                	alert("Veuillez selectionner un projet à renommer.");
                     return;
                 }
 
@@ -281,6 +282,7 @@
             function deleteProject() {
                 var text = $("#listProjet option:selected").text();
                 if (text === "") {
+                	alert("Veuillez selectionner un projet à supprimer.");
                     return;
                 }
                 var idText = text.substring(text.indexOf('(') + 1, text.length - 1);
@@ -363,6 +365,10 @@
             // modification users
             function addUser() {
                 var project = $("#listProjet").val();
+                if(project === null){
+                	alert("Veuillez selectionner un projet.");
+                	return;
+                }
 
                 var suffixProject = project.substring(project.indexOf('(') + 1, project.length - 1);
                 var nameProject = project.substring(0, project.indexOf('('));
@@ -422,13 +428,18 @@
 
             function deleteUser() {
                 var project = $("#listProjet").val();
+                if(project === null){
+                	alert("Veuillez selectionner un projet.");
+                	return;
+                }
 
                 var suffixProject = project.substring(project.indexOf('(') + 1, project.length - 1);
                 var nameProject = project.substring(0, project.indexOf('('));
 // 			console.log("Projet : " + nameProject + " " + suffixProject);
 
                 var user = $("#listUser").val();
-                if (user === "") {
+                if (user === null) {
+                	alert("Veuillez selectionner un utilisateur à supprimer.");
                     return;
                 }
 
