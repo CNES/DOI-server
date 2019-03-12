@@ -101,7 +101,7 @@ public class ManageSuperUsersResource extends AbstractResource {
         final ArrayList<String> result = new ArrayList<>();
         final AbstractUserRoleDBHelper manageUsers = PluginFactory.getUserManagement();
         final List<DOIUser> users = manageUsers.getUsers();
-        for (DOIUser doiUser : users) {
+        for (final DOIUser doiUser : users) {
             if (doiUser.isAdmin()) {
                 result.add(doiUser.getUsername());
             }
