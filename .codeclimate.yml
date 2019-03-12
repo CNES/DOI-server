@@ -35,6 +35,7 @@ exclude_paths:
   - src/test/**/* 
   - src/main/javadoc/**/*
   - src/main/resource/**/*
+  - src/main/org/datacite/**/*  
   - **/*.js  
 ratings: 
   paths: 

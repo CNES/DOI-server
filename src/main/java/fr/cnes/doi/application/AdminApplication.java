@@ -496,7 +496,7 @@ public class AdminApplication extends AbstractApplication {
     
     /**
      * Adds route attacURI to the target according to redirection mode.
-     * @param Router router
+     * @param router router
      * @param redirectorMode redirection mode
      * @param target target
      * @param attachURI attachURI
@@ -531,7 +531,7 @@ public class AdminApplication extends AbstractApplication {
      * @param router router
      */
     private void addServicesStatus(final Router router) {
-        this.addServices(router, Redirector.MODE_SERVER_OUTBOUND, TARGET_URL, STATS_URI);
+        this.addServices(router, Redirector.MODE_SERVER_OUTBOUND, TARGET_URL, STATUS_URI);
     }
 
     /**

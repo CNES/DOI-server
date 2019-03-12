@@ -68,8 +68,7 @@ public class TokenBasedVerifier implements Verifier {
      * @return the result
      */
     @Override
-    public int verify(final Request request,
-            final Response response) {
+    public int verify(final Request request, final Response response) {
         LOG.traceEntry(new JsonMessage(request));
         final int result;
         final ChallengeResponse challResponse = request.getChallengeResponse();

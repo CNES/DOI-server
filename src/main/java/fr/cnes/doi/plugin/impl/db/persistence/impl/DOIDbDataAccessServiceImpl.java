@@ -32,9 +32,11 @@ import fr.cnes.doi.exception.DOIDbException;
 import fr.cnes.doi.db.model.DOIProject;
 import fr.cnes.doi.db.model.DOIUser;
 import fr.cnes.doi.plugin.impl.db.persistence.service.DOIDbDataAccessService;
+import org.apache.logging.log4j.Level;
 
 /**
  * Implementation of the {@link DOIDbDataAccessService} using JDBC.
+ *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
@@ -42,7 +44,202 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = LogManager.getLogger(DOIDbDataAccessServiceImpl.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(DOIDbDataAccessServiceImpl.class.
+            getName());
+
+    /**
+     * SQL field that contains the username {@value #FIELD_USERNAME}.
+     */
+    private static final String FIELD_USERNAME = "username";
+    /**
+     * SQL field that contains the information telling if a user is admin {@value #FIELD_ADMIN}.
+     */    
+    private static final String FIELD_ADMIN = "admin";
+    /**
+     * SQL field that contains the email user {@value #FIELD_EMAIL}.
+     */    
+    private static final String FIELD_EMAIL = "email";
+    /**
+     * SQL field that contains the projectname related to a user {@value #FIELD_PROJECTNAME}.
+     */     
+    private static final String FIELD_PROJECTNAME = "projectname";
+    /**
+     * SQL field that contains the DOI suffix for the project name {@value #FIELD_PROJECT_SUFFIX}.
+     */     
+    private static final String FIELD_PROJECT_SUFFIX = "suffix";
+    /**
+     * SQL field that contains the authentication token.
+     */
+    private static final String FIELD_TOKEN = "token";
+    
+    /**
+     * Select user information.
+     */
+    private static final String SELECT_DOI_USERS = String.format(
+            "SELECT %s, %s, %s FROM T_DOI_USERS", 
+            FIELD_USERNAME, FIELD_ADMIN, FIELD_EMAIL
+    );
+
+    /**
+     * Select project information.
+     */
+    private static final String SELECT_PROJECTS = String.format(
+            "SELECT %s, %s FROM T_DOI_PROJECT", 
+            FIELD_PROJECT_SUFFIX, FIELD_PROJECTNAME);
+
+    /**
+     * Select a specific project based on the DOI suffix.
+     */
+    private static final String SELECT_PROJECT_SUFFIX = String.format(
+            "%s WHERE %s=?", SELECT_PROJECTS, FIELD_PROJECT_SUFFIX);
+
+    /**
+     * Select project information for a specific user.
+     */
+    private static final String SELECT_PROJECTS_WITH_CTX_USER = String.format(
+            "SELECT %s, %s \n"
+            + "FROM T_DOI_PROJECT \n"
+            + "WHERE %s IN (\n"
+            + "    SELECT %s \n"
+            + "    FROM T_DOI_ASSIGNATIONS \n"
+            + "    WHERE %s=?\n"
+            + ")", FIELD_PROJECT_SUFFIX, FIELD_PROJECTNAME, FIELD_PROJECT_SUFFIX, 
+            FIELD_PROJECT_SUFFIX, FIELD_USERNAME);
+
+    /**
+     * Select user information bases on the DOI suffix.
+     */
+    private static final String SELECT_PROJECTS_WITH_CTX_SUFFIX = String.format(
+            "SELECT %s, %s, %s "
+            + "FROM T_DOI_USERS "
+            + "WHERE %s IN ("
+            + " SELECT %s"
+            + " FROM T_DOI_ASSIGNATIONS"
+            + " WHERE %s=?"
+            + ")", FIELD_USERNAME, FIELD_ADMIN, FIELD_EMAIL, FIELD_USERNAME,
+            FIELD_USERNAME, FIELD_PROJECT_SUFFIX);
+
+    /**
+     * Select user information based on its username.
+     */
+    private static final String SELECT_USERS_CLAUSE_USER = SELECT_DOI_USERS + " WHERE username=?";
+
+    /**
+     * Checks if the user exists based on its username.
+     */
+    private static final String SELECT_EXISTS_USERNAME = String.format(
+            "SELECT 1 FROM T_DOI_USERS WHERE %s=?", FIELD_USERNAME);
+
+    /**
+     * Checks if the project exists based on its DOI suffix.
+     */
+    private static final String SELECT_EXISTS_SUFFIX = String.format(
+            "SELECT 1 FROM T_DOI_PROJECT WHERE %s=?", FIELD_PROJECT_SUFFIX);
+    
+    /**
+     * Select all tokens.
+     */
+    private static final String SELECT_TOKEN = String.format(
+            "SELECT %s FROM T_DOI_TOKENS", FIELD_TOKEN);    
+    
+    /**
+     * Delete part of the project.
+     */
+    private static final String DELETE_PROJECT = "DELETE FROM T_DOI_PROJECT";
+
+    /**
+     * Delete a project based on its DOI suffix.
+     */
+    private static final String DELETE_PROJECT_WITH_SUFFIX = String.format(
+            "%s WHERE suffix=?", DELETE_PROJECT, FIELD_PROJECT_SUFFIX);
+    
+    /**
+     * Delete a user based on its username.
+     */
+    private static final String DELETE_DOI_USERS = String.format(
+            "DELETE FROM T_DOI_USERS WHERE %s=?", FIELD_USERNAME);
+
+    /**
+     * Delete part of the assign.
+     */
+    private static final String DELETE_ASSIGN = "DELETE FROM T_DOI_ASSIGNATIONS";    
+    
+    /**
+     * Delete assignation based on the username.
+     */
+    private static final String DELETE_ASSIGN_USERNAME = String.format(
+            "%s WHERE %s=?", DELETE_ASSIGN, FIELD_USERNAME);
+
+    /**
+     * Delete assignation based on the project DOI suffix.
+     */
+    private static final String DELETE_ASSIGN_SUFFIX = String.format(
+            "%s WHERE %s=?", DELETE_ASSIGN, FIELD_PROJECT_SUFFIX);
+
+    /**
+     * Delete assignation based on username and project DOI suffix.
+     */
+    private static final String DELETE_ASSIGN_USER_AND_SUFFIX = String.format(
+            DELETE_ASSIGN_USERNAME + " AND %s=?", DELETE_ASSIGN_USERNAME, FIELD_PROJECT_SUFFIX);
+    
+    /**
+     * Delete token.
+     */
+    private static final String DELETE_TOKEN = String.format(
+            "DELETE FROM T_DOI_TOKENS WHERE %s=?", FIELD_TOKEN);
+    
+    /**
+     * Insert user information.
+     */
+    private static final String INSERT_DOI_USERS = String.format(
+            "INSERT INTO T_DOI_USERS (%s, %s) VALUES(?, ?)", FIELD_USERNAME, FIELD_ADMIN);
+
+    /**
+     * Insert user information.
+     */
+    private static final String INSERT_FULL_DOI_UERS = String.format(
+            "INSERT INTO T_DOI_USERS (%s, %s, %s) VALUES(?,?,?)", 
+            FIELD_USERNAME, FIELD_ADMIN, FIELD_EMAIL);
+
+    /**
+     * Insert project information.
+     */
+    private static final String INSERT_DOI_PROJECTS = String.format(
+            "INSERT INTO T_DOI_PROJECT (%s, %s) VALUES(?,?)", 
+            FIELD_PROJECT_SUFFIX, FIELD_PROJECTNAME);
+
+    /**
+     * Insert assignation information.
+     */
+    private static final String INSERT_DOI_ASSIGN = String.format(
+            "INSERT INTO T_DOI_ASSIGNATIONS (%s, %s) VALUES(?,?)", 
+            FIELD_USERNAME, FIELD_PROJECT_SUFFIX);
+
+    /**
+     * Insert token.
+     */
+    private static final String INSERT_TOKEN = String.format(
+            "INSERT INTO T_DOI_TOKENS (%s) VALUES (?)", FIELD_TOKEN);    
+
+    /**
+     * Sets a user as admin.
+     */
+    private static final String UPDATE_ADMIN_TRUE = String.format(
+            "UPDATE T_DOI_USERS SET %s = true WHERE %s =?", FIELD_ADMIN, FIELD_USERNAME);
+
+    /**
+     * Unsets a user as admin.
+     */
+    private static final String UPDATE_ADMIN_FALSE = String.format(
+            "UPDATE T_DOI_USERS SET %s = false WHERE %s =?", FIELD_ADMIN, FIELD_USERNAME);
+
+    /**
+     * Update project information.
+     */
+    private static final String UPDATE_PROJECT = String.format(
+            "UPDATE T_DOI_PROJECT SET %s =? WHERE %s =?", 
+            FIELD_PROJECTNAME, FIELD_PROJECT_SUFFIX);
+
     /**
      * Connection to the DOI database.
      */
@@ -60,12 +257,150 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
     /**
      * Create the implementation of DOI database by creation the JDBC connection from a specific
      * configuration file.
+     *
      * @param customDbConfigFile configuration file
      */
     public DOIDbDataAccessServiceImpl(final String customDbConfigFile) {
         LOGGER.traceEntry("Parameter : {}", customDbConfigFile);
         dbConnector = new JDBCConnector(customDbConfigFile);
         LOGGER.traceExit();
+    }
+
+    /**
+     * Returns the list of DOI projects
+     *
+     * @param statement Query to T_DOI_PROJECT
+     * @return the DOI projects related to the query
+     * @throws SQLException When an SQL execption occurs
+     */
+    private List<DOIProject> getDOIProjects(final PreparedStatement statement) throws SQLException {
+        LOGGER.debug(statement.toString());
+        final List<DOIProject> projects = new ArrayList<>();
+        try (final ResultSet rs = statement.executeQuery()) {
+            while (rs.next()) {
+                final DOIProject doiproject = new DOIProject();
+                doiproject.setSuffix(rs.getInt(FIELD_PROJECT_SUFFIX));
+                doiproject.setProjectname(rs.getString(FIELD_PROJECTNAME));
+                projects.add(doiproject);
+            }
+        }
+        LOGGER.debug("{} DOI projects found", projects.size());
+        return projects;
+    }
+
+    /**
+     * Returns the list of DOI users
+     *
+     * @param statement Query to T_DOI_USERS
+     * @return the DOI users related to the query
+     * @throws SQLException When an SQL execption occurs
+     */
+    private List<DOIUser> getDOIUSers(final PreparedStatement statement) throws SQLException {
+        LOGGER.debug(statement.toString());
+        final List<DOIUser> users = new ArrayList<>();
+        try (final ResultSet rs = statement.executeQuery()) {
+            while (rs.next()) {
+                final DOIUser doiuser = new DOIUser();
+                doiuser.setUsername(rs.getString(FIELD_USERNAME));
+                doiuser.setAdmin(rs.getBoolean(FIELD_ADMIN));
+                doiuser.setEmail(rs.getString(FIELD_EMAIL));
+                users.add(doiuser);
+            }
+        }
+        LOGGER.debug("{} DOI users found", users.size());
+        return users;
+    }
+
+    /**
+     * Returns the list of tokens.
+     *
+     * @param statement Query to T_DOI_USERS
+     * @return the tokens related to the query
+     * @throws SQLException When an SQL execption occurs
+     */
+    private List<String> getTokens(final PreparedStatement statement) throws SQLException {
+        LOGGER.debug(statement.toString());
+        final List<String> tokens = new ArrayList<>();
+        try (ResultSet rs = statement.executeQuery()) {
+            while (rs.next()) {
+                tokens.add(rs.getString(FIELD_TOKEN));
+            }
+        }
+        LOGGER.debug("{} tokens found", tokens.size());
+        return tokens;
+    }
+
+    /**
+     * Updates queries.
+     *
+     * @param statements statements
+     * @throws SQLException - if a problem occurs
+     */
+    private void updateQueries(final PreparedStatement... statements) throws SQLException {
+        for (PreparedStatement statement : statements) {
+            LOGGER.debug(statement.toString());
+            statement.executeUpdate();
+        }
+    }
+
+    /**
+     * Returns the list of projectName.
+     *
+     * @param statement Query to T_DOI_PROJECT
+     * @return the tokens related to the query
+     * @throws SQLException When an SQL execption occurs
+     */
+    private List<String> getProjectName(final PreparedStatement statement) throws SQLException {
+        LOGGER.debug(statement.toString());
+        final List<String> projectName = new ArrayList<>();
+        try (ResultSet rs = statement.executeQuery()) {
+            while (rs.next()) {
+                projectName.add(rs.getString(FIELD_PROJECTNAME));
+            }
+        }
+        return projectName;
+    }
+
+    /**
+     * Returns true when the query returns a non empty result otherwise false.
+     *
+     * @param statement query
+     * @return true when the query returns a non empty result otherwise false
+     * @throws SQLException When an SQL execption occurs
+     */
+    private boolean isQueryExist(final PreparedStatement statement) throws SQLException {
+        boolean isExist = false;
+        LOGGER.debug(statement.toString());
+        try (final ResultSet resultSet = statement.executeQuery()) {
+            isExist = resultSet.next();
+        }
+        LOGGER.debug(isExist);
+        return isExist;
+    }
+
+    /**
+     * Close the statements and connection.
+     *
+     * @param conn conection to close
+     * @param statements statements to close
+     */
+    private void close(final Connection conn, final PreparedStatement... statements) {
+        for (final PreparedStatement statement : statements) {
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                    LOGGER.error("Unable to close statement", e);
+                }
+            }
+        }
+        if (conn != null) {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                LOGGER.error("Unable to close connection to database", e);
+            }
+        }
     }
 
     /**
@@ -79,45 +414,22 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
         PreparedStatement statement = null;
         try {
             conn = dbConnector.getConnection();
-            LOGGER.debug("SELECT username, admin, email FROM T_DOI_USERS");
-            statement = conn.prepareStatement("SELECT username, admin, email FROM T_DOI_USERS");
-            try (final ResultSet rs = statement.executeQuery()) {
-                while (rs.next()) {
-                    final DOIUser doiuser = new DOIUser();
-                    doiuser.setAdmin(rs.getBoolean("admin"));
-                    doiuser.setUsername(rs.getString("username"));
-                    doiuser.setEmail(rs.getString("email"));
-                    users.add(doiuser);
-                }
-            } 
-            LOGGER.debug("{} DOI users found", users.size());
+            statement = conn.prepareStatement(SELECT_DOI_USERS);
+            users.addAll(getDOIUSers(statement));
         } catch (SQLException e) {
-            LOGGER.error("An exception occured when calling getAllDOIusers", e);
             throw LOGGER.throwing(
+                    Level.FATAL,
                     new DOIDbException("An exception occured when calling getAllDOIusers", e)
             );
         } finally {
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close statement", e);
-                }
-            }
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close connection to database", e);
-                }
-            }
+            close(conn, statement);
         }
         return LOGGER.traceExit(users);
     }
 
     /**
      * {@inheritDoc}
-     */    
+     */
     @Override
     public List<DOIProject> getAllDOIProjects() throws DOIDbException {
         LOGGER.traceEntry();
@@ -126,108 +438,49 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
         PreparedStatement statement = null;
         try {
             conn = dbConnector.getConnection();
-            LOGGER.debug("SELECT suffix, projectname FROM T_DOI_PROJECT");
-            statement = conn.prepareStatement("SELECT suffix, projectname FROM T_DOI_PROJECT");
-            try (final ResultSet rs = statement.executeQuery()) {
-                while (rs.next()) {
-                    final DOIProject doiproject = new DOIProject();
-                    doiproject.setSuffix(rs.getInt("suffix"));
-                    doiproject.setProjectname(rs.getString("projectname"));
-                    projects.add(doiproject);
-                }
-            }
-            LOGGER.debug("{} DOI projects found", projects.size());
+            statement = conn.prepareStatement(SELECT_PROJECTS);
+            projects.addAll(getDOIProjects(statement));
         } catch (SQLException e) {
-            LOGGER.error("An exception occured when calling getAllDOIProjects", e);
             throw LOGGER.throwing(
+                    Level.FATAL,
                     new DOIDbException("An exception occured when calling getAllDOIProjects", e)
             );
         } finally {
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close statement", e);
-                }
-            }
-
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close connection to database", e);
-                }
-            }
+            close(conn, statement);
         }
         return LOGGER.traceExit(projects);
     }
 
     /**
      * {@inheritDoc}
-     */    
+     */
     @Override
     public List<DOIProject> getAllDOIProjectsForUser(final String username) throws DOIDbException {
         LOGGER.traceEntry("Parameter : {}", username);
         final List<DOIProject> projects = new ArrayList<>();
         Connection conn = null;
-        PreparedStatement assignationsStatement = null;
         PreparedStatement projectsStatement = null;
 
         try {
             conn = dbConnector.getConnection();
-            assignationsStatement = conn.prepareStatement(
-                    "SELECT username, suffix FROM T_DOI_ASSIGNATIONS WHERE username=?");
-            assignationsStatement.setString(1, username);
-            LOGGER.debug("SELECT username, suffix FROM T_DOI_ASSIGNATIONS WHERE username={}",username);
-            try (final ResultSet assignations = assignationsStatement.executeQuery()) {
-                while (assignations.next()) {
-                    projectsStatement = conn.prepareStatement(
-                            "SELECT suffix, projectname FROM T_DOI_PROJECT WHERE suffix=?");
-                    projectsStatement.setInt(1, assignations.getInt("suffix"));
-                    LOGGER.debug("SELECT suffix, projectname FROM T_DOI_PROJECT WHERE suffix={}",assignations.getInt("suffix"));
-                    try (final ResultSet rs = projectsStatement.executeQuery()) {
-                        while (rs.next()) {
-                            final DOIProject doiproject = new DOIProject();
-                            doiproject.setSuffix(rs.getInt("suffix"));
-                            doiproject.setProjectname(rs.getString("projectname"));
-                            projects.add(doiproject);
-                        }
-                    }
-                    LOGGER.debug("{} project found", projects.size());
-                }
-            }
+            projectsStatement = conn.prepareStatement(SELECT_PROJECTS_WITH_CTX_USER);
+            projectsStatement.setString(1, username);
+            projects.addAll(getDOIProjects(projectsStatement));
         } catch (SQLException e) {
-            LOGGER.error("An exception occured when calling getAllDOIProjectsForUser", e);
-            throw new DOIDbException("An exception occured when calling getAllDOIProjectsForUser", e);
+            throw LOGGER.throwing(
+                    Level.FATAL,
+                    new DOIDbException("An exception occured when calling getAllDOIProjectsForUser",
+                            e)
+            );
         } finally {
-            if (assignationsStatement != null) {
-                try {
-                    assignationsStatement.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close statement", e);
-                }
-            }
-            if (projectsStatement != null) {
-                try {
-                    projectsStatement.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close statement", e);
-                }
-            }
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close connection to database", e);
-                }
-            }
+            close(conn, projectsStatement);
         }
         return LOGGER.traceExit(projects);
     }
 
     /**
      * {@inheritDoc}
-     */     
+     */
     @Override
     public List<DOIUser> getAllDOIUsersForProject(final int suffix) throws DOIDbException {
         LOGGER.traceEntry("Parameter : {}", suffix);
@@ -237,99 +490,49 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
         PreparedStatement usersStatement = null;
         try {
             conn = dbConnector.getConnection();
-            assignationsStatement = conn.prepareStatement(
-                    "SELECT username, suffix FROM T_DOI_ASSIGNATIONS WHERE suffix=?");
-            assignationsStatement.setInt(1, suffix);
-            LOGGER.debug("SELECT username, suffix FROM T_DOI_ASSIGNATIONS WHERE suffix={}",suffix);
-            try (final ResultSet assignations = assignationsStatement.executeQuery()) {
-                while (assignations.next()) {
-                    usersStatement = conn.prepareStatement(
-                            "SELECT username, admin, email FROM T_DOI_USERS WHERE username=?");
-                    usersStatement.setString(1, assignations.getString("username"));
-                    LOGGER.debug("SELECT username, admin, email FROM T_DOI_USERS WHERE username={}",
-                            assignations.getString("username"));
-                    try (final ResultSet rs = usersStatement.executeQuery()) {
-                        while (rs.next()) {
-                            final DOIUser doiuser = new DOIUser();
-                            doiuser.setUsername(rs.getString("username"));
-                            doiuser.setAdmin(rs.getBoolean("admin"));
-                            doiuser.setEmail(rs.getString("email"));
-                            users.add(doiuser);
-                        }
-                    }
-                    LOGGER.debug("{} users found", users.size());
-                }
-            }
+            usersStatement = conn.prepareStatement(SELECT_PROJECTS_WITH_CTX_SUFFIX);
+            usersStatement.setInt(1, suffix);
+            users.addAll(getDOIUSers(usersStatement));
         } catch (SQLException e) {
-            LOGGER.error("An exception occured when calling getAllDOIUsersForProject", e);
-            throw LOGGER.throwing(new DOIDbException("An exception occured when calling getAllDOIUsersForProject", e));
+            throw LOGGER.throwing(
+                    Level.FATAL,
+                    new DOIDbException(
+                            "An exception occured when calling getAllDOIUsersForProject", e));
         } finally {
-            if (assignationsStatement != null) {
-                try {
-                    assignationsStatement.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close statement", e);
-                }
-            }
-            if (usersStatement != null) {
-                try {
-                    usersStatement.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close statement", e);
-                }
-            }
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close connection to database", e);
-                }
-            }
+            close(conn, assignationsStatement, usersStatement);
         }
         return LOGGER.traceExit(users);
     }
 
     /**
      * {@inheritDoc}
-     */    
+     */
     @Override
     public void addDOIUser(final String username, final Boolean admin) throws DOIDbException {
         LOGGER.traceEntry("Parameters:\n  username:{}\n  admin:{}", username, admin);
         Connection conn = null;
         PreparedStatement usersStatement = null;
-        try {            
+        try {
             conn = dbConnector.getConnection();
-            usersStatement = conn.prepareStatement(
-                    "INSERT INTO T_DOI_USERS (username, admin) VALUES(?, ?)");
+            usersStatement = conn.prepareStatement(INSERT_DOI_USERS);
             usersStatement.setString(1, username);
             usersStatement.setBoolean(2, admin);
-            LOGGER.debug("INSERT INTO T_DOI_USERS (username, admin) VALUES({}, {})", username, admin);
-            usersStatement.executeUpdate();
+            this.updateQueries(usersStatement);
         } catch (SQLException e) {
             LOGGER.error("An exception occured when calling addDOIUser", e);
-            throw LOGGER.throwing(new DOIDbException("An exception occured when calling addDOIUser", e));
+            throw LOGGER.throwing(
+                    Level.DEBUG,
+                    new DOIDbException("An exception occured when calling addDOIUser", e)
+            );
         } finally {
-            if (usersStatement != null) {
-                try {
-                    usersStatement.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close statement", e);
-                }
-            }
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close connection to database", e);
-                }
-            }
+            close(conn, usersStatement);
         }
         LOGGER.traceExit();
     }
 
     /**
      * {@inheritDoc}
-     */     
+     */
     @Override
     public void addDOIProject(final int suffix, final String projectname) throws DOIDbException {
         LOGGER.traceEntry("Parameters:\n  suffix:{}\n  projectname:{}", suffix, projectname);
@@ -337,37 +540,25 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
         PreparedStatement projectStatement = null;
         try {
             conn = dbConnector.getConnection();
-            projectStatement = conn.prepareStatement(
-                    "INSERT INTO T_DOI_PROJECT (suffix, projectname) VALUES(?,?)");
+            projectStatement = conn.prepareStatement(INSERT_DOI_PROJECTS);
             projectStatement.setInt(1, suffix);
             projectStatement.setString(2, projectname);
-            LOGGER.debug("INSERT INTO T_DOI_PROJECT (suffix, projectname) VALUES({},{})", suffix, projectname);
-            projectStatement.executeUpdate();
+            this.updateQueries(projectStatement);
         } catch (SQLException e) {
             LOGGER.error("An exception occured when calling addDOIProject", e);
-            throw LOGGER.throwing(new DOIDbException("An exception occured when calling addDOIProject", e));
+            throw LOGGER.throwing(
+                    Level.FATAL,
+                    new DOIDbException("An exception occured when calling addDOIProject", e)
+            );
         } finally {
-            if (projectStatement != null) {
-                try {
-                    projectStatement.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close statement", e);
-                }
-            }
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close connection to database", e);
-                }
-            }
+            close(conn, projectStatement);
         }
         LOGGER.traceExit();
     }
 
     /**
      * {@inheritDoc}
-     */     
+     */
     @Override
     public void addDOIProjectToUser(final String username, final int suffix) throws DOIDbException {
         LOGGER.traceEntry("Parameters:\n  username:{}\n  suffix:{}", username, suffix);
@@ -377,303 +568,179 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
         PreparedStatement assignationStatement = null;
         try {
             conn = dbConnector.getConnection();
-            userStatement = conn.prepareStatement(
-                    "SELECT username, admin FROM T_DOI_USERS WHERE username=?");
+
+            userStatement = conn.prepareStatement(SELECT_EXISTS_USERNAME);
             userStatement.setString(1, username);
-            LOGGER.debug("SELECT username, admin FROM T_DOI_USERS WHERE username={}",username);
-            Boolean userExist;
-            try (final ResultSet resultSet = userStatement.executeQuery()) {
-                userExist = resultSet.next();                
-            }
-            LOGGER.debug(userExist);
-            projectStatement = conn.prepareStatement(
-                    "SELECT suffix, projectname FROM T_DOI_PROJECT WHERE suffix=?");
+            final boolean isUserExist = isQueryExist(userStatement);
+
+            projectStatement = conn.prepareStatement(SELECT_EXISTS_SUFFIX);
             projectStatement.setInt(1, suffix);
-            LOGGER.debug("SELECT suffix, projectname FROM T_DOI_PROJECT WHERE suffix={}", suffix);
-            Boolean projectExist;
-            try (final ResultSet resultSet = projectStatement.executeQuery()) {
-                projectExist = resultSet.next();
+            final boolean isProjectExist = isQueryExist(projectStatement);
+
+            if (!isUserExist || !isProjectExist) {
+                throw LOGGER.throwing(
+                        Level.FATAL,
+                        new DOIDbException(
+                                "An exception occured when calling addDOIProjectToUser: user " + username
+                                + " or project " + suffix + " don't exist in doi database", null)
+                );
             }
-            LOGGER.debug(projectExist);
-            if (!userExist || !projectExist) {
-                LOGGER.error("An exception occured when calling addDOIProjectToUser user " + username + 
-                        " or project " + suffix + " don't exist in doi database");
-                throw LOGGER.throwing(new DOIDbException(
-                        "An exception occured when calling addDOIProjectToUser: user " + username
-                        + " or project " + suffix + " don't exist in doi database", null));
-            }
-            assignationStatement = conn.prepareStatement(
-                    "INSERT INTO T_DOI_ASSIGNATIONS (username, suffix) VALUES(?,?)");
+            assignationStatement = conn.prepareStatement(INSERT_DOI_ASSIGN);
             assignationStatement.setString(1, username);
             assignationStatement.setInt(2, suffix);
-            LOGGER.debug("INSERT INTO T_DOI_ASSIGNATIONS (username, suffix) VALUES({},{})", username, suffix);
-            assignationStatement.executeUpdate();
+            this.updateQueries(assignationStatement);
         } catch (SQLException e) {
-            LOGGER.error("An exception occured when calling addDOIProjectToUser", e);
-            throw LOGGER.throwing(new DOIDbException("An exception occured when calling addDOIProjectToUser", e));
+            throw LOGGER.throwing(
+                    Level.FATAL,
+                    new DOIDbException("An exception occured when calling addDOIProjectToUser", e)
+            );
         } finally {
-
-            if (userStatement != null) {
-                try {
-                    userStatement.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close statement", e);
-                }
-            }
-
-            if (projectStatement != null) {
-                try {
-                    projectStatement.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close statement", e);
-                }
-            }
-
-            if (assignationStatement != null) {
-                try {
-                    assignationStatement.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close statement", e);
-                }
-            }
-
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close connection to database", e);
-                }
-            }
+            close(conn, userStatement, projectStatement, assignationStatement);
         }
         LOGGER.traceExit();
     }
 
     /**
      * {@inheritDoc}
-     */     
+     */
     @Override
-    public void removeDOIProjectFromUser(final String username, final int suffix) throws DOIDbException {
+    public void removeDOIProjectFromUser(final String username, final int suffix) throws
+            DOIDbException {
         LOGGER.traceEntry("Parameters:\n  username:{}\n  suffix:{}", username, suffix);
         Connection conn = null;
         PreparedStatement assignationsStatement = null;
         try {
             conn = dbConnector.getConnection();
-            assignationsStatement = conn.prepareStatement(
-                    "DELETE FROM T_DOI_ASSIGNATIONS WHERE username =? AND suffix=?");
+            assignationsStatement = conn.prepareStatement(DELETE_ASSIGN_USER_AND_SUFFIX);
             assignationsStatement.setString(1, username);
             assignationsStatement.setInt(2, suffix);
-            LOGGER.debug("DELETE FROM T_DOI_ASSIGNATIONS WHERE username ={} AND suffix={}", username, suffix);
-            assignationsStatement.executeUpdate();
+            this.updateQueries(assignationsStatement);
         } catch (SQLException e) {
-            LOGGER.error("An exception occured when calling removeDOIProjectFromUser", e);
-            throw LOGGER.throwing(new DOIDbException("An exception occured when calling removeDOIProjectFromUser", e));
+            throw LOGGER.throwing(
+                    Level.FATAL,
+                    new DOIDbException("An exception occured when calling removeDOIProjectFromUser",
+                            e)
+            );
         } finally {
-            if (assignationsStatement != null) {
-                try {
-                    assignationsStatement.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close statement", e);
-                }
-            }
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close connection to database", e);
-                }
-            }
+            close(conn, assignationsStatement);
         }
         LOGGER.traceExit();
     }
 
     /**
      * {@inheritDoc}
-     */     
+     */
     @Override
     public void setAdmin(final String username) throws DOIDbException {
-        LOGGER.traceEntry("Parameters:\n  username:{}",username);
+        LOGGER.traceEntry("Parameters:\n  username:{}", username);
         Connection conn = null;
         PreparedStatement userStatement = null;
         PreparedStatement updateStatement = null;
         try {
             conn = dbConnector.getConnection();
-            userStatement = conn.prepareStatement(
-                    "SELECT username, admin FROM T_DOI_USERS WHERE username=?");
+            userStatement = conn.prepareStatement(SELECT_EXISTS_USERNAME);
             userStatement.setString(1, username);
-            LOGGER.debug("SELECT username, admin FROM T_DOI_USERS WHERE username={}", username);
-            Boolean userExist;
-            try (final ResultSet resultSet = userStatement.executeQuery()) {
-                userExist = resultSet.next();
-            }
-            LOGGER.debug(userExist);
-            if (userExist) {
-                updateStatement = conn.prepareStatement(
-                        "UPDATE T_DOI_USERS SET admin = true WHERE username =?");
+            final boolean isUserExist = isQueryExist(userStatement);
+            if (isUserExist) {
+                updateStatement = conn.prepareStatement(UPDATE_ADMIN_TRUE);
                 updateStatement.setString(1, username);
-                LOGGER.debug("UPDATE T_DOI_USERS SET admin = true WHERE username ={}", username);
-                updateStatement.executeUpdate();
+                this.updateQueries(updateStatement);
             } else {
-                LOGGER.error("An exception occured when calling setAdmin:" + "user " + username
-                        + " don't exist in doi database");
-                throw LOGGER.throwing(new DOIDbException(
-                        "An exception occured when calling setAdmin:" + "user " + username
-                        + " don't exist in doi database", null));
+                throw LOGGER.throwing(
+                        Level.FATAL,
+                        new DOIDbException(
+                                "An exception occured when calling setAdmin:" + "user " + username
+                                + " don't exist in doi database", null)
+                );
             }
         } catch (SQLException e) {
-            LOGGER.error("An exception occured when calling setAdmin", e);
-            throw LOGGER.throwing(new DOIDbException("An exception occured when calling setAdmin", e));
+            throw LOGGER.throwing(
+                    Level.FATAL,
+                    new DOIDbException("An exception occured when calling setAdmin", e));
         } finally {
-
-            if (userStatement != null) {
-                try {
-                    userStatement.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close statement", e);
-                }
-            }
-
-            if (updateStatement != null) {
-                try {
-                    updateStatement.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close statement", e);
-                }
-            }
-
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close connection to database", e);
-                }
-            }
+            close(conn, userStatement, updateStatement);
         }
         LOGGER.traceExit();
     }
 
     /**
      * {@inheritDoc}
-     */     
+     */
     @Override
     public void unsetAdmin(final String username) throws DOIDbException {
-        LOGGER.traceEntry("Parameters:\n  username:{}",username);
+        LOGGER.traceEntry("Parameters:\n  username:{}", username);
         Connection conn = null;
         PreparedStatement usersStatement = null;
         try {
             conn = dbConnector.getConnection();
-            usersStatement = conn.prepareStatement(
-                    "UPDATE T_DOI_USERS SET admin = false WHERE username=?");
+            usersStatement = conn.prepareStatement(UPDATE_ADMIN_FALSE);
             usersStatement.setString(1, username);
-            LOGGER.debug("UPDATE T_DOI_USERS SET admin = false WHERE username={}", username);
-            usersStatement.executeUpdate();
+            this.updateQueries(usersStatement);
         } catch (SQLException e) {
-            LOGGER.error("An exception occured when calling setAdmin", e);
-            throw LOGGER.throwing(new DOIDbException("An exception occured when calling setAdmin", e));
+            throw LOGGER.throwing(
+                    Level.FATAL,
+                    new DOIDbException("An exception occured when calling setAdmin", e)
+            );
         } finally {
-
-            if (usersStatement != null) {
-                try {
-                    usersStatement.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close statement", e);
-                }
-            }
-
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close connection to database", e);
-                }
-            }
+            close(conn, usersStatement);
         }
         LOGGER.traceExit();
     }
 
     /**
      * {@inheritDoc}
-     */     
+     */
     @Override
-    public void renameDOIProject(final int suffix, final String newprojectname) throws DOIDbException {
+    public void renameDOIProject(final int suffix, final String newprojectname) throws
+            DOIDbException {
         LOGGER.traceEntry("Parameters:\n  suffix:{}\n  newprojectname", suffix, newprojectname);
         Connection conn = null;
         PreparedStatement statement = null;
         try {
             conn = dbConnector.getConnection();
-            statement = conn.prepareStatement(
-                    "UPDATE T_DOI_PROJECT SET projectname =? WHERE suffix=?");
+            statement = conn.prepareStatement(UPDATE_PROJECT);
             statement.setString(1, newprojectname);
             statement.setInt(2, suffix);
-            LOGGER.debug("UPDATE T_DOI_PROJECT SET projectname ={} WHERE suffix={}", newprojectname, suffix);
-            statement.executeUpdate();
+            this.updateQueries(statement);
         } catch (SQLException e) {
-            LOGGER.error("An exception occured when calling setAdmin", e);
-            throw LOGGER.throwing(new DOIDbException("An exception occured when calling setAdmin", e));
+            throw LOGGER.throwing(
+                    Level.FATAL,
+                    new DOIDbException("An exception occured when calling setAdmin", e)
+            );
         } finally {
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close statement", e);
-                }
-            }
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close connection to database", e);
-                }
-            }
+            close(conn, statement);
         }
         LOGGER.traceExit();
     }
 
     /**
      * {@inheritDoc}
-     */     
+     */
     @Override
     public String getDOIProjectName(final int suffix) throws DOIDbException {
         LOGGER.traceEntry("Parameters:\n  suffix:{}", suffix);
         Connection conn = null;
-        String projectNameResult = null;
+        final List<String> projectNameResult = new ArrayList<>();
         PreparedStatement statement = null;
         try {
             conn = dbConnector.getConnection();
-            statement = conn.prepareStatement(
-                    "SELECT suffix, projectname FROM T_DOI_PROJECT WHERE suffix=?");
+            statement = conn.prepareStatement(SELECT_PROJECT_SUFFIX);
             statement.setInt(1, suffix);
-            LOGGER.debug("SELECT suffix, projectname FROM T_DOI_PROJECT WHERE suffix={}", suffix);
-            try (ResultSet rs = statement.executeQuery()) {
-                while (rs.next()) {
-                    projectNameResult = rs.getString("projectname");
-                    break;
-                }
-            }
+            projectNameResult.addAll(getProjectName(statement));
         } catch (SQLException e) {
-            LOGGER.error("An exception occured when calling getDOIProjectName", e);
-            throw LOGGER.throwing(new DOIDbException("An exception occured when calling getDOIProjectName", e));
+            throw LOGGER.throwing(
+                    Level.FATAL,
+                    new DOIDbException("An exception occured when calling getDOIProjectName", e)
+            );
         } finally {
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close statement", e);
-                }
-            }
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close connection to database", e);
-                }
-            }
+            close(conn, statement);
         }
-        return LOGGER.traceExit(projectNameResult);
+        return LOGGER.traceExit(projectNameResult.isEmpty() ? null : projectNameResult.get(0));
     }
 
     /**
      * {@inheritDoc}
-     */     
+     */
     @Override
     public void addToken(final String token) throws DOIDbException {
         LOGGER.traceEntry("Parameters:\n  token:{}", token);
@@ -681,35 +748,23 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
         PreparedStatement statement = null;
         try {
             conn = dbConnector.getConnection();
-            statement = conn.prepareStatement("INSERT INTO T_DOI_TOKENS (token) VALUES (?)");
+            statement = conn.prepareStatement(INSERT_TOKEN);
             statement.setString(1, token);
-            LOGGER.debug("INSERT INTO T_DOI_TOKENS (token) VALUES ({})", token);
-            statement.executeUpdate();
+            this.updateQueries(statement);
         } catch (SQLException e) {
-            LOGGER.error("An exception occured when calling addToken", e);
-            throw LOGGER.throwing(new DOIDbException("An exception occured when calling addToken", e));
+            throw LOGGER.throwing(
+                    Level.FATAL,
+                    new DOIDbException("An exception occured when calling addToken", e)
+            );
         } finally {
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close statement", e);
-                }
-            }
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close connection to database", e);
-                }
-            }
+            close(conn, statement);
         }
         LOGGER.traceExit();
     }
 
     /**
      * {@inheritDoc}
-     */     
+     */
     @Override
     public void deleteToken(final String token) throws DOIDbException {
         LOGGER.traceEntry("Parameters:\n  token:{}", token);
@@ -717,36 +772,23 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
         PreparedStatement statement = null;
         try {
             conn = dbConnector.getConnection();
-            statement = conn.prepareStatement("DELETE FROM T_DOI_TOKENS WHERE token=?");
+            statement = conn.prepareStatement(DELETE_TOKEN);
             statement.setString(1, token);
-            LOGGER.debug("DELETE FROM T_DOI_TOKENS WHERE token={}", token);
-            statement.executeUpdate();
+            this.updateQueries(statement);
         } catch (SQLException e) {
-            LOGGER.error("An exception occured when calling deleteToken", e);
-            throw LOGGER.throwing(new DOIDbException("An exception occured when calling deleteToken", e));
+            throw LOGGER.throwing(
+                    Level.FATAL,
+                    new DOIDbException("An exception occured when calling deleteToken", e)
+            );
         } finally {
-
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close statement", e);
-                }
-            }
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close connection to database", e);
-                }
-            }
+            close(conn, statement);
         }
         LOGGER.traceExit();
     }
 
     /**
      * {@inheritDoc}
-     */     
+     */
     @Override
     public List<String> getTokens() throws DOIDbException {
         LOGGER.traceEntry();
@@ -755,38 +797,22 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
         PreparedStatement statement = null;
         try {
             conn = dbConnector.getConnection();
-            statement = conn.prepareStatement("SELECT token FROM T_DOI_TOKENS");
-            LOGGER.debug("SELECT token FROM T_DOI_TOKENS");
-            try (ResultSet rs = statement.executeQuery()) {
-                while (rs.next()) {
-                    tokens.add(rs.getString("token"));
-                }
-            }
+            statement = conn.prepareStatement(SELECT_TOKEN);
+            tokens.addAll(getTokens(statement));
         } catch (SQLException e) {
-            LOGGER.error("An exception occured when calling getToken", e);
-            throw LOGGER.throwing(new DOIDbException("An exception occured when calling getToken", e));
+            throw LOGGER.throwing(
+                    Level.FATAL,
+                    new DOIDbException("An exception occured when calling getToken", e)
+            );
         } finally {
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close statement", e);
-                }
-            }
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close connection to database", e);
-                }
-            }
+            close(conn, statement);
         }
         return LOGGER.traceExit(tokens);
     }
 
     /**
      * {@inheritDoc}
-     */     
+     */
     @Override
     public void removeDOIUser(final String username) throws DOIDbException {
         LOGGER.traceEntry("Parameters:\n  username:{}", username);
@@ -796,89 +822,55 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
 
         try {
             conn = dbConnector.getConnection();
-            usersStatement = conn.prepareStatement("DELETE FROM T_DOI_USERS WHERE username=?");
+            usersStatement = conn.prepareStatement(DELETE_DOI_USERS);
             usersStatement.setString(1, username);
-            LOGGER.debug("DELETE FROM T_DOI_USERS WHERE username={}", username);
-            usersStatement.executeUpdate();
-            assignationsStatement = conn.prepareStatement(
-                    "DELETE FROM T_DOI_ASSIGNATIONS WHERE username=?");
+
+            assignationsStatement = conn.prepareStatement(DELETE_ASSIGN_USERNAME);
             assignationsStatement.setString(1, username);
-            LOGGER.debug("DELETE FROM T_DOI_ASSIGNATIONS WHERE username={}", username);
-            assignationsStatement.executeUpdate();
+
+            this.updateQueries(usersStatement, assignationsStatement);
         } catch (SQLException e) {
-            LOGGER.error("An exception occured when calling removeDOIUser", e);
-            throw LOGGER.throwing(new DOIDbException("An exception occured when calling removeDOIUser", e));
+            throw LOGGER.throwing(
+                    Level.FATAL,
+                    new DOIDbException("An exception occured when calling removeDOIUser", e)
+            );
         } finally {
-            if (usersStatement != null) {
-                try {
-                    usersStatement.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close statement", e);
-                }
-            }
-
-            if (assignationsStatement != null) {
-                try {
-                    assignationsStatement.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close statement", e);
-                }
-            }
-
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close connection to database", e);
-                }
-            }
+            close(conn, usersStatement, assignationsStatement);
         }
         LOGGER.traceExit();
     }
 
     /**
      * {@inheritDoc}
-     */     
+     */
     @Override
-    public void addDOIUser(final String username, final Boolean admin, final String email) throws DOIDbException {
-        LOGGER.traceEntry("Parameters:\n  username:{}\n  admin:{}\n email:{}", username, admin, email);
+    public void addDOIUser(final String username, final Boolean admin, final String email) throws
+            DOIDbException {
+        LOGGER.traceEntry("Parameters:\n  username:{}\n  admin:{}\n email:{}", username, admin,
+                email);
         Connection conn = null;
         PreparedStatement statement = null;
         try {
             conn = dbConnector.getConnection();
-            statement = conn.prepareStatement(
-                    "INSERT INTO T_DOI_USERS (username, admin, email) VALUES(?,?,?)");
+            statement = conn.prepareStatement(INSERT_FULL_DOI_UERS);
             statement.setString(1, username);
             statement.setBoolean(2, admin);
             statement.setString(3, email);
-            LOGGER.debug("INSERT INTO T_DOI_USERS (username, admin, email) VALUES({},{},{})", username, admin, email);
-            statement.executeUpdate();
+            this.updateQueries(statement);
         } catch (SQLException e) {
-            LOGGER.error("An exception occured when calling addDOIUser", e);
-            throw LOGGER.throwing(new DOIDbException("An exception occured when calling addDOIUser", e));
+            throw LOGGER.throwing(
+                    Level.FATAL,
+                    new DOIDbException("An exception occured when calling addDOIUser", e)
+            );
         } finally {
-
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close statement", e);
-                }
-            }
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close connection to database", e);
-                }
-            }
+            close(conn, statement);
         }
         LOGGER.traceExit();
     }
 
     /**
      * {@inheritDoc}
-     */     
+     */
     @Override
     public void removeDOIProject(final int suffix) throws DOIDbException {
         LOGGER.traceEntry("Parameters:\n  suffix:{}", suffix);
@@ -887,54 +879,33 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
         PreparedStatement assignationsStatement = null;
         try {
             conn = dbConnector.getConnection();
-            projectStatement = conn.prepareStatement("DELETE FROM T_DOI_PROJECT WHERE suffix=?");
+            projectStatement = conn.prepareStatement(DELETE_PROJECT_WITH_SUFFIX);
             projectStatement.setInt(1, suffix);
-            LOGGER.debug("DELETE FROM T_DOI_PROJECT WHERE suffix={}", suffix);
-            projectStatement.executeUpdate();
 
-            assignationsStatement = conn.prepareStatement(
-                    "DELETE FROM T_DOI_ASSIGNATIONS WHERE suffix =?");
+            assignationsStatement = conn.prepareStatement(DELETE_ASSIGN_SUFFIX);
             assignationsStatement.setInt(1, suffix);
-            LOGGER.debug("DELETE FROM T_DOI_ASSIGNATIONS WHERE suffix ={}", suffix);
-            assignationsStatement.executeUpdate();
+
+            this.updateQueries(projectStatement, assignationsStatement);
         } catch (SQLException e) {
             LOGGER.error("An exception occured when calling removeDOIProject", e);
-            throw LOGGER.throwing(new DOIDbException("An exception occured when calling removeDOIProject", e));
+            throw LOGGER.throwing(
+                    Level.FATAL,
+                    new DOIDbException("An exception occured when calling removeDOIProject", e)
+            );
         } finally {
-
-            if (projectStatement != null) {
-                try {
-                    projectStatement.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close statement", e);
-                }
-            }
-            if (assignationsStatement != null) {
-                try {
-                    assignationsStatement.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close statement", e);
-                }
-            }
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close connection to database", e);
-                }
-            }
+            close(conn, projectStatement, assignationsStatement);
         }
         LOGGER.traceExit();
     }
 
     /**
      * {@inheritDoc}
-     */     
+     */
     @Override
     public boolean isAdmin(final String username) throws DOIDbException {
         LOGGER.traceEntry("Parameters:\n  username:{}", username);
         boolean isAdmin = false;
-        final DOIUser user = getDoiUserFromDb(username);        
+        final DOIUser user = getDoiUserFromDb(username);
         if (user != null) {
             isAdmin = getDoiUserFromDb(username).isAdmin();
         }
@@ -943,63 +914,44 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
 
     /**
      * Returns the DOI user from the username.
+     *
      * @param username username in the DB
-     * @return DOIUser
-     * @throws DOIDbException 
+     * @return DOIUser or null
+     * @throws DOIDbException - if a database error occurs.
      */
     private DOIUser getDoiUserFromDb(final String username) throws DOIDbException {
         LOGGER.traceEntry("Parameters:\n  username:{}", username);
         Connection conn = null;
         PreparedStatement statement = null;
-        DOIUser doiuser = null;
+        final List<DOIUser> doiusers = new ArrayList<>();
         try {
             conn = dbConnector.getConnection();
-            statement = conn.prepareStatement(
-                    "SELECT username, admin, email FROM T_DOI_USERS WHERE username=?");
+            statement = conn.prepareStatement(SELECT_USERS_CLAUSE_USER);
             statement.setString(1, username);
-            LOGGER.debug("SELECT username, admin, email FROM T_DOI_USERS WHERE username={}", username);
-            try (ResultSet rs = statement.executeQuery()) {
-                if (rs.next()) {
-                    doiuser = new DOIUser();
-                    doiuser.setAdmin(rs.getBoolean("admin"));
-                    doiuser.setUsername(rs.getString("username"));
-                    doiuser.setEmail(rs.getString("email"));
-                }
-            }
+            doiusers.addAll(getDOIUSers(statement));
         } catch (SQLException e) {
-            LOGGER.error("An exception occured when calling getAllDOIusers", e);
-            throw LOGGER.throwing(new DOIDbException("An exception occured when calling getAllDOIusers", e));
+            throw LOGGER.throwing(
+                    Level.FATAL,
+                    new DOIDbException("An exception occured when calling getAllDOIusers", e)
+            );
         } finally {
-            if(statement != null) {
-                try {
-                    statement.close();
-                } catch (SQLException ex) {
-                    LOGGER.error("Unable to close the statement to database", ex);
-                }
-            }
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    LOGGER.error("Unable to close connection to database", e);
-                }
-            }
+            close(conn, statement);
         }
-        return LOGGER.traceExit(doiuser);
+        return LOGGER.traceExit(doiusers.isEmpty() ? null : doiusers.get(0));
     }
 
     /**
      * {@inheritDoc}
-     */     
+     */
     @Override
-    public boolean isUserExist(final String username) throws DOIDbException { 
+    public boolean isUserExist(final String username) throws DOIDbException {
         LOGGER.traceEntry("Parameters:\n  username:{}", username);
         return LOGGER.traceExit(getDoiUserFromDb(username) != null);
     }
 
     /**
      * {@inheritDoc}
-     */     
+     */
     @Override
     public void close() throws DOIDbException {
         LOGGER.traceEntry();
