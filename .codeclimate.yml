@@ -39,4 +39,4 @@ exclude_paths:
   - **/*.js  
 ratings: 
   paths: 
-    - src/**
+    - src/main/fr/**
