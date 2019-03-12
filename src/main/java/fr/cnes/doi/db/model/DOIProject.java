@@ -47,7 +47,7 @@ public class DOIProject {
     /**
      * Sets the suffix.
      *
-     * @param suffix
+     * @param suffix DOI project suffix
      */
     public void setSuffix(final int suffix) {
         this.suffix = suffix;

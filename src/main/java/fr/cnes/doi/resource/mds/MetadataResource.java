@@ -155,7 +155,7 @@ public class MetadataResource extends BaseMdsResource {
      * Returns the metadata as JSON.
      *
      * @return JSON representation.
-     * @throws IOException
+     * @throws IOException - if JSON conversion problem occurs
      */
     @Get("json")
     public Resource getMetadataAsJson() throws IOException {

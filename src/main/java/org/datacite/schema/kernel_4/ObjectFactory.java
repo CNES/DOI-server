@@ -362,7 +362,7 @@ public class ObjectFactory {
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
      *
-     * @param value
+     * @param value description
      * @return the JAXBElement
      */
     @XmlElementDecl(namespace = "http://datacite.org/schema/kernel-4", name = "br", scope = Resource.Descriptions.Description.class)
