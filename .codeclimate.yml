@@ -52,7 +52,7 @@ exclude_patterns:
 - "scripts/"
 - "src/it/"
 - "src/test/"
-- "src/site"
-- "src/main/javadoc"
-- "src/main/resources"
+- "src/site/"
+- "src/main/javadoc/"
+- "src/main/resources/"
 
