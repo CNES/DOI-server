@@ -20,7 +20,6 @@ package fr.cnes.doi.utils;
 
 import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.plugin.PluginFactory;
-import fr.cnes.doi.server.Starter;
 import fr.cnes.doi.utils.spec.Requirement;
 import java.util.Map;
 import java.util.Random;

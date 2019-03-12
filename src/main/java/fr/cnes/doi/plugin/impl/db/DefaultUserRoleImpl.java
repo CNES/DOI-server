@@ -22,8 +22,8 @@ import fr.cnes.doi.db.MyMemoryRealm;
 import fr.cnes.doi.db.model.DOIUser;
 import fr.cnes.doi.exception.DOIDbException;
 import fr.cnes.doi.plugin.AbstractUserRolePluginHelper;
-import fr.cnes.doi.plugin.impl.db.persistence.service.DOIDbDataAccessService;
-import fr.cnes.doi.plugin.impl.db.persistence.service.DatabaseSingleton;
+import fr.cnes.doi.plugin.impl.db.service.DOIDbDataAccessService;
+import fr.cnes.doi.plugin.impl.db.service.DatabaseSingleton;
 import fr.cnes.doi.settings.EmailSettings;
 
 import java.util.ArrayList;

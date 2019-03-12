@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package fr.cnes.doi.plugin.impl.db.persistence.impl;
+package fr.cnes.doi.plugin.impl.db.impl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -31,7 +31,7 @@ import org.apache.logging.log4j.Logger;
 import fr.cnes.doi.exception.DOIDbException;
 import fr.cnes.doi.db.model.DOIProject;
 import fr.cnes.doi.db.model.DOIUser;
-import fr.cnes.doi.plugin.impl.db.persistence.service.DOIDbDataAccessService;
+import fr.cnes.doi.plugin.impl.db.service.DOIDbDataAccessService;
 import org.apache.logging.log4j.Level;
 
 /**
@@ -97,12 +97,12 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      * Select project information for a specific user.
      */
     private static final String SELECT_PROJECTS_WITH_CTX_USER = String.format(
-            "SELECT %s, %s \n"
-            + "FROM T_DOI_PROJECT \n"
-            + "WHERE %s IN (\n"
-            + "    SELECT %s \n"
-            + "    FROM T_DOI_ASSIGNATIONS \n"
-            + "    WHERE %s=?\n"
+            "SELECT %s, %s "
+            + "FROM T_DOI_PROJECT "
+            + "WHERE %s IN ("
+            + "    SELECT %s "
+            + "    FROM T_DOI_ASSIGNATIONS "
+            + "    WHERE %s=?"
             + ")", FIELD_PROJECT_SUFFIX, FIELD_PROJECTNAME, FIELD_PROJECT_SUFFIX,
             FIELD_PROJECT_SUFFIX, FIELD_USERNAME);
 
@@ -151,7 +151,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      * Delete a project based on its DOI suffix.
      */
     private static final String DELETE_PROJECT_WITH_SUFFIX = String.format(
-            "%s WHERE suffix=?", DELETE_PROJECT, FIELD_PROJECT_SUFFIX);
+            "%s WHERE %s=?", DELETE_PROJECT, FIELD_PROJECT_SUFFIX);
 
     /**
      * Delete a user based on its username.

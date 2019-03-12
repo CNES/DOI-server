@@ -20,3 +20,4 @@
  * Services to update user in DOI database from the LDAP.
  * The service retrieve all users having the group {@literal fr.cnes.doi.settings.Consts.LDAP_PROJECT}
  */
+package fr.cnes.doi.ldap.job;

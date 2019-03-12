@@ -17,6 +17,6 @@
  * MA 02110-1301  USA
  */
 /**
- * Provides LDAP user data model.
+ * Provides database access implementation using JDBC connector.
  */
-package fr.cnes.doi.ldap.model;
+package fr.cnes.doi.plugin.impl.db.impl;

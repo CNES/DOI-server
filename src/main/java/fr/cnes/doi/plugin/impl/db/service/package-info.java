@@ -19,3 +19,4 @@
 /**
  * Provides the database access that stores the DOI, project and tokens
  */
+package fr.cnes.doi.plugin.impl.db.service;

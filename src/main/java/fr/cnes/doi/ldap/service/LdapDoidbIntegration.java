@@ -21,8 +21,17 @@ package fr.cnes.doi.ldap.service;
 import fr.cnes.doi.exception.LDAPAccessException;
 import fr.cnes.doi.exception.DOIDbException;
 
+/**
+ * Integration of the LDAP to fill the DOI users database
+ * @author Jean-Christophe Malapert (Jean-Christophe.malapert@cnes.fr)
+ */
 public interface LdapDoidbIntegration {
 
+    /**
+     * Updates the users in DOI database from the LDAP.
+     * @throws LDAPAccessException - if a problem occurs
+     * @throws DOIDbException - if a problem occurs
+     */
     public void updateDoiServerDataBaseFromLdap() throws LDAPAccessException, DOIDbException;
 
 }

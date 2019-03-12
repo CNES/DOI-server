@@ -18,8 +18,8 @@
  */
 package fr.cnes.doi.plugin.impl.db;
 
-import fr.cnes.doi.plugin.impl.db.persistence.service.DatabaseSingleton;
-import fr.cnes.doi.plugin.impl.db.persistence.service.DOIDbDataAccessService;
+import fr.cnes.doi.plugin.impl.db.service.DatabaseSingleton;
+import fr.cnes.doi.plugin.impl.db.service.DOIDbDataAccessService;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;

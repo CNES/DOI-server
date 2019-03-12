@@ -19,3 +19,4 @@
 /**
  * All current Exceptions.
  */
+package fr.cnes.doi.exception;

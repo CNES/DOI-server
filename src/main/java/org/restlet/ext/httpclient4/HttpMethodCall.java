@@ -218,7 +218,7 @@ public class HttpMethodCall extends ClientCall {
      * @return null
      */
     @Override
-    public ReadableByteChannel getResponseEntityChannel(long size) {
+    public ReadableByteChannel getResponseEntityChannel(final long size) {
         return null;
     }
 
@@ -369,7 +369,7 @@ public class HttpMethodCall extends ClientCall {
                      * {@inheritDoc}
                      */
                     @Override
-                    public void writeTo(OutputStream os) throws IOException {
+                    public void writeTo(final OutputStream os) throws IOException {
                         entity.write(os);
                         os.flush();
                     }

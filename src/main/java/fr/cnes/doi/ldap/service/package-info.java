@@ -19,3 +19,4 @@
 /**
  * Interfaces to handle LDAP.
  */
+package fr.cnes.doi.ldap.service;

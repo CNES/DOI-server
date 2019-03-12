@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package fr.cnes.doi.plugin.impl.db.persistence.impl;
+package fr.cnes.doi.plugin.impl.db.impl;
 
 import fr.cnes.doi.exception.DoiRuntimeException;
 import java.io.IOException;

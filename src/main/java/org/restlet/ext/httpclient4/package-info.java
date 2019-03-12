@@ -17,5 +17,6 @@
  * MA 02110-1301  USA
  */
 /**
- * Provides database access implementation using JDBC connector.
+ * Provides Bridge to JSPNego
  */
+package org.restlet.ext.httpclient4;

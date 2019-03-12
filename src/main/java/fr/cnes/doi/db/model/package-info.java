@@ -23,3 +23,4 @@
  * <li>{@link fr.cnes.doi.db.model.DOIUser DOIUser} representing the user data model</li>
  * </ul>
  */
+package fr.cnes.doi.db.model;

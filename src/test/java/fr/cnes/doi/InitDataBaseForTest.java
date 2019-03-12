@@ -18,7 +18,7 @@
  */
 package fr.cnes.doi;
 
-import fr.cnes.doi.plugin.impl.db.persistence.service.DatabaseSingleton;
+import fr.cnes.doi.plugin.impl.db.service.DatabaseSingleton;
 import static org.junit.Assert.fail;
 
 import org.slf4j.Logger;
@@ -26,10 +26,10 @@ import org.slf4j.LoggerFactory;
 
 import fr.cnes.doi.persistence.DOIDBTest;
 import fr.cnes.doi.exception.DOIDbException;
-import fr.cnes.doi.plugin.impl.db.persistence.impl.DOIDbDataAccessServiceImpl;
+import fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl;
 import fr.cnes.doi.db.model.DOIProject;
 import fr.cnes.doi.db.model.DOIUser;
-import fr.cnes.doi.plugin.impl.db.persistence.service.DOIDbDataAccessService;
+import fr.cnes.doi.plugin.impl.db.service.DOIDbDataAccessService;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 

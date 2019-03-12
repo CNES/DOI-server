@@ -108,7 +108,7 @@ public class LdapDoidbIntegrationImpl implements LdapDoidbIntegration {
      * @param ldapmembers the users from the LDAP
      * @return True when the user from the database is contained from the users from the LDAP
      */
-    private boolean isContained(DOIUser dbuser, List<LDAPUser> ldapmembers) {
+    private boolean isContained(final DOIUser dbuser, final List<LDAPUser> ldapmembers) {
         LOG.traceEntry("Parameters {},", dbuser, ldapmembers);
         boolean isContained = false;
         for (final LDAPUser ldapuser : ldapmembers) {

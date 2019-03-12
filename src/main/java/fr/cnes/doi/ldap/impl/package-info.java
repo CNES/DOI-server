@@ -19,3 +19,4 @@
 /**
  * Provides LDAP implementation and LDAP integration implementation.
  */
+package fr.cnes.doi.ldap.impl;
