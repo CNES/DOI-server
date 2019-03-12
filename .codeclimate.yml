@@ -34,7 +34,8 @@ exclude_paths:
   - src/site/**/*
   - src/test/**/* 
   - src/main/javadoc/**/*
-  - src/main/resource/**/*  
+  - src/main/resource/**/*
+  - **/*.js  
 ratings: 
   paths: 
     - src/**

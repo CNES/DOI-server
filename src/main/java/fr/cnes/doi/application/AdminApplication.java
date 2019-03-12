@@ -27,7 +27,6 @@ import org.apache.logging.log4j.Logger;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
-import org.restlet.data.ChallengeScheme;
 import org.restlet.data.LocalReference;
 import org.restlet.data.Method;
 import org.restlet.data.Reference;
@@ -42,7 +41,6 @@ import org.restlet.security.Role;
 import org.restlet.security.RoleAuthorizer;
 import org.restlet.service.TaskService;
 
-import fr.cnes.doi.db.AbstractTokenDBHelper;
 import fr.cnes.doi.ldap.job.DOIUsersUpdate;
 import fr.cnes.doi.logging.business.JsonMessage;
 import fr.cnes.doi.resource.admin.AuthenticationResource;
@@ -54,9 +52,6 @@ import fr.cnes.doi.resource.admin.SuffixProjectsDoisResource;
 import fr.cnes.doi.resource.admin.SuffixProjectsResource;
 import fr.cnes.doi.resource.admin.TokenResource;
 import fr.cnes.doi.security.AllowerIP;
-import fr.cnes.doi.security.LoginBasedVerifier;
-import fr.cnes.doi.security.TokenBasedVerifier;
-import fr.cnes.doi.security.TokenSecurity;
 import fr.cnes.doi.services.LandingPageMonitoring;
 import fr.cnes.doi.services.UpdateTokenDataBase;
 import fr.cnes.doi.settings.Consts;
@@ -226,25 +221,26 @@ public class AdminApplication extends AbstractApplication {
      * DataCite Stats page {@value #TARGET_STATS_URL}.
      */
     private static final String TARGET_STATS_URL = "https://stats.datacite.org/#tab-prefixes";
-
-    /**
-     * Token database.
-     */
-    private final AbstractTokenDBHelper tokenDB;
     
     /**
      * Constructor.
      */
     public AdminApplication() {
         super();
+        init();
+    }
+    
+    /**
+     * Defines services and metadata.
+     */
+    private void init() {
         setName(NAME);
         setDescription("Provides an application for handling features related to "
-                + "the administration system of the DOI server.");
-        this.tokenDB = TokenSecurity.getInstance().getTOKEN_DB();       
+                + "the administration system of the DOI server.");               
         this.setTaskService(createTaskService());
         this.setTaskService(createUpdateDataBaseTaskService());
         this.setTaskService(periodicalyDeleteExpiredTokenFromDB());
-        getMetadataService().addExtension("xsd", MediaType.TEXT_XML, true);
+        getMetadataService().addExtension("xsd", MediaType.TEXT_XML, true);        
     }
 
     /**
@@ -317,7 +313,7 @@ public class AdminApplication extends AbstractApplication {
         LOG.traceEntry();
         // Defines the strategy of authentication (authentication is not required)
         //   - authentication with login/pwd
-        final ChallengeAuthenticator challAuth = createAuthenticator();
+        final ChallengeAuthenticator challAuth = createAuthenticatorLoginBased();
         challAuth.setOptional(true);
 
         //   - authentication with token
@@ -350,78 +346,6 @@ public class AdminApplication extends AbstractApplication {
         router.attach(ADMIN_URI, challAuth);
 
         return LOG.traceExit(router);
-    }
-
-    /**
-     * Creates an authentication by token.
-     *
-     * @return the object that contains the business to check
-     * @see TokenBasedVerifier the token verification
-     */
-    @Requirement(reqId = Requirement.DOI_AUTH_020, reqName = Requirement.DOI_AUTH_020_NAME)
-    private ChallengeAuthenticator createTokenAuthenticator() {
-        LOG.traceEntry();
-        final ChallengeAuthenticator guard = new ChallengeAuthenticator(
-                getContext(), ChallengeScheme.HTTP_OAUTH_BEARER, "testRealm") {
-            /**
-             * Verifies the token.
-             *
-             * @param request request
-             * @param response response
-             * @return the result
-             */
-            @Override
-            public int beforeHandle(final Request request,
-                    final Response response) {
-                if (request.getMethod().equals(Method.OPTIONS)) {
-                    response.setStatus(Status.SUCCESS_OK);
-                    return CONTINUE;
-                } else {
-                    return super.beforeHandle(request, response);
-                }
-            }
-        };
-        final TokenBasedVerifier verifier = new TokenBasedVerifier(getTokenDB());
-        guard.setVerifier(verifier);
-
-        return LOG.traceExit(guard);
-    }
-
-    /**
-     * Creates the authenticator based on a HTTP basic. Creates the user, role and mapping
-     * user/role.
-     *
-     * @return Authenticator based on a challenge scheme
-     */
-    @Requirement(reqId = Requirement.DOI_AUTH_010, reqName = Requirement.DOI_AUTH_010_NAME)
-    @Override
-    protected ChallengeAuthenticator createAuthenticator() {
-        LOG.traceEntry();
-        final ChallengeAuthenticator guard = new ChallengeAuthenticator(
-                getContext(), ChallengeScheme.HTTP_BASIC, "realm") {
-            /**
-             * Cancel verification on pre-flight OPTIONS method
-             *
-             * @param request request
-             * @param response response
-             * @return the result
-             */
-            @Override
-            public int beforeHandle(final Request request,
-                    final Response response) {
-                if (request.getMethod().equals(Method.OPTIONS)) {
-                    response.setStatus(Status.SUCCESS_OK);
-                    return CONTINUE;
-                } else {
-                    return super.beforeHandle(request, response);
-                }
-            }
-        };
-
-        final LoginBasedVerifier verifier = new LoginBasedVerifier();
-        guard.setVerifier(verifier);
-
-        return LOG.traceExit(guard);
     }
 
     /**
@@ -568,8 +492,38 @@ public class AdminApplication extends AbstractApplication {
         router.attach(RESOURCE_URI, directory);
 
         LOG.traceExit();
-
     }
+    
+    /**
+     * Adds route attacURI to the target according to redirection mode.
+     * @param Router router
+     * @param redirectorMode redirection mode
+     * @param target target
+     * @param attachURI attachURI
+     */
+    private void addServices(final Router router, final int redirectorMode, final String target, final String attachURI) {
+        LOG.traceEntry("Parameters\n   router: {}\n   redirectorMode: {}\n   "
+                + "target: {}\n  attachURI: {}", 
+                new JsonMessage(router), redirectorMode, target, attachURI);
+
+        final Redirector redirector = new Redirector(getContext(), target, redirectorMode);
+
+        final Filter authentication = new Filter() {
+            /**
+             * {@inheritDoc }
+             */
+            @Override
+            protected int doHandle(final Request request, final Response response) {
+                response.setLocationRef(target);
+                response.setStatus(Status.REDIRECTION_PERMANENT);
+                return super.doHandle(request, response);
+            }
+        };
+        authentication.setNext(redirector);
+        router.attach(attachURI, authentication);
+        LOG.traceExit();
+    }
+    
 
     /**
      * Adds route {@value #STATUS_URI} to the services describing the DataCite status.
@@ -577,32 +531,7 @@ public class AdminApplication extends AbstractApplication {
      * @param router router
      */
     private void addServicesStatus(final Router router) {
-        LOG.traceEntry("Parameter : {}", new JsonMessage(router));
-
-        final Redirector redirector = new Redirector(getContext(), TARGET_URL,
-                Redirector.MODE_SERVER_OUTBOUND);
-
-        final Filter authentication = new Filter() {
-            /**
-             * Adds the proxy authentication and handles the call by distributing it to the next
-             * Restlet. If no Restlet is attached, then a Status.SERVER_ERROR_INTERNAL status is
-             * returned. Returns Filter.CONTINUE by default.
-             *
-             * @param request request
-             * @param response response
-             * @return The continuation status. Either Filter.CONTINUE or Filter.STOP.
-             */
-            @Override
-            protected int doHandle(final Request request, final Response response) {
-                response.setLocationRef(TARGET_URL);
-                response.setStatus(Status.REDIRECTION_PERMANENT);
-                return super.doHandle(request, response);
-            }
-        };
-        authentication.setNext(redirector);
-        router.attach(STATUS_URI, authentication);
-
-        LOG.traceExit();
+        this.addServices(router, Redirector.MODE_SERVER_OUTBOUND, TARGET_URL, STATS_URI);
     }
 
     /**
@@ -611,35 +540,7 @@ public class AdminApplication extends AbstractApplication {
      * @param router router
      */
     private void addServicesStats(final Router router) {
-        LOG.traceEntry("Parameter : {}", new JsonMessage(router));
-
-        final Redirector redirector = new Redirector(
-                getContext(),
-                TARGET_STATS_URL,
-                Redirector.MODE_CLIENT_PERMANENT
-        );
-
-        final Filter authentication = new Filter() {
-            /**
-             * Adds the proxy authentication and handles the call by distributing it to the next
-             * Restlet. If no Restlet is attached, then a Status.SERVER_ERROR_INTERNAL status is
-             * returned. Returns Filter.CONTINUE by default.
-             *
-             * @param request request
-             * @param response response
-             * @return The continuation status. Either Filter.CONTINUE or Filter.STOP.
-             */
-            @Override
-            protected int doHandle(final Request request, final Response response) {
-                response.setLocationRef(TARGET_STATS_URL);
-                response.setStatus(Status.REDIRECTION_PERMANENT);
-                return super.doHandle(request, response);
-            }
-        };
-        authentication.setNext(redirector);
-        router.attach(STATS_URI, authentication);
-
-        LOG.traceExit();
+        this.addServices(router, Redirector.MODE_CLIENT_PERMANENT, TARGET_STATS_URL, STATS_URI);
     }
 
     /**
@@ -669,15 +570,6 @@ public class AdminApplication extends AbstractApplication {
             LOG.warn("The website for DOI server is not installed");
         }
         LOG.traceExit();
-    }
-
-    /**
-     * Returns the token database.
-     *
-     * @return the token database
-     */
-    public AbstractTokenDBHelper getTokenDB() {
-        return this.tokenDB;
     }
 
     /**

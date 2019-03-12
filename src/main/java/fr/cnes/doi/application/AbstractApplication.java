@@ -18,6 +18,10 @@
  */
 package fr.cnes.doi.application;
 
+import fr.cnes.doi.db.AbstractTokenDBHelper;
+import fr.cnes.doi.security.LoginBasedVerifier;
+import fr.cnes.doi.security.TokenBasedVerifier;
+import fr.cnes.doi.security.TokenSecurity;
 import fr.cnes.doi.services.CnesStatusService;
 import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.settings.EmailSettings;
@@ -28,11 +32,16 @@ import java.util.HashSet;
 import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.restlet.Request;
+import org.restlet.Response;
 import org.restlet.data.ChallengeScheme;
+import org.restlet.data.Method;
+import org.restlet.data.Status;
 import org.restlet.ext.wadl.ApplicationInfo;
 import org.restlet.ext.wadl.WadlApplication;
 import org.restlet.ext.wadl.WadlCnesRepresentation;
 import org.restlet.representation.Representation;
+import static org.restlet.routing.Filter.CONTINUE;
 import org.restlet.security.ChallengeAuthenticator;
 import org.restlet.service.CorsService;
 
@@ -43,7 +52,17 @@ import org.restlet.service.CorsService;
  */
 @Requirement(reqId = Requirement.DOI_DOC_010, reqName = Requirement.DOI_DOC_010_NAME)
 public abstract class AbstractApplication extends WadlApplication {
+    
+    /**
+     * Token database.
+     */
+    private final AbstractTokenDBHelper tokenDB = TokenSecurity.getInstance().getTOKEN_DB();    
 
+    /**
+     * DOI settings.
+     */
+    private final DoiSettings config = DoiSettings.getInstance();
+    
     /**
      * Default value of 'Access-Control-Allow-Origin' header.
      */
@@ -62,11 +81,6 @@ public abstract class AbstractApplication extends WadlApplication {
     private static final Logger LOG = LogManager.getLogger(AbstractApplication.class.getName());
 
     /**
-     * DOI settings.
-     */
-    private final DoiSettings config;
-
-    /**
      * This constructor creates an instance of proxySettings and doiSettings. By creating the
      * instance, the constructor creates :
      * <ul>
@@ -80,11 +94,17 @@ public abstract class AbstractApplication extends WadlApplication {
      */
     public AbstractApplication() {
         super();
-        this.config = DoiSettings.getInstance();
+        init();
+    }
+    
+    /**
+     * Defined services and metadata.
+     */
+    private void init() {
         getServices().add(this.createCoreService(DEFAULT_CORS_ORIGIN, DEFAULT_CORS_CREDENTIALS));
         setStatusService(new CnesStatusService());
         setOwner("Centre National d'Etudes Spatiales (CNES)");
-        setAuthor("Jean-Christophe Malapert (DNO/ISA/VIP)");
+        setAuthor("Jean-Christophe Malapert (DNO/ISA/VIP)");        
     }
 
     /**
@@ -123,6 +143,77 @@ public abstract class AbstractApplication extends WadlApplication {
 
         return LOG.traceExit(guard);
     }
+    
+    /**
+     * Creates the authenticator based on a HTTP basic. 
+     * Creates the user, role and mapping user/role.
+     *
+     * @return Authenticator based on a challenge scheme
+     */
+    @Requirement(reqId = Requirement.DOI_AUTH_010, reqName = Requirement.DOI_AUTH_010_NAME)
+    protected ChallengeAuthenticator createAuthenticatorLoginBased() {
+        LOG.traceEntry();
+        final ChallengeAuthenticator guard = new ChallengeAuthenticator(
+                getContext(), ChallengeScheme.HTTP_BASIC, "realm") {
+            /**
+             * Cancel verification on pre-flight OPTIONS method
+             *
+             * @param request request
+             * @param response response
+             * @return the result
+             */
+            @Override
+            public int beforeHandle(final Request request,
+                    final Response response) {
+                if (request.getMethod().equals(Method.OPTIONS)) {
+                    response.setStatus(Status.SUCCESS_OK);
+                    return CONTINUE;
+                } else {
+                    return super.beforeHandle(request, response);
+                }
+            }
+        };
+
+        final LoginBasedVerifier verifier = new LoginBasedVerifier();
+        guard.setVerifier(verifier);
+
+        return LOG.traceExit(guard);
+    }   
+    
+    /**
+     * Creates an authentication by token.
+     *
+     * @return the object that contains the business to check
+     * @see TokenBasedVerifier the token verification
+     */
+    @Requirement(reqId = Requirement.DOI_AUTH_020, reqName = Requirement.DOI_AUTH_020_NAME)
+    protected ChallengeAuthenticator createTokenAuthenticator() {
+        LOG.traceEntry();
+        final ChallengeAuthenticator guard = new ChallengeAuthenticator(
+                getContext(), ChallengeScheme.HTTP_OAUTH_BEARER, "testRealm") {
+            /**
+             * Verifies the token.
+             *
+             * @param request request
+             * @param response response
+             * @return the result
+             */
+            @Override
+            public int beforeHandle(final Request request,
+                    final Response response) {
+                if (request.getMethod().equals(Method.OPTIONS)) {
+                    response.setStatus(Status.SUCCESS_OK);
+                    return CONTINUE;
+                } else {
+                    return super.beforeHandle(request, response);
+                }
+            }
+        };
+        final TokenBasedVerifier verifier = new TokenBasedVerifier(getTokenDB());
+        guard.setVerifier(verifier);
+
+        return LOG.traceExit(guard);
+    }    
 
     /**
      * Creates HTML representation of the WADL.
@@ -158,6 +249,15 @@ public abstract class AbstractApplication extends WadlApplication {
         LOG.traceEntry();
         return LOG.traceExit(config);
     }
+    
+    /**
+     * Returns the token database.
+     *
+     * @return the token database
+     */
+    public AbstractTokenDBHelper getTokenDB() {
+        return this.tokenDB;
+    }    
 
     /**
      * Returns the logger.
