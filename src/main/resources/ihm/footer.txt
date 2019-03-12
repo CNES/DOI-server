@@ -1,10 +1,17 @@
 <div class="footer">
+
     <div id="footer_left">
-        <img src="/resources/images/Cnes-logo.png" width="50px" height="50px/>
-	<p>&copy; CNES 2019</p>
+
+        <a href="www.cnes.fr" target="_blank"><img src="/resources/images/Cnes-logo.png" width="50px" height="50px/>&nbsp;>&copy; CNES 2019</a>
+
     </div>
+
     <div id="footer_right">
-        <a href="https://status.datacite.org/"><img src="https://dka575ofm4ao0.cloudfront.net/pages-transactional_logos/retina/19026/jWSRwM1RI6STXVqsOSwt width="200px" height="50px/><a>
-        <a href="https://stats.datacite.org/?fq=prefix%3A%2210.24400%22&#tab-resolution-report">DOI stats</a>
+
+        <a href="https://status.datacite.org/" target="_blank">Datacite status</a>
+
+        <a href="https://stats.datacite.org/?fq=prefix%3A%2210.24400%22&#tab-resolution-report" target="_blank">DOI stats</a>
+
     </div>
+
 </div>
