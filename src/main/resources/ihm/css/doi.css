@@ -18,12 +18,10 @@ h1,h2 {
 
 #footer_left {
   position: absolute;
-  left: 0px;
-  width: 50%;    
+  left: 10px;
 }
 
 #footer_right {
   position: absolute;
-  right: 0px;
-  width: 50%;  
+  right: 10px;
 }
