@@ -20,6 +20,7 @@ package fr.cnes.doi.db.model;
 
 /**
  * DOI user model
+ *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class DOIUser {
@@ -41,6 +42,7 @@ public class DOIUser {
 
     /**
      * Returns the user name.
+     *
      * @return the user name
      */
     public String getUsername() {
@@ -49,6 +51,7 @@ public class DOIUser {
 
     /**
      * Sets the user name.
+     *
      * @param username user name.
      */
     public void setUsername(final String username) {
@@ -57,6 +60,7 @@ public class DOIUser {
 
     /**
      * Returns True when the user is administrator otherwise False.
+     *
      * @return True when the user is administrator otherwise False
      */
     public Boolean isAdmin() {
@@ -65,6 +69,7 @@ public class DOIUser {
 
     /**
      * Sets an administrator as admin.
+     *
      * @param isAdmin True when the user is administrator otherwise False
      */
     public void setAdmin(final Boolean isAdmin) {
@@ -73,6 +78,7 @@ public class DOIUser {
 
     /**
      * Sets the email of the user.
+     *
      * @param email email
      */
     public void setEmail(final String email) {
@@ -81,6 +87,7 @@ public class DOIUser {
 
     /**
      * Returns the email.
+     *
      * @return the email
      */
     public String getEmail() {
@@ -89,6 +96,7 @@ public class DOIUser {
 
     /**
      * Tests if this object is equal to testuser.
+     *
      * @param testuser DOIUser to test
      * @return True when testuser is the same à this DOIUser
      */
@@ -97,12 +105,12 @@ public class DOIUser {
                 && this.admin.equals(testuser.isAdmin())
                 && this.email.equals(testuser.getEmail());
     }
-    
-   /**
-    * {@inheritDoc}
-    */    
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public String toString( ) {
-      return this.getUsername() + "_" + this.getEmail();	
+    public String toString() {
+        return this.getUsername() + "_" + this.getEmail();
     }
 }

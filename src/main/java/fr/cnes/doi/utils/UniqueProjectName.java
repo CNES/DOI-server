@@ -20,28 +20,30 @@ package fr.cnes.doi.utils;
 
 import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.plugin.PluginFactory;
+import fr.cnes.doi.server.Starter;
 import fr.cnes.doi.utils.spec.Requirement;
 import java.util.Map;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Utils class to generate a unique number from the project name
  *
  */
 @Requirement(reqId = Requirement.DOI_INTER_030, reqName = Requirement.DOI_INTER_030_NAME)
-public class UniqueProjectName {
-
-    /**
-     * Class name.
-     */
-    private static final String CLASS_NAME = UniqueProjectName.class.getName();
+public final class UniqueProjectName {
 
     /**
      * logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(CLASS_NAME);
+    private static final Logger LOGGER = LogManager.getLogger(UniqueProjectName.class.getName());
+
+    /**
+     * Constructor
+     */
+    private UniqueProjectName() {
+    }
 
     /**
      * Access to unique INSTANCE of Settings
@@ -53,20 +55,13 @@ public class UniqueProjectName {
     }
 
     /**
-     * Constructor
-     */
-    private UniqueProjectName() {
-        LOGGER.entering(CLASS_NAME, "Constructor");
-        LOGGER.exiting(CLASS_NAME, "Constructor");
-    }
-
-    /**
      * Returns the projects from the database.
      *
      * @return the projects
      */
     public Map<String, Integer> getProjects() {
-        return PluginFactory.getProjectSuffix().getProjects();
+        LOGGER.traceEntry();
+        return LOGGER.traceExit("List of projects", PluginFactory.getProjectSuffix().getProjects());
     }
 
     /**
@@ -76,7 +71,9 @@ public class UniqueProjectName {
      * @return the projects
      */
     public Map<String, Integer> getProjectsFromUser(final String userName) {
-        return PluginFactory.getProjectSuffix().getProjectsFromUser(userName);
+        LOGGER.traceEntry("Parameter\n  userName:{}", userName);
+        return LOGGER.traceExit("Projects for userName", PluginFactory.getProjectSuffix().
+                getProjectsFromUser(userName));
     }
 
     /**
@@ -87,11 +84,10 @@ public class UniqueProjectName {
      * @return the IdRequirement.DOI_AUTH_010
      */
     private int generateId(final int maxNumber) {
-        LOGGER.entering(CLASS_NAME, "generateId", maxNumber);
+        LOGGER.traceEntry("Parameter\n   maxNumber: {}", maxNumber);
         final Random rand = new Random();
         final int identifier = Math.abs(rand.nextInt(maxNumber));
-        LOGGER.exiting(CLASS_NAME, "generateId", identifier);
-        return identifier;
+        return LOGGER.traceExit("ID", identifier);
     }
 
     /**
@@ -103,13 +99,13 @@ public class UniqueProjectName {
      * @return the input that is converted to the base
      */
     private int convert(final long input, final String projectName, final int maxNumber) {
-        LOGGER.entering(CLASS_NAME, "convert", new Object[]{input, projectName, maxNumber});
+        LOGGER.traceEntry("Parameters\n  input:{}\n  projectName:{}\n  maxNumer:{}", input,
+                projectName, maxNumber);
         int result = (int) input;
         do {
             result = (int) (result ^ (projectName.hashCode() % maxNumber));
         } while (result > maxNumber || result < 0 || !isIdUnique(result, projectName));
-        LOGGER.entering(CLASS_NAME, "convert", result);
-        return result;
+        return LOGGER.traceExit("ID", result);
     }
 
     /**
@@ -121,27 +117,23 @@ public class UniqueProjectName {
      * @return the unique string
      */
     public int getShortName(final String project, final int length) {
-        LOGGER.entering(CLASS_NAME, "getShortName", new Object[]{project, length});
+        LOGGER.traceEntry("Parameters\n project:{}\n  length:{}", project, length);
         final int suffixID;
         if (length > 9) {
             final DoiRuntimeException doiEx = new DoiRuntimeException(
                     "The short name cannot be build because the length requested is too big");
-            LOGGER.throwing(CLASS_NAME, "getShortName", doiEx);
-            throw doiEx;
+            throw LOGGER.throwing(doiEx);
         } else if (PluginFactory.getProjectSuffix().isExistProjectName(project)) {
             // Si le projet a déjà un identifiant on ne le recalcule pas
             suffixID = PluginFactory.getProjectSuffix().getIDFrom(project);
-            LOGGER.log(Level.FINE, "The project {0} has already an id : {1}",
-                    new Object[]{project, suffixID});
+            LOGGER.warn("The project {} has already an id : {}", project, suffixID);
         } else {
             final int maxNumber = (int) Math.pow(10.0, length);
             final long idRandom = generateId(maxNumber);
             suffixID = convert(idRandom, project, maxNumber);
-            LOGGER.log(Level.FINE, "The project {0} has an id : {1}",
-                    new Object[]{project, suffixID});
+            LOGGER.warn("The project {} has an id : {}", project, suffixID);
         }
-        LOGGER.exiting(CLASS_NAME, "getShortName", suffixID);
-        return suffixID;
+        return LOGGER.traceExit(suffixID);
     }
 
     /**
@@ -153,15 +145,14 @@ public class UniqueProjectName {
      * @return true if the Id is OK, false otherwise
      */
     private synchronized boolean isIdUnique(final int idToCheck, final String projectName) {
-        LOGGER.entering(CLASS_NAME, "isIdUnique", new Object[]{idToCheck, projectName});
+        LOGGER.traceEntry("Parameters\n  idToCheck:{}\n  projectName:{}\n", idToCheck, projectName);
         final boolean result;
         if (PluginFactory.getProjectSuffix().isExistID(idToCheck)) {
             result = false;
         } else {
             result = PluginFactory.getProjectSuffix().addProjectSuffix(idToCheck, projectName);
         }
-        LOGGER.exiting(CLASS_NAME, "isIdUnique", result);
-        return result;
+        return LOGGER.traceExit(result);
     }
 
     /**

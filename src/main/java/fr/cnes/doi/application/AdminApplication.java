@@ -221,7 +221,7 @@ public class AdminApplication extends AbstractApplication {
      * DataCite Stats page {@value #TARGET_STATS_URL}.
      */
     private static final String TARGET_STATS_URL = "https://stats.datacite.org/#tab-prefixes";
-    
+
     /**
      * Constructor.
      */
@@ -229,18 +229,18 @@ public class AdminApplication extends AbstractApplication {
         super();
         init();
     }
-    
+
     /**
      * Defines services and metadata.
      */
     private void init() {
         setName(NAME);
         setDescription("Provides an application for handling features related to "
-                + "the administration system of the DOI server.");               
+                + "the administration system of the DOI server.");
         this.setTaskService(createTaskService());
         this.setTaskService(createUpdateDataBaseTaskService());
         this.setTaskService(periodicalyDeleteExpiredTokenFromDB());
-        getMetadataService().addExtension("xsd", MediaType.TEXT_XML, true);        
+        getMetadataService().addExtension("xsd", MediaType.TEXT_XML, true);
     }
 
     /**
@@ -493,17 +493,19 @@ public class AdminApplication extends AbstractApplication {
 
         LOG.traceExit();
     }
-    
+
     /**
      * Adds route attacURI to the target according to redirection mode.
+     *
      * @param router router
      * @param redirectorMode redirection mode
      * @param target target
      * @param attachURI attachURI
      */
-    private void addServices(final Router router, final int redirectorMode, final String target, final String attachURI) {
+    private void addServices(final Router router, final int redirectorMode, final String target,
+            final String attachURI) {
         LOG.traceEntry("Parameters\n   router: {}\n   redirectorMode: {}\n   "
-                + "target: {}\n  attachURI: {}", 
+                + "target: {}\n  attachURI: {}",
                 new JsonMessage(router), redirectorMode, target, attachURI);
 
         final Redirector redirector = new Redirector(getContext(), target, redirectorMode);
@@ -523,7 +525,6 @@ public class AdminApplication extends AbstractApplication {
         router.attach(attachURI, authentication);
         LOG.traceExit();
     }
-    
 
     /**
      * Adds route {@value #STATUS_URI} to the services describing the DataCite status.

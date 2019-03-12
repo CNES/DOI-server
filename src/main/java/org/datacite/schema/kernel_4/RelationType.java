@@ -12,11 +12,14 @@ import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
 
 /**
- * <p>Java class for relationType.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
  * <p>
- * <pre>
+ * Java class for relationType.
+ *
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * <
+ * pre>
  * &lt;simpleType name="relationType"&gt;
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"&gt;
  *     &lt;enumeration value="IsCitedBy"/&gt;
@@ -378,25 +381,19 @@ public enum RelationType {
      */
     @XmlEnumValue("IsSourceOf")
     IS_SOURCE_OF("IsSourceOf"),
-    
     @XmlEnumValue("Describes")
     DESCRIBES("Describes"),
-    
     @XmlEnumValue("IsDescribedBy")
     IS_DESCRIBED_BY("IsDescribedBy"),
-    
     @XmlEnumValue("HasVersion")
     HAS_VERSION("HasVersion"),
-    
     @XmlEnumValue("IsVersionOf")
     IS_VERSION_OF("IsVersionOf"),
-    
     @XmlEnumValue("Requires")
     REQUIRES("Requires"),
-    
     @XmlEnumValue("IsRequiredBy")
     IS_REQUIRED_BY("IsRequiredBy");
-    
+
     private final String value;
 
     RelationType(String v) {

@@ -4,8 +4,6 @@
 // Any modifications to this file will be lost upon recompilation of the source schema. 
 // Generated on: 2019.02.11 at 04:29:56 PM CET 
 //
-
-
 package org.datacite.schema.kernel_4;
 
 import javax.xml.bind.JAXBElement;
@@ -13,36 +11,33 @@ import javax.xml.bind.annotation.XmlElementDecl;
 import javax.xml.bind.annotation.XmlRegistry;
 import javax.xml.namespace.QName;
 
-
 /**
- * This object contains factory methods for each 
- * Java content interface and Java element interface 
- * generated in the org.datacite.schema.kernel_4 package. 
- * <p>An ObjectFactory allows you to programatically 
- * construct new instances of the Java representation 
- * for XML content. The Java representation of XML 
- * content can consist of schema derived interfaces 
- * and classes representing the binding of schema 
- * type definitions, element declarations and model 
- * groups.  Factory methods for each of these are 
- * provided in this class.
- * 
+ * This object contains factory methods for each Java content interface and Java element interface
+ * generated in the org.datacite.schema.kernel_4 package.
+ * <p>
+ * An ObjectFactory allows you to programatically construct new instances of the Java representation
+ * for XML content. The Java representation of XML content can consist of schema derived interfaces
+ * and classes representing the binding of schema type definitions, element declarations and model
+ * groups. Factory methods for each of these are provided in this class.
+ *
  */
 @XmlRegistry
 public class ObjectFactory {
 
-    private final static QName _ResourceDescriptionsDescriptionBr_QNAME = new QName("http://datacite.org/schema/kernel-4", "br");
+    private final static QName _ResourceDescriptionsDescriptionBr_QNAME = new QName(
+            "http://datacite.org/schema/kernel-4", "br");
 
     /**
-     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: org.datacite.schema.kernel_4
-     * 
+     * Create a new ObjectFactory that can be used to create new instances of schema derived classes
+     * for package: org.datacite.schema.kernel_4
+     *
      */
     public ObjectFactory() {
     }
 
     /**
      * Create an instance of {@link Resource }
-     * 
+     *
      * @return the resource
      */
     public Resource createResource() {
@@ -51,7 +46,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Resource.FundingReferences }
-     * 
+     *
      * @return the FundingReferences
      */
     public Resource.FundingReferences createResourceFundingReferences() {
@@ -60,7 +55,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Resource.FundingReferences.FundingReference }
-     * 
+     *
      * @return the FundingReference
      */
     public Resource.FundingReferences.FundingReference createResourceFundingReferencesFundingReference() {
@@ -69,7 +64,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Resource.GeoLocations }
-     * 
+     *
      * @return the GeoLocations
      */
     public Resource.GeoLocations createResourceGeoLocations() {
@@ -78,7 +73,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Resource.GeoLocations.GeoLocation }
-     * 
+     *
      * @return the GeoLocation
      */
     public Resource.GeoLocations.GeoLocation createResourceGeoLocationsGeoLocation() {
@@ -87,7 +82,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Resource.Descriptions }
-     * 
+     *
      * @return the Descriptions
      */
     public Resource.Descriptions createResourceDescriptions() {
@@ -96,7 +91,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Resource.RightsList }
-     * 
+     *
      * @return the RightsList
      */
     public Resource.RightsList createResourceRightsList() {
@@ -105,7 +100,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Resource.RelatedIdentifiers }
-     * 
+     *
      * @return the RelatedIdentifiers
      */
     public Resource.RelatedIdentifiers createResourceRelatedIdentifiers() {
@@ -114,7 +109,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Resource.AlternateIdentifiers }
-     * 
+     *
      * @return the AlternateIdentifiers
      */
     public Resource.AlternateIdentifiers createResourceAlternateIdentifiers() {
@@ -123,7 +118,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Resource.Dates }
-     * 
+     *
      * @return the Dates
      */
     public Resource.Dates createResourceDates() {
@@ -132,7 +127,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Resource.Contributors }
-     * 
+     *
      * @return the Contributors
      */
     public Resource.Contributors createResourceContributors() {
@@ -141,7 +136,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Resource.Contributors.Contributor }
-     * 
+     *
      * @return the Contributor
      */
     public Resource.Contributors.Contributor createResourceContributorsContributor() {
@@ -150,7 +145,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Resource.Subjects }
-     * 
+     *
      * @return the Subjects
      */
     public Resource.Subjects createResourceSubjects() {
@@ -159,7 +154,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Resource.Titles }
-     * 
+     *
      * @return the Titles
      */
     public Resource.Titles createResourceTitles() {
@@ -168,7 +163,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Resource.Creators }
-     * 
+     *
      * @return the Creators
      */
     public Resource.Creators createResourceCreators() {
@@ -177,7 +172,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Resource.Creators.Creator }
-     * 
+     *
      * @return the Creator
      */
     public Resource.Creators.Creator createResourceCreatorsCreator() {
@@ -186,7 +181,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Resource.Identifier }
-     * 
+     *
      * @return the Identifier
      */
     public Resource.Identifier createResourceIdentifier() {
@@ -195,7 +190,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Resource.ResourceType }
-     * 
+     *
      * @return the ResourceType
      */
     public Resource.ResourceType createResourceResourceType() {
@@ -204,7 +199,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Resource.Sizes }
-     * 
+     *
      * @return the Sizes
      */
     public Resource.Sizes createResourceSizes() {
@@ -213,7 +208,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Resource.Formats }
-     * 
+     *
      * @return the Formats
      */
     public Resource.Formats createResourceFormats() {
@@ -222,7 +217,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Box }
-     * 
+     *
      * @return the Box
      */
     public Box createBox() {
@@ -231,7 +226,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Point }
-     * 
+     *
      * @return the Point
      */
     public Point createPoint() {
@@ -240,7 +235,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Resource.FundingReferences.FundingReference.FunderIdentifier }
-     * 
+     *
      * @return the FunderIdentifier
      */
     public Resource.FundingReferences.FundingReference.FunderIdentifier createResourceFundingReferencesFundingReferenceFunderIdentifier() {
@@ -249,7 +244,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Resource.FundingReferences.FundingReference.AwardNumber }
-     * 
+     *
      * @return the AwardNumber
      */
     public Resource.FundingReferences.FundingReference.AwardNumber createResourceFundingReferencesFundingReferenceAwardNumber() {
@@ -258,7 +253,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Resource.GeoLocations.GeoLocation.GeoLocationPolygon }
-     * 
+     *
      * @return the GeoLocationPolygon
      */
     public Resource.GeoLocations.GeoLocation.GeoLocationPolygon createResourceGeoLocationsGeoLocationGeoLocationPolygon() {
@@ -267,7 +262,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Resource.Descriptions.Description }
-     * 
+     *
      * @return the Description
      */
     public Resource.Descriptions.Description createResourceDescriptionsDescription() {
@@ -276,7 +271,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Resource.RightsList.Rights }
-     * 
+     *
      * @return the Rights
      */
     public Resource.RightsList.Rights createResourceRightsListRights() {
@@ -285,7 +280,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Resource.RelatedIdentifiers.RelatedIdentifier }
-     * 
+     *
      * @return the RelatedIdentifier
      */
     public Resource.RelatedIdentifiers.RelatedIdentifier createResourceRelatedIdentifiersRelatedIdentifier() {
@@ -294,7 +289,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Resource.AlternateIdentifiers.AlternateIdentifier }
-     * 
+     *
      * @return the AlternateIdentifier
      */
     public Resource.AlternateIdentifiers.AlternateIdentifier createResourceAlternateIdentifiersAlternateIdentifier() {
@@ -303,7 +298,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Resource.Dates.Date }
-     * 
+     *
      * @return the Date
      */
     public Resource.Dates.Date createResourceDatesDate() {
@@ -312,7 +307,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Resource.Contributors.Contributor.ContributorName }
-     * 
+     *
      * @return the ContributorName
      */
     public Resource.Contributors.Contributor.ContributorName createResourceContributorsContributorContributorName() {
@@ -321,7 +316,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Resource.Contributors.Contributor.NameIdentifier }
-     * 
+     *
      * @return the NameIdentifier
      */
     public Resource.Contributors.Contributor.NameIdentifier createResourceContributorsContributorNameIdentifier() {
@@ -330,7 +325,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Resource.Subjects.Subject }
-     * 
+     *
      * @return the Subject
      */
     public Resource.Subjects.Subject createResourceSubjectsSubject() {
@@ -339,7 +334,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Resource.Titles.Title }
-     * 
+     *
      * @return the Title
      */
     public Resource.Titles.Title createResourceTitlesTitle() {
@@ -348,7 +343,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Resource.Creators.Creator.CreatorName }
-     * 
+     *
      * @return the CreatorName
      */
     public Resource.Creators.Creator.CreatorName createResourceCreatorsCreatorCreatorName() {
@@ -357,7 +352,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Resource.Creators.Creator.NameIdentifier }
-     * 
+     *
      * @return the NameIdentifier
      */
     public Resource.Creators.Creator.NameIdentifier createResourceCreatorsCreatorNameIdentifier() {
@@ -366,13 +361,14 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
-     * 
+     *
      * @param value
      * @return the JAXBElement
      */
     @XmlElementDecl(namespace = "http://datacite.org/schema/kernel-4", name = "br", scope = Resource.Descriptions.Description.class)
     public JAXBElement<String> createResourceDescriptionsDescriptionBr(String value) {
-        return new JAXBElement<>(_ResourceDescriptionsDescriptionBr_QNAME, String.class, Resource.Descriptions.Description.class, value);
+        return new JAXBElement<>(_ResourceDescriptionsDescriptionBr_QNAME, String.class,
+                Resource.Descriptions.Description.class, value);
     }
 
 }

@@ -20,6 +20,7 @@ package fr.cnes.doi.db.model;
 
 /**
  * Data model for a DOI project.
+ *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class DOIProject {
@@ -36,6 +37,7 @@ public class DOIProject {
 
     /**
      * Returns the suffix.
+     *
      * @return the suffix
      */
     public int getSuffix() {
@@ -44,7 +46,8 @@ public class DOIProject {
 
     /**
      * Sets the suffix.
-     * @param suffix 
+     *
+     * @param suffix
      */
     public void setSuffix(final int suffix) {
         this.suffix = suffix;
@@ -52,6 +55,7 @@ public class DOIProject {
 
     /**
      * Returns the project name.
+     *
      * @return the project name
      */
     public String getProjectname() {
@@ -60,14 +64,16 @@ public class DOIProject {
 
     /**
      * Sets the project name.
-     * @param projectname  the project name
+     *
+     * @param projectname the project name
      */
     public void setProjectname(final String projectname) {
         this.projectname = projectname;
     }
 
     /**
-     * Tests a doiProject is equal to this one. 
+     * Tests a doiProject is equal to this one.
+     *
      * @param doiProject doi project
      * @return True when there are equals otherwise False
      */

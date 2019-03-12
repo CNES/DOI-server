@@ -4,20 +4,19 @@
 // Any modifications to this file will be lost upon recompilation of the source schema. 
 // Generated on: 2019.02.11 at 04:29:56 PM CET 
 //
-
-
 package org.datacite.schema.kernel_4;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for box complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ * <p>
+ * Java class for box complex type.
+ *
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
+ *
  * <pre>
  * &lt;complexType name="box"&gt;
  *   &lt;complexContent&gt;
@@ -32,13 +31,11 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "box", propOrder = {
-
-})
+@XmlType(name = "box", propOrder = {})
 public class Box {
 
     protected float westBoundLongitude;
@@ -48,7 +45,7 @@ public class Box {
 
     /**
      * Gets the value of the westBoundLongitude property.
-     * 
+     *
      * @return the west bound longitude.
      */
     public float getWestBoundLongitude() {
@@ -57,7 +54,7 @@ public class Box {
 
     /**
      * Sets the value of the westBoundLongitude property.
-     * 
+     *
      * @param value west bound longitude
      */
     public void setWestBoundLongitude(float value) {
@@ -66,7 +63,7 @@ public class Box {
 
     /**
      * Gets the value of the eastBoundLongitude property.
-     * 
+     *
      * @return the east bound longitude
      */
     public float getEastBoundLongitude() {
@@ -75,7 +72,7 @@ public class Box {
 
     /**
      * Sets the value of the eastBoundLongitude property.
-     * 
+     *
      * @param value the east bound longitude
      */
     public void setEastBoundLongitude(float value) {
@@ -84,7 +81,7 @@ public class Box {
 
     /**
      * Gets the value of the southBoundLatitude property.
-     * 
+     *
      * @return the south bound longitude
      */
     public float getSouthBoundLatitude() {
@@ -93,7 +90,7 @@ public class Box {
 
     /**
      * Sets the value of the southBoundLatitude property.
-     * 
+     *
      * @param value the south bound latitude
      */
     public void setSouthBoundLatitude(float value) {
@@ -102,7 +99,7 @@ public class Box {
 
     /**
      * Gets the value of the northBoundLatitude property.
-     * 
+     *
      * @return the north bound latitude
      */
     public float getNorthBoundLatitude() {
@@ -111,7 +108,7 @@ public class Box {
 
     /**
      * Sets the value of the northBoundLatitude property.
-     * 
+     *
      * @param value the north bound latitude
      */
     public void setNorthBoundLatitude(float value) {

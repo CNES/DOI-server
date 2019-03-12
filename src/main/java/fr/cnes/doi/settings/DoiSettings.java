@@ -70,6 +70,16 @@ public final class DoiSettings {
     private static final ConcurrentHashMap<String, String> MAP_PROPERTIES = new ConcurrentHashMap<>();
 
     /**
+     * Access to unique INSTANCE of Settings
+     *
+     * @return the configuration instance.
+     */
+    public static DoiSettings getInstance() {
+        LOG.traceEntry();
+        return LOG.traceExit(DoiSettingsHolder.INSTANCE);
+    }
+
+    /**
      * Secret key to decrypt login and password.
      */
     private String secretKey = UtilsCryptography.DEFAULT_SECRET_KEY;
@@ -82,7 +92,7 @@ public final class DoiSettings {
     /**
      * private constructor Loads the defautl configuration properties {@value #CONFIG_PROPERTIES}
      */
-    private DoiSettings() {        
+    private DoiSettings() {
         final Properties properties = loadConfigurationFile();
         init(properties, Level.OFF);
     }
@@ -94,11 +104,11 @@ public final class DoiSettings {
      * @param level LOG level
      */
     private void init(final Properties properties, Level level) {
-        if(Level.OFF.equals(level)) {
+        if (Level.OFF.equals(level)) {
             level = null; // this fixes a bug in log4j2
-        } 
+        }
         LOG.traceEntry("Parameter : {}", properties);
-        LOG.log(level,"----- DOI parameters ----");        
+        LOG.log(level, "----- DOI parameters ----");
         fillConcurrentMap(properties, level);
         computePathOfTheApplication();
         PluginFactory.init(DoiSettings.MAP_PROPERTIES);
@@ -144,16 +154,6 @@ public final class DoiSettings {
             client.release();
         }
         return LOG.traceExit(properties);
-    }
-
-    /**
-     * Access to unique INSTANCE of Settings
-     *
-     * @return the configuration instance.
-     */
-    public static DoiSettings getInstance() {
-        LOG.traceEntry();        
-        return LOG.traceExit(DoiSettingsHolder.INSTANCE);
     }
 
     /**

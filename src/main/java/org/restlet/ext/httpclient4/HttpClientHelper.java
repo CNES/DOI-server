@@ -38,6 +38,7 @@ import org.restlet.util.Series;
 
 /**
  * HttpClient configuration.
+ *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class HttpClientHelper extends org.restlet.engine.connector.HttpClientHelper {
@@ -54,6 +55,7 @@ public class HttpClientHelper extends org.restlet.engine.connector.HttpClientHel
 
     /**
      * Constructor.
+     *
      * @param client client
      */
     public HttpClientHelper(final Client client) {
@@ -159,6 +161,7 @@ public class HttpClientHelper extends org.restlet.engine.connector.HttpClientHel
 
     /**
      * Returns true if the SSL is disabled otherwise false.
+     *
      * @return true if the SSL is disabled otherwise false
      */
     public boolean isDisabledSSL() {
@@ -166,9 +169,9 @@ public class HttpClientHelper extends org.restlet.engine.connector.HttpClientHel
                 "false"));
     }
 
-   /**
-    * {@inheritDoc}
-    */    
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ClientCall create(final Request request) {
         ClientCall result = null;
@@ -196,6 +199,7 @@ public class HttpClientHelper extends org.restlet.engine.connector.HttpClientHel
 
     /**
      * Configures the http client.
+     *
      * @param parameters parameters
      */
     private void configure(final Series<Parameter> parameters) {
@@ -220,18 +224,18 @@ public class HttpClientHelper extends org.restlet.engine.connector.HttpClientHel
         this.httpClient = HttpClientFactory.create(type, this.isDisabledSSL(), config);
     }
 
-   /**
-    * {@inheritDoc}
-    */    
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public synchronized void start() throws Exception {
         final Series<Parameter> parameters = getHelpedParameters();
         configure(parameters);
     }
 
-   /**
-    * {@inheritDoc}
-    */    
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public synchronized void stop() throws Exception {
         if (this.httpClient != null) {

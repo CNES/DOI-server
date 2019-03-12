@@ -125,14 +125,14 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
      * {@inheritDoc }
      */
     @Override
-    public boolean addUserToRole(String user, int role) {
+    public boolean addUserToRole(final String user, final int role) {
         boolean isAdded = false;
         try {
             das.addDOIProjectToUser(user, role);
             isAdded = true;
             LOG.info("The user {} is added to role {}.", user, role);
 
-            User userFromRealm = REALM.findUser(user);
+            final User userFromRealm = REALM.findUser(user);
             final Role roleFromRealm = new Role(Application.getCurrent(), String.valueOf(role),
                     "Role " + String.valueOf(role) + " for " + Application.getCurrent().getName());
             REALM.map(userFromRealm, roleFromRealm);
@@ -148,7 +148,7 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
      * {@inheritDoc }
      */
     @Override
-    public boolean removeUserToRole(String user, int role) {
+    public boolean removeUserToRole(final String user, final int role) {
         boolean isRemoved = false;
         try {
             das.removeDOIProjectFromUser(user, role);
@@ -192,6 +192,9 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
         return isSetted;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
     public boolean unsetUserFromAdminGroup(final String user) {
         boolean isUnsetted = false;
@@ -200,7 +203,7 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
             isUnsetted = true;
             LOG.info("The user {} is removed to admin group.", user);
 
-            User userFromRealm = REALM.findUser(user);
+            final User userFromRealm = REALM.findUser(user);
             if (REALM.getRootGroups().get(0).getMemberUsers().contains(userFromRealm)) {
                 REALM.getRootGroups().get(0).getMemberUsers().remove(userFromRealm);
             }

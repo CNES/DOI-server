@@ -126,8 +126,8 @@ public class MetadataResource extends BaseMdsResource {
         checkInputs(doiName);
         final Representation resource;
         try {
-            setStatus(Status.SUCCESS_OK);            
-            resource = this.getDoiApp().getClient().getMetadata(this.doiName);  
+            setStatus(Status.SUCCESS_OK);
+            resource = this.getDoiApp().getClient().getMetadata(this.doiName);
         } catch (ClientMdsException ex) {
             if (ex.getStatus().getCode() == Status.CLIENT_ERROR_NOT_FOUND.getCode()) {
                 throw LOG.throwing(
@@ -150,11 +150,12 @@ public class MetadataResource extends BaseMdsResource {
         }
         return LOG.traceExit(resource);
     }
-    
+
     /**
      * Returns the metadata as JSON.
+     *
      * @return JSON representation.
-     * @throws IOException 
+     * @throws IOException
      */
     @Get("json")
     public Resource getMetadataAsJson() throws IOException {

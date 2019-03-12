@@ -22,48 +22,49 @@ import fr.cnes.doi.plugin.impl.db.persistence.impl.DOIDbDataAccessServiceImpl;
 
 /**
  * Database singleton for accessing to the LDAP and DOI database.
+ *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public final class DatabaseSingleton {
-    
+
+    /**
+     * Returns the instance
+     *
+     * @return the instance
+     */
+    public static DatabaseSingleton getInstance() {
+        return DatabaseSingletonHolder.INSTANCE;
+    }
+
     /**
      * DOI db access.
      */
     private final DOIDbDataAccessService das;
-    
+
     /**
      * Initialize the LDAP and DOI database.
      */
     private DatabaseSingleton() {
         this.das = new DOIDbDataAccessServiceImpl();
     }
-    
-    /**
-     * Returns the instance
-     * @return the instance
-     */
-    public static DatabaseSingleton getInstance() {
-        return DatabaseSingletonHolder.INSTANCE;
-    } 
-    
+
     /**
      * Returns the database access.
+     *
      * @return the database access.
      */
     public DOIDbDataAccessService getDatabaseAccess() {
         return this.das;
     }
-   
-    
+
     /**
      * Holder
      */
     private static class DatabaseSingletonHolder {
 
         /**
-         * Database singleton
-         * Unique Instance not pre-initiliaze
+         * Database singleton Unique Instance not pre-initiliaze
          */
         private static final DatabaseSingleton INSTANCE = new DatabaseSingleton();
-    }    
+    }
 }

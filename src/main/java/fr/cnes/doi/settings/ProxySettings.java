@@ -39,6 +39,16 @@ public final class ProxySettings {
     private static final Logger LOG = LogManager.getLogger(ProxySettings.class.getName());
 
     /**
+     * Access to unique INSTANCE of Settings
+     *
+     * @return the configuration instance.
+     */
+    public static ProxySettings getInstance() {
+        LOG.traceEntry();
+        return LOG.traceExit(ProxySettingsHolder.INSTANCE);
+    }
+
+    /**
      * Proxy configuration - host
      */
     private String proxyHost;
@@ -87,7 +97,7 @@ public final class ProxySettings {
      * Jaas context, which is described in Jaas file.
      */
     private String proxyJaasCtx;
-        
+
     /**
      * Private constructor
      */
@@ -96,16 +106,6 @@ public final class ProxySettings {
         init();
         LOG.traceExit();
     }
-    
-    /**
-     * Access to unique INSTANCE of Settings
-     *
-     * @return the configuration instance.
-     */
-    public static ProxySettings getInstance() {
-        LOG.traceEntry();
-        return LOG.traceExit(ProxySettingsHolder.INSTANCE);
-    }    
 
     /**
      * Init the proxy setting

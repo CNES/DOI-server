@@ -4,6 +4,5 @@
 // Any modifications to this file will be lost upon recompilation of the source schema. 
 // Generated on: 2019.02.11 at 04:29:56 PM CET 
 //
-
 @javax.xml.bind.annotation.XmlSchema(namespace = "http://datacite.org/schema/kernel-4", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package org.datacite.schema.kernel_4;

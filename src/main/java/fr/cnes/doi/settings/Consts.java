@@ -373,15 +373,15 @@ public final class Consts {
      */
     public static final String DB_PWD = "Starter.Database.Pwd";
 
-    /**     
+    /**
      * Minimum number of connection object that are to be kept alive in the pool
      */
     public static final String DB_MIN_IDLE_CONNECTIONS = "Starter.Database.MinIdleConnections";
-    
-    /**     
+
+    /**
      * Minimum number of connection object that are to be kept alive in the pool
      */
-    public static final String DB_MAX_IDLE_CONNECTIONS = "Starter.Database.MaxIdleConnections";    
+    public static final String DB_MAX_IDLE_CONNECTIONS = "Starter.Database.MaxIdleConnections";
 
     /**
      * Maximum number of active connections that can be allocated at the same time.
@@ -407,15 +407,16 @@ public final class Consts {
      * LDAP project
      */
     public static final String LDAP_PROJECT = "Starter.LDAP.project";
-    
+
     /**
      * LDAP username who is the administrator of the DOI server
      */
-    public static final String LDAP_DOI_ADMIN = "Starter.LDAP.user.admin";    
-    
+    public static final String LDAP_DOI_ADMIN = "Starter.LDAP.user.admin";
+
     /**
      * "Static" class cannot be instantiated
      */
-    private Consts() {}
+    private Consts() {
+    }
 
 }

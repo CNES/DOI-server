@@ -21,17 +21,18 @@ package fr.cnes.doi.ldap.job;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import fr.cnes.doi.ldap.exceptions.LDAPAccessException;
+import fr.cnes.doi.exception.LDAPAccessException;
 import fr.cnes.doi.ldap.impl.LdapDoidbIntegrationImpl;
-import fr.cnes.doi.ldap.persistence.LdapDoidbIntegration;
+import fr.cnes.doi.ldap.service.LdapDoidbIntegration;
 import fr.cnes.doi.exception.DOIDbException;
 
 /**
- * Updates the DOI database from the LDAP. 
+ * Updates the DOI database from the LDAP.
+ *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class DOIUsersUpdate implements Runnable {
-    
+
     /**
      * ldap and doidb integration service.
      */

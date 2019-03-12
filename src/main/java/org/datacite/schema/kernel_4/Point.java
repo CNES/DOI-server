@@ -4,20 +4,19 @@
 // Any modifications to this file will be lost upon recompilation of the source schema. 
 // Generated on: 2019.02.11 at 04:29:56 PM CET 
 //
-
-
 package org.datacite.schema.kernel_4;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for point complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ * <p>
+ * Java class for point complex type.
+ *
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
+ *
  * <pre>
  * &lt;complexType name="point"&gt;
  *   &lt;complexContent&gt;
@@ -30,13 +29,11 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "point", propOrder = {
-
-})
+@XmlType(name = "point", propOrder = {})
 public class Point {
 
     protected float pointLongitude;
@@ -44,7 +41,7 @@ public class Point {
 
     /**
      * Gets the value of the pointLongitude property.
-     * 
+     *
      * @return the longitude
      */
     public float getPointLongitude() {
@@ -53,7 +50,7 @@ public class Point {
 
     /**
      * Sets the value of the pointLongitude property.
-     * 
+     *
      * @param value the longitude
      */
     public void setPointLongitude(float value) {
@@ -62,7 +59,7 @@ public class Point {
 
     /**
      * Gets the value of the pointLatitude property.
-     * 
+     *
      * @return the latitude
      */
     public float getPointLatitude() {
@@ -71,7 +68,7 @@ public class Point {
 
     /**
      * Sets the value of the pointLatitude property.
-     * 
+     *
      * @param value the latitude
      */
     public void setPointLatitude(float value) {

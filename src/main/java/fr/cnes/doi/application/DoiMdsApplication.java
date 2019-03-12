@@ -26,7 +26,6 @@ import org.restlet.Context;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
-import org.restlet.data.ChallengeScheme;
 import org.restlet.data.Method;
 import org.restlet.data.Reference;
 import org.restlet.data.Status;
@@ -49,8 +48,6 @@ import fr.cnes.doi.resource.mds.DoisResource;
 import fr.cnes.doi.resource.mds.MediaResource;
 import fr.cnes.doi.resource.mds.MetadataResource;
 import fr.cnes.doi.resource.mds.MetadatasResource;
-import fr.cnes.doi.security.LoginBasedVerifier;
-import fr.cnes.doi.security.TokenBasedVerifier;
 import fr.cnes.doi.security.TokenSecurity;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.utils.spec.Requirement;
@@ -373,6 +370,41 @@ public final class DoiMdsApplication extends AbstractApplication {
     }
 
     /**
+     * Post processing for specific authorization. Specific class to handle the case where the user
+     * is authorized by oauth but non authorized by the service because the user's role is not
+     * related to any projects
+     */
+    public static class SecurityPostProcessingFilter extends Filter {
+
+        /**
+         * Constructor
+         *
+         * @param context context
+         * @param next gard
+         */
+        public SecurityPostProcessingFilter(final Context context, final Restlet next) {
+            super(context, next);
+        }
+
+        /**
+         * Fixed problem with Jetty response.
+         *
+         * @param request request
+         * @param response response
+         */
+        @Override
+        protected void afterHandle(final Request request, final Response response) {
+            final Status status = response.getStatus();
+            final String reason = status.getReasonPhrase();
+            if (status.getCode() == Status.CLIENT_ERROR_UNAUTHORIZED.getCode()
+                    && API_MDS.SECURITY_USER_NO_ROLE.getShortMessage().equals(reason)) {
+                response.getHeaders().add("WWW-Authenticate",
+                        "Basic realm=\"DOI Server access\", charset=\"UTF-8\"");
+            }
+        }
+    }
+
+    /**
      * API related only to the code in this webservice. Other codes can be returned by the
      * {@link ClientMDS}
      */
@@ -488,40 +520,5 @@ public final class DoiMdsApplication extends AbstractApplication {
             return this.shortMessage;
         }
 
-    }
-
-    /**
-     * Post processing for specific authorization. Specific class to handle the case where the user
-     * is authorized by oauth but non authorized by the service because the user's role is not
-     * related to any projects
-     */
-    public static class SecurityPostProcessingFilter extends Filter {
-
-        /**
-         * Constructor
-         *
-         * @param context context
-         * @param next gard
-         */
-        public SecurityPostProcessingFilter(final Context context, final Restlet next) {
-            super(context, next);
-        }
-
-        /**
-         * Fixed problem with Jetty response.
-         *
-         * @param request request
-         * @param response response
-         */
-        @Override
-        protected void afterHandle(final Request request, final Response response) {
-            final Status status = response.getStatus();
-            final String reason = status.getReasonPhrase();
-            if (status.getCode() == Status.CLIENT_ERROR_UNAUTHORIZED.getCode()
-                    && API_MDS.SECURITY_USER_NO_ROLE.getShortMessage().equals(reason)) {
-                response.getHeaders().add("WWW-Authenticate",
-                        "Basic realm=\"DOI Server access\", charset=\"UTF-8\"");
-            }
-        }
     }
 }

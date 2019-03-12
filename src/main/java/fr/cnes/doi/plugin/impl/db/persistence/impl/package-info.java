@@ -16,33 +16,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package fr.cnes.doi.security;
-
-import fr.cnes.doi.utils.spec.Requirement;
-
 /**
- * Utility class.
- *
- * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
+ * Provides database access implementation using JDBC connector.
  */
-@Requirement(reqId = Requirement.DOI_AUTO_020, reqName = Requirement.DOI_AUTO_020_NAME)
-public final class UtilsHeader {
-
-    /**
-     * The parameter to select the role of the operator when he is implied in different groups
-     * {@value #SELECTED_ROLE_PARAMETER}.
-     */
-    public static final String SELECTED_ROLE_PARAMETER = "selectedRole";
-
-    /**
-     * "Static" class cannot be instantiated
-     */
-    private UtilsHeader() {
-    }
-
-//    /**
-//     * The parameter to select the token of the operator
-//     * {@value #TOKEN_PARAMETER}.
-//     */
-//    public static final String TOKEN_PARAMETER = "token";
-}

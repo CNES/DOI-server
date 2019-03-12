@@ -34,8 +34,8 @@ import javax.naming.ldap.InitialLdapContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import fr.cnes.doi.ldap.exceptions.LDAPAccessException;
-import fr.cnes.doi.ldap.util.LDAPUser;
+import fr.cnes.doi.exception.LDAPAccessException;
+import fr.cnes.doi.ldap.model.LDAPUser;
 import fr.cnes.doi.security.UtilsCryptography;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
@@ -167,8 +167,9 @@ public class LDAPAccessServiceImpl implements ILDAPAccessService {
                     "cn=" + conf.getString(Consts.LDAP_PROJECT), constraints);
             final List<LDAPUser> members = new ArrayList<>();
             if (answer.hasMore()) {
-                NamingEnumeration<?> attrs = ((SearchResult) answer.next()).getAttributes().get(
-                        "gidNumber").getAll();
+                final NamingEnumeration<?> attrs = ((SearchResult) answer.next()).getAttributes().
+                        get(
+                                "gidNumber").getAll();
                 members.addAll(getLdapUsers(context, attrs.next().toString()));
             }
             return LOGGER.traceExit(members);

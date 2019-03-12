@@ -48,7 +48,8 @@ public abstract class AbstractProjectSuffixDBHelper extends Observable {
     public static final String RENAME_RECORD = "RENAME";
 
     /**
-     * Sets the configuration.     
+     * Sets the configuration.
+     *
      * @param configuration configuration parameters
      */
     public abstract void setConfiguration(final Object configuration);
@@ -120,6 +121,7 @@ public abstract class AbstractProjectSuffixDBHelper extends Observable {
 
     /**
      * Returns the projects related to a specific user.
+     *
      * @param userName username
      * @return the projected to an user
      */
@@ -127,6 +129,7 @@ public abstract class AbstractProjectSuffixDBHelper extends Observable {
 
     /**
      * Returns the users related to a project.
+     *
      * @param doiSuffix project
      * @return the users
      */

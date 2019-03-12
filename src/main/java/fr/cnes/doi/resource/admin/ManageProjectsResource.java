@@ -35,14 +35,15 @@ import fr.cnes.doi.db.AbstractProjectSuffixDBHelper;
 import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.resource.AbstractResource;
 import fr.cnes.doi.utils.spec.Requirement;
+
 /**
  * Provide a resource to delete and rename a project from database.
  */
 public class ManageProjectsResource extends AbstractResource {
 
     /**
-     * Parameter for the project name {@value #PROJECT_NAME_PARAMETER}. This
-     * parameter is send to create a new identifier for the project.
+     * Parameter for the project name {@value #PROJECT_NAME_PARAMETER}. This parameter is send to
+     * create a new identifier for the project.
      */
     public static final String PROJECT_NAME_PARAMETER = "newProjectName";
 
@@ -57,22 +58,21 @@ public class ManageProjectsResource extends AbstractResource {
     private volatile String suffixProject;
 
     /**
-     * Set-up method that can be overridden in order to initialize the state of the
-     * resource.
+     * Set-up method that can be overridden in order to initialize the state of the resource.
      *
      * @throws ResourceException - if a problem happens
      */
     @Override
     protected void doInit() throws ResourceException {
-        super.doInit();        
-	final AdminApplication app = (AdminApplication) getApplication();
-	LOG = app.getLog();        
+        super.doInit();
+        final AdminApplication app = (AdminApplication) getApplication();
+        LOG = app.getLog();
         LOG.traceEntry();
         setDescription("This resource handles deletion and renaming of a project");
-	this.suffixProject = getAttribute("suffixProject");
-	LOG.debug(this.suffixProject);
+        this.suffixProject = getAttribute("suffixProject");
+        LOG.debug(this.suffixProject);
 
-	LOG.traceExit();
+        LOG.traceExit();
     }
 
     // TODO requirement
@@ -85,11 +85,12 @@ public class ManageProjectsResource extends AbstractResource {
     @Requirement(reqId = Requirement.DOI_SRV_140, reqName = Requirement.DOI_SRV_140_NAME)
     @Post
     public boolean renameProject(final Form mediaForm) {
-	LOG.traceEntry();
-	checkInputs(mediaForm);
-	final String newProjectName = mediaForm.getFirstValue(PROJECT_NAME_PARAMETER);
+        LOG.traceEntry();
+        checkInputs(mediaForm);
+        final String newProjectName = mediaForm.getFirstValue(PROJECT_NAME_PARAMETER);
         final AbstractProjectSuffixDBHelper manageProjects = PluginFactory.getProjectSuffix();
-	return LOG.traceExit(manageProjects.renameProject(Integer.parseInt(suffixProject), newProjectName));
+        return LOG.traceExit(manageProjects.renameProject(Integer.parseInt(suffixProject),
+                newProjectName));
     }
 
     // TODO requirement
@@ -101,44 +102,42 @@ public class ManageProjectsResource extends AbstractResource {
     @Requirement(reqId = Requirement.DOI_SRV_140, reqName = Requirement.DOI_SRV_140_NAME)
     @Delete
     public boolean deleteProject() {
-	LOG.traceEntry();
+        LOG.traceEntry();
 
-	final ClientSearchDataCite client;
-	List<String> response = new ArrayList<>();
-	try {
-	    client = new ClientSearchDataCite();
-	    response = client.getDois(suffixProject);
+        final ClientSearchDataCite client;
+        List<String> response = new ArrayList<>();
+        try {
+            client = new ClientSearchDataCite();
+            response = client.getDois(suffixProject);
 
-	} catch (Exception ex) {
-	    LOG.error(ex + "\n"
-		    + "Error in SuffixProjectsDoisResource while searching for dois in project "
-		    + suffixProject);
-	}
+        } catch (Exception ex) {
+            LOG.error(ex + "\n"
+                    + "Error in SuffixProjectsDoisResource while searching for dois in project "
+                    + suffixProject);
+        }
 
-	// No DOIs have to be attached to a project before deleting it
-	if (!response.isEmpty()) {
-	    return LOG.traceExit(false);
-	}
+        // No DOIs have to be attached to a project before deleting it
+        if (!response.isEmpty()) {
+            return LOG.traceExit(false);
+        }
         final AbstractProjectSuffixDBHelper manageProjects = PluginFactory.getProjectSuffix();
-	return LOG.traceExit(manageProjects.deleteProject(Integer.parseInt(suffixProject)));
+        return LOG.traceExit(manageProjects.deleteProject(Integer.parseInt(suffixProject)));
     }
 
     /**
      * Tests if the {@link #PROJECT_NAME_PARAMETER} is set.
      *
-     * @param mediaForm
-     *            the parameters
-     * @throws ResourceException
-     *             - if PROJECT_NAME_PARAMETER is not set
+     * @param mediaForm the parameters
+     * @throws ResourceException - if PROJECT_NAME_PARAMETER is not set
      */
     private void checkInputs(final Form mediaForm) throws ResourceException {
-	LOG.traceEntry("Parameter : {}", mediaForm);
-	if (isValueNotExist(mediaForm, PROJECT_NAME_PARAMETER)) {
-	    throw LOG.throwing(Level.DEBUG, new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST,
-		    PROJECT_NAME_PARAMETER + " parameter must be set"));
-	}
-	LOG.debug("The form is valid");
-	LOG.traceExit();
+        LOG.traceEntry("Parameter : {}", mediaForm);
+        if (isValueNotExist(mediaForm, PROJECT_NAME_PARAMETER)) {
+            throw LOG.throwing(Level.DEBUG, new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST,
+                    PROJECT_NAME_PARAMETER + " parameter must be set"));
+        }
+        LOG.debug("The form is valid");
+        LOG.traceExit();
     }
 
 }

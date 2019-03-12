@@ -52,17 +52,7 @@ import org.restlet.service.CorsService;
  */
 @Requirement(reqId = Requirement.DOI_DOC_010, reqName = Requirement.DOI_DOC_010_NAME)
 public abstract class AbstractApplication extends WadlApplication {
-    
-    /**
-     * Token database.
-     */
-    private final AbstractTokenDBHelper tokenDB = TokenSecurity.getInstance().getTOKEN_DB();    
 
-    /**
-     * DOI settings.
-     */
-    private final DoiSettings config = DoiSettings.getInstance();
-    
     /**
      * Default value of 'Access-Control-Allow-Origin' header.
      */
@@ -79,6 +69,14 @@ public abstract class AbstractApplication extends WadlApplication {
      * Logger.
      */
     private static final Logger LOG = LogManager.getLogger(AbstractApplication.class.getName());
+    /**
+     * Token database.
+     */
+    private final AbstractTokenDBHelper tokenDB = TokenSecurity.getInstance().getTOKEN_DB();
+    /**
+     * DOI settings.
+     */
+    private final DoiSettings config = DoiSettings.getInstance();
 
     /**
      * This constructor creates an instance of proxySettings and doiSettings. By creating the
@@ -96,7 +94,7 @@ public abstract class AbstractApplication extends WadlApplication {
         super();
         init();
     }
-    
+
     /**
      * Defined services and metadata.
      */
@@ -104,7 +102,7 @@ public abstract class AbstractApplication extends WadlApplication {
         getServices().add(this.createCoreService(DEFAULT_CORS_ORIGIN, DEFAULT_CORS_CREDENTIALS));
         setStatusService(new CnesStatusService());
         setOwner("Centre National d'Etudes Spatiales (CNES)");
-        setAuthor("Jean-Christophe Malapert (DNO/ISA/VIP)");        
+        setAuthor("Jean-Christophe Malapert (DNO/ISA/VIP)");
     }
 
     /**
@@ -143,10 +141,10 @@ public abstract class AbstractApplication extends WadlApplication {
 
         return LOG.traceExit(guard);
     }
-    
+
     /**
-     * Creates the authenticator based on a HTTP basic. 
-     * Creates the user, role and mapping user/role.
+     * Creates the authenticator based on a HTTP basic. Creates the user, role and mapping
+     * user/role.
      *
      * @return Authenticator based on a challenge scheme
      */
@@ -177,8 +175,8 @@ public abstract class AbstractApplication extends WadlApplication {
         guard.setVerifier(verifier);
 
         return LOG.traceExit(guard);
-    }   
-    
+    }
+
     /**
      * Creates an authentication by token.
      *
@@ -211,7 +209,7 @@ public abstract class AbstractApplication extends WadlApplication {
         guard.setVerifier(verifier);
 
         return LOG.traceExit(guard);
-    }    
+    }
 
     /**
      * Creates HTML representation of the WADL.
@@ -247,7 +245,7 @@ public abstract class AbstractApplication extends WadlApplication {
         LOG.traceEntry();
         return LOG.traceExit(config);
     }
-    
+
     /**
      * Returns the token database.
      *
@@ -255,7 +253,7 @@ public abstract class AbstractApplication extends WadlApplication {
      */
     public AbstractTokenDBHelper getTokenDB() {
         return this.tokenDB;
-    }    
+    }
 
     /**
      * Returns the logger.

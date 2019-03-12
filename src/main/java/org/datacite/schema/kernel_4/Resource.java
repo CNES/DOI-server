@@ -4,8 +4,6 @@
 // Any modifications to this file will be lost upon recompilation of the source schema. 
 // Generated on: 2019.02.11 at 04:29:56 PM CET 
 //
-
-
 package org.datacite.schema.kernel_4;
 
 import java.io.Serializable;
@@ -26,12 +24,13 @@ import javax.xml.bind.annotation.XmlValue;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-
 /**
- * <p>Java class for anonymous complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ * <p>
+ * Java class for anonymous complex type.
+ *
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
+ *
  * <pre>
  * &lt;complexType&gt;
  *   &lt;complexContent&gt;
@@ -420,13 +419,11 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-
-})
+@XmlType(name = "", propOrder = {})
 @XmlRootElement(name = "resource")
 public class Resource {
 
@@ -461,11 +458,9 @@ public class Resource {
 
     /**
      * Gets the value of the identifier property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Resource.Identifier }
-     *     
+     *
+     * @return possible object is {@link Resource.Identifier }
+     *
      */
     public Resource.Identifier getIdentifier() {
         return identifier;
@@ -473,11 +468,9 @@ public class Resource {
 
     /**
      * Sets the value of the identifier property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Resource.Identifier }
-     *     
+     *
+     * @param value allowed object is {@link Resource.Identifier }
+     *
      */
     public void setIdentifier(Resource.Identifier value) {
         this.identifier = value;
@@ -485,11 +478,9 @@ public class Resource {
 
     /**
      * Gets the value of the creators property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Resource.Creators }
-     *     
+     *
+     * @return possible object is {@link Resource.Creators }
+     *
      */
     public Resource.Creators getCreators() {
         return creators;
@@ -497,11 +488,9 @@ public class Resource {
 
     /**
      * Sets the value of the creators property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Resource.Creators }
-     *     
+     *
+     * @param value allowed object is {@link Resource.Creators }
+     *
      */
     public void setCreators(Resource.Creators value) {
         this.creators = value;
@@ -509,11 +498,9 @@ public class Resource {
 
     /**
      * Gets the value of the titles property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Resource.Titles }
-     *     
+     *
+     * @return possible object is {@link Resource.Titles }
+     *
      */
     public Resource.Titles getTitles() {
         return titles;
@@ -521,11 +508,9 @@ public class Resource {
 
     /**
      * Sets the value of the titles property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Resource.Titles }
-     *     
+     *
+     * @param value allowed object is {@link Resource.Titles }
+     *
      */
     public void setTitles(Resource.Titles value) {
         this.titles = value;
@@ -533,11 +518,9 @@ public class Resource {
 
     /**
      * Gets the value of the publisher property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
+     *
      */
     public String getPublisher() {
         return publisher;
@@ -545,11 +528,9 @@ public class Resource {
 
     /**
      * Sets the value of the publisher property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
+     *
      */
     public void setPublisher(String value) {
         this.publisher = value;
@@ -557,11 +538,9 @@ public class Resource {
 
     /**
      * Gets the value of the publicationYear property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
+     *
      */
     public String getPublicationYear() {
         return publicationYear;
@@ -569,11 +548,9 @@ public class Resource {
 
     /**
      * Sets the value of the publicationYear property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
+     *
      */
     public void setPublicationYear(String value) {
         this.publicationYear = value;
@@ -581,11 +558,9 @@ public class Resource {
 
     /**
      * Gets the value of the resourceType property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Resource.ResourceType }
-     *     
+     *
+     * @return possible object is {@link Resource.ResourceType }
+     *
      */
     public Resource.ResourceType getResourceType() {
         return resourceType;
@@ -593,11 +568,9 @@ public class Resource {
 
     /**
      * Sets the value of the resourceType property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Resource.ResourceType }
-     *     
+     *
+     * @param value allowed object is {@link Resource.ResourceType }
+     *
      */
     public void setResourceType(Resource.ResourceType value) {
         this.resourceType = value;
@@ -605,11 +578,9 @@ public class Resource {
 
     /**
      * Gets the value of the subjects property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Resource.Subjects }
-     *     
+     *
+     * @return possible object is {@link Resource.Subjects }
+     *
      */
     public Resource.Subjects getSubjects() {
         return subjects;
@@ -617,11 +588,9 @@ public class Resource {
 
     /**
      * Sets the value of the subjects property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Resource.Subjects }
-     *     
+     *
+     * @param value allowed object is {@link Resource.Subjects }
+     *
      */
     public void setSubjects(Resource.Subjects value) {
         this.subjects = value;
@@ -629,11 +598,9 @@ public class Resource {
 
     /**
      * Gets the value of the contributors property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Resource.Contributors }
-     *     
+     *
+     * @return possible object is {@link Resource.Contributors }
+     *
      */
     public Resource.Contributors getContributors() {
         return contributors;
@@ -641,11 +608,9 @@ public class Resource {
 
     /**
      * Sets the value of the contributors property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Resource.Contributors }
-     *     
+     *
+     * @param value allowed object is {@link Resource.Contributors }
+     *
      */
     public void setContributors(Resource.Contributors value) {
         this.contributors = value;
@@ -653,11 +618,9 @@ public class Resource {
 
     /**
      * Gets the value of the dates property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Resource.Dates }
-     *     
+     *
+     * @return possible object is {@link Resource.Dates }
+     *
      */
     public Resource.Dates getDates() {
         return dates;
@@ -665,11 +628,9 @@ public class Resource {
 
     /**
      * Sets the value of the dates property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Resource.Dates }
-     *     
+     *
+     * @param value allowed object is {@link Resource.Dates }
+     *
      */
     public void setDates(Resource.Dates value) {
         this.dates = value;
@@ -677,11 +638,9 @@ public class Resource {
 
     /**
      * Gets the value of the language property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
+     *
      */
     public String getLanguage() {
         return language;
@@ -689,11 +648,9 @@ public class Resource {
 
     /**
      * Sets the value of the language property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
+     *
      */
     public void setLanguage(String value) {
         this.language = value;
@@ -701,11 +658,9 @@ public class Resource {
 
     /**
      * Gets the value of the alternateIdentifiers property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Resource.AlternateIdentifiers }
-     *     
+     *
+     * @return possible object is {@link Resource.AlternateIdentifiers }
+     *
      */
     public Resource.AlternateIdentifiers getAlternateIdentifiers() {
         return alternateIdentifiers;
@@ -713,11 +668,9 @@ public class Resource {
 
     /**
      * Sets the value of the alternateIdentifiers property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Resource.AlternateIdentifiers }
-     *     
+     *
+     * @param value allowed object is {@link Resource.AlternateIdentifiers }
+     *
      */
     public void setAlternateIdentifiers(Resource.AlternateIdentifiers value) {
         this.alternateIdentifiers = value;
@@ -725,11 +678,9 @@ public class Resource {
 
     /**
      * Gets the value of the relatedIdentifiers property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Resource.RelatedIdentifiers }
-     *     
+     *
+     * @return possible object is {@link Resource.RelatedIdentifiers }
+     *
      */
     public Resource.RelatedIdentifiers getRelatedIdentifiers() {
         return relatedIdentifiers;
@@ -737,11 +688,9 @@ public class Resource {
 
     /**
      * Sets the value of the relatedIdentifiers property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Resource.RelatedIdentifiers }
-     *     
+     *
+     * @param value allowed object is {@link Resource.RelatedIdentifiers }
+     *
      */
     public void setRelatedIdentifiers(Resource.RelatedIdentifiers value) {
         this.relatedIdentifiers = value;
@@ -749,11 +698,9 @@ public class Resource {
 
     /**
      * Gets the value of the sizes property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Resource.Sizes }
-     *     
+     *
+     * @return possible object is {@link Resource.Sizes }
+     *
      */
     public Resource.Sizes getSizes() {
         return sizes;
@@ -761,11 +708,9 @@ public class Resource {
 
     /**
      * Sets the value of the sizes property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Resource.Sizes }
-     *     
+     *
+     * @param value allowed object is {@link Resource.Sizes }
+     *
      */
     public void setSizes(Resource.Sizes value) {
         this.sizes = value;
@@ -773,11 +718,9 @@ public class Resource {
 
     /**
      * Gets the value of the formats property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Resource.Formats }
-     *     
+     *
+     * @return possible object is {@link Resource.Formats }
+     *
      */
     public Resource.Formats getFormats() {
         return formats;
@@ -785,11 +728,9 @@ public class Resource {
 
     /**
      * Sets the value of the formats property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Resource.Formats }
-     *     
+     *
+     * @param value allowed object is {@link Resource.Formats }
+     *
      */
     public void setFormats(Resource.Formats value) {
         this.formats = value;
@@ -797,11 +738,9 @@ public class Resource {
 
     /**
      * Gets the value of the version property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
+     *
      */
     public String getVersion() {
         return version;
@@ -809,11 +748,9 @@ public class Resource {
 
     /**
      * Sets the value of the version property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
+     *
      */
     public void setVersion(String value) {
         this.version = value;
@@ -821,11 +758,9 @@ public class Resource {
 
     /**
      * Gets the value of the rightsList property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Resource.RightsList }
-     *     
+     *
+     * @return possible object is {@link Resource.RightsList }
+     *
      */
     public Resource.RightsList getRightsList() {
         return rightsList;
@@ -833,11 +768,9 @@ public class Resource {
 
     /**
      * Sets the value of the rightsList property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Resource.RightsList }
-     *     
+     *
+     * @param value allowed object is {@link Resource.RightsList }
+     *
      */
     public void setRightsList(Resource.RightsList value) {
         this.rightsList = value;
@@ -845,11 +778,9 @@ public class Resource {
 
     /**
      * Gets the value of the descriptions property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Resource.Descriptions }
-     *     
+     *
+     * @return possible object is {@link Resource.Descriptions }
+     *
      */
     public Resource.Descriptions getDescriptions() {
         return descriptions;
@@ -857,11 +788,9 @@ public class Resource {
 
     /**
      * Sets the value of the descriptions property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Resource.Descriptions }
-     *     
+     *
+     * @param value allowed object is {@link Resource.Descriptions }
+     *
      */
     public void setDescriptions(Resource.Descriptions value) {
         this.descriptions = value;
@@ -869,11 +798,9 @@ public class Resource {
 
     /**
      * Gets the value of the geoLocations property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Resource.GeoLocations }
-     *     
+     *
+     * @return possible object is {@link Resource.GeoLocations }
+     *
      */
     public Resource.GeoLocations getGeoLocations() {
         return geoLocations;
@@ -881,11 +808,9 @@ public class Resource {
 
     /**
      * Sets the value of the geoLocations property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Resource.GeoLocations }
-     *     
+     *
+     * @param value allowed object is {@link Resource.GeoLocations }
+     *
      */
     public void setGeoLocations(Resource.GeoLocations value) {
         this.geoLocations = value;
@@ -893,11 +818,9 @@ public class Resource {
 
     /**
      * Gets the value of the fundingReferences property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Resource.FundingReferences }
-     *     
+     *
+     * @return possible object is {@link Resource.FundingReferences }
+     *
      */
     public Resource.FundingReferences getFundingReferences() {
         return fundingReferences;
@@ -905,22 +828,21 @@ public class Resource {
 
     /**
      * Sets the value of the fundingReferences property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Resource.FundingReferences }
-     *     
+     *
+     * @param value allowed object is {@link Resource.FundingReferences }
+     *
      */
     public void setFundingReferences(Resource.FundingReferences value) {
         this.fundingReferences = value;
     }
 
-
     /**
-     * <p>Java class for anonymous complex type.
-     * 
-     * <p>The following schema fragment specifies the expected content contained within this class.
-     * 
+     * <p>
+     * Java class for anonymous complex type.
+     *
+     * <p>
+     * The following schema fragment specifies the expected content contained within this class.
+     *
      * <pre>
      * &lt;complexType&gt;
      *   &lt;complexContent&gt;
@@ -940,8 +862,8 @@ public class Resource {
      *   &lt;/complexContent&gt;
      * &lt;/complexType&gt;
      * </pre>
-     * 
-     * 
+     *
+     *
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
@@ -953,25 +875,24 @@ public class Resource {
 
         /**
          * Gets the value of the alternateIdentifier property.
-         * 
+         *
          * <p>
-         * This accessor method returns a reference to the live list,
-         * not a snapshot. Therefore any modification you make to the
-         * returned list will be present inside the JAXB object.
-         * This is why there is not a <CODE>set</CODE> method for the alternateIdentifier property.
-         * 
+         * This accessor method returns a reference to the live list, not a snapshot. Therefore any
+         * modification you make to the returned list will be present inside the JAXB object. This
+         * is why there is not a <CODE>set</CODE> method for the alternateIdentifier property.
+         *
          * <p>
          * For example, to add a new item, do as follows:
          * <pre>
          *    getAlternateIdentifier().add(newItem);
          * </pre>
-         * 
-         * 
+         *
+         *
          * <p>
          * Objects of the following type(s) are allowed in the list
          * {@link Resource.AlternateIdentifiers.AlternateIdentifier }
-         * 
-         * 
+         *
+         *
          * @return the alternateIdentifier
          */
         public List<Resource.AlternateIdentifiers.AlternateIdentifier> getAlternateIdentifier() {
@@ -981,12 +902,13 @@ public class Resource {
             return this.alternateIdentifier;
         }
 
-
         /**
-         * <p>Java class for anonymous complex type.
-         * 
-         * <p>The following schema fragment specifies the expected content contained within this class.
-         * 
+         * <p>
+         * Java class for anonymous complex type.
+         *
+         * <p>
+         * The following schema fragment specifies the expected content contained within this class.
+         *
          * <pre>
          * &lt;complexType&gt;
          *   &lt;simpleContent&gt;
@@ -996,8 +918,8 @@ public class Resource {
          *   &lt;/simpleContent&gt;
          * &lt;/complexType&gt;
          * </pre>
-         * 
-         * 
+         *
+         *
          */
         @XmlAccessorType(XmlAccessType.FIELD)
         @XmlType(name = "", propOrder = {
@@ -1013,11 +935,9 @@ public class Resource {
 
             /**
              * Gets the value of the value property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is {@link String }
+             *
              */
             public String getValue() {
                 return value;
@@ -1025,11 +945,9 @@ public class Resource {
 
             /**
              * Sets the value of the value property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is {@link String }
+             *
              */
             public void setValue(String value) {
                 this.value = value;
@@ -1037,11 +955,9 @@ public class Resource {
 
             /**
              * Gets the value of the alternateIdentifierType property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is {@link String }
+             *
              */
             public String getAlternateIdentifierType() {
                 return alternateIdentifierType;
@@ -1049,11 +965,9 @@ public class Resource {
 
             /**
              * Sets the value of the alternateIdentifierType property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is {@link String }
+             *
              */
             public void setAlternateIdentifierType(String value) {
                 this.alternateIdentifierType = value;
@@ -1063,12 +977,13 @@ public class Resource {
 
     }
 
-
     /**
-     * <p>Java class for anonymous complex type.
-     * 
-     * <p>The following schema fragment specifies the expected content contained within this class.
-     * 
+     * <p>
+     * Java class for anonymous complex type.
+     *
+     * <p>
+     * The following schema fragment specifies the expected content contained within this class.
+     *
      * <pre>
      * &lt;complexType&gt;
      *   &lt;complexContent&gt;
@@ -1112,8 +1027,8 @@ public class Resource {
      *   &lt;/complexContent&gt;
      * &lt;/complexType&gt;
      * </pre>
-     * 
-     * 
+     *
+     *
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
@@ -1125,25 +1040,24 @@ public class Resource {
 
         /**
          * Gets the value of the contributor property.
-         * 
+         *
          * <p>
-         * This accessor method returns a reference to the live list,
-         * not a snapshot. Therefore any modification you make to the
-         * returned list will be present inside the JAXB object.
-         * This is why there is not a <CODE>set</CODE> method for the contributor property.
-         * 
+         * This accessor method returns a reference to the live list, not a snapshot. Therefore any
+         * modification you make to the returned list will be present inside the JAXB object. This
+         * is why there is not a <CODE>set</CODE> method for the contributor property.
+         *
          * <p>
          * For example, to add a new item, do as follows:
          * <pre>
          *    getContributor().add(newItem);
          * </pre>
-         * 
-         * 
+         *
+         *
          * <p>
          * Objects of the following type(s) are allowed in the list
          * {@link Resource.Contributors.Contributor }
-         * 
-         * 
+         *
+         *
          * @return the contributor
          */
         public List<Resource.Contributors.Contributor> getContributor() {
@@ -1153,12 +1067,13 @@ public class Resource {
             return this.contributor;
         }
 
-
         /**
-         * <p>Java class for anonymous complex type.
-         * 
-         * <p>The following schema fragment specifies the expected content contained within this class.
-         * 
+         * <p>
+         * Java class for anonymous complex type.
+         *
+         * <p>
+         * The following schema fragment specifies the expected content contained within this class.
+         *
          * <pre>
          * &lt;complexType&gt;
          *   &lt;complexContent&gt;
@@ -1192,8 +1107,8 @@ public class Resource {
          *   &lt;/complexContent&gt;
          * &lt;/complexType&gt;
          * </pre>
-         * 
-         * 
+         *
+         *
          */
         @XmlAccessorType(XmlAccessType.FIELD)
         @XmlType(name = "", propOrder = {
@@ -1216,11 +1131,9 @@ public class Resource {
 
             /**
              * Gets the value of the contributorName property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link Resource.Contributors.Contributor.ContributorName }
-             *     
+             *
+             * @return possible object is {@link Resource.Contributors.Contributor.ContributorName }
+             *
              */
             public Resource.Contributors.Contributor.ContributorName getContributorName() {
                 return contributorName;
@@ -1228,11 +1141,10 @@ public class Resource {
 
             /**
              * Sets the value of the contributorName property.
-             * 
-             * @param value
-             *     allowed object is
+             *
+             * @param value allowed object is
              *     {@link Resource.Contributors.Contributor.ContributorName }
-             *     
+             *
              */
             public void setContributorName(Resource.Contributors.Contributor.ContributorName value) {
                 this.contributorName = value;
@@ -1240,11 +1152,9 @@ public class Resource {
 
             /**
              * Gets the value of the givenName property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is {@link String }
+             *
              */
             public String getGivenName() {
                 return givenName;
@@ -1252,11 +1162,9 @@ public class Resource {
 
             /**
              * Sets the value of the givenName property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is {@link String }
+             *
              */
             public void setGivenName(String value) {
                 this.givenName = value;
@@ -1264,11 +1172,9 @@ public class Resource {
 
             /**
              * Gets the value of the familyName property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is {@link String }
+             *
              */
             public String getFamilyName() {
                 return familyName;
@@ -1276,11 +1182,9 @@ public class Resource {
 
             /**
              * Sets the value of the familyName property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is {@link String }
+             *
              */
             public void setFamilyName(String value) {
                 this.familyName = value;
@@ -1288,25 +1192,25 @@ public class Resource {
 
             /**
              * Gets the value of the nameIdentifier property.
-             * 
+             *
              * <p>
-             * This accessor method returns a reference to the live list,
-             * not a snapshot. Therefore any modification you make to the
-             * returned list will be present inside the JAXB object.
-             * This is why there is not a <CODE>set</CODE> method for the nameIdentifier property.
-             * 
+             * This accessor method returns a reference to the live list, not a snapshot. Therefore
+             * any modification you make to the returned list will be present inside the JAXB
+             * object. This is why there is not a <CODE>set</CODE> method for the nameIdentifier
+             * property.
+             *
              * <p>
              * For example, to add a new item, do as follows:
              * <pre>
              *    getNameIdentifier().add(newItem);
              * </pre>
-             * 
-             * 
+             *
+             *
              * <p>
              * Objects of the following type(s) are allowed in the list
              * {@link Resource.Contributors.Contributor.NameIdentifier }
-             * 
-             * 
+             *
+             *
              * @return the nameIdentifier
              */
             public List<Resource.Contributors.Contributor.NameIdentifier> getNameIdentifier() {
@@ -1318,25 +1222,24 @@ public class Resource {
 
             /**
              * Gets the value of the affiliation property.
-             * 
+             *
              * <p>
-             * This accessor method returns a reference to the live list,
-             * not a snapshot. Therefore any modification you make to the
-             * returned list will be present inside the JAXB object.
-             * This is why there is not a <CODE>set</CODE> method for the affiliation property.
-             * 
+             * This accessor method returns a reference to the live list, not a snapshot. Therefore
+             * any modification you make to the returned list will be present inside the JAXB
+             * object. This is why there is not a <CODE>set</CODE> method for the affiliation
+             * property.
+             *
              * <p>
              * For example, to add a new item, do as follows:
              * <pre>
              *    getAffiliation().add(newItem);
              * </pre>
-             * 
-             * 
+             *
+             *
              * <p>
-             * Objects of the following type(s) are allowed in the list
-             * {@link String }
-             * 
-             * 
+             * Objects of the following type(s) are allowed in the list {@link String }
+             *
+             *
              * @return the affiliation
              */
             public List<String> getAffiliation() {
@@ -1348,11 +1251,9 @@ public class Resource {
 
             /**
              * Gets the value of the contributorType property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link ContributorType }
-             *     
+             *
+             * @return possible object is {@link ContributorType }
+             *
              */
             public ContributorType getContributorType() {
                 return contributorType;
@@ -1360,22 +1261,22 @@ public class Resource {
 
             /**
              * Sets the value of the contributorType property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link ContributorType }
-             *     
+             *
+             * @param value allowed object is {@link ContributorType }
+             *
              */
             public void setContributorType(ContributorType value) {
                 this.contributorType = value;
             }
 
-
             /**
-             * <p>Java class for anonymous complex type.
-             * 
-             * <p>The following schema fragment specifies the expected content contained within this class.
-             * 
+             * <p>
+             * Java class for anonymous complex type.
+             *
+             * <p>
+             * The following schema fragment specifies the expected content contained within this
+             * class.
+             *
              * <pre>
              * &lt;complexType&gt;
              *   &lt;simpleContent&gt;
@@ -1385,8 +1286,8 @@ public class Resource {
              *   &lt;/simpleContent&gt;
              * &lt;/complexType&gt;
              * </pre>
-             * 
-             * 
+             *
+             *
              */
             @XmlAccessorType(XmlAccessType.FIELD)
             @XmlType(name = "", propOrder = {
@@ -1401,11 +1302,9 @@ public class Resource {
 
                 /**
                  * Gets the value of the value property.
-                 * 
-                 * @return
-                 *     possible object is
-                 *     {@link String }
-                 *     
+                 *
+                 * @return possible object is {@link String }
+                 *
                  */
                 public String getValue() {
                     return value;
@@ -1413,11 +1312,9 @@ public class Resource {
 
                 /**
                  * Sets the value of the value property.
-                 * 
-                 * @param value
-                 *     allowed object is
-                 *     {@link String }
-                 *     
+                 *
+                 * @param value allowed object is {@link String }
+                 *
                  */
                 public void setValue(String value) {
                     this.value = value;
@@ -1425,11 +1322,9 @@ public class Resource {
 
                 /**
                  * Gets the value of the nameType property.
-                 * 
-                 * @return
-                 *     possible object is
-                 *     {@link NameType }
-                 *     
+                 *
+                 * @return possible object is {@link NameType }
+                 *
                  */
                 public NameType getNameType() {
                     return nameType;
@@ -1437,11 +1332,9 @@ public class Resource {
 
                 /**
                  * Sets the value of the nameType property.
-                 * 
-                 * @param value
-                 *     allowed object is
-                 *     {@link NameType }
-                 *     
+                 *
+                 * @param value allowed object is {@link NameType }
+                 *
                  */
                 public void setNameType(NameType value) {
                     this.nameType = value;
@@ -1449,12 +1342,14 @@ public class Resource {
 
             }
 
-
             /**
-             * <p>Java class for anonymous complex type.
-             * 
-             * <p>The following schema fragment specifies the expected content contained within this class.
-             * 
+             * <p>
+             * Java class for anonymous complex type.
+             *
+             * <p>
+             * The following schema fragment specifies the expected content contained within this
+             * class.
+             *
              * <pre>
              * &lt;complexType&gt;
              *   &lt;simpleContent&gt;
@@ -1465,8 +1360,8 @@ public class Resource {
              *   &lt;/simpleContent&gt;
              * &lt;/complexType&gt;
              * </pre>
-             * 
-             * 
+             *
+             *
              */
             @XmlAccessorType(XmlAccessType.FIELD)
             @XmlType(name = "", propOrder = {
@@ -1485,11 +1380,9 @@ public class Resource {
 
                 /**
                  * Gets the value of the value property.
-                 * 
-                 * @return
-                 *     possible object is
-                 *     {@link String }
-                 *     
+                 *
+                 * @return possible object is {@link String }
+                 *
                  */
                 public String getValue() {
                     return value;
@@ -1497,11 +1390,9 @@ public class Resource {
 
                 /**
                  * Sets the value of the value property.
-                 * 
-                 * @param value
-                 *     allowed object is
-                 *     {@link String }
-                 *     
+                 *
+                 * @param value allowed object is {@link String }
+                 *
                  */
                 public void setValue(String value) {
                     this.value = value;
@@ -1509,11 +1400,9 @@ public class Resource {
 
                 /**
                  * Gets the value of the nameIdentifierScheme property.
-                 * 
-                 * @return
-                 *     possible object is
-                 *     {@link String }
-                 *     
+                 *
+                 * @return possible object is {@link String }
+                 *
                  */
                 public String getNameIdentifierScheme() {
                     return nameIdentifierScheme;
@@ -1521,11 +1410,9 @@ public class Resource {
 
                 /**
                  * Sets the value of the nameIdentifierScheme property.
-                 * 
-                 * @param value
-                 *     allowed object is
-                 *     {@link String }
-                 *     
+                 *
+                 * @param value allowed object is {@link String }
+                 *
                  */
                 public void setNameIdentifierScheme(String value) {
                     this.nameIdentifierScheme = value;
@@ -1533,11 +1420,9 @@ public class Resource {
 
                 /**
                  * Gets the value of the schemeURI property.
-                 * 
-                 * @return
-                 *     possible object is
-                 *     {@link String }
-                 *     
+                 *
+                 * @return possible object is {@link String }
+                 *
                  */
                 public String getSchemeURI() {
                     return schemeURI;
@@ -1545,11 +1430,9 @@ public class Resource {
 
                 /**
                  * Sets the value of the schemeURI property.
-                 * 
-                 * @param value
-                 *     allowed object is
-                 *     {@link String }
-                 *     
+                 *
+                 * @param value allowed object is {@link String }
+                 *
                  */
                 public void setSchemeURI(String value) {
                     this.schemeURI = value;
@@ -1561,12 +1444,13 @@ public class Resource {
 
     }
 
-
     /**
-     * <p>Java class for anonymous complex type.
-     * 
-     * <p>The following schema fragment specifies the expected content contained within this class.
-     * 
+     * <p>
+     * Java class for anonymous complex type.
+     *
+     * <p>
+     * The following schema fragment specifies the expected content contained within this class.
+     *
      * <pre>
      * &lt;complexType&gt;
      *   &lt;complexContent&gt;
@@ -1609,8 +1493,8 @@ public class Resource {
      *   &lt;/complexContent&gt;
      * &lt;/complexType&gt;
      * </pre>
-     * 
-     * 
+     *
+     *
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
@@ -1623,25 +1507,24 @@ public class Resource {
 
         /**
          * Gets the value of the creator property.
-         * 
+         *
          * <p>
-         * This accessor method returns a reference to the live list,
-         * not a snapshot. Therefore any modification you make to the
-         * returned list will be present inside the JAXB object.
-         * This is why there is not a <CODE>set</CODE> method for the creator property.
-         * 
+         * This accessor method returns a reference to the live list, not a snapshot. Therefore any
+         * modification you make to the returned list will be present inside the JAXB object. This
+         * is why there is not a <CODE>set</CODE> method for the creator property.
+         *
          * <p>
          * For example, to add a new item, do as follows:
          * <pre>
          *    getCreator().add(newItem);
          * </pre>
-         * 
-         * 
+         *
+         *
          * <p>
          * Objects of the following type(s) are allowed in the list
          * {@link Resource.Creators.Creator }
-         * 
-         * 
+         *
+         *
          * @return the creator
          */
         public List<Resource.Creators.Creator> getCreator() {
@@ -1651,12 +1534,13 @@ public class Resource {
             return this.creator;
         }
 
-
         /**
-         * <p>Java class for anonymous complex type.
-         * 
-         * <p>The following schema fragment specifies the expected content contained within this class.
-         * 
+         * <p>
+         * Java class for anonymous complex type.
+         *
+         * <p>
+         * The following schema fragment specifies the expected content contained within this class.
+         *
          * <pre>
          * &lt;complexType&gt;
          *   &lt;complexContent&gt;
@@ -1689,8 +1573,8 @@ public class Resource {
          *   &lt;/complexContent&gt;
          * &lt;/complexType&gt;
          * </pre>
-         * 
-         * 
+         *
+         *
          */
         @XmlAccessorType(XmlAccessType.FIELD)
         @XmlType(name = "", propOrder = {
@@ -1711,11 +1595,9 @@ public class Resource {
 
             /**
              * Gets the value of the creatorName property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link Resource.Creators.Creator.CreatorName }
-             *     
+             *
+             * @return possible object is {@link Resource.Creators.Creator.CreatorName }
+             *
              */
             public Resource.Creators.Creator.CreatorName getCreatorName() {
                 return creatorName;
@@ -1723,11 +1605,9 @@ public class Resource {
 
             /**
              * Sets the value of the creatorName property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link Resource.Creators.Creator.CreatorName }
-             *     
+             *
+             * @param value allowed object is {@link Resource.Creators.Creator.CreatorName }
+             *
              */
             public void setCreatorName(Resource.Creators.Creator.CreatorName value) {
                 this.creatorName = value;
@@ -1735,11 +1615,9 @@ public class Resource {
 
             /**
              * Gets the value of the givenName property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link Object }
-             *     
+             *
+             * @return possible object is {@link Object }
+             *
              */
             public String getGivenName() {
                 return givenName;
@@ -1747,11 +1625,9 @@ public class Resource {
 
             /**
              * Sets the value of the givenName property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is {@link String }
+             *
              */
             public void setGivenName(String value) {
                 this.givenName = value;
@@ -1759,11 +1635,9 @@ public class Resource {
 
             /**
              * Gets the value of the familyName property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is {@link String }
+             *
              */
             public String getFamilyName() {
                 return familyName;
@@ -1771,11 +1645,9 @@ public class Resource {
 
             /**
              * Sets the value of the familyName property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is {@link String }
+             *
              */
             public void setFamilyName(String value) {
                 this.familyName = value;
@@ -1783,25 +1655,25 @@ public class Resource {
 
             /**
              * Gets the value of the nameIdentifier property.
-             * 
+             *
              * <p>
-             * This accessor method returns a reference to the live list,
-             * not a snapshot. Therefore any modification you make to the
-             * returned list will be present inside the JAXB object.
-             * This is why there is not a <CODE>set</CODE> method for the nameIdentifier property.
-             * 
+             * This accessor method returns a reference to the live list, not a snapshot. Therefore
+             * any modification you make to the returned list will be present inside the JAXB
+             * object. This is why there is not a <CODE>set</CODE> method for the nameIdentifier
+             * property.
+             *
              * <p>
              * For example, to add a new item, do as follows:
              * <pre>
              *    getNameIdentifier().add(newItem);
              * </pre>
-             * 
-             * 
+             *
+             *
              * <p>
              * Objects of the following type(s) are allowed in the list
              * {@link Resource.Creators.Creator.NameIdentifier }
-             * 
-             * 
+             *
+             *
              * @return the nameIdentifier
              */
             public List<Resource.Creators.Creator.NameIdentifier> getNameIdentifier() {
@@ -1813,25 +1685,24 @@ public class Resource {
 
             /**
              * Gets the value of the affiliation property.
-             * 
+             *
              * <p>
-             * This accessor method returns a reference to the live list,
-             * not a snapshot. Therefore any modification you make to the
-             * returned list will be present inside the JAXB object.
-             * This is why there is not a <CODE>set</CODE> method for the affiliation property.
-             * 
+             * This accessor method returns a reference to the live list, not a snapshot. Therefore
+             * any modification you make to the returned list will be present inside the JAXB
+             * object. This is why there is not a <CODE>set</CODE> method for the affiliation
+             * property.
+             *
              * <p>
              * For example, to add a new item, do as follows:
              * <pre>
              *    getAffiliation().add(newItem);
              * </pre>
-             * 
-             * 
+             *
+             *
              * <p>
-             * Objects of the following type(s) are allowed in the list
-             * {@link String }
-             * 
-             * 
+             * Objects of the following type(s) are allowed in the list {@link String }
+             *
+             *
              * @return the affiliation
              */
             public List<String> getAffiliation() {
@@ -1841,12 +1712,14 @@ public class Resource {
                 return this.affiliation;
             }
 
-
             /**
-             * <p>Java class for anonymous complex type.
-             * 
-             * <p>The following schema fragment specifies the expected content contained within this class.
-             * 
+             * <p>
+             * Java class for anonymous complex type.
+             *
+             * <p>
+             * The following schema fragment specifies the expected content contained within this
+             * class.
+             *
              * <pre>
              * &lt;complexType&gt;
              *   &lt;simpleContent&gt;
@@ -1856,8 +1729,8 @@ public class Resource {
              *   &lt;/simpleContent&gt;
              * &lt;/complexType&gt;
              * </pre>
-             * 
-             * 
+             *
+             *
              */
             @XmlAccessorType(XmlAccessType.FIELD)
             @XmlType(name = "", propOrder = {
@@ -1872,11 +1745,9 @@ public class Resource {
 
                 /**
                  * Gets the value of the value property.
-                 * 
-                 * @return
-                 *     possible object is
-                 *     {@link String }
-                 *     
+                 *
+                 * @return possible object is {@link String }
+                 *
                  */
                 public String getValue() {
                     return value;
@@ -1884,11 +1755,9 @@ public class Resource {
 
                 /**
                  * Sets the value of the value property.
-                 * 
-                 * @param value
-                 *     allowed object is
-                 *     {@link String }
-                 *     
+                 *
+                 * @param value allowed object is {@link String }
+                 *
                  */
                 public void setValue(String value) {
                     this.value = value;
@@ -1896,11 +1765,9 @@ public class Resource {
 
                 /**
                  * Gets the value of the nameType property.
-                 * 
-                 * @return
-                 *     possible object is
-                 *     {@link NameType }
-                 *     
+                 *
+                 * @return possible object is {@link NameType }
+                 *
                  */
                 public NameType getNameType() {
                     return nameType;
@@ -1908,11 +1775,9 @@ public class Resource {
 
                 /**
                  * Sets the value of the nameType property.
-                 * 
-                 * @param value
-                 *     allowed object is
-                 *     {@link NameType }
-                 *     
+                 *
+                 * @param value allowed object is {@link NameType }
+                 *
                  */
                 public void setNameType(NameType value) {
                     this.nameType = value;
@@ -1920,12 +1785,14 @@ public class Resource {
 
             }
 
-
             /**
-             * <p>Java class for anonymous complex type.
-             * 
-             * <p>The following schema fragment specifies the expected content contained within this class.
-             * 
+             * <p>
+             * Java class for anonymous complex type.
+             *
+             * <p>
+             * The following schema fragment specifies the expected content contained within this
+             * class.
+             *
              * <pre>
              * &lt;complexType&gt;
              *   &lt;simpleContent&gt;
@@ -1936,8 +1803,8 @@ public class Resource {
              *   &lt;/simpleContent&gt;
              * &lt;/complexType&gt;
              * </pre>
-             * 
-             * 
+             *
+             *
              */
             @XmlAccessorType(XmlAccessType.FIELD)
             @XmlType(name = "", propOrder = {
@@ -1956,11 +1823,9 @@ public class Resource {
 
                 /**
                  * Gets the value of the value property.
-                 * 
-                 * @return
-                 *     possible object is
-                 *     {@link String }
-                 *     
+                 *
+                 * @return possible object is {@link String }
+                 *
                  */
                 public String getValue() {
                     return value;
@@ -1968,11 +1833,9 @@ public class Resource {
 
                 /**
                  * Sets the value of the value property.
-                 * 
-                 * @param value
-                 *     allowed object is
-                 *     {@link String }
-                 *     
+                 *
+                 * @param value allowed object is {@link String }
+                 *
                  */
                 public void setValue(String value) {
                     this.value = value;
@@ -1980,11 +1843,9 @@ public class Resource {
 
                 /**
                  * Gets the value of the nameIdentifierScheme property.
-                 * 
-                 * @return
-                 *     possible object is
-                 *     {@link String }
-                 *     
+                 *
+                 * @return possible object is {@link String }
+                 *
                  */
                 public String getNameIdentifierScheme() {
                     return nameIdentifierScheme;
@@ -1992,11 +1853,9 @@ public class Resource {
 
                 /**
                  * Sets the value of the nameIdentifierScheme property.
-                 * 
-                 * @param value
-                 *     allowed object is
-                 *     {@link String }
-                 *     
+                 *
+                 * @param value allowed object is {@link String }
+                 *
                  */
                 public void setNameIdentifierScheme(String value) {
                     this.nameIdentifierScheme = value;
@@ -2004,11 +1863,9 @@ public class Resource {
 
                 /**
                  * Gets the value of the schemeURI property.
-                 * 
-                 * @return
-                 *     possible object is
-                 *     {@link String }
-                 *     
+                 *
+                 * @return possible object is {@link String }
+                 *
                  */
                 public String getSchemeURI() {
                     return schemeURI;
@@ -2016,11 +1873,9 @@ public class Resource {
 
                 /**
                  * Sets the value of the schemeURI property.
-                 * 
-                 * @param value
-                 *     allowed object is
-                 *     {@link String }
-                 *     
+                 *
+                 * @param value allowed object is {@link String }
+                 *
                  */
                 public void setSchemeURI(String value) {
                     this.schemeURI = value;
@@ -2032,12 +1887,13 @@ public class Resource {
 
     }
 
-
     /**
-     * <p>Java class for anonymous complex type.
-     * 
-     * <p>The following schema fragment specifies the expected content contained within this class.
-     * 
+     * <p>
+     * Java class for anonymous complex type.
+     *
+     * <p>
+     * The following schema fragment specifies the expected content contained within this class.
+     *
      * <pre>
      * &lt;complexType&gt;
      *   &lt;complexContent&gt;
@@ -2058,8 +1914,8 @@ public class Resource {
      *   &lt;/complexContent&gt;
      * &lt;/complexType&gt;
      * </pre>
-     * 
-     * 
+     *
+     *
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
@@ -2071,25 +1927,23 @@ public class Resource {
 
         /**
          * Gets the value of the date property.
-         * 
+         *
          * <p>
-         * This accessor method returns a reference to the live list,
-         * not a snapshot. Therefore any modification you make to the
-         * returned list will be present inside the JAXB object.
-         * This is why there is not a <CODE>set</CODE> method for the date property.
-         * 
+         * This accessor method returns a reference to the live list, not a snapshot. Therefore any
+         * modification you make to the returned list will be present inside the JAXB object. This
+         * is why there is not a <CODE>set</CODE> method for the date property.
+         *
          * <p>
          * For example, to add a new item, do as follows:
          * <pre>
          *    getDate().add(newItem);
          * </pre>
-         * 
-         * 
+         *
+         *
          * <p>
-         * Objects of the following type(s) are allowed in the list
-         * {@link Resource.Dates.Date }
-         * 
-         * 
+         * Objects of the following type(s) are allowed in the list {@link Resource.Dates.Date }
+         *
+         *
          * @return the date
          */
         public List<Resource.Dates.Date> getDate() {
@@ -2099,12 +1953,13 @@ public class Resource {
             return this.date;
         }
 
-
         /**
-         * <p>Java class for anonymous complex type.
-         * 
-         * <p>The following schema fragment specifies the expected content contained within this class.
-         * 
+         * <p>
+         * Java class for anonymous complex type.
+         *
+         * <p>
+         * The following schema fragment specifies the expected content contained within this class.
+         *
          * <pre>
          * &lt;complexType&gt;
          *   &lt;simpleContent&gt;
@@ -2115,8 +1970,8 @@ public class Resource {
          *   &lt;/simpleContent&gt;
          * &lt;/complexType&gt;
          * </pre>
-         * 
-         * 
+         *
+         *
          */
         @XmlAccessorType(XmlAccessType.FIELD)
         @XmlType(name = "", propOrder = {
@@ -2134,11 +1989,9 @@ public class Resource {
 
             /**
              * Gets the value of the value property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is {@link String }
+             *
              */
             public String getValue() {
                 return value;
@@ -2146,11 +1999,9 @@ public class Resource {
 
             /**
              * Sets the value of the value property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is {@link String }
+             *
              */
             public void setValue(String value) {
                 this.value = value;
@@ -2158,11 +2009,9 @@ public class Resource {
 
             /**
              * Gets the value of the dateType property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link DateType }
-             *     
+             *
+             * @return possible object is {@link DateType }
+             *
              */
             public DateType getDateType() {
                 return dateType;
@@ -2170,11 +2019,9 @@ public class Resource {
 
             /**
              * Sets the value of the dateType property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link DateType }
-             *     
+             *
+             * @param value allowed object is {@link DateType }
+             *
              */
             public void setDateType(DateType value) {
                 this.dateType = value;
@@ -2182,11 +2029,9 @@ public class Resource {
 
             /**
              * Gets the value of the dateInformation property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is {@link String }
+             *
              */
             public String getDateInformation() {
                 return dateInformation;
@@ -2194,11 +2039,9 @@ public class Resource {
 
             /**
              * Sets the value of the dateInformation property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is {@link String }
+             *
              */
             public void setDateInformation(String value) {
                 this.dateInformation = value;
@@ -2208,12 +2051,13 @@ public class Resource {
 
     }
 
-
     /**
-     * <p>Java class for anonymous complex type.
-     * 
-     * <p>The following schema fragment specifies the expected content contained within this class.
-     * 
+     * <p>
+     * Java class for anonymous complex type.
+     *
+     * <p>
+     * The following schema fragment specifies the expected content contained within this class.
+     *
      * <pre>
      * &lt;complexType&gt;
      *   &lt;complexContent&gt;
@@ -2243,8 +2087,8 @@ public class Resource {
      *   &lt;/complexContent&gt;
      * &lt;/complexType&gt;
      * </pre>
-     * 
-     * 
+     *
+     *
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
@@ -2256,25 +2100,24 @@ public class Resource {
 
         /**
          * Gets the value of the description property.
-         * 
+         *
          * <p>
-         * This accessor method returns a reference to the live list,
-         * not a snapshot. Therefore any modification you make to the
-         * returned list will be present inside the JAXB object.
-         * This is why there is not a <CODE>set</CODE> method for the description property.
-         * 
+         * This accessor method returns a reference to the live list, not a snapshot. Therefore any
+         * modification you make to the returned list will be present inside the JAXB object. This
+         * is why there is not a <CODE>set</CODE> method for the description property.
+         *
          * <p>
          * For example, to add a new item, do as follows:
          * <pre>
          *    getDescription().add(newItem);
          * </pre>
-         * 
-         * 
+         *
+         *
          * <p>
          * Objects of the following type(s) are allowed in the list
          * {@link Resource.Descriptions.Description }
-         * 
-         * 
+         *
+         *
          * @return the description
          */
         public List<Resource.Descriptions.Description> getDescription() {
@@ -2284,12 +2127,13 @@ public class Resource {
             return this.description;
         }
 
-
         /**
-         * <p>Java class for anonymous complex type.
-         * 
-         * <p>The following schema fragment specifies the expected content contained within this class.
-         * 
+         * <p>
+         * Java class for anonymous complex type.
+         *
+         * <p>
+         * The following schema fragment specifies the expected content contained within this class.
+         *
          * <pre>
          * &lt;complexType&gt;
          *   &lt;complexContent&gt;
@@ -2309,8 +2153,8 @@ public class Resource {
          *   &lt;/complexContent&gt;
          * &lt;/complexType&gt;
          * </pre>
-         * 
-         * 
+         *
+         *
          */
         @XmlAccessorType(XmlAccessType.FIELD)
         @XmlType(name = "", propOrder = {
@@ -2328,26 +2172,25 @@ public class Resource {
 
             /**
              * Gets the value of the content property.
-             * 
+             *
              * <p>
-             * This accessor method returns a reference to the live list,
-             * not a snapshot. Therefore any modification you make to the
-             * returned list will be present inside the JAXB object.
-             * This is why there is not a <CODE>set</CODE> method for the content property.
-             * 
+             * This accessor method returns a reference to the live list, not a snapshot. Therefore
+             * any modification you make to the returned list will be present inside the JAXB
+             * object. This is why there is not a <CODE>set</CODE> method for the content property.
+             *
              * <p>
              * For example, to add a new item, do as follows:
              * <pre>
              *    getContent().add(newItem);
              * </pre>
-             * 
-             * 
+             *
+             *
              * <p>
-             * Objects of the following type(s) are allowed in the list null null null             {@link JAXBElement }{@code <}{@link String }{@code >}
+             * Objects of the following type(s) are allowed in the list null null null null             {@link JAXBElement }{@code <}{@link String }{@code >}
              * {@link String }
              * {@link JAXBElement }{@code <}{@link String }{@code >}
-             * 
-             * 
+             *
+             *
              * @return the content
              */
             public List<Serializable> getContent() {
@@ -2359,11 +2202,9 @@ public class Resource {
 
             /**
              * Gets the value of the descriptionType property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link DescriptionType }
-             *     
+             *
+             * @return possible object is {@link DescriptionType }
+             *
              */
             public DescriptionType getDescriptionType() {
                 return descriptionType;
@@ -2371,11 +2212,9 @@ public class Resource {
 
             /**
              * Sets the value of the descriptionType property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link DescriptionType }
-             *     
+             *
+             * @param value allowed object is {@link DescriptionType }
+             *
              */
             public void setDescriptionType(DescriptionType value) {
                 this.descriptionType = value;
@@ -2383,11 +2222,9 @@ public class Resource {
 
             /**
              * Gets the value of the lang property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is {@link String }
+             *
              */
             public String getLang() {
                 return lang;
@@ -2395,11 +2232,9 @@ public class Resource {
 
             /**
              * Sets the value of the lang property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is {@link String }
+             *
              */
             public void setLang(String value) {
                 this.lang = value;
@@ -2409,12 +2244,13 @@ public class Resource {
 
     }
 
-
     /**
-     * <p>Java class for anonymous complex type.
-     * 
-     * <p>The following schema fragment specifies the expected content contained within this class.
-     * 
+     * <p>
+     * Java class for anonymous complex type.
+     *
+     * <p>
+     * The following schema fragment specifies the expected content contained within this class.
+     *
      * <pre>
      * &lt;complexType&gt;
      *   &lt;complexContent&gt;
@@ -2426,8 +2262,8 @@ public class Resource {
      *   &lt;/complexContent&gt;
      * &lt;/complexType&gt;
      * </pre>
-     * 
-     * 
+     *
+     *
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
@@ -2439,25 +2275,23 @@ public class Resource {
 
         /**
          * Gets the value of the format property.
-         * 
+         *
          * <p>
-         * This accessor method returns a reference to the live list,
-         * not a snapshot. Therefore any modification you make to the
-         * returned list will be present inside the JAXB object.
-         * This is why there is not a <CODE>set</CODE> method for the format property.
-         * 
+         * This accessor method returns a reference to the live list, not a snapshot. Therefore any
+         * modification you make to the returned list will be present inside the JAXB object. This
+         * is why there is not a <CODE>set</CODE> method for the format property.
+         *
          * <p>
          * For example, to add a new item, do as follows:
          * <pre>
          *    getFormat().add(newItem);
          * </pre>
-         * 
-         * 
+         *
+         *
          * <p>
-         * Objects of the following type(s) are allowed in the list
-         * {@link String }
-         * 
-         * 
+         * Objects of the following type(s) are allowed in the list {@link String }
+         *
+         *
          * @return the format
          */
         public List<String> getFormat() {
@@ -2469,12 +2303,13 @@ public class Resource {
 
     }
 
-
     /**
-     * <p>Java class for anonymous complex type.
-     * 
-     * <p>The following schema fragment specifies the expected content contained within this class.
-     * 
+     * <p>
+     * Java class for anonymous complex type.
+     *
+     * <p>
+     * The following schema fragment specifies the expected content contained within this class.
+     *
      * <pre>
      * &lt;complexType&gt;
      *   &lt;complexContent&gt;
@@ -2525,8 +2360,8 @@ public class Resource {
      *   &lt;/complexContent&gt;
      * &lt;/complexType&gt;
      * </pre>
-     * 
-     * 
+     *
+     *
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
@@ -2538,25 +2373,24 @@ public class Resource {
 
         /**
          * Gets the value of the fundingReference property.
-         * 
+         *
          * <p>
-         * This accessor method returns a reference to the live list,
-         * not a snapshot. Therefore any modification you make to the
-         * returned list will be present inside the JAXB object.
-         * This is why there is not a <CODE>set</CODE> method for the fundingReference property.
-         * 
+         * This accessor method returns a reference to the live list, not a snapshot. Therefore any
+         * modification you make to the returned list will be present inside the JAXB object. This
+         * is why there is not a <CODE>set</CODE> method for the fundingReference property.
+         *
          * <p>
          * For example, to add a new item, do as follows:
          * <pre>
          *    getFundingReference().add(newItem);
          * </pre>
-         * 
-         * 
+         *
+         *
          * <p>
          * Objects of the following type(s) are allowed in the list
          * {@link Resource.FundingReferences.FundingReference }
-         * 
-         * 
+         *
+         *
          * @return the fundingReference
          */
         public List<Resource.FundingReferences.FundingReference> getFundingReference() {
@@ -2566,12 +2400,13 @@ public class Resource {
             return this.fundingReference;
         }
 
-
         /**
-         * <p>Java class for anonymous complex type.
-         * 
-         * <p>The following schema fragment specifies the expected content contained within this class.
-         * 
+         * <p>
+         * Java class for anonymous complex type.
+         *
+         * <p>
+         * The following schema fragment specifies the expected content contained within this class.
+         *
          * <pre>
          * &lt;complexType&gt;
          *   &lt;complexContent&gt;
@@ -2612,13 +2447,11 @@ public class Resource {
          *   &lt;/complexContent&gt;
          * &lt;/complexType&gt;
          * </pre>
-         * 
-         * 
+         *
+         *
          */
         @XmlAccessorType(XmlAccessType.FIELD)
-        @XmlType(name = "", propOrder = {
-
-        })
+        @XmlType(name = "", propOrder = {})
         public static class FundingReference {
 
             @XmlElement(required = true)
@@ -2629,11 +2462,9 @@ public class Resource {
 
             /**
              * Gets the value of the funderName property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is {@link String }
+             *
              */
             public String getFunderName() {
                 return funderName;
@@ -2641,11 +2472,9 @@ public class Resource {
 
             /**
              * Sets the value of the funderName property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is {@link String }
+             *
              */
             public void setFunderName(String value) {
                 this.funderName = value;
@@ -2653,11 +2482,10 @@ public class Resource {
 
             /**
              * Gets the value of the funderIdentifier property.
-             * 
-             * @return
-             *     possible object is
+             *
+             * @return possible object is
              *     {@link Resource.FundingReferences.FundingReference.FunderIdentifier }
-             *     
+             *
              */
             public Resource.FundingReferences.FundingReference.FunderIdentifier getFunderIdentifier() {
                 return funderIdentifier;
@@ -2665,23 +2493,22 @@ public class Resource {
 
             /**
              * Sets the value of the funderIdentifier property.
-             * 
-             * @param value
-             *     allowed object is
+             *
+             * @param value allowed object is
              *     {@link Resource.FundingReferences.FundingReference.FunderIdentifier }
-             *     
+             *
              */
-            public void setFunderIdentifier(Resource.FundingReferences.FundingReference.FunderIdentifier value) {
+            public void setFunderIdentifier(
+                    Resource.FundingReferences.FundingReference.FunderIdentifier value) {
                 this.funderIdentifier = value;
             }
 
             /**
              * Gets the value of the awardNumber property.
-             * 
-             * @return
-             *     possible object is
+             *
+             * @return possible object is
              *     {@link Resource.FundingReferences.FundingReference.AwardNumber }
-             *     
+             *
              */
             public Resource.FundingReferences.FundingReference.AwardNumber getAwardNumber() {
                 return awardNumber;
@@ -2689,11 +2516,10 @@ public class Resource {
 
             /**
              * Sets the value of the awardNumber property.
-             * 
-             * @param value
-             *     allowed object is
+             *
+             * @param value allowed object is
              *     {@link Resource.FundingReferences.FundingReference.AwardNumber }
-             *     
+             *
              */
             public void setAwardNumber(Resource.FundingReferences.FundingReference.AwardNumber value) {
                 this.awardNumber = value;
@@ -2701,11 +2527,9 @@ public class Resource {
 
             /**
              * Gets the value of the awardTitle property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is {@link String }
+             *
              */
             public String getAwardTitle() {
                 return awardTitle;
@@ -2713,22 +2537,22 @@ public class Resource {
 
             /**
              * Sets the value of the awardTitle property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is {@link String }
+             *
              */
             public void setAwardTitle(String value) {
                 this.awardTitle = value;
             }
 
-
             /**
-             * <p>Java class for anonymous complex type.
-             * 
-             * <p>The following schema fragment specifies the expected content contained within this class.
-             * 
+             * <p>
+             * Java class for anonymous complex type.
+             *
+             * <p>
+             * The following schema fragment specifies the expected content contained within this
+             * class.
+             *
              * <pre>
              * &lt;complexType&gt;
              *   &lt;simpleContent&gt;
@@ -2738,8 +2562,8 @@ public class Resource {
              *   &lt;/simpleContent&gt;
              * &lt;/complexType&gt;
              * </pre>
-             * 
-             * 
+             *
+             *
              */
             @XmlAccessorType(XmlAccessType.FIELD)
             @XmlType(name = "", propOrder = {
@@ -2755,11 +2579,9 @@ public class Resource {
 
                 /**
                  * Gets the value of the value property.
-                 * 
-                 * @return
-                 *     possible object is
-                 *     {@link String }
-                 *     
+                 *
+                 * @return possible object is {@link String }
+                 *
                  */
                 public String getValue() {
                     return value;
@@ -2767,11 +2589,9 @@ public class Resource {
 
                 /**
                  * Sets the value of the value property.
-                 * 
-                 * @param value
-                 *     allowed object is
-                 *     {@link String }
-                 *     
+                 *
+                 * @param value allowed object is {@link String }
+                 *
                  */
                 public void setValue(String value) {
                     this.value = value;
@@ -2779,11 +2599,9 @@ public class Resource {
 
                 /**
                  * Gets the value of the awardURI property.
-                 * 
-                 * @return
-                 *     possible object is
-                 *     {@link String }
-                 *     
+                 *
+                 * @return possible object is {@link String }
+                 *
                  */
                 public String getAwardURI() {
                     return awardURI;
@@ -2791,11 +2609,9 @@ public class Resource {
 
                 /**
                  * Sets the value of the awardURI property.
-                 * 
-                 * @param value
-                 *     allowed object is
-                 *     {@link String }
-                 *     
+                 *
+                 * @param value allowed object is {@link String }
+                 *
                  */
                 public void setAwardURI(String value) {
                     this.awardURI = value;
@@ -2803,12 +2619,14 @@ public class Resource {
 
             }
 
-
             /**
-             * <p>Java class for anonymous complex type.
-             * 
-             * <p>The following schema fragment specifies the expected content contained within this class.
-             * 
+             * <p>
+             * Java class for anonymous complex type.
+             *
+             * <p>
+             * The following schema fragment specifies the expected content contained within this
+             * class.
+             *
              * <pre>
              * &lt;complexType&gt;
              *   &lt;simpleContent&gt;
@@ -2818,8 +2636,8 @@ public class Resource {
              *   &lt;/simpleContent&gt;
              * &lt;/complexType&gt;
              * </pre>
-             * 
-             * 
+             *
+             *
              */
             @XmlAccessorType(XmlAccessType.FIELD)
             @XmlType(name = "", propOrder = {
@@ -2834,11 +2652,9 @@ public class Resource {
 
                 /**
                  * Gets the value of the value property.
-                 * 
-                 * @return
-                 *     possible object is
-                 *     {@link String }
-                 *     
+                 *
+                 * @return possible object is {@link String }
+                 *
                  */
                 public String getValue() {
                     return value;
@@ -2846,11 +2662,9 @@ public class Resource {
 
                 /**
                  * Sets the value of the value property.
-                 * 
-                 * @param value
-                 *     allowed object is
-                 *     {@link String }
-                 *     
+                 *
+                 * @param value allowed object is {@link String }
+                 *
                  */
                 public void setValue(String value) {
                     this.value = value;
@@ -2858,11 +2672,9 @@ public class Resource {
 
                 /**
                  * Gets the value of the funderIdentifierType property.
-                 * 
-                 * @return
-                 *     possible object is
-                 *     {@link FunderIdentifierType }
-                 *     
+                 *
+                 * @return possible object is {@link FunderIdentifierType }
+                 *
                  */
                 public FunderIdentifierType getFunderIdentifierType() {
                     return funderIdentifierType;
@@ -2870,11 +2682,9 @@ public class Resource {
 
                 /**
                  * Sets the value of the funderIdentifierType property.
-                 * 
-                 * @param value
-                 *     allowed object is
-                 *     {@link FunderIdentifierType }
-                 *     
+                 *
+                 * @param value allowed object is {@link FunderIdentifierType }
+                 *
                  */
                 public void setFunderIdentifierType(FunderIdentifierType value) {
                     this.funderIdentifierType = value;
@@ -2886,12 +2696,13 @@ public class Resource {
 
     }
 
-
     /**
-     * <p>Java class for anonymous complex type.
-     * 
-     * <p>The following schema fragment specifies the expected content contained within this class.
-     * 
+     * <p>
+     * Java class for anonymous complex type.
+     *
+     * <p>
+     * The following schema fragment specifies the expected content contained within this class.
+     *
      * <pre>
      * &lt;complexType&gt;
      *   &lt;complexContent&gt;
@@ -2927,8 +2738,8 @@ public class Resource {
      *   &lt;/complexContent&gt;
      * &lt;/complexType&gt;
      * </pre>
-     * 
-     * 
+     *
+     *
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
@@ -2940,25 +2751,24 @@ public class Resource {
 
         /**
          * Gets the value of the geoLocation property.
-         * 
+         *
          * <p>
-         * This accessor method returns a reference to the live list,
-         * not a snapshot. Therefore any modification you make to the
-         * returned list will be present inside the JAXB object.
-         * This is why there is not a <CODE>set</CODE> method for the geoLocation property.
-         * 
+         * This accessor method returns a reference to the live list, not a snapshot. Therefore any
+         * modification you make to the returned list will be present inside the JAXB object. This
+         * is why there is not a <CODE>set</CODE> method for the geoLocation property.
+         *
          * <p>
          * For example, to add a new item, do as follows:
          * <pre>
          *    getGeoLocation().add(newItem);
          * </pre>
-         * 
-         * 
+         *
+         *
          * <p>
          * Objects of the following type(s) are allowed in the list
          * {@link Resource.GeoLocations.GeoLocation }
-         * 
-         * 
+         *
+         *
          * @return the geoLocation
          */
         public List<Resource.GeoLocations.GeoLocation> getGeoLocation() {
@@ -2968,12 +2778,13 @@ public class Resource {
             return this.geoLocation;
         }
 
-
         /**
-         * <p>Java class for anonymous complex type.
-         * 
-         * <p>The following schema fragment specifies the expected content contained within this class.
-         * 
+         * <p>
+         * Java class for anonymous complex type.
+         *
+         * <p>
+         * The following schema fragment specifies the expected content contained within this class.
+         *
          * <pre>
          * &lt;complexType&gt;
          *   &lt;complexContent&gt;
@@ -2999,8 +2810,8 @@ public class Resource {
          *   &lt;/complexContent&gt;
          * &lt;/complexType&gt;
          * </pre>
-         * 
-         * 
+         *
+         *
          */
         @XmlAccessorType(XmlAccessType.FIELD)
         @XmlType(name = "", propOrder = {
@@ -3009,37 +2820,39 @@ public class Resource {
         public static class GeoLocation {
 
             @XmlElements({
-                @XmlElement(name = "geoLocationPlace"),
-                @XmlElement(name = "geoLocationPoint", type = Point.class),
-                @XmlElement(name = "geoLocationBox", type = Box.class),
+                @XmlElement(name = "geoLocationPlace")
+                ,
+                @XmlElement(name = "geoLocationPoint", type = Point.class)
+                ,
+                @XmlElement(name = "geoLocationBox", type = Box.class)
+                ,
                 @XmlElement(name = "geoLocationPolygon", type = Resource.GeoLocations.GeoLocation.GeoLocationPolygon.class)
             })
             protected List<Object> geoLocationPlaceOrGeoLocationPointOrGeoLocationBox;
 
             /**
              * Gets the value of the geoLocationPlaceOrGeoLocationPointOrGeoLocationBox property.
-             * 
+             *
              * <p>
-             * This accessor method returns a reference to the live list,
-             * not a snapshot. Therefore any modification you make to the
-             * returned list will be present inside the JAXB object.
-             * This is why there is not a <CODE>set</CODE> method for the geoLocationPlaceOrGeoLocationPointOrGeoLocationBox property.
-             * 
+             * This accessor method returns a reference to the live list, not a snapshot. Therefore
+             * any modification you make to the returned list will be present inside the JAXB
+             * object. This is why there is not a <CODE>set</CODE> method for the
+             * geoLocationPlaceOrGeoLocationPointOrGeoLocationBox property.
+             *
              * <p>
              * For example, to add a new item, do as follows:
              * <pre>
              *    getGeoLocationPlaceOrGeoLocationPointOrGeoLocationBox().add(newItem);
              * </pre>
-             * 
-             * 
+             *
+             *
              * <p>
-             * Objects of the following type(s) are allowed in the list
-             * {@link Object }
+             * Objects of the following type(s) are allowed in the list              {@link Object }
              * {@link Point }
              * {@link Box }
              * {@link Resource.GeoLocations.GeoLocation.GeoLocationPolygon }
-             * 
-             * 
+             *
+             *
              * @return the geoLocationPlaceOrGeoLocationPointOrGeoLocationBox
              */
             public List<Object> getGeoLocationPlaceOrGeoLocationPointOrGeoLocationBox() {
@@ -3049,12 +2862,14 @@ public class Resource {
                 return this.geoLocationPlaceOrGeoLocationPointOrGeoLocationBox;
             }
 
-
             /**
-             * <p>Java class for anonymous complex type.
-             * 
-             * <p>The following schema fragment specifies the expected content contained within this class.
-             * 
+             * <p>
+             * Java class for anonymous complex type.
+             *
+             * <p>
+             * The following schema fragment specifies the expected content contained within this
+             * class.
+             *
              * <pre>
              * &lt;complexType&gt;
              *   &lt;complexContent&gt;
@@ -3067,8 +2882,8 @@ public class Resource {
              *   &lt;/complexContent&gt;
              * &lt;/complexType&gt;
              * </pre>
-             * 
-             * 
+             *
+             *
              */
             @XmlAccessorType(XmlAccessType.FIELD)
             @XmlType(name = "", propOrder = {
@@ -3083,25 +2898,24 @@ public class Resource {
 
                 /**
                  * Gets the value of the polygonPoint property.
-                 * 
+                 *
                  * <p>
-                 * This accessor method returns a reference to the live list,
-                 * not a snapshot. Therefore any modification you make to the
-                 * returned list will be present inside the JAXB object.
-                 * This is why there is not a <CODE>set</CODE> method for the polygonPoint property.
-                 * 
+                 * This accessor method returns a reference to the live list, not a snapshot.
+                 * Therefore any modification you make to the returned list will be present inside
+                 * the JAXB object. This is why there is not a <CODE>set</CODE> method for the
+                 * polygonPoint property.
+                 *
                  * <p>
                  * For example, to add a new item, do as follows:
                  * <pre>
                  *    getPolygonPoint().add(newItem);
                  * </pre>
-                 * 
-                 * 
+                 *
+                 *
                  * <p>
-                 * Objects of the following type(s) are allowed in the list
-                 * {@link Point }
-                 * 
-                 * 
+                 * Objects of the following type(s) are allowed in the list {@link Point }
+                 *
+                 *
                  * @return the polygon
                  */
                 public List<Point> getPolygonPoint() {
@@ -3113,11 +2927,9 @@ public class Resource {
 
                 /**
                  * Gets the value of the inPolygonPoint property.
-                 * 
-                 * @return
-                 *     possible object is
-                 *     {@link Point }
-                 *     
+                 *
+                 * @return possible object is {@link Point }
+                 *
                  */
                 public Point getInPolygonPoint() {
                     return inPolygonPoint;
@@ -3125,11 +2937,9 @@ public class Resource {
 
                 /**
                  * Sets the value of the inPolygonPoint property.
-                 * 
-                 * @param value
-                 *     allowed object is
-                 *     {@link Point }
-                 *     
+                 *
+                 * @param value allowed object is {@link Point }
+                 *
                  */
                 public void setInPolygonPoint(Point value) {
                     this.inPolygonPoint = value;
@@ -3141,12 +2951,13 @@ public class Resource {
 
     }
 
-
     /**
-     * <p>Java class for anonymous complex type.
-     * 
-     * <p>The following schema fragment specifies the expected content contained within this class.
-     * 
+     * <p>
+     * Java class for anonymous complex type.
+     *
+     * <p>
+     * The following schema fragment specifies the expected content contained within this class.
+     *
      * <pre>
      * &lt;complexType&gt;
      *   &lt;simpleContent&gt;
@@ -3156,8 +2967,8 @@ public class Resource {
      *   &lt;/simpleContent&gt;
      * &lt;/complexType&gt;
      * </pre>
-     * 
-     * 
+     *
+     *
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
@@ -3165,25 +2976,23 @@ public class Resource {
     })
     public static class Identifier {
 
-	/**
-	 * 
-	 * 
-	 */
-	@XmlAttribute(name = "identifierType", required = true)
-	@XmlSchemaType(name = "anySimpleType")
-	public final static String IDENTIFIER_TYPE = "DOI";
-	
+        /**
+         *
+         *
+         */
+        @XmlAttribute(name = "identifierType", required = true)
+        @XmlSchemaType(name = "anySimpleType")
+        public final static String IDENTIFIER_TYPE = "DOI";
+
         @XmlValue
         @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
         protected String value;
 
         /**
          * Gets the value of the value property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link String }
-         *     
+         *
+         * @return possible object is {@link String }
+         *
          */
         public String getValue() {
             return value;
@@ -3191,11 +3000,9 @@ public class Resource {
 
         /**
          * Sets the value of the value property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
+         *
+         * @param value allowed object is {@link String }
+         *
          */
         public void setValue(String value) {
             this.value = value;
@@ -3203,12 +3010,13 @@ public class Resource {
 
     }
 
-
     /**
-     * <p>Java class for anonymous complex type.
-     * 
-     * <p>The following schema fragment specifies the expected content contained within this class.
-     * 
+     * <p>
+     * Java class for anonymous complex type.
+     *
+     * <p>
+     * The following schema fragment specifies the expected content contained within this class.
+     *
      * <pre>
      * &lt;complexType&gt;
      *   &lt;complexContent&gt;
@@ -3233,8 +3041,8 @@ public class Resource {
      *   &lt;/complexContent&gt;
      * &lt;/complexType&gt;
      * </pre>
-     * 
-     * 
+     *
+     *
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
@@ -3246,25 +3054,24 @@ public class Resource {
 
         /**
          * Gets the value of the relatedIdentifier property.
-         * 
+         *
          * <p>
-         * This accessor method returns a reference to the live list,
-         * not a snapshot. Therefore any modification you make to the
-         * returned list will be present inside the JAXB object.
-         * This is why there is not a <CODE>set</CODE> method for the relatedIdentifier property.
-         * 
+         * This accessor method returns a reference to the live list, not a snapshot. Therefore any
+         * modification you make to the returned list will be present inside the JAXB object. This
+         * is why there is not a <CODE>set</CODE> method for the relatedIdentifier property.
+         *
          * <p>
          * For example, to add a new item, do as follows:
          * <pre>
          *    getRelatedIdentifier().add(newItem);
          * </pre>
-         * 
-         * 
+         *
+         *
          * <p>
          * Objects of the following type(s) are allowed in the list
          * {@link Resource.RelatedIdentifiers.RelatedIdentifier }
-         * 
-         * 
+         *
+         *
          * @return the relatedIdentifier
          */
         public List<Resource.RelatedIdentifiers.RelatedIdentifier> getRelatedIdentifier() {
@@ -3274,12 +3081,13 @@ public class Resource {
             return this.relatedIdentifier;
         }
 
-
         /**
-         * <p>Java class for anonymous complex type.
-         * 
-         * <p>The following schema fragment specifies the expected content contained within this class.
-         * 
+         * <p>
+         * Java class for anonymous complex type.
+         *
+         * <p>
+         * The following schema fragment specifies the expected content contained within this class.
+         *
          * <pre>
          * &lt;complexType&gt;
          *   &lt;simpleContent&gt;
@@ -3294,8 +3102,8 @@ public class Resource {
          *   &lt;/simpleContent&gt;
          * &lt;/complexType&gt;
          * </pre>
-         * 
-         * 
+         *
+         *
          */
         @XmlAccessorType(XmlAccessType.FIELD)
         @XmlType(name = "", propOrder = {
@@ -3323,11 +3131,9 @@ public class Resource {
 
             /**
              * Gets the value of the value property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is {@link String }
+             *
              */
             public String getValue() {
                 return value;
@@ -3335,11 +3141,9 @@ public class Resource {
 
             /**
              * Sets the value of the value property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is {@link String }
+             *
              */
             public void setValue(String value) {
                 this.value = value;
@@ -3347,11 +3151,9 @@ public class Resource {
 
             /**
              * Gets the value of the resourceTypeGeneral property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link org.datacite.schema.kernel_4.ResourceType }
-             *     
+             *
+             * @return possible object is {@link org.datacite.schema.kernel_4.ResourceType }
+             *
              */
             public org.datacite.schema.kernel_4.ResourceType getResourceTypeGeneral() {
                 return resourceTypeGeneral;
@@ -3359,11 +3161,9 @@ public class Resource {
 
             /**
              * Sets the value of the resourceTypeGeneral property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link org.datacite.schema.kernel_4.ResourceType }
-             *     
+             *
+             * @param value allowed object is {@link org.datacite.schema.kernel_4.ResourceType }
+             *
              */
             public void setResourceTypeGeneral(org.datacite.schema.kernel_4.ResourceType value) {
                 this.resourceTypeGeneral = value;
@@ -3371,11 +3171,9 @@ public class Resource {
 
             /**
              * Gets the value of the relatedIdentifierType property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link RelatedIdentifierType }
-             *     
+             *
+             * @return possible object is {@link RelatedIdentifierType }
+             *
              */
             public RelatedIdentifierType getRelatedIdentifierType() {
                 return relatedIdentifierType;
@@ -3383,11 +3181,9 @@ public class Resource {
 
             /**
              * Sets the value of the relatedIdentifierType property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link RelatedIdentifierType }
-             *     
+             *
+             * @param value allowed object is {@link RelatedIdentifierType }
+             *
              */
             public void setRelatedIdentifierType(RelatedIdentifierType value) {
                 this.relatedIdentifierType = value;
@@ -3395,11 +3191,9 @@ public class Resource {
 
             /**
              * Gets the value of the relationType property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link RelationType }
-             *     
+             *
+             * @return possible object is {@link RelationType }
+             *
              */
             public RelationType getRelationType() {
                 return relationType;
@@ -3407,11 +3201,9 @@ public class Resource {
 
             /**
              * Sets the value of the relationType property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link RelationType }
-             *     
+             *
+             * @param value allowed object is {@link RelationType }
+             *
              */
             public void setRelationType(RelationType value) {
                 this.relationType = value;
@@ -3419,11 +3211,9 @@ public class Resource {
 
             /**
              * Gets the value of the relatedMetadataScheme property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is {@link String }
+             *
              */
             public String getRelatedMetadataScheme() {
                 return relatedMetadataScheme;
@@ -3431,11 +3221,9 @@ public class Resource {
 
             /**
              * Sets the value of the relatedMetadataScheme property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is {@link String }
+             *
              */
             public void setRelatedMetadataScheme(String value) {
                 this.relatedMetadataScheme = value;
@@ -3443,11 +3231,9 @@ public class Resource {
 
             /**
              * Gets the value of the schemeURI property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is {@link String }
+             *
              */
             public String getSchemeURI() {
                 return schemeURI;
@@ -3455,11 +3241,9 @@ public class Resource {
 
             /**
              * Sets the value of the schemeURI property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is {@link String }
+             *
              */
             public void setSchemeURI(String value) {
                 this.schemeURI = value;
@@ -3467,11 +3251,9 @@ public class Resource {
 
             /**
              * Gets the value of the schemeType property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is {@link String }
+             *
              */
             public String getSchemeType() {
                 return schemeType;
@@ -3479,11 +3261,9 @@ public class Resource {
 
             /**
              * Sets the value of the schemeType property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is {@link String }
+             *
              */
             public void setSchemeType(String value) {
                 this.schemeType = value;
@@ -3493,12 +3273,13 @@ public class Resource {
 
     }
 
-
     /**
-     * <p>Java class for anonymous complex type.
-     * 
-     * <p>The following schema fragment specifies the expected content contained within this class.
-     * 
+     * <p>
+     * Java class for anonymous complex type.
+     *
+     * <p>
+     * The following schema fragment specifies the expected content contained within this class.
+     *
      * <pre>
      * &lt;complexType&gt;
      *   &lt;simpleContent&gt;
@@ -3508,8 +3289,8 @@ public class Resource {
      *   &lt;/simpleContent&gt;
      * &lt;/complexType&gt;
      * </pre>
-     * 
-     * 
+     *
+     *
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
@@ -3524,11 +3305,9 @@ public class Resource {
 
         /**
          * Gets the value of the value property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link String }
-         *     
+         *
+         * @return possible object is {@link String }
+         *
          */
         public String getValue() {
             return value;
@@ -3536,11 +3315,9 @@ public class Resource {
 
         /**
          * Sets the value of the value property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
+         *
+         * @param value allowed object is {@link String }
+         *
          */
         public void setValue(String value) {
             this.value = value;
@@ -3548,11 +3325,9 @@ public class Resource {
 
         /**
          * Gets the value of the resourceTypeGeneral property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link org.datacite.schema.kernel_4.ResourceType }
-         *     
+         *
+         * @return possible object is {@link org.datacite.schema.kernel_4.ResourceType }
+         *
          */
         public org.datacite.schema.kernel_4.ResourceType getResourceTypeGeneral() {
             return resourceTypeGeneral;
@@ -3560,11 +3335,9 @@ public class Resource {
 
         /**
          * Sets the value of the resourceTypeGeneral property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link org.datacite.schema.kernel_4.ResourceType }
-         *     
+         *
+         * @param value allowed object is {@link org.datacite.schema.kernel_4.ResourceType }
+         *
          */
         public void setResourceTypeGeneral(org.datacite.schema.kernel_4.ResourceType value) {
             this.resourceTypeGeneral = value;
@@ -3572,12 +3345,13 @@ public class Resource {
 
     }
 
-
     /**
-     * <p>Java class for anonymous complex type.
-     * 
-     * <p>The following schema fragment specifies the expected content contained within this class.
-     * 
+     * <p>
+     * Java class for anonymous complex type.
+     *
+     * <p>
+     * The following schema fragment specifies the expected content contained within this class.
+     *
      * <pre>
      * &lt;complexType&gt;
      *   &lt;complexContent&gt;
@@ -3598,8 +3372,8 @@ public class Resource {
      *   &lt;/complexContent&gt;
      * &lt;/complexType&gt;
      * </pre>
-     * 
-     * 
+     *
+     *
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
@@ -3611,25 +3385,24 @@ public class Resource {
 
         /**
          * Gets the value of the rights property.
-         * 
+         *
          * <p>
-         * This accessor method returns a reference to the live list,
-         * not a snapshot. Therefore any modification you make to the
-         * returned list will be present inside the JAXB object.
-         * This is why there is not a <CODE>set</CODE> method for the rights property.
-         * 
+         * This accessor method returns a reference to the live list, not a snapshot. Therefore any
+         * modification you make to the returned list will be present inside the JAXB object. This
+         * is why there is not a <CODE>set</CODE> method for the rights property.
+         *
          * <p>
          * For example, to add a new item, do as follows:
          * <pre>
          *    getRights().add(newItem);
          * </pre>
-         * 
-         * 
+         *
+         *
          * <p>
          * Objects of the following type(s) are allowed in the list
          * {@link Resource.RightsList.Rights }
-         * 
-         * 
+         *
+         *
          * @return the rights
          */
         public List<Resource.RightsList.Rights> getRights() {
@@ -3639,12 +3412,13 @@ public class Resource {
             return this.rights;
         }
 
-
         /**
-         * <p>Java class for anonymous complex type.
-         * 
-         * <p>The following schema fragment specifies the expected content contained within this class.
-         * 
+         * <p>
+         * Java class for anonymous complex type.
+         *
+         * <p>
+         * The following schema fragment specifies the expected content contained within this class.
+         *
          * <pre>
          * &lt;complexType&gt;
          *   &lt;simpleContent&gt;
@@ -3655,8 +3429,8 @@ public class Resource {
          *   &lt;/simpleContent&gt;
          * &lt;/complexType&gt;
          * </pre>
-         * 
-         * 
+         *
+         *
          */
         @XmlAccessorType(XmlAccessType.FIELD)
         @XmlType(name = "", propOrder = {
@@ -3674,11 +3448,9 @@ public class Resource {
 
             /**
              * Gets the value of the value property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is {@link String }
+             *
              */
             public String getValue() {
                 return value;
@@ -3686,11 +3458,9 @@ public class Resource {
 
             /**
              * Sets the value of the value property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is {@link String }
+             *
              */
             public void setValue(String value) {
                 this.value = value;
@@ -3698,11 +3468,9 @@ public class Resource {
 
             /**
              * Gets the value of the rightsURI property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is {@link String }
+             *
              */
             public String getRightsURI() {
                 return rightsURI;
@@ -3710,11 +3478,9 @@ public class Resource {
 
             /**
              * Sets the value of the rightsURI property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is {@link String }
+             *
              */
             public void setRightsURI(String value) {
                 this.rightsURI = value;
@@ -3722,11 +3488,9 @@ public class Resource {
 
             /**
              * Gets the value of the lang property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is {@link String }
+             *
              */
             public String getLang() {
                 return lang;
@@ -3734,11 +3498,9 @@ public class Resource {
 
             /**
              * Sets the value of the lang property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is {@link String }
+             *
              */
             public void setLang(String value) {
                 this.lang = value;
@@ -3748,12 +3510,13 @@ public class Resource {
 
     }
 
-
     /**
-     * <p>Java class for anonymous complex type.
-     * 
-     * <p>The following schema fragment specifies the expected content contained within this class.
-     * 
+     * <p>
+     * Java class for anonymous complex type.
+     *
+     * <p>
+     * The following schema fragment specifies the expected content contained within this class.
+     *
      * <pre>
      * &lt;complexType&gt;
      *   &lt;complexContent&gt;
@@ -3765,8 +3528,8 @@ public class Resource {
      *   &lt;/complexContent&gt;
      * &lt;/complexType&gt;
      * </pre>
-     * 
-     * 
+     *
+     *
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
@@ -3778,25 +3541,23 @@ public class Resource {
 
         /**
          * Gets the value of the size property.
-         * 
+         *
          * <p>
-         * This accessor method returns a reference to the live list,
-         * not a snapshot. Therefore any modification you make to the
-         * returned list will be present inside the JAXB object.
-         * This is why there is not a <CODE>set</CODE> method for the size property.
-         * 
+         * This accessor method returns a reference to the live list, not a snapshot. Therefore any
+         * modification you make to the returned list will be present inside the JAXB object. This
+         * is why there is not a <CODE>set</CODE> method for the size property.
+         *
          * <p>
          * For example, to add a new item, do as follows:
          * <pre>
          *    getSize().add(newItem);
          * </pre>
-         * 
-         * 
+         *
+         *
          * <p>
-         * Objects of the following type(s) are allowed in the list
-         * {@link String }
-         * 
-         * 
+         * Objects of the following type(s) are allowed in the list {@link String }
+         *
+         *
          * @return the size
          */
         public List<String> getSize() {
@@ -3808,12 +3569,13 @@ public class Resource {
 
     }
 
-
     /**
-     * <p>Java class for anonymous complex type.
-     * 
-     * <p>The following schema fragment specifies the expected content contained within this class.
-     * 
+     * <p>
+     * Java class for anonymous complex type.
+     *
+     * <p>
+     * The following schema fragment specifies the expected content contained within this class.
+     *
      * <pre>
      * &lt;complexType&gt;
      *   &lt;complexContent&gt;
@@ -3836,8 +3598,8 @@ public class Resource {
      *   &lt;/complexContent&gt;
      * &lt;/complexType&gt;
      * </pre>
-     * 
-     * 
+     *
+     *
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
@@ -3849,25 +3611,24 @@ public class Resource {
 
         /**
          * Gets the value of the subject property.
-         * 
+         *
          * <p>
-         * This accessor method returns a reference to the live list,
-         * not a snapshot. Therefore any modification you make to the
-         * returned list will be present inside the JAXB object.
-         * This is why there is not a <CODE>set</CODE> method for the subject property.
-         * 
+         * This accessor method returns a reference to the live list, not a snapshot. Therefore any
+         * modification you make to the returned list will be present inside the JAXB object. This
+         * is why there is not a <CODE>set</CODE> method for the subject property.
+         *
          * <p>
          * For example, to add a new item, do as follows:
          * <pre>
          *    getSubject().add(newItem);
          * </pre>
-         * 
-         * 
+         *
+         *
          * <p>
          * Objects of the following type(s) are allowed in the list
          * {@link Resource.Subjects.Subject }
-         * 
-         * 
+         *
+         *
          * @return the subject
          */
         public List<Resource.Subjects.Subject> getSubject() {
@@ -3877,12 +3638,13 @@ public class Resource {
             return subject;
         }
 
-
         /**
-         * <p>Java class for anonymous complex type.
-         * 
-         * <p>The following schema fragment specifies the expected content contained within this class.
-         * 
+         * <p>
+         * Java class for anonymous complex type.
+         *
+         * <p>
+         * The following schema fragment specifies the expected content contained within this class.
+         *
          * <pre>
          * &lt;complexType&gt;
          *   &lt;simpleContent&gt;
@@ -3895,8 +3657,8 @@ public class Resource {
          *   &lt;/simpleContent&gt;
          * &lt;/complexType&gt;
          * </pre>
-         * 
-         * 
+         *
+         *
          */
         @XmlAccessorType(XmlAccessType.FIELD)
         @XmlType(name = "", propOrder = {
@@ -3920,11 +3682,9 @@ public class Resource {
 
             /**
              * Gets the value of the value property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is {@link String }
+             *
              */
             public String getValue() {
                 return value;
@@ -3932,11 +3692,9 @@ public class Resource {
 
             /**
              * Sets the value of the value property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is {@link String }
+             *
              */
             public void setValue(String value) {
                 this.value = value;
@@ -3944,11 +3702,9 @@ public class Resource {
 
             /**
              * Gets the value of the subjectScheme property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is {@link String }
+             *
              */
             public String getSubjectScheme() {
                 return subjectScheme;
@@ -3956,11 +3712,9 @@ public class Resource {
 
             /**
              * Sets the value of the subjectScheme property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is {@link String }
+             *
              */
             public void setSubjectScheme(String value) {
                 this.subjectScheme = value;
@@ -3968,11 +3722,9 @@ public class Resource {
 
             /**
              * Gets the value of the schemeURI property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is {@link String }
+             *
              */
             public String getSchemeURI() {
                 return schemeURI;
@@ -3980,11 +3732,9 @@ public class Resource {
 
             /**
              * Sets the value of the schemeURI property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is {@link String }
+             *
              */
             public void setSchemeURI(String value) {
                 this.schemeURI = value;
@@ -3992,11 +3742,9 @@ public class Resource {
 
             /**
              * Gets the value of the valueURI property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is {@link String }
+             *
              */
             public String getValueURI() {
                 return valueURI;
@@ -4004,11 +3752,9 @@ public class Resource {
 
             /**
              * Sets the value of the valueURI property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is {@link String }
+             *
              */
             public void setValueURI(String value) {
                 this.valueURI = value;
@@ -4016,11 +3762,9 @@ public class Resource {
 
             /**
              * Gets the value of the lang property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is {@link String }
+             *
              */
             public String getLang() {
                 return lang;
@@ -4028,11 +3772,9 @@ public class Resource {
 
             /**
              * Sets the value of the lang property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is {@link String }
+             *
              */
             public void setLang(String value) {
                 this.lang = value;
@@ -4042,12 +3784,13 @@ public class Resource {
 
     }
 
-
     /**
-     * <p>Java class for anonymous complex type.
-     * 
-     * <p>The following schema fragment specifies the expected content contained within this class.
-     * 
+     * <p>
+     * Java class for anonymous complex type.
+     *
+     * <p>
+     * The following schema fragment specifies the expected content contained within this class.
+     *
      * <pre>
      * &lt;complexType&gt;
      *   &lt;complexContent&gt;
@@ -4068,8 +3811,8 @@ public class Resource {
      *   &lt;/complexContent&gt;
      * &lt;/complexType&gt;
      * </pre>
-     * 
-     * 
+     *
+     *
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
@@ -4082,25 +3825,23 @@ public class Resource {
 
         /**
          * Gets the value of the title property.
-         * 
+         *
          * <p>
-         * This accessor method returns a reference to the live list,
-         * not a snapshot. Therefore any modification you make to the
-         * returned list will be present inside the JAXB object.
-         * This is why there is not a <CODE>set</CODE> method for the title property.
-         * 
+         * This accessor method returns a reference to the live list, not a snapshot. Therefore any
+         * modification you make to the returned list will be present inside the JAXB object. This
+         * is why there is not a <CODE>set</CODE> method for the title property.
+         *
          * <p>
          * For example, to add a new item, do as follows:
          * <pre>
          *    getTitle().add(newItem);
          * </pre>
-         * 
-         * 
+         *
+         *
          * <p>
-         * Objects of the following type(s) are allowed in the list
-         * {@link Resource.Titles.Title }
-         * 
-         * 
+         * Objects of the following type(s) are allowed in the list {@link Resource.Titles.Title }
+         *
+         *
          * @return the title
          */
         public List<Resource.Titles.Title> getTitle() {
@@ -4110,12 +3851,13 @@ public class Resource {
             return this.title;
         }
 
-
         /**
-         * <p>Java class for anonymous complex type.
-         * 
-         * <p>The following schema fragment specifies the expected content contained within this class.
-         * 
+         * <p>
+         * Java class for anonymous complex type.
+         *
+         * <p>
+         * The following schema fragment specifies the expected content contained within this class.
+         *
          * <pre>
          * &lt;complexType&gt;
          *   &lt;simpleContent&gt;
@@ -4126,8 +3868,8 @@ public class Resource {
          *   &lt;/simpleContent&gt;
          * &lt;/complexType&gt;
          * </pre>
-         * 
-         * 
+         *
+         *
          */
         @XmlAccessorType(XmlAccessType.FIELD)
         @XmlType(name = "", propOrder = {
@@ -4144,11 +3886,9 @@ public class Resource {
 
             /**
              * Gets the value of the value property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is {@link String }
+             *
              */
             public String getValue() {
                 return value;
@@ -4156,11 +3896,9 @@ public class Resource {
 
             /**
              * Sets the value of the value property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is {@link String }
+             *
              */
             public void setValue(String value) {
                 this.value = value;
@@ -4168,11 +3906,9 @@ public class Resource {
 
             /**
              * Gets the value of the titleType property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link TitleType }
-             *     
+             *
+             * @return possible object is {@link TitleType }
+             *
              */
             public TitleType getTitleType() {
                 return titleType;
@@ -4180,11 +3916,9 @@ public class Resource {
 
             /**
              * Sets the value of the titleType property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link TitleType }
-             *     
+             *
+             * @param value allowed object is {@link TitleType }
+             *
              */
             public void setTitleType(TitleType value) {
                 this.titleType = value;
@@ -4192,11 +3926,9 @@ public class Resource {
 
             /**
              * Gets the value of the lang property.
-             * 
-             * @return
-             *     possible object is
-             *     {@link String }
-             *     
+             *
+             * @return possible object is {@link String }
+             *
              */
             public String getLang() {
                 return lang;
@@ -4204,11 +3936,9 @@ public class Resource {
 
             /**
              * Sets the value of the lang property.
-             * 
-             * @param value
-             *     allowed object is
-             *     {@link String }
-             *     
+             *
+             * @param value allowed object is {@link String }
+             *
              */
             public void setLang(String value) {
                 this.lang = value;

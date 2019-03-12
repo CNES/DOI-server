@@ -16,10 +16,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package fr.cnes.doi.ldap.util;
+package fr.cnes.doi.ldap.model;
 
 /**
  * LDAP user model.
+ *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class LDAPUser {
@@ -41,6 +42,7 @@ public class LDAPUser {
 
     /**
      * Returns the username.
+     *
      * @return the username
      */
     public String getUsername() {
@@ -49,6 +51,7 @@ public class LDAPUser {
 
     /**
      * Sets the username
+     *
      * @param username the username
      */
     public void setUsername(final String username) {
@@ -57,6 +60,7 @@ public class LDAPUser {
 
     /**
      * Returns the email.
+     *
      * @return the email
      */
     public String getEmail() {
@@ -65,6 +69,7 @@ public class LDAPUser {
 
     /**
      * Sets the email.
+     *
      * @param email the email
      */
     public void setEmail(final String email) {
@@ -73,6 +78,7 @@ public class LDAPUser {
 
     /**
      * Returns the full name.
+     *
      * @return the full name
      */
     public String getFullname() {
@@ -81,17 +87,18 @@ public class LDAPUser {
 
     /**
      * Sets the full name.
+     *
      * @param fullname the full name
      */
     public void setFullname(final String fullname) {
         this.fullname = fullname;
     }
-    
+
     /**
      * {@inheritDoc}
      */
     @Override
-    public String toString( ) {
-      return this.getUsername() + "_" + this.getEmail();	
+    public String toString() {
+        return this.getUsername() + "_" + this.getEmail();
     }
 }

@@ -83,15 +83,15 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
     }
 
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public void setConfiguration(final Object configuration) {
     }
 
     /**
-     *{@inheritDoc}
-     */    
+     * {@inheritDoc}
+     */
     @Override
     public synchronized boolean addProjectSuffix(final int projectID, final String projectName) {
         boolean isAdded = false;
@@ -110,8 +110,8 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
     }
 
     /**
-     *{@inheritDoc}
-     */    
+     * {@inheritDoc}
+     */
     @Override
     public synchronized boolean deleteProject(final int projectID) {
         boolean isDeleted = false;
@@ -128,8 +128,8 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
     }
 
     /**
-     *{@inheritDoc}
-     */    
+     * {@inheritDoc}
+     */
     @Override
     public boolean isExistID(final int projectID) {
         final Map<String, Integer> map = getProjects();
@@ -143,8 +143,8 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
     }
 
     /**
-     *{@inheritDoc}
-     */     
+     * {@inheritDoc}
+     */
     @Override
     public boolean isExistProjectName(final String projectName) {
         final Map<String, Integer> map = getProjects();
@@ -158,8 +158,8 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
     }
 
     /**
-     *{@inheritDoc}
-     */     
+     * {@inheritDoc}
+     */
     @Override
     public String getProjectFrom(final int projectID) {
         String projectName = "";
@@ -174,8 +174,8 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
     }
 
     /**
-     *{@inheritDoc}
-     */     
+     * {@inheritDoc}
+     */
     @Override
     public int getIDFrom(final String projectName) {
         final Map<String, Integer> map = getProjects();
@@ -186,8 +186,8 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
     }
 
     /**
-     *{@inheritDoc}
-     */     
+     * {@inheritDoc}
+     */
     @Override
     public Map<String, Integer> getProjects() {
         final Map<String, Integer> map = new HashMap<>();
@@ -204,8 +204,8 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
     }
 
     /**
-     *{@inheritDoc}
-     */     
+     * {@inheritDoc}
+     */
     @Override
     public Map<String, Integer> getProjectsFromUser(final String userName) {
         final Map<String, Integer> map = new HashMap<>();
@@ -222,8 +222,8 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
     }
 
     /**
-     *{@inheritDoc}
-     */     
+     * {@inheritDoc}
+     */
     @Override
     public boolean renameProject(final int projectId, final String newProjectName) {
         boolean isRenamed = false;
@@ -240,64 +240,65 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
     }
 
     /**
-     *{@inheritDoc}
-     */     
+     * {@inheritDoc}
+     */
     @Override
     public String getName() {
         return NAME;
     }
 
     /**
-     *{@inheritDoc}
-     */     
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return DESCRIPTION;
     }
 
     /**
-     *{@inheritDoc}
-     */     
+     * {@inheritDoc}
+     */
     @Override
     public String getVersion() {
         return VERSION;
     }
 
     /**
-     *{@inheritDoc}
-     */     
+     * {@inheritDoc}
+     */
     @Override
     public String getAuthor() {
         return AUTHOR;
     }
 
     /**
-     *{@inheritDoc}
-     */     
+     * {@inheritDoc}
+     */
     @Override
     public String getOwner() {
         return OWNER;
     }
 
     /**
-     *{@inheritDoc}
-     */     
+     * {@inheritDoc}
+     */
     @Override
     public String getLicense() {
         return LICENSE;
     }
 
     /**
-     *{@inheritDoc}
-     */     
+     * {@inheritDoc}
+     */
     @Override
     public List<DOIUser> getAllDOIUsersForProject(final int doiSuffix) {
         final List<DOIUser> doiUsers = new ArrayList<>();
         try {
             doiUsers.addAll(this.das.getAllDOIUsersForProject(doiSuffix));
         } catch (DOIDbException ex) {
-            LOG.fatal("An error occured while trying to get all DOI users from project " + doiSuffix,
-                      ex);
+            LOG.
+                    fatal("An error occured while trying to get all DOI users from project " + doiSuffix,
+                            ex);
         }
         return doiUsers;
     }

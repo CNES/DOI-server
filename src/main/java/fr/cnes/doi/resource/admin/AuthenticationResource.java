@@ -42,12 +42,12 @@ import fr.cnes.doi.settings.DoiSettings;
  *
  */
 public class AuthenticationResource extends AbstractResource {
-    
+
     /**
      * Parameter for the user name {@value #USER_NAME}.
      */
     public static final String USER_NAME = "user";
-    
+
     /**
      * Parameter for the user token {@value #USER_TOKEN}.
      */
@@ -85,7 +85,7 @@ public class AuthenticationResource extends AbstractResource {
 
     /**
      * Delete an IHM token
-     * 
+     *
      * @param mediaForm the token to be deleted
      */
     @Delete

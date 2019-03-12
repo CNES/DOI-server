@@ -87,12 +87,14 @@ public class LandingPageMonitoring implements Runnable {
 
     /**
      * Send message by email
+     *
      * @param error error message
      * @param subject email subject
      * @param body email body
      * @param email email settings
      */
-    private void sendMessageToMembers(final String error, final String subject, final String body, final EmailSettings email) {
+    private void sendMessageToMembers(final String error, final String subject, final String body,
+            final EmailSettings email) {
         // parse project suffix from doi
         final String doiRegex = "^(.+)\\/(.+)\\/(.+)$";
         final Pattern doiPattern = Pattern.compile(doiRegex);

@@ -60,8 +60,9 @@ public final class Utils {
     /**
      * "Static" class cannot be instantiated
      */
-    private Utils() {}
-    
+    private Utils() {
+    }
+
     /**
      * Checks whether the char sequence is empty.
      *
@@ -197,15 +198,16 @@ public final class Utils {
         }
         return length;
     }
-    
+
     /**
      * Transform password to stars
+     *
      * @param password password to transform
      * @return stars
      */
     public static String transformPasswordToStars(final String password) {
         final StringBuilder passStars = new StringBuilder();
-        for (int i=0 ; i<password.length(); i++) {
+        for (int i = 0; i < password.length(); i++) {
             passStars.append("*");
         }
         return passStars.toString();

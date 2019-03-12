@@ -33,8 +33,8 @@ import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.utils.Utils;
 
 /**
- * Class that handles the connection to the DOI database.
- * As below, the structure of the DOI database.
+ * Class that handles the connection to the DOI database. As below, the structure of the DOI
+ * database.
  * <pre>
  * {@code
  * CREATE TABLE doi_schema.T_DOI_USERS (
@@ -47,9 +47,9 @@ import fr.cnes.doi.utils.Utils;
  * CREATE TABLE doi_schema.T_DOI_PROJECT (
  * suffix int NOT NULL,
  * projectname varchar(1024) NOT NULL,
- * PRIMARY KEY (suffix) 
+ * PRIMARY KEY (suffix)
  * );
- * 
+ *
  * CREATE TABLE doi_schema.T_DOI_ASSIGNATIONS (
  * username varchar(255) NOT NULL,
  * suffix int NOT NULL,
@@ -62,6 +62,7 @@ import fr.cnes.doi.utils.Utils;
  * );
  * }
  * </pre>
+ *
  * @author Jean-Christophe Malapert (jean-Christophe.malapert@cnes.fr)
  */
 public class JDBCConnector {
@@ -70,6 +71,19 @@ public class JDBCConnector {
      * Logger.
      */
     private static final Logger LOGGER = LogManager.getLogger(JDBCConnector.class.getName());
+
+    /**
+     * Default min IDL connection {@value #DEFAULT_MIN_IDLE_CONNECTION}.
+     */
+    public static final String DEFAULT_MIN_IDLE_CONNECTION = "10";
+    /**
+     * Default max IDL connection {@value #DEFAULT_MAX_IDLE_CONNECTION}.
+     */
+    public static final String DEFAULT_MAX_IDLE_CONNECTION = "50";
+    /**
+     * Default max active connection {@value #DEFAULT_MAX_ACTIVE_CONNECTION}.
+     */
+    public static final String DEFAULT_MAX_ACTIVE_CONNECTION = "50";
     /**
      * The data source.
      */
@@ -78,35 +92,23 @@ public class JDBCConnector {
      * The configuration file.
      */
     private final DoiSettings conf = DoiSettings.getInstance();
-    
-    /**
-     * Default min IDL connection {@value #DEFAULT_MIN_IDLE_CONNECTION}.
-     */
-    public static final String DEFAULT_MIN_IDLE_CONNECTION = "10";
-    /**
-     * Default max IDL connection {@value #DEFAULT_MAX_IDLE_CONNECTION}.
-     */    
-    public static final String DEFAULT_MAX_IDLE_CONNECTION = "50";
-    /**
-     * Default max active connection {@value #DEFAULT_MAX_ACTIVE_CONNECTION}.
-     */    
-    public static final String DEFAULT_MAX_ACTIVE_CONNECTION = "50";
 
     /**
      * Creates the JDBC connector based on a specific configuration file.
+     *
      * @param customDbConfigFile configuration file.
      * @throws RuntimeException Cannot retrieve the configuration file
      */
     public JDBCConnector(final String customDbConfigFile) {
-        LOGGER.traceEntry("Parameter\n  customDbConfigFile: {} ",customDbConfigFile);
-	try {
-	    conf.setPropertiesFile(customDbConfigFile);
-	} catch (IOException ex) {
-	    LOGGER.error("Cannot retrieve the configuration file {}", customDbConfigFile);
+        LOGGER.traceEntry("Parameter\n  customDbConfigFile: {} ", customDbConfigFile);
+        try {
+            conf.setPropertiesFile(customDbConfigFile);
+        } catch (IOException ex) {
+            LOGGER.error("Cannot retrieve the configuration file {}", customDbConfigFile);
             throw LOGGER.throwing(new RuntimeException("Cannot retrieve the configuration "
-                    + "file "+customDbConfigFile, ex));
-	}
-	init();
+                    + "file " + customDbConfigFile, ex));
+        }
+        init();
         LOGGER.traceExit();
     }
 
@@ -115,12 +117,13 @@ public class JDBCConnector {
      */
     public JDBCConnector() {
         LOGGER.traceEntry();
-	init();
+        init();
         LOGGER.traceExit();
     }
-    
+
     /**
      * Data source initialization.
+     *
      * @throws DoiRuntimeException Cannot decrypt the database pwd from the configuration file
      */
     private void init() {
@@ -133,46 +136,47 @@ public class JDBCConnector {
         );
         final int maxIdleConnection = conf.getInt(
                 Consts.DB_MAX_IDLE_CONNECTIONS, DEFAULT_MAX_IDLE_CONNECTION
-        );        
+        );
         final int maxActiveConnection = conf.getInt(
                 Consts.DB_MAX_ACTIVE_CONNECTIONS, DEFAULT_MAX_ACTIVE_CONNECTION
         );
-        
+
         LOGGER.debug("[CONF] Datasource database URL", dbURL);
         LOGGER.debug("[CONF] Datasource database user", dbUser);
         LOGGER.debug("[CONF] Datasource database password", Utils.transformPasswordToStars(passwd));
         LOGGER.debug("[CONF] Datasource min IDLE connection", minIdleConnection);
         LOGGER.debug("[CONF] Datasource max IDLE connection", maxIdleConnection);
-        LOGGER.debug("[CONF] Datasource max active connection", maxActiveConnection);                                
-        
-	ds.setUrl(dbURL);
-	ds.setUsername(dbUser);
-	try {
+        LOGGER.debug("[CONF] Datasource max active connection", maxActiveConnection);
+
+        ds.setUrl(dbURL);
+        ds.setUsername(dbUser);
+        try {
             final String decryptedPasswd = UtilsCryptography.decrypt(passwd);
-	    ds.setPassword(decryptedPasswd);
-	} catch (Exception e) {
-            LOGGER.error("Cannot decrypt the database pwd from the configuration file: {}",passwd);
-	    throw LOGGER.throwing(new DoiRuntimeException("Cannot decrypt the database "
-                    + "pwd "+passwd+" from the configuration file"));
-	}
-	ds.setMinIdle(minIdleConnection);
+            ds.setPassword(decryptedPasswd);
+        } catch (Exception e) {
+            LOGGER.error("Cannot decrypt the database pwd from the configuration file: {}", passwd);
+            throw LOGGER.throwing(new DoiRuntimeException("Cannot decrypt the database "
+                    + "pwd " + passwd + " from the configuration file"));
+        }
+        ds.setMinIdle(minIdleConnection);
         ds.setMaxIdle(maxIdleConnection);
-	ds.setMaxActive(maxActiveConnection);
+        ds.setMaxActive(maxActiveConnection);
         LOGGER.traceExit();
     }
 
     /**
      * Creates (if necessary) and return a connection to the database.
+     *
      * @return a database connection
      * @throws SQLException if a database access error occurs
      */
     public Connection getConnection() throws SQLException {
         LOGGER.traceEntry();
-	return LOGGER.traceExit(ds.getConnection());
+        return LOGGER.traceExit(ds.getConnection());
     }
-    
+
     /**
-     * Closes and releases all idle connections that are currently stored in the connection pool 
+     * Closes and releases all idle connections that are currently stored in the connection pool
      * associated with this data source.
      */
     public void close() {

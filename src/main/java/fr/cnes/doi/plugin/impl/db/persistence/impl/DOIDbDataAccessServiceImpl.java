@@ -53,30 +53,30 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
     private static final String FIELD_USERNAME = "username";
     /**
      * SQL field that contains the information telling if a user is admin {@value #FIELD_ADMIN}.
-     */    
+     */
     private static final String FIELD_ADMIN = "admin";
     /**
      * SQL field that contains the email user {@value #FIELD_EMAIL}.
-     */    
+     */
     private static final String FIELD_EMAIL = "email";
     /**
      * SQL field that contains the projectname related to a user {@value #FIELD_PROJECTNAME}.
-     */     
+     */
     private static final String FIELD_PROJECTNAME = "projectname";
     /**
      * SQL field that contains the DOI suffix for the project name {@value #FIELD_PROJECT_SUFFIX}.
-     */     
+     */
     private static final String FIELD_PROJECT_SUFFIX = "suffix";
     /**
      * SQL field that contains the authentication token.
      */
     private static final String FIELD_TOKEN = "token";
-    
+
     /**
      * Select user information.
      */
     private static final String SELECT_DOI_USERS = String.format(
-            "SELECT %s, %s, %s FROM T_DOI_USERS", 
+            "SELECT %s, %s, %s FROM T_DOI_USERS",
             FIELD_USERNAME, FIELD_ADMIN, FIELD_EMAIL
     );
 
@@ -84,7 +84,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      * Select project information.
      */
     private static final String SELECT_PROJECTS = String.format(
-            "SELECT %s, %s FROM T_DOI_PROJECT", 
+            "SELECT %s, %s FROM T_DOI_PROJECT",
             FIELD_PROJECT_SUFFIX, FIELD_PROJECTNAME);
 
     /**
@@ -103,7 +103,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
             + "    SELECT %s \n"
             + "    FROM T_DOI_ASSIGNATIONS \n"
             + "    WHERE %s=?\n"
-            + ")", FIELD_PROJECT_SUFFIX, FIELD_PROJECTNAME, FIELD_PROJECT_SUFFIX, 
+            + ")", FIELD_PROJECT_SUFFIX, FIELD_PROJECTNAME, FIELD_PROJECT_SUFFIX,
             FIELD_PROJECT_SUFFIX, FIELD_USERNAME);
 
     /**
@@ -135,13 +135,13 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      */
     private static final String SELECT_EXISTS_SUFFIX = String.format(
             "SELECT 1 FROM T_DOI_PROJECT WHERE %s=?", FIELD_PROJECT_SUFFIX);
-    
+
     /**
      * Select all tokens.
      */
     private static final String SELECT_TOKEN = String.format(
-            "SELECT %s FROM T_DOI_TOKENS", FIELD_TOKEN);    
-    
+            "SELECT %s FROM T_DOI_TOKENS", FIELD_TOKEN);
+
     /**
      * Delete part of the project.
      */
@@ -152,7 +152,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      */
     private static final String DELETE_PROJECT_WITH_SUFFIX = String.format(
             "%s WHERE suffix=?", DELETE_PROJECT, FIELD_PROJECT_SUFFIX);
-    
+
     /**
      * Delete a user based on its username.
      */
@@ -162,8 +162,8 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
     /**
      * Delete part of the assign.
      */
-    private static final String DELETE_ASSIGN = "DELETE FROM T_DOI_ASSIGNATIONS";    
-    
+    private static final String DELETE_ASSIGN = "DELETE FROM T_DOI_ASSIGNATIONS";
+
     /**
      * Delete assignation based on the username.
      */
@@ -181,13 +181,13 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      */
     private static final String DELETE_ASSIGN_USER_AND_SUFFIX = String.format(
             DELETE_ASSIGN_USERNAME + " AND %s=?", DELETE_ASSIGN_USERNAME, FIELD_PROJECT_SUFFIX);
-    
+
     /**
      * Delete token.
      */
     private static final String DELETE_TOKEN = String.format(
             "DELETE FROM T_DOI_TOKENS WHERE %s=?", FIELD_TOKEN);
-    
+
     /**
      * Insert user information.
      */
@@ -198,28 +198,28 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      * Insert user information.
      */
     private static final String INSERT_FULL_DOI_UERS = String.format(
-            "INSERT INTO T_DOI_USERS (%s, %s, %s) VALUES(?,?,?)", 
+            "INSERT INTO T_DOI_USERS (%s, %s, %s) VALUES(?,?,?)",
             FIELD_USERNAME, FIELD_ADMIN, FIELD_EMAIL);
 
     /**
      * Insert project information.
      */
     private static final String INSERT_DOI_PROJECTS = String.format(
-            "INSERT INTO T_DOI_PROJECT (%s, %s) VALUES(?,?)", 
+            "INSERT INTO T_DOI_PROJECT (%s, %s) VALUES(?,?)",
             FIELD_PROJECT_SUFFIX, FIELD_PROJECTNAME);
 
     /**
      * Insert assignation information.
      */
     private static final String INSERT_DOI_ASSIGN = String.format(
-            "INSERT INTO T_DOI_ASSIGNATIONS (%s, %s) VALUES(?,?)", 
+            "INSERT INTO T_DOI_ASSIGNATIONS (%s, %s) VALUES(?,?)",
             FIELD_USERNAME, FIELD_PROJECT_SUFFIX);
 
     /**
      * Insert token.
      */
     private static final String INSERT_TOKEN = String.format(
-            "INSERT INTO T_DOI_TOKENS (%s) VALUES (?)", FIELD_TOKEN);    
+            "INSERT INTO T_DOI_TOKENS (%s) VALUES (?)", FIELD_TOKEN);
 
     /**
      * Sets a user as admin.
@@ -237,7 +237,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      * Update project information.
      */
     private static final String UPDATE_PROJECT = String.format(
-            "UPDATE T_DOI_PROJECT SET %s =? WHERE %s =?", 
+            "UPDATE T_DOI_PROJECT SET %s =? WHERE %s =?",
             FIELD_PROJECTNAME, FIELD_PROJECT_SUFFIX);
 
     /**
@@ -337,7 +337,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      * @throws SQLException - if a problem occurs
      */
     private void updateQueries(final PreparedStatement... statements) throws SQLException {
-        for (PreparedStatement statement : statements) {
+        for (final PreparedStatement statement : statements) {
             LOGGER.debug(statement.toString());
             statement.executeUpdate();
         }

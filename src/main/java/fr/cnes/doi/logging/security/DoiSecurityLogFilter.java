@@ -32,6 +32,7 @@ import org.restlet.security.Role;
 
 /**
  * Log filter for DOI security
+ *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 @Requirement(reqId = Requirement.DOI_ARCHI_020, reqName = Requirement.DOI_ARCHI_020_NAME)

@@ -32,7 +32,8 @@ import fr.cnes.doi.utils.spec.Requirement;
 public abstract class AbstractTokenDBHelper extends Observable {
 
     /**
-     * Sets the configuration.     
+     * Sets the configuration.
+     *
      * @param configuration configuration parameters
      */
     public abstract void setConfiguration(final Object configuration);

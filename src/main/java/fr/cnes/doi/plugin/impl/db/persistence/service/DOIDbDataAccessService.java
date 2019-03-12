@@ -200,10 +200,10 @@ public interface DOIDbDataAccessService {
      * @throws fr.cnes.doi.exception.DOIDbException When an Database exception happens
      */
     public List<String> getTokens() throws DOIDbException;
-    
-    
+
     /**
      * Close and release all the Data access connections.
+     *
      * @throws DOIDbException When an error occurs
      */
     public void close() throws DOIDbException;

@@ -57,80 +57,78 @@ public class LoginBasedVerifier implements Verifier {
      * Constructor.
      */
     public LoginBasedVerifier() {
-	this.ldapService = new LDAPAccessServiceImpl();
+        this.ldapService = new LDAPAccessServiceImpl();
     }
 
     /**
      * Verifies the user name and his password.
      *
-     * @param request
-     *            request
-     * @param response
-     *            response
+     * @param request request
+     * @param response response
      * @return the result
      */
     @Override
     public int verify(final Request request, final Response response) {
-	LOG.traceEntry(new JsonMessage(request));
-	final int result;
-	final ChallengeResponse challResponse = request.getChallengeResponse();
+        LOG.traceEntry(new JsonMessage(request));
+        final int result;
+        final ChallengeResponse challResponse = request.getChallengeResponse();
 
-	if (challResponse == null) {
-	    result = Verifier.RESULT_MISSING;
-	} else if (challResponse.getScheme().equals(ChallengeScheme.HTTP_OAUTH_BEARER)) {
-	    result = Verifier.RESULT_MISSING;
-	} else {
-	    result = processAuthentication(request, challResponse);
-	}
-	return LOG.traceExit(result);
+        if (challResponse == null) {
+            result = Verifier.RESULT_MISSING;
+        } else if (challResponse.getScheme().equals(ChallengeScheme.HTTP_OAUTH_BEARER)) {
+            result = Verifier.RESULT_MISSING;
+        } else {
+            result = processAuthentication(request, challResponse);
+        }
+        return LOG.traceExit(result);
     }
 
     /**
      * Process Authentication.
      *
-     * @param request
-     *            request
-     * @param challResponse
-     *            authentication object
+     * @param request request
+     * @param challResponse authentication object
      * @return the authentication status
      */
-    private int processAuthentication(final Request request, final ChallengeResponse challResponse){
-	LOG.traceEntry(new JsonMessage(request));
-	final int result;
-	final String login = challResponse.getRawValue();
-	LOG.debug("User from challenge response : " + login);
+    private int processAuthentication(final Request request, final ChallengeResponse challResponse) {
+        LOG.traceEntry(new JsonMessage(request));
+        final int result;
+        final String login = challResponse.getRawValue();
+        LOG.debug("User from challenge response : " + login);
 
-	if (login == null) {
-	    return LOG.traceExit(Verifier.RESULT_MISSING);
-	}
+        if (login == null) {
+            return LOG.traceExit(Verifier.RESULT_MISSING);
+        }
 
-	final String decodedLogin = new String(Base64.getDecoder().decode(login));
-	final String[] userLogin = decodedLogin.split(":");
+        final String decodedLogin = new String(Base64.getDecoder().decode(login));
+        final String[] userLogin = decodedLogin.split(":");
 
-	final boolean isLDAPSetted = DoiSettings.getInstance().hasValue(Consts.LDAP_URL);
-        final boolean isProdContext = DoiSettings.getInstance().getString(Consts.CONTEXT_MODE).equals("PROD");
+        final boolean isLDAPSetted = DoiSettings.getInstance().hasValue(Consts.LDAP_URL);
+        final boolean isProdContext = DoiSettings.getInstance().getString(Consts.CONTEXT_MODE).
+                equals("PROD");
 
         final AbstractUserRoleDBHelper manageUsers = PluginFactory.getUserManagement();
-	if (manageUsers.isUserExist(userLogin[0])) {            
-	    if (isLDAPSetted) { 
+        if (manageUsers.isUserExist(userLogin[0])) {
+            if (isLDAPSetted) {
                 LOG.debug("LDAP is configured");
-                result = ldapService.authenticateUser(userLogin[0], userLogin[1]) 
+                result = ldapService.authenticateUser(userLogin[0], userLogin[1])
                         ? Verifier.RESULT_VALID : Verifier.RESULT_INVALID;
-	    } else if(isProdContext) {
+            } else if (isProdContext) {
                 LOG.warn("LDAP is not configured for PROD context, authentication is invalid");
                 result = Verifier.RESULT_INVALID;
             } else {
                 LOG.warn("LDAP is not configured for PROD context, we skip authentication because"
-                        + "we do not have the infrastructure to test");                
+                        + "we do not have the infrastructure to test");
                 result = Verifier.RESULT_VALID;
             }
-	} else {
-	    result = Verifier.RESULT_INVALID;
-	}
-        if (result == Verifier.RESULT_VALID) {
-            LOG.info("{} is authenticated, set it in get client info {}", userLogin[0], manageUsers.getRealm().findUser(userLogin[0]));
-	    request.getClientInfo().setUser(manageUsers.getRealm().findUser(userLogin[0]));
+        } else {
+            result = Verifier.RESULT_INVALID;
         }
-	return LOG.traceExit(result);
+        if (result == Verifier.RESULT_VALID) {
+            LOG.info("{} is authenticated, set it in get client info {}", userLogin[0], manageUsers.
+                    getRealm().findUser(userLogin[0]));
+            request.getClientInfo().setUser(manageUsers.getRealm().findUser(userLogin[0]));
+        }
+        return LOG.traceExit(result);
     }
 }

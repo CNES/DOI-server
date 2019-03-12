@@ -78,7 +78,7 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
      * Database access.
      */
     private final DOIDbDataAccessService das = DatabaseSingleton.getInstance().getDatabaseAccess();
-    
+
     /**
      * Default Constructor of the token database
      */
@@ -87,15 +87,15 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
     }
 
     /**
-     * {@inheritDoc }      
+     * {@inheritDoc }
      */
     @Override
     public void setConfiguration(final Object configuration) {
     }
 
     /**
-     * {@inheritDoc }      
-     */    
+     * {@inheritDoc }
+     */
     @Override
     public boolean addToken(final String jwt) {
 
@@ -111,8 +111,8 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
     }
 
     /**
-     * {@inheritDoc }      
-     */    
+     * {@inheritDoc }
+     */
     @Override
     public void deleteToken(final String jwt) {
         try {
@@ -124,8 +124,8 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
     }
 
     /**
-     * {@inheritDoc }      
-     */    
+     * {@inheritDoc }
+     */
     @Override
     public boolean isExist(final String jwt) {
         boolean isTokenExist = false;
@@ -145,8 +145,8 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
     }
 
     /**
-     * {@inheritDoc }      
-     */     
+     * {@inheritDoc }
+     */
     @Override
     public boolean isExpired(final String jwt) {
         boolean isExpirated = true;
@@ -160,7 +160,8 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
         final String expirationDate = jws.getBody().getExpiration().toString();
         try {
             // Precise "Locale.ENGLISH" otherwise unparsable exception occur for day in week and month
-            final DateFormat dateFormat = new SimpleDateFormat(TokenSecurity.DATE_FORMAT, Locale.ENGLISH);
+            final DateFormat dateFormat = new SimpleDateFormat(TokenSecurity.DATE_FORMAT,
+                    Locale.ENGLISH);
             final Date expDate = dateFormat.parse(expirationDate);
             isExpirated = new Date().after(expDate);
         } catch (ParseException ex) {
@@ -171,13 +172,13 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
     }
 
     /**
-     * {@inheritDoc }      
-     */     
+     * {@inheritDoc }
+     */
     @Override
     public List<String> getTokens() {
         final List<String> tokens = new ArrayList<>();
         try {
-            tokens.addAll(das.getTokens()) ;
+            tokens.addAll(das.getTokens());
         } catch (DOIDbException e) {
             LOG.fatal("Cannot retrieve the token list from database", e);
         }
@@ -185,48 +186,48 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
     }
 
     /**
-     * {@inheritDoc }      
-     */     
+     * {@inheritDoc }
+     */
     @Override
     public String getName() {
         return NAME;
     }
 
     /**
-     * {@inheritDoc }      
-     */     
+     * {@inheritDoc }
+     */
     @Override
     public String getDescription() {
         return DESCRIPTION;
     }
 
     /**
-     * {@inheritDoc }      
-     */     
+     * {@inheritDoc }
+     */
     @Override
     public String getVersion() {
         return VERSION;
     }
 
     /**
-     * {@inheritDoc }      
-     */     
+     * {@inheritDoc }
+     */
     @Override
     public String getAuthor() {
         return AUTHOR;
     }
 
     /**
-     * {@inheritDoc }      
-     */    
+     * {@inheritDoc }
+     */
     @Override
     public String getOwner() {
         return OWNER;
     }
 
     /**
-     * {@inheritDoc }      
-     */    
+     * {@inheritDoc }
+     */
     @Override
     public String getLicense() {
         return LICENSE;

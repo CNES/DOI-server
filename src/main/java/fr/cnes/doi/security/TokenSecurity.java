@@ -54,11 +54,6 @@ import org.restlet.data.Status;
  */
 @Requirement(reqId = Requirement.DOI_AUTH_020, reqName = Requirement.DOI_AUTH_020_NAME)
 public final class TokenSecurity {
-    
-    /**
-     * token key.
-     */
-    private String tokenKey;    
 
     /**
      * Project ID name in token.
@@ -111,7 +106,10 @@ public final class TokenSecurity {
         final Key key = MacProvider.generateKey(SignatureAlgorithm.HS256);
         return LOG.traceExit(TextCodec.BASE64.encode(key.getEncoded()));
     }
-
+    /**
+     * token key.
+     */
+    private String tokenKey;
 
     /**
      * Private constructor.

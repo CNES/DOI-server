@@ -58,17 +58,6 @@ import org.restlet.resource.ResourceException;
  */
 @Requirement(reqId = Requirement.DOI_INTER_010, reqName = Requirement.DOI_INTER_010_NAME)
 public class ClientMDS extends BaseClient {
-    
-    /**
-     * Selected test mode.
-     */
-    private final Parameter testMode;
-
-    /**
-     * Context.
-     */
-    private final Context context;
-    
 
     /**
      * Metadata store service endpoint {@value #DATA_CITE_URL}.
@@ -161,6 +150,14 @@ public class ClientMDS extends BaseClient {
                     + "0-9a-zA-Z\\-._+:/ in a DOI name");
         }
     }
+    /**
+     * Selected test mode.
+     */
+    private final Parameter testMode;
+    /**
+     * Context.
+     */
+    private final Context context;
 
     /**
      * Creates a client to handle DataCite server.
@@ -590,7 +587,7 @@ public class ClientMDS extends BaseClient {
             this.getLog().debug("PUT {0}", url.toString());
             final JaxbRepresentation<Resource> result = new JaxbRepresentation<>(entity);
             result.setCharacterSet(CharacterSet.UTF_8);
-            result.setMediaType(MediaType.APPLICATION_XML);            
+            result.setMediaType(MediaType.APPLICATION_XML);
             this.getClient().setReference(url);
             this.getClient().getRequestAttributes().put("charset", "UTF-8");
             this.getClient().setMethod(null);
@@ -617,7 +614,8 @@ public class ClientMDS extends BaseClient {
             ValidationException {
 
         try {
-            final JaxbRepresentation<Resource> resourceEntity = new JaxbRepresentation<>(entity, Resource.class);
+            final JaxbRepresentation<Resource> resourceEntity = new JaxbRepresentation<>(entity,
+                    Resource.class);
             final MyValidationEventHandler validationHandler = new MyValidationEventHandler(this.
                     getClient().getLogger());
             resourceEntity.setValidationEventHandler(validationHandler);
@@ -925,7 +923,7 @@ public class ClientMDS extends BaseClient {
          * HTTP status.
          */
         private final Status status;
-        
+
         /**
          * message.
          */
@@ -933,6 +931,7 @@ public class ClientMDS extends BaseClient {
 
         /**
          * Creates enumeration
+         *
          * @param status status
          * @param message message
          */

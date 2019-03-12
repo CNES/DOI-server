@@ -27,8 +27,9 @@ import fr.cnes.doi.db.AbstractTokenDBHelper;
 import fr.cnes.doi.security.TokenSecurity;
 
 /**
- * Updates token database.
- * The service checks if the token is expired. When it is expired, the token is removed from the database.
+ * Updates token database. The service checks if the token is expired. When it is expired, the token
+ * is removed from the database.
+ *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class UpdateTokenDataBase implements Runnable {
@@ -41,6 +42,9 @@ public class UpdateTokenDataBase implements Runnable {
     // logger
     private Logger LOG = LogManager.getLogger(UpdateTokenDataBase.class.getName());
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void run() {
         LOG.info("Executing task that remove expired token from database.");

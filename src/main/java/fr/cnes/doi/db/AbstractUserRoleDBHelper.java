@@ -22,7 +22,6 @@ import fr.cnes.doi.db.model.DOIUser;
 import java.util.List;
 import java.util.Observable;
 
-
 import fr.cnes.doi.exception.DOIDbException;
 import fr.cnes.doi.utils.spec.Requirement;
 
@@ -45,14 +44,14 @@ public abstract class AbstractUserRoleDBHelper extends Observable {
      */
     public static final String REMOVE_USER_NOTIFICATION = "RemoveUserNotification";
 
-    
     /**
      * Realm.
      */
     private static final MyMemoryRealm REALM = new MyMemoryRealm();
 
     /**
-     * Sets the configuration.     
+     * Sets the configuration.
+     *
      * @param configuration configuration parameters
      */
     public abstract void setConfiguration(final Object configuration);
@@ -122,7 +121,8 @@ public abstract class AbstractUserRoleDBHelper extends Observable {
      * @param admin True when the user must be added in the admin group otherwise False
      * @throws DOIDbException When a database problem happens
      */
-    public abstract void addDOIUser(final String username, final Boolean admin) throws DOIDbException;
+    public abstract void addDOIUser(final String username, final Boolean admin) throws
+            DOIDbException;
 
     /**
      * Add a DOI user
@@ -132,10 +132,12 @@ public abstract class AbstractUserRoleDBHelper extends Observable {
      * @param email email
      * @throws DOIDbException When a database problem occurs
      */
-    public abstract void addDOIUser(final String username, final Boolean admin, final String email) throws DOIDbException;
+    public abstract void addDOIUser(final String username, final Boolean admin, final String email)
+            throws DOIDbException;
 
     /**
      * Tests if the user exists.
+     *
      * @param username the user
      * @return True when the user exists otherwise False
      */
@@ -143,6 +145,7 @@ public abstract class AbstractUserRoleDBHelper extends Observable {
 
     /**
      * Tests is the user is an administrator.
+     *
      * @param username user
      * @return True when the user is an administrator otherwise False
      */
@@ -150,6 +153,7 @@ public abstract class AbstractUserRoleDBHelper extends Observable {
 
     /**
      * Removes the user
+     *
      * @param username user
      * @throws DOIDbException When a database problem happens
      */

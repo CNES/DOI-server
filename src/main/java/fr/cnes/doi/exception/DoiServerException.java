@@ -60,7 +60,7 @@ public class DoiServerException extends ResourceException {
      * @param error MDS error
      * @param description Description
      */
-    public DoiServerException(final Application app, final API_MDS error, final String description){
+    public DoiServerException(final Application app, final API_MDS error, final String description) {
         super(error.getStatus().getCode(), error.getShortMessage(), description);
     }
 
@@ -100,7 +100,7 @@ public class DoiServerException extends ResourceException {
      * @param error Datacite error
      * @param ex Exception
      */
-    public DoiServerException(final Application app, 
+    public DoiServerException(final Application app,
             final DATACITE_API_RESPONSE error,
             final Exception ex) {
         super(error.getStatus(), error.getShortMessage(), ex);
@@ -117,7 +117,7 @@ public class DoiServerException extends ResourceException {
      * @param error Datacite error
      * @param description description
      */
-    public DoiServerException(final Application app, 
+    public DoiServerException(final Application app,
             final DATACITE_API_RESPONSE error,
             final String description) {
         super(error.getStatus().getCode(), error.getShortMessage(), description);

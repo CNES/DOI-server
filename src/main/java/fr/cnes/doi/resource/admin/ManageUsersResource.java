@@ -36,11 +36,12 @@ import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.resource.AbstractResource;
 import fr.cnes.doi.utils.spec.Requirement;
 import java.util.ArrayList;
+
 /**
  * Provide resources to get all users, bind or delete a user to/from a project.
  */
 public class ManageUsersResource extends AbstractResource {
-    
+
     /**
      * Parameter for the user name {@value #USER_NAME_PARAMETER}. This parameter is send to
      * associate an user to a project.
@@ -92,13 +93,14 @@ public class ManageUsersResource extends AbstractResource {
         List<DOIUser> doiUsers = manageUsers.getUsersFromRole(idProject);
         for (DOIUser doiUser : doiUsers) {
             users.add(doiUser.getUsername());
-        }        
+        }
         return LOG.traceExit(users);
     }
 
     //TODO requirement 
     /**
      * Adds user to project
+     *
      * @param mediaForm form
      * @return True when the user is added to the project otherwise False
      */
@@ -116,12 +118,13 @@ public class ManageUsersResource extends AbstractResource {
         } else {
             isAdded = false;
         }
-        return isAdded;        
+        return isAdded;
     }
 
     //TODO requirement
     /**
      * Delete the project
+     *
      * @return true when the project is deleted otherwise false
      */
     @Requirement(reqId = Requirement.DOI_SRV_140, reqName = Requirement.DOI_SRV_140_NAME)

@@ -12,10 +12,13 @@ import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
 
 /**
- * <p>Java class for dateType.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
- * <p>&nbsp;
+ * <p>
+ * Java class for dateType.
+ *
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * &nbsp;
  * <pre>
  * &lt;simpleType name="dateType"&gt;
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"&gt;
@@ -77,13 +80,11 @@ public enum DateType {
      */
     @XmlEnumValue("Issued")
     ISSUED("Issued"),
-    
     /**
-	* Other
-	*/
-     @XmlEnumValue("Other")
+     * Other
+     */
+    @XmlEnumValue("Other")
     OTHER("Other"),
-    
     /**
      * The date the creator submits the resource to the publisher. This could be different from
      * Accepted if the publisher then applies a selection process. Recommended for discovery. To

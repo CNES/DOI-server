@@ -53,6 +53,11 @@ import org.restlet.util.Series;
 public final class EmailSettings {
 
     /**
+     * Default email {@value #EMAIL_DEFAULT}.
+     */
+    private static final String EMAIL_DEFAULT = "L-doi-support@cnes.fr";
+
+    /**
      * Default debug : {@value #DEFAULT_DEBUG}.
      */
     private static final boolean DEFAULT_DEBUG = false;
@@ -61,6 +66,15 @@ public final class EmailSettings {
      * Logger.
      */
     private static final Logger LOG = LogManager.getLogger(EmailSettings.class.getName());
+
+    /**
+     * Access to unique INSTANCE of Settings
+     *
+     * @return the configuration instance.
+     */
+    public static EmailSettings getInstance() {
+        return EmailSettingsHolder.INSTANCE;
+    }
 
     /**
      * SMTP URL.
@@ -135,15 +149,6 @@ public final class EmailSettings {
         LOG.info("---------------------------");
 
         LOG.traceExit();
-    }
-
-    /**
-     * Access to unique INSTANCE of Settings
-     *
-     * @return the configuration instance.
-     */
-    public static EmailSettings getInstance() {
-        return EmailSettingsHolder.INSTANCE;
     }
 
     /**
@@ -311,15 +316,11 @@ public final class EmailSettings {
         final Map<String, String> dataModel = new ConcurrentHashMap<>();
         dataModel.put("subject", subject);
         dataModel.put("message", msg);
-        dataModel.put("from", settings.getString(Consts.SERVER_CONTACT_ADMIN,
-                "L-doi-support@cnes.fr"));
+        dataModel.put("from", settings.getString(Consts.SERVER_CONTACT_ADMIN, EMAIL_DEFAULT));
         if (to == null) {
-            dataModel.
-                    put("to", settings.getString(Consts.SERVER_CONTACT_ADMIN,
-                            "L-doi-support@cnes.fr"));
+            dataModel.put("to", settings.getString(Consts.SERVER_CONTACT_ADMIN, EMAIL_DEFAULT));
         } else {
-            dataModel.
-                    put("to", to);
+            dataModel.put("to", to);
         }
         final Representation mailFtl = new ClientResource(LocalReference.createClapReference(
                 "class/email.ftl")).get();

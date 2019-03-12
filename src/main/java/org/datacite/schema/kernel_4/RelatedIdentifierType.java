@@ -12,10 +12,13 @@ import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
 
 /**
- * <p>Java class for relatedIdentifierType.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
- * <p>&nbsp;
+ * <p>
+ * Java class for relatedIdentifierType.
+ *
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * &nbsp;
  * <pre>
  * &lt;simpleType name="relatedIdentifierType"&gt;
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"&gt;
@@ -261,7 +264,8 @@ public enum RelatedIdentifierType {
      */
     URL("URL"),
     /**
-     * Uniform Resource Name; is a unique and persistent identifier of an electronic document. null null     {@code 
+     * Uniform Resource Name; is a unique and persistent identifier of an electronic document. null
+     * null null     {@code 
      * The syntax is: urn:< NID>:<NSS>
      * The leading urn: sequence is case‐insensitive, <br>
      * <NID> is the namespace identifier,<br>

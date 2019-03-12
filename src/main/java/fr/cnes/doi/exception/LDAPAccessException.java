@@ -16,13 +16,22 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package fr.cnes.doi.ldap.persistence;
+package fr.cnes.doi.exception;
 
-import fr.cnes.doi.ldap.exceptions.LDAPAccessException;
-import fr.cnes.doi.exception.DOIDbException;
+/**
+ * Exception created by a LDAP.
+ *
+ * @author Jean-Chritophe Malapert (Jean-Christophe.malapert@cnes.fr)
+ */
+public class LDAPAccessException extends Exception {
 
-public interface LdapDoidbIntegration {
-
-    public void updateDoiServerDataBaseFromLdap() throws LDAPAccessException, DOIDbException;
-
+    /**
+     * Constructor
+     *
+     * @param message Message explaining the exception
+     * @param ex exception
+     */
+    public LDAPAccessException(final String message, final Exception ex) {
+        super(message, ex);
+    }
 }

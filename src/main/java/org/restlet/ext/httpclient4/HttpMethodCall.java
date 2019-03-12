@@ -54,9 +54,10 @@ import org.restlet.util.Series;
 
 /**
  * Facade between HTTP call and the HTTP plugin.
+ *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-public class HttpMethodCall extends ClientCall {   
+public class HttpMethodCall extends ClientCall {
 
     /**
      * The associated HTTP client.
@@ -107,9 +108,9 @@ public class HttpMethodCall extends ClientCall {
                     getLogger()
                             .warning(
                                     "The current DELETE request provides an entity that may be not "
-                                            + "supported by the Apache HTTP Client library. If you "
-                                            + "face such issues, you can still move to another HTTP"
-                                            + " client connector.");
+                                    + "supported by the Apache HTTP Client library. If you "
+                                    + "face such issues, you can still move to another HTTP"
+                                    + " client connector.");
                 }
             } else if (method.equalsIgnoreCase(Method.OPTIONS.getName())) {
                 this.httpRequest = new HttpOptions(requestUri);
@@ -119,7 +120,7 @@ public class HttpMethodCall extends ClientCall {
                 this.httpRequest = new HttpEntityEnclosingRequestBase() {
 
                     /**
-                     * {@inheritDoc }                     
+                     * {@inheritDoc }
                      */
                     @Override
                     public String getMethod() {
@@ -127,8 +128,8 @@ public class HttpMethodCall extends ClientCall {
                     }
 
                     /**
-                     * {@inheritDoc }                     
-                     */                    
+                     * {@inheritDoc }
+                     */
                     @Override
                     public URI getURI() {
                         try {
@@ -169,9 +170,9 @@ public class HttpMethodCall extends ClientCall {
         return this.httpResponse;
     }
 
-   /**
-    * {@inheritDoc}
-    */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getReasonPhrase() {
         if ((getHttpResponse() != null)
@@ -181,45 +182,49 @@ public class HttpMethodCall extends ClientCall {
         return null;
     }
 
-   /**
-    * Not used.
-    * @return null
-    */    
+    /**
+     * Not used.
+     *
+     * @return null
+     */
     @Override
     public WritableByteChannel getRequestEntityChannel() {
         return null;
     }
 
-   /**
-    * Not used.
-    * @return null
-    */    
+    /**
+     * Not used.
+     *
+     * @return null
+     */
     @Override
     public OutputStream getRequestEntityStream() {
         return null;
     }
 
-   /**
-    * Not used.
-    * @return null
-    */    
+    /**
+     * Not used.
+     *
+     * @return null
+     */
     @Override
     public OutputStream getRequestHeadStream() {
         return null;
     }
 
-   /**
-    * Not used.
-    * @return null
-    */   
+    /**
+     * Not used.
+     *
+     * @return null
+     */
     @Override
     public ReadableByteChannel getResponseEntityChannel(long size) {
         return null;
     }
 
-   /**
-    * {@inheritDoc}
-    */    
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public InputStream getResponseEntityStream(final long size) {
         InputStream result = null;
@@ -245,15 +250,15 @@ public class HttpMethodCall extends ClientCall {
                     .getLogger()
                     .log(Level.WARNING,
                             "An error occurred during the communication with the remote HTTP server.",
-                            ioe);        
+                            ioe);
         }
 
         return result;
     }
 
-   /**
-    * {@inheritDoc}
-    */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Series<org.restlet.data.Header> getResponseHeaders() {
         final Series<org.restlet.data.Header> result = super.getResponseHeaders();
@@ -272,17 +277,17 @@ public class HttpMethodCall extends ClientCall {
         return result;
     }
 
-   /**
-    * {@inheritDoc}
-    */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getServerAddress() {
         return getHttpRequest().getURI().getHost();
     }
 
-   /**
-    * {@inheritDoc}
-    */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getStatusCode() {
         if (getHttpResponse() != null
@@ -292,9 +297,9 @@ public class HttpMethodCall extends ClientCall {
         return Status.CONNECTOR_ERROR_COMMUNICATION.getCode();
     }
 
-   /**
-    * {@inheritDoc}
-    */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Status sendRequest(final Request request) {
         Status result = null;
@@ -318,7 +323,7 @@ public class HttpMethodCall extends ClientCall {
                 eem.setEntity(new AbstractHttpEntity() {
                     /**
                      * {@inheritDoc}
-                     */                    
+                     */
                     @Override
                     public InputStream getContent() throws IOException,
                             IllegalStateException {
@@ -327,7 +332,7 @@ public class HttpMethodCall extends ClientCall {
 
                     /**
                      * {@inheritDoc}
-                     */                    
+                     */
                     @Override
                     public long getContentLength() {
                         return entity.getSize();
@@ -335,7 +340,7 @@ public class HttpMethodCall extends ClientCall {
 
                     /**
                      * {@inheritDoc}
-                     */                    
+                     */
                     @Override
                     public Header getContentType() {
                         return new BasicHeader(
@@ -346,7 +351,7 @@ public class HttpMethodCall extends ClientCall {
 
                     /**
                      * {@inheritDoc}
-                     */                    
+                     */
                     @Override
                     public boolean isRepeatable() {
                         return !entity.isTransient();
@@ -354,7 +359,7 @@ public class HttpMethodCall extends ClientCall {
 
                     /**
                      * {@inheritDoc}
-                     */                    
+                     */
                     @Override
                     public boolean isStreaming() {
                         return (entity.getSize() == Representation.UNKNOWN_SIZE);
@@ -362,7 +367,7 @@ public class HttpMethodCall extends ClientCall {
 
                     /**
                      * {@inheritDoc}
-                     */                    
+                     */
                     @Override
                     public void writeTo(OutputStream os) throws IOException {
                         entity.write(os);
@@ -393,11 +398,12 @@ public class HttpMethodCall extends ClientCall {
         return result;
     }
 
-   /**
-    * {@inheritDoc}
-    */    
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void sendRequest(final Request request, final Response response, final Uniform callback) throws Exception {
+    public void sendRequest(final Request request, final Response response, final Uniform callback)
+            throws Exception {
         sendRequest(request);
 
         if (request.getOnSent() != null) {
