@@ -120,6 +120,7 @@ public class TokenBasedVerifier implements Verifier {
         LOG.traceEntry(token);
         final int result;
         if (this.tokenDB.isExpired(token)) {
+            this.tokenDB.deleteToken(token);
             LOG.info("token {} is expirated", token);
             result = Verifier.RESULT_INVALID;
         } else {
