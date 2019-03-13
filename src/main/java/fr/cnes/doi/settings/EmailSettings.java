@@ -56,11 +56,6 @@ import org.restlet.util.Series;
 public final class EmailSettings {
 
     /**
-     * Default email {@value #EMAIL_DEFAULT}.
-     */
-    private static final String EMAIL_DEFAULT = "L-doi-support@cnes.fr";
-
-    /**
      * Default debug : {@value #DEFAULT_DEBUG}.
      */
     private static final boolean DEFAULT_DEBUG = false;
@@ -145,7 +140,7 @@ public final class EmailSettings {
         this.tlsEnable = settings.getString(Consts.SMTP_STARTTLS_ENABLE, "false");
         LOG.info(String.format("TLS enable : %s", this.tlsEnable));
 
-        this.contactAdmin = settings.getString(Consts.SERVER_CONTACT_ADMIN, "");
+        this.contactAdmin = settings.getString(Consts.SERVER_CONTACT_ADMIN, "L-doi-support@cnes.fr");
         LOG.info(String.format("Contact admin : %s", this.contactAdmin));
 
         LOG.info("Email settings have been loaded");
@@ -228,17 +223,17 @@ public final class EmailSettings {
             final String message, final String receiverEmail) throws Exception {
         LOG.debug("Enough information to send the email.");
         final Request request = new Request(Method.POST, getSmtpURL());
-        setSmtpPassword(request);
+        setSmtpCredentials(request);
         return sendMail(Protocol.valueOf(getSmtpProtocol()), request, Boolean.getBoolean(
                 getTlsEnable()), subject, message, receiverEmail);
     }
 
     /**
-     * Sets the SMTP password
+     * Sets the SMTP credential when the SMTP needs an authentication.
      *
      * @param request request
      */
-    private void setSmtpPassword(final Request request) {
+    private void setSmtpCredentials(final Request request) {
         if (isAuthenticate()) {
             LOG.debug("Sets the login/passwd for the SMTP server");
             request.setChallengeResponse(
@@ -279,16 +274,11 @@ public final class EmailSettings {
     private Representation createMailRepresentation(final String subject, final String msg,
             final String to) {
         final DoiSettings settings = DoiSettings.getInstance();
-        final String context = DoiSettings.getInstance().getString(Consts.CONTEXT_MODE);
         final Map<String, String> dataModel = new ConcurrentHashMap<>();
         dataModel.put("subject", subject);
         dataModel.put("message", msg);
-        dataModel.put("from", settings.getString(Consts.SERVER_CONTACT_ADMIN, EMAIL_DEFAULT));
-        if (to == null) {
-            dataModel.put("to", settings.getString(Consts.SERVER_CONTACT_ADMIN, EMAIL_DEFAULT));
-        } else {
-            dataModel.put("to", to);
-        }
+        dataModel.put("from", this.getContactAdmin());
+        dataModel.put("to", to);        
         final Representation mailFtl = new ClientResource(LocalReference.createClapReference(
                 "class/email.ftl")).get();
         return new TemplateRepresentation(mailFtl, dataModel, MediaType.TEXT_XML);
@@ -317,6 +307,7 @@ public final class EmailSettings {
                 protocol, request, startTls, subject, msg, to);
         final String contextMode = DoiSettings.getInstance().getString(Consts.CONTEXT_MODE);
         final Representation mail = this.createMailRepresentation(subject, msg, to);
+        request.setEntity(mail);
         final boolean result;
         if (!"PROD".equals(contextMode)) {
             result = true;
