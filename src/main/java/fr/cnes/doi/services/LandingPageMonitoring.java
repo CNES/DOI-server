@@ -76,7 +76,7 @@ public class LandingPageMonitoring implements Runnable {
 
                 }
             }
-            email.sendMessage(subject, msg.toString(), null);
+            email.sendMessage(subject, msg.toString());
 
             LOG.info("message to send : {}", msg.toString());
         } catch (Exception ex) {

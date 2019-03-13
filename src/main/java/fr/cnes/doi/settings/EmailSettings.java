@@ -29,8 +29,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.restlet.Client;
 import org.restlet.Context;
 import org.restlet.Request;
+import org.restlet.Response;
 import org.restlet.data.ChallengeResponse;
 import org.restlet.data.ChallengeScheme;
 import org.restlet.data.LocalReference;
@@ -40,6 +42,7 @@ import org.restlet.data.Parameter;
 import org.restlet.data.Protocol;
 import org.restlet.data.Status;
 import org.restlet.ext.freemarker.TemplateRepresentation;
+import org.restlet.ext.javamail.JavaMailClientHelper;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 import org.restlet.util.Series;
@@ -266,7 +269,33 @@ public final class EmailSettings {
     }
 
     /**
-     * Sends email.
+     * Creates the email representation.
+     *
+     * @param subject Email's subject
+     * @param msg Email's message
+     * @param to receiver or null. When to is null, the default value is {@value #EMAIL_DEFAULT}
+     * @return the email representation
+     */
+    private Representation createMailRepresentation(final String subject, final String msg,
+            final String to) {
+        final DoiSettings settings = DoiSettings.getInstance();
+        final String context = DoiSettings.getInstance().getString(Consts.CONTEXT_MODE);
+        final Map<String, String> dataModel = new ConcurrentHashMap<>();
+        dataModel.put("subject", subject);
+        dataModel.put("message", msg);
+        dataModel.put("from", settings.getString(Consts.SERVER_CONTACT_ADMIN, EMAIL_DEFAULT));
+        if (to == null) {
+            dataModel.put("to", settings.getString(Consts.SERVER_CONTACT_ADMIN, EMAIL_DEFAULT));
+        } else {
+            dataModel.put("to", to);
+        }
+        final Representation mailFtl = new ClientResource(LocalReference.createClapReference(
+                "class/email.ftl")).get();
+        return new TemplateRepresentation(mailFtl, dataModel, MediaType.TEXT_XML);
+    }
+
+    /**
+     * Sends an email only when {@value fr.cnes.doi.settings.Consts#CONTEXT_MODE} is set to PROD.
      *
      * @param protocol Protocol (SMTP or SMTPS)
      * @param request request
@@ -283,57 +312,31 @@ public final class EmailSettings {
             final String subject,
             final String msg,
             final String to) throws Exception {
-        LOG.traceEntry("With parameters");
-        final DoiSettings settings = DoiSettings.getInstance();
-        final String context = DoiSettings.getInstance().getString(Consts.CONTEXT_MODE);
-        boolean result;
-        final Map<String, String> dataModel = new ConcurrentHashMap<>();
-        dataModel.put("subject", subject);
-        dataModel.put("message", msg);
-        dataModel.put("from", settings.getString(Consts.SERVER_CONTACT_ADMIN, EMAIL_DEFAULT));
-        if (to == null) {
-            dataModel.put("to", settings.getString(Consts.SERVER_CONTACT_ADMIN, EMAIL_DEFAULT));
-        } else {
-            dataModel.put("to", to);
-        }
-        final Representation mailFtl = new ClientResource(LocalReference.createClapReference(
-                "class/email.ftl")).get();
-        final Representation mail = new TemplateRepresentation(mailFtl, dataModel,
-                MediaType.TEXT_XML);
-        if (request == null) {
-            LOG.error("Cannot connect to SMTP server; request=null");
-            LOG.error(mail.getText());
-            result = false;
-        } else if (!"PROD".equals(context)) {
-            LOG.warn("The configuration context {} is not PROD, do not send the email : {}",
-                     context, mail.getText());
+        LOG.traceEntry("Parameters\n  protocol:{}\n  startTls:{}, request:{}\n  subject:{}\n  "
+                + "msg:{}\n  to:{}", 
+                protocol, request, startTls, subject, msg, to);
+        final String contextMode = DoiSettings.getInstance().getString(Consts.CONTEXT_MODE);
+        final Representation mail = this.createMailRepresentation(subject, msg, to);
+        final boolean result;
+        if (!"PROD".equals(contextMode)) {
             result = true;
+            LOG.warn("The configuration context {} is not PROD, do not send the email : {}",
+                    contextMode, mail.getText());
         } else {
-            request.setEntity(mail);
-            try {
-                final ClientResource client = new ClientResource(new Context(), request);
-                client.setProtocol(protocol);
-                final Series<Parameter> params = client.getContext().getParameters();
-                params.set(RESTLET_MAX_TOTAL_CONNECTIONS, DoiSettings.getInstance().getString(
-                        fr.cnes.doi.settings.Consts.RESTLET_MAX_TOTAL_CONNECTIONS,
-                        DEFAULT_MAX_TOTAL_CONNECTIONS));
-                params.set(RESTLET_MAX_CONNECTIONS_PER_HOST, DoiSettings.getInstance().getString(
-                        fr.cnes.doi.settings.Consts.RESTLET_MAX_CONNECTIONS_PER_HOST,
-                        DEFAULT_MAX_CONNECTIONS_PER_HOST));
-                params.add("debug", String.valueOf(isDebug()));
-                params.add("startTls", Boolean.toString(startTls).toLowerCase(Locale.ENGLISH));
-                client.get();
-                final Status status = client.getStatus();
-                if (status.isError()) {
-                    LOG.error("Cannot send the email! : {}", status.getDescription());
-                    result = false;
-                } else {
-                    result = true;
-                }
-            } catch (NullPointerException ex) {
-                LOG.error("Cannot connect to SMTP server", ex);
-                LOG.error(mail.getText());
+            final Client client = new Client(new Context(), protocol);
+            final Series<Parameter> parameters = client.getContext().getParameters();
+            parameters.add("debug", String.valueOf(isDebug()));
+            parameters.add("startTls", Boolean.toString(startTls).toLowerCase(Locale.ENGLISH));
+            final JavaMailClientHelper smtpClient = new JavaMailClientHelper(client);
+            final Response response = new Response(request);
+            smtpClient.handle(request, response);
+            final Status status = response.getStatus();
+            if (status.isSuccess()) {
+                result = true;
+                LOG.info("Message sent to {}", to);
+            } else {
                 result = false;
+                LOG.error("Cannot connect to SMTP server", status.getThrowable());
             }
         }
         return LOG.traceExit(result);

@@ -295,8 +295,6 @@ public class DoiServer extends Component {
         this.getClients().add(Protocol.HTTPS);
         this.getClients().add(Protocol.CLAP);
         this.getClients().add(Protocol.FILE);
-        this.getClients().add(Protocol.SMTP);
-        this.getClients().add(Protocol.SMTPS);
         LOG.traceExit();
     }
 
