@@ -177,27 +177,9 @@ public final class EmailSettings {
      * @param msg Email's message
      * @return True when the message is sent
      */
-    public boolean sendMessage(final String subject,
-            final String msg) {
-        LOG.traceEntry("Parameters : {} and {}", subject, msg);
-        boolean result;
-        try {
-            if (isConfigureForSendingEmail()) {
-                result = processMessage(subject, msg, null);
-            } else {
-                LOG.warn("Cannot send the email, please fill the configuration file");
-                result = false;
-            }
-        } catch (RuntimeException ex) {
-            LOG.catching(Level.DEBUG, ex);
-            LOG.error("Cannot send the message with the subject {} : {}", subject, msg);
-            result = false;
-        } catch (Exception ex) {
-            LOG.catching(Level.DEBUG, ex);
-            LOG.error("Cannot send the message with the subject {} : {}", subject, msg);
-            result = false;
-        }
-        return LOG.traceExit(result);
+    public boolean sendMessage(final String subject, final String msg) {
+        final String email = EmailSettings.getInstance().getContactAdmin();
+        return this.sendMessage(subject, msg, email);
     }
 
     /**
@@ -213,11 +195,7 @@ public final class EmailSettings {
         boolean result;
         try {
             if (isConfigureForSendingEmail()) {
-                if (receiverEmail != null) {
-                    result = processMessage(subject, msg, receiverEmail);
-                } else {
-                    result = processMessage(subject, msg, null);
-                }
+                result = processMessage(subject, msg, receiverEmail);
             } else {
                 LOG.warn("Cannot send the email, please fill the configuration file");
                 result = false;
@@ -248,13 +226,8 @@ public final class EmailSettings {
         LOG.debug("Enough information to send the email.");
         final Request request = new Request(Method.POST, getSmtpURL());
         setSmtpPassword(request);
-        if (receiverEmail != null) {
-            return sendMail(Protocol.valueOf(getSmtpProtocol()), request, Boolean.getBoolean(
-                    getTlsEnable()), subject, message, receiverEmail);
-        } else {
-            return sendMail(Protocol.valueOf(getSmtpProtocol()), request, Boolean.getBoolean(
-                    getTlsEnable()), subject, message, null);
-        }
+        return sendMail(Protocol.valueOf(getSmtpProtocol()), request, Boolean.getBoolean(
+                getTlsEnable()), subject, message, receiverEmail);
     }
 
     /**
@@ -300,7 +273,7 @@ public final class EmailSettings {
      * @param startTls startTls
      * @param subject Email's subject
      * @param msg Email's message
-     * @param to receiver
+     * @param to receiver or null. When to is null, the default value is {@value #EMAIL_DEFAULT}
      * @return True when the message is sent
      * @throws Exception - if an error happens when stopping the request
      */
@@ -312,6 +285,7 @@ public final class EmailSettings {
             final String to) throws Exception {
         LOG.traceEntry("With parameters");
         final DoiSettings settings = DoiSettings.getInstance();
+        final String context = DoiSettings.getInstance().getString(Consts.CONTEXT_MODE);
         boolean result;
         final Map<String, String> dataModel = new ConcurrentHashMap<>();
         dataModel.put("subject", subject);
@@ -330,6 +304,10 @@ public final class EmailSettings {
             LOG.error("Cannot connect to SMTP server; request=null");
             LOG.error(mail.getText());
             result = false;
+        } else if (!"PROD".equals(context)) {
+            LOG.warn("The configuration context {} is not PROD, do not send the email : {}",
+                     context, mail.getText());
+            result = true;
         } else {
             request.setEntity(mail);
             try {
