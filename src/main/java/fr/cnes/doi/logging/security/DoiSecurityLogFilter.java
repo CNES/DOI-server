@@ -72,7 +72,10 @@ public class DoiSecurityLogFilter extends Filter {
         if (request.getClientInfo().isAuthenticated()) {
             final String authenticationMethod = request.getChallengeResponse().getScheme().
                     getTechnicalName();
-            final String identifier = request.getChallengeResponse().getIdentifier();
+            //TODO clientInfo always filled (see classes Token/Login based Verifier)
+            // instead of challengeResponse
+//            final String identifier = request.getChallengeResponse().getIdentifier();
+            final String identifier = request.getClientInfo().getUser().getIdentifier();
             final String profiles = computeProfiles(clientInfo);
             LogManager.getLogger(Utils.SECURITY_LOGGER_NAME).info(
                     "User: " + identifier + "\tProfile(s): " + profiles + "\t - "
