@@ -75,6 +75,13 @@
         <sourceDirectory>src/main/java</sourceDirectory>
         <resources>
             <resource>
+                <directory>src/main/resources</directory>
+                <targetPath>${project.build.directory}</targetPath>
+                <includes>
+                    <include>log4j2.xml</include>
+                </includes>
+            </resource>            
+            <resource>
                 <directory>src/main/java</directory>
                 <excludes>
                     <exclude>**/*.java</exclude>
@@ -417,6 +424,7 @@
                 </configuration>
                 <executions>
                     <execution>
+                        <id>make-assembly</id>
                         <phase>package</phase>
                         <goals>
                             <goal>single</goal>
@@ -576,12 +584,11 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
             <version>2.11.1</version>
-        </dependency>  
-        <!-- https://mvnrepository.com/artifact/org.slf4j/jul-to-slf4j -->
+        </dependency>     
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>jul-to-slf4j</artifactId>
-            <version>1.8.0-beta2</version>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-jul</artifactId>
+            <version>2.2</version>
         </dependency>
                     
         <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-surefire-report-plugin -->
@@ -713,8 +720,7 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>taglist-maven-plugin</artifactId>
                 <version>2.4</version>
-            </plugin>
-                       
+            </plugin>                    
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>findbugs-maven-plugin</artifactId>

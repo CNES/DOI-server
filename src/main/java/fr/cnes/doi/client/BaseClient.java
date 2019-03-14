@@ -18,6 +18,7 @@
  */
 package fr.cnes.doi.client;
 
+import java.util.logging.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.restlet.Client;
@@ -64,6 +65,7 @@ public class BaseClient {
      */
     public BaseClient(final String uri) {
         this.client = new ClientResource(uri);
+        this.client.getLogger().setLevel(Level.OFF);
         this.client.setLoggable(false);
         this.client.setRetryOnError(true);
         this.client.setRetryAttempts(NB_RETRY);

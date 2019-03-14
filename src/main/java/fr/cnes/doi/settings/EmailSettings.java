@@ -268,7 +268,7 @@ public final class EmailSettings {
      *
      * @param subject Email's subject
      * @param msg Email's message
-     * @param to receiver or null. When to is null, the default value is {@value #EMAIL_DEFAULT}
+     * @param to receiver
      * @return the email representation
      */
     private Representation createMailRepresentation(final String subject, final String msg,
@@ -292,7 +292,7 @@ public final class EmailSettings {
      * @param startTls startTls
      * @param subject Email's subject
      * @param msg Email's message
-     * @param to receiver or null. When to is null, the default value is {@value #EMAIL_DEFAULT}
+     * @param to receiver
      * @return True when the message is sent
      * @throws Exception - if an error happens when stopping the request
      */

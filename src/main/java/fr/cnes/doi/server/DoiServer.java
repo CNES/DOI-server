@@ -64,6 +64,12 @@ import fr.cnes.doi.utils.Utils;
 import fr.cnes.doi.utils.spec.Requirement;
 import fr.cnes.doi.ldap.service.ILDAPAccessService;
 import fr.cnes.doi.plugin.PluginFactory;
+import static fr.cnes.doi.plugin.Utils.addPath;
+import fr.cnes.doi.plugin.impl.db.service.DatabaseSingleton;
+import fr.cnes.doi.security.TokenSecurity;
+import fr.cnes.doi.utils.UniqueProjectName;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * DoiServer contains the configuration of this server and the methods to start/stop it.
@@ -486,4 +492,22 @@ public class DoiServer extends Component {
         }
         return LOG.traceExit(result);
     }
+
+    @Override
+    public synchronized void start() throws Exception {
+        LOG.info("Starting server ...");
+        addPath(DoiSettings.getInstance().getPathApp() + File.separatorChar + "plugins");
+        super.start();
+        LOG.info("Server started");        
+    }
+
+    @Override
+    public synchronized void stop() throws Exception {
+        LOG.info("Stopping the server ...");
+        super.stop();
+        EmailSettings.getInstance().sendMessage("[DOI] Stopping Server",
+                "Ther server has been interrupted");
+        LOG.info("Server stopped");
+    }
+
 }

@@ -22,14 +22,14 @@ import fr.cnes.doi.server.DoiServer;
 import fr.cnes.doi.settings.DoiSettings;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.restlet.Client;
 import org.restlet.engine.Engine;
 import org.restlet.engine.connector.ConnectorHelper;
 import org.restlet.ext.httpclient4.HttpClientHelper;
-import org.slf4j.bridge.SLF4JBridgeHandler;
 
 /**
  * Class to start/stop the http and https server.
@@ -43,7 +43,6 @@ public final class InitServerForTest {
 		.getLogger("");
 	final java.util.logging.Handler[] handlers = rootLogger.getHandlers();
 	rootLogger.removeHandler(handlers[0]);
-	SLF4JBridgeHandler.install();
 	final List<ConnectorHelper<Client>> registeredClients = Engine.getInstance()
 		.getRegisteredClients();
 	registeredClients.add(0, new HttpClientHelper(null));
@@ -93,6 +92,11 @@ public final class InitServerForTest {
      * White color.
      */
     public static final String ANSI_WHITE = "\u001B[37;1m";
+    
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = LogManager.getLogger(InitServerForTest.class.getName());   
 
     /**
      * the servers.
@@ -129,9 +133,9 @@ public final class InitServerForTest {
 	    while (!doiServer.isStarted()) {
 		Thread.sleep(1000);
 	    }
-	    Engine.getLogger(InitServerForTest.class).info("The test server is started");
+	    LOG.info("The test server is started");
 	} catch (Exception ex) {
-	    Engine.getLogger(InitServerForTest.class).log(Level.SEVERE, null, ex);
+	    LOG.fatal(ex);
 	}
     }
 
@@ -145,9 +149,9 @@ public final class InitServerForTest {
 	    while (!doiServer.isStopped()) {
 		Thread.sleep(1000);
 	    }
-	    Engine.getLogger(InitServerForTest.class).info("The test server is stopped");
+	    LOG.info("The test server is stopped");
 	} catch (Exception ex) {
-	    Engine.getLogger(InitServerForTest.class).log(Level.SEVERE, null, ex);
+	    LOG.fatal(ex);
 	}
     }
 

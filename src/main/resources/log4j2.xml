@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration xmlns="http://logging.apache.org/log4j/2.0/config">
+<Configuration status="INFO">
    
     <Appenders>
         <File name="PERFO" fileName="perfo.log" append="true">     
@@ -21,22 +21,26 @@
 
     <Loggers>
      
-        <Logger name="fr.cnes.doi.logging.app">
+        <Logger name="fr.cnes.doi.logging.app" level="INFO">
             <AppenderRef ref="PERFO"/>                        
         </Logger>        
-        <Logger name="fr.cnes.doi.logging.api">
+        <Logger name="fr.cnes.doi.logging.api" level="INFO">
             <AppenderRef ref="API"/>                        
         </Logger>
-        <Logger name="fr.cnes.doi.application" level="info">
+        <Logger name="fr.cnes.doi.application" level="INFO">
             <AppenderRef ref="FILE"/>            
         </Logger>      
-        <Logger name="fr.cnes.doi.logging.shell" level="info">
+        <Logger name="fr.cnes.doi.logging.shell" level="INFO">
+             <AppenderRef ref="FILE"/>
+        </Logger>  
+        <Logger name="fr.cnes.doi.server" level="INFO">
              <AppenderRef ref="SHELL"/>
-        </Logger>
-        <Root level="info">
-            <!--<AppenderRef ref="CONSOLE"/>-->
+        </Logger>                    
+        <Root level="INFO">
             <AppenderRef ref="FILE"/>
         </Root>
     </Loggers>
 
 </Configuration>
+<!-- https://fabianlee.org/2016/10/17/syslog-sending-java-log4j2-to-rsyslog-on-ubuntu/ -->
+<!-- java -Dlog4j.configurationFile=./log4j2.xml -jar DOI-0.0.1-SNAPSHOT.jar -->

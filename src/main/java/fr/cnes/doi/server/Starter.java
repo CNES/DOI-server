@@ -33,7 +33,6 @@ import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.security.TokenSecurity;
@@ -44,6 +43,7 @@ import fr.cnes.doi.settings.EmailSettings;
 import fr.cnes.doi.utils.spec.Requirement;
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
+import java.util.logging.Level;
 
 /**
  * DOI server
@@ -74,13 +74,12 @@ public final class Starter {
                 .getLogger("");
         java.util.logging.Handler[] handlers = rootLogger.getHandlers();
         rootLogger.removeHandler(handlers[0]);
-        SLF4JBridgeHandler.install();
     }
 
     private static void displayHelp() {
-        LOG.trace("Entering in displayHelp");
-        DoiSettings settings = DoiSettings.getInstance();
-        StringBuilder help = new StringBuilder();
+        LOG.traceEntry();
+        final DoiSettings settings = DoiSettings.getInstance();
+        final StringBuilder help = new StringBuilder();
         help.append("\n------------ Help for DOI Server -----------\n");
         help.append("\n");
         help.append("Usage: java -jar ").append(settings.getString(Consts.APP_NAME)).append("-")
@@ -91,7 +90,8 @@ public final class Starter {
         help.append("  --secret <key>               : The 16 bits secret key to crypt/decrypt\n");
         help.append("  --key-sign-secret <key>      : The key to sign the token\n");
         help.append("                                 If not provided, a default one is used\n");
-        help.append("  -s                           : Starts the server\n");
+        help.append("  -s|--start                   : Starts the server\n");
+        help.append("  -t|--stop                    : Stops the server\n");
         help.append("with OPTIONS:\n");
         help.append("  -h|--help                    : This output\n");
         help.append("  -k|--key-sign                : Creates a key to sign JWT token\n");
@@ -107,7 +107,7 @@ public final class Starter {
         help.append("\n");
         help.append("\n");
         LOG.info(help.toString());
-        LOG.trace("Exiting from displayHelp");
+        LOG.traceExit();
     }
 
     /**
@@ -116,25 +116,21 @@ public final class Starter {
      * @param server HTTP or HTTPS server
      */
     private static void stopServer(final Thread server) {
-        LOG.trace("Entering in stopServer");
+        LOG.traceEntry();
         try {
             try {
-                LOG.info("Stopping the server ...");
                 doiServer.stop();
-                LOG.info("Server stopped");
             } catch (Exception ex) {
                 LOG.fatal("Unable to stop the server", ex);
             } finally {
                 LOG.info("Interrups the server, which is stopping");
-                EmailSettings.getInstance().sendMessage("[DOI] Stopping Server",
-                        "Ther server has been interrupted");
                 server.interrupt();
                 server.join();
             }
         } catch (InterruptedException e) {
-            LOG.debug("Cannot interrupt the server", e);
+            LOG.fatal("Cannot interrupt the server", e);
         }
-        LOG.trace("Exiting from stopServer");
+        LOG.traceExit();
     }
 
     /**
@@ -144,17 +140,40 @@ public final class Starter {
      */
     @Requirement(reqId = Requirement.DOI_ARCHI_040, reqName = Requirement.DOI_ARCHI_040_NAME)
     private static void startServer(final DoiServer server) {
-        LOG.trace("Entering in startServer");
-        try {
-            fr.cnes.doi.plugin.Utils.addPath(
-                    DoiSettings.getInstance().getPathApp() + File.separatorChar + "plugins");
-            LOG.info("Starting server ...");
-            server.start();
-            LOG.info("Server started");
-        } catch (Exception ex) {
-            LOG.fatal("Unable to start the server");
+        final DoiSettings settings = DoiSettings.getInstance();
+        final String progName = settings.getString(Consts.APP_NAME) + "-" + settings.getString(
+                Consts.VERSION) + ".jar";
+        final String stopPid = getCurrentPid(progName);
+        if (stopPid == null) {
+            try {
+                server.start();
+            } catch (Exception ex) {
+                LOG.info("Unable to start the server");
+            }
+        } else {
+            LOG.info("The server is already started");
         }
-        LOG.trace("Exiting from startServer");
+    }
+
+    /**
+     * Stops the server
+     *
+     */
+    private static void stopServer() {
+        try {
+            final DoiSettings settings = DoiSettings.getInstance();
+            final String progName = settings.getString(Consts.APP_NAME) + "-" + settings.getString(
+                    Consts.VERSION) + ".jar";
+            final String stopPid = getCurrentPid(progName);
+            if (stopPid != null) {
+                Runtime.getRuntime().exec("kill -9 " + stopPid);
+                LOG.info("Stopping the DOI server .... OK");
+            } else {
+                LOG.info("The DOI server is already stopped");
+            }
+        } catch (IOException e) {
+            LOG.info("Stopping the DOI server .... Failed");
+        }
     }
 
     /**
@@ -163,41 +182,76 @@ public final class Starter {
      * @param settings Configuration
      */
     private static void launchServer(final DoiSettings settings) {
+        LOG.traceEntry();
+        try {
+            settings.validConfigurationFile();
+            doiServer = new DoiServer(settings);
+            final Thread server = new Thread() {
+                @Override
+                public void run() {
+                    startServer(doiServer);
+                }
+            };
 
-        LOG.trace("Entering in launchServer");
-        settings.validConfigurationFile();
-        LOG.info("launchServer, entering DOI server");
-        doiServer = new DoiServer(settings);
-        final Thread server = new Thread() {
-            @Override
-            public void run() {
-                startServer(doiServer);
-            }
-        };
+            Runtime.getRuntime().addShutdownHook(new Thread() {
+                @Override
+                public void run() {
+                    LOG.info("interrupt received, killing server…");
+                    stopServer(server);
+                }
+            });
 
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            @Override
-            public void run() {
-                LOG.info("interrupt received, killing server…");
-                stopServer(server);
-            }
-        });
-
-        server.start();
-        LOG.trace("Exiting from launchServer");
+            server.start();
+        } catch (DoiRuntimeException ex) {
+            LOG.info("Error when starting the server: " + ex.getMessage());
+        }
+        LOG.traceExit();
     }
 
     /**
      * Displays version.
      */
     private static void displayVersion() {
-        LOG.trace("Entering in displayVersion");
+        LOG.traceEntry();
         final DoiSettings settings = DoiSettings.getInstance();
         final String appName = settings.getString(Consts.APP_NAME);
         final String version = settings.getString(Consts.VERSION);
         final String copyright = settings.getString(Consts.COPYRIGHT);
         LOG.info("{} ({}) - Version:{}\n", appName, copyright, version);
-        LOG.trace("Exiting from displayVersion");
+        LOG.traceExit();
+    }
+
+    /**
+     * Return the server PID from the system.
+     *
+     * @param serverName server name
+     * @return the PID or null
+     */
+    private static String getCurrentPid(final String serverName) {
+        LOG.traceEntry("Parameter\n  serverName:{}", serverName);
+        String stopPid = null;
+        try {
+            final Process pro = Runtime.getRuntime().exec("ps aux");
+            final BufferedReader reader = new BufferedReader(new InputStreamReader(pro.
+                    getInputStream()));
+            final String processName = java.lang.management.ManagementFactory.getRuntimeMXBean().
+                    getName();
+            final String myPid = processName.split("@")[0];
+            String line;
+            while ((line = reader.readLine()) != null) {
+                LOG.info(serverName);
+                if (line.contains(serverName) && line.contains("java")) {
+                    final String[] split = line.split("\\s+");
+                    final String currentPid = split[1].trim();
+                    if (!currentPid.equals(myPid)) {
+                        stopPid = currentPid;
+                        break;
+                    }
+                }
+            }
+        } catch (IOException ex) {
+        }
+        return LOG.traceExit(stopPid);
     }
 
     /**
@@ -207,14 +261,15 @@ public final class Starter {
      */
     public static void main(final String[] argv) {
         final DoiSettings settings = DoiSettings.getInstance();
-        final String progName = "java -jar " + settings.getString(Consts.APP_NAME) + "-"
-                + settings.getString(Consts.VERSION) + ".jar";
+        final String progName = settings.getString(Consts.APP_NAME) + "-" + settings.getString(
+                Consts.VERSION) + ".jar";
+        final String progNameWithJar = "java -jar " + progName;
 
         int c;
         String arg;
 
         StringBuffer sb = new StringBuffer();
-        LongOpt[] longopts = new LongOpt[7];
+        LongOpt[] longopts = new LongOpt[9];
         longopts[0] = new LongOpt("help", LongOpt.NO_ARGUMENT, null, 'h');
         longopts[1] = new LongOpt("version", LongOpt.NO_ARGUMENT, null, 'v');
         longopts[2] = new LongOpt("secret", LongOpt.REQUIRED_ARGUMENT, sb, 0);
@@ -222,9 +277,10 @@ public final class Starter {
         longopts[4] = new LongOpt("cryptProperties", LongOpt.REQUIRED_ARGUMENT, null, 'y');
         longopts[5] = new LongOpt("key-sign", LongOpt.NO_ARGUMENT, null, 'k');
         longopts[6] = new LongOpt("key-sign-secret", LongOpt.REQUIRED_ARGUMENT, null, 'a');
-
+        longopts[7] = new LongOpt("start", LongOpt.NO_ARGUMENT, null, 's');
+        longopts[8] = new LongOpt("stop", LongOpt.NO_ARGUMENT, null, 't');
         //
-        final Getopt g = new Getopt(progName, argv, "hvdske:c:f:y:z:a:b:", longopts);
+        final Getopt g = new Getopt(progNameWithJar, argv, "hvdstke:c:f:y:z:a:b:", longopts);
         //
         while ((c = g.getopt()) != -1) {
             switch (c) {
@@ -239,6 +295,7 @@ public final class Starter {
                     break;
                 //
                 case 'a':
+                    LOG.debug("a option is selected");
                     String secretSignToken = g.getOptarg();
                     TokenSecurity.getInstance().setTokenKey(secretSignToken);
                     break;
@@ -249,11 +306,11 @@ public final class Starter {
                 //
                 case 's':
                     LOG.debug("s option is selected");
-                    try {
-                        launchServer(settings);
-                    } catch (DoiRuntimeException ex) {
-                        LOG.fatal("Error when starting the server: " + ex.getMessage());
-                    }
+                    launchServer(settings);
+                    break;
+                case 't':
+                    LOG.debug("t option is selected");
+                    stopServer();
                     break;
                 //
                 case 'k':
@@ -288,13 +345,10 @@ public final class Starter {
                 //
                 case 'f':
                     LOG.debug("f option is selected");
-                    arg = g.getOptarg();
-                     {
-                        try {
-                            settings.setPropertiesFile(arg);
-                        } catch (IOException ex) {
-                            LOG.fatal(ex.getMessage());
-                        }
+                    try {
+                        settings.setPropertiesFile(g.getOptarg());
+                    } catch (IOException ex) {
+                        LOG.fatal(ex.getMessage());
                     }
                     break;
                 //
@@ -304,9 +358,9 @@ public final class Starter {
                     break;
                 //
                 case 'y':
-                    arg = g.getOptarg();
+                    LOG.debug("y option is selected");
                     try {
-                        byte[] encodedFile = Files.readAllBytes(Paths.get(arg));
+                        byte[] encodedFile = Files.readAllBytes(Paths.get(g.getOptarg()));
                         String contentFile = new String(encodedFile, StandardCharsets.UTF_8);
                         contentFile = UtilsCryptography.encrypt(contentFile,
                                 settings.getSecretKey());
@@ -317,13 +371,13 @@ public final class Starter {
                     break;
                 //
                 case 'z':
-                    arg = g.getOptarg();
+                    LOG.debug("z option is selected");
                     InputStream inputStream = null;
                     BufferedReader reader = null;
                     Reader inputReader = null;
 
                     try {
-                        inputStream = new FileInputStream(arg);
+                        inputStream = new FileInputStream(g.getOptarg());
                         inputReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
                         reader = new BufferedReader(inputReader);
                         String content = reader.lines().collect(Collectors.joining("\n"));
@@ -335,11 +389,9 @@ public final class Starter {
                         if (inputStream != null) {
                             try {
                                 inputStream.close();
-
                             } catch (IOException e) {
                                 LOG.fatal("Error closing inputstream: {}", e.getMessage(), e);
                             }
-
                         }
                         if (inputReader != null) {
                             try {
@@ -354,7 +406,6 @@ public final class Starter {
                             } catch (IOException ex) {
                                 LOG.fatal("Error closing reader: {}", ex.getMessage(), ex);
                             }
-
                         }
                     }
                     break;

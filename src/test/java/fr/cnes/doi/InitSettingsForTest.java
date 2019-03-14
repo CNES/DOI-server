@@ -24,15 +24,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
-
-import org.restlet.engine.Engine;
 
 import fr.cnes.doi.client.ClientProxyTest;
 import fr.cnes.doi.security.UtilsCryptography;
 import fr.cnes.doi.settings.DoiSettings;
+import java.util.logging.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Class to read the settings from the crypted config file and to enable the
@@ -56,7 +55,7 @@ public final class InitSettingsForTest {
     /**
      * Init loggers.
      */
-    private static final Logger LOGGER = Engine.getLogger(InitSettingsForTest.class);
+    private static final Logger LOGGER = LogManager.getLogger(InitSettingsForTest.class);
 
     /**
      * "Static" class cannot be instantiated
@@ -82,8 +81,7 @@ public final class InitSettingsForTest {
 	    if (secretKey != null) {
 		result = UtilsCryptography.decrypt(result, secretKey);
 	    } else {
-		LOGGER.log(Level.WARNING,
-			"No private.key provided, the configuration is not crypted");
+		LOGGER.warn("No private.key provided, the configuration is not crypted");
 	    }
 	    // Replace the value to use the proxy by the system property
 	    final String useProxy = System.getProperty("proxy.use");
@@ -91,14 +89,14 @@ public final class InitSettingsForTest {
 		result = result.replace("Starter.Proxy.used=false",
 			"Starter.Proxy.used=" + useProxy);
 	    } else {
-		LOGGER.log(Level.INFO, "The key proxy.use is not set, default param applied");
+		LOGGER.warn("The key proxy.use is not set, default param applied");
 	    }
 	    final InputStream stream = new ByteArrayInputStream(
 		    result.getBytes(StandardCharsets.UTF_8));
 	    DoiSettings.getInstance().setPropertiesFile(stream);
 
 	} catch (IOException e) {
-	    LOGGER.log(Level.SEVERE, "Error during initialisation of the settings", e);
+	    LOGGER.warn("Error during initialisation of the settings", e);
 	}
     }
 

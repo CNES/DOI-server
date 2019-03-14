@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration xmlns="http://logging.apache.org/log4j/2.0/config">
+<Configuration status="INFO">
         
     <Appenders>
         <File name="PERFO" fileName="perfo.log" append="true">     
@@ -23,14 +23,14 @@
     </Appenders>
 
     <Loggers>
-        <Logger name="fr.cnes.doi.logging.security" level="INFO">
+        <Logger name="fr.cnes.doi.logging.security" level="OFF">
             <AppenderRef ref="SECURITY"/>
         </Logger>
-        <Logger name="fr.cnes.doi.logging.app" level="INFO">
+        <Logger name="fr.cnes.doi.logging.app" level="OFF">
             <AppenderRef ref="PERFO"/>                        
         </Logger>
                 
-        <Logger name="fr.cnes.doi.logging.api" level="INFO">
+        <Logger name="fr.cnes.doi.logging.api" level="OFF">
             <AppenderRef ref="API"/>                        
         </Logger>
 
@@ -42,7 +42,7 @@
             <AppenderRef ref="CONSOLE"/>
         </Logger>
 
-        <Root level="OFF">
+        <Root level="INFO">
             <AppenderRef ref="FILE"/>
         </Root>
     </Loggers>

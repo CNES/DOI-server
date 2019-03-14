@@ -41,7 +41,6 @@ import org.restlet.service.LogService;
 @Requirement(reqId = Requirement.DOI_ARCHI_020, reqName = Requirement.DOI_ARCHI_020_NAME)
 public class DoiLogDataServer extends LogService {
 
-    //private Logger logger = Engine.getLogger(Utils.HTTP_LOGGER_NAME);
     /**
      * Constructs a new logger.
      *

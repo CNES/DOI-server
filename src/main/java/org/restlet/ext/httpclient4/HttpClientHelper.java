@@ -228,9 +228,10 @@ public class HttpClientHelper extends org.restlet.engine.connector.HttpClientHel
      * {@inheritDoc}
      */
     @Override
-    public synchronized void start() throws Exception {
+    public synchronized void start() throws Exception {        
         final Series<Parameter> parameters = getHelpedParameters();
         configure(parameters);
+        LOG.info("Starting the internal HTTP client");
     }
 
     /**
@@ -241,6 +242,7 @@ public class HttpClientHelper extends org.restlet.engine.connector.HttpClientHel
         if (this.httpClient != null) {
             this.getHttpClient().close();
             this.httpClient = null;
+            LOG.info("Stopping the internal HTTP client");
         }
     }
 
