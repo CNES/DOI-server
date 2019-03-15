@@ -19,7 +19,6 @@
 package fr.cnes.doi.server;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -39,11 +38,9 @@ import fr.cnes.doi.security.TokenSecurity;
 import fr.cnes.doi.security.UtilsCryptography;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
-import fr.cnes.doi.settings.EmailSettings;
 import fr.cnes.doi.utils.spec.Requirement;
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
-import java.util.logging.Level;
 
 /**
  * DOI server
