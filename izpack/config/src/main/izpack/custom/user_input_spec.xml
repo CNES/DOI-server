@@ -25,7 +25,7 @@
         </field>        
         <field type="text" variable="project.mail.identifier">
             <spec txt="Login:" id="input.proxypanel.login" size="20" set="">                               
-                <processor class="com.izforge.izpack.panels.userinput.processor.PasswordEncryptionProcessor" backupVariable="project.mail.identifier.plain">
+                <processor class="fr.cnes.doi.izpack.processor.PasswordEncryptionProcessor" backupVariable="project.mail.identifier.plain">
                     <configuration>
                         <encryptionKey>16BYTESSECRETKEY</encryptionKey>
                         <algorithm>AES</algorithm>
@@ -37,31 +37,28 @@
             <spec>
                 <pwd txt="Password:" size="15" set="" id="input.smtp.secret.password" />
                 <pwd txt="Retype Password:" size="15" set="" id="input.smtp.secret.retypepassword" />                 
-                <processor class="com.izforge.izpack.panels.userinput.processor.PasswordEncryptionProcessor" backupVariable="project.mail.secret.plain">
-                    <configuration>
-                        <encryptionKey>16BYTESSECRETKEY</encryptionKey>
-                        <algorithm>AES</algorithm>
-                    </configuration>
-                </processor>                              
+                <processor class="fr.cnes.doi.izpack.processor.PasswordEncryptionProcessor" backupVariable="project.mail.secret.plain"/>
             </spec>
             <validator class="com.izforge.izpack.panels.userinput.validator.PasswordEqualityValidator" txt="Both keystore passwords must match." id="catalog.database.password.validator" />           
         </field>        
     </panel>
 
-    <!-- HTTP panel -->
+    <!-- HTTP/HTTPS panel -->
     <panel id="httppanel">
-        <field type="title" size="2" txt="HTTP server Settings" id="input.httppanel.title"/> 
-        <field type="text" variable="project.server.http.port">
+        <field type="title" size="2" txt="HTTP/HTTPS server Settings" id="input.httppanel.title"/> 
+        <field type="radio" variable="project.server.http.type">
+            <description txt="Select the server you want to configure" id="description.radio"/>
+            <spec txt="Type: " id="input.smtp.server" size="25" set="">
+                <choice txt="HTTP" id="input.smtp.tls.radio.1" value="HTTP"/>
+                <choice txt="HTTPS" id="input.smtp.tls.radio.2" value="HTTPS" set="true"/>
+            </spec>                
+        </field>        
+        <field type="text" variable="project.server.http.port" conditionid="condition.http">
             <spec txt="Http Port:" id="input.httppanel.port" size="6" set=""/>
         </field>
-    </panel>
-
-    <!-- HTTPS panel -->
-    <panel id="httpspanel">
-        <field type="title" size="2" txt="HTTPS server Settings" id="input.httpspanel.title"/> 
-        <field type="text" variable="project.server.https.port">
+        <field type="text" variable="project.server.https.port" conditionid="condition.https">
             <spec txt="Https Port:" id="input.httpspanel.port" size="6" set=""/>
-        </field>
+        </field>        
     </panel>
 
     <!-- Proxy panel -->
@@ -82,12 +79,7 @@
         </field>
         <field type="text" variable="project.proxy.login" conditionid="condition.proxy.basic">
             <spec txt="Proxy Username:" id="input.proxypanel.login" size="20" set="">                               
-                <processor class="com.izforge.izpack.panels.userinput.processor.PasswordEncryptionProcessor" backupVariable="project.proxy.login.plain">
-                    <configuration>
-                        <encryptionKey>16BYTESSECRETKEY</encryptionKey>
-                        <algorithm>AES</algorithm>
-                    </configuration>
-                </processor>                                           
+                <processor class="fr.cnes.doi.izpack.processor.PasswordEncryptionProcessor" backupVariable="project.proxy.login.plain"/>
             </spec>    
         </field>
         <field type="password" variable="project.proxy.pwd" conditionid="condition.proxy.basic">
@@ -95,12 +87,7 @@
                 <pwd txt="Proxy Password:" size="20" set="" id="input.proxypanel.password"/>
                 <pwd txt="Retype Password:" size="20" set="" id="input.proxypanel.retypepassword"/>
                 
-                <processor class="com.izforge.izpack.panels.userinput.processor.PasswordEncryptionProcessor" backupVariable="project.proxy.pwd.plain">
-                    <configuration>
-                        <encryptionKey>MySecretKey</encryptionKey>
-                        <algorithm>AES</algorithm>
-                    </configuration>
-                </processor>                               
+                <processor class="fr.cnes.doi.izpack.processor.PasswordEncryptionProcessor" backupVariable="project.proxy.pwd.plain"/>
             </spec>
             <validator class="com.izforge.izpack.panels.userinput.validator.PasswordEqualityValidator" txt="Both keystore passwords must match." id="input.proxypanel.password.validator" />    
         </field>
@@ -115,24 +102,14 @@
         </field>         
         <field type="text" variable="project.inist.login">
             <spec txt="Login:" id="input.proxypanel.login" size="15" set="">                               
-                <processor class="com.izforge.izpack.panels.userinput.processor.PasswordEncryptionProcessor" backupVariable="project.mail.identifier.plain">
-                    <configuration>
-                        <encryptionKey>16BYTESSECRETKEY</encryptionKey>
-                        <algorithm>AES</algorithm>
-                    </configuration>
-                </processor>                              
+                <processor class="fr.cnes.doi.izpack.processor.PasswordEncryptionProcessor" backupVariable="project.mail.identifier.plain"/>                            
             </spec>
         </field>   
         <field type="password" variable="project.inist.pwd">
             <spec>   
                 <pwd txt="Password:" size="15" set="" id="input.db_pwd.label" />
                 <pwd txt="Retype Password:" size="15" set="" id="input.db_repwd.label"/>                                            
-                <processor class="com.izforge.izpack.panels.userinput.processor.PasswordEncryptionProcessor" backupVariable="project.mail.identifier.plain">
-                    <configuration>
-                        <encryptionKey>16BYTESSECRETKEY</encryptionKey>
-                        <algorithm>AES</algorithm>
-                    </configuration>
-                </processor>                              
+                <processor class="fr.cnes.doi.izpack.processor.PasswordEncryptionProcessor" backupVariable="project.mail.identifier.plain"/>                           
             </spec>
             <validator class="com.izforge.izpack.panels.userinput.validator.PasswordEqualityValidator" txt="Both keystore passwords must match." id="catalog.database.password.validator" />
         </field>                   
@@ -149,7 +126,7 @@
                 <choice txt="Year" id="input.smtp.tls.radio.3" value="1" />
             </spec>                
         </field>
-        <field type="text" variable="project.token.delay">
+        <field type="text" variable="project.token.delay" set="1">
             <spec txt="Time: " id="input.smtp.server" size="10" set=""/>
             <validator class="com.izforge.izpack.panels.userinput.validator.NotEmptyValidator" id="input.stmp.server.validator" txt="server is a required field" />
         </field>               
@@ -186,12 +163,7 @@
             <spec>
                 <pwd txt="Password:" size="15" set="" id="input.db_pwd.label" />
                 <pwd txt="Retype Password:" size="15" set="" id="input.db_repwd.label"/>
-                <processor class="com.izforge.izpack.panels.userinput.processor.PasswordEncryptionProcessor" backupVariable="project.db.pwd.plain">
-                    <configuration>
-                        <encryptionKey>16BYTESSECRETKEY</encryptionKey>
-                        <algorithm>AES</algorithm>
-                    </configuration>
-                </processor>                 
+                <processor class="fr.cnes.doi.izpack.processor.PasswordEncryptionProcessor" backupVariable="project.db.pwd.plain"/>
             </spec>
             <validator class="com.izforge.izpack.panels.userinput.validator.PasswordEqualityValidator" txt="Both keystore passwords must match." id="catalog.database.password.validator" />
         </field>        
@@ -206,12 +178,7 @@
         </field>
         <field type="text" variable="project.ldap.user">
             <spec size="15" txt="Login" set="" id="input.db_us">
-                <processor class="com.izforge.izpack.panels.userinput.processor.PasswordEncryptionProcessor" backupVariable="project.ldap.user.plain">
-                    <configuration>
-                        <encryptionKey>16BYTESSECRETKEY</encryptionKey>
-                        <algorithm>AES</algorithm>
-                    </configuration>
-                </processor>                 
+                <processor class="fr.cnes.doi.izpack.processor.PasswordEncryptionProcessor" backupVariable="project.ldap.user.plain"/>              
             </spec>            
             <validator class="com.izforge.izpack.panels.userinput.validator.NotEmptyValidator" id="input.user.name.validator" txt="User name is a required field" />
         </field>
@@ -219,12 +186,7 @@
             <spec>
                 <pwd txt="Password:" size="15" set="" id="input.db_pwd.label" />
                 <pwd txt="Retype Password:" size="15" set="" id="input.db_repwd.label"/>
-                <processor class="com.izforge.izpack.panels.userinput.processor.PasswordEncryptionProcessor" backupVariable="project.ldap.pwd.plain">
-                    <configuration>
-                        <encryptionKey>16BYTESSECRETKEY</encryptionKey>
-                        <algorithm>AES</algorithm>
-                    </configuration>
-                </processor>                  
+                <processor class="fr.cnes.doi.izpack.processor.PasswordEncryptionProcessor" backupVariable="project.ldap.pwd.plain"/>
             </spec>
             <validator class="com.izforge.izpack.panels.userinput.validator.PasswordEqualityValidator" txt="Both keystore passwords must match." id="catalog.database.password.validator" />
         </field> 

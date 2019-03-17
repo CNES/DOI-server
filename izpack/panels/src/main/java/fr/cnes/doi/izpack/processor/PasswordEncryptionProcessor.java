@@ -9,24 +9,26 @@ import com.izforge.izpack.api.exception.IzPackException;
 import com.izforge.izpack.panels.userinput.processor.Processor;
 import com.izforge.izpack.panels.userinput.processorclient.ProcessingClient;
 import com.izforge.izpack.util.Base64;
-import java.security.SecureRandom;
-import java.util.Collections;
-import java.util.Map;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
  *
  * @author malapert
  */
-public class PasswordEncryptionProcessor implements Processor
-{
+public class PasswordEncryptionProcessor implements Processor {
     private Cipher encryptCipher;
 
-    private static final Logger logger = Logger.getLogger(PasswordEncryptionProcessor.class.getName());
+    private static final Logger logger = Logger.getLogger(fr.cnes.doi.izpack.processor.PasswordEncryptionProcessor.class.getName());
 
     /**
      * Processes the contend of an input field.
@@ -37,74 +39,21 @@ public class PasswordEncryptionProcessor implements Processor
      */
     @Override
     public String process(ProcessingClient client)
-    {
-        String result;
-        Map<String, String> params = getParams(client);
-        String key = params.get("encryptionKey");
-        String algorithm = params.get("algorithm");
-        if (key != null && algorithm != null)
-        {
-            initialize(key, algorithm);
-            result = encryptString(client.getFieldContents(0));
-        }
-        else
-        {
-            throw new IzPackException("PasswordEncryptionProcessor requires encryptionKey and algorithm parameters");
-        }
-        return result;
-    }
-
-    private Map<String, String> getParams(ProcessingClient client)
-    {
-        Map<String, String> params = Collections.emptyMap();
-        try
-        {
-            if (client.hasParams())
-            {
-                params = client.getValidatorParams();
-            }
-        }
-        catch (Exception e)
-        {
-            logger.log(Level.WARNING, "Getting validator parameters failed: " + e, e);
-        }
-        return params;
-    }
-
-    private void initialize(String key, String algorithm)
-    {
-        try
-        {
+    {                
+        try {
             //Generate the key bytes
-            KeyGenerator keygen = KeyGenerator.getInstance(algorithm);
-            keygen.init(new SecureRandom(key.getBytes()));
-            byte[] keyBytes = keygen.generateKey().getEncoded();
-            SecretKeySpec specKey = new SecretKeySpec(keyBytes, algorithm);
+            byte[] keyBytes = "16BYTESSECRETKEY".getBytes(StandardCharsets.UTF_8);
+            SecretKeySpec specKey = new SecretKeySpec(keyBytes, "AES");
             //Initialize the encryption cipher
-            encryptCipher = Cipher.getInstance(algorithm);
+            encryptCipher = Cipher.getInstance("AES");
             encryptCipher.init(Cipher.ENCRYPT_MODE, specKey);
-        }
-        catch (Throwable exception)
-        {
-            logger.log(Level.WARNING, "Error initializing password encryption: " + exception, exception);
-            throw new IzPackException("Failed to initialise password encryption: " + exception.getMessage(), exception);
-        }
-    }
-
-    private String encryptString(String string)
-    {
-        String result;
-        try
-        {
-            byte[] cryptedbytes = encryptCipher.doFinal(string.getBytes("UTF-8"));
-            result = Base64.encodeBytes(cryptedbytes);
-        }
-        catch (Throwable exception)
-        {
-            logger.log(Level.WARNING, "Failed to encrypt password: " + exception, exception);
-            throw new IzPackException("Failed to encrypt password: " + exception.getMessage(), exception);
+            byte[] cryptedbytes = encryptCipher.doFinal(client.getFieldContents(0).getBytes("UTF-8"));
+            return Base64.encodeBytes(cryptedbytes);            
+        } catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | UnsupportedEncodingException | IllegalBlockSizeException | BadPaddingException ex) {
+            logger.log(Level.WARNING, "Failed to encrypt password: " + ex, ex);
+            throw new IzPackException("Failed to encrypt password: " + ex.getMessage(), ex);
         }
 
-        return result;
     }
+
 }

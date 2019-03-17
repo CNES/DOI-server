@@ -6,8 +6,12 @@
 package fr.cnes.doi.izpack.actions;
 
 import com.izforge.izpack.api.data.AutomatedInstallData;
+import com.izforge.izpack.api.data.Pack;
 import com.izforge.izpack.api.event.AbstractInstallerListener;
+import com.izforge.izpack.api.event.ProgressListener;
 import com.izforge.izpack.api.exception.InstallerException;
+import com.izforge.izpack.api.exception.IzPackException;
+import com.izforge.izpack.event.AbstractProgressInstallerListener;
 import static fr.cnes.doi.izpack.utils.Constants.ID_DB_HOST;
 import static fr.cnes.doi.izpack.utils.Constants.ID_DB_NAME;
 import static fr.cnes.doi.izpack.utils.Constants.ID_DB_PASSWORD;
@@ -34,25 +38,47 @@ import java.util.logging.Logger;
  *
  * @author malapert
  */
-public class InstallDatabaseAction extends AbstractInstallerListener {
+public class InstallDatabaseAction extends AbstractProgressInstallerListener {
 
     private static final Logger LOG = Logger.getLogger(InstallDatabaseAction.class.getName());
-    
+
     /**
      * List of Postgresql files for user database
      */
     private final List<String> listPostgreSQLFiles;
-
+    
     private AutomatedInstallData installData;
 
-    public InstallDatabaseAction() {
-        LOG.finer("db/doidb.sql");
+
+    public InstallDatabaseAction(AutomatedInstallData installData) {
+        super(installData);
+        LOG.info("db/doidb.sql");
+        this.installData = installData;
         listPostgreSQLFiles = new ArrayList<>();
         listPostgreSQLFiles.add("db/doidb.sql");
+       
     }
+    
 
     @Override
-    public void afterInstallerInitialization(AutomatedInstallData data) throws Exception {
+    public void afterPacks(List<Pack> packs, ProgressListener listener) {
+        super.afterPacks(packs, listener);
+        //boolean installDBSelected = Boolean.parseBoolean(getInstalldata().getVariable(
+        //        "dbInstallSelected"));
+        try {
+            //if (!installDBSelected) {
+            //    return;
+            //    boolean installDBSelected = Boolean.parseBoolean(getInstalldata().getVariable(
+            //            "dbInstallSelected"));
+            installDatabase();
+        } catch (Exception ex) {
+            Logger.getLogger(InstallDatabaseAction.class.getName()).log(Level.SEVERE, null, ex);
+            throw new IzPackException(ex);
+        }
+    }
+
+    public void installDatabase() throws Exception {
+        LOG.info(this.getDbName());
         LOG.log(Level.INFO, "Creating tables in {0}", this.getDbName());
         //boolean installDBSelected = Boolean.parseBoolean(this.installData.getVariable(
         //        "dbInstallSelected"));
@@ -60,13 +86,14 @@ public class InstallDatabaseAction extends AbstractInstallerListener {
         //if (!installDBSelected) {
         //    return;
         //}        
-        this.installData = data;
+        LOG.info(this.installData.getDefaultInstallPath());
         String installPath = this.installData.getInstallPath();
         String request;
         String ligne;
         Connection cnx = null;
         Statement stat = null;
         try {
+            LOG.info(getDriver());
             Class.forName(getDriver());
             cnx = DriverManager.getConnection(getUrl(), getUser(), getPassword());
             for (Iterator<String> iterator = listPostgreSQLFiles.iterator(); iterator.hasNext();) {
@@ -110,7 +137,6 @@ public class InstallDatabaseAction extends AbstractInstallerListener {
             }
         }
     }
-
 
     public String getDriver() {
         return "org.postgresql.Driver";

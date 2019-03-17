@@ -1,0 +1,149 @@
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>DOI-installer</artifactId>
+        <groupId>fr.cnes.doi</groupId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>izpack-doi-config</artifactId>
+    <name>Izpack DOI config</name>
+
+    <packaging>jar</packaging>
+
+    <!-- maven repository where the izpack-maven-plugin  and such live -->
+    <repositories>
+        <repository>
+            <id>codehaus-releases</id>
+            <url>https://nexus.codehaus.org/content/repositories/releases</url>
+        </repository>
+    </repositories>
+
+    <properties>
+        <izpack.staging>${project.build.directory}/staging</izpack.staging>
+        <installer-output-filename>DOI-installer.jar</installer-output-filename>
+    </properties>
+
+    <!-- must have a dependency on our separate package that contains the custom
+    panels -->
+
+    <dependencies>
+        <dependency>
+            <groupId>fr.cnes.doi</groupId>
+            <artifactId>DOI-server</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/postgresql/postgresql -->
+        <dependency>
+            <groupId>postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>9.1-901-1.jdbc4</version>
+        </dependency>           
+        <dependency>
+            <groupId>fr.cnes.doi</groupId>
+            <artifactId>izpack-doi-panels</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>create-staging-area</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <copy todir="${izpack.staging}">
+                                    <fileset dir="${basedir}/src/main/izpack"/>
+                                </copy>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+         
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <configuration>
+                    <excludeTransitive>false</excludeTransitive>
+                    <!-- reference our custom panels jar in our installer descriptor without its version -->
+                    <stripVersion>true</stripVersion>
+                    <overWriteReleases>true</overWriteReleases>
+                    <overWriteSnapshots>true</overWriteSnapshots>
+                    <overWriteIfNewer>true</overWriteIfNewer>
+                </configuration>
+                <executions>
+                    <execution>
+                        <!-- copy *application* jars to izpack staging lib -->
+                        <id>copy-product-dependencies</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${izpack.staging}/lib</outputDirectory>
+                            <excludeScope>system</excludeScope>
+                            <!-- this excludes tools.jar, e.g. -->
+                            <excludeArtifactIds>izpack-doi-panels</excludeArtifactIds>
+                            <!-- IMPORTANT: don't copy custom panels where our application jars live -->
+                            <excludeGroupIds>org.codehaus.izpack</excludeGroupIds>
+                            <!-- IMPORTANT: we don't want to copy the IzPack dependency where our application jars live -->
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <!-- copy izpack custom (custom panels, etc.) jars to izpack staging custom -->
+                        <id>copy-izpack-dependencies</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${izpack.staging}/custom</outputDirectory>
+                            <includeArtifactIds>izpack-doi-panels,postgresql,DOI-server</includeArtifactIds>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>             
+
+            <plugin>
+                <groupId>org.codehaus.izpack</groupId>
+                <artifactId>izpack-maven-plugin</artifactId>
+                <version>${izpack.version}</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>izpack</goal>
+                        </goals>
+                        <configuration>
+                            <!-- base for relative paths in izpack descriptor -->
+                            <baseDir>${izpack.staging}</baseDir>
+                            <installFile>${basedir}/src/main/izpack/install.xml</installFile>
+                            <enableAttachArtifact>false</enableAttachArtifact>
+                            <autoIncludeDevelopers>true</autoIncludeDevelopers>
+                            <autoIncludeUrl>true</autoIncludeUrl>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.izpack</groupId>
+                        <artifactId>izpack-panel</artifactId>
+                        <version>${izpack.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>    
+                                                
+        </plugins>
+    </build>
+
+</project>
