@@ -6,14 +6,8 @@
     <jar src="custom/izpack-doi-panels.jar" />
     <jar src="custom/postgresql.jar"/>
     <info>
-        <appname>DOI</appname>
-        <appversion>1.0.0</appversion>
-        <!--
-        <authors>
-            <author email="jean-christophe.malapert@cnes.fr" name="Jean-Christophe Malapert (CNES)" />
-            <author email="julien.perrin@atos.net" name="Julien Perrin (ATOS)" />
-        </authors>
-        -->
+        <appname>@{info.appName}</appname>
+        <appversion>@{info.version}</appversion>
         <uninstaller name="Uninstaller.jar" write="yes" />
         <javaversion>1.8</javaversion>
         <requiresjdk>no</requiresjdk>
@@ -45,7 +39,7 @@
         <res id="LicencePanel.licence_eng" parse="yes" src="../../../../COPYING.LESSER" />
         <res id="LicencePanel.licence_fra" parse="yes" src="../../../../COPYING.LESSER" />        
         <res id="userInputSpec.xml" src="custom/user_input_spec.xml" parse="yes" type="xml"/>
-        <res id="Heading.image" src="../../src/main/izpack/res/Cnes-logo.png" />        
+        <res id="Heading.image" src="../../src/main/java/fr/cnes/doi/izpack/res/Cnes-logo.png" />        
     </resources>     
 
     <dynamicvariables>
@@ -71,7 +65,11 @@
         <condition type="variable" id="condition.https">
             <name>project.server.http.type</name>
             <value>HTTPS</value>
-        </condition>                        
+        </condition>  
+        <condition type="variable" id="conditionSkipLdap">
+            <name>skip.ldap.validation</name>
+            <value>false</value>
+        </condition>                      
     </conditions>
  
     <panels>
@@ -85,7 +83,9 @@
             <validator classname="fr.cnes.doi.izpack.validator.JDBCConnectionValidator" />
         </panel>    
         <panel classname="UserInputPanel" id="tokenpanel" condition="myConfigurationIsSelected"/>   
-        <panel classname="UserInputPanel" id="ldappanel" condition="myConfigurationIsSelected"/> 
+        <panel classname="UserInputPanel" id="ldappanel" condition="myConfigurationIsSelected">
+            <validator classname="fr.cnes.doi.izpack.validator.LDAPConnectionValidator" condition="conditionSkipLdap"/>
+        </panel> 
         <panel classname="UserInputPanel" id="proxypanel" condition="myConfigurationIsSelected"/>
         <panel classname="UserInputPanel" id="smtppanel" condition="myConfigurationIsSelected"/>                             
         <panel classname="UserInputPanel" id="httppanel" condition="myConfigurationIsSelected"/>           

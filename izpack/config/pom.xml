@@ -24,7 +24,9 @@
 
     <properties>
         <izpack.staging>${project.build.directory}/staging</izpack.staging>
-        <installer-output-filename>DOI-installer.jar</installer-output-filename>
+        <installer-output-filename>DOI-installer.jar</installer-output-filename> 
+        <info.appName>DOI</info.appName>
+        <info.version>${project.version}</info.version>      
     </properties>
 
     <!-- must have a dependency on our separate package that contains the custom
@@ -50,6 +52,7 @@
     </dependencies>
 
     <build>
+        <sourceDirectory>src/main/java</sourceDirectory>  
         <plugins>
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
@@ -63,7 +66,7 @@
                         <configuration>
                             <tasks>
                                 <copy todir="${izpack.staging}">
-                                    <fileset dir="${basedir}/src/main/izpack"/>
+                                    <fileset dir="${basedir}/src/main/java/fr/cnes/doi/izpack"/>
                                 </copy>
                             </tasks>
                         </configuration>
@@ -127,7 +130,8 @@
                         <configuration>
                             <!-- base for relative paths in izpack descriptor -->
                             <baseDir>${izpack.staging}</baseDir>
-                            <installFile>${basedir}/src/main/izpack/install.xml</installFile>
+                            <finalName>DOI-${project.version}</finalName>
+                            <installFile>${basedir}/src/main/java/fr/cnes/doi/izpack/install.xml</installFile>
                             <enableAttachArtifact>false</enableAttachArtifact>
                             <autoIncludeDevelopers>true</autoIncludeDevelopers>
                             <autoIncludeUrl>true</autoIncludeUrl>

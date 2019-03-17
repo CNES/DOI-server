@@ -194,10 +194,14 @@
             <spec txt="Group: " set="doiserver" id="input.database.hostname.label" size="15" />
             <validator class="com.izforge.izpack.panels.userinput.validator.NotEmptyValidator" id="catalog.database.name.validator" txt="hostname is a required field" />
         </field>    
-        <field type="text" variable="project.ldap.group">
+        <field type="text" variable="project.ldap.user.admin">
             <spec txt="Administrator: " set="" id="input.database.hostname.label" size="15" />
             <validator class="com.izforge.izpack.panels.userinput.validator.NotEmptyValidator" id="catalog.database.name.validator" txt="hostname is a required field" />
-        </field>                    
+        </field>  
+        <!-- Skip validation in case customer has something wrong they want to fix later -->
+        <field type="check" align="left" variable="skip.ldap.validation">
+          <spec txt=" Skip LDAP validation (not recommended)" size="25" true="true" false="false" set="false"/>
+        </field>                          
     </panel>   
 
 </izpack:userinput>
