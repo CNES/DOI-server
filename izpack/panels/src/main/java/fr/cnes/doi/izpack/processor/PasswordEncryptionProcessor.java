@@ -1,7 +1,20 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2017-2019 Centre National d'Etudes Spatiales (CNES).
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3.0 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301  USA
  */
 package fr.cnes.doi.izpack.processor;
 
@@ -9,24 +22,26 @@ import com.izforge.izpack.api.exception.IzPackException;
 import com.izforge.izpack.panels.userinput.processor.Processor;
 import com.izforge.izpack.panels.userinput.processorclient.ProcessingClient;
 import com.izforge.izpack.util.Base64;
-import java.security.SecureRandom;
-import java.util.Collections;
-import java.util.Map;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
- *
- * @author malapert
+ * Crypting password
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-public class PasswordEncryptionProcessor implements Processor
-{
+public class PasswordEncryptionProcessor implements Processor {
     private Cipher encryptCipher;
 
-    private static final Logger logger = Logger.getLogger(PasswordEncryptionProcessor.class.getName());
+    private static final Logger logger = Logger.getLogger(fr.cnes.doi.izpack.processor.PasswordEncryptionProcessor.class.getName());
 
     /**
      * Processes the contend of an input field.
@@ -37,74 +52,31 @@ public class PasswordEncryptionProcessor implements Processor
      */
     @Override
     public String process(ProcessingClient client)
-    {
-        String result;
-        Map<String, String> params = getParams(client);
-        String key = params.get("encryptionKey");
-        String algorithm = params.get("algorithm");
-        if (key != null && algorithm != null)
-        {
-            initialize(key, algorithm);
-            result = encryptString(client.getFieldContents(0));
-        }
-        else
-        {
-            throw new IzPackException("PasswordEncryptionProcessor requires encryptionKey and algorithm parameters");
+    {                
+        final String textToCrypt = client.getFieldContents(0);
+        final String result;
+        if(textToCrypt.isEmpty()) {
+            result = "";
+        } else {
+            result = crypt(textToCrypt);
         }
         return result;
     }
-
-    private Map<String, String> getParams(ProcessingClient client)
-    {
-        Map<String, String> params = Collections.emptyMap();
-        try
-        {
-            if (client.hasParams())
-            {
-                params = client.getValidatorParams();
-            }
-        }
-        catch (Exception e)
-        {
-            logger.log(Level.WARNING, "Getting validator parameters failed: " + e, e);
-        }
-        return params;
-    }
-
-    private void initialize(String key, String algorithm)
-    {
-        try
-        {
+    
+    private String crypt(final String textToCrypt) {
+        try {
             //Generate the key bytes
-            KeyGenerator keygen = KeyGenerator.getInstance(algorithm);
-            keygen.init(new SecureRandom(key.getBytes()));
-            byte[] keyBytes = keygen.generateKey().getEncoded();
-            SecretKeySpec specKey = new SecretKeySpec(keyBytes, algorithm);
+            byte[] keyBytes = "16BYTESSECRETKEY".getBytes(StandardCharsets.UTF_8);
+            SecretKeySpec specKey = new SecretKeySpec(keyBytes, "AES");
             //Initialize the encryption cipher
-            encryptCipher = Cipher.getInstance(algorithm);
+            encryptCipher = Cipher.getInstance("AES");
             encryptCipher.init(Cipher.ENCRYPT_MODE, specKey);
-        }
-        catch (Throwable exception)
-        {
-            logger.log(Level.WARNING, "Error initializing password encryption: " + exception, exception);
-            throw new IzPackException("Failed to initialise password encryption: " + exception.getMessage(), exception);
-        }
+            byte[] cryptedbytes = encryptCipher.doFinal(textToCrypt.getBytes("UTF-8"));
+            return Base64.encodeBytes(cryptedbytes);            
+        } catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | UnsupportedEncodingException | IllegalBlockSizeException | BadPaddingException ex) {
+            logger.log(Level.WARNING, "Failed to encrypt password: " + ex, ex);
+            throw new IzPackException("Failed to encrypt password: " + ex.getMessage(), ex);
+        }        
     }
 
-    private String encryptString(String string)
-    {
-        String result;
-        try
-        {
-            byte[] cryptedbytes = encryptCipher.doFinal(string.getBytes("UTF-8"));
-            result = Base64.encodeBytes(cryptedbytes);
-        }
-        catch (Throwable exception)
-        {
-            logger.log(Level.WARNING, "Failed to encrypt password: " + exception, exception);
-            throw new IzPackException("Failed to encrypt password: " + exception.getMessage(), exception);
-        }
-
-        return result;
-    }
 }

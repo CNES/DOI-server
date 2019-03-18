@@ -1,13 +1,30 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2017-2019 Centre National d'Etudes Spatiales (CNES).
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3.0 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301  USA
  */
 package fr.cnes.doi.izpack.actions;
 
 import com.izforge.izpack.api.data.AutomatedInstallData;
-import com.izforge.izpack.api.event.AbstractInstallerListener;
+import com.izforge.izpack.api.data.Pack;
+import com.izforge.izpack.api.event.ProgressListener;
 import com.izforge.izpack.api.exception.InstallerException;
+import com.izforge.izpack.api.exception.IzPackException;
+import com.izforge.izpack.event.AbstractProgressInstallerListener;
+import fr.cnes.doi.izpack.utils.Constants;
 import static fr.cnes.doi.izpack.utils.Constants.ID_DB_HOST;
 import static fr.cnes.doi.izpack.utils.Constants.ID_DB_NAME;
 import static fr.cnes.doi.izpack.utils.Constants.ID_DB_PASSWORD;
@@ -31,36 +48,48 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author malapert
+ * Creates tables in database.
+ * @author Jean-Christophe Malaper (jean-christophe.malapert@cnes.fr)
  */
-public class InstallDatabaseAction extends AbstractInstallerListener {
+public class InstallDatabaseAction extends AbstractProgressInstallerListener {
 
     private static final Logger LOG = Logger.getLogger(InstallDatabaseAction.class.getName());
-    
+
     /**
      * List of Postgresql files for user database
      */
     private final List<String> listPostgreSQLFiles;
-
+    
+    /**
+     * Data from the GUI.
+     */
     private AutomatedInstallData installData;
 
-    public InstallDatabaseAction() {
-        LOG.finer("db/doidb.sql");
+
+    public InstallDatabaseAction(AutomatedInstallData installData) {
+        super(installData);
+        LOG.info("db/doidb.sql");
+        this.installData = installData;
         listPostgreSQLFiles = new ArrayList<>();
         listPostgreSQLFiles.add("db/doidb.sql");
+       
     }
+    
 
     @Override
-    public void afterInstallerInitialization(AutomatedInstallData data) throws Exception {
-        LOG.log(Level.INFO, "Creating tables in {0}", this.getDbName());
-        //boolean installDBSelected = Boolean.parseBoolean(this.installData.getVariable(
-        //        "dbInstallSelected"));
+    public void afterPacks(List<Pack> packs, ProgressListener listener) {
+        super.afterPacks(packs, listener);
+        try {
+            installDatabase();
+        } catch (Exception ex) {
+            Logger.getLogger(InstallDatabaseAction.class.getName()).log(Level.SEVERE, null, ex);
+            throw new IzPackException(ex);
+        }
+    }
 
-        //if (!installDBSelected) {
-        //    return;
-        //}        
-        this.installData = data;
+    public void installDatabase() throws Exception {
+        LOG.info(this.getDbName());
+        LOG.log(Level.INFO, "Creating tables in {0}", this.getDbName());     
         String installPath = this.installData.getInstallPath();
         String request;
         String ligne;
@@ -111,7 +140,6 @@ public class InstallDatabaseAction extends AbstractInstallerListener {
         }
     }
 
-
     public String getDriver() {
         return "org.postgresql.Driver";
     }
@@ -141,6 +169,6 @@ public class InstallDatabaseAction extends AbstractInstallerListener {
     }
 
     public String getPassword() {
-        return installData.getVariable(ID_DB_PASSWORD);
+        return installData.getVariable(Constants.ID_DB_PASSWORD_AFTER_INSTALL);
     }
 }

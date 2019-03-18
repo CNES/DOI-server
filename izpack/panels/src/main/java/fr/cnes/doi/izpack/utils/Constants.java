@@ -25,6 +25,19 @@ public class Constants {
   public static final String ID_DB_USER = "project.db.user";
   /** The db password */
   public static final String ID_DB_PASSWORD = "project.db.pwd";    
- 
+
+  public static final String ID_DB_PASSWORD_AFTER_INSTALL = "project.db.pwd.plain";
+  
   public static final String ID_DB_URL = "project.db.url";
+  
+  public static final String ID_LDAP_URL = "project.ldap.url";
+  
+  public static final String ID_LDAP_USER = "project.ldap.user";
+  
+  public static final String ID_LDAP_PWD = "project.ldap.pwd";
+  
+  public static final String ID_LDAP_GROUP = "project.ldap.group";
+  
+  public static final String ID_LDAP_GROUP_ADMIN = "project.ldap.user.admin";
+  
 }

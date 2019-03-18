@@ -3,15 +3,12 @@
                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                      xsi:schemaLocation="http://izpack.org/schema/installation http://izpack.org/schema/5.0/izpack-installation-5.0.xsd">
 
-    <jar src="custom/izpack-panels.jar" />
-    <jar src="custom/postgresql.jar"/>		     
+    <jar src="custom/izpack-doi-panels.jar" />
+    <jar src="custom/postgresql.jar"/>
     <info>
-        <appname>DOI</appname>
-        <appversion>1.0.0</appversion>
-        <authors>
-            <author email="jean-christophe.malapert@cnes.fr" name="Jean-Christophe Malapert (CNES)" />
-            <author email="julien.perrin@atos.net" name="Julien Perrin (ATOS)" />
-        </authors>
+        <appname>@{info.appName}</appname>
+        <appversion>@{info.version}</appversion>
+        <url>https://github.com/CNES/DOI-server</url>
         <uninstaller name="Uninstaller.jar" write="yes" />
         <javaversion>1.8</javaversion>
         <requiresjdk>no</requiresjdk>
@@ -43,13 +40,31 @@
         <res id="LicencePanel.licence_eng" parse="yes" src="../../../../COPYING.LESSER" />
         <res id="LicencePanel.licence_fra" parse="yes" src="../../../../COPYING.LESSER" />        
         <res id="userInputSpec.xml" src="custom/user_input_spec.xml" parse="yes" type="xml"/>
-        <res id="Heading.image" src="../../src/main/izpack/res/Cnes-logo.png" />        
+        <res id="Heading.image" src="../../src/main/java/fr/cnes/doi/izpack/res/Cnes-logo.png" />     
+        <!-- for internationnalization -->
+        <res id="userInputLang.xml_eng" src="i18n/userInputLang.xml_eng" />
+        <res id="userInputLang.xml_fra" src="i18n/userInputLang.xml_fra" />
+        <!--        <res id="CustomLangpack.xml_eng" src="i18n/myPacksLang.xml_eng" />
+        <res id="CustomLangpack.xml_fra" src="i18n/myPacksLang.xml_fra" />           -->
     </resources>     
-
+    
+    <variables>
+        <variable name="project.artifactId" value="@{info.appName}"/>
+        <variable name="project.version" value="@{info.version}"/>
+    </variables>
+    
     <dynamicvariables>
+        <variable name="project.server.http.port" value=""/>
+        <variable name="project.server.https.port" value=""/>
+        <variable name="project.proxy.host" value=""/>        
+        <variable name="project.proxy.port" value=""/>        
+        <variable name="project.proxy.login" value=""/>        
+        <variable name="project.proxy.pwd" value=""/>                 
         <variable name="project.db.url"
-                  value="jdbc:postgresql://${project.db.hostname}:${project.db.port}/${project.db.name}?currentSchema=project.db.schema"
-        />      
+                  value="jdbc:postgresql://${project.db.hostname}:${project.db.port}/${project.db.name}?currentSchema=${project.db.schema}"
+        /> 
+        <variable name="project.mail.server" value="${project.mail.protocol}://${project.mail.server.hostname}:${project.mail.server.port}"/>   
+        <variable name="project.ldap.url" value="ldap://${project.ldap.hostname}:${project.ldap.port}"/>               
     </dynamicvariables>
     <conditions>
         <condition type="packselection" id="myDatabaseIsSelected">
@@ -61,7 +76,19 @@
         <condition type="variable" id="condition.proxy.basic">
             <name>project.proxy.type</name>
             <value>PROXY_BASIC</value>
-        </condition>          
+        </condition>   
+        <condition type="variable" id="condition.http">
+            <name>project.server.http.type</name>
+            <value>HTTP</value>
+        </condition>
+        <condition type="variable" id="condition.https">
+            <name>project.server.http.type</name>
+            <value>HTTPS</value>
+        </condition>  
+        <condition type="variable" id="conditionSkipLdap">
+            <name>skip.ldap.validation</name>
+            <value>false</value>
+        </condition>                      
     </conditions>
  
     <panels>
@@ -75,12 +102,12 @@
             <validator classname="fr.cnes.doi.izpack.validator.JDBCConnectionValidator" />
         </panel>    
         <panel classname="UserInputPanel" id="tokenpanel" condition="myConfigurationIsSelected"/>   
-        <panel classname="UserInputPanel" id="ldappanel" condition="myConfigurationIsSelected"/> 
+        <panel classname="UserInputPanel" id="ldappanel" condition="myConfigurationIsSelected">
+            <validator classname="fr.cnes.doi.izpack.validator.LDAPConnectionValidator" condition="conditionSkipLdap"/>
+        </panel> 
         <panel classname="UserInputPanel" id="proxypanel" condition="myConfigurationIsSelected"/>
         <panel classname="UserInputPanel" id="smtppanel" condition="myConfigurationIsSelected"/>                             
-        <panel classname="UserInputPanel" id="httppanel" condition="myConfigurationIsSelected"/>
-        <panel classname="UserInputPanel" id="httpspanel" condition="myConfigurationIsSelected"/>       
-           
+        <panel classname="UserInputPanel" id="httppanel" condition="myConfigurationIsSelected"/>           
         
         <panel classname="SummaryPanel" />
         <panel classname="InstallPanel"/>
@@ -93,8 +120,12 @@
         </pack>
         <pack name="DOI" preselected="yes" required="yes" parent="Server">
             <description>This package installs the core of the server</description>
-            <file src="custom/DOI.jar" targetdir="$INSTALL_PATH" unpack="false" /> 
+            <file src="custom/DOI-server.jar" targetdir="$INSTALL_PATH" unpack="false" />
             <file override="true" src="config/config.properties" targetdir="$INSTALL_PATH/" />   
+            <file override="true" src="config/log4j2.xml" targetdir="$INSTALL_PATH/" />
+            <file override="true" src="res/doi.sh" targetdir="$INSTALL_PATH/" />
+            <file override="true" src="db/doidb.sql" targetdir="$INSTALL_PATH/db" />
+            <executable targetfile="$INSTALL_PATH/doi.sh" stage="never" />
             <parsable targetfile="$INSTALL_PATH/config.properties"/>
         </pack>     
         <pack name="Configuration" preselected="yes" required="no" parent="Server">
