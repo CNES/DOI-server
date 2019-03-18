@@ -1,7 +1,20 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2017-2019 Centre National d'Etudes Spatiales (CNES).
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3.0 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301  USA
  */
 package fr.cnes.doi.izpack.processor;
 
@@ -22,8 +35,8 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
- *
- * @author malapert
+ * Crypting password
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class PasswordEncryptionProcessor implements Processor {
     private Cipher encryptCipher;
@@ -40,6 +53,17 @@ public class PasswordEncryptionProcessor implements Processor {
     @Override
     public String process(ProcessingClient client)
     {                
+        final String textToCrypt = client.getFieldContents(0);
+        final String result;
+        if(textToCrypt.isEmpty()) {
+            result = "";
+        } else {
+            result = crypt(textToCrypt);
+        }
+        return result;
+    }
+    
+    private String crypt(final String textToCrypt) {
         try {
             //Generate the key bytes
             byte[] keyBytes = "16BYTESSECRETKEY".getBytes(StandardCharsets.UTF_8);
@@ -47,13 +71,12 @@ public class PasswordEncryptionProcessor implements Processor {
             //Initialize the encryption cipher
             encryptCipher = Cipher.getInstance("AES");
             encryptCipher.init(Cipher.ENCRYPT_MODE, specKey);
-            byte[] cryptedbytes = encryptCipher.doFinal(client.getFieldContents(0).getBytes("UTF-8"));
+            byte[] cryptedbytes = encryptCipher.doFinal(textToCrypt.getBytes("UTF-8"));
             return Base64.encodeBytes(cryptedbytes);            
         } catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | UnsupportedEncodingException | IllegalBlockSizeException | BadPaddingException ex) {
             logger.log(Level.WARNING, "Failed to encrypt password: " + ex, ex);
             throw new IzPackException("Failed to encrypt password: " + ex.getMessage(), ex);
-        }
-
+        }        
     }
 
 }

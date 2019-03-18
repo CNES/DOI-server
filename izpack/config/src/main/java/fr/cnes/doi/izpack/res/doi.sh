@@ -19,7 +19,7 @@ case “$1” in
             echo “.”
             ;;
         *)
-          echo “Usage: /etc/init.d/sshd start|stop|restart”
+          echo “Usage: doi.sh start|stop|restart”
           exit 1
           ;;
     esac

@@ -134,7 +134,6 @@
                             <installFile>${basedir}/src/main/java/fr/cnes/doi/izpack/install.xml</installFile>
                             <enableAttachArtifact>false</enableAttachArtifact>
                             <autoIncludeDevelopers>true</autoIncludeDevelopers>
-                            <autoIncludeUrl>true</autoIncludeUrl>
                         </configuration>
                     </execution>
                 </executions>

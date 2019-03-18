@@ -19,6 +19,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -62,6 +63,9 @@ public class JDBCConnectionValidator implements DataValidator {
 
         try {
             Class.forName(getDriver());
+            LOG.log(Level.INFO, "url: {0}", getUrl());
+            LOG.log(Level.INFO, "user: {0}", getUser());
+            LOG.log(Level.INFO, "pwd: {0}", getPassword());
             Connection conn = DriverManager.getConnection(getUrl(), getUser(), getPassword());
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(getQuery());
@@ -84,7 +88,7 @@ public class JDBCConnectionValidator implements DataValidator {
     public String getUrl() {
         String url = "jdbc:postgresql://" + getHost() + ":" + getPort() + "/" + getDbName();
         if (getSchema() != null && !"".equals(getSchema())) {
-            url += "?schema=" + getSchema();
+            url += "?currentSchema=" + getSchema();
         }
         return url;
     }
