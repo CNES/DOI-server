@@ -19,7 +19,9 @@
 package fr.cnes.doi.security;
 
 import fr.cnes.doi.db.AbstractTokenDBHelper;
+import fr.cnes.doi.db.AbstractUserRoleDBHelper;
 import fr.cnes.doi.logging.business.JsonMessage;
+import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.utils.spec.Requirement;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -118,6 +120,7 @@ public class TokenBasedVerifier implements Verifier {
             final String token) {
         LOG.traceEntry(new JsonMessage(request));
         LOG.traceEntry(token);
+        final AbstractUserRoleDBHelper manageUsers = PluginFactory.getUserManagement();
         final int result;
         if (this.tokenDB.isExpired(token)) {
             this.tokenDB.deleteToken(token);
@@ -130,7 +133,8 @@ public class TokenBasedVerifier implements Verifier {
             final String userID = body.getSubject();
             final Integer projectID = (Integer) body.get(TokenSecurity.PROJECT_ID);
             LOG.info("token {} is valid, {} for {} are authenticated", token, userID, projectID);
-            request.getClientInfo().setUser(new User(userID));
+//            request.getClientInfo().setUser(new User(userID));
+            request.getClientInfo().setUser(manageUsers.getRealm().findUser(userID));
             request.getHeaders().set(UtilsHeader.SELECTED_ROLE_PARAMETER, String.valueOf(projectID));
         }
         return LOG.traceExit(result);
