@@ -110,6 +110,16 @@
   <str id="input.ldappanel.group.validation" txt="Group is a required field!"/>
   <str id="input.ldappanel.admin" txt="Administrator:"/>
   <str id="input.ldappanel.admin.validation" txt="Administrator is a required field!"/>
+  <str id="input.ldappanel.search.group" txt="Filter expression to get the group:"/>
+  <str id="input.ldappanel.search.group.validation" txt="Filter expression is a required field!"/>
+  <str id="input.ldappanel.search.user" txt="Filter expression to get the user:"/>
+  <str id="input.ldappanel.search.user.validation" txt="Filter expression is a required field!"/>
+  <str id="input.ldappanel.attr.username" txt="Username attribute in LDAP:"/>
+  <str id="input.ldappanel.attr.username.validation" txt="Username attribute is a required field!"/>
+  <str id="input.ldappanel.attr.mail" txt="Email attribute in LDAP:"/>
+  <str id="input.ldappanel.attr.mail.validation" txt="Email attribute is a required field!"/>
+  <str id="input.ldappanel.attr.fullname" txt="User fullname attribute in LDAP:"/>
+  <str id="input.ldappanel.attr.fullname.validation" txt="User fullname attribute is a required field!"/>
   <str id="input.ldappanel.skip" txt="Skip LDAP validation (not recommended)"/>
 
 </izpack:langpack>

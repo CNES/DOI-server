@@ -95,9 +95,14 @@ public class LDAPAccessServiceImpl implements ILDAPAccessService {
         prop.put(Context.PROVIDER_URL, conf.getString(Consts.LDAP_URL));
         prop.put(Context.SECURITY_AUTHENTICATION, "simple");
         try {
+
             prop.put(Context.SECURITY_PRINCIPAL,
-                    "uid=" + UtilsCryptography.decrypt(conf.getString(Consts.LDAP_USER))
-                    + ",cn=users,cn=accounts,dc=sis,dc=cnes,dc=fr");
+                    String.format(
+                            "uid=%s,%s",
+                            UtilsCryptography.decrypt(conf.getString(Consts.LDAP_USER)),
+                            conf.getString(Consts.LDAP_SEARCH_USER)
+                    )
+            );
             prop.put(Context.SECURITY_CREDENTIALS,
                     UtilsCryptography.decrypt(conf.getString(Consts.LDAP_PWD)));
         } catch (Exception e) {
@@ -122,8 +127,11 @@ public class LDAPAccessServiceImpl implements ILDAPAccessService {
         prop.put(Context.PROVIDER_URL, conf.getString(Consts.LDAP_URL));
         prop.put(Context.SECURITY_AUTHENTICATION, "simple");
         prop.put(Context.SECURITY_CREDENTIALS, password);
-        prop.put(Context.SECURITY_PRINCIPAL,
-                "uid=" + login + ",cn=users,cn=accounts,dc=sis,dc=cnes,dc=fr");
+        prop.put(Context.SECURITY_PRINCIPAL, String.format(
+                "uid=%s,%s", 
+                UtilsCryptography.decrypt(conf.getString(Consts.LDAP_USER)), 
+                conf.getString(Consts.LDAP_SEARCH_USER))
+        );
         InitialLdapContext context = null;
         boolean isAuthenticate;
         try {
@@ -162,14 +170,16 @@ public class LDAPAccessServiceImpl implements ILDAPAccessService {
             constraints.setSearchScope(SearchControls.SUBTREE_SCOPE);
             final String[] attrIDs = {"gidNumber",};
             constraints.setReturningAttributes(attrIDs);
+
             final NamingEnumeration answer = context.search(
-                    "cn=groups,cn=accounts,dc=sis,dc=cnes,dc=fr",
-                    "cn=" + conf.getString(Consts.LDAP_PROJECT), constraints);
+                    conf.getString(Consts.LDAP_SEARCH_GROUP),
+                    "cn=" + conf.getString(Consts.LDAP_PROJECT),
+                    constraints
+            );
             final List<LDAPUser> members = new ArrayList<>();
             if (answer.hasMore()) {
                 final NamingEnumeration<?> attrs = ((SearchResult) answer.next()).getAttributes().
-                        get(
-                                "gidNumber").getAll();
+                        get("gidNumber").getAll();
                 members.addAll(getLdapUsers(context, attrs.next().toString()));
             }
             return LOGGER.traceExit(members);
@@ -193,12 +203,19 @@ public class LDAPAccessServiceImpl implements ILDAPAccessService {
         final List<LDAPUser> ldapuserList = new ArrayList<>();
         final SearchControls controls = new SearchControls();
         controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-        final String[] attrIDs = {"uid", "mail", "cn"};
+        final String[] attrIDs = {
+            conf.getString(Consts.LDAP_ATTR_USERNAME),
+            conf.getString(Consts.LDAP_ATTR_MAIL),
+            conf.getString(Consts.LDAP_ATTR_FULLNAME)
+        };
         controls.setReturningAttributes(attrIDs);
 
-        final NamingEnumeration answer = context.search("cn=users,cn=accounts,dc=sis,dc=cnes,dc=fr",
-                "(|(gidNumber=" + gidNumber + ")(memberOf=cn=" + conf.getString(Consts.LDAP_PROJECT)
-                + ",cn=groups,cn=accounts,dc=sis,dc=cnes,dc=fr))",
+        final NamingEnumeration answer = context.search(conf.getString(Consts.LDAP_SEARCH_USER),
+                String.format(
+                        "(|(gidNumber=%s)(memberOf=cn=%s,%s))",
+                        gidNumber, conf.getString(Consts.LDAP_PROJECT), conf.getString(
+                        Consts.LDAP_SEARCH_GROUP)
+                ),
                 controls);
         while (answer.hasMore()) {
             final NamingEnumeration<? extends Attribute> attrbs = ((SearchResult) answer.next())
@@ -209,34 +226,23 @@ public class LDAPAccessServiceImpl implements ILDAPAccessService {
             while (attrbs.hasMore()) {
                 final Attribute att = attrbs.next();
                 final String attId = att.getID();
-                if (null != attId) {
-                    switch (attId) {
-                        case "cn": {
-                            final NamingEnumeration<?> values = att.getAll();
-                            while (values.hasMoreElements()) {
-                                fullname = values.next().toString();
-                                break;
-                            }
-                            break;
-                        }
-                        case "mail": {
-                            final NamingEnumeration<?> values = att.getAll();
-                            while (values.hasMoreElements()) {
-                                mail = values.next().toString();
-                                break;
-                            }
-                            break;
-                        }
-                        case "uid": {
-                            final NamingEnumeration<?> values = att.getAll();
-                            while (values.hasMoreElements()) {
-                                uid = values.next().toString();
-                                break;
-                            }
-                            break;
-                        }
-                        default:
-                            break;
+                if (attrIDs[0].equals(attId)) {
+                    final NamingEnumeration<?> values = att.getAll();
+                    while (values.hasMoreElements()) {
+                        uid = values.next().toString();
+                        break;
+                    }
+                } else if (attrIDs[1].equals(attId)) {
+                    final NamingEnumeration<?> values = att.getAll();
+                    while (values.hasMoreElements()) {
+                        mail = values.next().toString();
+                        break;
+                    }
+                } else if (attrIDs[2].equals(attId)) {
+                    final NamingEnumeration<?> values = att.getAll();
+                    while (values.hasMoreElements()) {
+                        fullname = values.next().toString();
+                        break;
                     }
                 }
             }

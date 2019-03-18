@@ -27,7 +27,6 @@ import com.izforge.izpack.event.AbstractProgressInstallerListener;
 import fr.cnes.doi.izpack.utils.Constants;
 import static fr.cnes.doi.izpack.utils.Constants.ID_DB_HOST;
 import static fr.cnes.doi.izpack.utils.Constants.ID_DB_NAME;
-import static fr.cnes.doi.izpack.utils.Constants.ID_DB_PASSWORD;
 import static fr.cnes.doi.izpack.utils.Constants.ID_DB_PORT;
 import static fr.cnes.doi.izpack.utils.Constants.ID_DB_SCHEMA;
 import static fr.cnes.doi.izpack.utils.Constants.ID_DB_URL;
@@ -63,7 +62,7 @@ public class InstallDatabaseAction extends AbstractProgressInstallerListener {
     /**
      * Data from the GUI.
      */
-    private AutomatedInstallData installData;
+    private final AutomatedInstallData installData;
 
 
     public InstallDatabaseAction(AutomatedInstallData installData) {

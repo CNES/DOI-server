@@ -410,6 +410,31 @@ public final class Consts {
     public static final String LDAP_DOI_ADMIN = "Starter.LDAP.user.admin";
 
     /**
+     * Specifies the filter expression to get the group.
+     */
+    public static final String LDAP_SEARCH_GROUP = "Starter.LDAP.search.group";
+    
+    /**
+     * Specifies the filter expression to get the users.
+     */
+    public static final String LDAP_SEARCH_USER = "Starter.LDAP.search.user";
+    
+    /**
+     * Attributes name in LDAP for username.
+     */
+    public static final String LDAP_ATTR_USERNAME = "Starter.LDAP.attr.username";
+
+    /**
+     * Attributes name in LDAP for mail.
+     */
+    public static final String LDAP_ATTR_MAIL = "Starter.LDAP.attr.mail";    
+
+    /**
+     * Attributes name in LDAP for fullname.
+     */
+    public static final String LDAP_ATTR_FULLNAME = "Starter.LDAP.attr.fullname";
+    
+    /**
      * "Static" class cannot be instantiated
      */
     private Consts() {

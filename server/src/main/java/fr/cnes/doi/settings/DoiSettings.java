@@ -184,6 +184,30 @@ public final class DoiSettings {
         if (isNotExist(DoiSettings.MAP_PROPERTIES, Consts.PLUGIN_USER_GROUP_MGT)) {
             validation.append(message).append(Consts.PLUGIN_USER_GROUP_MGT).append("\n");
         }
+        if (isNotExist(DoiSettings.MAP_PROPERTIES, Consts.DB_URL)) {
+            validation.append(message).append(Consts.DB_URL).append("\n");
+        }  
+        if (isNotExist(DoiSettings.MAP_PROPERTIES, Consts.LDAP_ATTR_FULLNAME)) {
+            validation.append(message).append(Consts.LDAP_ATTR_FULLNAME).append("\n");
+        }
+        if (isNotExist(DoiSettings.MAP_PROPERTIES, Consts.LDAP_ATTR_MAIL)) {
+            validation.append(message).append(Consts.LDAP_ATTR_MAIL).append("\n");
+        } 
+        if (isNotExist(DoiSettings.MAP_PROPERTIES, Consts.LDAP_ATTR_USERNAME)) {
+            validation.append(message).append(Consts.LDAP_ATTR_USERNAME).append("\n");
+        } 
+        if (isNotExist(DoiSettings.MAP_PROPERTIES, Consts.LDAP_PROJECT)) {
+            validation.append(message).append(Consts.LDAP_PROJECT).append("\n");
+        } 
+        if (isNotExist(DoiSettings.MAP_PROPERTIES, Consts.LDAP_URL)) {
+            validation.append(message).append(Consts.LDAP_URL).append("\n");
+        } 
+        if (isNotExist(DoiSettings.MAP_PROPERTIES, Consts.LDAP_SEARCH_GROUP)) {
+            validation.append(message).append(Consts.LDAP_SEARCH_GROUP).append("\n");
+        }  
+        if (isNotExist(DoiSettings.MAP_PROPERTIES, Consts.LDAP_SEARCH_USER)) {
+            validation.append(message).append(Consts.LDAP_SEARCH_USER).append("\n");
+        }        
         if (validation.length() != 0) {
             throw LOG.traceExit(new DoiRuntimeException(validation.toString()));
         }

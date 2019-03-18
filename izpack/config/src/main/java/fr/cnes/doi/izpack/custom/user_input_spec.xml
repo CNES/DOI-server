@@ -272,6 +272,41 @@
             <validator class="com.izforge.izpack.panels.userinput.validator.NotEmptyValidator" 
                        id="input.ldappanel.admin.validation" txt="Administrator is a required field" />
         </field>  
+        <field type="text" variable="project.ldap.search.group">
+            <spec txt="Filter expression to get the group:" 
+                  set="cn=groups,cn=accounts,dc=sis,dc=cnes,dc=fr" 
+                  id="input.ldappanel.search.group" size="25" />
+            <validator class="com.izforge.izpack.panels.userinput.validator.NotEmptyValidator" 
+                       id="input.ldappanel.search.group.validation" txt="Filter expression is a required field" />
+        </field>
+        <field type="text" variable="project.ldap.search.user">
+            <spec txt="Filter expression to get the users:" 
+                  set="cn=users,cn=accounts,dc=sis,dc=cnes,dc=fr" 
+                  id="input.ldappanel.search.group" size="25" />
+            <validator class="com.izforge.izpack.panels.userinput.validator.NotEmptyValidator" 
+                       id="input.ldappanel.search.group.validation" txt="Filter expression is a required field" />
+        </field>   
+        <field type="text" variable="project.ldap.attr.username">
+            <spec txt="Username attribute in LDAP:" 
+                  set="uid" 
+                  id="input.ldappanel.attr.username" size="15" />
+            <validator class="com.izforge.izpack.panels.userinput.validator.NotEmptyValidator" 
+                       id="input.ldappanel.attr.username.validation" txt="Username attribute is a required field" />
+        </field>  
+        <field type="text" variable="project.ldap.attr.mail">
+            <spec txt="Mail attribute in LDAP:" 
+                  set="mail" 
+                  id="input.ldappanel.attr.mail" size="15" />
+            <validator class="com.izforge.izpack.panels.userinput.validator.NotEmptyValidator" 
+                       id="input.ldappanel.attr.mail.validation" txt="Username attribute is a required field" />
+        </field>  
+        <field type="text" variable="project.ldap.attr.fullname">
+            <spec txt="User full name attribute in LDAP:" 
+                  set="cn" 
+                  id="input.ldappanel.attr.fullname" size="15" />
+            <validator class="com.izforge.izpack.panels.userinput.validator.NotEmptyValidator" 
+                       id="input.ldappanel.attr.mail.validation" txt="User full name attribute is a required field" />
+        </field>                                      
         <!-- Skip validation in case customer has something wrong they want to fix later -->
         <field type="check" align="left" variable="skip.ldap.validation">
             <spec txt=" Skip LDAP validation (not recommended)" size="25" true="true" false="false" set="false"

@@ -4,12 +4,12 @@ A Digital Object Identifier (DOI) is an alphanumeric string assigned to uniquely
 It is tied to a metadata description of the object as well as to a digital location, such as a URL, 
 where all the details about the object are accessible.
 
-### Synopsis
+## 1- Synopsis
 
 This document provides the motivation of the project and the different instructions to both install
 and use the DOI-Server. 
 
-### Motivation
+## 2- Motivation
 
 To create a DOI, a user needs to be connected to DATACITE so that he sends the metadata and the URL 
 of the landing page. Within an organization, the same password to DATACITE cannot be shared for all 
@@ -21,13 +21,13 @@ client uses the DOI-Server web services to handle the DOI.
 DOI-Server is also generic because he can host several plugins to handle the databases (projects, 
 role and DOI number generation). 
 
-## Getting Started
+## 3- Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for 
 development and testing purposes. See deployment for notes on how to deploy the project on a 
 live system.
 
-### Prerequisities
+### 3.1- Prerequisities
 
 What things you need to install the software and how to install them
 
@@ -35,9 +35,40 @@ What things you need to install the software and how to install them
 Openjdk version 1.8
 Apache Maven 3.5.2
 Git version 2.17.1
+PostgreSQL version 9.2
 ```
 
-### Installing
+PostgreSQL installation
+
+```
+// installing database
+yum install postgresql-server postgresql-contrib
+
+// init database
+postgresql-setup initdb
+
+// changing authentication mode
+sed -i '/\(^host.*127.0.0.1\/32\)/s/ident/md5/' /var/lib/pgsql/data/pg_hba.conf
+
+// starting postgreSQL
+systemctl start postgresql
+
+// attaching postgreSQL at boot
+systemctl enable postgresql
+
+// changing postgres user
+su postgres
+psql
+\password
+<set the password>
+\q
+exit
+```
+
+
+### 3.2- Installing for developers
+
+#### 3.2.1- Installing
 
 Clone the repository
 
@@ -45,76 +76,97 @@ Clone the repository
 git clone https://github.com/CNES/DOI-server.git && cd DOI-server
 ```
 
-Compile and run the tests
+Define the settings, which will be used for the compilation
 
 ```
-mvn install
-```
+mkdir $HOME/.m2
+echo "
+<settings>
+    <servers>
+        <server>
+            <id>dbpostgresql</id>
+            <!-- user for the Postgres database admin -->
+            <username></username>
+            <!-- password for the Postgres database admin -->
+            <password></password>   
+        </server>     
+    </servers>
+    
+    <profiles>
+        <profile>
+            <id>inject-doiserver</id>
+            <properties>
+                <!-- password for doiserver user -->
+                <doiserver-pwd></doiserver-pwd>
+                <!-- password for the DOI-server admin -->
+                <doi-admin-pwd></doi-admin-pwd>                
+            </properties>            
+        </profile>
+    </profiles>
+    
+    <activeProfiles>
+        <activeProfile>inject-doiserver</activeProfile>
+    </activeProfiles>
+        
+</settings>
+" > $HOME/.m2/settings.xml
 
-End with an example of getting some data out of the system or using it for a little demo
+// compiling DOI-server and testing
+cd DOI-server && mvn clean install
 
-## Example Use
-
-Show what the library does as concisely as possible, developers should be able to figure out **how** your project solves their problem by looking at the code example. Make sure the API you are showing off is obvious, and that your code is short and concise.
-
-## API Reference
-
-Depending on the size of the project, if it is small and simple enough the reference docs can be added to the README. For medium size to larger projects it is important to at least provide a link to where the API reference docs live.
-
-## Running the tests
-
-Run the unit tests 
-
-```
-mvn test
-```
-
-Run the integration tests
-
-```
+// Testing integration tests
 mvn verify -P integration-test
-```
 
-### Break down into end to end tests
-
-Explain what these tests test and why
+// Installing
+java -jar DOI-server-1.0.0-SNAPSHOT.jar
 
 ```
-Give an example
-```
 
-### And coding style tests
+#### 3.2.2- Running DOI-server
 
-Explain what these tests test and why
+Creating the configuration file
 
 ```
-Give an example
+java -Dlog4j.configurationFile=server/target/log4j2.xml -jar server/target/DOI-server-1.0.0-SNAPSHOT.jar -d > doi.conf
 ```
 
-## Deployment
+Filling the configuration file 
 
-Add additional notes about how to deploy this on a live system
+```
+vim doi.conf
+```
 
-## Built With
-* Maven
+Starting the server
 
-## Contributing
+```
+java -Dlog4j.configurationFile=server/target/log4j2.xml -jar server/target/DOI-server-1.0.0-SNAPSHOT.jar -f doi.conf --start
+```
 
-Please read [CONTRIBUTING.md](http://github.com/J-Christophe/DOI/blob/master/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
+### 3.3- Installing for end-users (izpack)
 
-## Versioning
+#### 3.3.1- Installing
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/J-Christophe/DOI/tags). 
+Installing the package by IzPack
 
-## Authors
+```
+java -jar DOI-1.0.0-SNAPSHOT.jar
+```
 
-* **Jean-Christophe Malapert** - *Initial work* - [Jean-Christophe Malapert](https://github.com/J-Christophe)
+#### 3.3.2- Runnig DOI-server
 
-* **Claire Caillet** - *Initial work* - [Claire Caillet](https://github.com/ClaireCaillet)
+Go to the installation path
 
-See also the list of [contributors](https://github.com/CNES/DOI/graphs/contributors) who participated in this project.
+```
+cd $HOME/DOI
+```
+Running
 
-## License
+```
+./doi.sh start
+```
 
-This project is licensed under the **LGPLV3** - see the [LICENSE.md](https://github.com/CNES/DOI-server/blob/master/COPYING.LESSER) file for details.
+### 3.3- Connection to the GUI
 
+```
+firefox http(s)://localhost:<port>/ihm
+```
