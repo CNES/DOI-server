@@ -129,7 +129,7 @@ public class LDAPAccessServiceImpl implements ILDAPAccessService {
         final Hashtable<String, String> prop = new Hashtable<>();
         final String securityPrincipal = String.format(
                 "uid=%s,%s",
-                conf.getString(Consts.LDAP_DOI_ADMIN),
+                login,
                 conf.getString(Consts.LDAP_SEARCH_USER));
         final String ldapUrl = conf.getString(Consts.LDAP_URL);
         prop.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
