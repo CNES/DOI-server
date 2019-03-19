@@ -527,8 +527,8 @@
                     type: "POST",
                     url: "/mds/metadata",
                     data: xml,
-                    contentType: "text/xml",
-                    dataType: "xml",
+                    contentType: "text",
+                    dataType: "text",
                     headers: {
 // 			    	'Authorization': 'Basic ' + btoa('malapert:pwd'),  
                         'Authorization': "Bearer " + sessionStorage.getItem("token")
