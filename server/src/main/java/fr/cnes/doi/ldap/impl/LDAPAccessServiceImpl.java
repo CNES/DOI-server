@@ -85,38 +85,54 @@ public class LDAPAccessServiceImpl implements ILDAPAccessService {
     }
 
     /**
+     * Returns true when the LDAP context is well configured.
+     *
+     * @return true when the LDAP context is well configured otherwise false
+     */
+    private boolean isLdapConfigured() {
+        final String ldapUser = conf.getString(Consts.LDAP_USER);
+        final String ldapPwd = conf.getString(Consts.LDAP_PWD);
+        final String ldapSearchUser = conf.getString(Consts.LDAP_SEARCH_USER);
+        return !ldapUser.isEmpty() && !ldapPwd.isEmpty() && !ldapSearchUser.isEmpty();
+    }
+
+    /**
      * Init LDAP context.
      *
      * @return the context or null when a LDAP configuration is missing
      */
     private InitialLdapContext getContext() {
         LOGGER.traceEntry();
-        final Hashtable<String, String> prop = new Hashtable<>();
-        final String ldapUser = UtilsCryptography.decrypt(conf.getString(Consts.LDAP_USER));
-        final String ldapPwd = UtilsCryptography.decrypt(conf.getString(Consts.LDAP_PWD));
-        final String securityPrincipal = String.format(
-                "uid=%s,%s",
-                ldapUser, conf.getString(Consts.LDAP_SEARCH_USER)
-        );
-        final String ldapUrl = conf.getString(Consts.LDAP_URL);
-        prop.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-        prop.put(Context.PROVIDER_URL, ldapUrl);
-        prop.put(Context.SECURITY_AUTHENTICATION, "simple");
-        prop.put(Context.SECURITY_PRINCIPAL, securityPrincipal);
-        prop.put(Context.SECURITY_CREDENTIALS, ldapPwd);
+        InitialLdapContext context = null;        
+        if (isLdapConfigured()) {
+            final Hashtable<String, String> prop = new Hashtable<>();
+            final String ldapUser = UtilsCryptography.decrypt(conf.getString(Consts.LDAP_USER));
+            final String ldapPwd = UtilsCryptography.decrypt(conf.getString(Consts.LDAP_PWD));
+            final String securityPrincipal = String.format(
+                    "uid=%s,%s",
+                    ldapUser, conf.getString(Consts.LDAP_SEARCH_USER)
+            );
+            final String ldapUrl = conf.getString(Consts.LDAP_URL);
+            prop.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
+            prop.put(Context.PROVIDER_URL, ldapUrl);
+            prop.put(Context.SECURITY_AUTHENTICATION, "simple");
+            prop.put(Context.SECURITY_PRINCIPAL, securityPrincipal);
+            prop.put(Context.SECURITY_CREDENTIALS, ldapPwd);
 
-        LOGGER.info("LDAP context:\n  {}={}\n  {}={}\n  {}={}\n  {}={}\n  {}={}",
-                Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory",
-                Context.PROVIDER_URL, ldapUrl,
-                Context.SECURITY_AUTHENTICATION, "simple",
-                Context.SECURITY_PRINCIPAL, securityPrincipal,
-                Context.SECURITY_CREDENTIALS, Utils.transformPasswordToStars(ldapPwd));
+            LOGGER.info("LDAP context:\n  {}={}\n  {}={}\n  {}={}\n  {}={}\n  {}={}",
+                    Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory",
+                    Context.PROVIDER_URL, ldapUrl,
+                    Context.SECURITY_AUTHENTICATION, "simple",
+                    Context.SECURITY_PRINCIPAL, securityPrincipal,
+                    Context.SECURITY_CREDENTIALS, Utils.transformPasswordToStars(ldapPwd));
 
-        InitialLdapContext context = null;
-        try {
-            context = new InitialLdapContext(prop, null);
-        } catch (NamingException e) {
-            LOGGER.error("LDAPAccessImpl getContext: Unable to connect to Ldap", e);
+            try {
+                context = new InitialLdapContext(prop, null);
+            } catch (NamingException e) {
+                LOGGER.error("LDAPAccessImpl getContext: Unable to connect to Ldap", e);
+            }
+        } else {
+            LOGGER.error("LDAP is not well configured. Checks the configuration file");
         }
         return LOGGER.traceExit(context);
     }
@@ -225,7 +241,7 @@ public class LDAPAccessServiceImpl implements ILDAPAccessService {
             conf.getString(Consts.LDAP_ATTR_FULLNAME)
         };
         LOGGER.info("Getting attributes from LDAP: {}", (Object[]) attrIDs);
-        controls.setReturningAttributes(attrIDs);        
+        controls.setReturningAttributes(attrIDs);
 
         final String ldapProject = conf.getString(Consts.LDAP_PROJECT);
         final String ldapSearchGroup = conf.getString(Consts.LDAP_SEARCH_GROUP);
