@@ -251,9 +251,25 @@ public final class DoiSettings {
         LOG.traceEntry("Parameters : {}", properties);
         for (final Entry<Object, Object> entry : properties.entrySet()) {
             MAP_PROPERTIES.put((String) entry.getKey(), (String) entry.getValue());
-            LOG.log(level, "{} = {}", entry.getKey(), entry.getValue());
+            LOG.log(level, "{} = {}", entry.getKey(), 
+                    isPassword(String.valueOf(entry.getKey())) ? 
+                            Utils.transformPasswordToStars(String.valueOf(entry.getValue())) : 
+                            entry.getValue()
+            );
         }
         LOG.traceExit();
+    }
+    
+    /**
+     * Tests if the value of the key is a password
+     * @param key key to test
+     * @return True when the value of the key is a password otherwise false
+     */
+    private boolean isPassword(final String key) {
+        return (Consts.INIST_PWD.equals(key) || Consts.DB_PWD.equals(key) || Consts.LDAP_PWD.equals(
+                key) || Consts.SERVER_HTTPS_KEYSTORE_PASSWD.equals(key) || 
+                Consts.SERVER_HTTPS_SECRET_KEY.equals(key) || Consts.SERVER_PROXY_PWD.equals(key) || 
+                Consts.SMTP_AUTH_PWD.equals(key) || Consts.TOKEN_KEY.equals(key));
     }
 
     /**

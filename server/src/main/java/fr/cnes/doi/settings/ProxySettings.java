@@ -18,6 +18,7 @@
  */
 package fr.cnes.doi.settings;
 
+import fr.cnes.doi.utils.Utils;
 import fr.cnes.doi.utils.spec.Requirement;
 import fr.cnes.httpclient.HttpClientFactory.Type;
 import fr.cnes.httpclient.configuration.ProxyConfiguration;
@@ -125,7 +126,7 @@ public final class ProxySettings {
         LOG.info("proxyUser : {}", this.proxyUser);
 
         this.proxyPassword = settings.getSecret(Consts.SERVER_PROXY_PWD);
-        LOG.info("proxyPassword : {}", this.proxyPassword);
+        LOG.info("proxyPassword : {}", Utils.transformPasswordToStars(this.proxyPassword));
 
         this.nonProxyHosts = settings.getString(Consts.SERVER_NONPROXY_HOSTS, "localhost");
         LOG.info("nonProxyHosts : {}", this.nonProxyHosts);
