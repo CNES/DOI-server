@@ -461,7 +461,7 @@ public class AdminApplication extends AbstractApplication {
      * page</li>
      * <li>the website resources attached by default when it is available</li>
      * </ul>
-     * The website is located to {@link AdminApplication#IHM_DIR} directory when it is distributed
+     * The website is located to {@link AdminApplication#IHM_RESOURCE} directory when it is distributed
      * by the DOI server.
      *
      * @return The router for the public web site
