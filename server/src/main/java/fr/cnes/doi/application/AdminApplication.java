@@ -188,14 +188,19 @@ public class AdminApplication extends AbstractApplication {
     private static final Logger LOG = LogManager.getLogger(AdminApplication.class.getName());
 
     /**
-     * Default directory {@value #IHM_DIR} where the web site is located.
+     * URI {@value #IHM_RESOURCE} where the web site is located.
      */
-    private static final String IHM_DIR = "ihm";
+    private static final String IHM_RESOURCE = "/ihm";
 
     /**
      * Location of the resources for the status page in the classpath.
      */
     private static final String STATUS_PAGE_CLASSPATH = "class/website";
+
+    /**
+     * Location of the resources for the IHM in the classpath.
+     */
+    private static final String IHM_CLASSPATH = "class/ihm";
 
     /**
      * The period between successive executions : {@value #PERIOD_SCHEDULER}.
@@ -546,30 +551,22 @@ public class AdminApplication extends AbstractApplication {
 
     /**
      * Adds default route to the website when it exists. The website must be located in the
-     * {@value #IHM_DIR} directory.
+     * {@value #IHM_RESOURCE} directory.
      *
      * @param router router
      */
     private void addRouteForWebSite(final Router router) {
         LOG.traceEntry("Parameter : {}", new JsonMessage(router));
 
-        String pathApp = this.getConfig().getPathApp();
-        //TODO pour se lancer depuis le .jar (getPathApp différent + .jar récupère ihm sur la vm)
-        if (!pathApp.contains("/classes")) {
-            pathApp = pathApp + "/classes";
-        }
-        final File file = new File(pathApp + File.separator + IHM_DIR);
-        if (file.canRead()) {
-            LOG.info("The website for DOI server is ready here {}", file.getPath());
-            final Directory ihm = new Directory(getContext(), "file://" + file.getPath());
-            ihm.setListingAllowed(false);
-            ihm.setDeeplyAccessible(true);
-            ihm.setIndexName("authentication");
-            router.attach("/ihm", ihm);
+        final Directory ihm = new Directory(
+                getContext(),
+                LocalReference.createClapReference(IHM_CLASSPATH)
+        );
+        ihm.setListingAllowed(false);
+        ihm.setDeeplyAccessible(true);
+        ihm.setIndexName("authentication");
+        router.attach(IHM_RESOURCE, ihm);
 
-        } else {
-            LOG.warn("The website for DOI server is not installed");
-        }
         LOG.traceExit();
     }
 

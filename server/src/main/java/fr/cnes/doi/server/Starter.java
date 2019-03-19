@@ -236,7 +236,6 @@ public final class Starter {
             final String myPid = processName.split("@")[0];
             String line;
             while ((line = reader.readLine()) != null) {
-                LOG.info(serverName);
                 if (line.contains(serverName) && line.contains("java")) {
                     final String[] split = line.split("\\s+");
                     final String currentPid = split[1].trim();
