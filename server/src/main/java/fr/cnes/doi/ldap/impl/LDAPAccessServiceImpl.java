@@ -40,6 +40,7 @@ import fr.cnes.doi.security.UtilsCryptography;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.ldap.service.ILDAPAccessService;
+import fr.cnes.doi.utils.Utils;
 
 /**
  * Implementation of the LDAP.
@@ -91,23 +92,26 @@ public class LDAPAccessServiceImpl implements ILDAPAccessService {
     private InitialLdapContext getContext() {
         LOGGER.traceEntry();
         final Hashtable<String, String> prop = new Hashtable<>();
+        final String ldapUser = UtilsCryptography.decrypt(conf.getString(Consts.LDAP_USER));
+        final String ldapPwd = UtilsCryptography.decrypt(conf.getString(Consts.LDAP_PWD));
+        final String securityPrincipal = String.format(
+                "uid=%s,%s",
+                ldapUser, conf.getString(Consts.LDAP_SEARCH_USER)
+        );
+        final String ldapUrl = conf.getString(Consts.LDAP_URL);
         prop.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-        prop.put(Context.PROVIDER_URL, conf.getString(Consts.LDAP_URL));
+        prop.put(Context.PROVIDER_URL, ldapUrl);
         prop.put(Context.SECURITY_AUTHENTICATION, "simple");
-        try {
+        prop.put(Context.SECURITY_PRINCIPAL, securityPrincipal);
+        prop.put(Context.SECURITY_CREDENTIALS, ldapPwd);
 
-            prop.put(Context.SECURITY_PRINCIPAL,
-                    String.format(
-                            "uid=%s,%s",
-                            UtilsCryptography.decrypt(conf.getString(Consts.LDAP_USER)),
-                            conf.getString(Consts.LDAP_SEARCH_USER)
-                    )
-            );
-            prop.put(Context.SECURITY_CREDENTIALS,
-                    UtilsCryptography.decrypt(conf.getString(Consts.LDAP_PWD)));
-        } catch (Exception e) {
-            LOGGER.error("LDAPAccessImpl getContext: Unable to get Ldap password", e);
-        }
+        LOGGER.info("LDAP context:\n  {}={}\n  {}={}\n  {}={}\n  {}={}\n  {}={}",
+                Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory",
+                Context.PROVIDER_URL, ldapUrl,
+                Context.SECURITY_AUTHENTICATION, "simple",
+                Context.SECURITY_PRINCIPAL, securityPrincipal,
+                Context.SECURITY_CREDENTIALS, Utils.transformPasswordToStars(ldapPwd));
+
         InitialLdapContext context = null;
         try {
             context = new InitialLdapContext(prop, null);
@@ -123,15 +127,24 @@ public class LDAPAccessServiceImpl implements ILDAPAccessService {
     @Override
     public boolean authenticateUser(final String login, final String password) {
         final Hashtable<String, String> prop = new Hashtable<>();
+        final String securityPrincipal = String.format(
+                "uid=%s,%s",
+                UtilsCryptography.decrypt(conf.getString(Consts.LDAP_DOI_ADMIN)),
+                conf.getString(Consts.LDAP_SEARCH_USER));
+        final String ldapUrl = conf.getString(Consts.LDAP_URL);
         prop.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-        prop.put(Context.PROVIDER_URL, conf.getString(Consts.LDAP_URL));
+        prop.put(Context.PROVIDER_URL, ldapUrl);
         prop.put(Context.SECURITY_AUTHENTICATION, "simple");
+        prop.put(Context.SECURITY_PRINCIPAL, securityPrincipal);
         prop.put(Context.SECURITY_CREDENTIALS, password);
-        prop.put(Context.SECURITY_PRINCIPAL, String.format(
-                "uid=%s,%s", 
-                UtilsCryptography.decrypt(conf.getString(Consts.LDAP_USER)), 
-                conf.getString(Consts.LDAP_SEARCH_USER))
-        );
+
+        LOGGER.info("LDAP authentication:\n  {}={}\n  {}={}\n  {}={}\n  {}={}\n  {}={}",
+                Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory",
+                Context.PROVIDER_URL, ldapUrl,
+                Context.SECURITY_AUTHENTICATION, "simple",
+                Context.SECURITY_PRINCIPAL, securityPrincipal,
+                Context.SECURITY_CREDENTIALS, Utils.transformPasswordToStars(password));
+
         InitialLdapContext context = null;
         boolean isAuthenticate;
         try {
@@ -152,6 +165,7 @@ public class LDAPAccessServiceImpl implements ILDAPAccessService {
                 LOGGER.error("LDAPAccessImpl getContext: Unable to close context", e);
             }
         }
+        LOGGER.info("LDAP authentication: {}", isAuthenticate);
         return isAuthenticate;
     }
 
@@ -166,16 +180,18 @@ public class LDAPAccessServiceImpl implements ILDAPAccessService {
             throws LDAPAccessException {
         try {
             LOGGER.traceEntry("Parameters : {}", context);
+            final String searchGroup = conf.getString(Consts.LDAP_SEARCH_GROUP);
+            final String ldapProject = conf.getString(Consts.LDAP_PROJECT);
+
             final SearchControls constraints = new SearchControls();
             constraints.setSearchScope(SearchControls.SUBTREE_SCOPE);
             final String[] attrIDs = {"gidNumber",};
             constraints.setReturningAttributes(attrIDs);
 
-            final NamingEnumeration answer = context.search(
-                    conf.getString(Consts.LDAP_SEARCH_GROUP),
-                    "cn=" + conf.getString(Consts.LDAP_PROJECT),
-                    constraints
-            );
+            LOGGER.info("LDAP search({},{},{})", searchGroup, "cn=" + ldapProject, constraints);
+            final NamingEnumeration answer = context.search(searchGroup, "cn=" + ldapProject,
+                    constraints);
+            LOGGER.info("LDAP search : OK");
             final List<LDAPUser> members = new ArrayList<>();
             if (answer.hasMore()) {
                 final NamingEnumeration<?> attrs = ((SearchResult) answer.next()).getAttributes().
@@ -208,15 +224,20 @@ public class LDAPAccessServiceImpl implements ILDAPAccessService {
             conf.getString(Consts.LDAP_ATTR_MAIL),
             conf.getString(Consts.LDAP_ATTR_FULLNAME)
         };
-        controls.setReturningAttributes(attrIDs);
+        LOGGER.info("Getting attributes from LDAP: {}", (Object[]) attrIDs);
+        controls.setReturningAttributes(attrIDs);        
 
-        final NamingEnumeration answer = context.search(conf.getString(Consts.LDAP_SEARCH_USER),
-                String.format(
-                        "(|(gidNumber=%s)(memberOf=cn=%s,%s))",
-                        gidNumber, conf.getString(Consts.LDAP_PROJECT), conf.getString(
-                        Consts.LDAP_SEARCH_GROUP)
-                ),
-                controls);
+        final String ldapProject = conf.getString(Consts.LDAP_PROJECT);
+        final String ldapSearchGroup = conf.getString(Consts.LDAP_SEARCH_GROUP);
+        final String ldapSearchUser = conf.getString(Consts.LDAP_SEARCH_USER);
+        final String ldapSearchAttr = String.format(
+                "(|(gidNumber=%s)(memberOf=cn=%s,%s))",
+                gidNumber, ldapProject, ldapSearchGroup
+        );
+
+        LOGGER.info("LDAP search({},{},{}", ldapSearchUser, ldapSearchAttr, controls);
+        final NamingEnumeration answer = context.search(ldapSearchUser, ldapSearchAttr, controls);
+        LOGGER.info("LDAP search : OK");
         while (answer.hasMore()) {
             final NamingEnumeration<? extends Attribute> attrbs = ((SearchResult) answer.next())
                     .getAttributes().getAll();
