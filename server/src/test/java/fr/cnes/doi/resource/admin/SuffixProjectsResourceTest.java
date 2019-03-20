@@ -29,8 +29,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -66,12 +64,6 @@ import fr.cnes.doi.settings.DoiSettings;
  */
 @Category(UnitTest.class)
 public class SuffixProjectsResourceTest {
-
-    /**
-     * Cache file for tests.
-     */
-    private static final String cacheFile = "src" + File.separatorChar + "test" + File.separatorChar
-	    + "resources" + File.separatorChar + "projects.conf";
 
     /**
      * Client
@@ -120,27 +112,12 @@ public class SuffixProjectsResourceTest {
 
     @Before
     public void setUp() {
-	// Save the projects.conf file
-	try {
-	    Files.copy(new File(SuffixProjectsResourceTest.cacheFile).toPath(),
-		    new File(SuffixProjectsResourceTest.cacheFile + ".bak").toPath(),
-		    StandardCopyOption.REPLACE_EXISTING);
-	} catch (IOException e) {
-	}
 	Assume.assumeTrue("Database is not configured, please configure it and rerun the tests",
 		isDatabaseConfigured);
     }
 
     @After
     public void tearDown() {
-	// restore the cache file
-	try {
-	    Files.copy(new File(SuffixProjectsResourceTest.cacheFile + ".bak").toPath(),
-		    new File(SuffixProjectsResourceTest.cacheFile).toPath(),
-		    StandardCopyOption.REPLACE_EXISTING);
-	    Files.delete(new File(SuffixProjectsResourceTest.cacheFile + ".bak").toPath());
-	} catch (IOException e) {
-	}
     }
 
     /**

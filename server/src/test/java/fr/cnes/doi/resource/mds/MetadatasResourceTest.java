@@ -159,7 +159,7 @@ public class MetadatasResourceTest {
      * A CLIENT_ERROR_BAD_REQUEST status is expected because the metadata file is not valid.
      * The file is validated at the DOIServer level then DataCite is not requested.
      */    
-    //@Test
+    @Test
     public void testCreateMetadataHttpsWithWrongFile() throws IOException {
         testSpecCreateMetadataAsObj(MdsSpec.Spec.POST_METADATA_400, inputStreamFileError, "malapert", "pwd", "828606", 0);
     }  
@@ -170,7 +170,7 @@ public class MetadatasResourceTest {
      * A CLIENT_ERROR_UNAUTHORIZED is expected because the user is not related to a project then he
      * is not allowed to create a metadata.
      */
-    //@Test
+    @Test
     public void testCreateMetadataHttpsWithNoRole() throws IOException {
         testSpecCreateMetadataAsObj(MdsSpec.Spec.POST_METADATA_401, inputStream, "norole", "norole", null, 0);        
     }
@@ -182,7 +182,7 @@ public class MetadatasResourceTest {
      * role is provided then the DOIServer does not know which role must be applied. No request is 
      * done to DataCite
      */    
-    //@Test
+    @Test
     public void testCreateMetadataHttpsWithConflict() throws IOException {
         testSpecCreateMetadataAsObjWithConflict(MdsSpec.Spec.POST_METADATA_401, inputStream, "malapert", "pwd", null, 0);        
     }
@@ -271,11 +271,7 @@ public class MetadatasResourceTest {
             code = client.getStatus().getCode();
             rep.exhaust();
         } catch (ResourceException ex) {
-            code = ex.getStatus().getCode();
-//            if (code == Status.CONNECTOR_ERROR_COMMUNICATION.getCode()) {
-//                code = Status.CLIENT_ERROR_UNAUTHORIZED.getCode();
-//                System.out.println("****Cause : "+ex.getCause().getMessage());
-//            }            
+            code = ex.getStatus().getCode();            
         }
         client.release();
         assertEquals(409, code);        
