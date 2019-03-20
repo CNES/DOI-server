@@ -222,7 +222,7 @@ public final class TokenSecurity {
      * @param tokenKey token key
      */
     public void setTokenKey(final String tokenKey) {
-        LOG.traceEntry("Parameter : {0}", tokenKey);
+        LOG.traceEntry("Parameter : {}", tokenKey);
         this.tokenKey = tokenKey;
         LOG.debug(String.format("Set tokenKey to %s", tokenKey));
         LOG.traceExit();

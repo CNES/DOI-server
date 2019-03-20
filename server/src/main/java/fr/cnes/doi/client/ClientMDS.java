@@ -21,6 +21,7 @@ package fr.cnes.doi.client;
 import static fr.cnes.doi.client.ClientMDS.METADATA_RESOURCE;
 import fr.cnes.doi.exception.ClientMdsException;
 import fr.cnes.doi.settings.DoiSettings;
+import fr.cnes.doi.utils.Utils;
 import fr.cnes.doi.utils.spec.Requirement;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -215,8 +216,8 @@ public class ClientMDS extends BaseClient {
             final String login,
             final String pwd) throws ClientMdsException {
         this(context);
-        this.getLog().debug("Authentication with HTTP_BASIC : {0}/{1}",
-                new Object[]{login, pwd});
+        this.getLog().debug("Authentication with HTTP_BASIC : {}/{}",
+                login, Utils.transformPasswordToStars(pwd));
         this.getClient().setChallengeResponse(ChallengeScheme.HTTP_BASIC, login, pwd);
     }
 
@@ -230,8 +231,8 @@ public class ClientMDS extends BaseClient {
     public ClientMDS(final String login,
             final String pwd) throws ClientMdsException {
         this(Context.PROD);
-        this.getLog().debug("Authentication with HTTP_BASIC : {0}/{1}",
-                new Object[]{login, pwd});
+        this.getLog().debug("Authentication with HTTP_BASIC : {}/{}",
+                login, Utils.transformPasswordToStars(pwd));
         this.getClient().setChallengeResponse(ChallengeScheme.HTTP_BASIC, login, pwd);
     }
 
@@ -469,7 +470,7 @@ public class ClientMDS extends BaseClient {
         final Map<String, Object> requestAttributes = this.getClient().getRequestAttributes();
         requestAttributes.put("charset", StandardCharsets.UTF_8);
         requestAttributes.put("Content-Type", "text/plain");
-        this.getLog().info("POST {0} with parameters {1}", new Object[]{url, requestBody});
+        this.getLog().info("POST {} with parameters {}", url, requestBody);
         return this.getClient().post(requestBody, MediaType.TEXT_PLAIN);
     }
 
@@ -530,9 +531,9 @@ public class ClientMDS extends BaseClient {
      */
     public Representation getMetadata(final String doiName) throws ClientMdsException {
         final Reference url = createReferenceWithDOI(METADATA_RESOURCE, doiName);
-        this.getLog().debug("GET {0}", url.toString());
+        this.getLog().debug("GET {}", url.toString());
         this.getClient().setReference(url);
-        this.getLog().info("GET {0}", url);
+        this.getLog().info("GET {}", url);
         try {
             return this.getClient().get(MediaType.APPLICATION_XML);
         } catch (ResourceException ex) {
@@ -584,7 +585,7 @@ public class ClientMDS extends BaseClient {
             final Identifier identifier = entity.getIdentifier();
             identifier.setValue(getDoiAccorgindToContext(identifier.getValue()));
             final Reference url = createReference(METADATA_RESOURCE);
-            this.getLog().debug("PUT {0}", url.toString());
+            this.getLog().debug("PUT {}", url.toString());
             final JaxbRepresentation<Resource> result = new JaxbRepresentation<>(entity);
             result.setCharacterSet(CharacterSet.UTF_8);
             result.setMediaType(MediaType.APPLICATION_XML);
@@ -673,7 +674,7 @@ public class ClientMDS extends BaseClient {
      */
     public Representation deleteMetadata(final String doiName) throws ClientMdsException {
         final Reference url = createReferenceWithDOI(METADATA_RESOURCE, doiName);
-        this.getLog().debug("DELETE {0}", url.toString());
+        this.getLog().debug("DELETE {}", url.toString());
         this.getClient().setReference(url);
         try {
             return this.getClient().delete();
@@ -703,7 +704,7 @@ public class ClientMDS extends BaseClient {
     public String getMedia(final String doiName) throws ClientMdsException {
         final String result;
         final Reference url = createReferenceWithDOI(MEDIA_RESOURCE, doiName);
-        this.getLog().debug("GET {0}", url.toString());
+        this.getLog().debug("GET {}", url.toString());
         this.getClient().setReference(url);
         try {
             final Representation response = this.getClient().get();
@@ -740,7 +741,7 @@ public class ClientMDS extends BaseClient {
             final Form form) throws ClientMdsException {
         final String result;
         final Reference url = createReferenceWithDOI(MEDIA_RESOURCE, doiName);
-        this.getLog().debug("POST {0}", url.toString());
+        this.getLog().debug("POST {}", url.toString());
         this.getClient().setReference(url);
         final Representation entity = createEntity(form);
         try {
