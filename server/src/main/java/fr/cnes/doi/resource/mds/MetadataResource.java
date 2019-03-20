@@ -83,7 +83,7 @@ public class MetadataResource extends BaseMdsResource {
      */
     @Requirement(reqId = Requirement.DOI_INTER_070, reqName = Requirement.DOI_INTER_070_NAME)
     private void checkInputs(final String doiName) throws DoiServerException {
-        LOG.traceEntry("Parameter : {}", doiName);
+        LOG.traceEntry("Parameter\n\tdoiName : {}", doiName);
         StringBuilder errorMsg = new StringBuilder();
         if (doiName == null || doiName.isEmpty()) {
             errorMsg = errorMsg.append(DoiMdsApplication.DOI_TEMPLATE).append("value is not set.");

@@ -141,8 +141,7 @@ public class DoisResource extends BaseMdsResource {
     @Requirement(reqId = Requirement.DOI_AUTO_030, reqName = Requirement.DOI_AUTO_030_NAME)
     @Post("form")
     public String createDoi(final Form doiForm) throws DoiServerException {
-
-        LOG.traceEntry("Parameter : {}", doiForm);
+        LOG.traceEntry("Parameters\n\tdoiForm : {}", doiForm);
         checkInputs(doiForm);
         final String result;
         final String selectedRole = extractSelectedRoleFromRequestIfExists();
