@@ -105,13 +105,13 @@ public class DoiResource extends BaseMdsResource {
         } catch (ClientMdsException ex) {
             if (ex.getStatus().getCode() == Status.CLIENT_ERROR_NOT_FOUND.getCode()) {
                 throw LOG.throwing(
-                        Level.DEBUG,
+                        Level.ERROR,
                         new DoiServerException(getApplication(), DATACITE_API_RESPONSE.DOI_NOT_FOUND,
                                 ex)
                 );
             } else {
                 throw LOG.throwing(
-                        Level.DEBUG,
+                        Level.ERROR,
                         new DoiServerException(getApplication(), API_MDS.DATACITE_PROBLEM, ex)
                 );
             }
@@ -131,7 +131,7 @@ public class DoiResource extends BaseMdsResource {
         LOG.traceEntry("Parameter : {}", doiName);
         if (doiName == null || doiName.isEmpty()) {
             throw LOG.throwing(
-                    Level.DEBUG,
+                    Level.ERROR,
                     new DoiServerException(getApplication(), API_MDS.DOI_VALIDATION,
                             "DoiName must be set.")
             );
@@ -140,13 +140,13 @@ public class DoiResource extends BaseMdsResource {
                 ClientMDS.checkIfAllCharsAreValid(doiName);
             } catch (IllegalArgumentException ex) {
                 throw LOG.throwing(
-                        Level.DEBUG,
+                        Level.ERROR,
                         new DoiServerException(getApplication(), API_MDS.DOI_VALIDATION, ex)
                 );
             }
         } else {
             throw LOG.throwing(
-                    Level.DEBUG,
+                    Level.ERROR,
                     new DoiServerException(getApplication(), API_MDS.DOI_VALIDATION, "the DOI"
                             + " prefix must contains the prefix of the institution")
             );

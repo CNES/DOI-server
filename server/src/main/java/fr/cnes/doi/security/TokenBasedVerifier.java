@@ -79,7 +79,7 @@ public class TokenBasedVerifier implements Verifier {
             result = Verifier.RESULT_MISSING;
         } else if (challResponse.getScheme().equals(ChallengeScheme.HTTP_BASIC)) {
             result = Verifier.RESULT_MISSING;
-        } else {
+        } else {            
             result = processAuthentication(request, challResponse);
         }
         return LOG.traceExit(result);
@@ -100,10 +100,13 @@ public class TokenBasedVerifier implements Verifier {
         LOG.debug("Token from challenge response : " + token);
 
         if (token == null) {
+            LOG.warn("Token is missing !");
             result = Verifier.RESULT_MISSING;
         } else if (this.tokenDB.isExist(token)) {
+            LOG.debug("Token exists in the database.");
             result = processToken(request, token);
         } else {
+            LOG.error("Token is invalid !");
             result = Verifier.RESULT_INVALID;
         }
         return LOG.traceExit(result);
@@ -133,7 +136,6 @@ public class TokenBasedVerifier implements Verifier {
             final String userID = body.getSubject();
             final Integer projectID = (Integer) body.get(TokenSecurity.PROJECT_ID);
             LOG.info("token {} is valid, {} for {} are authenticated", token, userID, projectID);
-//            request.getClientInfo().setUser(new User(userID));
             request.getClientInfo().setUser(manageUsers.getRealm().findUser(userID));
             request.getHeaders().set(UtilsHeader.SELECTED_ROLE_PARAMETER, String.valueOf(projectID));
         }

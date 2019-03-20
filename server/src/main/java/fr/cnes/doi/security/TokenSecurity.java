@@ -175,7 +175,6 @@ public final class TokenSecurity {
         return LOG.traceExit(token);
     }
 
-    //TODO createToken surcharged
     /**
      * Creates a token. (no project ID required)
      *

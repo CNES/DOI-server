@@ -85,7 +85,7 @@ public class ManageProjectsResource extends AbstractResource {
     @Requirement(reqId = Requirement.DOI_SRV_140, reqName = Requirement.DOI_SRV_140_NAME)
     @Post
     public boolean renameProject(final Form mediaForm) {
-        LOG.traceEntry();
+        LOG.traceEntry("Parameters\n\tmediaForm : {}", mediaForm);
         checkInputs(mediaForm);
         final String newProjectName = mediaForm.getFirstValue(PROJECT_NAME_PARAMETER);
         final AbstractProjectSuffixDBHelper manageProjects = PluginFactory.getProjectSuffix();
@@ -131,9 +131,9 @@ public class ManageProjectsResource extends AbstractResource {
      * @throws ResourceException - if PROJECT_NAME_PARAMETER is not set
      */
     private void checkInputs(final Form mediaForm) throws ResourceException {
-        LOG.traceEntry("Parameter : {}", mediaForm);
+        LOG.traceEntry("Parameters\n\tmediaForm : {}", mediaForm);
         if (isValueNotExist(mediaForm, PROJECT_NAME_PARAMETER)) {
-            throw LOG.throwing(Level.DEBUG, new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST,
+            throw LOG.throwing(Level.ERROR, new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST,
                     PROJECT_NAME_PARAMETER + " parameter must be set"));
         }
         LOG.debug("The form is valid");

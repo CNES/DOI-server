@@ -77,12 +77,12 @@ public class ManageSuperUsersResource extends AbstractResource {
     // Requirement.DOI_SRV_140_NAME)
     @Post
     public boolean createSUPERUSER(final Form mediaForm) {
-        LOG.traceEntry();
+        LOG.traceEntry("Parameters\n\tmediaForm : {}", mediaForm);
         checkInputs(mediaForm);
         final String newSUPERUSERName = mediaForm.getFirstValue(SUPERUSER_NAME_PARAMETER);
         final AbstractUserRoleDBHelper manageUsers = PluginFactory.getUserManagement();
         if (!manageUsers.isUserExist(newSUPERUSERName)) {
-            return false;
+            return LOG.traceExit(false);
         }
         return LOG.traceExit(manageUsers.setUserToAdminGroup(newSUPERUSERName));
     }
@@ -116,9 +116,9 @@ public class ManageSuperUsersResource extends AbstractResource {
      * @throws ResourceException - if SUPERUSER_NAME_PARAMETER is not set
      */
     private void checkInputs(final Form mediaForm) throws ResourceException {
-        LOG.traceEntry("Parameter : {}", mediaForm);
+        LOG.traceEntry("Parameters\n\tmediaForm : {}", mediaForm);
         if (isValueNotExist(mediaForm, SUPERUSER_NAME_PARAMETER)) {
-            throw LOG.throwing(Level.DEBUG, new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST,
+            throw LOG.throwing(Level.ERROR, new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST,
                     SUPERUSER_NAME_PARAMETER + " parameter must be set"));
         }
         LOG.debug("The form is valid");

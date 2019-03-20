@@ -31,6 +31,7 @@ import fr.cnes.doi.security.UtilsCryptography;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.utils.Utils;
+import org.apache.logging.log4j.Level;
 
 /**
  * Class that handles the connection to the DOI database. As below, the structure of the DOI
@@ -141,12 +142,12 @@ public class JDBCConnector {
                 Consts.DB_MAX_ACTIVE_CONNECTIONS, DEFAULT_MAX_ACTIVE_CONNECTION
         );
 
-        LOGGER.debug("[CONF] Datasource database URL", dbURL);
-        LOGGER.debug("[CONF] Datasource database user", dbUser);
-        LOGGER.debug("[CONF] Datasource database password", Utils.transformPasswordToStars(passwd));
-        LOGGER.debug("[CONF] Datasource min IDLE connection", minIdleConnection);
-        LOGGER.debug("[CONF] Datasource max IDLE connection", maxIdleConnection);
-        LOGGER.debug("[CONF] Datasource max active connection", maxActiveConnection);
+        LOGGER.info("[CONF] Datasource database URL", dbURL);
+        LOGGER.info("[CONF] Datasource database user", dbUser);
+        LOGGER.info("[CONF] Datasource database password", Utils.transformPasswordToStars(passwd));
+        LOGGER.info("[CONF] Datasource min IDLE connection", minIdleConnection);
+        LOGGER.info("[CONF] Datasource max IDLE connection", maxIdleConnection);
+        LOGGER.info("[CONF] Datasource max active connection", maxActiveConnection);
 
         ds.setUrl(dbURL);
         ds.setUsername(dbUser);
@@ -154,8 +155,7 @@ public class JDBCConnector {
             final String decryptedPasswd = UtilsCryptography.decrypt(passwd);
             ds.setPassword(decryptedPasswd);
         } catch (Exception e) {
-            LOGGER.error("Cannot decrypt the database pwd from the configuration file: {}", passwd);
-            throw LOGGER.throwing(new DoiRuntimeException("Cannot decrypt the database "
+            throw LOGGER.throwing(Level.ERROR, new DoiRuntimeException("Cannot decrypt the database "
                     + "pwd " + passwd + " from the configuration file"));
         }
         ds.setMinIdle(minIdleConnection);

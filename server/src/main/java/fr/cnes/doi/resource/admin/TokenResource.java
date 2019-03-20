@@ -148,7 +148,7 @@ public class TokenResource extends AbstractResource {
 
             return LOG.traceExit(tokenJwt);
         } catch (TokenSecurityException ex) {
-            throw LOG.throwing(Level.DEBUG, new ResourceException(ex.getStatus(), ex.getMessage(),
+            throw LOG.throwing(Level.INFO, new ResourceException(ex.getStatus(), ex.getMessage(),
                     ex));
         }
     }
@@ -172,7 +172,7 @@ public class TokenResource extends AbstractResource {
         if (errorMsg.length() == 0) {
             LOG.debug("The form is valid");
         } else {
-            throw LOG.throwing(Level.DEBUG, new ResourceException(
+            throw LOG.throwing(Level.INFO, new ResourceException(
                     Status.CLIENT_ERROR_BAD_REQUEST, errorMsg.toString()));
         }
     }
@@ -192,7 +192,7 @@ public class TokenResource extends AbstractResource {
             // TODO new StringRepresentation instead?
             return LOG.traceExit(new JsonRepresentation(jws));
         } catch (DoiRuntimeException ex) {
-            throw LOG.throwing(Level.DEBUG, new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST,
+            throw LOG.throwing(Level.INFO, new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST,
                     ex));
         }
     }

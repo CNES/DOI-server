@@ -95,13 +95,13 @@ public class MediaResource extends BaseMdsResource {
         } catch (ClientMdsException ex) {
             if (ex.getStatus().getCode() == Status.CLIENT_ERROR_NOT_FOUND.getCode()) {
                 throw LOG.throwing(
-                        Level.DEBUG,
+                        Level.ERROR,
                         new DoiServerException(getApplication(), DATACITE_API_RESPONSE.DOI_NOT_FOUND,
                                 ex)
                 );
             } else {
                 throw LOG.throwing(
-                        Level.DEBUG,
+                        Level.ERROR,
                         new DoiServerException(getApplication(), API_MDS.DATACITE_PROBLEM, ex)
                 );
             }
@@ -134,7 +134,7 @@ public class MediaResource extends BaseMdsResource {
     @Requirement(reqId = Requirement.DOI_AUTO_030, reqName = Requirement.DOI_AUTO_030_NAME)
     @Post
     public Representation createMedia(final Form mediaForm) throws DoiServerException {
-        LOG.traceEntry("Parameter : {}", mediaForm);
+        LOG.traceEntry("Parameters\n\tmediaForm : {}", mediaForm);
         checkInputs(this.mediaName, mediaForm);
         final String result;
         try {
@@ -145,13 +145,13 @@ public class MediaResource extends BaseMdsResource {
         } catch (ClientMdsException ex) {
             if (ex.getStatus().getCode() == Status.CLIENT_ERROR_BAD_REQUEST.getCode()) {
                 throw LOG.throwing(
-                        Level.DEBUG,
+                        Level.ERROR,
                         new DoiServerException(getApplication(), DATACITE_API_RESPONSE.BAD_REQUEST,
                                 ex)
                 );
             } else {
                 throw LOG.throwing(
-                        Level.DEBUG,
+                        Level.ERROR,
                         new DoiServerException(getApplication(), API_MDS.DATACITE_PROBLEM, ex)
                 );
             }
@@ -169,7 +169,7 @@ public class MediaResource extends BaseMdsResource {
     @Requirement(reqId = Requirement.DOI_INTER_070, reqName = Requirement.DOI_INTER_070_NAME)
     private void checkInputs(final String doi,
             final Form mediaForm) throws DoiServerException {
-        LOG.traceEntry("Parameters : {} and {}", doi, mediaForm);
+        LOG.traceEntry("Parameters\n\tdoi={}\n\tmediaForm={}", doi, mediaForm);
         final StringBuilder errorMsg = new StringBuilder();
         if (doi == null || doi.isEmpty() || !doi.startsWith(DoiSettings.getInstance().getString(
                 Consts.INIST_DOI))) {
@@ -185,7 +185,7 @@ public class MediaResource extends BaseMdsResource {
             LOG.debug("The form is valid");
         } else {
             throw LOG.throwing(
-                    Level.DEBUG,
+                    Level.ERROR,
                     new DoiServerException(getApplication(), API_MDS.MEDIA_VALIDATION, errorMsg.
                             toString())
             );

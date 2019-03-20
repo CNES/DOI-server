@@ -101,22 +101,22 @@ public class MetadatasResource extends BaseMdsResource {
             resource.setPublisher("CNES");
             result = this.getDoiApp().getClient().createMetadata(resource);
         } catch (ClientMdsException ex) {
-            throw LOG.throwing(Level.DEBUG,
+            throw LOG.throwing(Level.ERROR,
                     new DoiServerException(getApplication(), API_MDS.DATACITE_PROBLEM, ex.
                             getMessage(), ex)
             );
         } catch (ValidationException ex) {
-            throw LOG.throwing(Level.DEBUG,
+            throw LOG.throwing(Level.ERROR,
                     new DoiServerException(getApplication(), API_MDS.METADATA_VALIDATION,
                             "invalid XML", ex)
             );
         } catch (JAXBException ex) {
-            throw LOG.throwing(Level.DEBUG,
+            throw LOG.throwing(Level.ERROR,
                     new DoiServerException(getApplication(), API_MDS.METADATA_VALIDATION,
                             "invalid XML", ex)
             );
         } catch (SAXException ex) {
-            throw LOG.throwing(Level.DEBUG,
+            throw LOG.throwing(Level.ERROR,
                     new DoiServerException(getApplication(), API_MDS.NETWORK_PROBLEM,
                             "DataCite schema not available", ex)
             );
@@ -136,7 +136,7 @@ public class MetadatasResource extends BaseMdsResource {
     private void checkInputs(final Object obj) throws DoiServerException {
         LOG.traceEntry("Parameter : " + obj);
         if (isObjectNotExist(obj)) {
-            throw LOG.throwing(Level.DEBUG,
+            throw LOG.throwing(Level.ERROR,
                     new DoiServerException(getApplication(), API_MDS.METADATA_VALIDATION,
                             "Input is not set")
             );

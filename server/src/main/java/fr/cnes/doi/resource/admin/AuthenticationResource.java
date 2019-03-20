@@ -90,9 +90,10 @@ public class AuthenticationResource extends AbstractResource {
      */
     @Delete
     public void deleteToken(final Form mediaForm) {
-        LOG.traceEntry();
+        LOG.traceEntry("Parameters\n\tmediaForm : {}", mediaForm);
         final String token = mediaForm.getFirstValue(USER_TOKEN);
         this.tokenDB.deleteToken(token);
+        LOG.traceExit();
     }
 
     /**
@@ -110,7 +111,7 @@ public class AuthenticationResource extends AbstractResource {
      */
     @Post
     public Representation authenticate(final Form mediaForm) {
-        LOG.traceEntry("Paramater : {}", mediaForm);
+        LOG.traceEntry("Parameters\n\tmediaForm : {}", mediaForm);
         checkInputs(mediaForm);
         final String userName = mediaForm.getFirstValue(USER_NAME);
 
@@ -139,9 +140,9 @@ public class AuthenticationResource extends AbstractResource {
      * @throws ResourceException - if USER_NAME is not set
      */
     private void checkInputs(final Form mediaForm) throws ResourceException {
-        LOG.traceEntry("Parameter : {}", mediaForm);
+        LOG.traceEntry("Parameters\n\tmediaForm : {}", mediaForm);
         if (isValueNotExist(mediaForm, USER_NAME)) {
-            throw LOG.throwing(Level.DEBUG, new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST,
+            throw LOG.throwing(Level.ERROR, new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST,
                     USER_NAME + " parameter must be set"));
         }
         LOG.debug("The form is valid");
