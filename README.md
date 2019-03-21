@@ -111,6 +111,10 @@ echo "
 </settings>
 " > $HOME/.m2/settings.xml
 
+// Defining the JAVA_HOME variable
+export $JAVA_HOME="..."
+export PATH=$JAVA_HOME/bin:$PATH
+
 // compiling DOI-server and testing
 cd DOI-server && mvn clean install
 

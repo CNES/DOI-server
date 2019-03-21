@@ -435,6 +435,11 @@ public final class Consts {
     public static final String LDAP_ATTR_FULLNAME = "Starter.LDAP.attr.fullname";
     
     /**
+     * Attributes name in LDAP for fullname.
+     */
+    public static final String ATTRIBUTION = "Starter.attribution";    
+    
+    /**
      * "Static" class cannot be instantiated
      */
     private Consts() {
