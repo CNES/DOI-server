@@ -89,7 +89,9 @@
                             "Action irréversible. /!\\");
                     if (doi === $("#doi").val()) {
                         $("#doi option:selected").remove();
-                        requestDelete();
+                        if (confirm("Voulez-vous vraiment désactiver le DOI ?")) {
+                            requestDelete();
+                        }
                     } else {
                         return;
                     }
