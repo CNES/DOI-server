@@ -91,7 +91,7 @@ public class AllowerIP extends org.restlet.routing.Filter {
      * @param allowedAddresses the new allowed addresses
      */
     private void addCustomIP(final Set<String> allowedAddresses) {
-        LOG.traceEntry("Parameter : {}", allowedAddresses);
+        LOG.traceEntry("Parameter\n\tallowedAddresses: {}", allowedAddresses);
         final String ips = DoiSettings.getInstance().getString(Consts.ADMIN_IP_ALLOWER);
         if (ips != null) {
             final StringTokenizer tokenizer = new StringTokenizer(ips, "|");

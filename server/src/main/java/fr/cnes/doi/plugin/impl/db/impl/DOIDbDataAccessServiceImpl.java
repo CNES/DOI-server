@@ -261,7 +261,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      * @param customDbConfigFile configuration file
      */
     public DOIDbDataAccessServiceImpl(final String customDbConfigFile) {
-        LOGGER.traceEntry("Parameter : {}", customDbConfigFile);
+        LOGGER.traceEntry("Parameter\n\t customDbConfigFile: {}", customDbConfigFile);
         dbConnector = new JDBCConnector(customDbConfigFile);
         LOGGER.traceExit();
     }
@@ -274,6 +274,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      * @throws SQLException When an SQL execption occurs
      */
     private List<DOIProject> getDOIProjects(final PreparedStatement statement) throws SQLException {
+        LOGGER.traceEntry("Parameter\n\t statement: {}", statement.toString());
         LOGGER.debug(statement.toString());
         final List<DOIProject> projects = new ArrayList<>();
         try (final ResultSet rs = statement.executeQuery()) {
@@ -285,7 +286,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
             }
         }
         LOGGER.debug("{} DOI projects found", projects.size());
-        return projects;
+        return LOGGER.traceExit(projects);
     }
 
     /**
@@ -296,6 +297,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      * @throws SQLException When an SQL execption occurs
      */
     private List<DOIUser> getDOIUSers(final PreparedStatement statement) throws SQLException {
+        LOGGER.traceEntry("Parameter\n\t statement: {}", statement.toString());        
         LOGGER.debug(statement.toString());
         final List<DOIUser> users = new ArrayList<>();
         try (final ResultSet rs = statement.executeQuery()) {
@@ -308,7 +310,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
             }
         }
         LOGGER.debug("{} DOI users found", users.size());
-        return users;
+        return LOGGER.traceExit(users);
     }
 
     /**
@@ -319,6 +321,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      * @throws SQLException When an SQL execption occurs
      */
     private List<String> getTokens(final PreparedStatement statement) throws SQLException {
+        LOGGER.traceEntry("Parameter\n\t statement: {}", statement.toString());                
         LOGGER.debug(statement.toString());
         final List<String> tokens = new ArrayList<>();
         try (ResultSet rs = statement.executeQuery()) {
@@ -327,7 +330,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
             }
         }
         LOGGER.debug("{} tokens found", tokens.size());
-        return tokens;
+        return LOGGER.traceExit(tokens);
     }
 
     /**
@@ -351,6 +354,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      * @throws SQLException When an SQL execption occurs
      */
     private List<String> getProjectName(final PreparedStatement statement) throws SQLException {
+        LOGGER.traceEntry("Parameter\n\t statement: {}", statement.toString());                
         LOGGER.debug(statement.toString());
         final List<String> projectName = new ArrayList<>();
         try (ResultSet rs = statement.executeQuery()) {
@@ -358,7 +362,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
                 projectName.add(rs.getString(FIELD_PROJECTNAME));
             }
         }
-        return projectName;
+        return LOGGER.traceExit(projectName);
     }
 
     /**
@@ -369,13 +373,14 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      * @throws SQLException When an SQL execption occurs
      */
     private boolean isQueryExist(final PreparedStatement statement) throws SQLException {
+        LOGGER.traceEntry("Parameter\n\t statement: {}", statement.toString());                
         boolean isExist = false;
         LOGGER.debug(statement.toString());
         try (final ResultSet resultSet = statement.executeQuery()) {
             isExist = resultSet.next();
         }
         LOGGER.debug(isExist);
-        return isExist;
+        return LOGGER.traceExit(isExist);
     }
 
     /**
@@ -456,7 +461,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      */
     @Override
     public List<DOIProject> getAllDOIProjectsForUser(final String username) throws DOIDbException {
-        LOGGER.traceEntry("Parameter : {}", username);
+        LOGGER.traceEntry("Parameter\n\t username: {}", username);        
         final List<DOIProject> projects = new ArrayList<>();
         Connection conn = null;
         PreparedStatement projectsStatement = null;
@@ -483,7 +488,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      */
     @Override
     public List<DOIUser> getAllDOIUsersForProject(final int suffix) throws DOIDbException {
-        LOGGER.traceEntry("Parameter : {}", suffix);
+        LOGGER.traceEntry("Parameter\n\t suffix: {}", suffix);        
         final List<DOIUser> users = new ArrayList<>();
         Connection conn = null;
         PreparedStatement assignationsStatement = null;
@@ -509,7 +514,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      */
     @Override
     public void addDOIUser(final String username, final Boolean admin) throws DOIDbException {
-        LOGGER.traceEntry("Parameters:\n  username:{}\n  admin:{}", username, admin);
+        LOGGER.traceEntry("Parameter\n\t username: {}\n\tadmin: {}", username, admin);        
         Connection conn = null;
         PreparedStatement usersStatement = null;
         try {
@@ -519,9 +524,8 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
             usersStatement.setBoolean(2, admin);
             this.updateQueries(usersStatement);
         } catch (SQLException e) {
-            LOGGER.error("An exception occured when calling addDOIUser", e);
             throw LOGGER.throwing(
-                    Level.DEBUG,
+                    Level.ERROR,
                     new DOIDbException("An exception occured when calling addDOIUser", e)
             );
         } finally {
@@ -535,7 +539,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      */
     @Override
     public void addDOIProject(final int suffix, final String projectname) throws DOIDbException {
-        LOGGER.traceEntry("Parameters:\n  suffix:{}\n  projectname:{}", suffix, projectname);
+        LOGGER.traceEntry("Parameter\n\t suffix: {}\n\tprojectname: {}", suffix, projectname);        
         Connection conn = null;
         PreparedStatement projectStatement = null;
         try {
@@ -547,7 +551,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
         } catch (SQLException e) {
             LOGGER.error("An exception occured when calling addDOIProject", e);
             throw LOGGER.throwing(
-                    Level.FATAL,
+                    Level.ERROR,
                     new DOIDbException("An exception occured when calling addDOIProject", e)
             );
         } finally {
@@ -561,7 +565,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      */
     @Override
     public void addDOIProjectToUser(final String username, final int suffix) throws DOIDbException {
-        LOGGER.traceEntry("Parameters:\n  username:{}\n  suffix:{}", username, suffix);
+        LOGGER.traceEntry("Parameters:\n\tusername:{}\n\tsuffix:{}", username, suffix);
         Connection conn = null;
         PreparedStatement userStatement = null;
         PreparedStatement projectStatement = null;
@@ -591,7 +595,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
             this.updateQueries(assignationStatement);
         } catch (SQLException e) {
             throw LOGGER.throwing(
-                    Level.FATAL,
+                    Level.ERROR,
                     new DOIDbException("An exception occured when calling addDOIProjectToUser", e)
             );
         } finally {
@@ -606,7 +610,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
     @Override
     public void removeDOIProjectFromUser(final String username, final int suffix) throws
             DOIDbException {
-        LOGGER.traceEntry("Parameters:\n  username:{}\n  suffix:{}", username, suffix);
+        LOGGER.traceEntry("Parameters:\n\tusername:{}\n\tsuffix:{}", username, suffix);
         Connection conn = null;
         PreparedStatement assignationsStatement = null;
         try {
@@ -617,7 +621,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
             this.updateQueries(assignationsStatement);
         } catch (SQLException e) {
             throw LOGGER.throwing(
-                    Level.FATAL,
+                    Level.ERROR,
                     new DOIDbException("An exception occured when calling removeDOIProjectFromUser",
                             e)
             );
@@ -632,7 +636,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      */
     @Override
     public void setAdmin(final String username) throws DOIDbException {
-        LOGGER.traceEntry("Parameters:\n  username:{}", username);
+        LOGGER.traceEntry("Parameters:\n\tusername:{}", username);
         Connection conn = null;
         PreparedStatement userStatement = null;
         PreparedStatement updateStatement = null;
@@ -647,7 +651,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
                 this.updateQueries(updateStatement);
             } else {
                 throw LOGGER.throwing(
-                        Level.FATAL,
+                        Level.ERROR,
                         new DOIDbException(
                                 "An exception occured when calling setAdmin:" + "user " + username
                                 + " don't exist in doi database", null)
@@ -655,7 +659,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
             }
         } catch (SQLException e) {
             throw LOGGER.throwing(
-                    Level.FATAL,
+                    Level.ERROR,
                     new DOIDbException("An exception occured when calling setAdmin", e));
         } finally {
             close(conn, userStatement, updateStatement);
@@ -668,7 +672,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      */
     @Override
     public void unsetAdmin(final String username) throws DOIDbException {
-        LOGGER.traceEntry("Parameters:\n  username:{}", username);
+        LOGGER.traceEntry("Parameters:\n\tusername:{}", username);
         Connection conn = null;
         PreparedStatement usersStatement = null;
         try {
@@ -678,7 +682,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
             this.updateQueries(usersStatement);
         } catch (SQLException e) {
             throw LOGGER.throwing(
-                    Level.FATAL,
+                    Level.ERROR,
                     new DOIDbException("An exception occured when calling setAdmin", e)
             );
         } finally {
@@ -693,7 +697,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
     @Override
     public void renameDOIProject(final int suffix, final String newprojectname) throws
             DOIDbException {
-        LOGGER.traceEntry("Parameters:\n  suffix:{}\n  newprojectname", suffix, newprojectname);
+        LOGGER.traceEntry("Parameters:\n\tsuffix:{}\n\tnewprojectname", suffix, newprojectname);
         Connection conn = null;
         PreparedStatement statement = null;
         try {
@@ -704,7 +708,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
             this.updateQueries(statement);
         } catch (SQLException e) {
             throw LOGGER.throwing(
-                    Level.FATAL,
+                    Level.ERROR,
                     new DOIDbException("An exception occured when calling setAdmin", e)
             );
         } finally {
@@ -718,7 +722,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      */
     @Override
     public String getDOIProjectName(final int suffix) throws DOIDbException {
-        LOGGER.traceEntry("Parameters:\n  suffix:{}", suffix);
+        LOGGER.traceEntry("Parameters:\n\tsuffix:{}", suffix);
         Connection conn = null;
         final List<String> projectNameResult = new ArrayList<>();
         PreparedStatement statement = null;
@@ -729,7 +733,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
             projectNameResult.addAll(getProjectName(statement));
         } catch (SQLException e) {
             throw LOGGER.throwing(
-                    Level.FATAL,
+                    Level.ERROR,
                     new DOIDbException("An exception occured when calling getDOIProjectName", e)
             );
         } finally {
@@ -743,7 +747,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      */
     @Override
     public void addToken(final String token) throws DOIDbException {
-        LOGGER.traceEntry("Parameters:\n  token:{}", token);
+        LOGGER.traceEntry("Parameters:\n\ttoken:{}", token);
         Connection conn = null;
         PreparedStatement statement = null;
         try {
@@ -753,7 +757,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
             this.updateQueries(statement);
         } catch (SQLException e) {
             throw LOGGER.throwing(
-                    Level.FATAL,
+                    Level.ERROR,
                     new DOIDbException("An exception occured when calling addToken", e)
             );
         } finally {
@@ -767,7 +771,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      */
     @Override
     public void deleteToken(final String token) throws DOIDbException {
-        LOGGER.traceEntry("Parameters:\n  token:{}", token);
+        LOGGER.traceEntry("Parameters:\n\ttoken:{}", token);
         Connection conn = null;
         PreparedStatement statement = null;
         try {
@@ -777,7 +781,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
             this.updateQueries(statement);
         } catch (SQLException e) {
             throw LOGGER.throwing(
-                    Level.FATAL,
+                    Level.ERROR,
                     new DOIDbException("An exception occured when calling deleteToken", e)
             );
         } finally {
@@ -801,7 +805,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
             tokens.addAll(getTokens(statement));
         } catch (SQLException e) {
             throw LOGGER.throwing(
-                    Level.FATAL,
+                    Level.ERROR,
                     new DOIDbException("An exception occured when calling getToken", e)
             );
         } finally {
@@ -815,7 +819,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      */
     @Override
     public void removeDOIUser(final String username) throws DOIDbException {
-        LOGGER.traceEntry("Parameters:\n  username:{}", username);
+        LOGGER.traceEntry("Parameters:\n\tusername:{}", username);
         Connection conn = null;
         PreparedStatement usersStatement = null;
         PreparedStatement assignationsStatement = null;
@@ -831,7 +835,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
             this.updateQueries(usersStatement, assignationsStatement);
         } catch (SQLException e) {
             throw LOGGER.throwing(
-                    Level.FATAL,
+                    Level.ERROR,
                     new DOIDbException("An exception occured when calling removeDOIUser", e)
             );
         } finally {
@@ -846,7 +850,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
     @Override
     public void addDOIUser(final String username, final Boolean admin, final String email) throws
             DOIDbException {
-        LOGGER.traceEntry("Parameters:\n  username:{}\n  admin:{}\n email:{}", username, admin,
+        LOGGER.traceEntry("Parameters:\n\tusername:{}\n\tadmin:{}\n\temail:{}", username, admin,
                 email);
         Connection conn = null;
         PreparedStatement statement = null;
@@ -859,7 +863,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
             this.updateQueries(statement);
         } catch (SQLException e) {
             throw LOGGER.throwing(
-                    Level.FATAL,
+                    Level.ERROR,
                     new DOIDbException("An exception occured when calling addDOIUser", e)
             );
         } finally {
@@ -873,7 +877,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      */
     @Override
     public void removeDOIProject(final int suffix) throws DOIDbException {
-        LOGGER.traceEntry("Parameters:\n  suffix:{}", suffix);
+        LOGGER.traceEntry("Parameters:\n\tsuffix:{}", suffix);
         Connection conn = null;
         PreparedStatement projectStatement = null;
         PreparedStatement assignationsStatement = null;
@@ -889,7 +893,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
         } catch (SQLException e) {
             LOGGER.error("An exception occured when calling removeDOIProject", e);
             throw LOGGER.throwing(
-                    Level.FATAL,
+                    Level.ERROR,
                     new DOIDbException("An exception occured when calling removeDOIProject", e)
             );
         } finally {
@@ -903,7 +907,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      */
     @Override
     public boolean isAdmin(final String username) throws DOIDbException {
-        LOGGER.traceEntry("Parameters:\n  username:{}", username);
+        LOGGER.traceEntry("Parameters:\n\tusername:{}", username);
         boolean isAdmin = false;
         final DOIUser user = getDoiUserFromDb(username);
         if (user != null) {
@@ -920,7 +924,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      * @throws DOIDbException - if a database error occurs.
      */
     private DOIUser getDoiUserFromDb(final String username) throws DOIDbException {
-        LOGGER.traceEntry("Parameters:\n  username:{}", username);
+        LOGGER.traceEntry("Parameters:\n\tusername:{}", username);
         Connection conn = null;
         PreparedStatement statement = null;
         final List<DOIUser> doiusers = new ArrayList<>();
@@ -931,7 +935,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
             doiusers.addAll(getDOIUSers(statement));
         } catch (SQLException e) {
             throw LOGGER.throwing(
-                    Level.FATAL,
+                    Level.ERROR,
                     new DOIDbException("An exception occured when calling getAllDOIusers", e)
             );
         } finally {
@@ -945,7 +949,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      */
     @Override
     public boolean isUserExist(final String username) throws DOIDbException {
-        LOGGER.traceEntry("Parameters:\n  username:{}", username);
+        LOGGER.traceEntry("Parameters:\n\tusername:{}", username);
         return LOGGER.traceExit(getDoiUserFromDb(username) != null);
     }
 

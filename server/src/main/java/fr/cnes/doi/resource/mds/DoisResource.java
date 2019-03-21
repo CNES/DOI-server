@@ -94,7 +94,7 @@ public class DoisResource extends BaseMdsResource {
             rep = new StringRepresentation(dois, MediaType.TEXT_URI_LIST);
         } catch (ClientMdsException ex) {
             throw LOG.throwing(
-                    Level.DEBUG,
+                    Level.ERROR,
                     new DoiServerException(getApplication(), API_MDS.DATACITE_PROBLEM, ex));
         }
         return LOG.traceExit(rep);
@@ -141,8 +141,7 @@ public class DoisResource extends BaseMdsResource {
     @Requirement(reqId = Requirement.DOI_AUTO_030, reqName = Requirement.DOI_AUTO_030_NAME)
     @Post("form")
     public String createDoi(final Form doiForm) throws DoiServerException {
-
-        LOG.traceEntry("Parameter : {}", doiForm);
+        LOG.traceEntry("Parameters\n\tdoiForm : {}", doiForm);
         checkInputs(doiForm);
         final String result;
         final String selectedRole = extractSelectedRoleFromRequestIfExists();
@@ -153,13 +152,13 @@ public class DoisResource extends BaseMdsResource {
         } catch (ClientMdsException ex) {
             if (ex.getStatus().getCode() == Status.CLIENT_ERROR_PRECONDITION_FAILED.getCode()) {
                 throw LOG.throwing(
-                        Level.DEBUG,
+                        Level.ERROR,
                         new DoiServerException(getApplication(), DATACITE_API_RESPONSE.PROCESS_ERROR,
                                 ex)
                 );
             } else {
                 throw LOG.throwing(
-                        Level.DEBUG,
+                        Level.ERROR,
                         new DoiServerException(getApplication(), API_MDS.DATACITE_PROBLEM, ex)
                 );
             }
@@ -200,7 +199,7 @@ public class DoisResource extends BaseMdsResource {
             LOG.debug("The form is valid");
         } else {
             throw LOG.throwing(
-                    Level.DEBUG,
+                    Level.ERROR,
                     new DoiServerException(getApplication(), API_MDS.LANGING_PAGE_VALIDATION,
                             errorMsg.toString())
             );

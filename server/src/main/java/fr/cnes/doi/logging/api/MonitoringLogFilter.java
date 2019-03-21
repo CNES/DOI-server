@@ -69,7 +69,8 @@ public class MonitoringLogFilter extends LogFilter {
     }
 
     /**
-     * Allows filtering after processing by the next Restlet. Does nothing by default.
+     * Allows filtering after processing by the next Restlet. Does nothing by
+     * default.
      *
      * @param request request
      * @param response response
@@ -88,12 +89,13 @@ public class MonitoringLogFilter extends LogFilter {
             final int duration = (int) (System.currentTimeMillis() - startTime);
             if (monitoring.isRegistered(method, path)) {
                 monitoring.addMeasurement(method, path, duration);
-                LogManager.getLogger(Utils.APP_LOGGER_NAME)
-                        .info(MessageFormat.format(
-                                "{0}({1} {2}) - current speed average : {3} ms - "
-                                + "current measure: {4} ms",
-                                monitoring.getDescription(method, path), method.getName(), path,
-                                monitoring.getCurrentAverage(method, path), duration));
+                final String description = monitoring.getDescription(method, path);
+                final String methodName = method.getName();
+                final float average = monitoring.getCurrentAverage(method, path);
+                LogManager.getLogger(Utils.APP_LOGGER_NAME).info(
+                        "{}({} {}) - current speed average : {} ms - " +
+                        "current measure: {} ms",
+                        description, methodName, path, average, duration);
                 sendAlertIfNeeded(monitoring.getCurrentAverage(method, path), duration, path,
                         method);
             }

@@ -227,7 +227,6 @@ public class JettySettingsTest {
      */
     @Test
     public void testGetConnectorIdleTimeout() {
-        System.out.println("TEST: GetConnectorIdleTimeout");
         int expResult = 30000;
         int result = instance.getConnectorIdleTimeout();
         assertEquals(expResult, result);

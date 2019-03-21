@@ -18,7 +18,6 @@
  */
 package fr.cnes.doi.application;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
@@ -44,6 +43,7 @@ import org.restlet.service.TaskService;
 import fr.cnes.doi.ldap.job.DOIUsersUpdate;
 import fr.cnes.doi.logging.business.JsonMessage;
 import fr.cnes.doi.resource.admin.AuthenticationResource;
+import fr.cnes.doi.resource.admin.ConfigIhmResource;
 import fr.cnes.doi.resource.admin.ManageProjectsResource;
 import fr.cnes.doi.resource.admin.ManageSuperUserResource;
 import fr.cnes.doi.resource.admin.ManageSuperUsersResource;
@@ -191,6 +191,11 @@ public class AdminApplication extends AbstractApplication {
      * URI {@value #IHM_RESOURCE} where the web site is located.
      */
     private static final String IHM_RESOURCE = "/ihm";
+    
+    /**
+     * URI {@value #IHM_CONFIG_RESOURCE} where the configuration file is located.
+     */
+    private static final String IHM_CONFIG_RESOURCE = "/js/config.js";    
 
     /**
      * Location of the resources for the status page in the classpath.
@@ -565,7 +570,8 @@ public class AdminApplication extends AbstractApplication {
         ihm.setListingAllowed(false);
         ihm.setDeeplyAccessible(true);
         ihm.setIndexName("authentication");
-        router.attach(IHM_RESOURCE, ihm);
+        router.attach(IHM_RESOURCE+IHM_CONFIG_RESOURCE, ConfigIhmResource.class);
+        router.attach(IHM_RESOURCE, ihm);        
 
         LOG.traceExit();
     }

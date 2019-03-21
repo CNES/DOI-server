@@ -107,7 +107,7 @@ public class ManageUsersResource extends AbstractResource {
     @Requirement(reqId = Requirement.DOI_SRV_140, reqName = Requirement.DOI_SRV_140_NAME)
     @Post
     public boolean addUserToProject(Form mediaForm) {
-        LOG.traceEntry();
+        LOG.traceEntry("Parameters\n\tmediaForm : {}", mediaForm);
         checkInputs(mediaForm);
         final String user = mediaForm.getFirstValue(USER_NAME_PARAMETER);
         int idProject = Integer.parseInt(suffixProject);
@@ -118,7 +118,7 @@ public class ManageUsersResource extends AbstractResource {
         } else {
             isAdded = false;
         }
-        return isAdded;
+        return LOG.traceExit(isAdded);
     }
 
     //TODO requirement
@@ -143,7 +143,7 @@ public class ManageUsersResource extends AbstractResource {
      * @throws ResourceException - if USER_NAME_PARAMETER is not set
      */
     private void checkInputs(final Form mediaForm) throws ResourceException {
-        LOG.traceEntry("Parameter : {}", mediaForm);
+        LOG.traceEntry("Parameters\n\tmediaForm : {}", mediaForm);
         if (isValueNotExist(mediaForm, USER_NAME_PARAMETER)) {
             throw LOG.throwing(Level.DEBUG, new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST,
                     USER_NAME_PARAMETER + " parameter must be set"));

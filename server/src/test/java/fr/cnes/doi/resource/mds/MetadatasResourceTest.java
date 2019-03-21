@@ -271,11 +271,7 @@ public class MetadatasResourceTest {
             code = client.getStatus().getCode();
             rep.exhaust();
         } catch (ResourceException ex) {
-            code = ex.getStatus().getCode();
-//            if (code == Status.CONNECTOR_ERROR_COMMUNICATION.getCode()) {
-//                code = Status.CLIENT_ERROR_UNAUTHORIZED.getCode();
-//                System.out.println("****Cause : "+ex.getCause().getMessage());
-//            }            
+            code = ex.getStatus().getCode();            
         }
         client.release();
         assertEquals(409, code);        

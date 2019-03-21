@@ -83,7 +83,7 @@ public class MetadataResource extends BaseMdsResource {
      */
     @Requirement(reqId = Requirement.DOI_INTER_070, reqName = Requirement.DOI_INTER_070_NAME)
     private void checkInputs(final String doiName) throws DoiServerException {
-        LOG.traceEntry("Parameter : {}", doiName);
+        LOG.traceEntry("Parameter\n\tdoiName : {}", doiName);
         StringBuilder errorMsg = new StringBuilder();
         if (doiName == null || doiName.isEmpty()) {
             errorMsg = errorMsg.append(DoiMdsApplication.DOI_TEMPLATE).append("value is not set.");
@@ -99,7 +99,7 @@ public class MetadataResource extends BaseMdsResource {
             LOG.debug("The input is valid");
         } else {
             throw LOG.throwing(
-                    Level.DEBUG,
+                    Level.ERROR,
                     new DoiServerException(getApplication(), Status.CLIENT_ERROR_BAD_REQUEST,
                             errorMsg.toString())
             );
@@ -131,19 +131,19 @@ public class MetadataResource extends BaseMdsResource {
         } catch (ClientMdsException ex) {
             if (ex.getStatus().getCode() == Status.CLIENT_ERROR_NOT_FOUND.getCode()) {
                 throw LOG.throwing(
-                        Level.DEBUG,
+                        Level.ERROR,
                         new DoiServerException(getApplication(), DATACITE_API_RESPONSE.DOI_NOT_FOUND,
                                 ex)
                 );
             } else if (ex.getStatus().getCode() == Status.CLIENT_ERROR_BAD_REQUEST.getCode()) {
                 throw LOG.throwing(
-                        Level.DEBUG,
+                        Level.ERROR,
                         new DoiServerException(getApplication(), DATACITE_API_RESPONSE.BAD_REQUEST,
                                 ex)
                 );
             } else {
                 throw LOG.throwing(
-                        Level.DEBUG,
+                        Level.ERROR,
                         new DoiServerException(getApplication(), API_MDS.DATACITE_PROBLEM, ex)
                 );
             }
@@ -196,13 +196,13 @@ public class MetadataResource extends BaseMdsResource {
         } catch (ClientMdsException ex) {
             if (ex.getStatus().getCode() == Status.CLIENT_ERROR_NOT_FOUND.getCode()) {
                 throw LOG.throwing(
-                        Level.DEBUG,
+                        Level.ERROR,
                         new DoiServerException(getApplication(), DATACITE_API_RESPONSE.DOI_NOT_FOUND,
                                 ex)
                 );
             } else {
                 throw LOG.throwing(
-                        Level.DEBUG,
+                        Level.ERROR,
                         new DoiServerException(getApplication(), API_MDS.DATACITE_PROBLEM, ex)
                 );
             }
