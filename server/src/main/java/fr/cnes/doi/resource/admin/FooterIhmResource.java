@@ -64,7 +64,7 @@ public class FooterIhmResource extends AbstractResource {
         LOG.traceEntry();
         final Map<String, String> dataModel = new ConcurrentHashMap<>();
         dataModel.put("doi_prefix", DoiSettings.getInstance().getString(Consts.INIST_DOI));
-        dataModel.put("attribution", DoiSettings.getInstance().getString(Consts.ATTRIBUTION));
+        dataModel.put("attribution", DoiSettings.getInstance().getString(Consts.ATTRIBUTION,""));
         return LOG.traceExit(dataModel);
     }    
     
@@ -76,6 +76,7 @@ public class FooterIhmResource extends AbstractResource {
     public Representation getFooter() {
         LOG.traceEntry();
         final Map<String, String> dataModel = createDataModel();
+        System.out.println(dataModel);
         final Representation configFtl = new ClientResource(LocalReference.createClapReference(
                 "class/ihm_footer.ftl")).get();
         return LOG.traceExit(new TemplateRepresentation(configFtl, dataModel, MediaType.TEXT_ALL));        

@@ -128,6 +128,21 @@ public class IhmTest {
         );
     }
     
+    
+    @Test
+    public void testIhmFooter() throws IOException {
+        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
+        ClientResource client = new ClientResource("https://localhost:" + port + "/ihm/footer.txt");
+        client.setNext(cl);
+        Representation response = client.get(MediaType.TEXT_PLAIN);
+        String config = response.getText();
+        client.release();
+        assertNotNull("Test if the response is not null", config);
+        assertTrue("Test if the response contains stats",
+                config.contains("stats")
+        );
+    }    
+    
     @Test
     public void testIhm() throws IOException {
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
