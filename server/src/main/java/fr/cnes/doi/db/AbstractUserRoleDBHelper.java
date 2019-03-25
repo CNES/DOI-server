@@ -69,16 +69,18 @@ public abstract class AbstractUserRoleDBHelper extends Observable {
      * Returns the allowed users for authentication.
      *
      * @return List of users to add for the authentication
+     * @throws fr.cnes.doi.exception.DOIDbException When an error occurs
      */
-    public abstract List<DOIUser> getUsers();
+    public abstract List<DOIUser> getUsers() throws DOIDbException;
 
     /**
      * Get users from a specific role.
      *
      * @param roleName role name
      * @return The users related to a specific role
+     * @throws fr.cnes.doi.exception.DOIDbException When an error occurs
      */
-    public abstract List<DOIUser> getUsersFromRole(final int roleName);
+    public abstract List<DOIUser> getUsersFromRole(final int roleName) throws DOIDbException;
 
     /**
      * Adds an user to a specific role.
@@ -119,10 +121,9 @@ public abstract class AbstractUserRoleDBHelper extends Observable {
      *
      * @param username username
      * @param admin True when the user must be added in the admin group otherwise False
-     * @throws DOIDbException When a database problem happens
+     * @return True when the user is added otherwise False
      */
-    public abstract void addDOIUser(final String username, final Boolean admin) throws
-            DOIDbException;
+    public abstract boolean addDOIUser(final String username, final Boolean admin);
 
     /**
      * Add a DOI user
@@ -130,10 +131,9 @@ public abstract class AbstractUserRoleDBHelper extends Observable {
      * @param username username
      * @param admin True when the user must be added in the admin group otherwise False
      * @param email email
-     * @throws DOIDbException When a database problem occurs
+     * @return True when the the user is added otherwise false
      */
-    public abstract void addDOIUser(final String username, final Boolean admin, final String email)
-            throws DOIDbException;
+    public abstract boolean addDOIUser(final String username, final Boolean admin, final String email);
 
     /**
      * Tests if the user exists.
@@ -155,8 +155,8 @@ public abstract class AbstractUserRoleDBHelper extends Observable {
      * Removes the user
      *
      * @param username user
-     * @throws DOIDbException When a database problem happens
+     * @return True when the user is removed otherwise false
      */
-    public abstract void removeDOIUser(final String username) throws DOIDbException;
+    public abstract boolean removeDOIUser(final String username);
 
 }

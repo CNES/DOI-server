@@ -30,11 +30,15 @@ import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
 
 import fr.cnes.doi.application.AdminApplication;
+import static fr.cnes.doi.application.AdminApplication.SUFFIX_PROJECT_NAME_TEMPLATE;
 import fr.cnes.doi.client.ClientSearchDataCite;
 import fr.cnes.doi.db.AbstractProjectSuffixDBHelper;
 import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.resource.AbstractResource;
 import fr.cnes.doi.utils.spec.Requirement;
+import org.restlet.data.Method;
+import org.restlet.ext.wadl.MethodInfo;
+import org.restlet.ext.wadl.ParameterStyle;
 
 /**
  * Provide a resource to delete and rename a project from database.
@@ -46,6 +50,8 @@ public class ManageProjectsResource extends AbstractResource {
      * create a new identifier for the project.
      */
     public static final String PROJECT_NAME_PARAMETER = "newProjectName";
+    
+    
 
     /**
      * Logger.
@@ -69,9 +75,8 @@ public class ManageProjectsResource extends AbstractResource {
         LOG = app.getLog();
         LOG.traceEntry();
         setDescription("This resource handles deletion and renaming of a project");
-        this.suffixProject = getAttribute("suffixProject");
+        this.suffixProject = getAttribute(SUFFIX_PROJECT_NAME_TEMPLATE);
         LOG.debug(this.suffixProject);
-
         LOG.traceExit();
     }
 
@@ -80,48 +85,59 @@ public class ManageProjectsResource extends AbstractResource {
      * Rename the project from the project id sent in url.
      *
      * @param mediaForm form
-     * @return True when the project is renamed otherwise false
      */
     @Requirement(reqId = Requirement.DOI_SRV_140, reqName = Requirement.DOI_SRV_140_NAME)
     @Post
-    public boolean renameProject(final Form mediaForm) {
+    public void renameProject(final Form mediaForm) {
         LOG.traceEntry("Parameters\n\tmediaForm : {}", mediaForm);
         checkInputs(mediaForm);
         final String newProjectName = mediaForm.getFirstValue(PROJECT_NAME_PARAMETER);
         final AbstractProjectSuffixDBHelper manageProjects = PluginFactory.getProjectSuffix();
-        return LOG.traceExit(manageProjects.renameProject(Integer.parseInt(suffixProject),
-                newProjectName));
+        final boolean isRenamed = manageProjects.renameProject(Integer.parseInt(suffixProject),
+                newProjectName);
+        if(isRenamed) {
+            setStatus(Status.SUCCESS_NO_CONTENT);
+        } else {
+            throw LOG.throwing(new ResourceException(
+                    Status.CLIENT_ERROR_BAD_REQUEST, "Cannot rename project to "+newProjectName));
+        }
+        LOG.traceExit();
     }
 
     // TODO requirement
     /**
-     * Delete the project from database.
-     *
-     * @return the list of dois
+     * Delete the project from database.     
      */
     @Requirement(reqId = Requirement.DOI_SRV_140, reqName = Requirement.DOI_SRV_140_NAME)
     @Delete
-    public boolean deleteProject() {
+    public void deleteProject() {
         LOG.traceEntry();
 
         final ClientSearchDataCite client;
-        List<String> response = new ArrayList<>();
+        final List<String> response = new ArrayList<>();
         try {
             client = new ClientSearchDataCite();
-            response = client.getDois(suffixProject);
+            response.addAll(client.getDois(suffixProject));
 
         } catch (Exception ex) {
             LOG.error(ex + "\n"
                     + "Error in SuffixProjectsDoisResource while searching for dois in project "
                     + suffixProject);
         }
+        
+        final AbstractProjectSuffixDBHelper manageProjects = PluginFactory.getProjectSuffix();
 
         // No DOIs have to be attached to a project before deleting it
         if (!response.isEmpty()) {
-            return LOG.traceExit(false);
+            throw LOG.throwing(new ResourceException(
+                    Status.CLIENT_ERROR_NOT_FOUND, suffixProject+" not found"));
+        } else if(manageProjects.deleteProject(Integer.parseInt(suffixProject))) {
+            setStatus(Status.SUCCESS_NO_CONTENT);
+        } else {
+            throw LOG.throwing(new ResourceException(
+                    Status.SERVER_ERROR_INTERNAL, "Cannot delete the project "+suffixProject));
         }
-        final AbstractProjectSuffixDBHelper manageProjects = PluginFactory.getProjectSuffix();
-        return LOG.traceExit(manageProjects.deleteProject(Integer.parseInt(suffixProject)));
+        LOG.traceExit();
     }
 
     /**
@@ -139,5 +155,48 @@ public class ManageProjectsResource extends AbstractResource {
         LOG.debug("The form is valid");
         LOG.traceExit();
     }
+    
+    @Override
+    protected void describePost(final MethodInfo info) {
+        info.setName(Method.POST);
+        info.setDocumentation("Rename the project");
+        addRequestDocToMethod(info, createQueryParamDoc(
+                SUFFIX_PROJECT_NAME_TEMPLATE, ParameterStyle.TEMPLATE,
+                "projectID", true, "xs:integer")
+        );        
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.SUCCESS_NO_CONTENT, "Operation successful",
+                stringRepresentation())
+        );
+        
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.CLIENT_ERROR_BAD_REQUEST, "Cannot rename project",
+                htmlRepresentation())
+        );        
+    }  
+    
+    @Override
+    protected void describeDelete(final MethodInfo info) {
+        info.setName(Method.DELETE);
+        info.setDocumentation("Delete a project");
+        addRequestDocToMethod(info, createQueryParamDoc(
+                SUFFIX_PROJECT_NAME_TEMPLATE, ParameterStyle.TEMPLATE,
+                "projectID", true, "xs:integer")
+        );        
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.SUCCESS_NO_CONTENT, "Operation successful",
+                stringRepresentation())
+        );
+        
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.CLIENT_ERROR_NOT_FOUND, "projectID not found",
+                htmlRepresentation())
+        );        
+        
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.CLIENT_ERROR_BAD_REQUEST, "Cannot delete the project",
+                htmlRepresentation())
+        );        
+    }     
 
 }

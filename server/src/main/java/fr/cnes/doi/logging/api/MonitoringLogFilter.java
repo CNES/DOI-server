@@ -24,7 +24,6 @@ import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.settings.EmailSettings;
 import fr.cnes.doi.utils.Utils;
 import fr.cnes.doi.utils.spec.Requirement;
-import java.text.MessageFormat;
 import org.apache.logging.log4j.LogManager;
 import org.restlet.Context;
 import org.restlet.Request;
@@ -69,8 +68,7 @@ public class MonitoringLogFilter extends LogFilter {
     }
 
     /**
-     * Allows filtering after processing by the next Restlet. Does nothing by
-     * default.
+     * Allows filtering after processing by the next Restlet. Does nothing by default.
      *
      * @param request request
      * @param response response
@@ -93,8 +91,8 @@ public class MonitoringLogFilter extends LogFilter {
                 final String methodName = method.getName();
                 final float average = monitoring.getCurrentAverage(method, path);
                 LogManager.getLogger(Utils.APP_LOGGER_NAME).info(
-                        "{}({} {}) - current speed average : {} ms - " +
-                        "current measure: {} ms",
+                        "{}({} {}) - current speed average : {} ms - "
+                        + "current measure: {} ms",
                         description, methodName, path, average, duration);
                 sendAlertIfNeeded(monitoring.getCurrentAverage(method, path), duration, path,
                         method);

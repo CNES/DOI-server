@@ -24,7 +24,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import fr.cnes.doi.db.AbstractTokenDBHelper;
+import fr.cnes.doi.exception.DOIDbException;
 import fr.cnes.doi.security.TokenSecurity;
+import java.util.ArrayList;
+import java.util.logging.Level;
 
 /**
  * Updates token database. The service checks if the token is expired. When it is expired, the token
@@ -35,12 +38,14 @@ import fr.cnes.doi.security.TokenSecurity;
 public class UpdateTokenDataBase implements Runnable {
 
     /**
+     * Logger.
+     */
+    private static final Logger LOG = LogManager.getLogger(UpdateTokenDataBase.class.getName());
+    
+    /**
      * Token database.
      */
     private final AbstractTokenDBHelper tokenDB = TokenSecurity.getInstance().getTOKEN_DB();
-
-    // logger
-    private Logger LOG = LogManager.getLogger(UpdateTokenDataBase.class.getName());
 
     /**
      * {@inheritDoc}
@@ -48,7 +53,12 @@ public class UpdateTokenDataBase implements Runnable {
     @Override
     public void run() {
         LOG.info("Executing task that remove expired token from database.");
-        final List<String> tokenList = tokenDB.getTokens();
+        List<String> tokenList;
+        try {
+            tokenList = tokenDB.getTokens();
+        } catch (DOIDbException ex) {
+            tokenList = new ArrayList<>();
+        }
         for (final String token : tokenList) {
             if (tokenDB.isExpired(token)) {
                 tokenDB.deleteToken(token);

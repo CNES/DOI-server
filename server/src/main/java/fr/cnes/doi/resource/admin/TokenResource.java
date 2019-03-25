@@ -21,8 +21,10 @@ package fr.cnes.doi.resource.admin;
 import fr.cnes.doi.application.AdminApplication;
 import static fr.cnes.doi.application.AdminApplication.TOKEN_TEMPLATE;
 import fr.cnes.doi.db.AbstractTokenDBHelper;
+import fr.cnes.doi.db.AbstractUserRoleDBHelper;
 import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.exception.TokenSecurityException;
+import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.resource.AbstractResource;
 import fr.cnes.doi.security.TokenSecurity;
 import fr.cnes.doi.security.TokenSecurity.TimeUnit;
@@ -126,7 +128,18 @@ public class TokenResource extends AbstractResource {
         LOG.traceEntry("Paramater : {}", info);
         checkInputs(info);
         try {
-            final String userID = info.getFirstValue(IDENTIFIER_PARAMETER, null);
+            final String user = this.getClientInfo().getUser().getIdentifier();
+            LOG.debug("Identified user : {}", user);
+            final AbstractUserRoleDBHelper manageUsers = PluginFactory.getUserManagement();
+            final String userID;            
+            if (manageUsers.isAdmin(user)) {
+                // The admin can generate for everybody
+                LOG.debug("User {} is admin", user);
+                userID = info.getFirstValue(IDENTIFIER_PARAMETER, null);                
+            } else {
+                // The token is generated for the identified user.
+                userID = user;
+            }
             final String projectID = info.getFirstValue(PROJECT_ID_PARAMETER, null);
             final String timeParam = info.getFirstValue(UNIT_OF_TIME_PARAMETER, "0");
 
@@ -197,6 +210,9 @@ public class TokenResource extends AbstractResource {
         }
     }
 
+    /**
+     * Deletes token.
+     */
     @Requirement(reqId = Requirement.DOI_INTER_040, reqName = Requirement.DOI_INTER_040_NAME)
     @Delete
     public void deleteToken() {

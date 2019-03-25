@@ -328,11 +328,7 @@
                             <!-- The specifications, useless to analyze -->
                             <exclude>fr/cnes/doi/utils/spec/*.class</exclude>
                             <!-- Generated classes from JAXB -->
-                            <exclude>org/datacite/schema/**/*.class</exclude>
-                            <!-- Default plugin / just for test purposes -->
-                            <exclude>fr/cnes/doi/plugin/impl/*.class</exclude>
-                            <!-- Do not check that, is was done for an internal project -->
-                            <exclude>fr/cnes/doi/utils/DoiGUI*.class</exclude>                                             
+                            <exclude>org/datacite/schema/**/*.class</exclude>                                           
                         </excludes>
                     </instrumentation>
                 </configuration>
@@ -548,16 +544,11 @@
             <groupId>org.restlet.jee</groupId>
             <artifactId>org.restlet.ext.jaxb</artifactId>
             <version>${restlet-version}</version>
-        </dependency>  
-        <dependency>
-            <groupId>org.restlet.jee</groupId>
-            <artifactId>org.restlet.ext.javamail</artifactId>
-            <version>2.0.3</version>
-        </dependency>     
+        </dependency>      
         <dependency>
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>
-            <version>1.4</version>
+            <version>1.4.1</version>
         </dependency>                 
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
@@ -622,7 +613,12 @@
             <artifactId>commons-dbcp</artifactId>
             <version>1.4</version>
         </dependency>
-        
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>findbugs</artifactId>
+            <version>3.0.1</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
     <reporting>
         <plugins> 
@@ -675,7 +671,7 @@
                 <version>2.17</version>
                 <configuration>
                     <configLocation>${project.basedir}/ConfTools/Checkstyle_7.2.0_CNES_C_2016.12.05.xml</configLocation>
-                    <excludes>fr/cnes/doi/utils/DoiGUI.java, org/datacite/**/*.java,fr/cnes/doi/plugin/impl/*.java,fr/cnes/doi/utils/spec/*.java</excludes>                      
+                    <excludes>org/datacite/**/*.java,fr/cnes/doi/utils/spec/*.java</excludes>                      
                 </configuration>
             </plugin>                       
             <plugin>
@@ -691,9 +687,7 @@
                         <exclude>fr/cnes/doi/utils/HttpClientHelperPatch.java</exclude>
                         <exclude>fr/cnes/doi/server/Starter.java</exclude>
                         <exclude>org/datacite/**/*.java</exclude>
-                        <exclude>fr/cnes/doi/plugin/impl/*.java</exclude>
                         <exclude>fr/cnes/doi/utils/spec/*.java</exclude>
-                        <exclude>fr/cnes/doi/utils/DoiGUI.java</exclude>
                     </excludes>                    
                 </configuration>
             </plugin>    

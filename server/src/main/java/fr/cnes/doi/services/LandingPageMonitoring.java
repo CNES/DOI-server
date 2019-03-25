@@ -22,10 +22,13 @@ import fr.cnes.doi.client.ClientLandingPage;
 import fr.cnes.doi.client.ClientSearchDataCite;
 import fr.cnes.doi.db.AbstractProjectSuffixDBHelper;
 import fr.cnes.doi.db.model.DOIUser;
+import fr.cnes.doi.exception.DOIDbException;
 import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.settings.EmailSettings;
 import fr.cnes.doi.utils.spec.Requirement;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -101,7 +104,12 @@ public class LandingPageMonitoring implements Runnable {
         final Matcher doiMatcher = doiPattern.matcher(error);
         final int doiSuffix = Integer.parseInt(doiMatcher.group(3));
         final AbstractProjectSuffixDBHelper manageProjects = PluginFactory.getProjectSuffix();
-        final List<DOIUser> members = manageProjects.getAllDOIUsersForProject(doiSuffix);
+        List<DOIUser> members;
+        try {
+            members = manageProjects.getAllDOIUsersForProject(doiSuffix);
+        } catch (DOIDbException ex) {
+            members = new ArrayList<>();
+        }
         for (final DOIUser member : members) {
             email.sendMessage(subject, body, member.getEmail());
         }

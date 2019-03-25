@@ -18,11 +18,10 @@
  */
 package fr.cnes.doi.plugin;
 
-import fr.cnes.doi.db.AbstractProjectSuffixDBHelper;
-import fr.cnes.doi.db.AbstractUserRoleDBHelper;
 import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.utils.spec.Requirement;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -39,6 +38,11 @@ public final class PluginFactory {
     private static final Map<String, String> PLUGINS_IMPL = new ConcurrentHashMap<>();
 
     /**
+     * Settings.
+     */
+    private static final Map<String, String> SETTINGS = new HashMap<>();
+
+    /**
      * Loads the path of plugins from Settings.
      *
      * @param settings config settings
@@ -48,10 +52,13 @@ public final class PluginFactory {
         final String projectSuffixPlugin = settings.getOrDefault(Consts.PLUGIN_PROJECT_SUFFIX, "");
         final String tokenPlugin = settings.getOrDefault(Consts.PLUGIN_TOKEN, "");
         final String doiPlugin = settings.getOrDefault(Consts.PLUGIN_DOI, "");
+        final String authPlugin = settings.getOrDefault(Consts.PLUGIN_AUTHENTICATION, "");
         PLUGINS_IMPL.put(Consts.PLUGIN_USER_GROUP_MGT, userRealPlugin);
         PLUGINS_IMPL.put(Consts.PLUGIN_PROJECT_SUFFIX, projectSuffixPlugin);
         PLUGINS_IMPL.put(Consts.PLUGIN_TOKEN, tokenPlugin);
         PLUGINS_IMPL.put(Consts.PLUGIN_DOI, doiPlugin);
+        PLUGINS_IMPL.put(Consts.PLUGIN_AUTHENTICATION, authPlugin);
+        SETTINGS.putAll(settings);
     }
 
     /**
@@ -59,9 +66,12 @@ public final class PluginFactory {
      *
      * @return the plugin
      */
-    public static AbstractUserRoleDBHelper getUserManagement() {
+    public static AbstractUserRolePluginHelper getUserManagement() {
         final String implClassName = PLUGINS_IMPL.get(Consts.PLUGIN_USER_GROUP_MGT);
-        return (AbstractUserRoleDBHelper) buildObject(implClassName);
+        final AbstractUserRolePluginHelper plugin = (AbstractUserRolePluginHelper) buildObject(
+                implClassName);
+        plugin.setConfiguration(SETTINGS);
+        return plugin;
     }
 
     /**
@@ -69,9 +79,12 @@ public final class PluginFactory {
      *
      * @return the plugin
      */
-    public static AbstractProjectSuffixDBHelper getProjectSuffix() {
+    public static AbstractProjectSuffixPluginHelper getProjectSuffix() {
         final String implClassName = PLUGINS_IMPL.get(Consts.PLUGIN_PROJECT_SUFFIX);
-        return (AbstractProjectSuffixDBHelper) buildObject(implClassName);
+        final AbstractProjectSuffixPluginHelper plugin = (AbstractProjectSuffixPluginHelper) buildObject(
+                implClassName);
+        plugin.setConfiguration(SETTINGS);
+        return plugin;
     }
 
     /**
@@ -81,7 +94,22 @@ public final class PluginFactory {
      */
     public static AbstractTokenDBPluginHelper getToken() {
         final String implClassName = PLUGINS_IMPL.get(Consts.PLUGIN_TOKEN);
-        return (AbstractTokenDBPluginHelper) buildObject(implClassName);
+        final AbstractTokenDBPluginHelper plugin = (AbstractTokenDBPluginHelper) buildObject(implClassName);
+        plugin.setConfiguration(SETTINGS);
+        return plugin;
+    }
+
+    /**
+     * Returns the concrete implementation of the authentication system.
+     *
+     * @return the plugin
+     */
+    public static AbstractAuthenticationPluginHelper getAuthenticationSystem() {
+        final String implClassName = PLUGINS_IMPL.get(Consts.PLUGIN_AUTHENTICATION);
+        final AbstractAuthenticationPluginHelper plugin = (AbstractAuthenticationPluginHelper) buildObject(
+                implClassName);
+        plugin.setConfiguration(SETTINGS);
+        return plugin;
     }
 
     /**

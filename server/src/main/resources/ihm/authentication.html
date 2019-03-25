@@ -70,8 +70,8 @@
                     $(document).ready(function () {
                         $("#footer").load("footer.txt");
 
-                        if (sessionStorage.getItem("user") != null) {
-                            deleteToken();
+                        if (sessionStorage.getItem("user") !== null) {
+                            deleteToken();                            
                         }
                     });
 

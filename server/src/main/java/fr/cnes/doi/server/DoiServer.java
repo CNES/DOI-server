@@ -48,12 +48,11 @@ import fr.cnes.doi.application.AdminApplication;
 import fr.cnes.doi.application.DoiCrossCiteApplication;
 import fr.cnes.doi.application.DoiMdsApplication;
 import fr.cnes.doi.db.AbstractUserRoleDBHelper;
-import fr.cnes.doi.exception.LDAPAccessException;
-import fr.cnes.doi.ldap.model.LDAPUser;
+import fr.cnes.doi.exception.AuthenticationAccessException;
+import fr.cnes.doi.db.model.AuthSystemUser;
 import fr.cnes.doi.logging.api.DoiLogDataServer;
 import fr.cnes.doi.logging.business.JsonMessage;
 import fr.cnes.doi.logging.security.DoiSecurityLogFilter;
-import fr.cnes.doi.ldap.impl.LDAPAccessServiceImpl;
 import fr.cnes.doi.security.RoleAuthorizer;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
@@ -62,9 +61,9 @@ import fr.cnes.doi.settings.JettySettings;
 import fr.cnes.doi.settings.ProxySettings;
 import fr.cnes.doi.utils.Utils;
 import fr.cnes.doi.utils.spec.Requirement;
-import fr.cnes.doi.ldap.service.ILDAPAccessService;
 import fr.cnes.doi.plugin.PluginFactory;
 import static fr.cnes.doi.plugin.Utils.addPath;
+import fr.cnes.doi.db.IAuthenticationDBHelper;
 
 /**
  * DoiServer contains the configuration of this server and the methods to start/stop it.
@@ -312,38 +311,40 @@ public class DoiServer extends Component {
         // Set authentication 
         RoleAuthorizer.getInstance().createRealmFor(appDoiProject);
         RoleAuthorizer.getInstance().createRealmFor(appAdmin);
-        // Set LDAP user as admin
-        final String doiAdmin = DoiSettings.getInstance().getString(Consts.LDAP_DOI_ADMIN);
-        addLdapUserAsAdmin(doiAdmin);
+        // Set authentication user as admin
+        final String doiAdmin = PluginFactory.getAuthenticationSystem().getDOIAdmin();
+        addAuthenticationUserAsAdmin(doiAdmin);
         LOG.traceExit();
     }
 
     /**
-     * Adds LDAP user as administrator of the DOI server
+     * Adds an authentication system user as administrator of the DOI server
      *
      * @param username username
      */
-    private void addLdapUserAsAdmin(final String username) {
+    private void addAuthenticationUserAsAdmin(final String username) {
         LOG.traceEntry("Parameter\n   username: {}", username);
-        final ILDAPAccessService ldapaccessservice = new LDAPAccessServiceImpl();
+        final IAuthenticationDBHelper authenticationService = PluginFactory.
+                getAuthenticationSystem();
         final AbstractUserRoleDBHelper manageUsers = PluginFactory.getUserManagement();
         try {
             boolean isFound = false;
-            final List<LDAPUser> ldapUsers = ldapaccessservice.getDOIProjectMembers();
-            for (final LDAPUser ldapUser : ldapUsers) {
-                if (ldapUser.getUsername().equals(username)) {
-                    manageUsers.setUserToAdminGroup(ldapUser.getUsername());
+            final List<AuthSystemUser> authenticationUsers = authenticationService.
+                    getDOIProjectMembers();
+            for (final AuthSystemUser authenticationUser : authenticationUsers) {
+                if (authenticationUser.getUsername().equals(username)) {
+                    manageUsers.setUserToAdminGroup(authenticationUser.getUsername());
                     isFound = true;
                     break;
                 }
             }
             if (!isFound) {
-                LOG.warn("{} is not registered in the LDAP with the group {} - Cannot create "
-                        + "the administrator",
-                        username, DoiSettings.getInstance().getString(Consts.LDAP_PROJECT)
+                LOG.warn("{} is not registered in the authentication system - Cannot create "
+                        + "the administrator in DOI database",
+                        username
                 );
             }
-        } catch (LDAPAccessException ex) {
+        } catch (AuthenticationAccessException ex) {
             LOG.catching(ex);
             LOG.warn("Cannot create an administrator: {}", ex);
         }
@@ -488,18 +489,28 @@ public class DoiServer extends Component {
         return LOG.traceExit(result);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public synchronized void start() throws Exception {
         LOG.info("Starting server ...");
         addPath(DoiSettings.getInstance().getPathApp() + File.separatorChar + "plugins");
         super.start();
-        LOG.info("Server started");        
+        LOG.info("Server started");
     }
 
+    /**
+     * {@inheritDoc}
+     */    
     @Override
     public synchronized void stop() throws Exception {
         LOG.info("Stopping the server ...");
         super.stop();
+        PluginFactory.getAuthenticationSystem().release();
+        PluginFactory.getProjectSuffix().release();
+        PluginFactory.getToken().release();
+        PluginFactory.getUserManagement().release();
         EmailSettings.getInstance().sendMessage("[DOI] Stopping Server",
                 "Ther server has been interrupted");
         LOG.info("Server stopped");

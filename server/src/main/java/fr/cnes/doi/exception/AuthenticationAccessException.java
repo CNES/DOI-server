@@ -19,11 +19,11 @@
 package fr.cnes.doi.exception;
 
 /**
- * Exception created by a LDAP.
+ * Exception created by the authentication access mechanism.
  *
  * @author Jean-Chritophe Malapert (Jean-Christophe.malapert@cnes.fr)
  */
-public class LDAPAccessException extends Exception {
+public class AuthenticationAccessException extends Exception {
 
     /**
      * Constructor
@@ -31,7 +31,7 @@ public class LDAPAccessException extends Exception {
      * @param message Message explaining the exception
      * @param ex exception
      */
-    public LDAPAccessException(final String message, final Exception ex) {
+    public AuthenticationAccessException(final String message, final Exception ex) {
         super(message, ex);
     }
 }

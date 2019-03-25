@@ -320,6 +320,11 @@ public final class Consts {
     public static final String PLUGIN_TOKEN = "Starter.Plugin.Token";
 
     /**
+     * Plugin to load the authentication system.
+     */
+    public static final String PLUGIN_AUTHENTICATION = "Starter.Plugin.Authentication";
+
+    /**
      * Plugin to load the DOI database.
      */
     public static final String PLUGIN_DOI = "Starter.Plugin.Doi";
@@ -355,90 +360,10 @@ public final class Consts {
     public static final String DB_UPDATE_JOB_PERIOD = "Starter.updateDatabaseJob.period";
 
     /**
-     * Database url
-     */
-    public static final String DB_URL = "Starter.Database.Doidburl";
-
-    /**
-     * Database user
-     */
-    public static final String DB_USER = "Starter.Database.User";
-
-    /**
-     * Database password
-     */
-    public static final String DB_PWD = "Starter.Database.Pwd";
-
-    /**
-     * Minimum number of connection object that are to be kept alive in the pool
-     */
-    public static final String DB_MIN_IDLE_CONNECTIONS = "Starter.Database.MinIdleConnections";
-
-    /**
-     * Minimum number of connection object that are to be kept alive in the pool
-     */
-    public static final String DB_MAX_IDLE_CONNECTIONS = "Starter.Database.MaxIdleConnections";
-
-    /**
-     * Maximum number of active connections that can be allocated at the same time.
-     */
-    public static final String DB_MAX_ACTIVE_CONNECTIONS = "Starter.Database.MaxActiveConnections";
-
-    /**
-     * LDAP url
-     */
-    public static final String LDAP_URL = "Starter.LDAP.url";
-
-    /**
-     * LDAP user
-     */
-    public static final String LDAP_USER = "Starter.LDAP.user";
-
-    /**
-     * LDAP pwd
-     */
-    public static final String LDAP_PWD = "Starter.LDAP.password";
-
-    /**
-     * LDAP project
-     */
-    public static final String LDAP_PROJECT = "Starter.LDAP.project";
-
-    /**
-     * LDAP username who is the administrator of the DOI server
-     */
-    public static final String LDAP_DOI_ADMIN = "Starter.LDAP.user.admin";
-
-    /**
-     * Specifies the filter expression to get the group.
-     */
-    public static final String LDAP_SEARCH_GROUP = "Starter.LDAP.search.group";
-    
-    /**
-     * Specifies the filter expression to get the users.
-     */
-    public static final String LDAP_SEARCH_USER = "Starter.LDAP.search.user";
-    
-    /**
-     * Attributes name in LDAP for username.
-     */
-    public static final String LDAP_ATTR_USERNAME = "Starter.LDAP.attr.username";
-
-    /**
-     * Attributes name in LDAP for mail.
-     */
-    public static final String LDAP_ATTR_MAIL = "Starter.LDAP.attr.mail";    
-
-    /**
      * Attributes name in LDAP for fullname.
      */
-    public static final String LDAP_ATTR_FULLNAME = "Starter.LDAP.attr.fullname";
-    
-    /**
-     * Attributes name in LDAP for fullname.
-     */
-    public static final String ATTRIBUTION = "Starter.attribution";    
-    
+    public static final String ATTRIBUTION = "Starter.attribution";
+
     /**
      * "Static" class cannot be instantiated
      */

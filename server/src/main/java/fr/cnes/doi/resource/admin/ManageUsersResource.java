@@ -32,6 +32,7 @@ import org.restlet.resource.ResourceException;
 import fr.cnes.doi.application.AdminApplication;
 import fr.cnes.doi.db.AbstractUserRoleDBHelper;
 import fr.cnes.doi.db.model.DOIUser;
+import fr.cnes.doi.exception.DOIDbException;
 import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.resource.AbstractResource;
 import fr.cnes.doi.utils.spec.Requirement;
@@ -84,17 +85,26 @@ public class ManageUsersResource extends AbstractResource {
     }
 
     //TODO requirement
+    /**
+     * Get users.
+     *
+     * @return users.
+     */
     @Get
     public List<String> getUsers() {
         LOG.traceEntry();
-        int idProject = Integer.parseInt(suffixProject);
-        final List<String> users = new ArrayList<>();
-        final AbstractUserRoleDBHelper manageUsers = PluginFactory.getUserManagement();
-        List<DOIUser> doiUsers = manageUsers.getUsersFromRole(idProject);
-        for (DOIUser doiUser : doiUsers) {
-            users.add(doiUser.getUsername());
+        try {
+            final int idProject = Integer.parseInt(suffixProject);
+            final List<String> users = new ArrayList<>();
+            final AbstractUserRoleDBHelper manageUsers = PluginFactory.getUserManagement();
+            final List<DOIUser> doiUsers = manageUsers.getUsersFromRole(idProject);
+            for (final DOIUser doiUser : doiUsers) {
+                users.add(doiUser.getUsername());
+            }
+            return LOG.traceExit(users);
+        } catch (DOIDbException ex) {
+            throw LOG.throwing(new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage()));
         }
-        return LOG.traceExit(users);
     }
 
     //TODO requirement 
@@ -102,38 +112,46 @@ public class ManageUsersResource extends AbstractResource {
      * Adds user to project
      *
      * @param mediaForm form
-     * @return True when the user is added to the project otherwise False
      */
     @Requirement(reqId = Requirement.DOI_SRV_140, reqName = Requirement.DOI_SRV_140_NAME)
     @Post
-    public boolean addUserToProject(Form mediaForm) {
+    public void addUserToProject(final Form mediaForm) {
         LOG.traceEntry("Parameters\n\tmediaForm : {}", mediaForm);
         checkInputs(mediaForm);
         final String user = mediaForm.getFirstValue(USER_NAME_PARAMETER);
-        int idProject = Integer.parseInt(suffixProject);
+        final int idProject = Integer.parseInt(suffixProject);
         final AbstractUserRoleDBHelper manageUsers = PluginFactory.getUserManagement();
-        final boolean isAdded;
         if (manageUsers.isUserExist(user)) {
-            isAdded = manageUsers.addUserToRole(user, idProject);
+            if (manageUsers.addUserToRole(user, idProject)) {
+                setStatus(Status.SUCCESS_NO_CONTENT);
+            } else {
+                throw LOG.throwing(new ResourceException(
+                        Status.SERVER_ERROR_INTERNAL, "Can't add user to project"));
+            }
         } else {
-            isAdded = false;
+            throw LOG.throwing(new ResourceException(
+                    Status.CLIENT_ERROR_BAD_REQUEST, "User " + user + " not found"));
         }
-        return LOG.traceExit(isAdded);
+        LOG.traceExit();
     }
 
     //TODO requirement
     /**
      * Delete the project
      *
-     * @return true when the project is deleted otherwise false
      */
     @Requirement(reqId = Requirement.DOI_SRV_140, reqName = Requirement.DOI_SRV_140_NAME)
     @Delete
-    public boolean deleteProject() {
+    public void deleteProject() {
         LOG.traceEntry();
-        int idProject = Integer.parseInt(suffixProject);
+        final int idProject = Integer.parseInt(suffixProject);
         final AbstractUserRoleDBHelper manageUsers = PluginFactory.getUserManagement();
-        return LOG.traceExit(manageUsers.removeUserToRole(userName, idProject));
+        if (manageUsers.removeUserToRole(userName, idProject)) {
+            setStatus(Status.SUCCESS_NO_CONTENT);
+        } else {
+            throw LOG.throwing(new ResourceException(Status.SERVER_ERROR_INTERNAL,
+                    "Can't remove user " + userName));
+        }
     }
 
     /**

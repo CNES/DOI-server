@@ -16,14 +16,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package fr.cnes.doi.ldap.model;
+package fr.cnes.doi.db.model;
 
 /**
- * LDAP user model.
+ * Authentication user model.
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-public class LDAPUser {
+public class AuthSystemUser {
 
     /**
      * username.

@@ -18,10 +18,6 @@
  */
 package fr.cnes.doi.settings;
 
-import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_CONNECTIONS_PER_HOST;
-import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_TOTAL_CONNECTIONS;
-import static fr.cnes.doi.server.DoiServer.RESTLET_MAX_CONNECTIONS_PER_HOST;
-import static fr.cnes.doi.server.DoiServer.RESTLET_MAX_TOTAL_CONNECTIONS;
 import fr.cnes.doi.utils.spec.Requirement;
 import java.util.Locale;
 import java.util.Map;
@@ -188,7 +184,7 @@ public final class EmailSettings {
      * @param receiverEmail receiver
      * @return True when the message is sent
      */
-    public boolean sendMessage(final String subject, final String msg, String receiverEmail) {
+    public boolean sendMessage(final String subject, final String msg, final String receiverEmail) {
         LOG.traceEntry("Parameters : {}, {} and {}", subject, msg, receiverEmail);
         boolean result;
         try {
@@ -273,12 +269,11 @@ public final class EmailSettings {
      */
     private Representation createMailRepresentation(final String subject, final String msg,
             final String to) {
-        final DoiSettings settings = DoiSettings.getInstance();
         final Map<String, String> dataModel = new ConcurrentHashMap<>();
         dataModel.put("subject", subject);
         dataModel.put("message", msg);
         dataModel.put("from", this.getContactAdmin());
-        dataModel.put("to", to);        
+        dataModel.put("to", to);
         final Representation mailFtl = new ClientResource(LocalReference.createClapReference(
                 "class/email.ftl")).get();
         return new TemplateRepresentation(mailFtl, dataModel, MediaType.TEXT_XML);
@@ -303,18 +298,14 @@ public final class EmailSettings {
             final String msg,
             final String to) throws Exception {
         LOG.traceEntry("Parameters\n  protocol:{}\n  startTls:{}, request:{}\n  subject:{}\n  "
-                + "msg:{}\n  to:{}", 
+                + "msg:{}\n  to:{}",
                 protocol, request, startTls, subject, msg, to);
         final String contextMode = DoiSettings.getInstance().getString(Consts.CONTEXT_MODE);
         final Representation mail = this.createMailRepresentation(subject, msg, to);
         request.setEntity(mail);
         final boolean result;
-        if (!"PROD".equals(contextMode)) {
-            result = true;
-            LOG.warn("The configuration context {} is not PROD, do not send the email : {}",
-                    contextMode, mail.getText());
-        } else {
-            final Client client = new Client(new Context(), protocol);
+        if ("PROD".equals(contextMode)) {
+           final Client client = new Client(new Context(), protocol);
             final Series<Parameter> parameters = client.getContext().getParameters();
             parameters.add("debug", String.valueOf(isDebug()));
             parameters.add("startTls", Boolean.toString(startTls).toLowerCase(Locale.ENGLISH));
@@ -329,6 +320,10 @@ public final class EmailSettings {
                 result = false;
                 LOG.error("Cannot connect to SMTP server", status.getThrowable());
             }
+        } else {
+            result = true;
+            LOG.warn("The configuration context {} is not PROD, do not send the email : {}",
+                    contextMode, mail.getText());                         
         }
         return LOG.traceExit(result);
     }

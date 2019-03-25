@@ -27,7 +27,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.logging.log4j.Logger;
 import org.restlet.data.LocalReference;
 import org.restlet.data.MediaType;
+import org.restlet.data.Method;
+import org.restlet.data.Status;
 import org.restlet.ext.freemarker.TemplateRepresentation;
+import org.restlet.ext.wadl.MethodInfo;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.Get;
@@ -35,14 +38,15 @@ import org.restlet.resource.ResourceException;
 
 /**
  * Retrieves configuration file.
+ *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class ConfigIhmResource extends AbstractResource {
-    
+
     /**
      * Logger.
      */
-    private volatile Logger LOG;    
+    private volatile Logger LOG;
 
     @Override
     protected void doInit() throws ResourceException {
@@ -50,12 +54,12 @@ public class ConfigIhmResource extends AbstractResource {
         final AdminApplication app = (AdminApplication) getApplication();
         LOG = app.getLog();
         LOG.traceEntry();
+        setDescription("This resources handles GUI configuration file.");
         LOG.traceExit();
     }
-    
+
     /**
-     * Creates a data model. 
-     * The data model is used to replace values in the template
+     * Creates a data model. The data model is used to replace values in the template
      * ihm_config.ftl.
      *
      * @return the data model
@@ -65,10 +69,11 @@ public class ConfigIhmResource extends AbstractResource {
         final Map<String, String> dataModel = new ConcurrentHashMap<>();
         dataModel.put("doi_prefix", DoiSettings.getInstance().getString(Consts.INIST_DOI));
         return LOG.traceExit(dataModel);
-    }    
-    
+    }
+
     /**
      * Returns the configuration file.
+     *
      * @return the configuration file
      */
     @Get
@@ -77,7 +82,18 @@ public class ConfigIhmResource extends AbstractResource {
         final Map<String, String> dataModel = createDataModel();
         final Representation configFtl = new ClientResource(LocalReference.createClapReference(
                 "class/ihm_config.ftl")).get();
-        return LOG.traceExit(new TemplateRepresentation(configFtl, dataModel, MediaType.APPLICATION_JAVASCRIPT));        
+        return LOG.traceExit(new TemplateRepresentation(configFtl, dataModel,
+                MediaType.APPLICATION_JAVASCRIPT));
     }
     
+    @Override
+    protected void describeGet(final MethodInfo info) {
+        info.setName(Method.GET);
+        info.setDocumentation("Returns the GUI configuration");
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.SUCCESS_OK, "Operation successful",
+                stringRepresentation())
+        );
+    }     
+
 }

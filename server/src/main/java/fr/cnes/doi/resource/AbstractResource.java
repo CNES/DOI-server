@@ -283,5 +283,20 @@ public abstract class AbstractResource extends WadlServerResource {
         repInfo.setDocumentation(docInfo);
         return repInfo;
     }
+    
+    /**
+     * projects representation
+     *
+     * @return Wadl representation for projects
+     */
+    protected RepresentationInfo htmlRepresentation() {
+        final RepresentationInfo repInfo = new RepresentationInfo();
+        repInfo.setMediaType(MediaType.TEXT_HTML);
+        final DocumentationInfo docInfo = new DocumentationInfo();
+        docInfo.setTitle("HTML Representation");
+        docInfo.setTextContent("The representation contains the HTML representation.");
+        repInfo.setDocumentation(docInfo);
+        return repInfo;
+    }    
 
 }

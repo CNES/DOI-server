@@ -16,7 +16,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
+package fr.cnes.doi.plugin;
+
 /**
- * Provides LDAP user data model.
+ * Provides validation for plugin configuration.
+ *
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-package fr.cnes.doi.ldap.model;
+public interface PluginConfiguration {
+
+    /**
+     * Validates the parameters in the configuration file.
+     *
+     * @return the error messages.
+     */
+    public StringBuilder validate();
+
+    /**
+     * Returns True when the key is a password otherwise False.
+     *
+     * @param key key to check
+     * @return True when the key is a password otherwise False.
+     */
+    public boolean isPassword(final String key);
+
+    /**
+     * Release the plugin.
+     */
+    public void release();
+
+}

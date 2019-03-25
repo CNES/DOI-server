@@ -497,6 +497,11 @@ public final class DoiMdsApplication extends AbstractApplication {
          */
         private final String shortMessage;
 
+        /**
+         * Constructor.
+         * @param status status
+         * @param shortMessage short message related to the status
+         */
         API_MDS(final Status status, final String shortMessage) {
             this.status = status;
             this.shortMessage = shortMessage;

@@ -2186,7 +2186,7 @@ public class Resource {
              *
              *
              * <p>
-             * Objects of the following type(s) are allowed in the list null null null null             {@link JAXBElement }{@code <}{@link String }{@code >}
+             * Objects of the following type(s) are allowed in the list null null null null null             {@link JAXBElement }{@code <}{@link String }{@code >}
              * {@link String }
              * {@link JAXBElement }{@code <}{@link String }{@code >}
              *
@@ -2847,7 +2847,7 @@ public class Resource {
              *
              *
              * <p>
-             * Objects of the following type(s) are allowed in the list              {@link Object }
+             * Objects of the following type(s) are allowed in the list null             {@link Object }
              * {@link Point }
              * {@link Box }
              * {@link Resource.GeoLocations.GeoLocation.GeoLocationPolygon }

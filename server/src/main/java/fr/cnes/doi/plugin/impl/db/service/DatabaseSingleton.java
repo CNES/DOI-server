@@ -19,9 +19,10 @@
 package fr.cnes.doi.plugin.impl.db.service;
 
 import fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl;
+import java.util.Map;
 
 /**
- * Database singleton for accessing to the LDAP and DOI database.
+ * Database singleton for accessing to the DOI database.
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
@@ -42,10 +43,23 @@ public final class DatabaseSingleton {
     private final DOIDbDataAccessService das;
 
     /**
-     * Initialize the LDAP and DOI database.
+     * Initialize the DOI singleton.
      */
     private DatabaseSingleton() {
         this.das = new DOIDbDataAccessServiceImpl();
+    }
+
+    /**
+     * Initialize the DOI database.
+     *
+     * @param dbUrl database URL
+     * @param dbUser database user
+     * @param dbPwd database password
+     * @param options database options
+     */
+    public void init(final String dbUrl, final String dbUser, final String dbPwd,
+            final Map<String, Integer> options) {
+        ((DOIDbDataAccessServiceImpl) this.das).init(dbUrl, dbUser, dbPwd, options);
     }
 
     /**

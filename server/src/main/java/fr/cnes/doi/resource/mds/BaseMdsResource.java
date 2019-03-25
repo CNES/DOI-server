@@ -20,14 +20,16 @@ package fr.cnes.doi.resource.mds;
 
 import fr.cnes.doi.application.DoiMdsApplication;
 import fr.cnes.doi.application.DoiMdsApplication.API_MDS;
+import fr.cnes.doi.db.model.DOIProject;
+import fr.cnes.doi.exception.DOIDbException;
 import fr.cnes.doi.exception.DoiServerException;
 import fr.cnes.doi.resource.AbstractResource;
 import static fr.cnes.doi.security.UtilsHeader.SELECTED_ROLE_PARAMETER;
 
 import fr.cnes.doi.utils.UniqueProjectName;
 import fr.cnes.doi.utils.spec.Requirement;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
@@ -216,11 +218,15 @@ public class BaseMdsResource extends AbstractResource {
         // Token-ihm isn't attached to any project, in this case, check role in database
         if ("null".equals(selectedRole)) {
             final String user = getClientInfo().getUser().getIdentifier();
-            final Map<String, Integer> map = UniqueProjectName.getInstance()
-                    .getProjectsFromUser(user);
+            List<DOIProject> projects;
+            try {
+                projects = UniqueProjectName.getInstance().getProjectsFromUser(user);
+            } catch (DOIDbException ex) {
+                projects = new ArrayList<>();
+            }
             boolean isAuthorized = false;
-            for (int suffixProject : map.values()) {
-                if (doiName.startsWith(prefixCNES + "/" + suffixProject + "/")) {
+            for (final DOIProject project : projects) {
+                if (doiName.startsWith(prefixCNES + "/" + project.getSuffix() + "/")) {
                     isAuthorized = true;
                     break;
                 }

@@ -34,14 +34,14 @@ import org.restlet.resource.ClientResource;
 public class BaseClient {
 
     /**
-     * Logger.
-     */
-    private static final Logger LOG = LogManager.getLogger(BaseClient.class.getName());
-
-    /**
      * Port of the Datacite mockserver
      */
     public static final int DATACITE_MOCKSERVER_PORT = 1080;
+    
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = LogManager.getLogger(BaseClient.class.getName());
 
     /**
      * Number of retry when an error happens.

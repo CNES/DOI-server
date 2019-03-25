@@ -31,6 +31,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.Enumeration;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
@@ -107,11 +108,23 @@ public final class DoiSettings {
         if (Level.OFF.equals(level)) {
             level = null; // this fixes a bug in log4j2
         }
-        LOG.traceEntry("Parameter : {}", properties);
+        LOG.traceEntry("Parameter\n\tproperties:{}\n\tlevel:{}", properties, level);
         LOG.log(level, "----- DOI parameters ----");
         fillConcurrentMap(properties, level);
         computePathOfTheApplication();
         PluginFactory.init(DoiSettings.MAP_PROPERTIES);
+        final Enumeration<String> keys = DoiSettings.MAP_PROPERTIES.keys();
+        while (keys.hasMoreElements()) {
+            final String key = keys.nextElement();
+            LOG.log(
+                    level, "{} = {}",
+                    key,
+                    isPassword(String.valueOf(key))
+                    ? Utils.transformPasswordToStars(String.valueOf(DoiSettings.MAP_PROPERTIES.get(
+                            key)))
+                    : DoiSettings.MAP_PROPERTIES.get(key)
+            );
+        }
         LOG.log(level, "DOI settings have been loaded");
         LOG.log(level, "-------------------------");
         LOG.log(level, properties.getProperty(Consts.NAME) + " loaded");
@@ -184,30 +197,16 @@ public final class DoiSettings {
         if (isNotExist(DoiSettings.MAP_PROPERTIES, Consts.PLUGIN_USER_GROUP_MGT)) {
             validation.append(message).append(Consts.PLUGIN_USER_GROUP_MGT).append("\n");
         }
-        if (isNotExist(DoiSettings.MAP_PROPERTIES, Consts.DB_URL)) {
-            validation.append(message).append(Consts.DB_URL).append("\n");
-        }  
-        if (isNotExist(DoiSettings.MAP_PROPERTIES, Consts.LDAP_ATTR_FULLNAME)) {
-            validation.append(message).append(Consts.LDAP_ATTR_FULLNAME).append("\n");
+
+        if (isNotExist(DoiSettings.MAP_PROPERTIES, Consts.PLUGIN_AUTHENTICATION)) {
+            validation.append(message).append(Consts.PLUGIN_AUTHENTICATION).append("\n");
         }
-        if (isNotExist(DoiSettings.MAP_PROPERTIES, Consts.LDAP_ATTR_MAIL)) {
-            validation.append(message).append(Consts.LDAP_ATTR_MAIL).append("\n");
-        } 
-        if (isNotExist(DoiSettings.MAP_PROPERTIES, Consts.LDAP_ATTR_USERNAME)) {
-            validation.append(message).append(Consts.LDAP_ATTR_USERNAME).append("\n");
-        } 
-        if (isNotExist(DoiSettings.MAP_PROPERTIES, Consts.LDAP_PROJECT)) {
-            validation.append(message).append(Consts.LDAP_PROJECT).append("\n");
-        } 
-        if (isNotExist(DoiSettings.MAP_PROPERTIES, Consts.LDAP_URL)) {
-            validation.append(message).append(Consts.LDAP_URL).append("\n");
-        } 
-        if (isNotExist(DoiSettings.MAP_PROPERTIES, Consts.LDAP_SEARCH_GROUP)) {
-            validation.append(message).append(Consts.LDAP_SEARCH_GROUP).append("\n");
-        }  
-        if (isNotExist(DoiSettings.MAP_PROPERTIES, Consts.LDAP_SEARCH_USER)) {
-            validation.append(message).append(Consts.LDAP_SEARCH_USER).append("\n");
-        }        
+
+        validation.append(PluginFactory.getAuthenticationSystem().validate());
+        validation.append(PluginFactory.getProjectSuffix().validate());
+        validation.append(PluginFactory.getToken().validate());
+        validation.append(PluginFactory.getUserManagement().validate());
+
         if (validation.length() != 0) {
             throw LOG.traceExit(new DoiRuntimeException(validation.toString()));
         }
@@ -223,7 +222,7 @@ public final class DoiSettings {
      */
     private boolean isExist(final ConcurrentHashMap<String, String> properties,
             final String keyword) {
-        LOG.traceEntry("Parameters : {} and {}", properties, keyword);
+        LOG.traceEntry("Parameters\n\tproperties : {}\n\tkeyword : {}", properties, keyword);
         return LOG.traceExit(properties.containsKey(keyword) && !properties.get(keyword).isEmpty());
     }
 
@@ -236,7 +235,7 @@ public final class DoiSettings {
      */
     private boolean isNotExist(final ConcurrentHashMap<String, String> properties,
             final String keyword) {
-        LOG.traceEntry("Parameters : {} and {}", properties, keyword);
+        LOG.traceEntry("Parameters\n\tproperties : {}\n\tkeyword : {}", properties, keyword);
         return LOG.traceExit(!isExist(properties, keyword));
     }
 
@@ -246,30 +245,30 @@ public final class DoiSettings {
      * @param properties the configuration file content
      * @param level log level
      */
-    private void fillConcurrentMap(final Properties properties,
-            final Level level) {
-        LOG.traceEntry("Parameters : {}", properties);
+    private void fillConcurrentMap(final Properties properties, final Level level) {
+        LOG.traceEntry("Parameters\n\tproperties : {}\n\tlevel : {}", properties, level);
         for (final Entry<Object, Object> entry : properties.entrySet()) {
             MAP_PROPERTIES.put((String) entry.getKey(), (String) entry.getValue());
-            LOG.log(level, "{} = {}", entry.getKey(), 
-                    isPassword(String.valueOf(entry.getKey())) ? 
-                            Utils.transformPasswordToStars(String.valueOf(entry.getValue())) : 
-                            entry.getValue()
-            );
         }
         LOG.traceExit();
     }
-    
+
     /**
      * Tests if the value of the key is a password
+     *
      * @param key key to test
      * @return True when the value of the key is a password otherwise false
      */
     private boolean isPassword(final String key) {
-        return (Consts.INIST_PWD.equals(key) || Consts.DB_PWD.equals(key) || Consts.LDAP_PWD.equals(
-                key) || Consts.SERVER_HTTPS_KEYSTORE_PASSWD.equals(key) || 
-                Consts.SERVER_HTTPS_SECRET_KEY.equals(key) || Consts.SERVER_PROXY_PWD.equals(key) || 
-                Consts.SMTP_AUTH_PWD.equals(key) || Consts.TOKEN_KEY.equals(key));
+        LOG.traceEntry("Parameter\n\tkey:{}", key);
+        return LOG.traceExit(Consts.INIST_PWD.equals(key)
+                || PluginFactory.getAuthenticationSystem().isPassword(key)
+                || PluginFactory.getProjectSuffix().isPassword(key)
+                || PluginFactory.getToken().isPassword(key)
+                || PluginFactory.getUserManagement().isPassword(key)
+                || Consts.SERVER_HTTPS_KEYSTORE_PASSWD.equals(key)
+                || Consts.SERVER_HTTPS_SECRET_KEY.equals(key) || Consts.SERVER_PROXY_PWD.equals(key)
+                || Consts.SMTP_AUTH_PWD.equals(key) || Consts.TOKEN_KEY.equals(key));
     }
 
     /**
@@ -279,7 +278,7 @@ public final class DoiSettings {
      * @return True when the value inputStream different or null and empty
      */
     public boolean hasValue(final String key) {
-        LOG.traceEntry("Parameter : {}", key);
+        LOG.traceEntry("Parameter\n\tkey : {}", key);
         return LOG.traceExit(Utils.isNotEmpty(getString(key)));
     }
 
@@ -299,7 +298,7 @@ public final class DoiSettings {
      * @param secretKey the secret key.
      */
     public void setSecretKey(final String secretKey) {
-        LOG.traceEntry("Parameter : {}", secretKey);
+        LOG.traceEntry("Parameter\n\t secretKey : {}", secretKey);
         this.secretKey = secretKey;
         LOG.traceExit();
     }
@@ -311,9 +310,8 @@ public final class DoiSettings {
      * @param defaultValue Default value if the key inputStream not found
      * @return the value of the key
      */
-    public String getString(final String key,
-            final String defaultValue) {
-        LOG.traceEntry("Parameters : {} and {}", key, defaultValue);
+    public String getString(final String key, final String defaultValue) {
+        LOG.traceEntry("Parameters\n\tkey : {}\n\tdefaultValue : {}", key, defaultValue);
         return LOG.traceExit(MAP_PROPERTIES.getOrDefault(key, defaultValue));
     }
 
@@ -326,10 +324,10 @@ public final class DoiSettings {
      * {@value fr.cnes.doi.settings.Consts#INIST_DOI} inputStream set to {@value #INIST_TEST_DOI}.
      *
      * @param key key to search
-     * @return the value of the key
+     * @return the value of the key orl null if does not exist
      */
     public String getString(final String key) {
-        LOG.traceEntry("Parameter : {}", key);
+        LOG.traceEntry("Parameter\n\tkey : {}", key);
         final String value;
         if (Consts.INIST_DOI.equals(key)) {
             final String context = this.getString(Consts.CONTEXT_MODE, "DEV");
@@ -349,6 +347,7 @@ public final class DoiSettings {
      * @return the decoded vale
      */
     public String getSecret(final String key) {
+        LOG.traceEntry("Parameter\n\tkey : {}", key);
         final String result;
         final String value = getString(key, "");
         if (Utils.isEmpty(value)) {
@@ -356,7 +355,7 @@ public final class DoiSettings {
         } else {
             result = UtilsCryptography.decrypt(value, getSecretKey());
         }
-        return result;
+        return LOG.traceExit(result);
     }
 
     /**
@@ -368,7 +367,7 @@ public final class DoiSettings {
      * @exception NumberFormatException if the string does not contain a parsable integer.
      */
     public int getInt(final String key) {
-        LOG.traceEntry("Parameter : {}", key);
+        LOG.traceEntry("Parameter\n\tkey : {}", key);
         return LOG.traceExit(Integer.parseInt(getString(key)));
     }
 
@@ -381,9 +380,8 @@ public final class DoiSettings {
      * @return the value
      * @exception NumberFormatException if the string does not contain a parsable integer.
      */
-    public int getInt(final String key,
-            final String defaultValue) {
-        LOG.traceEntry("Parameters : {} and {}", key, defaultValue);
+    public int getInt(final String key, final String defaultValue) {
+        LOG.traceEntry("Parameter\n\tkey : {}\n\tdefaultValue", key, defaultValue);
         return LOG.traceExit(Integer.parseInt(getString(key, defaultValue)));
     }
 
@@ -396,7 +394,7 @@ public final class DoiSettings {
      * @exception IllegalArgumentException - if key not found
      */
     public boolean getBoolean(final String key) {
-        LOG.traceEntry("Parameter : {}", key);
+        LOG.traceEntry("Parameter\n\tkey : {}", key);
         if (getString(key) == null) {
             throw LOG.throwing(Level.TRACE, new IllegalArgumentException("Key not found : " + key));
         } else {
@@ -413,7 +411,7 @@ public final class DoiSettings {
      * @exception NumberFormatException - if the string does not contain a parsable long
      */
     public Long getLong(final String key) {
-        LOG.traceEntry("Parameter : {}", key);
+        LOG.traceEntry("Parameter\n\tkey : {}", key);
         return LOG.traceExit(Long.parseLong(getString(key)));
     }
 
@@ -426,9 +424,8 @@ public final class DoiSettings {
      * @return the value
      * @exception NumberFormatException - if the string does not contain a parsable long
      */
-    public Long getLong(final String key,
-            final String defaultValue) {
-        LOG.traceEntry("Parameters : {} and {}", key, defaultValue);
+    public Long getLong(final String key, final String defaultValue) {
+        LOG.traceEntry("Parameter\n\tkey : {}\n\tdefaultValue", key, defaultValue);
         return LOG.traceExit(Long.parseLong(getString(key, defaultValue)));
     }
 
@@ -458,7 +455,7 @@ public final class DoiSettings {
      * @throws IOException - if an error occurred when reading from the input stream.
      */
     public void setPropertiesFile(final String path) throws IOException {
-        LOG.traceEntry("Parameter : {}", path);
+        LOG.traceEntry("Parameter\n\tpath : {}", path);
         try (InputStream inputStream = new FileInputStream(new File(path))) {
             setPropertiesFile(inputStream);
         }
@@ -500,8 +497,7 @@ public final class DoiSettings {
      * @param inputStream input stream
      * @param outputStream output stream
      */
-    private void copyStream(final InputStream inputStream,
-            final OutputStream outputStream) {
+    private void copyStream(final InputStream inputStream, final OutputStream outputStream) {
         LOG.traceEntry("With an input and output stream");
         final int buffer_size = 1024;
         try {

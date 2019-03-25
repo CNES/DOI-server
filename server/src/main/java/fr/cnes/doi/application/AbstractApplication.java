@@ -162,12 +162,14 @@ public abstract class AbstractApplication extends WadlApplication {
              */
             @Override
             public int beforeHandle(final Request request, final Response response) {
+                final int status;
                 if (request.getMethod().equals(Method.OPTIONS)) {
                     response.setStatus(Status.SUCCESS_OK);
-                    return CONTINUE;
+                    status = CONTINUE;
                 } else {
-                    return super.beforeHandle(request, response);
+                    status = super.beforeHandle(request, response);
                 }
+                return status;
             }
         };
 
@@ -197,12 +199,14 @@ public abstract class AbstractApplication extends WadlApplication {
              */
             @Override
             public int beforeHandle(final Request request, final Response response) {
+                final int status;
                 if (request.getMethod().equals(Method.OPTIONS)) {
                     response.setStatus(Status.SUCCESS_OK);
-                    return CONTINUE;
+                    status = CONTINUE;
                 } else {
-                    return super.beforeHandle(request, response);
+                    status = super.beforeHandle(request, response);
                 }
+                return status;
             }
         };
         final TokenBasedVerifier verifier = new TokenBasedVerifier(getTokenDB());

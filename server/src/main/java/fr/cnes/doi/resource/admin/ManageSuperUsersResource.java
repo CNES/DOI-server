@@ -31,6 +31,7 @@ import org.restlet.resource.ResourceException;
 import fr.cnes.doi.application.AdminApplication;
 import fr.cnes.doi.db.AbstractUserRoleDBHelper;
 import fr.cnes.doi.db.model.DOIUser;
+import fr.cnes.doi.exception.DOIDbException;
 import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.resource.AbstractResource;
 import java.util.ArrayList;
@@ -71,20 +72,22 @@ public class ManageSuperUsersResource extends AbstractResource {
      * Rename the SUPERUSER from the SUPERUSER id sent in url.
      *
      * @param mediaForm Data sent with request containing the user name to be super user.
-     * @return the list of dois
      */
     // @Requirement(reqId = Requirement.DOI_SRV_140, reqName =
     // Requirement.DOI_SRV_140_NAME)
     @Post
-    public boolean createSUPERUSER(final Form mediaForm) {
+    public void createSuperUser(final Form mediaForm) {
         LOG.traceEntry("Parameters\n\tmediaForm : {}", mediaForm);
         checkInputs(mediaForm);
-        final String newSUPERUSERName = mediaForm.getFirstValue(SUPERUSER_NAME_PARAMETER);
+        final String newSuperUserName = mediaForm.getFirstValue(SUPERUSER_NAME_PARAMETER);
         final AbstractUserRoleDBHelper manageUsers = PluginFactory.getUserManagement();
-        if (!manageUsers.isUserExist(newSUPERUSERName)) {
-            return LOG.traceExit(false);
+        if (!manageUsers.isUserExist(newSuperUserName)) {
+            throw LOG.throwing(new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "Can't find user "+newSuperUserName));
+        } else if(manageUsers.setUserToAdminGroup(newSuperUserName)) {
+            setStatus(Status.SUCCESS_NO_CONTENT);
+        } else {
+            throw LOG.throwing(new ResourceException(Status.SERVER_ERROR_INTERNAL, "Can't create user "+newSuperUserName));            
         }
-        return LOG.traceExit(manageUsers.setUserToAdminGroup(newSUPERUSERName));
     }
 
     // TODO requirement
@@ -96,17 +99,21 @@ public class ManageSuperUsersResource extends AbstractResource {
     // @Requirement(reqId = Requirement.DOI_SRV_140, reqName =
     // Requirement.DOI_SRV_140_NAME)
     @Get
-    public List<String> getSuperUsersAsJson() {
-        LOG.traceEntry();
-        final ArrayList<String> result = new ArrayList<>();
-        final AbstractUserRoleDBHelper manageUsers = PluginFactory.getUserManagement();
-        final List<DOIUser> users = manageUsers.getUsers();
-        for (final DOIUser doiUser : users) {
-            if (doiUser.isAdmin()) {
-                result.add(doiUser.getUsername());
+    public List<String> getSuperUsersAsJson(){
+        LOG.traceEntry();        
+        try {
+            final ArrayList<String> result = new ArrayList<>();
+            final AbstractUserRoleDBHelper manageUsers = PluginFactory.getUserManagement();
+            final List<DOIUser> users = manageUsers.getUsers();
+            for (final DOIUser doiUser : users) {
+                if (doiUser.isAdmin()) {
+                    result.add(doiUser.getUsername());
+                }
             }
+            return LOG.traceExit(result);
+        } catch (DOIDbException ex) {
+            throw LOG.throwing(new ResourceException(Status.SERVER_ERROR_INTERNAL, ex.getMessage()));
         }
-        return LOG.traceExit(result);
     }
 
     /**
@@ -123,6 +130,5 @@ public class ManageSuperUsersResource extends AbstractResource {
         }
         LOG.debug("The form is valid");
         LOG.traceExit();
-    }
-
+    }      
 }

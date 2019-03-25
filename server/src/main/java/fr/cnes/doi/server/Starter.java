@@ -41,6 +41,8 @@ import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.utils.spec.Requirement;
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
+import java.nio.charset.Charset;
+import java.util.logging.Level;
 
 /**
  * DOI server
@@ -225,12 +227,14 @@ public final class Starter {
      * @return the PID or null
      */
     private static String getCurrentPid(final String serverName) {
-        LOG.traceEntry("Parameter\n  serverName:{}", serverName);
+        LOG.traceEntry("Parameter\n\tserverName:{}", serverName);
         String stopPid = null;
+        BufferedReader reader = null;
+        Process pro = null;
         try {
-            final Process pro = Runtime.getRuntime().exec("ps aux");
-            final BufferedReader reader = new BufferedReader(new InputStreamReader(pro.
-                    getInputStream()));
+            pro = Runtime.getRuntime().exec("ps aux");
+            reader = new BufferedReader(new InputStreamReader(pro.
+                    getInputStream(), Charset.defaultCharset()));
             final String processName = java.lang.management.ManagementFactory.getRuntimeMXBean().
                     getName();
             final String myPid = processName.split("@")[0];
@@ -244,8 +248,18 @@ public final class Starter {
                         break;
                     }
                 }
-            }
+            }        
         } catch (IOException ex) {
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException ex) {
+                }
+            }
+            if (pro != null) {
+                pro.destroy();
+            }
         }
         return LOG.traceExit(stopPid);
     }
