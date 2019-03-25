@@ -31,6 +31,12 @@ public interface PluginConfiguration {
      * @return the error messages.
      */
     public StringBuilder validate();
+    
+    /**
+     * Checks if the plugin is already configured
+     * @return True when the plugin is already configured otherwise false
+     */
+    public boolean isConfigured();
 
     /**
      * Release the plugin.

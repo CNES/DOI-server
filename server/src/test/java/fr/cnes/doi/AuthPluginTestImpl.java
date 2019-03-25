@@ -58,6 +58,11 @@ public class AuthPluginTestImpl extends AbstractAuthenticationPluginHelper {
     
     private Map<String, String> conf;
     
+    /**
+     * Status of the plugin configuration.
+     */
+    private boolean isConfigured = false;    
+    
     public AuthPluginTestImpl() {
         AuthSystemUser user1 = new AuthSystemUser();
         user1.setEmail("doidbuser@mail.com");
@@ -102,6 +107,7 @@ public class AuthPluginTestImpl extends AbstractAuthenticationPluginHelper {
     @Override
     public void setConfiguration(Object configuration) {
         this.conf = (Map<String, String>) configuration;
+        this.isConfigured = true;
     }    
 
     @Override
@@ -185,7 +191,13 @@ public class AuthPluginTestImpl extends AbstractAuthenticationPluginHelper {
 
     @Override
     public void release() {
-        this.conf = null;       
+        this.conf = null; 
+        this.isConfigured = false;
+    }
+
+    @Override
+    public boolean isConfigured() {
+        return this.isConfigured;
     }
 
 

@@ -108,7 +108,9 @@ public final class PluginFactory {
         final String implClassName = PLUGINS_IMPL.get(Consts.PLUGIN_AUTHENTICATION);
         final AbstractAuthenticationPluginHelper plugin = (AbstractAuthenticationPluginHelper) buildObject(
                 implClassName);
-        plugin.setConfiguration(SETTINGS);
+        if(!plugin.isConfigured()) {
+            plugin.setConfiguration(SETTINGS);
+        }
         return plugin;
     }
     

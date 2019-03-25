@@ -21,7 +21,6 @@ package fr.cnes.doi.plugin.impl.db;
 import fr.cnes.doi.db.MyMemoryRealm;
 import fr.cnes.doi.db.model.DOIUser;
 import fr.cnes.doi.exception.DOIDbException;
-import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.plugin.AbstractUserRolePluginHelper;
 import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_MAX_ACTIVE_CONNECTIONS;
 import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_MAX_IDLE_CONNECTIONS;
@@ -97,6 +96,11 @@ public final class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
      * Configuration file.
      */
     private Map<String, String> conf;
+    
+    /**
+     * Status of the plugin configuration.
+     */
+    private boolean isConfigured = false;    
 
     /**
      * Default constructor of the authentication plugin.
@@ -131,12 +135,10 @@ public final class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
         LOG.info("[CONF] Plugin database user : {}", dbUser);
         LOG.info("[CONF] Plugin database password : {}", Utils.transformPasswordToStars(dbPwd));
         LOG.info("[CONF] Plugin options : {}", options);        
-        try {
-            DatabaseSingleton.getInstance().init(dbUrl, dbUser, dbPwd, options);
-            this.das = DatabaseSingleton.getInstance().getDatabaseAccess();
-        } catch (DoiRuntimeException ex) {
-            LOG.warn(ex);
-        }
+        
+        DatabaseSingleton.getInstance().init(dbUrl, dbUser, dbPwd, options);
+        this.das = DatabaseSingleton.getInstance().getDatabaseAccess();
+        this.isConfigured = true;
     }
 
     /**
@@ -438,5 +440,11 @@ public final class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
             this.das.close();
         } catch (DOIDbException ex) {
         }
+        this.isConfigured = false;
+    }
+
+    @Override
+    public boolean isConfigured() {
+        return this.isConfigured;
     }
 }

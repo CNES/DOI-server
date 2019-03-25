@@ -87,6 +87,11 @@ public final class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginH
      * Configuration file.
      */
     private Map<String, String> conf;
+    
+    /**
+     * Status of the plugin configuration.
+     */
+    private boolean isConfigured = false;    
 
     /**
      * Default constructor of the project suffix database
@@ -121,13 +126,10 @@ public final class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginH
         LOG.info("[CONF] Plugin database user : {}", dbUser);
         LOG.info("[CONF] Plugin database password : {}", Utils.transformPasswordToStars(dbPwd));
         LOG.info("[CONF] Plugin options : {}", options);      
-        try {
-            DatabaseSingleton.getInstance().init(dbUrl, dbUser, dbPwd, options);
-            this.das = DatabaseSingleton.getInstance().getDatabaseAccess();
-        } catch (DoiRuntimeException ex) {
-            LOG.warn(ex);
-        }
-
+        
+        DatabaseSingleton.getInstance().init(dbUrl, dbUser, dbPwd, options);
+        this.das = DatabaseSingleton.getInstance().getDatabaseAccess();
+        this.isConfigured = true;
     }
 
     /**
@@ -360,6 +362,12 @@ public final class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginH
             this.das.close();
         } catch (DOIDbException ex) {
         }
+        this.isConfigured = false;
+    }
+
+    @Override
+    public boolean isConfigured() {
+        return this.isConfigured;
     }
 
 }

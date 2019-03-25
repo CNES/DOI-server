@@ -132,6 +132,11 @@ public final class DefaultLDAPImpl extends AbstractAuthenticationPluginHelper {
      * Configuration file.
      */
     private Map<String, String> conf;
+    
+    /**
+     * Status of the plugin configuration.
+     */
+    private boolean isConfigured = false;
 
     /**
      * Constructor.
@@ -143,7 +148,8 @@ public final class DefaultLDAPImpl extends AbstractAuthenticationPluginHelper {
     @Override
     public void setConfiguration(Object configuration) {
         this.conf = (Map<String, String>) configuration;
-        LOGGER.info("[CONF] Plugin configuration : {}", this.conf);      
+        LOGGER.info("[CONF] Plugin configuration : {}", this.conf);
+        this.isConfigured = true;
     }
 
     /**
@@ -488,5 +494,11 @@ public final class DefaultLDAPImpl extends AbstractAuthenticationPluginHelper {
     @Override
     public void release() {
         this.conf = null;
+        this.isConfigured = false;
+    }
+
+    @Override
+    public boolean isConfigured() {
+        return this.isConfigured;
     }
 }
