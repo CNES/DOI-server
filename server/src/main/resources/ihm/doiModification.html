@@ -456,19 +456,14 @@
                         var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
                         var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
                         alert("Erreur lors du chargement des métadonnées.\n" +
-                                "Erreur: " + XMLHttpRequest.status + ", " + XMLHttpRequest.statusText + "\n"
+                                "Erreur: " + errMessage + "\n"
                                 );
-                        console.log("Erreur lors du chargement des métadonnées.\n" + errMessage);
                     },
                     success: function (xml) {
                         console.log("Le chargement des métadonnées est un succés.");
                         console.log("xml : " + xml);
-                        if (xml != undefined || xml != null) {
-// 				    		 var parser = new DOMParser();
-// 				             var doc = parser.parseFromString(xml, "application/xml");
-                            //TODO xml type? If doesn't work, check and convert xml 
+                        if (xml !== undefined || xml !== null) {
                             loadXML(xml);
-// 				    		loadXML(doc);
                         }
                     }
                 });
@@ -489,19 +484,16 @@
                         var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
                         var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
                         alert("Erreur lors de la récupération de l'URL.\n" +
-                                "Erreur: " + XMLHttpRequest.status + ", " + XMLHttpRequest.statusText + "\n"
+                                "Erreur: " + errMessage + "\n"
                                 );
-                        console.log("Erreur lors de la récupération de l'URL.\n" + errMessage);
                     },
                     success: function (url) {
                         $("#url").val(url);
-                        console.log("L'URL, " + url + ", a été chargée.");
                     }
                 });
             }
 
             function getDoisFromProject() {
-// 				console.log(projectId);
                 $.ajax({
                     type: "GET",
                     url: "/admin/projects/" + projectId + "/dois",
@@ -515,12 +507,10 @@
                         var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
                         var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
                         alert("Erreur lors du chargement des DOIs.\n" +
-                                "Erreur: " + XMLHttpRequest.status + ", " + XMLHttpRequest.statusText + "\n"
+                                "Erreur: " + errMessage + "\n"
                                 );
-                        console.log("Erreur lors du chargement des DOIs.\n" + errMessage);
                     },
                     success: function (list) {
-                        console.log("Le chargement des DOIs est un succès.");
                         $("#doi").empty();
                         $("#doi").append("<option disabled selected>Choix d'un doi</option>");
                         for (var doi of list) {
@@ -540,13 +530,12 @@
             // call by pressing the modify button
             function modifyDOI() {
                 var xml = $("pre code").text();
-// 				console.log(xml);
-                if (xml != "" && xml != null) {
+                if (xml !== "" && xml != null) {
                     if (confirm("Voulez-vous vraiment modifier les métadonnées du doi " + identifier + " ?")) {
                         requestPost(xml);
                     }
                 }
-                if (url != "" && url != null) {
+                if (url !== "" && url != null) {
                     if (confirm("Voulez-vous vraiment modifier la landing page du doi " + identifier + " ?")) {
                         requestURL();
                     }
@@ -573,9 +562,8 @@
                         var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
                         var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
                         alert("Erreur lors de la modification de l'URL.\n" +
-                                "Erreur: " + XMLHttpRequest.status + ", " + XMLHttpRequest.statusText + "\n"
+                                "Erreur: " + errMessage + "\n"
                                 );
-                        console.log("Erreur lors de la modification de l'URL.\n" + errMessage);
                     },
                     success: function (url) {
                         alert("L'URL, " + url + ", a été modifiée.");
@@ -600,9 +588,8 @@
                         var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
                         var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
                         alert("Erreur lors de la modification de des métadonnées.\n" +
-                                "Erreur: " + XMLHttpRequest.status + ", " + XMLHttpRequest.statusText + "\n"
+                                "Erreur: " + errMessage + "\n"
                                 );
-                        console.log("Erreur lors de la modification de des métadonnées.\n" + errMessage);
                     },
                     success: function () {
                         alert("Les métadonnées du DOI " + identifier + " ont été modifiées.");

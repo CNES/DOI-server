@@ -89,9 +89,7 @@
                             "Action irréversible. /!\\");
                     if (doi === $("#doi").val()) {
                         $("#doi option:selected").remove();
-                        if (confirm("Voulez-vous vraiment désactiver le DOI ?")) {
-                            requestDelete();
-                        }
+                        requestDelete();
                     } else {
                         return;
                     }
@@ -113,9 +111,8 @@
                         var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
                         var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
                         alert("Erreur lors de la désactivation du DOI.\n" +
-                                "Erreur: " + XMLHttpRequest.status + ", " + XMLHttpRequest.statusText + "\n"
+                                "Erreur: " + errMessage + "\n"
                                 );
-                        console.log("Erreur lors de la désactivation du DOI.\n" + errMessage);
                     },
                     success: function (xml) {
                         alert("Le DOI, " + doi + ", a été désactivé.");
@@ -143,12 +140,10 @@
                         var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
                         var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
                         alert("Erreur lors du chargement des DOIs.\n" +
-                                "Erreur: " + XMLHttpRequest.status + ", " + XMLHttpRequest.statusText + "\n"
+                                "Erreur: " + errMessage + "\n"
                                 );
-                        console.log("Erreur lors du chargement des DOIs.\n" + errMessage);
                     },
                     success: function (list) {
-                        console.log("Le chargement des DOIs est un succès.");
                         $("#doi").empty();
                         $("#doi").append("<option disabled selected>Choix d'un doi</option>");
                         for (var doi of list) {
