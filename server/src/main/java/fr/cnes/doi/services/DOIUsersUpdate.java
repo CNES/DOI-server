@@ -51,8 +51,8 @@ public class DOIUsersUpdate implements Runnable {
     /**
      * Fills the DOI users database from the members of the authentication system.
      *
-     * @throws AuthenticationAccessException
-     * @throws DOIDbException
+     * @throws AuthenticationAccessException When an authentication problem occurs
+     * @throws DOIDbException When a SQL problem occurs
      */
     private void updateDoiServerDataBaseFromAuthSystem() throws AuthenticationAccessException,
             DOIDbException {
@@ -85,7 +85,7 @@ public class DOIUsersUpdate implements Runnable {
      * Tests if the authMember of the authentication mechanism is contained in the users from the
      * database.
      *
-     * @param membe authMember of the authentication mechanism
+     * @param authMember authMember of the authentication mechanism
      * @param dbusers users database
      * @return True when the authMember is contained in the users from database otherwise false
      */
