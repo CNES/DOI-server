@@ -189,6 +189,7 @@ public final class EmailSettings {
         boolean result;
         try {
             if (isConfigureForSendingEmail()) {
+                LOG.info("Try to send this message {} to {}", msg, receiverEmail);
                 result = processMessage(subject, msg, receiverEmail);
             } else {
                 LOG.warn("Cannot send the email, please fill the configuration file");
