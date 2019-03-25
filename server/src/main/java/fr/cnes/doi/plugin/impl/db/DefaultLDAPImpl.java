@@ -148,7 +148,16 @@ public final class DefaultLDAPImpl extends AbstractAuthenticationPluginHelper {
     @Override
     public void setConfiguration(Object configuration) {
         this.conf = (Map<String, String>) configuration;
-        LOGGER.info("[CONF] Plugin configuration : {}", this.conf);
+        LOGGER.info("[CONF] Plugin LDAP URL : {}", LDAP_URL);
+        LOGGER.info("[CONF] Plugin LDAP user : {}", LDAP_USER);
+        LOGGER.info("[CONF] Plugin LDAP password : {}", Utils.transformPasswordToStars(LDAP_PWD));
+        LOGGER.info("[CONF] Plugin LDAP project : {}", LDAP_PROJECT);
+        LOGGER.info("[CONF] Plugin LDAP admin for DOI : {}", LDAP_DOI_ADMIN); 
+        LOGGER.info("[CONF] Plugin LDAP attribute for fullname : {}", LDAP_ATTR_FULLNAME);
+        LOGGER.info("[CONF] Plugin LDAP attribute for mail : {}", LDAP_ATTR_MAIL);    
+        LOGGER.info("[CONF] Plugin LDAP attribute for username : {}", LDAP_ATTR_USERNAME);   
+        LOGGER.info("[CONF] Plugin LDAP search group : {}", LDAP_SEARCH_GROUP);
+        LOGGER.info("[CONF] Plugin LDAP search user : {}", LDAP_SEARCH_USER);                
         this.isConfigured = true;
     }
 

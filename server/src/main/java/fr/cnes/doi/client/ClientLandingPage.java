@@ -57,25 +57,32 @@ public class ClientLandingPage extends BaseClient {
      * @param dois dois to check
      */
     //TODO : check with Head before. If not implemented, check with get
-    private void checkDoi(final List<String> dois) {
+    private void checkDoi(final List<String> dois) {       
+        this.getLog().traceEntry("Parameters\n\tdois : {}", dois);        
         this.getClient().setFollowingRedirects(true);
         this.getClient().setLoggable(true);
+        this.getLog().info("{} landing pages to check.", dois.size());
         for (final String doi : dois) {
             this.getClient().setReference(BASE_URI);
             this.getClient().addSegment(doi);
+            this.getLog().info("Checking landing page {}", doi);
             try {
                 this.getClient().get();
                 final Status status = this.getClient().getStatus();
                 if (status.isError()) {
                     this.errors.add(doi);
+                    this.getLog().error("Error for landing page {}", doi);
+                } else {
+                    this.getLog().info("OK");
                 }
             } catch (ResourceException ex) {
+                this.getLog().error("Checking landing pages", ex);
                 this.errors.add(doi);
-                //ClientLandingPage.getLOGGER().fine(ex.getMessage());
             } finally {
                 this.getClient().release();
             }
         }
+        this.getLog().traceExit();
     }
 
     /**
@@ -84,7 +91,8 @@ public class ClientLandingPage extends BaseClient {
      * @return true when there is no error otherwise False
      */
     public boolean isSuccess() {
-        return this.errors.isEmpty();
+        this.getLog().traceEntry();
+        return this.getLog().traceExit(this.errors.isEmpty());
     }
 
     /**
@@ -102,7 +110,8 @@ public class ClientLandingPage extends BaseClient {
      * @return the error
      */
     public List<String> getErrors() {
-        return Collections.unmodifiableList(this.errors);
+        this.getLog().traceEntry();
+        return this.getLog().traceExit(Collections.unmodifiableList(this.errors));
     }
 
 }
