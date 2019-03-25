@@ -21,6 +21,8 @@ package fr.cnes.doi.plugin;
 import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.utils.spec.Requirement;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -51,12 +53,10 @@ public final class PluginFactory {
         final String userRealPlugin = settings.getOrDefault(Consts.PLUGIN_USER_GROUP_MGT, "");
         final String projectSuffixPlugin = settings.getOrDefault(Consts.PLUGIN_PROJECT_SUFFIX, "");
         final String tokenPlugin = settings.getOrDefault(Consts.PLUGIN_TOKEN, "");
-        final String doiPlugin = settings.getOrDefault(Consts.PLUGIN_DOI, "");
         final String authPlugin = settings.getOrDefault(Consts.PLUGIN_AUTHENTICATION, "");
         PLUGINS_IMPL.put(Consts.PLUGIN_USER_GROUP_MGT, userRealPlugin);
         PLUGINS_IMPL.put(Consts.PLUGIN_PROJECT_SUFFIX, projectSuffixPlugin);
         PLUGINS_IMPL.put(Consts.PLUGIN_TOKEN, tokenPlugin);
-        PLUGINS_IMPL.put(Consts.PLUGIN_DOI, doiPlugin);
         PLUGINS_IMPL.put(Consts.PLUGIN_AUTHENTICATION, authPlugin);
         SETTINGS.putAll(settings);
     }
@@ -110,6 +110,25 @@ public final class PluginFactory {
                 implClassName);
         plugin.setConfiguration(SETTINGS);
         return plugin;
+    }
+    
+    /**
+     * Checks if the key is a password in the class keywordClassName related to the configuration file
+     * @param keywordClassName plugin related to the configuration file
+     * @param key keyword
+     * @return True when key is a password otherwise false
+     * @throws DoiRuntimeException When an error occurs
+     */
+    public static boolean isPassword(final String keywordClassName, final String key) throws DoiRuntimeException {
+        try {
+            final String implClassName = PLUGINS_IMPL.get(keywordClassName);
+            final Class implClass = Class.forName(implClassName);           
+            Method method = implClass.getMethod("isPassword", String.class);
+            Object obj = method.invoke(null, key);
+            return Boolean.getBoolean(String.valueOf(obj));
+        } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw new DoiRuntimeException(ex);
+        }
     }
 
     /**

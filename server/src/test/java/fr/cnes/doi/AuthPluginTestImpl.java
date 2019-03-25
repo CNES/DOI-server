@@ -5,7 +5,6 @@
  */
 package fr.cnes.doi;
 
-import edu.emory.mathcs.backport.java.util.Arrays;
 import fr.cnes.doi.db.model.AuthSystemUser;
 import fr.cnes.doi.exception.AuthenticationAccessException;
 import fr.cnes.doi.plugin.AbstractAuthenticationPluginHelper;
@@ -17,7 +16,6 @@ import static fr.cnes.doi.plugin.impl.db.DefaultLDAPImpl.LDAP_PWD;
 import static fr.cnes.doi.plugin.impl.db.DefaultLDAPImpl.LDAP_SEARCH_GROUP;
 import static fr.cnes.doi.plugin.impl.db.DefaultLDAPImpl.LDAP_SEARCH_USER;
 import static fr.cnes.doi.plugin.impl.db.DefaultLDAPImpl.LDAP_URL;
-import fr.cnes.doi.settings.DoiSettings;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -181,8 +179,7 @@ public class AuthPluginTestImpl extends AbstractAuthenticationPluginHelper {
         return validation;
     }
     
-    @Override
-    public boolean isPassword(String key) {
+    public static boolean isPassword(String key) {
         return LDAP_PWD.equals(key);
     }
 

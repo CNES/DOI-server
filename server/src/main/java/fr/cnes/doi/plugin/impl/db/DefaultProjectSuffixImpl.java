@@ -342,10 +342,11 @@ public final class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginH
     }
 
     /**
-     * {@inheritDoc}
+     * Checks if the keyword is a password.
+     * @param key keyword to check
+     * @return True when the keyword is a password otherwise False
      */
-    @Override
-    public boolean isPassword(String key) {
+    public static boolean isPassword(String key) {
         return false;
     }
 

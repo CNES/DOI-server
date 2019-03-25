@@ -284,10 +284,11 @@ public final class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
     }
 
     /**
-     * {@inheritDoc}
+     * Checks if the keyword is a password.
+     * @param key keyword to check
+     * @return True when the keyword is a password otherwise False
      */
-    @Override
-    public boolean isPassword(final String key) {
+    public static boolean isPassword(final String key) {
         return false;
     }
 

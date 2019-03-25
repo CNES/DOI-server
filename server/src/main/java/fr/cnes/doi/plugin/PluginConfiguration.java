@@ -33,14 +33,6 @@ public interface PluginConfiguration {
     public StringBuilder validate();
 
     /**
-     * Returns True when the key is a password otherwise False.
-     *
-     * @param key key to check
-     * @return True when the key is a password otherwise False.
-     */
-    public boolean isPassword(final String key);
-
-    /**
      * Release the plugin.
      */
     public void release();

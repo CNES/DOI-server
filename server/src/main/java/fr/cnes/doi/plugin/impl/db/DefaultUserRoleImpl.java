@@ -420,10 +420,11 @@ public final class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
     }
 
     /**
-     * {@inheritDoc}
+     * Checks if the keyword is a password.
+     * @param key keyword to check
+     * @return True when the keyword is a password otherwise False
      */
-    @Override
-    public boolean isPassword(final String key) {
+    public static boolean isPassword(final String key) {
         return DB_PWD.equals(key);
     }
 

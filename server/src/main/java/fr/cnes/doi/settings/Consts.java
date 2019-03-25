@@ -325,11 +325,6 @@ public final class Consts {
     public static final String PLUGIN_AUTHENTICATION = "Starter.Plugin.Authentication";
 
     /**
-     * Plugin to load the DOI database.
-     */
-    public static final String PLUGIN_DOI = "Starter.Plugin.Doi";
-
-    /**
      * Allowed IPs for the administration application.
      */
     public static final String ADMIN_IP_ALLOWER = "Starter.admin.IP.allower";
