@@ -38,6 +38,7 @@ import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_MIN_
 import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_PWD;
 import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_URL;
 import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_USER;
+import fr.cnes.doi.utils.Utils;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
@@ -116,6 +117,10 @@ public final class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginH
             options.put(DB_MAX_ACTIVE_CONNECTIONS,
                     Integer.valueOf(this.conf.get(DB_MAX_ACTIVE_CONNECTIONS)));
         }
+        LOG.info("[CONF] Plugin database URL : {}", dbUrl);
+        LOG.info("[CONF] Plugin database user : {}", dbUser);
+        LOG.info("[CONF] Plugin database password : {}", Utils.transformPasswordToStars(dbPwd));
+        LOG.info("[CONF] Plugin options : {}", options);      
         try {
             DatabaseSingleton.getInstance().init(dbUrl, dbUser, dbPwd, options);
             this.das = DatabaseSingleton.getInstance().getDatabaseAccess();

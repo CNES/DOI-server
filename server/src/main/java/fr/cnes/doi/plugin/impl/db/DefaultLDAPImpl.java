@@ -143,6 +143,7 @@ public final class DefaultLDAPImpl extends AbstractAuthenticationPluginHelper {
     @Override
     public void setConfiguration(Object configuration) {
         this.conf = (Map<String, String>) configuration;
+        LOGGER.info("[CONF] Plugin configuration : {}", this.conf);      
     }
 
     /**

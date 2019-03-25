@@ -32,6 +32,7 @@ import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_USER
 import fr.cnes.doi.plugin.impl.db.service.DOIDbDataAccessService;
 import fr.cnes.doi.plugin.impl.db.service.DatabaseSingleton;
 import fr.cnes.doi.settings.EmailSettings;
+import fr.cnes.doi.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -126,6 +127,10 @@ public final class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
             options.put(DB_MAX_ACTIVE_CONNECTIONS,
                     Integer.valueOf(this.conf.get(DB_MAX_ACTIVE_CONNECTIONS)));
         }
+        LOG.info("[CONF] Plugin database URL : {}", dbUrl);
+        LOG.info("[CONF] Plugin database user : {}", dbUser);
+        LOG.info("[CONF] Plugin database password : {}", Utils.transformPasswordToStars(dbPwd));
+        LOG.info("[CONF] Plugin options : {}", options);        
         try {
             DatabaseSingleton.getInstance().init(dbUrl, dbUser, dbPwd, options);
             this.das = DatabaseSingleton.getInstance().getDatabaseAccess();
