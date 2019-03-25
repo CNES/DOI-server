@@ -129,12 +129,12 @@ public class JDBCConnector {
                 DB_MAX_ACTIVE_CONNECTIONS, DEFAULT_MAX_ACTIVE_CONNECTION
         );
 
-        LOGGER.info("[CONF] Datasource database URL", dbUrl);
-        LOGGER.info("[CONF] Datasource database user", dbUser);
-        LOGGER.info("[CONF] Datasource database password", Utils.transformPasswordToStars(dbPwd));
-        LOGGER.info("[CONF] Datasource min IDLE connection", minIdleConnection);
-        LOGGER.info("[CONF] Datasource max IDLE connection", maxIdleConnection);
-        LOGGER.info("[CONF] Datasource max active connection", maxActiveConnection);
+        LOGGER.info("[CONF] Datasource database URL : {}", dbUrl);
+        LOGGER.info("[CONF] Datasource database user : {}", dbUser);
+        LOGGER.info("[CONF] Datasource database password : {}", Utils.transformPasswordToStars(dbPwd));
+        LOGGER.info("[CONF] Datasource min IDLE connection : {}", minIdleConnection);
+        LOGGER.info("[CONF] Datasource max IDLE connection : {}", maxIdleConnection);
+        LOGGER.info("[CONF] Datasource max active connection : {}", maxActiveConnection);
 
         ds.setUrl(dbUrl);
         ds.setUsername(dbUser);
