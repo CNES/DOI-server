@@ -302,7 +302,7 @@ public class HttpMethodCall extends ClientCall {
      */
     @Override
     public Status sendRequest(final Request request) {
-        Status result = null;
+        Status result;
 
         try {
             final Representation entity = request.getEntity();

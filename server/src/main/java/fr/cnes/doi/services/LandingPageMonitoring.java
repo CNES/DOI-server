@@ -28,7 +28,6 @@ import fr.cnes.doi.settings.EmailSettings;
 import fr.cnes.doi.utils.spec.Requirement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -58,7 +57,7 @@ public class LandingPageMonitoring implements Runnable {
         final StringBuffer msg = new StringBuffer();
         try {
             final String subject;
-            final ClientSearchDataCite client = new ClientSearchDataCite();
+            final ClientSearchDataCite client = new ClientSearchDataCite("10.24400");
             final List<String> response = client.getDois();
             final ClientLandingPage clientLandingPage = new ClientLandingPage(response);
 
@@ -102,7 +101,8 @@ public class LandingPageMonitoring implements Runnable {
         final String doiRegex = "^(.+)\\/(.+)\\/(.+)$";
         final Pattern doiPattern = Pattern.compile(doiRegex);
         final Matcher doiMatcher = doiPattern.matcher(error);
-        final int doiSuffix = Integer.parseInt(doiMatcher.group(3));
+        doiMatcher.matches();        
+        final int doiSuffix = Integer.parseInt(doiMatcher.group(2));
         final AbstractProjectSuffixDBHelper manageProjects = PluginFactory.getProjectSuffix();
         List<DOIUser> members;
         try {

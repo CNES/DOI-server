@@ -18,11 +18,20 @@
  */
 package fr.cnes.doi.client;
 
+import fr.cnes.httpclient.HttpClient;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.restlet.Client;
+import org.restlet.data.Parameter;
 import org.restlet.data.Status;
+import org.restlet.representation.Representation;
 import org.restlet.resource.ResourceException;
+import org.restlet.util.Series;
 
 /**
  * Checks the status of the landing page.
@@ -57,17 +66,21 @@ public class ClientLandingPage extends BaseClient {
      * @param dois dois to check
      */
     //TODO : check with Head before. If not implemented, check with get
-    private void checkDoi(final List<String> dois) {       
-        this.getLog().traceEntry("Parameters\n\tdois : {}", dois);        
-        this.getClient().setFollowingRedirects(true);
+    private void checkDoi(final List<String> dois) {
+        this.getLog().traceEntry("Parameters\n\tdois : {}", dois);
+        this.getClient().setMaxRedirects(5);
         this.getClient().setLoggable(true);
+        final Client cl = (Client) this.getClient().getNext();
+        final Series<Parameter> parameters = cl.getContext().getParameters();
+        parameters.add(HttpClient.MAX_REDIRECTION, String.valueOf(this.getClient().getMaxRedirects()));
         this.getLog().info("{} landing pages to check.", dois.size());
         for (final String doi : dois) {
             this.getClient().setReference(BASE_URI);
             this.getClient().addSegment(doi);
             this.getLog().info("Checking landing page {}", doi);
             try {
-                this.getClient().get();
+                Representation rep = this.getClient().get();
+                rep.exhaust();
                 final Status status = this.getClient().getStatus();
                 if (status.isError()) {
                     this.errors.add(doi);
@@ -75,7 +88,7 @@ public class ClientLandingPage extends BaseClient {
                 } else {
                     this.getLog().info("OK");
                 }
-            } catch (ResourceException ex) {
+            } catch (ResourceException | IOException ex) {
                 this.getLog().error("Checking landing pages", ex);
                 this.errors.add(doi);
             } finally {

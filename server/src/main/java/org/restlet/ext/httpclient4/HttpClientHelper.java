@@ -158,6 +158,24 @@ public class HttpClientHelper extends org.restlet.engine.connector.HttpClientHel
     public int getRetry() {
         return Integer.parseInt(getHelpedParameters().getFirstValue(HttpClient.MAX_RETRY, "3"));
     }
+    
+    /**
+     * Delay between two retries.
+     *
+     * @return max retry the delay between two retries.
+     */
+    public long getRetryDelay() {
+        return Long.parseLong(getHelpedParameters().getFirstValue(HttpClient.RETRY_DELAY, "1000"));
+    }    
+    
+    /**
+     * Get Max retry.
+     *
+     * @return max retry
+     */
+    public int getMaxRedirects() {
+        return Integer.parseInt(getHelpedParameters().getFirstValue(HttpClient.MAX_REDIRECTION, "5"));
+    }           
 
     /**
      * Returns true if the SSL is disabled otherwise false.
@@ -209,6 +227,8 @@ public class HttpClientHelper extends org.restlet.engine.connector.HttpClientHel
         config.put(HttpClient.CONNECTION_MAX_TOTAL, String.valueOf(this.getMaxTotalConnections()));
         config.put(HttpClient.CONNECTION_TIME_TO_LIVE_MS, String.valueOf(this.getIdleTimeout()));
         config.put(HttpClient.MAX_RETRY, String.valueOf(this.getRetry()));
+        config.put(HttpClient.RETRY_DELAY, String.valueOf(this.getRetryDelay()));
+        config.put(HttpClient.MAX_REDIRECTION, String.valueOf(this.getMaxRedirects()));
         config.computeIfAbsent(HttpClient.KEYSTORE_TYPE, v -> this.getKeyStoreType());
         config.computeIfAbsent(HttpClient.KEYSTORE_PATH, v -> this.getKeyStorePath());
         config.computeIfAbsent(HttpClient.KEYSTORE_PWD, v -> this.getKeyStorePwd());

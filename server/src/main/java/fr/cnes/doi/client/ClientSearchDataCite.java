@@ -105,10 +105,11 @@ public class ClientSearchDataCite extends BaseClient {
             if (this.doiList.size() != numFound) {
                 computeListDOI(this.doiList.size(), doi_prefix);
             }
-
+            this.getClient().release();
         } else {
+            this.getClient().release();
             throw new DoiRuntimeException(status.getDescription(), status.getThrowable());
-        }
+        } 
     }
 
     /**
