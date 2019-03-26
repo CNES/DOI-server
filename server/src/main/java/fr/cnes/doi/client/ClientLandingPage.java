@@ -22,7 +22,9 @@ import fr.cnes.httpclient.HttpClient;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,7 +50,7 @@ public class ClientLandingPage extends BaseClient {
     /**
      * List of offline landing pages.
      */
-    private final List<String> errors = new ArrayList<>();
+    private final Map<String, Status> errors = new HashMap<>();
 
     /**
      * Constructor
@@ -83,14 +85,17 @@ public class ClientLandingPage extends BaseClient {
                 rep.exhaust();
                 final Status status = this.getClient().getStatus();
                 if (status.isError()) {
-                    this.errors.add(doi);
+                    this.errors.put(doi, status);
                     this.getLog().error("Error for landing page {}", doi);
                 } else {
                     this.getLog().info("OK");
                 }
-            } catch (ResourceException | IOException ex) {
+            } catch (ResourceException ex) {
                 this.getLog().error("Checking landing pages", ex);
-                this.errors.add(doi);
+                this.errors.put(doi, ex.getStatus());
+            } catch (IOException ex) {
+                this.getLog().error("Checking landing pages", ex);
+                this.errors.put(doi, new Status(Status.SERVER_ERROR_INTERNAL, ex));                
             } finally {
                 this.getClient().release();
             }
@@ -122,9 +127,9 @@ public class ClientLandingPage extends BaseClient {
      *
      * @return the error
      */
-    public List<String> getErrors() {
+    public Map<String, Status> getErrors() {
         this.getLog().traceEntry();
-        return this.getLog().traceExit(Collections.unmodifiableList(this.errors));
+        return this.getLog().traceExit(Collections.unmodifiableMap(this.errors));
     }
 
 }
