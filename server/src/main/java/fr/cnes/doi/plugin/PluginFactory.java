@@ -44,6 +44,8 @@ public final class PluginFactory {
      */
     private static final Map<String, String> SETTINGS = new HashMap<>();
 
+    private static final Map<String, Object> CONFIG = new ConcurrentHashMap<>();
+
     /**
      * Loads the path of plugins from Settings.
      *
@@ -68,8 +70,7 @@ public final class PluginFactory {
      */
     public static AbstractUserRolePluginHelper getUserManagement() {
         final String implClassName = PLUGINS_IMPL.get(Consts.PLUGIN_USER_GROUP_MGT);
-        final AbstractUserRolePluginHelper plugin = (AbstractUserRolePluginHelper) buildObject(
-                implClassName);
+        final AbstractUserRolePluginHelper plugin = getPlugin(implClassName);
         plugin.setConfiguration(SETTINGS);
         return plugin;
     }
@@ -81,8 +82,7 @@ public final class PluginFactory {
      */
     public static AbstractProjectSuffixPluginHelper getProjectSuffix() {
         final String implClassName = PLUGINS_IMPL.get(Consts.PLUGIN_PROJECT_SUFFIX);
-        final AbstractProjectSuffixPluginHelper plugin = (AbstractProjectSuffixPluginHelper) buildObject(
-                implClassName);
+        final AbstractProjectSuffixPluginHelper plugin = getPlugin(implClassName);
         plugin.setConfiguration(SETTINGS);
         return plugin;
     }
@@ -94,7 +94,7 @@ public final class PluginFactory {
      */
     public static AbstractTokenDBPluginHelper getToken() {
         final String implClassName = PLUGINS_IMPL.get(Consts.PLUGIN_TOKEN);
-        final AbstractTokenDBPluginHelper plugin = (AbstractTokenDBPluginHelper) buildObject(implClassName);
+        final AbstractTokenDBPluginHelper plugin = getPlugin(implClassName);
         plugin.setConfiguration(SETTINGS);
         return plugin;
     }
@@ -106,31 +106,56 @@ public final class PluginFactory {
      */
     public static AbstractAuthenticationPluginHelper getAuthenticationSystem() {
         final String implClassName = PLUGINS_IMPL.get(Consts.PLUGIN_AUTHENTICATION);
-        final AbstractAuthenticationPluginHelper plugin = (AbstractAuthenticationPluginHelper) buildObject(
-                implClassName);
-        if(!plugin.isConfigured()) {
-            plugin.setConfiguration(SETTINGS);
-        }
+        final AbstractAuthenticationPluginHelper plugin = getPlugin(implClassName);
+        plugin.setConfiguration(SETTINGS);
         return plugin;
     }
-    
+
     /**
-     * Checks if the key is a password in the class keywordClassName related to the configuration file
+     * Checks if the key is a password in the class keywordClassName related to the configuration
+     * file
+     *
      * @param keywordClassName plugin related to the configuration file
      * @param key keyword
      * @return True when key is a password otherwise false
      * @throws DoiRuntimeException When an error occurs
      */
-    public static boolean isPassword(final String keywordClassName, final String key) throws DoiRuntimeException {
+    public static boolean isPassword(final String keywordClassName, final String key) throws
+            DoiRuntimeException {
         try {
             final String implClassName = PLUGINS_IMPL.get(keywordClassName);
-            final Class implClass = Class.forName(implClassName);           
+            final Class implClass = Class.forName(implClassName);
             Method method = implClass.getMethod("isPassword", String.class);
             Object obj = method.invoke(null, key);
             return Boolean.getBoolean(String.valueOf(obj));
-        } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+        } catch (ClassNotFoundException | NoSuchMethodException | SecurityException 
+                | IllegalAccessException | IllegalArgumentException 
+                | InvocationTargetException ex) {
             throw new DoiRuntimeException(ex);
         }
+    }
+
+    /**
+     * Returns the plugin according to its implementation class.
+     *
+     * @param <T> the plugin
+     * @param implClassName implementation class
+     * @return the plugin
+     */
+    private static <T> T getPlugin(final String implClassName) {
+        final T plugin;
+        if (CONFIG.get(implClassName) == null) {
+            try {
+                final Class impClass = Class.forName(implClassName);
+                plugin = (T) impClass.cast(buildObject(implClassName));
+                CONFIG.put(implClassName, plugin);
+            } catch (ClassNotFoundException ex) {
+                throw new DoiRuntimeException(ex);
+            }
+        } else {
+            plugin = (T) CONFIG.get(implClassName);
+        }
+        return plugin;
     }
 
     /**
