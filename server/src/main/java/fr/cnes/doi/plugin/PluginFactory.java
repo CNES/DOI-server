@@ -71,7 +71,9 @@ public final class PluginFactory {
     public static AbstractUserRolePluginHelper getUserManagement() {
         final String implClassName = PLUGINS_IMPL.get(Consts.PLUGIN_USER_GROUP_MGT);
         final AbstractUserRolePluginHelper plugin = getPlugin(implClassName);
-        plugin.setConfiguration(SETTINGS);
+        if(!plugin.isConfigured()) {
+            plugin.setConfiguration(SETTINGS);
+        }
         return plugin;
     }
 
@@ -83,7 +85,9 @@ public final class PluginFactory {
     public static AbstractProjectSuffixPluginHelper getProjectSuffix() {
         final String implClassName = PLUGINS_IMPL.get(Consts.PLUGIN_PROJECT_SUFFIX);
         final AbstractProjectSuffixPluginHelper plugin = getPlugin(implClassName);
-        plugin.setConfiguration(SETTINGS);
+        if(!plugin.isConfigured()) {
+            plugin.setConfiguration(SETTINGS);
+        }
         return plugin;
     }
 
@@ -95,7 +99,9 @@ public final class PluginFactory {
     public static AbstractTokenDBPluginHelper getToken() {
         final String implClassName = PLUGINS_IMPL.get(Consts.PLUGIN_TOKEN);
         final AbstractTokenDBPluginHelper plugin = getPlugin(implClassName);
-        plugin.setConfiguration(SETTINGS);
+        if(!plugin.isConfigured()) {
+            plugin.setConfiguration(SETTINGS);
+        }
         return plugin;
     }
 
@@ -107,7 +113,9 @@ public final class PluginFactory {
     public static AbstractAuthenticationPluginHelper getAuthenticationSystem() {
         final String implClassName = PLUGINS_IMPL.get(Consts.PLUGIN_AUTHENTICATION);
         final AbstractAuthenticationPluginHelper plugin = getPlugin(implClassName);
-        plugin.setConfiguration(SETTINGS);
+        if(!plugin.isConfigured()) {
+            plugin.setConfiguration(SETTINGS);
+        }
         return plugin;
     }
 
