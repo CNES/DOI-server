@@ -45,7 +45,6 @@ import fr.cnes.doi.exception.DOIDbException;
 import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.utils.UniqueProjectName;
 import fr.cnes.doi.utils.spec.Requirement;
-import java.util.logging.Level;
 
 /**
  * Security class for authentication by REALM.
@@ -56,17 +55,17 @@ import java.util.logging.Level;
 public class RoleAuthorizer implements Observer {
 
     /**
-     * Role name for the amdinistrators {@value #ROLE_ADMIN}.
+     * Role name for the administrators {@value #ROLE_ADMIN}.
      */
     public static final String ROLE_ADMIN = "admin";
 
     /**
-     * Group name for the users {@value #GROUP_USERS}
+     * Group name for the users {@value #GROUP_USERS}.
      */
     public static final String GROUP_USERS = "Users";
 
     /**
-     * Group name for the amdinistrators {@value #GROUP_ADMIN}.
+     * Group name for the administrators {@value #GROUP_ADMIN}.
      */
     public static final String GROUP_ADMIN = "Administrator";
 

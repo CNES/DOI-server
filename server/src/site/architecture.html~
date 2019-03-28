@@ -1,0 +1,180 @@
+<html>
+
+<head>
+<title>Architecture</title>
+</head>
+
+<body>
+<h1>Architecture</h1>
+
+<h2>1 - Introduction</h2>
+A Digital Object Identifier (DOI) is an alphanumeric string assigned to uniquely identify an object. 
+It is tied to a metadata description of the object as well as to a digital location, such as a URL, 
+where all the details about the object are accessible.
+<p>
+To create a DOI, a user needs to be connected to DATACITE so that he sends the metadata and the URL 
+of the landing page. Within an organization, the same password to DATACITE cannot be shared for all 
+users of the organization.That's why DOI-Server has been created. It allows an user (human or 
+programmatic client) to connect to a GUI (or a web service) in order to create a DOI. Each project has 
+its own password to connect itself to DOI-Server and DOI-Server does the rest.
+With the DOI-Server, some clients are also provided : 
+<ul>
+<li>a python client, </li>
+<li>a Java client </li>
+<li>and a IHM.</li>
+</ul>
+Each client uses the DOI-Server web services to handle the DOI. DOI-Server is also generic because he can host several plugins to handle the databases (projects, 
+users and token generation), authentication mechanism. 
+
+<h3>1.1 - Purpose</h3>
+This document provides a comprehensive architectural overview of the system, using a number of different
+architectural views to depict different aspects of the system. It is intended to capture and convey the
+significant architectural decisions which have been made on the system.
+
+<h3>1.2 - Scope</h3>
+This document discusses the class diagrams, package diagrams and other static architecture designs. 
+Dynamic aspects of the system are elaborated using use case realizations and system sequence diagrams.
+
+<h3>1.3 - Definitions, Acronyms, and Abbreviations</h3>
+<ul>
+<li>GUI - General User Interface</li>
+<li>DOI - Digital Object Identifier - permanent identifier</li>
+<li>MDS - Datacite Metadata Store - External service that stores and registers the DOI</li>
+<li>Citation - External services that creates the citation based on the DOI metadata</li>
+</ul>
+
+<h3>1.4 - Overview</h3>
+The report will present an analysis of the architecture of DOI-server. Further
+sections cover the architectural representation of the project including architectural representation,
+architectural goals and constraints.
+
+<h2>2 - Architectural Representation</h2>
+This section details the architecture using the views. The views used to
+document the DOI-Server application are:
+
+<!-- Actors -->
+<h3>2.1 - Actors</h3>
+Three actors handle the DOI-server:
+<br/>
+<img src="resources/images/actors.png" alt="actors"/>
+
+<h4>2.1.1 - The public user</h4>
+The public user can read all resources of MDS, Citations for any projects
+
+<h4>2.1.2 - The project administrator</h4>
+This administrator has : 
+<ul>
+<li>the rights of the public user</li>
+<li>for a specific project, he can create a DOI and generate a token</li>
+</ul> 
+
+<h4>2.1.3 - The DOI-server administrator.</h4>
+This administrator is the super administrator of the DOI-server and has the following rights:
+<ul>
+<li>the rights of the project administrator</li>
+<li>he can add/remove user, add/remove a project, add/remove a user for a specific project, generate a token for a project administrator</li> 
+</ul> 
+
+<!-- interfaces -->
+<h3>2.2 - Interfaces</h3>
+The DOI-server is interfaced with 5 external components:
+
+<h4>2.2.1 - LDAP server</h4>
+This component is mainly responsible for the user authentication. In addition, it is used to : 
+<ul>
+<li>retrieve all users for the DOI server - this list of users is then inserted in the DOI database for checking authorizations rules to DOI resources</li>
+<li>retrieve the administrator information - this user is set as super administrator of the DOI-server in the DOI database</li>
+</ul>
+
+<i><u>Note 1</u>: The list of users in the DOI database is updated from the LDAP server. The frequency is defined in the configuration file by the variable <b>Starter.updateDatabaseJob.period</b>.
+The unit is the minute.</i>
+<br/>
+<i><u>Note 2</u>: The information exchange between the DOI-server/LDAP is implemented through a plugin in the DOI-server that follows the interface <b>IAuthenticationDBHelper</b>.
+It means other authentication system could be implemented through another plugin. The plugin is defined in the configuration file by the variable <b>Starter.Plugin.Authentication</b>.
+The parameters of this plugin are defined in the configuration file :
+<pre>
+<code>
+## ---- LDAP Settings ----
+## user, password are encrypted
+# LDAP url such as ldap://<hostname>:<port>
+Starter.LDAP.url = 
+# LDAP user
+Starter.LDAP.user = 
+# LDAP password 
+Starter.LDAP.password = 
+# LDAP group
+Starter.LDAP.project =
+# User in LDAP, which is administrator
+Starter.LDAP.user.admin = 
+# LDAP filter to search group
+Starter.LDAP.search.group = cn=groups,cn=accounts,dc=sis,dc=cnes,dc=fr
+# LDAP filter to search user
+Starter.LDAP.search.user = cn=users,cn=accounts,dc=sis,dc=cnes,dc=fr
+# User name attribute in LDAP
+Starter.LDAP.attr.username = uid
+# mail name attribute in LDAP
+Starter.LDAP.attr.mail = mail
+# fullaname attribute in LDAP
+Starter.LDAP.attr.fullname = cn
+</code>
+</pre>
+</i>
+ 
+<p>
+<pre>
+<code>
+public interface IAuthenticationDBHelper {
+
+    /**
+     * Returns the authentication members.
+     *
+     * @return the authentication members
+     * @throws AuthenticationAccessException When a problem occurs
+     */
+    public List<AuthSystemUser> getDOIProjectMembers() throws AuthenticationAccessException;
+
+    /**
+     * Authenticates an user via the authentication service.
+     *
+     * @param login login
+     * @param password password
+     * @return True when the user is authenticated otherwise False.
+     */
+    public boolean authenticateUser(final String login, final String password);
+
+    /**
+     * Returns the user from the authentication access, which will be the administrator of DOI
+     * server.
+     *
+     * @return the administrator
+     */
+    public String getDOIAdmin();
+
+}
+</code>
+</pre>
+
+<h4>2.2.2 - DOI server database</h4>
+This component is responsible to store :
+<ul>
+<li>the users - the users are part of the LDAP users</li>
+<li></li>
+</ul>
+
+
+
+<ul>
+<li>LDAP server - Component to handle the user authentication to the system.</li>
+<li>DOI database server - Relational database under PostgreSQL that contains the users, the projects, the mapping user/project and the created tokens.</li>
+<li>Email server - Component to send notification to DOI-server administrators and projects administrators </li>
+</ul>
+<img src="resources/images/interface.png" alt="interface with external components"/>
+
+<h3>2.2 - Server design</h3>
+<img src="resources/images/design.png" alt="Server design"/>
+
+<h2>3 - The GUI</h2>
+
+</body>
+
+</html>

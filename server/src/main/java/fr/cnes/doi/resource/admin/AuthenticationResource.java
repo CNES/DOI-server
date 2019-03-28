@@ -121,8 +121,10 @@ public class AuthenticationResource extends AbstractResource {
 
         // token is valid for 12 hours
         final int amount = doiSetting.getInt(Consts.TOKEN_EXPIRATION_DELAY, "12");
-        // unit = HOURS
-        final int timeUnit = doiSetting.getInt(Consts.TOKEN_EXPIRATION_UNIT, "10");
+        final int timeUnit = doiSetting.getInt(
+                Consts.TOKEN_EXPIRATION_UNIT, 
+                String.valueOf(TokenSecurity.TimeUnit.HOUR.getTimeUnit())
+        );
         final TimeUnit unit = TokenSecurity.TimeUnit.getTimeUnitFrom(timeUnit);
         final String token = TokenSecurity.getInstance().generate(userName, unit, amount);
         final boolean isTokenAdded = this.tokenDB.addToken(token);

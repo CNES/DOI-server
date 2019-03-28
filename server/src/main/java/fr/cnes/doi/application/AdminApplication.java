@@ -403,11 +403,12 @@ public class AdminApplication extends AbstractApplication {
 
                 if (requestMethod.equals(Method.OPTIONS) || "admin".equals(lastSeg)) {
                     ignoreVerification = true;
+                    // we want to access to the authentication page of the GUI without authentication
                 } else if (requestMethod.equals(Method.GET)) {
                     if ("projects".equals(lastSeg) && requestReference.hasQuery()) {
                         ignoreVerification = true;
                     }
-                    if (requestReference.toString().contains("/admin/superusers/")) {
+                    if (requestReference.toString().contains(ADMIN_URI+SUPERUSERS_URI)) {
                         ignoreVerification = true;
                     }
                     // ignore method GET dois from project

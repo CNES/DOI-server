@@ -358,7 +358,7 @@ public final class Consts {
      * Attributes name in LDAP for fullname.
      */
     public static final String ATTRIBUTION = "Starter.attribution";
-
+    
     /**
      * "Static" class cannot be instantiated
      */

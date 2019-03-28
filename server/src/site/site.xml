@@ -28,7 +28,7 @@
   
         <links>
             <item name="Download" href="" />
-            <item name="GitHub project" href="http://github.com/J-Christophe/DOI" />
+            <item name="GitHub project" href="https://github.com/CNES/DOI-server" />
         </links>
 
         <breadcrumbs>
@@ -37,23 +37,23 @@
   
         <menu name="Main" inherit="top">
             <item name="Home" href="index.html" />
-            <item name="GitHub project" href="http://github.com/J-Christophe/DOI" />
-            <item name="Release notes" href="http://github.com/J-Christophe/DOI/releases" />
+            <item name="GitHub project" href="https://github.com/CNES/DOI-server" />
+            <item name="Release notes" href="https://github.com/CNES/DOI-server/releases" />
         </menu>
         <menu name="Download" inherit="top">
-            <item name="Download" href="http://github.com/J-Christophe/DOI/releases" />
-            <item name="License" href="http://github.com/J-Christophe/DOI/blob/master/COPYING.LESSER" />
+            <item name="Download" href="https://github.com/CNES/DOI-server/releases" />
+            <item name="License" href="https://github.com/CNES/DOI-server/blob/master/COPYING.LESSER" />
         </menu>
         <menu name="Documentation" inherit="bottom">
-            <item name="Architecture" href="architecture.html" />  
+            <item name="Architecture" href="architecture.md" />  
             <item name="Usage" href="usage.html" />
             <item name="Configuration" href="configuration.html" />
             <item name="Javadoc" href="apidocs/index.html" />
         </menu>
         <menu name="Contribute" inherit="bottom">
             <item name="Contribute" href="http://github.com/J-Christophe/DOI/blob/master/CONTRIBUTING.md" />
-            <item name="Issues" href="http://github.com/J-Christophe/DOI/issues" />
-            <item name="Fork on GitHub" href="http://github.com/J-Christophe/DOI" />
+            <item name="Issues" href="https://github.com/CNES/DOI-server/issues" />
+            <item name="Fork on GitHub" href="https://github.com/CNES/DOI-server" />
         </menu>
         <menu name="Maven documentation" ref="reports" inherit="bottom"/>
     </body>

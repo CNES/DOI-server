@@ -123,7 +123,7 @@ public class TokenResourceTest {
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
         client.setNext(cl);
         Form form = new Form();
-        form.add("identifier", "jcm");
+        form.add("identifier", "malapert");
         form.add("projectID", "828606");
         Representation response = client.post(form);
         String token = response.getText();
