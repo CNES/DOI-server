@@ -1,7 +1,7 @@
 # Architecture
 
 
-# Table of contents
+## Table of contents
 1. [Introduction](#introduction)
     1. [Purpose](#purpose)
     2. [Scope](#scope)
