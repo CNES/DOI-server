@@ -142,17 +142,20 @@
         <!--
         <pack name="Documentation" preselected="yes" required="no" parent="Server">
             <description>This package contains the DOI server documentation</description>
-        </pack>         
+        </pack>   
+        -->              
         <pack name="Clients" preselected="no" required="no">
             <description>This package installs the clients to query the DOI server</description>
         </pack>  
         <pack name="PyDoiApiClient" preselected="no" required="no" parent="Clients">
             <description>This package installs the python client</description>
+            <fileset  override="true" dir="pythonClient" targetdir="$INSTALL_PATH/pythonClient"/>                        
         </pack>    
         <pack name="JavaDoiApiClient" preselected="no" required="no" parent="Clients">
             <description>This package installs the JAVA client</description>
+            <fileset  override="true" dir="javaClient" targetdir="$INSTALL_PATH/javaClient"/>            
         </pack> 
-        -->    
+    
         
     </packs>        
  

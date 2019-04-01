@@ -1,0 +1,6 @@
+[submodule "javaClient"]
+	path = javaClient
+	url = https://github.com/CNES/JavaDoiApiClient.git
+[submodule "pythonClient"]
+	path = pythonClient
+	url = https://github.com/CNES/pyDoiApiClient.git

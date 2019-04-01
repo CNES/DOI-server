@@ -68,6 +68,12 @@
                                 <copy todir="${izpack.staging}">
                                     <fileset dir="${basedir}/src/main/java/fr/cnes/doi/izpack"/>
                                 </copy>
+                                <copy todir="${izpack.staging}/javaClient">
+                                    <fileset dir="../../javaClient/target/"/>
+                                </copy>
+                                <copy todir="${izpack.staging}/pythonClient">
+                                    <fileset dir="../../pythonClient/"/>
+                                </copy>                                                               
                             </tasks>
                         </configuration>
                     </execution>

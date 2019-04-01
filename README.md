@@ -74,6 +74,8 @@ Clone the repository
 
 ```
 git clone https://github.com/CNES/DOI-server.git && cd DOI-server
+git submodule init
+git submodule update
 ```
 
 Define the settings, which will be used for the compilation
