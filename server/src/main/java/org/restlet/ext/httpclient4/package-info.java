@@ -17,6 +17,6 @@
  * MA 02110-1301  USA
  */
 /**
- * Provides Bridge to JSPNego
+ * Provides a Bridge to JSPNego library, which supports different kind of proxies.
  */
 package org.restlet.ext.httpclient4;

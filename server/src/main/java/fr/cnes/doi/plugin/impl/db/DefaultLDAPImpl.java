@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package fr.cnes.doi.ldap.impl;
+package fr.cnes.doi.plugin.impl.db;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -34,41 +34,145 @@ import javax.naming.ldap.InitialLdapContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import fr.cnes.doi.exception.LDAPAccessException;
-import fr.cnes.doi.ldap.model.LDAPUser;
+import fr.cnes.doi.exception.AuthenticationAccessException;
+import fr.cnes.doi.db.model.AuthSystemUser;
 import fr.cnes.doi.security.UtilsCryptography;
-import fr.cnes.doi.settings.Consts;
-import fr.cnes.doi.settings.DoiSettings;
-import fr.cnes.doi.ldap.service.ILDAPAccessService;
 import fr.cnes.doi.utils.Utils;
+import fr.cnes.doi.plugin.AbstractAuthenticationPluginHelper;
+import java.util.Map;
 
 /**
  * Implementation of the LDAP.
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-public class LDAPAccessServiceImpl implements ILDAPAccessService {
+public final class DefaultLDAPImpl extends AbstractAuthenticationPluginHelper {
+
+    /**
+     * LDAP url
+     */
+    public static final String LDAP_URL = "Starter.LDAP.url";
+
+    /**
+     * LDAP user
+     */
+    public static final String LDAP_USER = "Starter.LDAP.user";
+
+    /**
+     * LDAP pwd
+     */
+    public static final String LDAP_PWD = "Starter.LDAP.password";
+
+    /**
+     * LDAP project
+     */
+    public static final String LDAP_PROJECT = "Starter.LDAP.project";
+
+    /**
+     * LDAP username who is the administrator of the DOI server
+     */
+    public static final String LDAP_DOI_ADMIN = "Starter.LDAP.user.admin";
+
+    /**
+     * Specifies the filter expression to get the group.
+     */
+    public static final String LDAP_SEARCH_GROUP = "Starter.LDAP.search.group";
+
+    /**
+     * Specifies the filter expression to get the users.
+     */
+    public static final String LDAP_SEARCH_USER = "Starter.LDAP.search.user";
+
+    /**
+     * Attributes name in LDAP for username.
+     */
+    public static final String LDAP_ATTR_USERNAME = "Starter.LDAP.attr.username";
+
+    /**
+     * Attributes name in LDAP for mail.
+     */
+    public static final String LDAP_ATTR_MAIL = "Starter.LDAP.attr.mail";
+
+    /**
+     * Attributes name in LDAP for fullname.
+     */
+    public static final String LDAP_ATTR_FULLNAME = "Starter.LDAP.attr.fullname";
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = LogManager.getLogger(LDAPAccessServiceImpl.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(DefaultLDAPImpl.class.getName());
+
+    /**
+     * Plugin description.
+     */
+    private static final String DESCRIPTION = "Provides a pre-defined list of users and groups";
+    /**
+     * Plugin version.
+     */
+    private static final String VERSION = "1.0.0";
+    /**
+     * Plugin owner.
+     */
+    private static final String OWNER = "CNES";
+    /**
+     * Plugin author.
+     */
+    private static final String AUTHOR = "Jean-Christophe Malapert";
+    /**
+     * Plugin license.
+     */
+    private static final String LICENSE = "LGPLV3";
+    /**
+     * Plugin name.
+     */
+    private final String NAME = this.getClass().getName();
+
     /**
      * Configuration file.
      */
-    private final DoiSettings conf = DoiSettings.getInstance();
+    private Map<String, String> conf;
+
+    /**
+     * Status of the plugin configuration.
+     */
+    private boolean isConfigured = false;
+
+    /**
+     * Constructor.
+     */
+    public DefaultLDAPImpl() {
+
+    }
+
+    @Override
+    public void setConfiguration(Object configuration) {
+        this.conf = (Map<String, String>) configuration;
+        LOGGER.info("[CONF] Plugin LDAP URL : {}", LDAP_URL);
+        LOGGER.info("[CONF] Plugin LDAP user : {}", LDAP_USER);
+        LOGGER.info("[CONF] Plugin LDAP password : {}", Utils.transformPasswordToStars(LDAP_PWD));
+        LOGGER.info("[CONF] Plugin LDAP project : {}", LDAP_PROJECT);
+        LOGGER.info("[CONF] Plugin LDAP admin for DOI : {}", LDAP_DOI_ADMIN);
+        LOGGER.info("[CONF] Plugin LDAP attribute for fullname : {}", LDAP_ATTR_FULLNAME);
+        LOGGER.info("[CONF] Plugin LDAP attribute for mail : {}", LDAP_ATTR_MAIL);
+        LOGGER.info("[CONF] Plugin LDAP attribute for username : {}", LDAP_ATTR_USERNAME);
+        LOGGER.info("[CONF] Plugin LDAP search group : {}", LDAP_SEARCH_GROUP);
+        LOGGER.info("[CONF] Plugin LDAP search user : {}", LDAP_SEARCH_USER);
+        this.isConfigured = true;
+    }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<LDAPUser> getDOIProjectMembers() throws LDAPAccessException {
+    public List<AuthSystemUser> getDOIProjectMembers() throws AuthenticationAccessException {
         LOGGER.traceEntry();
         DirContext context = null;
         try {
             context = getContext();
             if (context == null) {
-                throw new LDAPAccessException("Configuration problem with the LDAP", new Exception());
+                throw new AuthenticationAccessException("Configuration problem with the LDAP",
+                        new Exception());
             } else {
                 return LOGGER.traceExit(getAllDOIProjectMembers((InitialLdapContext) context));
             }
@@ -90,9 +194,9 @@ public class LDAPAccessServiceImpl implements ILDAPAccessService {
      * @return true when the LDAP context is well configured otherwise false
      */
     private boolean isLdapConfigured() {
-        final String ldapUser = conf.getString(Consts.LDAP_USER);
-        final String ldapPwd = conf.getString(Consts.LDAP_PWD);
-        final String ldapSearchUser = conf.getString(Consts.LDAP_SEARCH_USER);
+        final String ldapUser = conf.getOrDefault(LDAP_USER, "");
+        final String ldapPwd = conf.getOrDefault(LDAP_PWD, "");
+        final String ldapSearchUser = conf.getOrDefault(LDAP_SEARCH_USER, "");
         return !ldapUser.isEmpty() && !ldapPwd.isEmpty() && !ldapSearchUser.isEmpty();
     }
 
@@ -103,16 +207,16 @@ public class LDAPAccessServiceImpl implements ILDAPAccessService {
      */
     private InitialLdapContext getContext() {
         LOGGER.traceEntry();
-        InitialLdapContext context = null;        
+        InitialLdapContext context = null;
         if (isLdapConfigured()) {
             final Hashtable<String, String> prop = new Hashtable<>();
-            final String ldapUser = UtilsCryptography.decrypt(conf.getString(Consts.LDAP_USER));
-            final String ldapPwd = UtilsCryptography.decrypt(conf.getString(Consts.LDAP_PWD));
+            final String ldapUser = UtilsCryptography.decrypt(conf.get(LDAP_USER));
+            final String ldapPwd = UtilsCryptography.decrypt(conf.get(LDAP_PWD));
             final String securityPrincipal = String.format(
                     "uid=%s,%s",
-                    ldapUser, conf.getString(Consts.LDAP_SEARCH_USER)
+                    ldapUser, conf.get(LDAP_SEARCH_USER)
             );
-            final String ldapUrl = conf.getString(Consts.LDAP_URL);
+            final String ldapUrl = conf.get(LDAP_URL);
             prop.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
             prop.put(Context.PROVIDER_URL, ldapUrl);
             prop.put(Context.SECURITY_AUTHENTICATION, "simple");
@@ -146,8 +250,8 @@ public class LDAPAccessServiceImpl implements ILDAPAccessService {
         final String securityPrincipal = String.format(
                 "uid=%s,%s",
                 login,
-                conf.getString(Consts.LDAP_SEARCH_USER));
-        final String ldapUrl = conf.getString(Consts.LDAP_URL);
+                conf.get(LDAP_SEARCH_USER));
+        final String ldapUrl = conf.get(LDAP_URL);
         prop.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
         prop.put(Context.PROVIDER_URL, ldapUrl);
         prop.put(Context.SECURITY_AUTHENTICATION, "simple");
@@ -190,14 +294,14 @@ public class LDAPAccessServiceImpl implements ILDAPAccessService {
      *
      * @param context context
      * @return all LDAP users which are in the group Consts.LDAP_PROJECT
-     * @throws LDAPAccessException Exception
+     * @throws AuthenticationAccessException Exception
      */
-    public List<LDAPUser> getAllDOIProjectMembers(final InitialLdapContext context)
-            throws LDAPAccessException {
+    public List<AuthSystemUser> getAllDOIProjectMembers(final InitialLdapContext context)
+            throws AuthenticationAccessException {
         try {
             LOGGER.traceEntry("Parameters : {}", context);
-            final String searchGroup = conf.getString(Consts.LDAP_SEARCH_GROUP);
-            final String ldapProject = conf.getString(Consts.LDAP_PROJECT);
+            final String searchGroup = conf.get(LDAP_SEARCH_GROUP);
+            final String ldapProject = conf.get(LDAP_PROJECT);
 
             final SearchControls constraints = new SearchControls();
             constraints.setSearchScope(SearchControls.SUBTREE_SCOPE);
@@ -208,7 +312,7 @@ public class LDAPAccessServiceImpl implements ILDAPAccessService {
             final NamingEnumeration answer = context.search(searchGroup, "cn=" + ldapProject,
                     constraints);
             LOGGER.info("LDAP search : OK");
-            final List<LDAPUser> members = new ArrayList<>();
+            final List<AuthSystemUser> members = new ArrayList<>();
             if (answer.hasMore()) {
                 final NamingEnumeration<?> attrs = ((SearchResult) answer.next()).getAttributes().
                         get("gidNumber").getAll();
@@ -217,7 +321,7 @@ public class LDAPAccessServiceImpl implements ILDAPAccessService {
             return LOGGER.traceExit(members);
         } catch (NamingException e) {
             LOGGER.error(e);
-            throw new LDAPAccessException("", e);
+            throw new AuthenticationAccessException("", e);
         }
     }
 
@@ -229,23 +333,23 @@ public class LDAPAccessServiceImpl implements ILDAPAccessService {
      * @return all LDAP users which are in the group Consts.LDAP_PROJECT for a specific LDAP group
      * @throws NamingException Exception
      */
-    private List<LDAPUser> getLdapUsers(final DirContext context, final String gidNumber)
+    private List<AuthSystemUser> getLdapUsers(final DirContext context, final String gidNumber)
             throws NamingException {
         LOGGER.traceEntry("Parameters : {}", context, gidNumber);
-        final List<LDAPUser> ldapuserList = new ArrayList<>();
+        final List<AuthSystemUser> ldapuserList = new ArrayList<>();
         final SearchControls controls = new SearchControls();
         controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
         final String[] attrIDs = {
-            conf.getString(Consts.LDAP_ATTR_USERNAME),
-            conf.getString(Consts.LDAP_ATTR_MAIL),
-            conf.getString(Consts.LDAP_ATTR_FULLNAME)
+            conf.get(LDAP_ATTR_USERNAME),
+            conf.get(LDAP_ATTR_MAIL),
+            conf.get(LDAP_ATTR_FULLNAME)
         };
         LOGGER.info("Getting attributes from LDAP: {}", (Object[]) attrIDs);
         controls.setReturningAttributes(attrIDs);
 
-        final String ldapProject = conf.getString(Consts.LDAP_PROJECT);
-        final String ldapSearchGroup = conf.getString(Consts.LDAP_SEARCH_GROUP);
-        final String ldapSearchUser = conf.getString(Consts.LDAP_SEARCH_USER);
+        final String ldapProject = conf.get(LDAP_PROJECT);
+        final String ldapSearchGroup = conf.get(LDAP_SEARCH_GROUP);
+        final String ldapSearchUser = conf.get(LDAP_SEARCH_USER);
         final String ldapSearchAttr = String.format(
                 "(|(gidNumber=%s)(memberOf=cn=%s,%s))",
                 gidNumber, ldapProject, ldapSearchGroup
@@ -284,7 +388,7 @@ public class LDAPAccessServiceImpl implements ILDAPAccessService {
                 }
             }
             if ((mail != null) && (uid != null)) {
-                final LDAPUser ldapuser = new LDAPUser();
+                final AuthSystemUser ldapuser = new AuthSystemUser();
                 ldapuser.setFullname(fullname);
                 ldapuser.setEmail(mail);
                 ldapuser.setUsername(uid);
@@ -293,5 +397,117 @@ public class LDAPAccessServiceImpl implements ILDAPAccessService {
             }
         }
         return LOGGER.traceExit(ldapuserList);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getName() {
+        return NAME;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getDescription() {
+        return DESCRIPTION;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getVersion() {
+        return VERSION;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getAuthor() {
+        return AUTHOR;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getOwner() {
+        return OWNER;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getLicense() {
+        return LICENSE;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getDOIAdmin() {
+        return conf.get(LDAP_DOI_ADMIN);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public StringBuilder validate() {
+        final StringBuilder validation = new StringBuilder();
+        final String message = "Sets ";
+        if (!this.conf.containsKey(LDAP_ATTR_FULLNAME)) {
+            validation.append(message).append(LDAP_ATTR_FULLNAME).append("\n");
+        }
+        if (!this.conf.containsKey(LDAP_ATTR_MAIL)) {
+            validation.append(message).append(LDAP_ATTR_MAIL).append("\n");
+        }
+        if (!this.conf.containsKey(LDAP_ATTR_USERNAME)) {
+            validation.append(message).append(LDAP_ATTR_USERNAME).append("\n");
+        }
+        if (!this.conf.containsKey(LDAP_PROJECT)) {
+            validation.append(message).append(LDAP_PROJECT).append("\n");
+        }
+        if (!this.conf.containsKey(LDAP_URL)) {
+            validation.append(message).append(LDAP_URL).append("\n");
+        }
+        if (!this.conf.containsKey(LDAP_SEARCH_GROUP)) {
+            validation.append(message).append(LDAP_SEARCH_GROUP).append("\n");
+        }
+        if (!this.conf.containsKey(LDAP_SEARCH_USER)) {
+            validation.append(message).append(LDAP_SEARCH_USER).append("\n");
+        }
+
+        return validation;
+    }
+
+    /**
+     * Checks if the keyword is a password.
+     *
+     * @param key keyword to check
+     * @return True when the keyword is a password otherwise False
+     */
+    public static boolean isPassword(String key) {
+        return LDAP_PWD.equals(key);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void release() {
+        this.conf = null;
+        this.isConfigured = false;
+    }
+
+    @Override
+    public boolean isConfigured() {
+        return this.isConfigured;
     }
 }

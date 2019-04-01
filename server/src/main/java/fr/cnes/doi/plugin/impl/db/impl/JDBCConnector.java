@@ -19,7 +19,9 @@
 package fr.cnes.doi.plugin.impl.db.impl;
 
 import fr.cnes.doi.exception.DoiRuntimeException;
-import java.io.IOException;
+import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_MAX_ACTIVE_CONNECTIONS;
+import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_MAX_IDLE_CONNECTIONS;
+import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_MIN_IDLE_CONNECTIONS;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -28,9 +30,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import fr.cnes.doi.security.UtilsCryptography;
-import fr.cnes.doi.settings.Consts;
-import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.utils.Utils;
+import java.util.Map;
 import org.apache.logging.log4j.Level;
 
 /**
@@ -76,87 +77,75 @@ public class JDBCConnector {
     /**
      * Default min IDL connection {@value #DEFAULT_MIN_IDLE_CONNECTION}.
      */
-    public static final String DEFAULT_MIN_IDLE_CONNECTION = "10";
+    public static final int DEFAULT_MIN_IDLE_CONNECTION = 10;
     /**
      * Default max IDL connection {@value #DEFAULT_MAX_IDLE_CONNECTION}.
      */
-    public static final String DEFAULT_MAX_IDLE_CONNECTION = "50";
+    public static final int DEFAULT_MAX_IDLE_CONNECTION = 50;
     /**
      * Default max active connection {@value #DEFAULT_MAX_ACTIVE_CONNECTION}.
      */
-    public static final String DEFAULT_MAX_ACTIVE_CONNECTION = "50";
+    public static final int DEFAULT_MAX_ACTIVE_CONNECTION = 50;
     /**
      * The data source.
      */
     private final BasicDataSource ds = new BasicDataSource();
-    /**
-     * The configuration file.
-     */
-    private final DoiSettings conf = DoiSettings.getInstance();
 
     /**
      * Creates the JDBC connector based on a specific configuration file.
      *
-     * @param customDbConfigFile configuration file.
-     * @throws RuntimeException Cannot retrieve the configuration file
+     * @param dbUrl database URL
+     * @param dbUser database user
+     * @param dbPwd database password
+     * @param options database options
      */
-    public JDBCConnector(final String customDbConfigFile) {
-        LOGGER.traceEntry("Parameter\n  customDbConfigFile: {} ", customDbConfigFile);
-        try {
-            conf.setPropertiesFile(customDbConfigFile);
-        } catch (IOException ex) {
-            LOGGER.error("Cannot retrieve the configuration file {}", customDbConfigFile);
-            throw LOGGER.throwing(new RuntimeException("Cannot retrieve the configuration "
-                    + "file " + customDbConfigFile, ex));
-        }
-        init();
-        LOGGER.traceExit();
-    }
-
-    /**
-     * Creates the JDBC connector based on the default settings.
-     */
-    public JDBCConnector() {
-        LOGGER.traceEntry();
-        init();
+    public JDBCConnector(final String dbUrl, final String dbUser, final String dbPwd,
+            final Map<String, Integer> options) {
+        LOGGER.traceEntry("Parameter\n\tdbUrl : {}\n\tdbPwd : {}\n\toptions : {}", dbUrl, dbPwd,
+                options);
+        init(dbUrl, dbUser, dbPwd, options);
         LOGGER.traceExit();
     }
 
     /**
      * Data source initialization.
      *
+     * @param dbUrl database URL
+     * @param dbUser database user
+     * @param dbPwd database password
+     * @param options database options
      * @throws DoiRuntimeException Cannot decrypt the database pwd from the configuration file
      */
-    private void init() {
+    private void init(final String dbUrl, final String dbUser, final String dbPwd,
+            final Map<String, Integer> options) {
         LOGGER.traceEntry();
-        final String dbURL = conf.getString(Consts.DB_URL);
-        final String dbUser = conf.getString(Consts.DB_USER);
-        final String passwd = conf.getString(Consts.DB_PWD);
-        final int minIdleConnection = conf.getInt(
-                Consts.DB_MIN_IDLE_CONNECTIONS, DEFAULT_MIN_IDLE_CONNECTION
+        final int minIdleConnection = options.getOrDefault(
+                DB_MIN_IDLE_CONNECTIONS, DEFAULT_MIN_IDLE_CONNECTION
         );
-        final int maxIdleConnection = conf.getInt(
-                Consts.DB_MAX_IDLE_CONNECTIONS, DEFAULT_MAX_IDLE_CONNECTION
+        final int maxIdleConnection = options.getOrDefault(
+                DB_MAX_IDLE_CONNECTIONS, DEFAULT_MAX_IDLE_CONNECTION
         );
-        final int maxActiveConnection = conf.getInt(
-                Consts.DB_MAX_ACTIVE_CONNECTIONS, DEFAULT_MAX_ACTIVE_CONNECTION
+        final int maxActiveConnection = options.getOrDefault(
+                DB_MAX_ACTIVE_CONNECTIONS, DEFAULT_MAX_ACTIVE_CONNECTION
         );
 
-        LOGGER.info("[CONF] Datasource database URL", dbURL);
-        LOGGER.info("[CONF] Datasource database user", dbUser);
-        LOGGER.info("[CONF] Datasource database password", Utils.transformPasswordToStars(passwd));
-        LOGGER.info("[CONF] Datasource min IDLE connection", minIdleConnection);
-        LOGGER.info("[CONF] Datasource max IDLE connection", maxIdleConnection);
-        LOGGER.info("[CONF] Datasource max active connection", maxActiveConnection);
+        LOGGER.info("[CONF] Datasource database URL : {}", dbUrl);
+        LOGGER.info("[CONF] Datasource database user : {}", dbUser);
+        LOGGER.info("[CONF] Datasource database password : {}", Utils.
+                transformPasswordToStars(dbPwd));
+        LOGGER.info("[CONF] Datasource min IDLE connection : {}", minIdleConnection);
+        LOGGER.info("[CONF] Datasource max IDLE connection : {}", maxIdleConnection);
+        LOGGER.info("[CONF] Datasource max active connection : {}", maxActiveConnection);
 
-        ds.setUrl(dbURL);
+        ds.setUrl(dbUrl);
         ds.setUsername(dbUser);
         try {
-            final String decryptedPasswd = UtilsCryptography.decrypt(passwd);
+            final String decryptedPasswd = UtilsCryptography.decrypt(dbPwd);
             ds.setPassword(decryptedPasswd);
         } catch (Exception e) {
-            throw LOGGER.throwing(Level.ERROR, new DoiRuntimeException("Cannot decrypt the database "
-                    + "pwd " + passwd + " from the configuration file"));
+            throw LOGGER.throwing(Level.ERROR, new DoiRuntimeException(
+                    "Cannot decrypt the database "
+                    + "pwd " + dbPwd + " from the configuration file"));
         }
         ds.setMinIdle(minIdleConnection);
         ds.setMaxIdle(maxIdleConnection);

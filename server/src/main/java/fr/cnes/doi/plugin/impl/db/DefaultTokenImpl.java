@@ -33,16 +33,25 @@ import org.apache.logging.log4j.Logger;
 
 import fr.cnes.doi.exception.DOIDbException;
 import fr.cnes.doi.plugin.AbstractTokenDBPluginHelper;
+import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_MAX_ACTIVE_CONNECTIONS;
+import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_MAX_IDLE_CONNECTIONS;
+import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_MIN_IDLE_CONNECTIONS;
+import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_PWD;
+import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_URL;
+import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_USER;
 import fr.cnes.doi.security.TokenSecurity;
+import fr.cnes.doi.utils.Utils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Default implementation of the token database.
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
+public final class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
 
     /**
      * Plugin description.
@@ -77,7 +86,17 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
     /**
      * Database access.
      */
-    private final DOIDbDataAccessService das = DatabaseSingleton.getInstance().getDatabaseAccess();
+    private DOIDbDataAccessService das;
+
+    /**
+     * Configuration file.
+     */
+    private Map<String, String> conf;
+
+    /**
+     * Status of the plugin configuration.
+     */
+    private boolean isConfigured = false;
 
     /**
      * Default Constructor of the token database
@@ -91,6 +110,31 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
      */
     @Override
     public void setConfiguration(final Object configuration) {
+        this.conf = (Map<String, String>) configuration;
+        final String dbUrl = this.conf.get(DB_URL);
+        final String dbUser = this.conf.get(DB_USER);
+        final String dbPwd = this.conf.get(DB_PWD);
+        final Map<String, Integer> options = new HashMap<>();
+        if (this.conf.containsKey(DB_MIN_IDLE_CONNECTIONS)) {
+            options.put(DB_MIN_IDLE_CONNECTIONS,
+                    Integer.valueOf(this.conf.get(DB_MIN_IDLE_CONNECTIONS)));
+        }
+        if (this.conf.containsKey(DB_MAX_IDLE_CONNECTIONS)) {
+            options.put(DB_MAX_IDLE_CONNECTIONS,
+                    Integer.valueOf(this.conf.get(DB_MAX_IDLE_CONNECTIONS)));
+        }
+        if (this.conf.containsKey(DB_MAX_ACTIVE_CONNECTIONS)) {
+            options.put(DB_MAX_ACTIVE_CONNECTIONS,
+                    Integer.valueOf(this.conf.get(DB_MAX_ACTIVE_CONNECTIONS)));
+        }
+        LOG.info("[CONF] Plugin database URL : {}", dbUrl);
+        LOG.info("[CONF] Plugin database user : {}", dbUser);
+        LOG.info("[CONF] Plugin database password : {}", Utils.transformPasswordToStars(dbPwd));
+        LOG.info("[CONF] Plugin options : {}", options);
+
+        DatabaseSingleton.getInstance().init(dbUrl, dbUser, dbPwd, options);
+        this.das = DatabaseSingleton.getInstance().getDatabaseAccess();
+        this.isConfigured = true;
     }
 
     /**
@@ -114,13 +158,17 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
      * {@inheritDoc }
      */
     @Override
-    public void deleteToken(final String jwt) {
+    public boolean deleteToken(final String jwt) {
+        boolean isRemoved;
         try {
             das.deleteToken(jwt);
+            isRemoved = true;
             LOG.info("token deleted : " + jwt);
         } catch (DOIDbException e) {
+            isRemoved = false;
             LOG.fatal("The token " + jwt + "cannot be deleted in database", e);
         }
+        return isRemoved;
     }
 
     /**
@@ -175,13 +223,9 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
      * {@inheritDoc }
      */
     @Override
-    public List<String> getTokens() {
+    public List<String> getTokens() throws DOIDbException {
         final List<String> tokens = new ArrayList<>();
-        try {
-            tokens.addAll(das.getTokens());
-        } catch (DOIDbException e) {
-            LOG.fatal("Cannot retrieve the token list from database", e);
-        }
+        tokens.addAll(das.getTokens());
         return tokens;
     }
 
@@ -231,6 +275,43 @@ public class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
     @Override
     public String getLicense() {
         return LICENSE;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public StringBuilder validate() {
+        return new StringBuilder();
+    }
+
+    /**
+     * Checks if the keyword is a password.
+     *
+     * @param key keyword to check
+     * @return True when the keyword is a password otherwise False
+     */
+    public static boolean isPassword(final String key) {
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void release() {
+
+        this.conf = null;
+        try {
+            this.das.close();
+        } catch (DOIDbException ex) {
+        }
+        this.isConfigured = false;
+    }
+
+    @Override
+    public boolean isConfigured() {
+        return this.isConfigured;
     }
 
 }

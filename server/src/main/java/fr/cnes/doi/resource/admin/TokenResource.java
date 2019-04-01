@@ -21,14 +21,20 @@ package fr.cnes.doi.resource.admin;
 import fr.cnes.doi.application.AdminApplication;
 import static fr.cnes.doi.application.AdminApplication.TOKEN_TEMPLATE;
 import fr.cnes.doi.db.AbstractTokenDBHelper;
+import fr.cnes.doi.db.AbstractUserRoleDBHelper;
+import fr.cnes.doi.db.model.DOIUser;
+import fr.cnes.doi.exception.DOIDbException;
 import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.exception.TokenSecurityException;
+import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.resource.AbstractResource;
 import fr.cnes.doi.security.TokenSecurity;
 import fr.cnes.doi.security.TokenSecurity.TimeUnit;
+import fr.cnes.doi.settings.EmailSettings;
 import fr.cnes.doi.utils.spec.Requirement;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
+import java.util.List;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 import org.restlet.data.Form;
@@ -126,11 +132,25 @@ public class TokenResource extends AbstractResource {
         LOG.traceEntry("Paramater : {}", info);
         checkInputs(info);
         try {
-            final String userID = info.getFirstValue(IDENTIFIER_PARAMETER, null);
+            final String user = this.getClientInfo().getUser().getIdentifier();
+            LOG.debug("Identified user : {}", user);
+            final AbstractUserRoleDBHelper manageUsers = PluginFactory.getUserManagement();
+            final String userID;
+            if (manageUsers.isAdmin(user)) {
+                // The admin can generate for everybody
+                LOG.debug("User {} is admin", user);
+                userID = info.getFirstValue(IDENTIFIER_PARAMETER, null);
+            } else {
+                // The token is generated for the identified user.
+                userID = user;
+            }
             final String projectID = info.getFirstValue(PROJECT_ID_PARAMETER, null);
-            final String timeParam = info.getFirstValue(UNIT_OF_TIME_PARAMETER, "0");
+            final String timeParam = info.getFirstValue(
+                    UNIT_OF_TIME_PARAMETER, String.
+                            valueOf(TokenSecurity.TimeUnit.YEAR.getTimeUnit())
+            );
 
-            final int timeUnit = "0".equals(timeParam) ? 1 : Integer.parseInt(timeParam);
+            final int timeUnit = Integer.parseInt(timeParam);
             final TimeUnit unit = TokenSecurity.TimeUnit.getTimeUnitFrom(timeUnit);
 
             final int amount = Integer.parseInt(info.getFirstValue(AMOUNT_OF_TIME_PARAMETER, "1"));
@@ -144,12 +164,51 @@ public class TokenResource extends AbstractResource {
             LOG.info("Token created {} for project {} during {} {}",
                     tokenJwt, projectID, amount, unit.name());
 
-            this.tokenDB.addToken(tokenJwt);
+            if (this.tokenDB.addToken(tokenJwt)) {
+                sendTokenToUser(user, userID, tokenJwt, amount, timeUnit);
+            }
 
             return LOG.traceExit(tokenJwt);
         } catch (TokenSecurityException ex) {
             throw LOG.throwing(Level.INFO, new ResourceException(ex.getStatus(), ex.getMessage(),
                     ex));
+        }
+    }
+
+    /**
+     * Sends the token to the user when the administrator creates a token for theuser
+     *
+     * @param userAdmin User administration
+     * @param userID user to send the message
+     * @param token created token for userID
+     * @param amount time
+     * @param timeUnit time unit
+     */
+    private void sendTokenToUser(final String userAdmin, final String userID, final String token,
+            final int amount, final int timeUnit) {
+        if (!userAdmin.equals(userID)) {
+            try {
+                final StringBuilder builderMsg = new StringBuilder();
+                builderMsg.append("The administrator ").append(userAdmin)
+                        .append(" has created a token for you:\n\n").append(token).append("\n\n")
+                        .append("This token is valid during ").append(amount).append(" ")
+                        .append(TokenSecurity.TimeUnit.getTimeUnitFrom(timeUnit).name());
+                final List<DOIUser> doiUsers = PluginFactory.getUserManagement().getUsers();
+                String email = "";
+                for (final DOIUser doiUser : doiUsers) {
+                    if (doiUser.getUsername().equals(userID)) {
+                        email = doiUser.getEmail();
+                        break;
+                    }
+                }
+                if (email.isEmpty()) {
+                    LOG.error("Email is not set for {}", userID);
+                }
+                EmailSettings.getInstance().sendMessage("Creating Token", builderMsg.toString(),
+                        email);
+            } catch (DOIDbException ex) {
+                LOG.error(ex);
+            }
         }
     }
 
@@ -189,7 +248,6 @@ public class TokenResource extends AbstractResource {
         try {
             final Jws<Claims> jws = TokenSecurity.getInstance()
                     .getTokenInformation(this.tokenParam);
-            // TODO new StringRepresentation instead?
             return LOG.traceExit(new JsonRepresentation(jws));
         } catch (DoiRuntimeException ex) {
             throw LOG.throwing(Level.INFO, new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST,
@@ -197,6 +255,9 @@ public class TokenResource extends AbstractResource {
         }
     }
 
+    /**
+     * Deletes token.
+     */
     @Requirement(reqId = Requirement.DOI_INTER_040, reqName = Requirement.DOI_INTER_040_NAME)
     @Delete
     public void deleteToken() {

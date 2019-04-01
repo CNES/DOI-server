@@ -28,9 +28,12 @@ import fr.cnes.doi.persistence.DOIDBTest;
 import fr.cnes.doi.exception.DOIDbException;
 import fr.cnes.doi.db.model.DOIProject;
 import fr.cnes.doi.db.model.DOIUser;
+import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_PWD;
+import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_URL;
+import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_USER;
 import fr.cnes.doi.plugin.impl.db.service.DOIDbDataAccessService;
-import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
+import java.util.HashMap;
 
 /**
  * Class to initialize database with test users and project
@@ -56,8 +59,12 @@ public final class InitDataBaseForTest {
      * Init the database for test by adding test user and role.
      */
     public static void init() {
-
+        final String dbUrl = DoiSettings.getInstance().getString(DB_URL);
+        final String dbUser = DoiSettings.getInstance().getString(DB_USER);
+        final String dbPwd = DoiSettings.getInstance().getString(DB_PWD);
+        DatabaseSingleton.getInstance().init(dbUrl, dbUser, dbPwd, new HashMap<>());
         das = DatabaseSingleton.getInstance().getDatabaseAccess();
+        
         
         // Test LAPD User
         final DOIUser testLdapUser = new DOIUser();
@@ -117,7 +124,8 @@ public final class InitDataBaseForTest {
             // assign user to project
             das.addDOIProjectToUser(testuser.getUsername(), testProject.getSuffix());
             das.addDOIProjectToUser(testLdapUser.getUsername(), testProject.getSuffix());
-            das.addDOIProjectToUser(testLdapUser.getUsername(), testProject2.getSuffix());            
+            das.addDOIProjectToUser(testLdapUser.getUsername(), testProject2.getSuffix());
+            das.addDOIProjectToUser(kerberos.getUsername(), testProject2.getSuffix());
         } catch (DOIDbException e) {
             logger.error("testDoiUsers failed: unexpected exception: ", e);
             fail();
@@ -142,9 +150,8 @@ public final class InitDataBaseForTest {
             
         } catch (DOIDbException e) {
             fail("Please create the database with the following informations:\nURL:" + DoiSettings.
-                    getInstance().getString(Consts.DB_URL) + "\nUser: " + DoiSettings.getInstance().
-                    getString(Consts.DB_USER) + "\nPwd: " + DoiSettings.getInstance().getSecret(
-                    Consts.DB_PWD));
+                    getInstance().getString(DB_URL) + "\nUser: " + DoiSettings.getInstance().
+                    getString(DB_USER) + "\nPwd: " + DoiSettings.getInstance().getSecret(DB_PWD));
         }
     }
 

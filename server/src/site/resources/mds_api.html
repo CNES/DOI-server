@@ -4,79 +4,79 @@
 <title>Metadata Store Application</title>
 <style type="text/css">
                     body {
-                        font-family: sans-serif;
-                        font-size: 0.85em;
-                        margin: 2em 8em;
+                    font-family: sans-serif;
+                    font-size: 0.85em;
+                    margin: 2em 8em;
                     }
                     .methods {
-                        background-color: #eef;
-                        padding: 1em;
+                    background-color: #eef;
+                    padding: 1em;
                     }
                     h1 {
-                        font-size: 2.5em;
+                    font-size: 2.5em;
                     }
                     h2 {
-                        border-bottom: 1px solid black;
-                        margin-top: 1em;
-                        margin-bottom: 0.5em;
-                        font-size: 2em;
-                       }
+                    border-bottom: 1px solid black;
+                    margin-top: 1em;
+                    margin-bottom: 0.5em;
+                    font-size: 2em;
+                    }
                     h3 {
-                        color: orange;
-                        font-size: 1.75em;
-                        margin-top: 1.25em;
-                        margin-bottom: 0em;
+                    color: orange;
+                    font-size: 1.75em;
+                    margin-top: 1.25em;
+                    margin-bottom: 0em;
                     }
                     h4 {
-                        margin: 0em;
-                        padding: 0em;
-                        border-bottom: 2px solid white;
+                    margin: 0em;
+                    padding: 0em;
+                    border-bottom: 2px solid white;
                     }
                     h6 {
-                        font-size: 1.1em;
-                        color: #99a;
-                        margin: 0.5em 0em 0.25em 0em;
+                    font-size: 1.1em;
+                    color: #99a;
+                    margin: 0.5em 0em 0.25em 0em;
                     }
                     dd {
-                        margin-left: 1em;
+                    margin-left: 1em;
                     }
                     tt {
-                        font-size: 1.2em;
+                    font-size: 1.2em;
                     }
                     table {
-                        margin-bottom: 0.5em;
+                    margin-bottom: 0.5em;
                     }
                     th {
-                        text-align: left;
-                        font-weight: normal;
-                        color: black;
-                        border-bottom: 1px solid black;
-                        padding: 3px 6px;
+                    text-align: left;
+                    font-weight: normal;
+                    color: black;
+                    border-bottom: 1px solid black;
+                    padding: 3px 6px;
                     }
                     td {
-                        padding: 3px 6px;
-                        vertical-align: top;
-                        background-color: f6f6ff;
-                        font-size: 0.85em;
+                    padding: 3px 6px;
+                    vertical-align: top;
+                    background-color: f6f6ff;
+                    font-size: 0.85em;
                     }
                     td p {
-                        margin: 0px;
+                    margin: 0px;
                     }
                     ul {
-                        padding-left: 1.75em;
+                    padding-left: 1.75em;
                     }
                     p + ul, p + ol, p + dl {
-                        margin-top: 0em;
+                    margin-top: 0em;
                     }
                     .optional {
-                        font-weight: normal;
-                        opacity: 0.75;
+                    font-weight: normal;
+                    opacity: 0.75;
                     }
                 </style>
 </head>
 <body>
 <h1>Metadata Store Application</h1>
-<p>Provides an application for handling Data Object Identifier at CNES<br xmlns="http://wadl.dev.java.net/2009/02" xmlns:default="https://schema.datacite.org/meta/kernel-4.0/metadata.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema" />This application provides 3 API:<ul xmlns="http://wadl.dev.java.net/2009/02" xmlns:default="https://schema.datacite.org/meta/kernel-4.0/metadata.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema">
+<p>Provides an application for handling Data Object Identifier at CNES<br xmlns="http://wadl.dev.java.net/2009/02" xmlns:xsi="http://www.w3.org/2001/XMLSchema" xmlns:default="https://schema.datacite.org/meta/kernel-4-1/metadata.xsd" />This application provides 3 API:<ul xmlns="http://wadl.dev.java.net/2009/02" xmlns:xsi="http://www.w3.org/2001/XMLSchema" xmlns:default="https://schema.datacite.org/meta/kernel-4-1/metadata.xsd">
 <li>dois : DOI minting</li>
 <li>metadata : Registration of the associated metadata</li>
 <li>media : Possbility to obtain metadata in various formats and/or get automatic, direct access to an object rather than via the "landing page"</li>
@@ -90,16 +90,16 @@
 <a href="#N2000A">http://localhost:8182/mds/dois</a>
 </li>
 <li>
-<a href="#N200D1">http://localhost:8182/mds/dois/{doiName}</a>
+<a href="#N20105">http://localhost:8182/mds/dois/{doiName}</a>
 </li>
 <li>
-<a href="#N20136">http://localhost:8182/mds/metadata</a>
+<a href="#N20182">http://localhost:8182/mds/metadata</a>
 </li>
 <li>
-<a href="#N201C1">http://localhost:8182/mds/metadata/{doiName}</a>
+<a href="#N20247">http://localhost:8182/mds/metadata/{doiName}</a>
 </li>
 <li>
-<a href="#N2028C">http://localhost:8182/mds/media/{doiName}</a>
+<a href="#N20357">http://localhost:8182/mds/media/{doiName}</a>
 </li>
 </ul>
 </li>
@@ -120,16 +120,19 @@
 <a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain)</a>
 </li>
 <li>
-<a href="#N200EF">DOI Representation (text/plain)</a>
+<a href="#http://localhost:8182/mds#explainRepresentationID">Body representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
 </li>
 <li>
-<a href="#http://localhost:8182/mds#metadataRepresentation">application/xml (<abbr title="{https://schema.datacite.org/meta/kernel-4.0/metadata.xsd} Resource">default:Resource</abbr>)</a>
+<a href="#N20123">DOI Representation (text/plain)</a>
 </li>
 <li>
-<a href="#N202AA">Media representation (text/plain)</a>
+<a href="#http://localhost:8182/mds#metadataRepresentation">application/xml (<abbr title="{https://schema.datacite.org/meta/kernel-4-1/metadata.xsd} Resource">default:Resource</abbr>)</a>
 </li>
 <li>
-<a href="#N202E3">application/x-www-form-urlencoded<abbr title="{http://wadl.dev.java.net/2009/02} " />
+<a href="#N20375">Media representation (text/plain)</a>
+</li>
+<li>
+<a href="#N203BA">application/x-www-form-urlencoded<abbr title="{http://wadl.dev.java.net/2009/02} " />
 </a>
 </li>
 </ul>
@@ -147,7 +150,7 @@
 <em>available response status and representations:</em>
 </p>
 <ul>
-        	STATUS <b>200</b> : <i>Operation successful</i>
+            STATUS <b>200</b> : <i>Operation successful</i>
 <br />
 <br />
 <ul>
@@ -157,7 +160,7 @@
 </ul>
 </ul>
 <ul>
-        	STATUS <b>204</b> : <i>no DOIs founds</i>
+            STATUS <b>204</b> : <i> the DOI is known to DataCite Metadata Store (MDS), but no metadata have been registered</i>
 <br />
 <br />
 <ul>
@@ -167,7 +170,7 @@
 </ul>
 </ul>
 <ul>
-        	STATUS <b>500</b> : <i>Unexpected error</i>
+            STATUS <b>500</b> : <i>Interface problem between Datacite and DOI-Server</i>
 </ul>
 </div>
 <div class="method">
@@ -213,7 +216,7 @@
 <em>available response status and representations:</em>
 </p>
 <ul>
-        	STATUS <b>201</b> : <i>Operation successful</i>
+            STATUS <b>201</b> : <i>Operation successful</i>
 <br />
 <br />
 <ul>
@@ -223,62 +226,72 @@
 </ul>
 </ul>
 <ul>
-        	STATUS <b>400</b> : <i>request body must be exactly two lines: DOI and URL; wrong domain, wrong prefix</i>
+            STATUS <b>400</b> : <i>Validation error when defining the DOI and its landing page</i>
 <br />
 <br />
 <ul>
 <li>
-<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+<a href="#http://localhost:8182/mds#explainRepresentationID">Body representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
 </li>
 </ul>
 </ul>
 <ul>
-        	STATUS <b>401</b> : <i>this request need an authorization</i>
+            STATUS <b>412</b> : <i>metadata must be uploaded first</i>
 <br />
 <br />
 <ul>
 <li>
-<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+<a href="#http://localhost:8182/mds#explainRepresentationID">Body representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
 </li>
 </ul>
 </ul>
 <ul>
-        	STATUS <b>403</b> : <i>Not allow to execute this request</i>
+            STATUS <b>500</b> : <i>Interface problem between Datacite and DOI-Server</i>
 <br />
 <br />
 <ul>
 <li>
-<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+<a href="#http://localhost:8182/mds#explainRepresentationID">Body representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
 </li>
 </ul>
 </ul>
 <ul>
-        	STATUS <b>412</b> : <i>metadata must be uploaded first</i>
+            STATUS <b>401</b> : <i>Fail to authorize the user</i>
 <br />
 <br />
 <ul>
 <li>
-<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+<a href="#http://localhost:8182/mds#explainRepresentationID">Body representation (text/plain)</a>
 </li>
 </ul>
 </ul>
 <ul>
-        	STATUS <b>500</b> : <i>Error when requesting DataCite</i>
+            STATUS <b>403</b> : <i>Forbidden to use this role</i>
 <br />
 <br />
 <ul>
 <li>
-<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+<a href="#http://localhost:8182/mds#explainRepresentationID">Body representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
 </li>
 </ul>
 </ul>
 <ul>
-        	STATUS <b>409</b> : <i>Error when an user is associated to more than one role without setting selectedRole parameter</i>
+            STATUS <b>403</b> : <i>User is not allowed to make this operation</i>
 <br />
 <br />
 <ul>
 <li>
-<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+<a href="#http://localhost:8182/mds#explainRepresentationID">Body representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+</li>
+</ul>
+</ul>
+<ul>
+            STATUS <b>409</b> : <i>Error when an user is associated to more than one role without setting selectedRole parameter</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#http://localhost:8182/mds#explainRepresentationID">Body representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
 </li>
 </ul>
 </ul>
@@ -286,11 +299,11 @@
 </div>
 </div>
 <div class="resource">
-<h3 id="N200D1">/dois/{doiName}</h3>
+<h3 id="N20105">/dois/{doiName}</h3>
 <h6>Methods</h6>
 <div class="methods">
 <div class="method">
-<h4 id="N200D6">GET</h4>
+<h4 id="N2010A">GET</h4>
 <p>Get the landing page related to a given DOI</p>
 <h6>request template parameters</h6>
 <table>
@@ -322,52 +335,52 @@
 <em>available response status and representations:</em>
 </p>
 <ul>
-        	STATUS <b>200</b> : <i>Operation successful</i>
+            STATUS <b>200</b> : <i>Operation successful</i>
 <br />
 <br />
 <ul>
 <li>
-<a href="#N200EF">DOI Representation (text/plain)</a>
+<a href="#N20123">DOI Representation (text/plain)</a>
 </li>
 </ul>
 </ul>
 <ul>
-        	STATUS <b>204</b> : <i>DOI is known to MDS, but is not minted (or not resolvable e.g. due to handle's latency)</i>
+            STATUS <b>204</b> : <i> the DOI is known to DataCite Metadata Store (MDS), but no metadata have been registered</i>
 <br />
 <br />
 <ul>
 <li>
-<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+<a href="#http://localhost:8182/mds#explainRepresentationID">Body representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
 </li>
 </ul>
 </ul>
 <ul>
-        	STATUS <b>400</b> : <i>if the DOI does not contain the institution suffix</i>
+            STATUS <b>400</b> : <i>Character or prefix not allowed in the DOI</i>
 <br />
 <br />
 <ul>
 <li>
-<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+<a href="#http://localhost:8182/mds#explainRepresentationID">Body representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
 </li>
 </ul>
 </ul>
 <ul>
-        	STATUS <b>404</b> : <i>DOI does not exist in DataCite</i>
+            STATUS <b>404</b> : <i>DOI does not exist in our database</i>
 <br />
 <br />
 <ul>
 <li>
-<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+<a href="#http://localhost:8182/mds#explainRepresentationID">Body representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
 </li>
 </ul>
 </ul>
 <ul>
-        	STATUS <b>500</b> : <i>server internal error, try later and if problem persists please contact us</i>
+            STATUS <b>500</b> : <i>Interface problem between Datacite and DOI-Server</i>
 <br />
 <br />
 <ul>
 <li>
-<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+<a href="#http://localhost:8182/mds#explainRepresentationID">Body representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
 </li>
 </ul>
 </ul>
@@ -375,12 +388,12 @@
 </div>
 </div>
 <div class="resource">
-<h3 id="N20136">/metadata</h3>
+<h3 id="N20182">/metadata</h3>
 <h6>Methods</h6>
 <div class="methods">
 <div class="method">
-<h4 id="N2013B">POST</h4>
-<p>This request stores new version of metadata. The request body must contain valid XML.</p>
+<h4 id="N20187">POST</h4>
+<p>This request stores new version of metadata. The request body must contain a valid XML.</p>
 <h6>request header parameters</h6>
 <table>
 <tr>
@@ -412,7 +425,7 @@
 <ul>
 <ul>
 <li>
-<a href="#http://localhost:8182/mds#metadataRepresentation">application/xml (<abbr title="{https://schema.datacite.org/meta/kernel-4.0/metadata.xsd} Resource">default:Resource</abbr>)</a>
+<a href="#http://localhost:8182/mds#metadataRepresentation">application/xml (<abbr title="{https://schema.datacite.org/meta/kernel-4-1/metadata.xsd} Resource">default:Resource</abbr>)</a>
 </li>
 </ul>
 </ul>
@@ -420,72 +433,82 @@
 <em>available response status and representations:</em>
 </p>
 <ul>
-        	STATUS <b>201</b> : <i>Operation successful</i>
+            STATUS <b>201</b> : <i>Operation successful</i>
 <br />
 <br />
 <ul>
 <li>
-<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+<a href="#http://localhost:8182/mds#explainRepresentationID">Body representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
 </li>
 </ul>
 </ul>
 <ul>
-        	STATUS <b>400</b> : <i>invalid XML, wrong prefix in the metadata</i>
+            STATUS <b>400</b> : <i>Failed to validate the user inputs parameters</i>
 <br />
 <br />
 <ul>
 <li>
-<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+<a href="#http://localhost:8182/mds#explainRepresentationID">Body representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
 </li>
 </ul>
 </ul>
 <ul>
-        	STATUS <b>401</b> : <i>this request needs authentication</i>
+            STATUS <b>500</b> : <i>Interface problem between Datacite and DOI-Server</i>
 <br />
 <br />
 <ul>
 <li>
-<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+<a href="#http://localhost:8182/mds#explainRepresentationID">Body representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
 </li>
 </ul>
 </ul>
 <ul>
-        	STATUS <b>403</b> : <i>Not allow to execute the request</i>
+            STATUS <b>1001</b> : <i>Cannot access to Datacite</i>
 <br />
 <br />
 <ul>
 <li>
-<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+<a href="#http://localhost:8182/mds#explainRepresentationID">Body representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
 </li>
 </ul>
 </ul>
 <ul>
-        	STATUS <b>500</b> : <i>DataCite Schema not available or problem when requesting DataCite</i>
+            STATUS <b>401</b> : <i>Fail to authorize the user</i>
 <br />
 <br />
 <ul>
 <li>
-<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+<a href="#http://localhost:8182/mds#explainRepresentationID">Body representation (text/plain)</a>
 </li>
 </ul>
 </ul>
 <ul>
-        	STATUS <b>1001</b> : <i>Network problem</i>
+            STATUS <b>403</b> : <i>Forbidden to use this role</i>
 <br />
 <br />
 <ul>
 <li>
-<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+<a href="#http://localhost:8182/mds#explainRepresentationID">Body representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
 </li>
 </ul>
 </ul>
 <ul>
-        	STATUS <b>409</b> : <i>Error when an user is associated to more than one role without setting selectedRole parameter</i>
+            STATUS <b>403</b> : <i>User is not allowed to make this operation</i>
 <br />
 <br />
 <ul>
 <li>
-<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+<a href="#http://localhost:8182/mds#explainRepresentationID">Body representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+</li>
+</ul>
+</ul>
+<ul>
+            STATUS <b>409</b> : <i>Error when an user is associated to more than one role without setting selectedRole parameter</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#http://localhost:8182/mds#explainRepresentationID">Body representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
 </li>
 </ul>
 </ul>
@@ -493,11 +516,11 @@
 </div>
 </div>
 <div class="resource">
-<h3 id="N201C1">/metadata/{doiName}</h3>
+<h3 id="N20247">/metadata/{doiName}</h3>
 <h6>Methods</h6>
 <div class="methods">
 <div class="method">
-<h4 id="N201C6">DELETE</h4>
+<h4 id="N2024C">DELETE</h4>
 <p>Delete a specific metadata</p>
 <h6>request template parameters</h6>
 <table>
@@ -554,68 +577,78 @@
 <em>available response status and representations:</em>
 </p>
 <ul>
-        	STATUS <b>200</b> : <i>Operation successful</i>
+            STATUS <b>200</b> : <i>Operation successful</i>
 <br />
 <br />
 <ul>
 <li>
-<a href="#http://localhost:8182/mds#metadataRepresentation">application/xml (<abbr title="{https://schema.datacite.org/meta/kernel-4.0/metadata.xsd} Resource">default:Resource</abbr>)</a>
+<a href="#http://localhost:8182/mds#metadataRepresentation">application/xml (<abbr title="{https://schema.datacite.org/meta/kernel-4-1/metadata.xsd} Resource">default:Resource</abbr>)</a>
 </li>
 </ul>
 </ul>
 <ul>
-        	STATUS <b>401</b> : <i>if no role is provided</i>
+            STATUS <b>404</b> : <i>DOI does not exist in our database</i>
 <br />
 <br />
 <ul>
 <li>
-<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+<a href="#http://localhost:8182/mds#explainRepresentationID">Body representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
 </li>
 </ul>
 </ul>
 <ul>
-        	STATUS <b>403</b> : <i>if the role is not allowed to use this feature or the role is not allow to delete the DOI</i>
+            STATUS <b>500</b> : <i>Interface problem between Datacite and DOI-Server</i>
 <br />
 <br />
 <ul>
 <li>
-<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+<a href="#http://localhost:8182/mds#explainRepresentationID">Body representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
 </li>
 </ul>
 </ul>
 <ul>
-        	STATUS <b>404</b> : <i>DOI does not exist in our database</i>
+            STATUS <b>401</b> : <i>Fail to authorize the user</i>
 <br />
 <br />
 <ul>
 <li>
-<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+<a href="#http://localhost:8182/mds#explainRepresentationID">Body representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
 </li>
 </ul>
 </ul>
 <ul>
-        	STATUS <b>409</b> : <i>Error when a user is associated to more than one role without setting selectedRole parameter</i>
+            STATUS <b>403</b> : <i>Forbidden to use this role</i>
 <br />
 <br />
 <ul>
 <li>
-<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+<a href="#http://localhost:8182/mds#explainRepresentationID">Body representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
 </li>
 </ul>
 </ul>
 <ul>
-        	STATUS <b>500</b> : <i>server internal error, try later and if problem persists please contact us</i>
+            STATUS <b>403</b> : <i>User is not allowed to make this operation</i>
 <br />
 <br />
 <ul>
 <li>
-<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+<a href="#http://localhost:8182/mds#explainRepresentationID">Body representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+</li>
+</ul>
+</ul>
+<ul>
+            STATUS <b>409</b> : <i>Error when an user is associated to more than one role without setting selectedRole parameter</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#http://localhost:8182/mds#explainRepresentationID">Body representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
 </li>
 </ul>
 </ul>
 </div>
 <div class="method">
-<h4 id="N2023C">GET</h4>
+<h4 id="N202F5">GET</h4>
 <p>Get a specific metadata</p>
 <h6>request template parameters</h6>
 <table>
@@ -647,42 +680,42 @@
 <em>available response status and representations:</em>
 </p>
 <ul>
-        	STATUS <b>200</b> : <i>Operation successful</i>
+            STATUS <b>200</b> : <i>Operation successful</i>
 <br />
 <br />
 <ul>
 <li>
-<a href="#http://localhost:8182/mds#metadataRepresentation">application/xml (<abbr title="{https://schema.datacite.org/meta/kernel-4.0/metadata.xsd} Resource">default:Resource</abbr>)</a>
+<a href="#http://localhost:8182/mds#metadataRepresentation">application/xml (<abbr title="{https://schema.datacite.org/meta/kernel-4-1/metadata.xsd} Resource">default:Resource</abbr>)</a>
 </li>
 </ul>
 </ul>
 <ul>
-        	STATUS <b>404</b> : <i>DOI does not exist in DataCite</i>
+            STATUS <b>404</b> : <i>DOI does not exist in our database</i>
 <br />
 <br />
 <ul>
 <li>
-<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+<a href="#http://localhost:8182/mds#explainRepresentationID">Body representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
 </li>
 </ul>
 </ul>
 <ul>
-        	STATUS <b>410</b> : <i>the requested dataset was marked inactive (using DELETE method)</i>
+            STATUS <b>410</b> : <i>the requested dataset was marked inactive (using DELETE method)</i>
 <br />
 <br />
 <ul>
 <li>
-<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+<a href="#http://localhost:8182/mds#explainRepresentationID">Body representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
 </li>
 </ul>
 </ul>
 <ul>
-        	STATUS <b>500</b> : <i>server internal error, try later and if problem persists please contact us</i>
+            STATUS <b>500</b> : <i>Interface problem between Datacite and DOI-Server</i>
 <br />
 <br />
 <ul>
 <li>
-<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+<a href="#http://localhost:8182/mds#explainRepresentationID">Body representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
 </li>
 </ul>
 </ul>
@@ -690,11 +723,11 @@
 </div>
 </div>
 <div class="resource">
-<h3 id="N2028C">/media/{doiName}</h3>
+<h3 id="N20357">/media/{doiName}</h3>
 <h6>Methods</h6>
 <div class="methods">
 <div class="method">
-<h4 id="N20291">GET</h4>
+<h4 id="N2035C">GET</h4>
 <p>Get a specific media for a given DOI</p>
 <h6>request template parameters</h6>
 <table>
@@ -726,38 +759,38 @@
 <em>available response status and representations:</em>
 </p>
 <ul>
-        	STATUS <b>200</b> : <i>Operation successful</i>
+            STATUS <b>200</b> : <i>Operation successful</i>
 <br />
 <br />
 <ul>
 <li>
-<a href="#N202AA">Media representation (text/plain)</a>
+<a href="#N20375">Media representation (text/plain)</a>
 </li>
 </ul>
 </ul>
 <ul>
-        	STATUS <b>404</b> : <i>DOI does not exist in our database</i>
+            STATUS <b>404</b> : <i>DOI does not exist in our database</i>
 <br />
 <br />
 <ul>
 <li>
-<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+<a href="#http://localhost:8182/mds#explainRepresentationID">Body representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
 </li>
 </ul>
 </ul>
 <ul>
-        	STATUS <b>500</b> : <i>server internal error, try later and if problem persists please contact us</i>
+            STATUS <b>500</b> : <i>Interface problem between Datacite and DOI-Server</i>
 <br />
 <br />
 <ul>
 <li>
-<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+<a href="#http://localhost:8182/mds#explainRepresentationID">Body representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
 </li>
 </ul>
 </ul>
 </div>
 <div class="method">
-<h4 id="N202D2">POST</h4>
+<h4 id="N203A9">POST</h4>
 <p>POST will add/update media type/urls pairs to a DOI. Standard domain restrictions check will be performed.</p>
 <h6>request header parameters</h6>
 <table>
@@ -790,7 +823,7 @@
 <ul>
 <ul>
 <li>
-<a href="#N202E3">application/x-www-form-urlencoded<abbr title="{http://wadl.dev.java.net/2009/02} " />
+<a href="#N203BA">application/x-www-form-urlencoded<abbr title="{http://wadl.dev.java.net/2009/02} " />
 </a>
 </li>
 </ul>
@@ -799,62 +832,72 @@
 <em>available response status and representations:</em>
 </p>
 <ul>
-        	STATUS <b>200</b> : <i>Operation successful</i>
+            STATUS <b>200</b> : <i>Operation successful</i>
 <br />
 <br />
 <ul>
 <li>
-<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+<a href="#http://localhost:8182/mds#explainRepresentationID">Body representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
 </li>
 </ul>
 </ul>
 <ul>
-        	STATUS <b>400</b> : <i>doi not provided or one or more of the specified mime-types or urls are invalid (e.g. non supported mime-type, not allowed url domain, etc.)</i>
+            STATUS <b>400</b> : <i>DOI not provided or one or more of the specified mime-types or urls are invalid (e.g. non supported mime-type, not allowed url domain, etc.)</i>
 <br />
 <br />
 <ul>
 <li>
-<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+<a href="#http://localhost:8182/mds#explainRepresentationID">Body representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
 </li>
 </ul>
 </ul>
 <ul>
-        	STATUS <b>401</b> : <i>if no role is provided</i>
+            STATUS <b>500</b> : <i>Interface problem between Datacite and DOI-Server</i>
 <br />
 <br />
 <ul>
 <li>
-<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+<a href="#http://localhost:8182/mds#explainRepresentationID">Body representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
 </li>
 </ul>
 </ul>
 <ul>
-        	STATUS <b>403</b> : <i>if the role is not allowed to use this feature or the user is not allow to create media</i>
+            STATUS <b>401</b> : <i>Fail to authorize the user</i>
 <br />
 <br />
 <ul>
 <li>
-<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+<a href="#http://localhost:8182/mds#explainRepresentationID">Body representation (text/plain)</a>
 </li>
 </ul>
 </ul>
 <ul>
-        	STATUS <b>409</b> : <i>if a user is associated to more than one role without setting selectedRole parameter</i>
+            STATUS <b>403</b> : <i>Forbidden to use this role</i>
 <br />
 <br />
 <ul>
 <li>
-<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+<a href="#http://localhost:8182/mds#explainRepresentationID">Body representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
 </li>
 </ul>
 </ul>
 <ul>
-        	STATUS <b>500</b> : <i>server internal error, try later and if problem persists please contact us</i>
+            STATUS <b>403</b> : <i>User is not allowed to make this operation</i>
 <br />
 <br />
 <ul>
 <li>
-<a href="#http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+<a href="#http://localhost:8182/mds#explainRepresentationID">Body representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
+</li>
+</ul>
+</ul>
+<ul>
+            STATUS <b>409</b> : <i>Error when an user is associated to more than one role without setting selectedRole parameter</i>
+<br />
+<br />
+<ul>
+<li>
+<a href="#http://localhost:8182/mds#explainRepresentationID">Body representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</a>
 </li>
 </ul>
 </ul>
@@ -941,9 +984,21 @@
 </div>
 <h3 id="http://localhost:8182/mds#explainRepresentation">Explain representation (text/plain)</h3>
 <p>short explanation of status code e.g. CREATED, HANDLE_ALREADY_EXISTS etc</p>
-<h3 id="N200EF">DOI Representation (text/plain)</h3>
+<h3 id="http://localhost:8182/mds#explainRepresentationID">Body representation (text/plain - <abbr title="{http://wadl.dev.java.net/2009/02} " />)</h3>
+<p>short explanation of status code</p>
+<p>short explanation of status code</p>
+<p>short explanation of status code</p>
+<div class="representation">
+<h6>XML Schema</h6>
+<p>
+<em>Source: <a href="" />
+</em>
+</p>
+<pre />
+</div>
+<h3 id="N20123">DOI Representation (text/plain)</h3>
 <p>This request returns an URL associated with a given DOI.</p>
-<h3 id="http://localhost:8182/mds#metadataRepresentation">application/xml (<abbr title="{https://schema.datacite.org/meta/kernel-4.0/metadata.xsd} Resource">default:Resource</abbr>)</h3>
+<h3 id="http://localhost:8182/mds#metadataRepresentation">application/xml (<abbr title="{https://schema.datacite.org/meta/kernel-4-1/metadata.xsd} Resource">default:Resource</abbr>)</h3>
 <p>DataCite metadata</p>
 <div class="representation">
 <h6>XML Schema</h6>
@@ -978,9 +1033,9 @@
 </tr>
 </table>
 </div>
-<h3 id="N202AA">Media representation (text/plain)</h3>
+<h3 id="N20375">Media representation (text/plain)</h3>
 <p>This request returns a key-value list of media types/urls for a given DOI name</p>
-<h3 id="N202E3">application/x-www-form-urlencoded<abbr title="{http://wadl.dev.java.net/2009/02} " />
+<h3 id="N203BA">application/x-www-form-urlencoded<abbr title="{http://wadl.dev.java.net/2009/02} " />
 </h3>
 <div class="representation">
 <h6> plain parameters</h6>

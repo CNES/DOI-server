@@ -16,35 +16,43 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package fr.cnes.doi.ldap.service;
+package fr.cnes.doi.db;
 
 import java.util.List;
 
-import fr.cnes.doi.exception.LDAPAccessException;
-import fr.cnes.doi.ldap.model.LDAPUser;
+import fr.cnes.doi.exception.AuthenticationAccessException;
+import fr.cnes.doi.db.model.AuthSystemUser;
 
 /**
- * This interfaces handles LDAP operations.
+ * This interfaces handles authentications operations.
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-public interface ILDAPAccessService {
+public interface IAuthenticationDBHelper {
 
     /**
-     * Returns the LDAP members having doiserver as group.
+     * Returns the authentication members.
      *
-     * @return the LDAP members
-     * @throws LDAPAccessException When a problem occurs
+     * @return the authentication members
+     * @throws AuthenticationAccessException When a problem occurs
      */
-    public List<LDAPUser> getDOIProjectMembers() throws LDAPAccessException;
+    public List<AuthSystemUser> getDOIProjectMembers() throws AuthenticationAccessException;
 
     /**
-     * Authenticate an user via the LDAP.
+     * Authenticates an user via the authentication service.
      *
      * @param login login
      * @param password password
      * @return True when the user is authenticated otherwise False.
      */
     public boolean authenticateUser(final String login, final String password);
+
+    /**
+     * Returns the user from the authentication access, which will be the administrator of DOI
+     * server.
+     *
+     * @return the administrator
+     */
+    public String getDOIAdmin();
 
 }

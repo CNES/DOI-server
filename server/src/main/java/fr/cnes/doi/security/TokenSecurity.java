@@ -19,13 +19,14 @@
 package fr.cnes.doi.security;
 
 import fr.cnes.doi.db.AbstractTokenDBHelper;
+import fr.cnes.doi.db.model.DOIProject;
+import fr.cnes.doi.exception.DOIDbException;
 import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.exception.TokenSecurityException;
 import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.utils.UniqueProjectName;
-import fr.cnes.doi.utils.Utils;
 import fr.cnes.doi.utils.spec.Requirement;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -39,10 +40,12 @@ import io.jsonwebtoken.impl.TextCodec;
 import io.jsonwebtoken.impl.crypto.MacProvider;
 import java.security.Key;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.restlet.data.Status;
@@ -127,7 +130,6 @@ public final class TokenSecurity {
         LOG.traceEntry();
         final String token = DoiSettings.getInstance().getString(Consts.TOKEN_KEY);
         this.tokenKey = (token == null) ? DEFAULT_TOKEN_KEY : token;
-        TokenSecurity.TOKEN_DB.setConfiguration(null);
         LOG.traceExit();
     }
 
@@ -146,16 +148,21 @@ public final class TokenSecurity {
             final TokenSecurity.TimeUnit timeUnit,
             final int amount) throws TokenSecurityException {
         LOG.traceEntry("Parameters : {}, {}, {} and {}", userID, projectID, timeUnit, amount);
-        final Map<String, Integer> projects = UniqueProjectName.getInstance().getProjects();
-        final Set<String> projectNameColl = Utils.getKeysByValue(projects, projectID);
-        if (projectNameColl.isEmpty()) {
+        List<DOIProject> projects;
+        try {
+            projects = UniqueProjectName.getInstance().getProjects();
+        } catch (DOIDbException ex) {
+            projects = new ArrayList<>();
+        }
+        final Map<Integer, String> result = projects.stream().collect(
+                Collectors.toMap(DOIProject::getSuffix, DOIProject::getProjectname));
+        final String projectName = result.get(projectID);
+        if (projectName.isEmpty()) {
             throw LOG.throwing(new TokenSecurityException(
                     Status.CLIENT_ERROR_BAD_REQUEST,
                     "No register " + PROJECT_ID + ", please create one")
             );
         }
-        final String projectName = projectNameColl.iterator().next();
-
         final Date now = Date.from(Instant.now());
         final Date expirationTime = computeExpirationDate(now, timeUnit.getTimeUnit(), amount);
 
@@ -258,7 +265,7 @@ public final class TokenSecurity {
      *
      * @return the token DB
      */
-    public AbstractTokenDBHelper getTOKEN_DB() {
+    public AbstractTokenDBHelper getTokenDB() {
         LOG.traceEntry();
         return LOG.traceExit(TokenSecurity.TOKEN_DB);
     }

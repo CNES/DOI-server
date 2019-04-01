@@ -16,7 +16,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
+package fr.cnes.doi.plugin;
+
+import fr.cnes.doi.utils.spec.Requirement;
+import fr.cnes.doi.db.IAuthenticationDBHelper;
+
 /**
- * Provides LDAP user data model.
+ *
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-package fr.cnes.doi.ldap.model;
+@Requirement(reqId = Requirement.DOI_ARCHI_030, reqName = Requirement.DOI_ARCHI_030_NAME)
+public abstract class AbstractAuthenticationPluginHelper
+        implements IAuthenticationDBHelper, PluginMetadata, PluginConfiguration {
+
+    /**
+     * Empty constructor.
+     */
+    protected AbstractAuthenticationPluginHelper() {
+    }
+
+    /**
+     * Sets the configuration.
+     *
+     * @param configuration configuration parameters
+     */
+    public abstract void setConfiguration(final Object configuration);
+
+}

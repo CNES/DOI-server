@@ -32,6 +32,7 @@ import fr.cnes.doi.settings.DoiSettings;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+//import static java.lang.Thread.sleep;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -122,6 +123,7 @@ public class AdminApplicationTest {
      */
     @Test
     public void generateAPIWadl() throws Exception {
+        //sleep(1000000L);
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);        
         ClientResource client = new ClientResource("http://localhost:"+port+"/?media=text/html"); 
 	client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");              

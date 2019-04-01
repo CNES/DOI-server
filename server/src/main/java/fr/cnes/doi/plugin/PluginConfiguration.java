@@ -16,7 +16,32 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
+package fr.cnes.doi.plugin;
+
 /**
- * Interfaces to handle LDAP.
+ * Provides validation for plugin configuration.
+ *
+ * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-package fr.cnes.doi.ldap.service;
+public interface PluginConfiguration {
+
+    /**
+     * Validates the parameters in the configuration file.
+     *
+     * @return the error messages.
+     */
+    public StringBuilder validate();
+
+    /**
+     * Checks if the plugin is already configured
+     *
+     * @return True when the plugin is already configured otherwise false
+     */
+    public boolean isConfigured();
+
+    /**
+     * Release the plugin.
+     */
+    public void release();
+
+}

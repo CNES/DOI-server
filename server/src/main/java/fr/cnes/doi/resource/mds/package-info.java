@@ -33,13 +33,16 @@
  * <li>the {@link fr.cnes.doi.resource.mds.DoisResource} is routed by the URI
  * {@value fr.cnes.doi.application.DoiMdsApplication#DOI_URI}</li>
  * <li>the {@link fr.cnes.doi.resource.mds.DoiResource} is routed by the URI
- * {@value fr.cnes.doi.application.DoiMdsApplication#DOI_URI}{@value fr.cnes.doi.application.DoiMdsApplication#DOI_NAME_URI}</li>
+ * {@value fr.cnes.doi.application.DoiMdsApplication#DOI_URI}
+ * {@value fr.cnes.doi.application.DoiMdsApplication#DOI_NAME_URI}</li>
  * <li>the {@link fr.cnes.doi.resource.mds.MetadatasResource} is routed by the URI
  * {@value fr.cnes.doi.application.DoiMdsApplication#METADATAS_URI}</li>
  * <li>the {@link fr.cnes.doi.resource.mds.MetadataResource} is routed by the URI
- * {@value fr.cnes.doi.application.DoiMdsApplication#METADATAS_URI}{@value fr.cnes.doi.application.DoiMdsApplication#DOI_NAME_URI}</li>
+ * {@value fr.cnes.doi.application.DoiMdsApplication#METADATAS_URI}
+ * {@value fr.cnes.doi.application.DoiMdsApplication#DOI_NAME_URI}</li>
  * <li>the {@link fr.cnes.doi.resource.mds.MediaResource} is routed by the URI
- * {@value fr.cnes.doi.application.DoiMdsApplication#MEDIA_URI}{@value fr.cnes.doi.application.DoiMdsApplication#DOI_NAME_URI}</li>
+ * {@value fr.cnes.doi.application.DoiMdsApplication#MEDIA_URI}
+ * {@value fr.cnes.doi.application.DoiMdsApplication#DOI_NAME_URI}</li>
  * </ul>
  *
  * Some of the above resources are protected by several mechanism. This mechanism is defined as a
@@ -47,11 +50,13 @@
  * <ul>
  * <li>Request: --&gt;
  * {@link fr.cnes.doi.application.DoiMdsApplication#createAuthenticator Basic auth}(optional)
- * --&gt;{@link fr.cnes.doi.application.DoiMdsApplication#createTokenAuthenticator Token auth}(optional)
+ * --&gt;{@link fr.cnes.doi.application.DoiMdsApplication#createTokenAuthenticator Token auth}
+ * (optional)
  * --&gt;{@link fr.cnes.doi.application.DoiMdsApplication#createMethodAuthorizer Method auth}
  * --&gt;{@link fr.cnes.doi.application.DoiMdsApplication#createRouter router}</li>
  * <li>Response: &lt;--
- * {@link fr.cnes.doi.application.DoiMdsApplication.SecurityPostProcessingFilter SecurityPostProcessing}
+ * {@link fr.cnes.doi.application.DoiMdsApplication.SecurityPostProcessingFilter 
+ * SecurityPostProcessing}
  * &lt;---</li>
  * </ul>
  *

@@ -41,12 +41,12 @@ import org.restlet.util.Series;
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-public class HttpClientHelper extends org.restlet.engine.connector.HttpClientHelper {
+public class HttpDOIClientHelper extends org.restlet.engine.connector.HttpClientHelper {
 
     /**
      * Logger.
      */
-    private static final Logger LOG = LogManager.getLogger(HttpClientHelper.class.getName());
+    private static final Logger LOG = LogManager.getLogger(HttpDOIClientHelper.class.getName());
 
     /**
      * Http client.
@@ -58,7 +58,7 @@ public class HttpClientHelper extends org.restlet.engine.connector.HttpClientHel
      *
      * @param client client
      */
-    public HttpClientHelper(final Client client) {
+    public HttpDOIClientHelper(final Client client) {
         super(client);
         getProtocols().add(Protocol.HTTP);
         getProtocols().add(Protocol.HTTPS);
@@ -160,6 +160,25 @@ public class HttpClientHelper extends org.restlet.engine.connector.HttpClientHel
     }
 
     /**
+     * Delay between two retries.
+     *
+     * @return max retry the delay between two retries.
+     */
+    public long getRetryDelay() {
+        return Long.parseLong(getHelpedParameters().getFirstValue(HttpClient.RETRY_DELAY, "1000"));
+    }
+
+    /**
+     * Get Max retry.
+     *
+     * @return max retry
+     */
+    public int getMaxRedirects() {
+        return Integer.
+                parseInt(getHelpedParameters().getFirstValue(HttpClient.MAX_REDIRECTION, "5"));
+    }
+
+    /**
      * Returns true if the SSL is disabled otherwise false.
      *
      * @return true if the SSL is disabled otherwise false
@@ -209,6 +228,8 @@ public class HttpClientHelper extends org.restlet.engine.connector.HttpClientHel
         config.put(HttpClient.CONNECTION_MAX_TOTAL, String.valueOf(this.getMaxTotalConnections()));
         config.put(HttpClient.CONNECTION_TIME_TO_LIVE_MS, String.valueOf(this.getIdleTimeout()));
         config.put(HttpClient.MAX_RETRY, String.valueOf(this.getRetry()));
+        config.put(HttpClient.RETRY_DELAY, String.valueOf(this.getRetryDelay()));
+        config.put(HttpClient.MAX_REDIRECTION, String.valueOf(this.getMaxRedirects()));
         config.computeIfAbsent(HttpClient.KEYSTORE_TYPE, v -> this.getKeyStoreType());
         config.computeIfAbsent(HttpClient.KEYSTORE_PATH, v -> this.getKeyStorePath());
         config.computeIfAbsent(HttpClient.KEYSTORE_PWD, v -> this.getKeyStorePwd());
@@ -228,7 +249,7 @@ public class HttpClientHelper extends org.restlet.engine.connector.HttpClientHel
      * {@inheritDoc}
      */
     @Override
-    public synchronized void start() throws Exception {        
+    public synchronized void start() throws Exception {
         final Series<Parameter> parameters = getHelpedParameters();
         configure(parameters);
         LOG.info("Starting the internal HTTP client");

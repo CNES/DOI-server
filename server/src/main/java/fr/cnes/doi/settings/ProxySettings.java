@@ -97,7 +97,7 @@ public final class ProxySettings {
         init();
         LOG.traceExit();
     }
-    
+
     /**
      * Access to unique INSTANCE of Settings
      *
@@ -106,7 +106,7 @@ public final class ProxySettings {
     public static ProxySettings getInstance() {
         LOG.traceEntry();
         return LOG.traceExit(ProxySettingsHolder.INSTANCE);
-    }    
+    }
 
     /**
      * Init the proxy setting
@@ -240,7 +240,7 @@ public final class ProxySettings {
      */
     public void configureProxy() {
         final Type type = Type.valueOf(this.getProxyType());
-        LOG.info("Starting with proxy : " + this.proxySet);
+        LOG.info("Starting with proxy : {}", this.proxySet);
         if (this.proxySet) {
             switch (type) {
                 case PROXY_BASIC:

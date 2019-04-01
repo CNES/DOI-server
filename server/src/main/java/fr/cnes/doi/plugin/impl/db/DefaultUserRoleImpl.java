@@ -22,13 +22,22 @@ import fr.cnes.doi.db.MyMemoryRealm;
 import fr.cnes.doi.db.model.DOIUser;
 import fr.cnes.doi.exception.DOIDbException;
 import fr.cnes.doi.plugin.AbstractUserRolePluginHelper;
+import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_MAX_ACTIVE_CONNECTIONS;
+import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_MAX_IDLE_CONNECTIONS;
+import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_MIN_IDLE_CONNECTIONS;
+import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_PWD;
+import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_URL;
+import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_USER;
 import fr.cnes.doi.plugin.impl.db.service.DOIDbDataAccessService;
 import fr.cnes.doi.plugin.impl.db.service.DatabaseSingleton;
 import fr.cnes.doi.settings.EmailSettings;
+import fr.cnes.doi.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,7 +51,7 @@ import org.restlet.security.User;
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
+public final class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
 
     /**
      * Plugin description.
@@ -78,7 +87,20 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
      */
     private final MyMemoryRealm REALM = getRealm();
 
-    private final DOIDbDataAccessService das = DatabaseSingleton.getInstance().getDatabaseAccess();
+    /**
+     * Database access.
+     */
+    private DOIDbDataAccessService das;
+
+    /**
+     * Configuration file.
+     */
+    private Map<String, String> conf;
+
+    /**
+     * Status of the plugin configuration.
+     */
+    private boolean isConfigured = false;
 
     /**
      * Default constructor of the authentication plugin.
@@ -92,19 +114,40 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
      */
     @Override
     public void setConfiguration(final Object configuration) {
+        this.conf = (Map<String, String>) configuration;
+        final String dbUrl = this.conf.get(DB_URL);
+        final String dbUser = this.conf.get(DB_USER);
+        final String dbPwd = this.conf.get(DB_PWD);
+        final Map<String, Integer> options = new HashMap<>();
+        if (this.conf.containsKey(DB_MIN_IDLE_CONNECTIONS)) {
+            options.put(DB_MIN_IDLE_CONNECTIONS,
+                    Integer.valueOf(this.conf.get(DB_MIN_IDLE_CONNECTIONS)));
+        }
+        if (this.conf.containsKey(DB_MAX_IDLE_CONNECTIONS)) {
+            options.put(DB_MAX_IDLE_CONNECTIONS,
+                    Integer.valueOf(this.conf.get(DB_MAX_IDLE_CONNECTIONS)));
+        }
+        if (this.conf.containsKey(DB_MAX_ACTIVE_CONNECTIONS)) {
+            options.put(DB_MAX_ACTIVE_CONNECTIONS,
+                    Integer.valueOf(this.conf.get(DB_MAX_ACTIVE_CONNECTIONS)));
+        }
+        LOG.info("[CONF] Plugin database URL : {}", dbUrl);
+        LOG.info("[CONF] Plugin database user : {}", dbUser);
+        LOG.info("[CONF] Plugin database password : {}", Utils.transformPasswordToStars(dbPwd));
+        LOG.info("[CONF] Plugin options : {}", options);
+
+        DatabaseSingleton.getInstance().init(dbUrl, dbUser, dbPwd, options);
+        this.das = DatabaseSingleton.getInstance().getDatabaseAccess();
+        this.isConfigured = true;
     }
 
     /**
      * {@inheritDoc }
      */
     @Override
-    public List<DOIUser> getUsers() {
+    public List<DOIUser> getUsers() throws DOIDbException {
         final List<DOIUser> listUser = new ArrayList<>();
-        try {
-            listUser.addAll(das.getAllDOIusers());
-        } catch (DOIDbException e) {
-            LOG.fatal("An error occured while trying to get all DOI users", e);
-        }
+        listUser.addAll(das.getAllDOIusers());
         return Collections.unmodifiableList(listUser);
     }
 
@@ -112,14 +155,9 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
      * {@inheritDoc }
      */
     @Override
-    public List<DOIUser> getUsersFromRole(final int roleName) {
+    public List<DOIUser> getUsersFromRole(final int roleName) throws DOIDbException {
         final List<DOIUser> listUser = new ArrayList<>();
-        try {
-            listUser.addAll(das.getAllDOIUsersForProject(roleName));
-        } catch (DOIDbException e) {
-            LOG.fatal("An error occured while trying to get all DOI users from project " + roleName,
-                    e);
-        }
+        listUser.addAll(das.getAllDOIUsersForProject(roleName));
         return Collections.unmodifiableList(listUser);
     }
 
@@ -174,11 +212,12 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
 
     /**
      * Sets the user to the admin group.
+     *
      * @param user username
-     * @throws DOIDbException - if a Database error occurs 
+     * @throws DOIDbException - if a Database error occurs
      */
     private void setUserToAdminGroupInDB(final String user) throws DOIDbException {
-        das.setAdmin(user);        
+        das.setAdmin(user);
         LOG.info("The user {} is added to admin group.", user);
         EmailSettings.getInstance().sendMessage("[DOI] Admin group",
                 "The user " + user + " has been added to the administror group.");
@@ -264,42 +303,61 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
      * {@inheritDoc }
      */
     @Override
-    public void addDOIUser(final String username, final Boolean admin) throws DOIDbException {
-        this.das.addDOIUser(username, admin);
-        if (REALM.findUser(username) == null) {
-            REALM.getUsers().add(new User(username));
+    public boolean addDOIUser(final String username, final Boolean admin) {
+        boolean isAdded;
+        try {
+            this.das.addDOIUser(username, admin);
+            if (REALM.findUser(username) == null) {
+                REALM.getUsers().add(new User(username));
+            }
+            isAdded = true;
+            LOG.info("The user {} is added to database.", username);
+        } catch (DOIDbException ex) {
+            isAdded = false;
+            LOG.fatal("Cannot add the user {}", username);
         }
-        LOG.info("The user {} is added to database.", username);
+        return isAdded;
     }
 
     /**
      * {@inheritDoc }
      */
     @Override
-    public void addDOIUser(final String username, final Boolean admin, final String email)
-            throws DOIDbException {
-        this.das.addDOIUser(username, admin, email);
-        if (REALM.findUser(username) == null) {
-            REALM.getUsers().add(new User(username));
+    public boolean addDOIUser(final String username, final Boolean admin, final String email) {
+        boolean isAdded;
+        try {
+            this.das.addDOIUser(username, admin, email);
+            if (REALM.findUser(username) == null) {
+                REALM.getUsers().add(new User(username));
+            }
+            isAdded = true;
+            LOG.info("The user {} is added to database.", username);
+        } catch (DOIDbException ex) {
+            isAdded = false;
+            LOG.fatal("Cannot add the user {}", username);
         }
-        LOG.info("The user {} is added to database.", username);
+        return isAdded;
     }
 
     /**
      * {@inheritDoc }
      */
     @Override
-    public void removeDOIUser(final String username) {
+    public boolean removeDOIUser(final String username) {
+        boolean isRemoved;
         try {
             this.das.removeDOIUser(username);
             final User userFromRealm = REALM.findUser(username);
             if (userFromRealm != null) {
                 REALM.getUsers().remove(userFromRealm);
             }
+            isRemoved = true;
             LOG.info("The user {} is removed from database.", username);
         } catch (DOIDbException ex) {
+            isRemoved = false;
             LOG.fatal("Cannot remove user" + username, ex);
         }
+        return isRemoved;
     }
 
     /**
@@ -348,5 +406,46 @@ public class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
     @Override
     public String getLicense() {
         return LICENSE;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public StringBuilder validate() {
+        final StringBuilder validation = new StringBuilder();
+        final String message = "Sets ";
+        if (!this.conf.containsKey(DB_URL)) {
+            validation.append(message).append(DB_URL).append("\n");
+        }
+        return validation;
+    }
+
+    /**
+     * Checks if the keyword is a password.
+     *
+     * @param key keyword to check
+     * @return True when the keyword is a password otherwise False
+     */
+    public static boolean isPassword(final String key) {
+        return DB_PWD.equals(key);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void release() {
+        this.conf = null;
+        try {
+            this.das.close();
+        } catch (DOIDbException ex) {
+        }
+        this.isConfigured = false;
+    }
+
+    @Override
+    public boolean isConfigured() {
+        return this.isConfigured;
     }
 }

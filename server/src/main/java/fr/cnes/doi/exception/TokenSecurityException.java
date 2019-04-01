@@ -26,6 +26,9 @@ import org.restlet.data.Status;
  */
 public class TokenSecurityException extends Exception {
 
+    /**
+     * serialVersionUID.
+     */
     private static final long serialVersionUID = 7133144912794016901L;
 
     /**

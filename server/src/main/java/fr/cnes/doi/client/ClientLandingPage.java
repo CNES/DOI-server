@@ -18,11 +18,18 @@
  */
 package fr.cnes.doi.client;
 
-import java.util.ArrayList;
+import fr.cnes.httpclient.HttpClient;
+import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import org.restlet.Client;
+import org.restlet.data.Parameter;
 import org.restlet.data.Status;
+import org.restlet.representation.Representation;
 import org.restlet.resource.ResourceException;
+import org.restlet.util.Series;
 
 /**
  * Checks the status of the landing page.
@@ -39,7 +46,7 @@ public class ClientLandingPage extends BaseClient {
     /**
      * List of offline landing pages.
      */
-    private final List<String> errors = new ArrayList<>();
+    private final Map<String, Status> errors = new HashMap<>();
 
     /**
      * Constructor
@@ -58,24 +65,39 @@ public class ClientLandingPage extends BaseClient {
      */
     //TODO : check with Head before. If not implemented, check with get
     private void checkDoi(final List<String> dois) {
-        this.getClient().setFollowingRedirects(true);
+        this.getLog().traceEntry("Parameters\n\tdois : {}", dois);
+        this.getClient().setMaxRedirects(5);
         this.getClient().setLoggable(true);
+        final Client cl = (Client) this.getClient().getNext();
+        final Series<Parameter> parameters = cl.getContext().getParameters();
+        parameters.add(HttpClient.MAX_REDIRECTION, String.
+                valueOf(this.getClient().getMaxRedirects()));
+        this.getLog().info("{} landing pages to check.", dois.size());
         for (final String doi : dois) {
             this.getClient().setReference(BASE_URI);
             this.getClient().addSegment(doi);
+            this.getLog().info("Checking landing page {}", doi);
             try {
-                this.getClient().get();
+                final Representation rep = this.getClient().get();
+                rep.exhaust();
                 final Status status = this.getClient().getStatus();
                 if (status.isError()) {
-                    this.errors.add(doi);
+                    this.errors.put(doi, status);
+                    this.getLog().error("Error for landing page {}", doi);
+                } else {
+                    this.getLog().info("OK");
                 }
             } catch (ResourceException ex) {
-                this.errors.add(doi);
-                //ClientLandingPage.getLOGGER().fine(ex.getMessage());
+                this.getLog().error("Checking landing pages", ex);
+                this.errors.put(doi, ex.getStatus());
+            } catch (IOException ex) {
+                this.getLog().error("Checking landing pages", ex);
+                this.errors.put(doi, new Status(Status.SERVER_ERROR_INTERNAL, ex));
             } finally {
                 this.getClient().release();
             }
         }
+        this.getLog().traceExit();
     }
 
     /**
@@ -84,7 +106,8 @@ public class ClientLandingPage extends BaseClient {
      * @return true when there is no error otherwise False
      */
     public boolean isSuccess() {
-        return this.errors.isEmpty();
+        this.getLog().traceEntry();
+        return this.getLog().traceExit(this.errors.isEmpty());
     }
 
     /**
@@ -101,8 +124,9 @@ public class ClientLandingPage extends BaseClient {
      *
      * @return the error
      */
-    public List<String> getErrors() {
-        return Collections.unmodifiableList(this.errors);
+    public Map<String, Status> getErrors() {
+        this.getLog().traceEntry();
+        return this.getLog().traceExit(Collections.unmodifiableMap(this.errors));
     }
 
 }

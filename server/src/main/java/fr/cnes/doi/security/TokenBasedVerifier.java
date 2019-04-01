@@ -31,7 +31,6 @@ import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.data.ChallengeResponse;
 import org.restlet.data.ChallengeScheme;
-import org.restlet.security.User;
 import org.restlet.security.Verifier;
 
 /**
@@ -79,7 +78,7 @@ public class TokenBasedVerifier implements Verifier {
             result = Verifier.RESULT_MISSING;
         } else if (challResponse.getScheme().equals(ChallengeScheme.HTTP_BASIC)) {
             result = Verifier.RESULT_MISSING;
-        } else {            
+        } else {
             result = processAuthentication(request, challResponse);
         }
         return LOG.traceExit(result);

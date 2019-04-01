@@ -20,7 +20,6 @@ package fr.cnes.doi.plugin.impl.db;
 
 import fr.cnes.doi.plugin.impl.db.service.DatabaseSingleton;
 import fr.cnes.doi.plugin.impl.db.service.DOIDbDataAccessService;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,14 +31,23 @@ import fr.cnes.doi.exception.DOIDbException;
 import fr.cnes.doi.db.model.DOIProject;
 import fr.cnes.doi.plugin.AbstractProjectSuffixPluginHelper;
 import fr.cnes.doi.db.model.DOIUser;
+import fr.cnes.doi.exception.DoiRuntimeException;
+import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_MAX_ACTIVE_CONNECTIONS;
+import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_MAX_IDLE_CONNECTIONS;
+import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_MIN_IDLE_CONNECTIONS;
+import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_PWD;
+import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_URL;
+import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_USER;
+import fr.cnes.doi.utils.Utils;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /**
  * Default implementation of the project suffix database.
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper {
+public final class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper {
 
     /**
      * Logger.
@@ -73,7 +81,17 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
     /**
      * DOI database access.
      */
-    private final DOIDbDataAccessService das = DatabaseSingleton.getInstance().getDatabaseAccess();
+    private DOIDbDataAccessService das;
+
+    /**
+     * Configuration file.
+     */
+    private Map<String, String> conf;
+
+    /**
+     * Status of the plugin configuration.
+     */
+    private boolean isConfigured = false;
 
     /**
      * Default constructor of the project suffix database
@@ -87,6 +105,31 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
      */
     @Override
     public void setConfiguration(final Object configuration) {
+        this.conf = (Map<String, String>) configuration;
+        final String dbUrl = this.conf.get(DB_URL);
+        final String dbUser = this.conf.get(DB_USER);
+        final String dbPwd = this.conf.get(DB_PWD);
+        final Map<String, Integer> options = new HashMap<>();
+        if (this.conf.containsKey(DB_MIN_IDLE_CONNECTIONS)) {
+            options.put(DB_MIN_IDLE_CONNECTIONS,
+                    Integer.valueOf(this.conf.get(DB_MIN_IDLE_CONNECTIONS)));
+        }
+        if (this.conf.containsKey(DB_MAX_IDLE_CONNECTIONS)) {
+            options.put(DB_MAX_IDLE_CONNECTIONS,
+                    Integer.valueOf(this.conf.get(DB_MAX_IDLE_CONNECTIONS)));
+        }
+        if (this.conf.containsKey(DB_MAX_ACTIVE_CONNECTIONS)) {
+            options.put(DB_MAX_ACTIVE_CONNECTIONS,
+                    Integer.valueOf(this.conf.get(DB_MAX_ACTIVE_CONNECTIONS)));
+        }
+        LOG.info("[CONF] Plugin database URL : {}", dbUrl);
+        LOG.info("[CONF] Plugin database user : {}", dbUser);
+        LOG.info("[CONF] Plugin database password : {}", Utils.transformPasswordToStars(dbPwd));
+        LOG.info("[CONF] Plugin options : {}", options);
+
+        DatabaseSingleton.getInstance().init(dbUrl, dbUser, dbPwd, options);
+        this.das = DatabaseSingleton.getInstance().getDatabaseAccess();
+        this.isConfigured = true;
     }
 
     /**
@@ -132,12 +175,19 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
      */
     @Override
     public boolean isExistID(final int projectID) {
-        final Map<String, Integer> map = getProjects();
-        final boolean isExist;
-        if (map.isEmpty()) {
+        boolean isExist;
+        try {
+            final List<DOIProject> projects = getProjects();
+            if (projects.isEmpty()) {
+                isExist = false;
+            } else {
+                final Map<String, Integer> map = projects.stream().collect(
+                        Collectors.toMap(DOIProject::getProjectname, DOIProject::getSuffix));
+                isExist = map.containsValue(projectID);
+            }
+        } catch (DOIDbException ex) {
             isExist = false;
-        } else {
-            isExist = map.containsValue(projectID);
+            LOG.fatal(ex);
         }
         return isExist;
     }
@@ -147,12 +197,20 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
      */
     @Override
     public boolean isExistProjectName(final String projectName) {
-        final Map<String, Integer> map = getProjects();
-        final boolean isExist;
-        if (map.isEmpty()) {
+        boolean isExist;
+        try {
+            final List<DOIProject> projects = getProjects();
+
+            if (projects.isEmpty()) {
+                isExist = false;
+            } else {
+                final Map<String, Integer> map = projects.stream().collect(
+                        Collectors.toMap(DOIProject::getProjectname, DOIProject::getSuffix));
+                isExist = map.containsKey(projectName);
+            }
+        } catch (DOIDbException ex) {
             isExist = false;
-        } else {
-            isExist = map.containsKey(projectName);
+            LOG.fatal(ex);
         }
         return isExist;
     }
@@ -161,27 +219,21 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
      * {@inheritDoc}
      */
     @Override
-    public String getProjectFrom(final int projectID) {
-        String projectName = "";
-        try {
-            projectName = das.getDOIProjectName(projectID);
-        } catch (DOIDbException e) {
-            LOG.fatal(
-                    "An error occured while trying to get the name of the project from the id " + projectID,
-                    e);
-        }
-        return projectName;
+    public String getProjectFrom(final int projectID) throws DOIDbException {
+        return das.getDOIProjectName(projectID);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public int getIDFrom(final String projectName) {
-        final Map<String, Integer> map = getProjects();
-        if (map.isEmpty()) {
-            throw new RuntimeException("The projects list is empty");
+    public int getIDFrom(final String projectName) throws DOIDbException {
+        final List<DOIProject> projects = getProjects();
+        if (projects.isEmpty()) {
+            throw new DoiRuntimeException("The projects list is empty");
         }
+        final Map<String, Integer> map = projects.stream().collect(
+                Collectors.toMap(DOIProject::getProjectname, DOIProject::getSuffix));
         return map.get(projectName);
     }
 
@@ -189,36 +241,16 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
      * {@inheritDoc}
      */
     @Override
-    public Map<String, Integer> getProjects() {
-        final Map<String, Integer> map = new HashMap<>();
-        try {
-            final List<DOIProject> doiProjects = das.getAllDOIProjects();
-            for (final DOIProject doiProject : doiProjects) {
-                map.put(doiProject.getProjectname(), doiProject.getSuffix());
-            }
-        } catch (DOIDbException e) {
-            LOG.fatal("An error occured while trying to get all DOI projects", e);
-        }
-
-        return Collections.unmodifiableMap(map);
+    public List<DOIProject> getProjects() throws DOIDbException {
+        return das.getAllDOIProjects();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Map<String, Integer> getProjectsFromUser(final String userName) {
-        final Map<String, Integer> map = new HashMap<>();
-        try {
-            final List<DOIProject> doiProjects = das.getAllDOIProjectsForUser(userName);
-            for (final DOIProject doiProject : doiProjects) {
-                map.put(doiProject.getProjectname(), doiProject.getSuffix());
-            }
-        } catch (DOIDbException e) {
-            LOG.fatal("An error occured while trying to get all DOI projects", e);
-        }
-
-        return Collections.unmodifiableMap(map);
+    public List<DOIProject> getProjectsFromUser(final String userName) throws DOIDbException {
+        return das.getAllDOIProjectsForUser(userName);
     }
 
     /**
@@ -296,11 +328,46 @@ public class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginHelper 
         try {
             doiUsers.addAll(this.das.getAllDOIUsersForProject(doiSuffix));
         } catch (DOIDbException ex) {
-            LOG.
-                    fatal("An error occured while trying to get all DOI users from project " + doiSuffix,
-                            ex);
+            LOG.fatal("An error occured while trying to get all "
+                    + "DOI users from project " + doiSuffix, ex);
         }
         return doiUsers;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public StringBuilder validate() {
+        return new StringBuilder();
+    }
+
+    /**
+     * Checks if the keyword is a password.
+     *
+     * @param key keyword to check
+     * @return True when the keyword is a password otherwise False
+     */
+    public static boolean isPassword(String key) {
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void release() {
+        this.conf = null;
+        try {
+            this.das.close();
+        } catch (DOIDbException ex) {
+        }
+        this.isConfigured = false;
+    }
+
+    @Override
+    public boolean isConfigured() {
+        return this.isConfigured;
     }
 
 }

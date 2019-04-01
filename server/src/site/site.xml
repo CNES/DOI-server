@@ -15,7 +15,7 @@
     <skin>
         <groupId>org.apache.maven.skins</groupId>
         <artifactId>maven-fluido-skin</artifactId>
-        <version>1.3.0</version>
+        <version>1.7</version>
     </skin>
     
     <publishDate position="bottom" format="yyyy-MM-dd" />
@@ -27,8 +27,8 @@
     <body>
   
         <links>
-            <item name="Download" href="" />
-            <item name="GitHub project" href="http://github.com/J-Christophe/DOI" />
+            <item name="Download" href="https://github.com/CNES/DOI-server/releases" />
+            <item name="GitHub project" href="https://github.com/CNES/DOI-server" />
         </links>
 
         <breadcrumbs>
@@ -37,23 +37,29 @@
   
         <menu name="Main" inherit="top">
             <item name="Home" href="index.html" />
-            <item name="GitHub project" href="http://github.com/J-Christophe/DOI" />
-            <item name="Release notes" href="http://github.com/J-Christophe/DOI/releases" />
+            <item name="GitHub project" href="https://github.com/CNES/DOI-server" />
         </menu>
+        <menu name="ChangeLog" inherit="top">
+            <item name="Change log" href="changelog.html" />
+            <item name="File activity" href="file-activity.html" />
+            <item name="Dev activity" href="dev-activity.html" />
+        </menu>        
         <menu name="Download" inherit="top">
-            <item name="Download" href="http://github.com/J-Christophe/DOI/releases" />
-            <item name="License" href="http://github.com/J-Christophe/DOI/blob/master/COPYING.LESSER" />
+            <item name="Download" href="https://github.com/CNES/DOI-server/releases" />
+            <item name="License" href="https://github.com/CNES/DOI-server/blob/master/COPYING.LESSER" />
         </menu>
         <menu name="Documentation" inherit="bottom">
             <item name="Architecture" href="architecture.html" />  
             <item name="Usage" href="usage.html" />
             <item name="Configuration" href="configuration.html" />
+            <item name="MDS API" href="mds_api.html" />
+            <item name="Citation API" href="citation_api.html" />            
             <item name="Javadoc" href="apidocs/index.html" />
         </menu>
         <menu name="Contribute" inherit="bottom">
-            <item name="Contribute" href="http://github.com/J-Christophe/DOI/blob/master/CONTRIBUTING.md" />
-            <item name="Issues" href="http://github.com/J-Christophe/DOI/issues" />
-            <item name="Fork on GitHub" href="http://github.com/J-Christophe/DOI" />
+            <item name="Contribute" href="https://github.com/CNES/DOI-server/blob/master/CONTRIBUTING.md" />
+            <item name="Issues" href="https://github.com/CNES/DOI-server/issues" />
+            <item name="Fork on GitHub" href="https://github.com/CNES/DOI-server" />
         </menu>
         <menu name="Maven documentation" ref="reports" inherit="bottom"/>
     </body>

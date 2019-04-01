@@ -92,8 +92,7 @@ public final class Utils {
      * @param value value to search
      * @return the keys related to a value
      */
-    public static <T, E> Set<T> getKeysByValue(final Map<T, E> map,
-            final E value) {
+    public static <T, E> Set<T> getKeysByValue(final Map<T, E> map, final E value) {
         final Set<T> keys = new HashSet<>();
         for (final Entry<T, E> entry : map.entrySet()) {
             final E entryVal = entry.getValue();

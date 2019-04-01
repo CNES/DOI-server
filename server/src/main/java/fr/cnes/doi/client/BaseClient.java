@@ -18,13 +18,16 @@
  */
 package fr.cnes.doi.client;
 
+import fr.cnes.httpclient.HttpClient;
 import java.util.logging.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.restlet.Client;
 import org.restlet.Context;
+import org.restlet.data.Parameter;
 import org.restlet.data.Protocol;
 import org.restlet.resource.ClientResource;
+import org.restlet.util.Series;
 
 /**
  * Base client
@@ -34,14 +37,14 @@ import org.restlet.resource.ClientResource;
 public class BaseClient {
 
     /**
-     * Logger.
-     */
-    private static final Logger LOG = LogManager.getLogger(BaseClient.class.getName());
-
-    /**
      * Port of the Datacite mockserver
      */
     public static final int DATACITE_MOCKSERVER_PORT = 1080;
+
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = LogManager.getLogger(BaseClient.class.getName());
 
     /**
      * Number of retry when an error happens.
@@ -71,6 +74,9 @@ public class BaseClient {
         this.client.setRetryAttempts(NB_RETRY);
         this.client.setRetryDelay(NB_DELAY);
         final Client cl = new Client(new Context(), Protocol.HTTPS);
+        final Series<Parameter> parameters = cl.getContext().getParameters();
+        parameters.add(HttpClient.MAX_RETRY, String.valueOf(this.client.getRetryAttempts()));
+        parameters.add(HttpClient.RETRY_DELAY, String.valueOf(this.client.getRetryDelay()));
         this.client.setNext(cl);
     }
 

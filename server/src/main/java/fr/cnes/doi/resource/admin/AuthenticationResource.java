@@ -35,6 +35,10 @@ import fr.cnes.doi.security.TokenSecurity;
 import fr.cnes.doi.security.TokenSecurity.TimeUnit;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
+import org.restlet.data.MediaType;
+import org.restlet.data.Method;
+import org.restlet.ext.wadl.MethodInfo;
+import org.restlet.ext.wadl.ParameterStyle;
 
 /**
  * Handle the creation and deletion of a token generated after authentication by login/password.
@@ -117,8 +121,10 @@ public class AuthenticationResource extends AbstractResource {
 
         // token is valid for 12 hours
         final int amount = doiSetting.getInt(Consts.TOKEN_EXPIRATION_DELAY, "12");
-        // unit = HOURS
-        final int timeUnit = doiSetting.getInt(Consts.TOKEN_EXPIRATION_UNIT, "10");
+        final int timeUnit = doiSetting.getInt(
+                Consts.TOKEN_EXPIRATION_UNIT,
+                String.valueOf(TokenSecurity.TimeUnit.HOUR.getTimeUnit())
+        );
         final TimeUnit unit = TokenSecurity.TimeUnit.getTimeUnitFrom(timeUnit);
         final String token = TokenSecurity.getInstance().generate(userName, unit, amount);
         final boolean isTokenAdded = this.tokenDB.addToken(token);
@@ -130,7 +136,13 @@ public class AuthenticationResource extends AbstractResource {
             LOG.info("Token coud not be saved in data base.");
         }
 
-        return LOG.traceExit(new StringRepresentation(token));
+        if (token == null) {
+            throw LOG.throwing(new ResourceException(
+                    Status.SERVER_ERROR_INTERNAL, "Cannot generate the token"));
+        } else {
+            setStatus(Status.SUCCESS_OK);
+        }
+        return LOG.traceExit(new StringRepresentation(token, MediaType.TEXT_PLAIN));
     }
 
     /**
@@ -147,5 +159,22 @@ public class AuthenticationResource extends AbstractResource {
         }
         LOG.debug("The form is valid");
         LOG.traceExit();
+    }
+
+    @Override
+    protected void describePost(final MethodInfo info) {
+        info.setName(Method.POST);
+        info.setDocumentation("Authentifies an user and returns a token");
+        addRequestDocToMethod(info, createQueryParamDoc(
+                USER_NAME, ParameterStyle.MATRIX,
+                "User ID of the operator that creates the token", true, "xs:string")
+        );
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.SUCCESS_OK, "Operation successful",
+                stringRepresentation())
+        );
+        addResponseDocToMethod(info, createResponseDoc(
+                Status.SERVER_ERROR_INTERNAL, "Cannot generate the token")
+        );
     }
 }

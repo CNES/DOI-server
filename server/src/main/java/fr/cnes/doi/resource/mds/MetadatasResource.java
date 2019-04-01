@@ -89,7 +89,7 @@ public class MetadatasResource extends BaseMdsResource {
     @Requirement(reqId = Requirement.DOI_AUTO_030, reqName = Requirement.DOI_AUTO_030_NAME)
     @Post
     public String createMetadata(final Representation entity) throws DoiServerException {
-        LOG.traceEntry("Parameter\n\tentity:{}",entity);
+        LOG.traceEntry("Parameter\n\tentity:{}", entity);
         checkInputs(entity);
         final String result;
         try {

@@ -37,9 +37,13 @@ import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
 
 import fr.cnes.doi.application.AdminApplication;
+import fr.cnes.doi.db.model.DOIProject;
+import fr.cnes.doi.exception.DOIDbException;
 import fr.cnes.doi.resource.AbstractResource;
 import fr.cnes.doi.utils.UniqueProjectName;
 import fr.cnes.doi.utils.spec.Requirement;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Provides a unique identifier to the project. This identifier is used as part of the DOI name.
@@ -57,13 +61,17 @@ public class SuffixProjectsResource extends AbstractResource {
      * Number of digits ({@value #NB_DIGITS}) in which the suffix project is encoded.
      */
     public static final int NB_DIGITS = 6;
+    
+    /**
+     * Query parameter for user {@value #USER_PARAMETER}.
+     */
+    public static final String USER_PARAMETER = "user";    
 
     /**
      * Logger.
      */
     private volatile Logger LOG;
 
-    public final String USER_PARAMETER = "user";
     /**
      * The user name
      */
@@ -97,10 +105,18 @@ public class SuffixProjectsResource extends AbstractResource {
     @Get("json|xml")
     public Map<String, Integer> getProjectsNameAsJson() {
         LOG.traceEntry();
-        if (this.userName == null || this.userName.isEmpty()) {
-            return LOG.traceExit(UniqueProjectName.getInstance().getProjects());
-        } else {
-            return LOG.traceExit(UniqueProjectName.getInstance().getProjectsFromUser(this.userName));
+        try {
+            final List<DOIProject> projects;
+            if (this.userName == null || this.userName.isEmpty()) {
+                projects = UniqueProjectName.getInstance().getProjects();
+            } else {
+                projects = UniqueProjectName.getInstance().getProjectsFromUser(this.userName);
+            }
+            return projects.stream().collect(
+                    Collectors.toMap(DOIProject::getProjectname, DOIProject::getSuffix));
+        } catch (DOIDbException ex) {
+            throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST,
+                    this.userName + " already exists");
         }
     }
 
@@ -119,9 +135,13 @@ public class SuffixProjectsResource extends AbstractResource {
         LOG.traceEntry("Parameters\n\tmediaForm : {}", mediaForm);
         checkInputs(mediaForm);
         final String projectName = mediaForm.getFirstValue(PROJECT_NAME_PARAMETER);
-        final int digits = UniqueProjectName.getInstance().getShortName(projectName, NB_DIGITS);
-
-        return LOG.traceExit(new StringRepresentation(String.valueOf(digits)));
+        try {
+            final int digits = UniqueProjectName.getInstance().getShortName(projectName, NB_DIGITS);
+            return LOG.traceExit(new StringRepresentation(String.valueOf(digits)));
+        } catch (DOIDbException ex) {
+            throw LOG.throwing(new ResourceException(
+                    Status.CLIENT_ERROR_BAD_REQUEST, projectName + " already exists !"));
+        }
     }
 
     /**

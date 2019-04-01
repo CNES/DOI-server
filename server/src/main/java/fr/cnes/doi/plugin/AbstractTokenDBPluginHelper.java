@@ -27,7 +27,7 @@ import fr.cnes.doi.utils.spec.Requirement;
  */
 @Requirement(reqId = Requirement.DOI_ARCHI_030, reqName = Requirement.DOI_ARCHI_030_NAME)
 public abstract class AbstractTokenDBPluginHelper
-        extends AbstractTokenDBHelper implements PluginMetadata {
+        extends AbstractTokenDBHelper implements PluginMetadata, PluginConfiguration {
 
     /**
      * Empty constructor.

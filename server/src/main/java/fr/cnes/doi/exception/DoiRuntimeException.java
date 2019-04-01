@@ -26,6 +26,9 @@ package fr.cnes.doi.exception;
  */
 public class DoiRuntimeException extends RuntimeException {
 
+    /**
+     * serialVersionUID.
+     */
     private static final long serialVersionUID = 1589749416315841115L;
 
     /**

@@ -18,10 +18,11 @@
  */
 package fr.cnes.doi.db;
 
+import fr.cnes.doi.db.model.DOIProject;
 import fr.cnes.doi.db.model.DOIUser;
+import fr.cnes.doi.exception.DOIDbException;
 import fr.cnes.doi.utils.spec.Requirement;
 import java.util.List;
-import java.util.Map;
 import java.util.Observable;
 
 /**
@@ -101,38 +102,45 @@ public abstract class AbstractProjectSuffixDBHelper extends Observable {
      *
      * @param projectID the suffix project
      * @return the project name
+     * @throws fr.cnes.doi.exception.DOIDbException when an error occurs
      */
-    public abstract String getProjectFrom(int projectID);
+    public abstract String getProjectFrom(int projectID) throws DOIDbException;
 
     /**
      * Returns the project suffix based on the project name.
      *
      * @param projectName the project name
      * @return the suffix project
+     * @throws fr.cnes.doi.exception.DOIDbException When an error occurs
      */
-    public abstract int getIDFrom(String projectName);
+    public abstract int getIDFrom(String projectName) throws DOIDbException;
 
     /**
      * Returns the database records.
      *
      * @return the database records
+     * @throws fr.cnes.doi.exception.DOIDbException When an error occurs
      */
-    public abstract Map<String, Integer> getProjects();
+    public abstract List<DOIProject> getProjects() throws DOIDbException;
 
     /**
      * Returns the projects related to a specific user.
      *
      * @param userName username
      * @return the projected to an user
+     * @throws fr.cnes.doi.exception.DOIDbException When an error occurs
      */
-    public abstract Map<String, Integer> getProjectsFromUser(final String userName);
+    public abstract List<DOIProject> getProjectsFromUser(final String userName) throws
+            DOIDbException;
 
     /**
      * Returns the users related to a project.
      *
      * @param doiSuffix project
      * @return the users
+     * @throws fr.cnes.doi.exception.DOIDbException When an error occurs.
      */
-    public abstract List<DOIUser> getAllDOIUsersForProject(final int doiSuffix);
+    public abstract List<DOIUser> getAllDOIUsersForProject(final int doiSuffix) throws
+            DOIDbException;
 
 }

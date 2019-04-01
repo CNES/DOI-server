@@ -33,6 +33,7 @@ import org.junit.Test;
 import fr.cnes.doi.InitDataBaseForTest;
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.UnitTest;
+import fr.cnes.doi.exception.DOIDbException;
 import fr.cnes.doi.exception.DoiRuntimeException;
 import org.junit.Assume;
 import org.junit.Rule;
@@ -123,7 +124,7 @@ public class UniqueProjectNameTest {
      * Test method for {@link fr.cnes.doi.utils.UniqueProjectName#getShortName}
      */
     @Test
-    public void testGetShortName() {
+    public void testGetShortName() throws DOIDbException {
 	// New id
 	final int idSWOT = UniqueProjectName.getInstance().getShortName("SWOT", 6);
 	Assert.assertTrue(UniqueProjectName.getInstance().getShortName("SWOT", 6) == idSWOT);
@@ -136,7 +137,7 @@ public class UniqueProjectNameTest {
      * Test method for {@link fr.cnes.doi.utils.UniqueProjectName#getShortName}
      */
     @Test
-    public void testGetShortNameWithLongName() {
+    public void testGetShortNameWithLongName() throws DOIDbException {
 	exceptions.expect(DoiRuntimeException.class);
 	exceptions.expectMessage(
 		"The short name cannot be build because the length requested is too big");

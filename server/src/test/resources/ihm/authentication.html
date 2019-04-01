@@ -53,7 +53,7 @@
                 <h2 class="form-signin-heading" style="color:#005191">Connexion</h2>
                 <input id="user" type="text" class="input-block-level" placeholder="Nom utilisateur">
                 <input id="password" type="password" class="input-block-level" placeholder="Mot de passe">
-                <button type="button" class="btn btn-large btn-primary" onclick="authentication()">Se connecter</button>
+                <button type="button" id="myBtn" class="btn btn-large btn-primary" onclick="authentication()">Se connecter</button>
             </form>
 
             <hr>
@@ -67,176 +67,170 @@
         <script src="js/config.js"></script>
         <script>
 
-                    $(document).ready(function () {
-                        $("#footer").load("footer.txt");
+            $(document).ready(function () {
+                $("#footer").load("footer.txt");
 
-                        if (sessionStorage.getItem("user") != null) {
-                            deleteToken();
+                if (sessionStorage.getItem("user") !== null) {
+                    deleteToken();
+                }
+            });
+
+            var password = document.getElementById("password");
+            password.addEventListener("keyup", function(event) {
+              if (event.keyCode === 13) {
+               event.preventDefault();
+               document.getElementById("myBtn").click();
+              }
+            });
+
+            var userId;
+            var userPwd;
+            var user; //userId + userPwd
+
+            function authentication() {
+                userId = $("#user").val();
+                userPwd = $("#password").val();
+                user = userId + ":" + userPwd;
+
+                //isUserExist? save in session userName and admin(true or false)
+                $.ajax({
+                    type: "GET",
+                    url: "/admin/superusers/" + userId,
+                    headers: {
+                        'Authorization': 'Basic ' + btoa(user)
+                    },
+                    crossDomain: true,
+                    cache: false,
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        var parser = new DOMParser();
+                        var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
+                        var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
+                        if(XMLHttpRequest.status === 404) {
+                            alert("Utilisateur ou mot de passe incorrect.");
+                        } else {
+                            alert("Erreur d'authentification.\n" +
+                                    "Erreur: " + errMessage + "\n"
+                                    );                                    
                         }
-                    });
 
-                    var userId;
-                    var userPwd;
-                    var user; //userId + userPwd
-
-                    function authentication() {
-                        userId = $("#user").val();
-                        userPwd = $("#password").val();
-                        user = userId + ":" + userPwd;
-
-                        //isUserExist? save in session userName and admin(true or false)
-                        $.ajax({
-                            type: "GET",
-                            url: "/admin/superusers/" + userId,
-                            headers: {
-                                'Authorization': 'Basic ' + btoa(user)
-                            },
-                            crossDomain: true,
-                            cache: false,
-                            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                                var parser = new DOMParser();
-                                var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
-                                var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
-                                if(XMLHttpRequest.status === 404) {
-                                    alert("Utilisateur ou mot de passe incorrect.");
-                                } else {
-                                    alert("Erreur d'authentification.\n" +
-                                            "Erreur: " + XMLHttpRequest.status + ", " + XMLHttpRequest.statusText + "\n"
-                                            );                                    
-                                }
-
-                                console.log("Erreur d'authentification.\n" + errMessage);
-                            },
-                            success: function (boo) {
-                                console.log("Authentification réussie.");
-                                console.log(boo);
-                                sessionStorage.setItem("user", userId);
-                                if (boo) {
-                                    sessionStorage.setItem("admin", "true");
-                                } else {
-                                    sessionStorage.setItem("admin", "false");
-                                }
-
-                                //get project associated to this user
-                                getAssociatedProject();
-                                
-                            }
-                        });
-                    }
-
-                    function getAssociatedProject() {
-                        var admin = sessionStorage.getItem("admin");
-                        $.ajax({
-                            type: "GET",
-                            url: "/admin/projects?user=" + userId,
-                            headers: {
-                                'Authorization': 'Basic ' + btoa(user)
-                            },
-                            crossDomain: true,
-                            cache: false,
-                            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                                sessionStorage.clear();
-                                var parser = new DOMParser();
-                                var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
-                                var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
-                                alert("Erreur d'authentification.\n" +
-                                        "Erreur: " + XMLHttpRequest.status + ", " + XMLHttpRequest.statusText + "\n"
-                                        );
-                                console.log("Erreur d'authentification.\n" + errMessage);
-                            },
-                            success: function (array) {
-                                console.log("Projet(s) utilisateur récupéré(s).");
-                                console.log(array);
-
-                                if (!isEmpty(array)) {
-                                    sessionStorage.setItem("projects", JSON.stringify(array));
-                                    generateToken("doiCreation.html");
-                                } else {
-                                    sessionStorage.setItem("projects", null);
-                                    if (admin === "true") {
-                                        generateToken("administration.html");
-                                    } else {
-                                        alert("L'utilisateur n'est rattaché à aucun projets.")
-                                        //user is not attached to any project nor is admin
-                                        sessionStorage.clear();
-                                    }
-                                }
-                            }
-                        });
-                    }
-                    function isEmpty(object) {
-                        for (key in object) {
-                            return false;
+                    },
+                    success: function (boo) {
+                        sessionStorage.setItem("user", userId);
+                        if (boo) {
+                            sessionStorage.setItem("admin", "true");
+                        } else {
+                            sessionStorage.setItem("admin", "false");
                         }
-                        return true;
-                    }
 
-                    function generateToken(redirection) {
-                        var dataForm = {
-                            "user": userId
+                        //get project associated to this user
+                        getAssociatedProject();
+
+                    }
+                });
+            }
+
+            function getAssociatedProject() {
+                var admin = sessionStorage.getItem("admin");
+                $.ajax({
+                    type: "GET",
+                    url: "/admin/projects?user=" + userId,
+                    headers: {
+                        'Authorization': 'Basic ' + btoa(user)
+                    },
+                    crossDomain: true,
+                    cache: false,
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        sessionStorage.clear();
+                        var parser = new DOMParser();
+                        var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
+                        var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
+                        alert("Erreur d'authentification.\n" +
+                                "Erreur: " + errMessage + "\n"
+                                );
+                    },
+                    success: function (array) {
+                        if (!isEmpty(array)) {
+                            sessionStorage.setItem("projects", JSON.stringify(array));
+                            generateToken("doiCreation.html");
+                        } else {
+                            sessionStorage.setItem("projects", null);
+                            if (admin === "true") {
+                                generateToken("administration.html");
+                            } else {
+                                alert("L'utilisateur n'est rattaché à aucun projets.");
+                                //user is not attached to any project nor is admin
+                                sessionStorage.clear();
+                            }
                         }
-                        $.ajax({
-                            type: "POST",
-                            url: "/admin",
-                            headers: {
-                                'Authorization': 'Basic ' + btoa(user)
-                            },
-                            data: dataForm,
-                            crossDomain: true,
-                            cache: false,
-                            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                                sessionStorage.clear();
-                                var parser = new DOMParser();
-                                var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
-                                var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
-                                alert("Erreur d'authentification.\n" +
-                                        "Erreur: " + XMLHttpRequest.status + ", " + XMLHttpRequest.statusText + "\n"
-                                        );
-                                console.log("Erreur d'authentification.\n" + errMessage);
-                            },
-                            success: function (token) {
-                                console.log("Token généré.");
-                                console.log(token);
-
-                                sessionStorage.setItem("token", token);
-                                window.location.href = redirection;
-                            }
-                        });
                     }
+                });
+            }
+            function isEmpty(object) {
+                for (key in object) {
+                    return false;
+                }
+                return true;
+            }
 
-                    function deleteToken() {
-                        token = sessionStorage.getItem("token");
-
-                        $.ajax({
-                            type: "DELETE",
-                            url: "/admin",
-                            headers: {
-                                'Authorization': "Bearer " + sessionStorage.getItem("token")
-                            },
-                            data: {
-                                "token": token
-                            },
-                            crossDomain: true,
-                            cache: false,
-                            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                                //if the request fail then token won't be deleted. 
-                                //tokens are still deleted periodicaly if expired.
-                                sessionStorage.clear();
-                                var parser = new DOMParser();
-                                var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
-                                var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
-                                console.log("Erreur lors de la suppréssion du token.\n" +
-                                        "Erreur: " + XMLHttpRequest.status + ", " + XMLHttpRequest.statusText + "\n"
-                                        );
-                                console.log("Erreur lors de la suppréssion du token.\n" + errMessage);
-                            },
-                            success: function () {
-                                sessionStorage.clear();
-                                console.log("Le token utilisateur a été supprimé.");
-                            }
-                        });
+            function generateToken(redirection) {
+                var dataForm = {
+                    "user": userId
+                };
+                $.ajax({
+                    type: "POST",
+                    url: "/admin",
+                    headers: {
+                        'Authorization': 'Basic ' + btoa(user)
+                    },
+                    data: dataForm,
+                    crossDomain: true,
+                    cache: false,
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        sessionStorage.clear();
+                        var parser = new DOMParser();
+                        var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
+                        var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
+                        alert("Erreur d'authentification.\n" +
+                                "Erreur: " + errMessage + "\n"
+                                );
+                    },
+                    success: function (token) {
+                        sessionStorage.setItem("token", token);
+                        window.location.href = redirection;
                     }
+                });
+            }
 
+            function deleteToken() {
+                token = sessionStorage.getItem("token");
+
+                $.ajax({
+                    type: "DELETE",
+                    url: "/admin",
+                    headers: {
+                        'Authorization': "Bearer " + sessionStorage.getItem("token")
+                    },
+                    data: {
+                        "token": token
+                    },
+                    crossDomain: true,
+                    cache: false,
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        //if the request fail then token won't be deleted. 
+                        //tokens are still deleted periodicaly if expired.
+                        sessionStorage.clear();
+                        var parser = new DOMParser();
+                        var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
+                        var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
+                        alert("Erreur d'authentification.\n" +
+                                "Erreur: " + errMessage + "\n"
+                                );
+                    },
+                    success: function () {
+                        sessionStorage.clear();
+                    }
+                });
+            }
 
         </script>
     </body>

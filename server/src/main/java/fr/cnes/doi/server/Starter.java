@@ -41,6 +41,7 @@ import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.utils.spec.Requirement;
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
+import java.nio.charset.Charset;
 
 /**
  * DOI server
@@ -67,9 +68,9 @@ public final class Starter {
     private static DoiServer doiServer;
 
     static {
-        java.util.logging.Logger rootLogger = java.util.logging.LogManager.getLogManager()
+        final java.util.logging.Logger rootLogger = java.util.logging.LogManager.getLogManager()
                 .getLogger("");
-        java.util.logging.Handler[] handlers = rootLogger.getHandlers();
+        final java.util.logging.Handler[] handlers = rootLogger.getHandlers();
         rootLogger.removeHandler(handlers[0]);
     }
 
@@ -225,12 +226,14 @@ public final class Starter {
      * @return the PID or null
      */
     private static String getCurrentPid(final String serverName) {
-        LOG.traceEntry("Parameter\n  serverName:{}", serverName);
+        LOG.traceEntry("Parameter\n\tserverName:{}", serverName);
         String stopPid = null;
+        BufferedReader reader = null;
+        Process pro = null;
         try {
-            final Process pro = Runtime.getRuntime().exec("ps aux");
-            final BufferedReader reader = new BufferedReader(new InputStreamReader(pro.
-                    getInputStream()));
+            pro = Runtime.getRuntime().exec("ps aux");
+            reader = new BufferedReader(new InputStreamReader(pro.
+                    getInputStream(), Charset.defaultCharset()));
             final String processName = java.lang.management.ManagementFactory.getRuntimeMXBean().
                     getName();
             final String myPid = processName.split("@")[0];
@@ -246,6 +249,16 @@ public final class Starter {
                 }
             }
         } catch (IOException ex) {
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException ex) {
+                }
+            }
+            if (pro != null) {
+                pro.destroy();
+            }
         }
         return LOG.traceExit(stopPid);
     }
@@ -264,8 +277,8 @@ public final class Starter {
         int c;
         String arg;
 
-        StringBuffer sb = new StringBuffer();
-        LongOpt[] longopts = new LongOpt[9];
+        final StringBuffer sb = new StringBuffer();
+        final LongOpt[] longopts = new LongOpt[9];
         longopts[0] = new LongOpt("help", LongOpt.NO_ARGUMENT, null, 'h');
         longopts[1] = new LongOpt("version", LongOpt.NO_ARGUMENT, null, 'v');
         longopts[2] = new LongOpt("secret", LongOpt.REQUIRED_ARGUMENT, sb, 0);
@@ -292,7 +305,7 @@ public final class Starter {
                 //
                 case 'a':
                     LOG.debug("a option is selected");
-                    String secretSignToken = g.getOptarg();
+                    final String secretSignToken = g.getOptarg();
                     TokenSecurity.getInstance().setTokenKey(secretSignToken);
                     break;
                 case 'h':
@@ -356,7 +369,7 @@ public final class Starter {
                 case 'y':
                     LOG.debug("y option is selected");
                     try {
-                        byte[] encodedFile = Files.readAllBytes(Paths.get(g.getOptarg()));
+                        final byte[] encodedFile = Files.readAllBytes(Paths.get(g.getOptarg()));
                         String contentFile = new String(encodedFile, StandardCharsets.UTF_8);
                         contentFile = UtilsCryptography.encrypt(contentFile,
                                 settings.getSecretKey());

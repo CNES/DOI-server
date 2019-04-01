@@ -265,7 +265,7 @@ public enum RelatedIdentifierType {
     URL("URL"),
     /**
      * Uniform Resource Name; is a unique and persistent identifier of an electronic document. null
-     * null null     {@code 
+     * null null null null     {@code 
      * The syntax is: urn:< NID>:<NSS>
      * The leading urn: sequence is case‐insensitive, <br>
      * <NID> is the namespace identifier,<br>

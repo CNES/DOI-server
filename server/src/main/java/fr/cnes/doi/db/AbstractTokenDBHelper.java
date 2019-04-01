@@ -18,6 +18,7 @@
  */
 package fr.cnes.doi.db;
 
+import fr.cnes.doi.exception.DOIDbException;
 import java.util.List;
 import java.util.Observable;
 
@@ -50,8 +51,9 @@ public abstract class AbstractTokenDBHelper extends Observable {
      * Deletes a token from the database.
      *
      * @param jwt the token
+     * @return True when the token is deletes otherwise false
      */
-    public abstract void deleteToken(String jwt);
+    public abstract boolean deleteToken(String jwt);
 
     /**
      * Tests if the token exists in the database.
@@ -73,6 +75,7 @@ public abstract class AbstractTokenDBHelper extends Observable {
      * Return the token list from database.
      *
      * @return the list of tokens
+     * @throws fr.cnes.doi.exception.DOIDbException when an error occurs
      */
-    public abstract List<String> getTokens();
+    public abstract List<String> getTokens() throws DOIDbException;
 }

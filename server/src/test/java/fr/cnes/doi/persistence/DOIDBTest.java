@@ -18,6 +18,7 @@
  */
 package fr.cnes.doi.persistence;
 
+import fr.cnes.doi.InitSettingsForTest;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
@@ -32,20 +33,47 @@ import fr.cnes.doi.exception.DOIDbException;
 import fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl;
 import fr.cnes.doi.db.model.DOIProject;
 import fr.cnes.doi.db.model.DOIUser;
+import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_MAX_ACTIVE_CONNECTIONS;
+import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_MAX_IDLE_CONNECTIONS;
+import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_MIN_IDLE_CONNECTIONS;
+import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_PWD;
+import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_URL;
+import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_USER;
 import fr.cnes.doi.plugin.impl.db.service.DOIDbDataAccessService;
+import fr.cnes.doi.settings.DoiSettings;
+import java.util.HashMap;
+import java.util.Map;
+import org.junit.BeforeClass;
 
 public class DOIDBTest {
 
     private Logger logger = LoggerFactory.getLogger(DOIDBTest.class);
 
-    private DOIDbDataAccessService das = new DOIDbDataAccessServiceImpl(
-	    getClass().getClassLoader().getResource("config-test.properties").getFile());
+    private DOIDbDataAccessService das;
 
     private DOIUser testuser;
     private DOIProject testProject;
+    
+    @BeforeClass
+    public static void setUpClass() {
+        InitSettingsForTest.init(InitSettingsForTest.CONFIG_TEST_PROPERTIES);
+    }    
 
     @Before
     public void init() {
+             
+        final String dbUrl =  DoiSettings.getInstance().getString(DB_URL);
+        final String dbUser =  DoiSettings.getInstance().getString(DB_USER);
+        final String dbPwd =  DoiSettings.getInstance().getString(DB_PWD);
+        final String minIdle = DoiSettings.getInstance().getString(DB_MIN_IDLE_CONNECTIONS);
+        final String maxIdle = DoiSettings.getInstance().getString(DB_MAX_IDLE_CONNECTIONS);
+        final String maxActive = DoiSettings.getInstance().getString(DB_MAX_ACTIVE_CONNECTIONS);
+        
+        final Map<String, Integer> options = new HashMap<>();
+        options.put(DB_MIN_IDLE_CONNECTIONS, minIdle == null ? null : Integer.valueOf(minIdle));
+        options.put(DB_MIN_IDLE_CONNECTIONS, maxIdle == null ? null : Integer.valueOf(maxIdle));
+        options.put(DB_MAX_ACTIVE_CONNECTIONS, maxActive == null ? null : Integer.valueOf(maxActive));
+        this.das = new DOIDbDataAccessServiceImpl(dbUrl, dbUser, dbPwd, options);
 
 	// Test User
 	testuser = new DOIUser();

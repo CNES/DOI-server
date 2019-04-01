@@ -18,6 +18,7 @@
  */
 package fr.cnes.doi.plugin.impl.db.impl;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -32,6 +33,7 @@ import fr.cnes.doi.exception.DOIDbException;
 import fr.cnes.doi.db.model.DOIProject;
 import fr.cnes.doi.db.model.DOIUser;
 import fr.cnes.doi.plugin.impl.db.service.DOIDbDataAccessService;
+import java.util.Map;
 import org.apache.logging.log4j.Level;
 
 /**
@@ -39,7 +41,37 @@ import org.apache.logging.log4j.Level;
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
+public final class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
+
+    /**
+     * Database url
+     */
+    public static final String DB_URL = "Starter.Database.Doidburl";
+
+    /**
+     * Database user
+     */
+    public static final String DB_USER = "Starter.Database.User";
+
+    /**
+     * Database password
+     */
+    public static final String DB_PWD = "Starter.Database.Pwd";
+
+    /**
+     * Minimum number of connection object that are to be kept alive in the pool
+     */
+    public static final String DB_MIN_IDLE_CONNECTIONS = "Starter.Database.MinIdleConnections";
+
+    /**
+     * Minimum number of connection object that are to be kept alive in the pool
+     */
+    public static final String DB_MAX_IDLE_CONNECTIONS = "Starter.Database.MaxIdleConnections";
+
+    /**
+     * Maximum number of active connections that can be allocated at the same time.
+     */
+    public static final String DB_MAX_ACTIVE_CONNECTIONS = "Starter.Database.MaxActiveConnections";
 
     /**
      * Logger.
@@ -180,7 +212,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      * Delete assignation based on username and project DOI suffix.
      */
     private static final String DELETE_ASSIGN_USER_AND_SUFFIX = String.format(
-            DELETE_ASSIGN_USERNAME + " AND %s=?", DELETE_ASSIGN_USERNAME, FIELD_PROJECT_SUFFIX);
+            DELETE_ASSIGN_USERNAME + " AND %s=?", FIELD_PROJECT_SUFFIX);
 
     /**
      * Delete token.
@@ -243,14 +275,13 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
     /**
      * Connection to the DOI database.
      */
-    private final JDBCConnector dbConnector;
+    private JDBCConnector dbConnector;
 
     /**
-     * Create the implementation of DOI database by creation the JDBC connection from the settings.
+     * Constructor.
      */
     public DOIDbDataAccessServiceImpl() {
         LOGGER.traceEntry();
-        dbConnector = new JDBCConnector();
         LOGGER.traceExit();
     }
 
@@ -258,11 +289,34 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      * Create the implementation of DOI database by creation the JDBC connection from a specific
      * configuration file.
      *
-     * @param customDbConfigFile configuration file
+     * @param dbUrl database URL
+     * @param dbUser database user
+     * @param dbPwd database password
+     * @param options database options
      */
-    public DOIDbDataAccessServiceImpl(final String customDbConfigFile) {
-        LOGGER.traceEntry("Parameter\n\t customDbConfigFile: {}", customDbConfigFile);
-        dbConnector = new JDBCConnector(customDbConfigFile);
+    public DOIDbDataAccessServiceImpl(final String dbUrl, final String dbUser, final String dbPwd,
+            final Map<String, Integer> options) {
+        LOGGER.traceEntry("Parameter\n\tdbUrl : {}\n\tdbPwd : {}\n\toptions : {}", dbUrl, dbPwd,
+                options);
+        this.init(dbUrl, dbUser, dbPwd, options);
+        LOGGER.traceExit();
+    }
+
+    /**
+     * Initialize the JDBC connection when it is not defined.
+     *
+     * @param dbUrl database URL
+     * @param dbUser database user
+     * @param dbPwd database password
+     * @param options database options
+     */
+    public void init(final String dbUrl, final String dbUser, final String dbPwd,
+            final Map<String, Integer> options) {
+        LOGGER.traceEntry("Parameter\n\tdbUrl : {}\n\tdbPwd : {}\n\toptions : {}", dbUrl, dbPwd,
+                options);
+        if (dbConnector == null) {
+            dbConnector = new JDBCConnector(dbUrl, dbUser, dbPwd, options);
+        }
         LOGGER.traceExit();
     }
 
@@ -297,7 +351,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      * @throws SQLException When an SQL execption occurs
      */
     private List<DOIUser> getDOIUSers(final PreparedStatement statement) throws SQLException {
-        LOGGER.traceEntry("Parameter\n\t statement: {}", statement.toString());        
+        LOGGER.traceEntry("Parameter\n\t statement: {}", statement.toString());
         LOGGER.debug(statement.toString());
         final List<DOIUser> users = new ArrayList<>();
         try (final ResultSet rs = statement.executeQuery()) {
@@ -321,7 +375,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      * @throws SQLException When an SQL execption occurs
      */
     private List<String> getTokens(final PreparedStatement statement) throws SQLException {
-        LOGGER.traceEntry("Parameter\n\t statement: {}", statement.toString());                
+        LOGGER.traceEntry("Parameter\n\t statement: {}", statement.toString());
         LOGGER.debug(statement.toString());
         final List<String> tokens = new ArrayList<>();
         try (ResultSet rs = statement.executeQuery()) {
@@ -354,7 +408,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      * @throws SQLException When an SQL execption occurs
      */
     private List<String> getProjectName(final PreparedStatement statement) throws SQLException {
-        LOGGER.traceEntry("Parameter\n\t statement: {}", statement.toString());                
+        LOGGER.traceEntry("Parameter\n\t statement: {}", statement.toString());
         LOGGER.debug(statement.toString());
         final List<String> projectName = new ArrayList<>();
         try (ResultSet rs = statement.executeQuery()) {
@@ -373,8 +427,8 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      * @throws SQLException When an SQL execption occurs
      */
     private boolean isQueryExist(final PreparedStatement statement) throws SQLException {
-        LOGGER.traceEntry("Parameter\n\t statement: {}", statement.toString());                
-        boolean isExist = false;
+        LOGGER.traceEntry("Parameter\n\t statement: {}", statement.toString());
+        final boolean isExist;
         LOGGER.debug(statement.toString());
         try (final ResultSet resultSet = statement.executeQuery()) {
             isExist = resultSet.next();
@@ -384,12 +438,12 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
     }
 
     /**
-     * Close the statements and connection.
+     * Close the statements and free the connection.
      *
-     * @param conn conection to close
-     * @param statements statements to close
+     * @param conn connection to closeAndRelease
+     * @param statements statements to closeAndRelease
      */
-    private void close(final Connection conn, final PreparedStatement... statements) {
+    private void closeAndRelease(final Connection conn, final PreparedStatement... statements) {
         for (final PreparedStatement statement : statements) {
             if (statement != null) {
                 try {
@@ -412,6 +466,8 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      * {@inheritDoc}
      */
     @Override
+    @SuppressFBWarnings(value = "OBL_UNSATISFIED_OBLIGATION",
+            justification = "Cleans up with closeAndRelease method")
     public List<DOIUser> getAllDOIusers() throws DOIDbException {
         LOGGER.traceEntry();
         final List<DOIUser> users = new ArrayList<>();
@@ -427,7 +483,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
                     new DOIDbException("An exception occured when calling getAllDOIusers", e)
             );
         } finally {
-            close(conn, statement);
+            closeAndRelease(conn, statement);
         }
         return LOGGER.traceExit(users);
     }
@@ -436,6 +492,8 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      * {@inheritDoc}
      */
     @Override
+    @SuppressFBWarnings(value = "OBL_UNSATISFIED_OBLIGATION",
+            justification = "Cleans up with closeAndRelease method")
     public List<DOIProject> getAllDOIProjects() throws DOIDbException {
         LOGGER.traceEntry();
         final List<DOIProject> projects = new ArrayList<>();
@@ -451,7 +509,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
                     new DOIDbException("An exception occured when calling getAllDOIProjects", e)
             );
         } finally {
-            close(conn, statement);
+            closeAndRelease(conn, statement);
         }
         return LOGGER.traceExit(projects);
     }
@@ -460,8 +518,10 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      * {@inheritDoc}
      */
     @Override
+    @SuppressFBWarnings(value = "OBL_UNSATISFIED_OBLIGATION",
+            justification = "Cleans up with closeAndRelease method")
     public List<DOIProject> getAllDOIProjectsForUser(final String username) throws DOIDbException {
-        LOGGER.traceEntry("Parameter\n\t username: {}", username);        
+        LOGGER.traceEntry("Parameter\n\t username: {}", username);
         final List<DOIProject> projects = new ArrayList<>();
         Connection conn = null;
         PreparedStatement projectsStatement = null;
@@ -478,7 +538,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
                             e)
             );
         } finally {
-            close(conn, projectsStatement);
+            closeAndRelease(conn, projectsStatement);
         }
         return LOGGER.traceExit(projects);
     }
@@ -487,11 +547,13 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      * {@inheritDoc}
      */
     @Override
+    @SuppressFBWarnings(value = "OBL_UNSATISFIED_OBLIGATION",
+            justification = "Cleans up with closeAndRelease method")
     public List<DOIUser> getAllDOIUsersForProject(final int suffix) throws DOIDbException {
-        LOGGER.traceEntry("Parameter\n\t suffix: {}", suffix);        
+        LOGGER.traceEntry("Parameter\n\t suffix: {}", suffix);
         final List<DOIUser> users = new ArrayList<>();
         Connection conn = null;
-        PreparedStatement assignationsStatement = null;
+        final PreparedStatement assignationsStatement = null;
         PreparedStatement usersStatement = null;
         try {
             conn = dbConnector.getConnection();
@@ -504,7 +566,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
                     new DOIDbException(
                             "An exception occured when calling getAllDOIUsersForProject", e));
         } finally {
-            close(conn, assignationsStatement, usersStatement);
+            closeAndRelease(conn, assignationsStatement, usersStatement);
         }
         return LOGGER.traceExit(users);
     }
@@ -513,8 +575,10 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      * {@inheritDoc}
      */
     @Override
+    @SuppressFBWarnings(value = "OBL_UNSATISFIED_OBLIGATION",
+            justification = "Cleans up with closeAndRelease method")
     public void addDOIUser(final String username, final Boolean admin) throws DOIDbException {
-        LOGGER.traceEntry("Parameter\n\t username: {}\n\tadmin: {}", username, admin);        
+        LOGGER.traceEntry("Parameter\n\t username: {}\n\tadmin: {}", username, admin);
         Connection conn = null;
         PreparedStatement usersStatement = null;
         try {
@@ -529,7 +593,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
                     new DOIDbException("An exception occured when calling addDOIUser", e)
             );
         } finally {
-            close(conn, usersStatement);
+            closeAndRelease(conn, usersStatement);
         }
         LOGGER.traceExit();
     }
@@ -538,8 +602,10 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      * {@inheritDoc}
      */
     @Override
+    @SuppressFBWarnings(value = "OBL_UNSATISFIED_OBLIGATION",
+            justification = "Cleans up with closeAndRelease method")
     public void addDOIProject(final int suffix, final String projectname) throws DOIDbException {
-        LOGGER.traceEntry("Parameter\n\t suffix: {}\n\tprojectname: {}", suffix, projectname);        
+        LOGGER.traceEntry("Parameter\n\t suffix: {}\n\tprojectname: {}", suffix, projectname);
         Connection conn = null;
         PreparedStatement projectStatement = null;
         try {
@@ -555,7 +621,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
                     new DOIDbException("An exception occured when calling addDOIProject", e)
             );
         } finally {
-            close(conn, projectStatement);
+            closeAndRelease(conn, projectStatement);
         }
         LOGGER.traceExit();
     }
@@ -564,6 +630,8 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      * {@inheritDoc}
      */
     @Override
+    @SuppressFBWarnings(value = "OBL_UNSATISFIED_OBLIGATION",
+            justification = "Cleans up with closeAndRelease method")
     public void addDOIProjectToUser(final String username, final int suffix) throws DOIDbException {
         LOGGER.traceEntry("Parameters:\n\tusername:{}\n\tsuffix:{}", username, suffix);
         Connection conn = null;
@@ -599,7 +667,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
                     new DOIDbException("An exception occured when calling addDOIProjectToUser", e)
             );
         } finally {
-            close(conn, userStatement, projectStatement, assignationStatement);
+            closeAndRelease(conn, userStatement, projectStatement, assignationStatement);
         }
         LOGGER.traceExit();
     }
@@ -608,6 +676,8 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      * {@inheritDoc}
      */
     @Override
+    @SuppressFBWarnings(value = "OBL_UNSATISFIED_OBLIGATION",
+            justification = "Cleans up with closeAndRelease method")
     public void removeDOIProjectFromUser(final String username, final int suffix) throws
             DOIDbException {
         LOGGER.traceEntry("Parameters:\n\tusername:{}\n\tsuffix:{}", username, suffix);
@@ -626,7 +696,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
                             e)
             );
         } finally {
-            close(conn, assignationsStatement);
+            closeAndRelease(conn, assignationsStatement);
         }
         LOGGER.traceExit();
     }
@@ -635,6 +705,8 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      * {@inheritDoc}
      */
     @Override
+    @SuppressFBWarnings(value = "OBL_UNSATISFIED_OBLIGATION",
+            justification = "Cleans up with closeAndRelease method")
     public void setAdmin(final String username) throws DOIDbException {
         LOGGER.traceEntry("Parameters:\n\tusername:{}", username);
         Connection conn = null;
@@ -662,7 +734,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
                     Level.ERROR,
                     new DOIDbException("An exception occured when calling setAdmin", e));
         } finally {
-            close(conn, userStatement, updateStatement);
+            closeAndRelease(conn, userStatement, updateStatement);
         }
         LOGGER.traceExit();
     }
@@ -671,6 +743,8 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      * {@inheritDoc}
      */
     @Override
+    @SuppressFBWarnings(value = "OBL_UNSATISFIED_OBLIGATION",
+            justification = "Cleans up with closeAndRelease method")
     public void unsetAdmin(final String username) throws DOIDbException {
         LOGGER.traceEntry("Parameters:\n\tusername:{}", username);
         Connection conn = null;
@@ -686,7 +760,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
                     new DOIDbException("An exception occured when calling setAdmin", e)
             );
         } finally {
-            close(conn, usersStatement);
+            closeAndRelease(conn, usersStatement);
         }
         LOGGER.traceExit();
     }
@@ -695,6 +769,8 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      * {@inheritDoc}
      */
     @Override
+    @SuppressFBWarnings(value = "OBL_UNSATISFIED_OBLIGATION",
+            justification = "Cleans up with closeAndRelease method")
     public void renameDOIProject(final int suffix, final String newprojectname) throws
             DOIDbException {
         LOGGER.traceEntry("Parameters:\n\tsuffix:{}\n\tnewprojectname", suffix, newprojectname);
@@ -712,7 +788,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
                     new DOIDbException("An exception occured when calling setAdmin", e)
             );
         } finally {
-            close(conn, statement);
+            closeAndRelease(conn, statement);
         }
         LOGGER.traceExit();
     }
@@ -721,6 +797,8 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      * {@inheritDoc}
      */
     @Override
+    @SuppressFBWarnings(value = "OBL_UNSATISFIED_OBLIGATION",
+            justification = "Cleans up with closeAndRelease method")
     public String getDOIProjectName(final int suffix) throws DOIDbException {
         LOGGER.traceEntry("Parameters:\n\tsuffix:{}", suffix);
         Connection conn = null;
@@ -737,7 +815,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
                     new DOIDbException("An exception occured when calling getDOIProjectName", e)
             );
         } finally {
-            close(conn, statement);
+            closeAndRelease(conn, statement);
         }
         return LOGGER.traceExit(projectNameResult.isEmpty() ? null : projectNameResult.get(0));
     }
@@ -746,6 +824,8 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      * {@inheritDoc}
      */
     @Override
+    @SuppressFBWarnings(value = "OBL_UNSATISFIED_OBLIGATION",
+            justification = "Cleans up with closeAndRelease method")
     public void addToken(final String token) throws DOIDbException {
         LOGGER.traceEntry("Parameters:\n\ttoken:{}", token);
         Connection conn = null;
@@ -761,7 +841,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
                     new DOIDbException("An exception occured when calling addToken", e)
             );
         } finally {
-            close(conn, statement);
+            closeAndRelease(conn, statement);
         }
         LOGGER.traceExit();
     }
@@ -770,6 +850,8 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      * {@inheritDoc}
      */
     @Override
+    @SuppressFBWarnings(value = "OBL_UNSATISFIED_OBLIGATION",
+            justification = "Cleans up with closeAndRelease method")
     public void deleteToken(final String token) throws DOIDbException {
         LOGGER.traceEntry("Parameters:\n\ttoken:{}", token);
         Connection conn = null;
@@ -785,7 +867,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
                     new DOIDbException("An exception occured when calling deleteToken", e)
             );
         } finally {
-            close(conn, statement);
+            closeAndRelease(conn, statement);
         }
         LOGGER.traceExit();
     }
@@ -794,6 +876,8 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      * {@inheritDoc}
      */
     @Override
+    @SuppressFBWarnings(value = "OBL_UNSATISFIED_OBLIGATION",
+            justification = "Cleans up with closeAndRelease method")
     public List<String> getTokens() throws DOIDbException {
         LOGGER.traceEntry();
         final List<String> tokens = new ArrayList<>();
@@ -809,7 +893,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
                     new DOIDbException("An exception occured when calling getToken", e)
             );
         } finally {
-            close(conn, statement);
+            closeAndRelease(conn, statement);
         }
         return LOGGER.traceExit(tokens);
     }
@@ -818,6 +902,8 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      * {@inheritDoc}
      */
     @Override
+    @SuppressFBWarnings(value = "OBL_UNSATISFIED_OBLIGATION",
+            justification = "Cleans up with closeAndRelease method")
     public void removeDOIUser(final String username) throws DOIDbException {
         LOGGER.traceEntry("Parameters:\n\tusername:{}", username);
         Connection conn = null;
@@ -839,7 +925,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
                     new DOIDbException("An exception occured when calling removeDOIUser", e)
             );
         } finally {
-            close(conn, usersStatement, assignationsStatement);
+            closeAndRelease(conn, usersStatement, assignationsStatement);
         }
         LOGGER.traceExit();
     }
@@ -848,6 +934,8 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      * {@inheritDoc}
      */
     @Override
+    @SuppressFBWarnings(value = "OBL_UNSATISFIED_OBLIGATION",
+            justification = "Cleans up with closeAndRelease method")
     public void addDOIUser(final String username, final Boolean admin, final String email) throws
             DOIDbException {
         LOGGER.traceEntry("Parameters:\n\tusername:{}\n\tadmin:{}\n\temail:{}", username, admin,
@@ -867,7 +955,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
                     new DOIDbException("An exception occured when calling addDOIUser", e)
             );
         } finally {
-            close(conn, statement);
+            closeAndRelease(conn, statement);
         }
         LOGGER.traceExit();
     }
@@ -876,6 +964,8 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      * {@inheritDoc}
      */
     @Override
+    @SuppressFBWarnings(value = "OBL_UNSATISFIED_OBLIGATION",
+            justification = "Cleans up with closeAndRelease method")
     public void removeDOIProject(final int suffix) throws DOIDbException {
         LOGGER.traceEntry("Parameters:\n\tsuffix:{}", suffix);
         Connection conn = null;
@@ -897,7 +987,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
                     new DOIDbException("An exception occured when calling removeDOIProject", e)
             );
         } finally {
-            close(conn, projectStatement, assignationsStatement);
+            closeAndRelease(conn, projectStatement, assignationsStatement);
         }
         LOGGER.traceExit();
     }
@@ -923,6 +1013,8 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
      * @return DOIUser or null
      * @throws DOIDbException - if a database error occurs.
      */
+    @SuppressFBWarnings(value = "OBL_UNSATISFIED_OBLIGATION",
+            justification = "Cleans up with closeAndRelease method")
     private DOIUser getDoiUserFromDb(final String username) throws DOIDbException {
         LOGGER.traceEntry("Parameters:\n\tusername:{}", username);
         Connection conn = null;
@@ -939,7 +1031,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
                     new DOIDbException("An exception occured when calling getAllDOIusers", e)
             );
         } finally {
-            close(conn, statement);
+            closeAndRelease(conn, statement);
         }
         return LOGGER.traceExit(doiusers.isEmpty() ? null : doiusers.get(0));
     }
@@ -960,6 +1052,7 @@ public class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService {
     public void close() throws DOIDbException {
         LOGGER.traceEntry();
         this.dbConnector.close();
+        this.dbConnector = null;
         LOGGER.traceExit();
     }
 

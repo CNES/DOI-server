@@ -70,6 +70,7 @@ import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.MdsSpec;
 import fr.cnes.doi.client.ClientProxyTest;
 import fr.cnes.doi.exception.ClientMdsException;
+import fr.cnes.doi.plugin.impl.db.DefaultLDAPImpl;
 import fr.cnes.doi.resource.mds.DoisResource;
 import fr.cnes.doi.security.UtilsHeader;
 import fr.cnes.doi.settings.Consts;
@@ -261,7 +262,7 @@ public class ITperformance {
         @Override
         public void run() {
             
-            final String userAdmin = DoiSettings.getInstance().getString(Consts.LDAP_DOI_ADMIN);
+            final String userAdmin = DoiSettings.getInstance().getString(DefaultLDAPImpl.LDAP_DOI_ADMIN);
             final String password = System.getProperty("doi-admin-pwd");
             
             Form doiForm = new Form();

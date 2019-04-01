@@ -58,15 +58,16 @@ import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.client.ClientMDS;
 import fr.cnes.doi.exception.ClientMdsException;
-import fr.cnes.doi.exception.LDAPAccessException;
-import fr.cnes.doi.ldap.impl.LDAPAccessServiceImpl;
-import fr.cnes.doi.ldap.model.LDAPUser;
+import fr.cnes.doi.exception.AuthenticationAccessException;
+import fr.cnes.doi.db.model.AuthSystemUser;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import java.util.List;
 import static org.junit.Assert.assertTrue;
-import fr.cnes.doi.ldap.service.ILDAPAccessService;
 import org.restlet.representation.Representation;
+import fr.cnes.doi.db.IAuthenticationDBHelper;
+import fr.cnes.doi.plugin.PluginFactory;
+import fr.cnes.doi.plugin.impl.db.DefaultLDAPImpl;
 
 /**
  *
@@ -106,7 +107,7 @@ public class ITauthentication {
 	    parameters.add("truststorePassword",
 		    DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
 	    parameters.add("truststoreType", "JKS");
-            userAdmin = DoiSettings.getInstance().getString(Consts.LDAP_DOI_ADMIN);
+            userAdmin = DoiSettings.getInstance().getString(DefaultLDAPImpl.LDAP_DOI_ADMIN);
             password = System.getProperty("doi-admin-pwd");
 	} catch (Error ex) {
 	    isDatabaseConfigured = false;
@@ -268,15 +269,15 @@ public class ITauthentication {
     }    
     
     @Test
-    public void testLDAPWithDoiGroup() throws LDAPAccessException {
-        ILDAPAccessService ldapaccessservice = new LDAPAccessServiceImpl();
-        List<LDAPUser> ldap = ldapaccessservice.getDOIProjectMembers();
+    public void testLDAPWithDoiGroup() throws AuthenticationAccessException {
+        IAuthenticationDBHelper ldapaccessservice = PluginFactory.getAuthenticationSystem();
+        List<AuthSystemUser> ldap = ldapaccessservice.getDOIProjectMembers();
         assertTrue(!ldap.isEmpty());
     }
     
     @Test
-    public void testLDAPAuthentication() throws LDAPAccessException {
-        ILDAPAccessService ldapaccessservice = new LDAPAccessServiceImpl();
+    public void testLDAPAuthentication() throws AuthenticationAccessException {
+        IAuthenticationDBHelper ldapaccessservice = PluginFactory.getAuthenticationSystem();
         boolean isAuthenticated = ldapaccessservice.authenticateUser(userAdmin,password);
         assertTrue(isAuthenticated);
     }    

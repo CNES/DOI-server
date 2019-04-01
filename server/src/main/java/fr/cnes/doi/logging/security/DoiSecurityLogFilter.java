@@ -77,7 +77,7 @@ public class DoiSecurityLogFilter extends Filter {
             LogManager.getLogger(Utils.SECURITY_LOGGER_NAME).info(
                     "User: {} \tProfile(s): {}\t - [{}] - [{}] {} {} {} - {}",
                     identifier, profiles, upStreamIp, authenticationMethod,
-                    method, targetUri, response.getStatus().getCode(), 
+                    method, targetUri, response.getStatus().getCode(),
                     clientInfo.getAgent());
         }
     }

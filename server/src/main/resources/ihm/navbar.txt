@@ -17,6 +17,7 @@
 				<li><a href="doiModification.html">Modification DOI</a></li>
 				<li><a href="doiDeactivation.html">Desactivation DOI</a></li>
 				<li><a href="citations.html">Citations</a></li>
+                                <li><a href="tokenCreation.html">Créer token</a></li>
 				<li><a href="administration.html">Administration</a></li>
 			</ul>
 			<button type="button" class="navbar-btn navbar-right" onclick="disconnect()">Se déconnecter</button>

@@ -123,7 +123,7 @@ public class TokenResourceTest {
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
         client.setNext(cl);
         Form form = new Form();
-        form.add("identifier", "jcm");
+        form.add("identifier", "malapert");
         form.add("projectID", "828606");
         Representation response = client.post(form);
         String token = response.getText();
@@ -161,8 +161,6 @@ public class TokenResourceTest {
      */
     @Test
     public void testCreateTokenWithWrongCredentials() throws IOException {
-    	// if LDAP isn't setted, ignore the test
-    	org.junit.Assume.assumeTrue("LDAP not configured, please configure it before running this test.",!"".equals(DoiSettings.getInstance().getString(Consts.LDAP_URL)));
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + "/admin/token");
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "test");
@@ -189,7 +187,6 @@ public class TokenResourceTest {
     @Test
     public void testGetTokenInformationWithWrongCredentials() throws IOException {
     	// if LDAP isn't setted, ignore the test
-    	org.junit.Assume.assumeTrue("LDAP not configured, please configure it before running this test.",!"".equals(DoiSettings.getInstance().getString(Consts.LDAP_URL)));
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + "/admin/token");
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");

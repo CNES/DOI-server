@@ -19,7 +19,6 @@
 package fr.cnes.doi.security;
 
 import fr.cnes.doi.db.AbstractUserRoleDBHelper;
-import fr.cnes.doi.ldap.impl.LDAPAccessServiceImpl;
 import java.util.Base64;
 
 import org.apache.logging.log4j.LogManager;
@@ -31,10 +30,9 @@ import org.restlet.data.ChallengeScheme;
 import org.restlet.security.Verifier;
 
 import fr.cnes.doi.logging.business.JsonMessage;
-import fr.cnes.doi.settings.Consts;
-import fr.cnes.doi.settings.DoiSettings;
-import fr.cnes.doi.ldap.service.ILDAPAccessService;
 import fr.cnes.doi.plugin.PluginFactory;
+import fr.cnes.doi.db.IAuthenticationDBHelper;
+import java.nio.charset.Charset;
 
 /**
  * Security class for checking login/password.
@@ -49,15 +47,15 @@ public class LoginBasedVerifier implements Verifier {
     private static final Logger LOG = LogManager.getLogger(LoginBasedVerifier.class.getName());
 
     /**
-     * LDAP access instance.
+     * Authentication access instance.
      */
-    private final ILDAPAccessService ldapService;
+    private final IAuthenticationDBHelper authenticationService;
 
     /**
      * Constructor.
      */
     public LoginBasedVerifier() {
-        this.ldapService = new LDAPAccessServiceImpl();
+        this.authenticationService = PluginFactory.getAuthenticationSystem();
     }
 
     /**
@@ -100,27 +98,14 @@ public class LoginBasedVerifier implements Verifier {
             return LOG.traceExit(Verifier.RESULT_MISSING);
         }
 
-        final String decodedLogin = new String(Base64.getDecoder().decode(login));
+        final String decodedLogin = new String(Base64.getDecoder().decode(login), Charset.
+                defaultCharset());
         final String[] userLogin = decodedLogin.split(":");
-
-        final boolean isLDAPSetted = DoiSettings.getInstance().hasValue(Consts.LDAP_URL);
-        final boolean isProdContext = DoiSettings.getInstance().getString(Consts.CONTEXT_MODE).
-                equals("PROD");
 
         final AbstractUserRoleDBHelper manageUsers = PluginFactory.getUserManagement();
         if (manageUsers.isUserExist(userLogin[0])) {
-            if (isLDAPSetted) {
-                LOG.debug("LDAP is configured");
-                result = ldapService.authenticateUser(userLogin[0], userLogin[1])
-                        ? Verifier.RESULT_VALID : Verifier.RESULT_INVALID;
-            } else if (isProdContext) {
-                LOG.warn("LDAP is not configured for PROD context, authentication is invalid");
-                result = Verifier.RESULT_INVALID;
-            } else {
-                LOG.warn("LDAP is not configured for PROD context, we skip authentication because"
-                        + "we do not have the infrastructure to test");
-                result = Verifier.RESULT_VALID;
-            }
+            result = authenticationService.authenticateUser(userLogin[0], userLogin[1])
+                    ? Verifier.RESULT_VALID : Verifier.RESULT_INVALID;
         } else {
             result = Verifier.RESULT_INVALID;
         }

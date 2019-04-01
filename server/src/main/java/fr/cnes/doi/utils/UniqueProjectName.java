@@ -18,10 +18,12 @@
  */
 package fr.cnes.doi.utils;
 
+import fr.cnes.doi.db.model.DOIProject;
+import fr.cnes.doi.exception.DOIDbException;
 import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.utils.spec.Requirement;
-import java.util.Map;
+import java.util.List;
 import java.util.Random;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -57,10 +59,12 @@ public final class UniqueProjectName {
      * Returns the projects from the database.
      *
      * @return the projects
+     * @throws fr.cnes.doi.exception.DOIDbException When a problem occurs
      */
-    public Map<String, Integer> getProjects() {
+    public List<DOIProject> getProjects() throws DOIDbException {
         LOGGER.traceEntry();
-        return LOGGER.traceExit("List of projects", PluginFactory.getProjectSuffix().getProjects());
+        final List<DOIProject> projects = PluginFactory.getProjectSuffix().getProjects();
+        return LOGGER.traceExit("List of projects", projects);
     }
 
     /**
@@ -68,11 +72,13 @@ public final class UniqueProjectName {
      *
      * @param userName user name
      * @return the projects
+     * @throws fr.cnes.doi.exception.DOIDbException When a problem occurs
      */
-    public Map<String, Integer> getProjectsFromUser(final String userName) {
+    public List<DOIProject> getProjectsFromUser(final String userName) throws DOIDbException {
         LOGGER.traceEntry("Parameter\n  userName:{}", userName);
-        return LOGGER.traceExit("Projects for userName", PluginFactory.getProjectSuffix().
-                getProjectsFromUser(userName));
+        final List<DOIProject> projects = PluginFactory.getProjectSuffix().getProjectsFromUser(
+                userName);
+        return LOGGER.traceExit("Projects for userName", projects);
     }
 
     /**
@@ -114,10 +120,11 @@ public final class UniqueProjectName {
      * @param length length of the short name to generate (the short name must be an int to the
      * length cannot be up to 9)
      * @return the unique string
+     * @throws fr.cnes.doi.exception.DOIDbException When a problem occurs
      */
-    public int getShortName(final String project, final int length) {
+    public int getShortName(final String project, final int length) throws DOIDbException {
         LOGGER.traceEntry("Parameters\n project:{}\n  length:{}", project, length);
-        final int suffixID;
+        int suffixID;
         if (length > 9) {
             final DoiRuntimeException doiEx = new DoiRuntimeException(
                     "The short name cannot be build because the length requested is too big");
