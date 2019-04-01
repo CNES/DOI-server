@@ -69,7 +69,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <skip.unit.tests>false</skip.unit.tests>
         <skip.integration.tests>true</skip.integration.tests>
-        <dependency.locations.enabled>false</dependency.locations.enabled>   
+        <dependency.locations.enabled>false</dependency.locations.enabled>          
     </properties>
     <profiles>
         <profile>
@@ -91,9 +91,11 @@
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
+                 <filtering>true</filtering>
                 <targetPath>${project.build.directory}</targetPath>
                 <includes>
                     <include>log4j2.xml</include>
+                    <include>doi.sh</include>
                 </includes>
             </resource>            
             <resource>
@@ -115,6 +117,7 @@
                     <include> **/*.js </include>
                     <include> **/*.txt </include>
                     <include> **/*.xsd </include>
+                    <include> **/*.sh </include>
                 </includes>
             </resource>
             <resource>

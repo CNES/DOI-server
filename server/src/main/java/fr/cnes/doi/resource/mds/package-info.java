@@ -62,7 +62,7 @@
  *
  * The {@link fr.cnes.doi.client.ClientMDS clientMDS} implements the call to
  * <a href="https://support.datacite.org/docs/mds-api-guide">DataCite</a>. This clients supports the
- * proxy by the use of {@link org.restlet.ext.httpclient4.HttpClientHelper} plugin. This plugin is
+ * proxy by the use of {@link org.restlet.ext.httpclient4.HttpDOIClientHelper} plugin. This plugin is
  * registered by default when the method {@link fr.cnes.doi.client.BaseClient#getClient} is used.
  * The proxy parameters are automatically set from the config.properties by the use of
  * {@link fr.cnes.doi.settings.ProxySettings}
