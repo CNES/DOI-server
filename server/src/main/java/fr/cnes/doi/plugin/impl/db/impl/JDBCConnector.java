@@ -30,6 +30,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import fr.cnes.doi.security.UtilsCryptography;
+import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.utils.Utils;
 import java.util.Map;
 import org.apache.logging.log4j.Level;
@@ -140,7 +141,7 @@ public class JDBCConnector {
         ds.setUrl(dbUrl);
         ds.setUsername(dbUser);
         try {
-            final String decryptedPasswd = UtilsCryptography.decrypt(dbPwd);
+            final String decryptedPasswd = DoiSettings.getInstance().getSecretValue(dbPwd);
             ds.setPassword(decryptedPasswd);
         } catch (Exception e) {
             throw LOGGER.throwing(Level.ERROR, new DoiRuntimeException(

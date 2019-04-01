@@ -358,6 +358,11 @@ public final class Consts {
      * Attributes name in LDAP for fullname.
      */
     public static final String ATTRIBUTION = "Starter.attribution";
+    
+    /**
+     * True when login/password are encoded otherwise false.
+     */
+    public static final String ENCRYPTED_FIELDS = "Starter.encrypted_fields";
 
     /**
      * "Static" class cannot be instantiated

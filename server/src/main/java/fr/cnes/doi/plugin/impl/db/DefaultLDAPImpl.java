@@ -39,6 +39,7 @@ import fr.cnes.doi.db.model.AuthSystemUser;
 import fr.cnes.doi.security.UtilsCryptography;
 import fr.cnes.doi.utils.Utils;
 import fr.cnes.doi.plugin.AbstractAuthenticationPluginHelper;
+import fr.cnes.doi.settings.DoiSettings;
 import java.util.Map;
 
 /**
@@ -210,8 +211,8 @@ public final class DefaultLDAPImpl extends AbstractAuthenticationPluginHelper {
         InitialLdapContext context = null;
         if (isLdapConfigured()) {
             final Hashtable<String, String> prop = new Hashtable<>();
-            final String ldapUser = UtilsCryptography.decrypt(conf.get(LDAP_USER));
-            final String ldapPwd = UtilsCryptography.decrypt(conf.get(LDAP_PWD));
+            final String ldapUser = DoiSettings.getInstance().getSecretValue(conf.get(LDAP_USER));
+            final String ldapPwd = DoiSettings.getInstance().getSecretValue(conf.get(LDAP_PWD));
             final String securityPrincipal = String.format(
                     "uid=%s,%s",
                     ldapUser, conf.get(LDAP_SEARCH_USER)

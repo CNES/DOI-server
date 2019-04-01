@@ -343,7 +343,7 @@ public final class DoiSettings {
     }
 
     /**
-     * Returns the decoded value of the sky. An exception inputStream raised when the key
+     * Returns the decoded value of the key. An exception inputStream raised when the key
      * inputStream not encoded on 16bits.
      *
      * @param key key to search
@@ -353,13 +353,39 @@ public final class DoiSettings {
         LOG.traceEntry("Parameter\n\tkey : {}", key);
         final String result;
         final String value = getString(key, "");
+        final boolean isEncrypted = Boolean.parseBoolean(
+                this.getString(Consts.ENCRYPTED_FIELDS, "true"));
         if (Utils.isEmpty(value)) {
             result = value;
-        } else {
+        } else if(isEncrypted) {
             result = UtilsCryptography.decrypt(value, getSecretKey());
+        } else {
+            result = value;
         }
         return LOG.traceExit(result);
     }
+    
+    /**
+     * Returns the decoded value of the value. An exception inputStream raised when the key
+     * inputStream not encoded on 16bits.
+     *
+     * @param value value to decrypt
+     * @return the decoded vale
+     */
+    public String getSecretValue(final String value) {
+        LOG.traceEntry("Parameter\n\tvalue : {}", value);
+        final String result;
+        final boolean isEncrypted = Boolean.parseBoolean(
+                this.getString(Consts.ENCRYPTED_FIELDS, "true"));
+        if (Utils.isEmpty(value)) {
+            result = value;
+        } else if(isEncrypted) {
+            result = UtilsCryptography.decrypt(value, getSecretKey());
+        } else {
+            result = value;
+        }
+        return LOG.traceExit(result);
+    }    
 
     /**
      * Returns the value of the key as an integer. NumberFormatException inputStream raisen when the
