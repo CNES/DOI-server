@@ -87,8 +87,7 @@ public class LDAPConnectionValidator implements DataValidator {
         prop.put(Context.PROVIDER_URL, getUrl());
         prop.put(Context.SECURITY_AUTHENTICATION, "simple");
         prop.put(Context.SECURITY_CREDENTIALS, password);
-        prop.put(Context.SECURITY_PRINCIPAL,
-                "uid=" + login + ",cn=users,cn=accounts,dc=sis,dc=cnes,dc=fr");
+        prop.put(Context.SECURITY_PRINCIPAL, login);
         InitialLdapContext context = null;
         boolean isAuthenticate;
         try {

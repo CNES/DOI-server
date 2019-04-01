@@ -127,7 +127,7 @@ public final class EmailSettings {
         this.smtpUrl = settings.getString(Consts.SMTP_URL, "");
         LOG.info(String.format("smtp URL : %s", this.smtpUrl));
 
-        this.authUser = settings.getSecret(Consts.SMTP_AUTH_USER);
+        this.authUser = settings.getString(Consts.SMTP_AUTH_USER, "");
         LOG.info(String.format("auth user : %s", this.authUser));
 
         this.authPwd = settings.getSecret(Consts.SMTP_AUTH_PWD);

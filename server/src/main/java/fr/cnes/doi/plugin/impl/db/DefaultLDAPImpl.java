@@ -36,7 +36,6 @@ import org.apache.logging.log4j.Logger;
 
 import fr.cnes.doi.exception.AuthenticationAccessException;
 import fr.cnes.doi.db.model.AuthSystemUser;
-import fr.cnes.doi.security.UtilsCryptography;
 import fr.cnes.doi.utils.Utils;
 import fr.cnes.doi.plugin.AbstractAuthenticationPluginHelper;
 import fr.cnes.doi.settings.DoiSettings;
@@ -211,12 +210,9 @@ public final class DefaultLDAPImpl extends AbstractAuthenticationPluginHelper {
         InitialLdapContext context = null;
         if (isLdapConfigured()) {
             final Hashtable<String, String> prop = new Hashtable<>();
-            final String ldapUser = DoiSettings.getInstance().getSecretValue(conf.get(LDAP_USER));
+            final String ldapUser = conf.get(LDAP_USER);
             final String ldapPwd = DoiSettings.getInstance().getSecretValue(conf.get(LDAP_PWD));
-            final String securityPrincipal = String.format(
-                    "uid=%s,%s",
-                    ldapUser, conf.get(LDAP_SEARCH_USER)
-            );
+            final String securityPrincipal = ldapUser;
             final String ldapUrl = conf.get(LDAP_URL);
             prop.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
             prop.put(Context.PROVIDER_URL, ldapUrl);
