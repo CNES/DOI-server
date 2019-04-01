@@ -283,7 +283,7 @@ public abstract class AbstractResource extends WadlServerResource {
         repInfo.setDocumentation(docInfo);
         return repInfo;
     }
-    
+
     /**
      * projects representation
      *
@@ -297,6 +297,6 @@ public abstract class AbstractResource extends WadlServerResource {
         docInfo.setTextContent("The representation contains the HTML representation.");
         repInfo.setDocumentation(docInfo);
         return repInfo;
-    }    
+    }
 
 }

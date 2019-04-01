@@ -181,7 +181,7 @@ public final class DoiMdsApplication extends AbstractApplication {
             final String contextMode = this.getConfig().getString(Consts.CONTEXT_MODE);
             client = new ClientMDS(ClientMDS.Context.valueOf(contextMode), getLoginMds(),
                     getPwdMds());
-            this.tokenDB = TokenSecurity.getInstance().getTOKEN_DB();
+            this.tokenDB = TokenSecurity.getInstance().getTokenDB();
         } catch (ClientMdsException ex) {
             throw LOG.throwing(new DoiRuntimeException(ex));
         }
@@ -499,6 +499,7 @@ public final class DoiMdsApplication extends AbstractApplication {
 
         /**
          * Constructor.
+         *
          * @param status status
          * @param shortMessage short message related to the status
          */

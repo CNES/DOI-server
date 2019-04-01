@@ -62,7 +62,7 @@ public class HttpMethodCall extends ClientCall {
     /**
      * The associated HTTP client.
      */
-    private volatile HttpClientHelper clientHelper;
+    private volatile HttpDOIClientHelper clientHelper;
 
     /**
      * The wrapped HTTP request.
@@ -88,7 +88,7 @@ public class HttpMethodCall extends ClientCall {
      * @param hasEntity Indicates if the call will have an entity to send to the server.
      * @throws IOException when an error happens
      */
-    public HttpMethodCall(final HttpClientHelper helper, final String method,
+    public HttpMethodCall(final HttpDOIClientHelper helper, final String method,
             final String requestUri, boolean hasEntity) throws IOException {
         super(helper, method, requestUri);
         this.clientHelper = helper;
@@ -132,13 +132,15 @@ public class HttpMethodCall extends ClientCall {
                      */
                     @Override
                     public URI getURI() {
+                        URI uri;
                         try {
-                            return new URI(requestUri);
+                            uri = new URI(requestUri);
                         } catch (URISyntaxException e) {
                             getLogger().log(Level.WARNING,
                                     "Invalid URI syntax", e);
-                            return null;
+                            uri = null;
                         }
+                        return uri;
                     }
                 };
             }
@@ -175,11 +177,14 @@ public class HttpMethodCall extends ClientCall {
      */
     @Override
     public String getReasonPhrase() {
+        final String reasonPhrase;
         if ((getHttpResponse() != null)
                 && (getHttpResponse().getStatusLine() != null)) {
-            return getHttpResponse().getStatusLine().getReasonPhrase();
+            reasonPhrase = getHttpResponse().getStatusLine().getReasonPhrase();
+        } else {
+            reasonPhrase = null;
         }
-        return null;
+        return reasonPhrase;
     }
 
     /**
@@ -290,11 +295,14 @@ public class HttpMethodCall extends ClientCall {
      */
     @Override
     public int getStatusCode() {
+        final int statusCode;
         if (getHttpResponse() != null
                 && getHttpResponse().getStatusLine() != null) {
-            return getHttpResponse().getStatusLine().getStatusCode();
+            statusCode = getHttpResponse().getStatusLine().getStatusCode();
+        } else {
+            statusCode = Status.CONNECTOR_ERROR_COMMUNICATION.getCode();
         }
-        return Status.CONNECTOR_ERROR_COMMUNICATION.getCode();
+        return statusCode;
     }
 
     /**

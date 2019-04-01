@@ -44,6 +44,9 @@ public final class PluginFactory {
      */
     private static final Map<String, String> SETTINGS = new HashMap<>();
 
+    /**
+     * Stores the instances of plugin.
+     */
     private static final Map<String, Object> CONFIG = new ConcurrentHashMap<>();
 
     /**
@@ -71,7 +74,7 @@ public final class PluginFactory {
     public static AbstractUserRolePluginHelper getUserManagement() {
         final String implClassName = PLUGINS_IMPL.get(Consts.PLUGIN_USER_GROUP_MGT);
         final AbstractUserRolePluginHelper plugin = getPlugin(implClassName);
-        if(!plugin.isConfigured()) {
+        if (!plugin.isConfigured()) {
             plugin.setConfiguration(SETTINGS);
         }
         return plugin;
@@ -85,7 +88,7 @@ public final class PluginFactory {
     public static AbstractProjectSuffixPluginHelper getProjectSuffix() {
         final String implClassName = PLUGINS_IMPL.get(Consts.PLUGIN_PROJECT_SUFFIX);
         final AbstractProjectSuffixPluginHelper plugin = getPlugin(implClassName);
-        if(!plugin.isConfigured()) {
+        if (!plugin.isConfigured()) {
             plugin.setConfiguration(SETTINGS);
         }
         return plugin;
@@ -99,7 +102,7 @@ public final class PluginFactory {
     public static AbstractTokenDBPluginHelper getToken() {
         final String implClassName = PLUGINS_IMPL.get(Consts.PLUGIN_TOKEN);
         final AbstractTokenDBPluginHelper plugin = getPlugin(implClassName);
-        if(!plugin.isConfigured()) {
+        if (!plugin.isConfigured()) {
             plugin.setConfiguration(SETTINGS);
         }
         return plugin;
@@ -113,7 +116,7 @@ public final class PluginFactory {
     public static AbstractAuthenticationPluginHelper getAuthenticationSystem() {
         final String implClassName = PLUGINS_IMPL.get(Consts.PLUGIN_AUTHENTICATION);
         final AbstractAuthenticationPluginHelper plugin = getPlugin(implClassName);
-        if(!plugin.isConfigured()) {
+        if (!plugin.isConfigured()) {
             plugin.setConfiguration(SETTINGS);
         }
         return plugin;
@@ -133,11 +136,11 @@ public final class PluginFactory {
         try {
             final String implClassName = PLUGINS_IMPL.get(keywordClassName);
             final Class implClass = Class.forName(implClassName);
-            Method method = implClass.getMethod("isPassword", String.class);
-            Object obj = method.invoke(null, key);
+            final Method method = implClass.getMethod("isPassword", String.class);
+            final Object obj = method.invoke(null, key);
             return Boolean.getBoolean(String.valueOf(obj));
-        } catch (ClassNotFoundException | NoSuchMethodException | SecurityException 
-                | IllegalAccessException | IllegalArgumentException 
+        } catch (ClassNotFoundException | NoSuchMethodException | SecurityException
+                | IllegalAccessException | IllegalArgumentException
                 | InvocationTargetException ex) {
             throw new DoiRuntimeException(ex);
         }

@@ -112,6 +112,7 @@ public class LandingPageMonitoring implements Runnable {
 
     /**
      * Build detail message for a record
+     *
      * @param record
      * @return the message
      */

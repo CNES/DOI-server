@@ -122,7 +122,7 @@ public class AuthenticationResource extends AbstractResource {
         // token is valid for 12 hours
         final int amount = doiSetting.getInt(Consts.TOKEN_EXPIRATION_DELAY, "12");
         final int timeUnit = doiSetting.getInt(
-                Consts.TOKEN_EXPIRATION_UNIT, 
+                Consts.TOKEN_EXPIRATION_UNIT,
                 String.valueOf(TokenSecurity.TimeUnit.HOUR.getTimeUnit())
         );
         final TimeUnit unit = TokenSecurity.TimeUnit.getTimeUnitFrom(timeUnit);
@@ -136,7 +136,7 @@ public class AuthenticationResource extends AbstractResource {
             LOG.info("Token coud not be saved in data base.");
         }
 
-        if(token == null) {
+        if (token == null) {
             throw LOG.throwing(new ResourceException(
                     Status.SERVER_ERROR_INTERNAL, "Cannot generate the token"));
         } else {
@@ -160,7 +160,7 @@ public class AuthenticationResource extends AbstractResource {
         LOG.debug("The form is valid");
         LOG.traceExit();
     }
-    
+
     @Override
     protected void describePost(final MethodInfo info) {
         info.setName(Method.POST);
@@ -176,5 +176,5 @@ public class AuthenticationResource extends AbstractResource {
         addResponseDocToMethod(info, createResponseDoc(
                 Status.SERVER_ERROR_INTERNAL, "Cannot generate the token")
         );
-    }    
+    }
 }

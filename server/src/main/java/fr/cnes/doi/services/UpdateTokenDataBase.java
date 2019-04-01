@@ -27,7 +27,6 @@ import fr.cnes.doi.db.AbstractTokenDBHelper;
 import fr.cnes.doi.exception.DOIDbException;
 import fr.cnes.doi.security.TokenSecurity;
 import java.util.ArrayList;
-import java.util.logging.Level;
 
 /**
  * Updates token database. The service checks if the token is expired. When it is expired, the token
@@ -41,11 +40,11 @@ public class UpdateTokenDataBase implements Runnable {
      * Logger.
      */
     private static final Logger LOG = LogManager.getLogger(UpdateTokenDataBase.class.getName());
-    
+
     /**
      * Token database.
      */
-    private final AbstractTokenDBHelper tokenDB = TokenSecurity.getInstance().getTOKEN_DB();
+    private final AbstractTokenDBHelper tokenDB = TokenSecurity.getInstance().getTokenDB();
 
     /**
      * {@inheritDoc}

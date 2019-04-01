@@ -85,7 +85,7 @@ public class FooterIhmResource extends AbstractResource {
                 "class/ihm_footer.ftl")).get();
         return LOG.traceExit(new TemplateRepresentation(configFtl, dataModel, MediaType.TEXT_ALL));
     }
-    
+
     @Override
     protected void describeGet(final MethodInfo info) {
         info.setName(Method.GET);
@@ -94,6 +94,6 @@ public class FooterIhmResource extends AbstractResource {
                 Status.SUCCESS_OK, "Operation successful",
                 stringRepresentation())
         );
-    }     
+    }
 
 }

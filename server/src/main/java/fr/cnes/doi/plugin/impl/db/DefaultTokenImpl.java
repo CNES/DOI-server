@@ -97,7 +97,7 @@ public final class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
      * Status of the plugin configuration.
      */
     private boolean isConfigured = false;
-    
+
     /**
      * Default Constructor of the token database
      */
@@ -130,7 +130,7 @@ public final class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
         LOG.info("[CONF] Plugin database URL : {}", dbUrl);
         LOG.info("[CONF] Plugin database user : {}", dbUser);
         LOG.info("[CONF] Plugin database password : {}", Utils.transformPasswordToStars(dbPwd));
-        LOG.info("[CONF] Plugin options : {}", options);        
+        LOG.info("[CONF] Plugin options : {}", options);
 
         DatabaseSingleton.getInstance().init(dbUrl, dbUser, dbPwd, options);
         this.das = DatabaseSingleton.getInstance().getDatabaseAccess();
@@ -224,7 +224,7 @@ public final class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
      */
     @Override
     public List<String> getTokens() throws DOIDbException {
-        final List<String> tokens = new ArrayList<>();      
+        final List<String> tokens = new ArrayList<>();
         tokens.addAll(das.getTokens());
         return tokens;
     }
@@ -287,6 +287,7 @@ public final class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
 
     /**
      * Checks if the keyword is a password.
+     *
      * @param key keyword to check
      * @return True when the keyword is a password otherwise False
      */

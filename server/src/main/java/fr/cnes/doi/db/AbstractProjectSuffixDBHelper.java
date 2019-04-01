@@ -130,7 +130,8 @@ public abstract class AbstractProjectSuffixDBHelper extends Observable {
      * @return the projected to an user
      * @throws fr.cnes.doi.exception.DOIDbException When an error occurs
      */
-    public abstract List<DOIProject> getProjectsFromUser(final String userName) throws DOIDbException;
+    public abstract List<DOIProject> getProjectsFromUser(final String userName) throws
+            DOIDbException;
 
     /**
      * Returns the users related to a project.
@@ -139,6 +140,7 @@ public abstract class AbstractProjectSuffixDBHelper extends Observable {
      * @return the users
      * @throws fr.cnes.doi.exception.DOIDbException When an error occurs.
      */
-    public abstract List<DOIUser> getAllDOIUsersForProject(final int doiSuffix) throws DOIDbException;
+    public abstract List<DOIUser> getAllDOIUsersForProject(final int doiSuffix) throws
+            DOIDbException;
 
 }

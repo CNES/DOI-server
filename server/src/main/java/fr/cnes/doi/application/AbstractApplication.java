@@ -72,7 +72,7 @@ public abstract class AbstractApplication extends WadlApplication {
     /**
      * Token database.
      */
-    private final AbstractTokenDBHelper tokenDB = TokenSecurity.getInstance().getTOKEN_DB();
+    private final AbstractTokenDBHelper tokenDB = TokenSecurity.getInstance().getTokenDB();
     /**
      * DOI settings.
      */

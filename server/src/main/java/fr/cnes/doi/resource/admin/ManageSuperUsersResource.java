@@ -82,11 +82,13 @@ public class ManageSuperUsersResource extends AbstractResource {
         final String newSuperUserName = mediaForm.getFirstValue(SUPERUSER_NAME_PARAMETER);
         final AbstractUserRoleDBHelper manageUsers = PluginFactory.getUserManagement();
         if (!manageUsers.isUserExist(newSuperUserName)) {
-            throw LOG.throwing(new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "Can't find user "+newSuperUserName));
-        } else if(manageUsers.setUserToAdminGroup(newSuperUserName)) {
+            throw LOG.throwing(new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST,
+                    "Can't find user " + newSuperUserName));
+        } else if (manageUsers.setUserToAdminGroup(newSuperUserName)) {
             setStatus(Status.SUCCESS_NO_CONTENT);
         } else {
-            throw LOG.throwing(new ResourceException(Status.SERVER_ERROR_INTERNAL, "Can't create user "+newSuperUserName));            
+            throw LOG.throwing(new ResourceException(Status.SERVER_ERROR_INTERNAL,
+                    "Can't create user " + newSuperUserName));
         }
     }
 
@@ -99,8 +101,8 @@ public class ManageSuperUsersResource extends AbstractResource {
     // @Requirement(reqId = Requirement.DOI_SRV_140, reqName =
     // Requirement.DOI_SRV_140_NAME)
     @Get
-    public List<String> getSuperUsersAsJson(){
-        LOG.traceEntry();        
+    public List<String> getSuperUsersAsJson() {
+        LOG.traceEntry();
         try {
             final ArrayList<String> result = new ArrayList<>();
             final AbstractUserRoleDBHelper manageUsers = PluginFactory.getUserManagement();
@@ -130,5 +132,5 @@ public class ManageSuperUsersResource extends AbstractResource {
         }
         LOG.debug("The form is valid");
         LOG.traceExit();
-    }      
+    }
 }

@@ -36,7 +36,7 @@ import org.restlet.data.Parameter;
 import org.restlet.data.Protocol;
 import org.restlet.engine.Engine;
 import org.restlet.engine.connector.ConnectorHelper;
-import org.restlet.ext.httpclient4.HttpClientHelper;
+import org.restlet.ext.httpclient4.HttpDOIClientHelper;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 import org.restlet.routing.Filter;
@@ -171,7 +171,7 @@ public class DoiServer extends Component {
     static {
         final List<ConnectorHelper<Client>> registeredClients = Engine.getInstance().
                 getRegisteredClients();
-        registeredClients.add(0, new HttpClientHelper(null));
+        registeredClients.add(0, new HttpDOIClientHelper(null));
     }
 
     /**
@@ -502,7 +502,7 @@ public class DoiServer extends Component {
 
     /**
      * {@inheritDoc}
-     */    
+     */
     @Override
     public synchronized void stop() throws Exception {
         LOG.info("Stopping the server ...");

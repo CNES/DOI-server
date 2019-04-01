@@ -124,7 +124,8 @@ public final class InitDataBaseForTest {
             // assign user to project
             das.addDOIProjectToUser(testuser.getUsername(), testProject.getSuffix());
             das.addDOIProjectToUser(testLdapUser.getUsername(), testProject.getSuffix());
-            das.addDOIProjectToUser(testLdapUser.getUsername(), testProject2.getSuffix());            
+            das.addDOIProjectToUser(testLdapUser.getUsername(), testProject2.getSuffix());
+            das.addDOIProjectToUser(kerberos.getUsername(), testProject2.getSuffix());
         } catch (DOIDbException e) {
             logger.error("testDoiUsers failed: unexpected exception: ", e);
             fail();

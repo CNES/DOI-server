@@ -66,26 +66,26 @@ public class ClientSearchDataCite extends BaseClient {
     /**
      * Constructor.
      *
-     * @param doi_prefix DOI prefix
+     * @param doiPrefix DOI prefix
      * @throws Exception when an error happens
      */
-    public ClientSearchDataCite(final String doi_prefix) throws Exception {
+    public ClientSearchDataCite(final String doiPrefix) throws Exception {
         super(BASE_URI);
-        computeListDOI(0, doi_prefix);
+        computeListDOI(0, doiPrefix);
     }
 
     /**
      * Computes recursively the response.
      *
      * @param start page number
-     * @param doi_prefix DOI prefix
+     * @param doiPrefix DOI prefix
      * @throws DoiRuntimeException - if the status of the query is not 200
      * @throws java.io.IOException - if an error happens in the stream
      */
     public final void computeListDOI(final int start,
-            final String doi_prefix) throws DoiRuntimeException, IOException {
+            final String doiPrefix) throws DoiRuntimeException, IOException {
         this.getClient().setReference(BASE_URI);
-        this.getClient().addQueryParameter("q", "prefix:" + doi_prefix);
+        this.getClient().addQueryParameter("q", "prefix:" + doiPrefix);
         this.getClient().addQueryParameter("fl", "doi");
         this.getClient().addQueryParameter("wt", "json");
         this.getClient().addQueryParameter("indent", "true");
@@ -103,13 +103,13 @@ public class ClientSearchDataCite extends BaseClient {
                 this.doiList.add(String.valueOf(doi.get("doi")));
             }
             if (this.doiList.size() != numFound) {
-                computeListDOI(this.doiList.size(), doi_prefix);
+                computeListDOI(this.doiList.size(), doiPrefix);
             }
             this.getClient().release();
         } else {
             this.getClient().release();
             throw new DoiRuntimeException(status.getDescription(), status.getThrowable());
-        } 
+        }
     }
 
     /**

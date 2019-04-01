@@ -45,7 +45,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -266,7 +265,7 @@ public final class TokenSecurity {
      *
      * @return the token DB
      */
-    public AbstractTokenDBHelper getTOKEN_DB() {
+    public AbstractTokenDBHelper getTokenDB() {
         LOG.traceEntry();
         return LOG.traceExit(TokenSecurity.TOKEN_DB);
     }

@@ -123,7 +123,7 @@ public class DOIUsersUpdate implements Runnable {
 
     /**
      * {@inheritDoc}
-     */    
+     */
     @Override
     public void run() {
         LOG.info("executing task that updates database from the authentication system !");

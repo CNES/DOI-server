@@ -160,7 +160,7 @@ public class MetadataResource extends BaseMdsResource {
     @Get("json")
     public Resource getMetadataAsJson() throws IOException {
         final Representation rep = getMetadata();
-        JaxbRepresentation<Resource> resourceEntity = new JaxbRepresentation<>(rep, Resource.class);
+        final JaxbRepresentation<Resource> resourceEntity = new JaxbRepresentation<>(rep, Resource.class);
         return resourceEntity.getObject();
     }
 

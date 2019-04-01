@@ -52,7 +52,7 @@ import fr.cnes.doi.utils.spec.Requirement;
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 @Requirement(reqId = Requirement.DOI_AUTH_010, reqName = Requirement.DOI_AUTH_010_NAME)
-public class RoleAuthorizer implements Observer {
+public final class RoleAuthorizer implements Observer {
 
     /**
      * Role name for the administrators {@value #ROLE_ADMIN}.

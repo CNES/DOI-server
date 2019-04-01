@@ -40,7 +40,7 @@ public class BaseClient {
      * Port of the Datacite mockserver
      */
     public static final int DATACITE_MOCKSERVER_PORT = 1080;
-    
+
     /**
      * Logger.
      */

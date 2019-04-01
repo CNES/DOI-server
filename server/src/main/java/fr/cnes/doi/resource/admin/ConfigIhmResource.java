@@ -85,7 +85,7 @@ public class ConfigIhmResource extends AbstractResource {
         return LOG.traceExit(new TemplateRepresentation(configFtl, dataModel,
                 MediaType.APPLICATION_JAVASCRIPT));
     }
-    
+
     @Override
     protected void describeGet(final MethodInfo info) {
         info.setName(Method.GET);
@@ -94,6 +94,6 @@ public class ConfigIhmResource extends AbstractResource {
                 Status.SUCCESS_OK, "Operation successful",
                 stringRepresentation())
         );
-    }     
+    }
 
 }

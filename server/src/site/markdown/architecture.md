@@ -25,7 +25,6 @@
         2. [Create DOI](#use_case_create_doi)
         3. [Update DOI](#use_case_update_doi)
         4. [Delete DOI](#use_case_delete_doi)
-        5. [Check landing page availability](#use_case_landing)
 5. [Logical views](#logical)
     1. [Overview](#logical_overview)
     2. [Interface definitions](#logical_interfaces)
@@ -80,15 +79,16 @@ This document describes the various aspects of the DOI-server system design that
 
 ### 1.4 Overview  <a name="overview"/>
 In order to fully document all the aspects of the architecture, the Software Architecture Document contains the following subsections.
-Section 2: describes the use of each view
-Section 3: describes the architectural goals and constraints of the system
-Section 4: describes the most important use-case realizations
-Section 5: describes logical view of the system including interface and operation definitions.
-Section 6: describes the data view.
-Section 7: describes how the system will be deployed.
-Section 8: describes the development and tests factors.
 
-## 2. Architectural Representation  <a name="arch_rep">
+ - Section 2: describes the use of each view
+ - Section 3: describes the architectural goals and constraints of the system 
+ - Section 4: describes the most important use-case realizations
+ - Section 5: describes logical view of the system including interface and operation definitions.
+ - Section 6: describes the data view.
+ - Section 7: describes how the system will be deployed.
+ - Section 8: describes the development and tests factors.
+
+## 2. Architectural Representation  <a name="arch_rep"/>
 This document details the architecture using views. The views used to document the DOI-server system are:
 
 ### Use Case view
@@ -101,16 +101,9 @@ This document details the architecture using views. The views used to document t
 ### Logical view
 > **Audience:** Designers.
 
-> **Area:** Functional Requirements: describes the design's object model. Also describes the most important use-case realizations and business requirements of the system.
+> **Area:** Functional Requirements: describes the design's object model. Also describes the most important use-case realizations and business requirements of the system including interface and operation definitions.
 
 > **Related Artifacts:** Design model
-
-### Implementation view
-> **Audience:** Programmers.
-
-> **Area:** Software components: describes the layers and subsystems of the application.
-
-> **Related Artifacts:** Implementation model, components
 
 ### Data view
 > **Audience:** Data specialists, Database administrators
@@ -126,30 +119,30 @@ This document details the architecture using views. The views used to document t
 
 > **Related Artifacts:** Deployment model.
 
-## 3. Architectural Goals and Constraints <a name="arch_const">
+## 3. Architectural Goals and Constraints <a name="arch_const"/>
 This section describes the software requirements and objectives that have some significant impact on the architecture
 
-### 3.1 License <a name="arch_license">
+### 3.1 License <a name="arch_license"/>
 The DOI-server will be open source under the LGPLV3 license.
 
-### 3.2 Languages <a name="arch_lang">
+### 3.2 Languages <a name="arch_lang"/>
 The DOI-server will be written in JAVA, the GUI in HTML/JavaScript and the different client libraries to consume the DOI-server API will be written in JAVA and python
 
-### 3.3 Persistence <a name="arch_persis">
+### 3.3 Persistence <a name="arch_persis"/>
 Data persistence will be addressed using any relational databases. By default, an implementation of PostgreSQL database will be used.
 
-### 3.4 Authentication <a name="arch_auth">
+### 3.4 Authentication <a name="arch_auth"/>
 The authentication will be addressed using an LDAP by default. Others systems could be used. 
-Authentication could be performed by providing a username/password or a token. A token could be revoked by the amdinistrator of the project or of the system.
+Authentication could be performed by providing a username/password or a token. A token could be revoked by the registered user or the amdinistrator.
 
-### 3.5 Changes <a name="arch_changes">
+### 3.5 Changes <a name="arch_changes"/>
 The Software Requirements Specification outlines a number of anticipated changes that the application could face over time.  One of the primary goals of the system architecture is to minimize the impact of these changes by minimizing the amount of code that would need to be modified to implement them.  The architecture seeks to do this through the use of modularization and information hiding to isolate components that are likely to change from the rest of the system.
 
-### 3.6 Third part API <a name="arch_third">
+### 3.6 Third part API <a name="arch_third"/>
 The system must communicate with multiple third-party APIs: MDS, Cross-Cite and DataCiteSearch
 
-### 3.7 Security <a name="arch_secu">
-The system must be secured, so that a non allowed user can create/update DOI
+### 3.7 Security <a name="arch_secu"/>
+The system must be secured, so that a non allowed user cannot create/update DOI
 
 The system will be interfaced to a proxy in some deployment cases.
 
@@ -158,70 +151,305 @@ The application must implement basic security behaviors:
 1. Authentication: Login using at least a user name and a password
 2. Authorization: according to their profile, online user must be granted or not to perform some specific actions (Create users, creates projets, create DOI)
 
-### 3.8 Availability <a name="arch_avail">
-Targeted availability is TODO
+### 3.8 Availability <a name="arch_avail"/>
+Targeted availability of the DOI-server is 90%. The DOI-server checks the availability of the landing pages. 
 
-### 3.9 Performance <a name="arch_perfo">
-The DOI creation must be under TODO seconds.
+### 3.9 Performance <a name="arch_perfo"/>
+The DOI-server is able to create 1000 projects whithout degrading the perfomances. The DOI-server is able to create one DOI metadata under one second. The DOI-server is able to create one hundred DOI metadata under five seconds.
 
-## 4. Use case view <a name="use_case">
+## 4. Use case view <a name="use_case"/>
 The purpose of the use-case view is to give additional context surrounding the usage of the system and the interactions between its components.  For the purposes of this document, each component is considered a use-case actor.  Section 4.1 lists the current actors and gives a brief description of each in the overall use context of the system.  In section 4.2, the most significant use-cases are outlined and illustrated using UML use-case diagrams and sequence diagrams to clarify the interactions between components.
 
-### 4.1 Actors <a name="use_case_actors">
+### 4.1 Actors <a name="use_case_actors"/>
 
 Three actors handle the DOI-server:
 
-![actors](resources/images/actors.png)
+![actors](images/actors.png)
 
-> **Public user** : The public user can read all resources of MDS, Citations for any projects and he can get access to some resources from admin application (GUI, list of created projects, list of registred DOI on DataCite)
+> - **Public user** : The public user can read all resources of MDS for any projects as well as Citations. He can also get access to some resources from admin application (GUI, list of created projects, list of registred DOI on DataCite)
 
-> **Project administrator** : This administrator has the rights of the public user. For a specific project, he can create a DOI and generate a token
+> - **Registerd user** : This registered user has the rights of the public user. For a specific project, he can create/update/delete a DOI and he can generate a token
 
-> **Superamdinistrator** : This administrator is the super administrator of the DOI-server and he has the following rights: the rights of the project administrator and some extra rights as adding/removing user from a project, adding/removing a project, generating a token for a project administrator
+> - **Administrator** : This administrator has the rights of a registered user and some extra rights as adding/removing user from a project, adding/removing a project, generating a token for a registered user
 
-### 4.2 Use-Case Realizations <a name="use_case_real">
+### 4.2 Use-Case Realizations <a name="use_case_real"/>
 
-#### 4.2.1 Login <a name="use_case_login">
-User credentials are authenticated and user is redirected to application home page.
+#### 4.2.1 Login <a name="use_case_login"/>
+User credentials are authenticated and user is redirected to application home page with more or less features according to the user rights
 
-TODO
+> #### Actors
+> > public user
 
-#### 4.2.2 Create DOI <a name="use_case_create_doi">
-TODO
+> #### Priority
+> > Critical
 
-#### 4.2.3 Update DOI <a name="use_case_update_doi">
-TODO
+> #### Preconditions
+> > The user loads the authenticate.html page
 
-#### 4.2.4 Delete DOI <a name="use_case_delete_doi">
-TODO
 
-#### 4.2.5 Check landing page availability <a name="use_case_landing">
-TODO
+> #### Basic Course
+> > - The page sends the credentials to the admin application
+> > - The router of the admin application valids the credentials
+> > - The router calls the resource AuthenticationResource
+> > - The AuthenticationResource generates the token and sends back the token to the GUI
+> > - The authenticate.html page stores the token on the session and redirects on the right page
+> > - The authenticate.html page asks to the server the list of projects related to the user
+> > - The server returns the list of projects
+> > - The authenticate.html page stores the list of projects.
+> > - The authenticate.htlm page asks to the server if the user is an admininstrator
+> > - The server returns true
+> > - The authenticate.html page stores true.
+> > - The authenticate.html redirects to the doiCreation.html page and get access to the administrator menu
 
-## 5. Logical view <a name="logical">
+> #### Alternate Course
+> > - The page sends the credentials to the admin application
+> > - The router of the admin application valids the credentials
+> > - The router calls the resource AuthenticationResource
+> > - The AuthenticationResource generates the token and sends back to the GUI the token
+> > - The authenticate.html page stores the token on the session and redirects on the right page
+> > - The authenticate.html page asks to the server the list of projects related to the user
+> > - The server returns the list of projects
+> > - The authenticate.html page stores the list of projects.
+> > - The authenticate.htlm page asks to the server if the user is an admininstrator
+> > - The server returns false
+> > - The authenticate.html page stores false.
+> > - The authenticate.html redirects to the doiCreation.html page and get access to the project and the administrator menu
 
-### 5.1 Overview <a name="logical_overview">
+> #### Alternate Course
+> > - The page sends the credentials to the admin application
+> > - The router of the admin application valids the credentials
+> > - The router calls the resource AuthenticationResource
+> > - The AuthenticationResource generates the token and sends back to the GUI the token
+> > - The authenticate.html page stores the token on the session and redirects on the right page
+> > - The authenticate.html page asks to the server the list of projects related to the user
+> > - The server returns an empty list of projects
+> > - The authenticate.html page stores the empty list.
+> > - The authenticate.htlm page asks to the server if the user is an admininstrator
+> > - The server returns false
+> > - The authenticate.html page stores false.
+> > - The authenticate.html sends an error saying that the user is not linked to a project
+
+> #### Alternate Course
+> > - The page sends the credentials to the admin application
+> > - The router of the admin application valids the credentials
+> > - The router calls the resource AuthenticationResource
+> > - The AuthenticationResource generates the token and sends back to the GUI the token
+> > - The authenticate.html page stores the token on the session and redirects on the right page
+> > - The authenticate.html page asks to the server the list of projects related to the user
+> > - The server returns an empty list of projects
+> > - The authenticate.html page stores the empty list.
+> > - The authenticate.htlm page asks to the server if the user is an admininstrator
+> > - The server returns true
+> > - The authenticate.html page stores true.
+> > - The authenticate.html redirects to the administration.html page and get access only to the administrator menu
+
+> #### Exception Course
+> > - The server does not accept the credentials.
+> > - The GUI remains on authenticate.html page and display the error
+
+> #### Postconditions
+> > The user is located on the doiCreation.html or on the administration.html
+
+> #### Notes¶
+
+
+
+#### 4.2.2 Create DOI <a name="use_case_create_doi"/>
+> Publish a DOI on DATACITE
+
+> #### Actors
+> > Registered user or administrator
+
+> #### Priority
+> > Critical
+
+> #### Preconditions
+> > The user is on the doiCreation.html page
+
+> #### Basic Course
+> > - The user selects a project for which he wants to create a DOI
+> > - The user fills the form to create the DOI metadata.
+> > - When filling the form, the XML representation is displayed closed to the form
+> > - The user fills the landing page field.
+> > - The user click on **Create DOI**
+> > - The doiCreation.html page send the XML metadata and the token to MDS application
+> > - MDS application authentifies the user by the token
+> > - MDS application checks if the user is allowed to create the DOI for this project
+> > - MDS application sends the XML metadata to MDS Datacite
+> > - MDS accepts the metadata
+> > - MDS application returns to the doiCreation.hml page that the metadata was accepted
+> > - doiCreation.hml confirms to the user that the metadata is uploaded.
+> > - doiCreation.html sends the DOI and the landing page URL to MDS application
+> > - MDS application authentifies the user by the token
+> > - MDS application checks if the user is allowed to create the DOI for this project
+> > - MDS application sends the DOI and the landing page URL to MDS Datacite
+> > - MDS Datacite accepts the request
+> > - MDS application returns to the doiCreation.hml page that the DOI is created.
+> > - doiCreation.hml confirms to the user that the DOI is created. 
+
+> #### Exception Course
+> > - The user selects a project for which he wants to create a DOI
+> > - The user fills the form to create the DOI metadata.
+> > - When filling the form, the XML representation is displayed closed to the form
+> > - The user fills the landing page field.
+> > - The user click on **Create DOI**
+> > - The doiCreation.html page send the XML metadata and the token to MDS application
+> > - MDS application authentifies the user by the token
+> > - MDS application checks if the user is allowed to create the DOI for this project
+> > - MDS application sends the XML metadata to MDS Datacite
+> > - MDS accepts the metadata
+> > - MDS application returns to the doiCreation.hml page that the metadata was accepted
+> > - doiCreation.hml confirms to the user that the metadata is uploaded.
+> > - doiCreation.html sends the DOI and the landing page URL to MDS application
+> > - MDS application authentifies the user by the token
+> > - MDS application checks if the user is allowed to create the DOI for this project
+> > - MDS application sends the DOI and the landing page URL to MDS Datacite
+> > - MDS Datacite refuse the request
+> > - MDS application returns to the doiCreation.hml page that the DOI is not created.
+> > - doiCreation.hml confirms to the user that the DOI is not created. 
+
+> #### Exception Course
+> > - The user selects a project for which he wants to create a DOI
+> > - The user fills the form to create the DOI metadata.
+> > - When filling the form, the XML representation is displayed closed to the form
+> > - The user fills the landing page field.
+> > - The user click on **Create DOI**
+> > - The doiCreation.html page send the XML metadata and the token to MDS application
+> > - MDS application authentifies the user by the token
+> > - MDS application checks if the user is allowed to create the DOI for this project
+> > - MDS application sends the XML metadata to MDS Datacite
+> > - MDS accepts the metadata
+> > - MDS application returns to the doiCreation.hml page that the metadata was accepted
+> > - doiCreation.hml confirms to the user that the metadata is uploaded.
+> > - doiCreation.html sends the DOI and the landing page URL to MDS application
+> > - MDS application authentifies the user by the token
+> > - MDS application does not allow to create the DOI for this project
+> > - doiCreation.hml confirms to the user that the DOI is not created. 
+
+> #### Exception Course
+> > - The user selects a project for which he wants to create a DOI
+> > - The user fills the form to create the DOI metadata.
+> > - When filling the form, the XML representation is displayed closed to the form
+> > - The user fills the landing page field.
+> > - The user click on **Create DOI**
+> > - The doiCreation.html page send the XML metadata and the token to MDS application
+> > - MDS application authentifies the user by the token
+> > - MDS application checks if the user is allowed to create the DOI for this project
+> > - MDS application sends the XML metadata to MDS Datacite
+> > - MDS refuses the metadata
+> > - MDS application returns to the doiCreation.hml page that the metadata was refused
+> > - doiCreation.hml confirms to the user there is an error.
+
+> #### Exception Course
+> > - The user selects a project for which he wants to create a DOI
+> > - The user fills the form to create the DOI metadata.
+> > - When filling the form, the XML representation is displayed closed to the form
+> > - The user fills the landing page field.
+> > - The user click on **Create DOI**
+> > - The doiCreation.html page sends the XML metadata and the token to MDS application
+> > - MDS application authentifies the user by the token
+> > - MDS application does not allow to create the DOI for this project (the project suffix in the DOI number is not mapped to the user)
+> > - doiCreation.hml confirms to the user there is an error.
+
+> #### Exception Course
+> > - The user selects a project for which he wants to create a DOI
+> > - The user fills the form to create the DOI metadata.
+> > - When filling the form, the XML representation is displayed closed to the form
+> > - The user fills the landing page field.
+> > - The user click on **Create DOI**
+> > - The doiCreation.html page sends the XML metadata and the token to MDS application
+> > - MDS application cannot authentify the user by the token
+
+> #### Postconditions
+> > The DOI metadata has been uploaded in DATACITE and the mapping DOI/landing page is uploaded to DATACITE
+
+> #### Notes¶
+
+#### 4.2.3 Update DOI <a name="use_case_update_doi"/>
+> Updates DOI metadata or landing page.
+
+> #### Actors
+> > Registered user related to a project
+
+> #### Priority
+> > Critical
+
+> #### Preconditions
+> > The user is loggued on the doiModification.html page
+
+> #### Basic Course
+> > - The user selects a project
+> > - The user clicks on the select field
+> > - The GUI requests all DOI related to this DOI
+> > - The server returns to the GUI the list of the DOI
+> > - The user selects a DOI
+> > - The DOI metadata and the landing page is loaded on the GUI
+> > - Then same as **Creating a DOI**
+
+> #### Alternate Course
+> > Step-by-step description of the alternate course
+
+> #### Exception Course
+> > Step-by-step description of the exception course
+
+> #### Postconditions
+> > The landing page or/and DOI metadata have been updated on DataCite
+
+> #### Notes¶
+
+#### 4.2.4 Disable DOI <a name="use_case_delete_doi"/>
+> Updates DOI metadata or landing page.
+
+> #### Actors
+> > Registered user related to a project
+
+> #### Priority
+> > Critical
+
+> #### Preconditions
+> > The user is loggued on the doiDeactivation.html page
+
+> #### Basic Course
+> > - The user selects a project
+> > - The user clicks on the select field
+> > - The GUI requests all DOI related to this DOI
+> > - The server returns to the GUI the list of the DOI
+> > - The user selects a DOI
+> > - The user must rewrite the DOI to make it disable
+
+> #### Exception Course
+> > DataCite WS is down
+
+> #### Postconditions
+> > The DOI is disabled on DataCite
+
+> #### Notes¶
+
+
+## 5. Logical view <a name="logical"/>
+
+### 5.1 Overview <a name="logical_overview"/>
 The main goal of the logical view is to define the components that will make up the system and to define the interfaces through which they will communicate and interact with one another.  The primary decision-making factor behind defining the system components is the need to isolate the components that are likely to change from the rest of the system.  By clearly defining the interfaces of these components and hiding their internal implementations from the rest of the system, the impact of expected changes can be minimized.  The Software Requirements Specification outlines the changes that are likely to be made to the system.  A summary of these changes and how the logical decomposition of the architecture addresses them is as follows:
 
-1. Changes to the data persitance component
+**1. Changes to the data persitance component**
 > The architecture addresses this by implementing the calls to the persistance database in three components : one for the user management, one for the project management and the last one for token management. The rest of the application will communicate with the persistance database only through the interface exposed by these three components. Therefore any changes to the system to deal with changes the persistance database technology only be made in the internal implementation of this three components. The frequency of this chnages could be high because it depends on the common services if the infrastructure on which the DOI-server is deployed. That's why the implementation of the interface is a plugin.
 
-2. Changes to the authentication component
+**2. Changes to the authentication component**
 > Similar to the above, this is addressed by implementing calls to the LDAP API in an authentication component.  Changes required to deal with changes to the LDAP API need only be made in the internal implementation of this component and not to the rest of the system. The changes frequency of this chnages could be high because it depends on the common services if the infrastructure on which the DOI-server is deployed. That's why the implementation of the interface is a plugin.
 
-3. Changes to the MDS API
+**3. Changes to the MDS API**
 > Similar to the above, this is addressed by implementing calls to the MDS API in a MDS Client component.  Changes required to deal with changes to the MDS API need only be made in the internal implementation of this component and not to the rest of the system. The changes frequency should be low. No plugin is provided.
 
-4. Changes to Cross-cite API
+**4. Changes to Cross-cite API**
 > Similar to the above, this is addressed by implementing calls to the Cross-cite API in a Cross-cite Client component.  Changes required to deal with changes to the Cross-cite API need only be made in the internal implementation of this component and not to the rest of the system. The changes frequency should be low. No plugin is provided.
 
-5. Changes to DataCite Search API
+**5. Changes to DataCite Search API**
 > Similar to the above, this is addressed by implementing calls to the DataCiteSearch API in a DataCiteSearch Client component.  Changes required to deal with changes to the DataCiteSearch API need only be made in the internal implementation of this component and not to the rest of the system. The chnages frequency should be low. No plugin is provided.
 
-6. Changes to the DataCite schema.
+**6. Changes to the DataCite schema.**
 > The architecture addresses at the server side this by generating the classes from the XSD using JAXB. The generation of the new classes will not have impact on the rest of the system. From the client side, the changes on the schema will have a small impact on the GUI because the GUI represents each element of the XSD as fields so that the user can fill them. The changes frequency should be high. We could implement the changes at the server side by a plugin to avoid to recompile/deploy the server. However, we do not have implemented a solution to adapt automatically the GUI to the new schema. Therefore, if a changes happens, we need to modify the client. It means we need to reploy the server. That's why we do not have taken the decision to provide a plugin at the server side to handle the changes.
 
-![logical view](resources/images/logicalView.png)
+![logical view](images/logicalView.png)
 
 
 | Element                 | Responsibilities                                                                                                  |
@@ -238,7 +466,7 @@ The main goal of the logical view is to define the components that will make up 
 | LandingPageMonitoring   | - Provides an interface to run asynchronously a periodical task to monitor the availaility of landing pages       |
 |                         | - Interacts with ClientLandingPage to check the availability of landing pages                                     |
 |                         | - Interacts with EmailSettings to send a notification about off-line landing pages                                |
-|                         | - Interacts with IAuthenticationDBHelper to find the project administrators related to each project so that an notification is sent to them when an off-line landing page is found |
+|                         | - Interacts with IAuthenticationDBHelper to find the registered users related to each project so that an notification is sent to them when an off-line landing page is found |
 |                         | - Interacts with the Proxy                                                                                        |
 | DOIUserUpdate           | - Provides an interface to run asynchronously a periodical task to save the updated list coming from AutenticationDBHelper |
 |                         | - Interacts with IAuthenticationDBHelper to get the list of DOI-server users                                      |
@@ -258,7 +486,7 @@ The main goal of the logical view is to define the components that will make up 
 |                         | - Interacts with UpdateTokenDB                                                                                    |
 | MDSApplication          | - Provides the WS API for handling DOI                                                                            |
 |                         | - Interacts with ClientMDS to query MDS WS                                                                        |
-|                         | - Interacts with AbstractProjectSuffixDBHelper to check the fine-grained authorization when a project administrator updates/adds a new DOI |
+|                         | - Interacts with AbstractProjectSuffixDBHelper to check the fine-grained authorization when a registerd user updates/adds a new DOI |
 | CrossCiteApplication    | - Provides the WS API for DOI citation                                                                            |
 |                         | - Interacts with ClientCrossCiteCitation to query the CrossCite WS                                                |
 | Web Portal | - Present users with an HTML-based user interface accessible through a web browser                                             |
@@ -270,11 +498,11 @@ The main goal of the logical view is to define the components that will make up 
 |            | - Interacts with AbstractTokenDBHelper to remove expired tokens when a user uses an authentication by token                    |
              
 
-### 5.2 Interface definitions <a name="logical_interfaces">
+### 5.2 Interface definitions <a name="logical_interfaces"/>
 
-#### 5.2.1 Programmatic interfaces <a name="programmatic_interfaces">
+#### 5.2.1 Programmatic interfaces <a name="programmatic_interfaces"/>
 
-##### 5.2.1.1 The interface AbstractProjectSuffixDBHelper <a name="p_int">
+##### 5.2.1.1 The interface AbstractProjectSuffixDBHelper <a name="p_int"/>
 
 The interface AbstractProjectSuffixDBHelper:
 
@@ -392,7 +620,7 @@ The interface AbstractProjectSuffixDBHelper:
     }
 ```
 
-##### 5.2.1.2 The interface AbstractUserRoleDBHelper <a name="u_int">
+##### 5.2.1.2 The interface AbstractUserRoleDBHelper <a name="u_int"/>
 
 The interface AbstractUserRoleDBHelper:
 
@@ -527,7 +755,7 @@ The interface AbstractUserRoleDBHelper:
     }
 ```
 
-##### 5.2.1.3 The interface AbstractTokenDBHelper <a name="t_int">
+##### 5.2.1.3 The interface AbstractTokenDBHelper <a name="t_int"/>
 The interface AbstractTokenDBHelper:
 
 ```
@@ -582,7 +810,7 @@ The interface AbstractTokenDBHelper:
     }
 ```
 
-##### 5.2.1.4 The interface IAuthenticationDBHelper <a name="a_int">
+##### 5.2.1.4 The interface IAuthenticationDBHelper <a name="a_int"/>
 
 The interface to handle the authentication:
  
@@ -617,7 +845,7 @@ The interface to handle the authentication:
     }
 ```
 
-#### 5.2.2 REST API <a name="rest_interfaces">
+#### 5.2.2 REST API <a name="rest_interfaces"/>
 
 ```
 # YAML describing the DOI client
@@ -952,45 +1180,47 @@ securityDefinitions:
 
 ```
 
-#### 5.2.3 The client libraries of the DOI-server <a name="client_lib">
+#### 5.2.3 The client libraries of the DOI-server <a name="client_lib"/>
 In addition to the DOI-server API, the clients libraries can be generated automatically based on the YAML description from the DOI-server API. For this, go to http://editor.swagger.io/ and copy and paste the YAML description in the editor. Then click on "generate client" to generate the clients that you wish.
 
 
-#### 5.2.4 GUI <a name="gui">
+#### 5.2.4 GUI <a name="gui"/>
 
-##### 5.2.4.1 Authentication <a name="gui_auth">
+##### 5.2.4.1 Authentication <a name="gui_auth"/>
 A pop-up asks the user to enter their login and password to identify themselves on the DOI SERVER. If it is not part of the "Admin" group the last "Administration" tab of the main page will not be visible.
 Once identified the user arrives on the main page and the first project from the list of its associated projects is automatically selected. If the user is not associated with any project, all tabs are grayed out (except "Administration" if the user is part of the "Admin" group.
 
-##### 5.2.4.2 Creating a DOI <a name="gui_creating_doi">
+##### 5.2.4.2 Creating a DOI <a name="gui_creating_doi"/>
 The user can create a DOI on the currently selected project :
  - The HMI will need to check the input fields and before sending to verify that the generated xml conforms to the current metadata schema. If this is not the case, an error message will warn the user.
  - On the right side of the screen may be the XML code of the metadata currently entered.
  - A button will import or export metadata in XML format
 
-![creating DOI](resources/images/creating_doi.png)
+![creating DOI](images/creating_doi.png)
 
-##### 5.2.4.3 Disabling a DOI <a name="gui_disabling_doi">
+##### 5.2.4.3 Disabling a DOI <a name="gui_disabling_doi"/>
 The deactivation page of DOI permanently deactivates a DOI. For this the user must first enter the DOI (which must belong to the current project), then a confirmation pop-up opens, asking the user to confirm that he wants to permanently disable this DOI and him Requests to enter the complete DOI.
 
-![disabling DOI](resources/images/disabling_doi.png)
+![disabling DOI](images/disabling_doi.png)
 
-##### 5.2.4.4 Citation <a name="gui_citation_doi">
+##### 5.2.4.4 Citation <a name="gui_citation_doi"/>
 The Citation Management page generates a quote from a DOI of the current project, (calls will be handled via citation.crosscite.org)
-![quoting DOI](resources/images/citation_doi.png)
+
+![quoting DOI](images/citation_doi.png)
 
 
-##### 5.2.4.5 Administration <a name="gui_admin_doi">
+##### 5.2.4.5 Administration <a name="gui_admin_doi"/>
 If the user is in the "Admin" group, he has access to the last tab, which allows to manage associations between users and projects, as well as the list of users in the Admin group:
-![quoting DOI](resources/images/admin_doi.png)
 
-## 6. Data view <a name="data_view">
+![quoting DOI](images/admin_doi.png)
 
-### 6.1 Data model <a name="data_view_model">
+## 6. Data view <a name="data_view"/>
+
+### 6.1 Data model <a name="data_view_model"/>
 
 This diagram illustrates the static data structure and relationships of the main entities that will be stored by the application in its database. Each element represents a database table.  Relationship cardinality is denoted with UML multiplicity notation.
 
-![data model](resources/images/datamodel.png)
+![data model](images/datamodel.png)
 
 ```
 
@@ -1074,47 +1304,47 @@ GRANT SELECT, UPDATE, INSERT, DELETE ON TABLE doi_schema.t_doi_tokens TO doiserv
 
 ```
 
-### 6.2 Security <a name="data_view_security">
+### 6.2 Security <a name="data_view_security"/>
 
-#### 6.2.1 Security for Citations <a name="data_view_citations">
+#### 6.2.1 Security for Citations <a name="data_view_citations"/>
 No security, that's only a query to a public web service : https://citation.crosscite.org/
 
-#### 6.2.2 Security for MDS <a name="data_view_mds">
+#### 6.2.2 Security for MDS <a name="data_view_mds"/>
 By default, the global authorization is for every users in DOI-server database.
 Some exceptions at this rule are represented by the following picture:
 
-![MDS](resources/images/securityMds.png)
+![MDS](images/securityMds.png)
 
-#### 6.2.3 Security for Admin <a name="data_view_admin">
-By default, the global authorization is for the super administrator.
+#### 6.2.3 Security for Admin <a name="data_view_admin"/>
+By default, the global authorization is for the administrator.
 Some exceptions at this rule are represented by the following picture:
 
-#### 6.2.4 Login/password in the configuration file <a name="data_view_login_pwd">
+#### 6.2.4 Login/password in the configuration file <a name="data_view_login_pwd"/>
 Login/password for each external server is crypted in the configuration file by AES algorithm. The default key is defined in the code. 
 
-![MDS](resources/images/securityAdmin.png)
+![MDS](images/securityAdmin.png)
 
 To change the default key, the DOI-server must be launched with a specific argument in the command line. The value of this argument is the 16 bits secret key (see exploitation manual).
 
-#### 6.2.5 Crypt/Uncrypt the whole configuration file <a name="data_view_crypt">
+#### 6.2.5 Crypt/Uncrypt the whole configuration file <a name="data_view_crypt"/>
 The whole configuration file can be crypted/uncrypted. To active this feature, the DOI-server must launched with a specific argument in the command line (see exploitation manual)
 
-## 7. Deployment view <a name="deployment">
+## 7. Deployment view <a name="deployment"/>
 The web application will be hosted on a single physical server.  An embedded Jetty in the application will be used. In addition, a PostgreSQL Server instance will also be hosted on the physical server to aid the application in persisting data.
 The application will interface with external APIs (LDAP server, Proxy server, Mail server, MDS WS, Cross-cite WS, DataciteSearch WS, landing pages) of which the deployment scenarios are not known.
 
-![MDS](resources/images/design.png)
+![MDS](images/design.png)
 
 ## 8. Development and Test Factors <a name="dev_test"/>
 ### 8.1 Hardware Limitations <a name="hard_limit"/>
 The DOI-server works on JAVA 8.
 
-### 8.2 Software validation and verification <a name="software validation"/>
+### 8.2 Software validation and verification <a name="software_validation"/>
 See the README in the DOI-server sources.
 
 
 ## Appendix A : Use Case template <a name="appendix_A"/>
-### Use Case: <Name>
+### Use Case: name
 > Short description
 
 > #### Actors

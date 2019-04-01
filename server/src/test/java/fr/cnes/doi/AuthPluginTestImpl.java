@@ -101,7 +101,7 @@ public class AuthPluginTestImpl extends AbstractAuthenticationPluginHelper {
         credentials.put(user2.getUsername(), "pwd");
         credentials.put(user3.getUsername(), "admin");
         credentials.put(user4.getUsername(), "norole");
-        credentials.put(user5.getUsername(), "admin");
+        credentials.put(user5.getUsername(), "doi_kerberos");
     }
     
     @Override

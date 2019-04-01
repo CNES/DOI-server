@@ -61,16 +61,16 @@ public class SuffixProjectsResource extends AbstractResource {
      * Number of digits ({@value #NB_DIGITS}) in which the suffix project is encoded.
      */
     public static final int NB_DIGITS = 6;
+    
+    /**
+     * Query parameter for user {@value #USER_PARAMETER}.
+     */
+    public static final String USER_PARAMETER = "user";    
 
     /**
      * Logger.
      */
     private volatile Logger LOG;
-
-    /**
-     * Query parameter for user {@value #USER_PARAMETER}.
-     */
-    public final String USER_PARAMETER = "user";
 
     /**
      * The user name

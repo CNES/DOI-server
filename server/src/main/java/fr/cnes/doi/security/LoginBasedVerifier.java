@@ -98,7 +98,8 @@ public class LoginBasedVerifier implements Verifier {
             return LOG.traceExit(Verifier.RESULT_MISSING);
         }
 
-        final String decodedLogin = new String(Base64.getDecoder().decode(login), Charset.defaultCharset());
+        final String decodedLogin = new String(Base64.getDecoder().decode(login), Charset.
+                defaultCharset());
         final String[] userLogin = decodedLogin.split(":");
 
         final AbstractUserRoleDBHelper manageUsers = PluginFactory.getUserManagement();

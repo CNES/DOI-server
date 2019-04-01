@@ -29,7 +29,7 @@ import org.junit.runner.notification.Failure;
 import org.restlet.Client;
 import org.restlet.engine.Engine;
 import org.restlet.engine.connector.ConnectorHelper;
-import org.restlet.ext.httpclient4.HttpClientHelper;
+import org.restlet.ext.httpclient4.HttpDOIClientHelper;
 
 /**
  * Class to start/stop the http and https server.
@@ -45,7 +45,7 @@ public final class InitServerForTest {
 	rootLogger.removeHandler(handlers[0]);
 	final List<ConnectorHelper<Client>> registeredClients = Engine.getInstance()
 		.getRegisteredClients();
-	registeredClients.add(0, new HttpClientHelper(null));
+	registeredClients.add(0, new HttpDOIClientHelper(null));
     }
 
     /**

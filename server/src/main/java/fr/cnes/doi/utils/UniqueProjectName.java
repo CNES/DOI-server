@@ -75,8 +75,9 @@ public final class UniqueProjectName {
      * @throws fr.cnes.doi.exception.DOIDbException When a problem occurs
      */
     public List<DOIProject> getProjectsFromUser(final String userName) throws DOIDbException {
-        LOGGER.traceEntry("Parameter\n  userName:{}", userName);        
-        final List<DOIProject> projects = PluginFactory.getProjectSuffix().getProjectsFromUser(userName);
+        LOGGER.traceEntry("Parameter\n  userName:{}", userName);
+        final List<DOIProject> projects = PluginFactory.getProjectSuffix().getProjectsFromUser(
+                userName);
         return LOGGER.traceExit("Projects for userName", projects);
     }
 

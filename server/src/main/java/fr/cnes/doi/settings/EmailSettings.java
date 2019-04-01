@@ -62,15 +62,6 @@ public final class EmailSettings {
     private static final Logger LOG = LogManager.getLogger(EmailSettings.class.getName());
 
     /**
-     * Access to unique INSTANCE of Settings
-     *
-     * @return the configuration instance.
-     */
-    public static EmailSettings getInstance() {
-        return EmailSettingsHolder.INSTANCE;
-    }
-
-    /**
      * SMTP URL.
      */
     private String smtpUrl;
@@ -112,6 +103,15 @@ public final class EmailSettings {
         init();
     }
 
+    /**
+     * Access to unique INSTANCE of Settings
+     *
+     * @return the configuration instance.
+     */
+    public static EmailSettings getInstance() {
+        return EmailSettingsHolder.INSTANCE;
+    }
+    
     /**
      * Init singleton.
      */
@@ -306,7 +306,7 @@ public final class EmailSettings {
         request.setEntity(mail);
         final boolean result;
         if ("PROD".equals(contextMode)) {
-           final Client client = new Client(new Context(), protocol);
+            final Client client = new Client(new Context(), protocol);
             final Series<Parameter> parameters = client.getContext().getParameters();
             parameters.add("debug", String.valueOf(isDebug()));
             parameters.add("startTls", Boolean.toString(startTls).toLowerCase(Locale.ENGLISH));
@@ -324,7 +324,7 @@ public final class EmailSettings {
         } else {
             result = true;
             LOG.warn("The configuration context {} is not PROD, do not send the email : {}",
-                    contextMode, mail.getText());                         
+                    contextMode, mail.getText());
         }
         return LOG.traceExit(result);
     }

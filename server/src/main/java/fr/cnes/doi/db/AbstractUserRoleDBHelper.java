@@ -133,7 +133,8 @@ public abstract class AbstractUserRoleDBHelper extends Observable {
      * @param email email
      * @return True when the the user is added otherwise false
      */
-    public abstract boolean addDOIUser(final String username, final Boolean admin, final String email);
+    public abstract boolean addDOIUser(final String username, final Boolean admin,
+            final String email);
 
     /**
      * Tests if the user exists.

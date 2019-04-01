@@ -96,11 +96,11 @@ public final class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
      * Configuration file.
      */
     private Map<String, String> conf;
-    
+
     /**
      * Status of the plugin configuration.
      */
-    private boolean isConfigured = false;    
+    private boolean isConfigured = false;
 
     /**
      * Default constructor of the authentication plugin.
@@ -134,8 +134,8 @@ public final class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
         LOG.info("[CONF] Plugin database URL : {}", dbUrl);
         LOG.info("[CONF] Plugin database user : {}", dbUser);
         LOG.info("[CONF] Plugin database password : {}", Utils.transformPasswordToStars(dbPwd));
-        LOG.info("[CONF] Plugin options : {}", options);        
-        
+        LOG.info("[CONF] Plugin options : {}", options);
+
         DatabaseSingleton.getInstance().init(dbUrl, dbUser, dbPwd, options);
         this.das = DatabaseSingleton.getInstance().getDatabaseAccess();
         this.isConfigured = true;
@@ -314,7 +314,7 @@ public final class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
             LOG.info("The user {} is added to database.", username);
         } catch (DOIDbException ex) {
             isAdded = false;
-            LOG.fatal("Cannot add the user {}", username);            
+            LOG.fatal("Cannot add the user {}", username);
         }
         return isAdded;
     }
@@ -334,7 +334,7 @@ public final class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
             LOG.info("The user {} is added to database.", username);
         } catch (DOIDbException ex) {
             isAdded = false;
-            LOG.fatal("Cannot add the user {}", username); 
+            LOG.fatal("Cannot add the user {}", username);
         }
         return isAdded;
     }
@@ -423,6 +423,7 @@ public final class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
 
     /**
      * Checks if the keyword is a password.
+     *
      * @param key keyword to check
      * @return True when the keyword is a password otherwise False
      */

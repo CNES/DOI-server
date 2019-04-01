@@ -132,7 +132,7 @@ public final class DefaultLDAPImpl extends AbstractAuthenticationPluginHelper {
      * Configuration file.
      */
     private Map<String, String> conf;
-    
+
     /**
      * Status of the plugin configuration.
      */
@@ -152,12 +152,12 @@ public final class DefaultLDAPImpl extends AbstractAuthenticationPluginHelper {
         LOGGER.info("[CONF] Plugin LDAP user : {}", LDAP_USER);
         LOGGER.info("[CONF] Plugin LDAP password : {}", Utils.transformPasswordToStars(LDAP_PWD));
         LOGGER.info("[CONF] Plugin LDAP project : {}", LDAP_PROJECT);
-        LOGGER.info("[CONF] Plugin LDAP admin for DOI : {}", LDAP_DOI_ADMIN); 
+        LOGGER.info("[CONF] Plugin LDAP admin for DOI : {}", LDAP_DOI_ADMIN);
         LOGGER.info("[CONF] Plugin LDAP attribute for fullname : {}", LDAP_ATTR_FULLNAME);
-        LOGGER.info("[CONF] Plugin LDAP attribute for mail : {}", LDAP_ATTR_MAIL);    
-        LOGGER.info("[CONF] Plugin LDAP attribute for username : {}", LDAP_ATTR_USERNAME);   
+        LOGGER.info("[CONF] Plugin LDAP attribute for mail : {}", LDAP_ATTR_MAIL);
+        LOGGER.info("[CONF] Plugin LDAP attribute for username : {}", LDAP_ATTR_USERNAME);
         LOGGER.info("[CONF] Plugin LDAP search group : {}", LDAP_SEARCH_GROUP);
-        LOGGER.info("[CONF] Plugin LDAP search user : {}", LDAP_SEARCH_USER);                
+        LOGGER.info("[CONF] Plugin LDAP search user : {}", LDAP_SEARCH_USER);
         this.isConfigured = true;
     }
 
@@ -487,9 +487,9 @@ public final class DefaultLDAPImpl extends AbstractAuthenticationPluginHelper {
         return validation;
     }
 
-
     /**
      * Checks if the keyword is a password.
+     *
      * @param key keyword to check
      * @return True when the keyword is a password otherwise False
      */

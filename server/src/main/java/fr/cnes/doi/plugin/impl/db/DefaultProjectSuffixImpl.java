@@ -87,11 +87,11 @@ public final class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginH
      * Configuration file.
      */
     private Map<String, String> conf;
-    
+
     /**
      * Status of the plugin configuration.
      */
-    private boolean isConfigured = false;    
+    private boolean isConfigured = false;
 
     /**
      * Default constructor of the project suffix database
@@ -125,8 +125,8 @@ public final class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginH
         LOG.info("[CONF] Plugin database URL : {}", dbUrl);
         LOG.info("[CONF] Plugin database user : {}", dbUser);
         LOG.info("[CONF] Plugin database password : {}", Utils.transformPasswordToStars(dbPwd));
-        LOG.info("[CONF] Plugin options : {}", options);      
-        
+        LOG.info("[CONF] Plugin options : {}", options);
+
         DatabaseSingleton.getInstance().init(dbUrl, dbUser, dbPwd, options);
         this.das = DatabaseSingleton.getInstance().getDatabaseAccess();
         this.isConfigured = true;
@@ -145,7 +145,7 @@ public final class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginH
             notifyObservers(new String[]{ADD_RECORD, String.valueOf(projectID)});
             isAdded = true;
         } catch (DOIDbException e) {
-            LOG.fatal("The id " + projectID + " of the project " + projectName 
+            LOG.fatal("The id " + projectID + " of the project " + projectName
                     + "cannot be saved in the database", e);
         }
         return isAdded;
@@ -177,7 +177,7 @@ public final class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginH
     public boolean isExistID(final int projectID) {
         boolean isExist;
         try {
-            final List<DOIProject> projects = getProjects();            
+            final List<DOIProject> projects = getProjects();
             if (projects.isEmpty()) {
                 isExist = false;
             } else {
@@ -185,7 +185,6 @@ public final class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginH
                         Collectors.toMap(DOIProject::getProjectname, DOIProject::getSuffix));
                 isExist = map.containsValue(projectID);
             }
-            return isExist;
         } catch (DOIDbException ex) {
             isExist = false;
             LOG.fatal(ex);
@@ -201,7 +200,7 @@ public final class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginH
         boolean isExist;
         try {
             final List<DOIProject> projects = getProjects();
-            
+
             if (projects.isEmpty()) {
                 isExist = false;
             } else {
@@ -345,6 +344,7 @@ public final class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginH
 
     /**
      * Checks if the keyword is a password.
+     *
      * @param key keyword to check
      * @return True when the keyword is a password otherwise False
      */

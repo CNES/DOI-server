@@ -95,15 +95,15 @@ public class ManageSuperUserResource extends AbstractResource {
     public void deleteSuperUser() {
         LOG.traceEntry();
         final AbstractUserRoleDBHelper manageUsers = PluginFactory.getUserManagement();
-        if(manageUsers.unsetUserFromAdminGroup(userName)) {
+        if (manageUsers.unsetUserFromAdminGroup(userName)) {
             setStatus(Status.SUCCESS_NO_CONTENT);
         } else {
             throw LOG.throwing(new ResourceException(
-                    Status.CLIENT_ERROR_BAD_REQUEST, "Can't delete super user "+userName));
+                    Status.CLIENT_ERROR_BAD_REQUEST, "Can't delete super user " + userName));
         }
         LOG.traceExit();
     }
-    
+
     @Override
     protected void describeGet(final MethodInfo info) {
         info.setName(Method.GET);
@@ -111,18 +111,18 @@ public class ManageSuperUserResource extends AbstractResource {
         addRequestDocToMethod(info, createQueryParamDoc(
                 USERS_NAME_TEMPLATE, ParameterStyle.TEMPLATE,
                 "user name", true, "xs:string")
-        );        
+        );
         addResponseDocToMethod(info, createResponseDoc(
                 Status.SUCCESS_NO_CONTENT, "Operation successful with true or false",
                 stringRepresentation())
         );
-        
+
         addResponseDocToMethod(info, createResponseDoc(
                 Status.CLIENT_ERROR_BAD_REQUEST, "The user does not exist",
                 htmlRepresentation())
-        );        
-    }  
-    
+        );
+    }
+
     @Override
     protected void describeDelete(final MethodInfo info) {
         info.setName(Method.DELETE);
@@ -130,16 +130,16 @@ public class ManageSuperUserResource extends AbstractResource {
         addRequestDocToMethod(info, createQueryParamDoc(
                 USERS_NAME_TEMPLATE, ParameterStyle.TEMPLATE,
                 "user name", true, "xs:string")
-        );        
+        );
         addResponseDocToMethod(info, createResponseDoc(
                 Status.SUCCESS_NO_CONTENT, "Operation successful",
                 stringRepresentation())
-        );        
-        
+        );
+
         addResponseDocToMethod(info, createResponseDoc(
                 Status.CLIENT_ERROR_BAD_REQUEST, "Cannot delete super user",
                 htmlRepresentation())
-        );        
-    }      
+        );
+    }
 
 }

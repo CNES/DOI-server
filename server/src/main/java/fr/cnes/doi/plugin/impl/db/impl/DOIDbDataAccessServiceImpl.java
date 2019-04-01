@@ -428,7 +428,7 @@ public final class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService 
      */
     private boolean isQueryExist(final PreparedStatement statement) throws SQLException {
         LOGGER.traceEntry("Parameter\n\t statement: {}", statement.toString());
-        boolean isExist = false;
+        final boolean isExist;
         LOGGER.debug(statement.toString());
         try (final ResultSet resultSet = statement.executeQuery()) {
             isExist = resultSet.next();
@@ -467,7 +467,7 @@ public final class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService 
      */
     @Override
     @SuppressFBWarnings(value = "OBL_UNSATISFIED_OBLIGATION",
-            justification = "Cleans up with closeAndRelease method")    
+            justification = "Cleans up with closeAndRelease method")
     public List<DOIUser> getAllDOIusers() throws DOIDbException {
         LOGGER.traceEntry();
         final List<DOIUser> users = new ArrayList<>();
@@ -493,7 +493,7 @@ public final class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService 
      */
     @Override
     @SuppressFBWarnings(value = "OBL_UNSATISFIED_OBLIGATION",
-            justification = "Cleans up with closeAndRelease method")    
+            justification = "Cleans up with closeAndRelease method")
     public List<DOIProject> getAllDOIProjects() throws DOIDbException {
         LOGGER.traceEntry();
         final List<DOIProject> projects = new ArrayList<>();
@@ -519,7 +519,7 @@ public final class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService 
      */
     @Override
     @SuppressFBWarnings(value = "OBL_UNSATISFIED_OBLIGATION",
-            justification = "Cleans up with closeAndRelease method")    
+            justification = "Cleans up with closeAndRelease method")
     public List<DOIProject> getAllDOIProjectsForUser(final String username) throws DOIDbException {
         LOGGER.traceEntry("Parameter\n\t username: {}", username);
         final List<DOIProject> projects = new ArrayList<>();
@@ -548,12 +548,12 @@ public final class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService 
      */
     @Override
     @SuppressFBWarnings(value = "OBL_UNSATISFIED_OBLIGATION",
-            justification = "Cleans up with closeAndRelease method")    
+            justification = "Cleans up with closeAndRelease method")
     public List<DOIUser> getAllDOIUsersForProject(final int suffix) throws DOIDbException {
         LOGGER.traceEntry("Parameter\n\t suffix: {}", suffix);
         final List<DOIUser> users = new ArrayList<>();
         Connection conn = null;
-        PreparedStatement assignationsStatement = null;
+        final PreparedStatement assignationsStatement = null;
         PreparedStatement usersStatement = null;
         try {
             conn = dbConnector.getConnection();
@@ -576,7 +576,7 @@ public final class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService 
      */
     @Override
     @SuppressFBWarnings(value = "OBL_UNSATISFIED_OBLIGATION",
-            justification = "Cleans up with closeAndRelease method")    
+            justification = "Cleans up with closeAndRelease method")
     public void addDOIUser(final String username, final Boolean admin) throws DOIDbException {
         LOGGER.traceEntry("Parameter\n\t username: {}\n\tadmin: {}", username, admin);
         Connection conn = null;
@@ -631,7 +631,7 @@ public final class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService 
      */
     @Override
     @SuppressFBWarnings(value = "OBL_UNSATISFIED_OBLIGATION",
-            justification = "Cleans up with closeAndRelease method")    
+            justification = "Cleans up with closeAndRelease method")
     public void addDOIProjectToUser(final String username, final int suffix) throws DOIDbException {
         LOGGER.traceEntry("Parameters:\n\tusername:{}\n\tsuffix:{}", username, suffix);
         Connection conn = null;
@@ -677,7 +677,7 @@ public final class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService 
      */
     @Override
     @SuppressFBWarnings(value = "OBL_UNSATISFIED_OBLIGATION",
-            justification = "Cleans up with closeAndRelease method")    
+            justification = "Cleans up with closeAndRelease method")
     public void removeDOIProjectFromUser(final String username, final int suffix) throws
             DOIDbException {
         LOGGER.traceEntry("Parameters:\n\tusername:{}\n\tsuffix:{}", username, suffix);
@@ -706,7 +706,7 @@ public final class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService 
      */
     @Override
     @SuppressFBWarnings(value = "OBL_UNSATISFIED_OBLIGATION",
-            justification = "Cleans up with closeAndRelease method")    
+            justification = "Cleans up with closeAndRelease method")
     public void setAdmin(final String username) throws DOIDbException {
         LOGGER.traceEntry("Parameters:\n\tusername:{}", username);
         Connection conn = null;
@@ -744,7 +744,7 @@ public final class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService 
      */
     @Override
     @SuppressFBWarnings(value = "OBL_UNSATISFIED_OBLIGATION",
-            justification = "Cleans up with closeAndRelease method")    
+            justification = "Cleans up with closeAndRelease method")
     public void unsetAdmin(final String username) throws DOIDbException {
         LOGGER.traceEntry("Parameters:\n\tusername:{}", username);
         Connection conn = null;
@@ -770,7 +770,7 @@ public final class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService 
      */
     @Override
     @SuppressFBWarnings(value = "OBL_UNSATISFIED_OBLIGATION",
-            justification = "Cleans up with closeAndRelease method")    
+            justification = "Cleans up with closeAndRelease method")
     public void renameDOIProject(final int suffix, final String newprojectname) throws
             DOIDbException {
         LOGGER.traceEntry("Parameters:\n\tsuffix:{}\n\tnewprojectname", suffix, newprojectname);
@@ -798,7 +798,7 @@ public final class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService 
      */
     @Override
     @SuppressFBWarnings(value = "OBL_UNSATISFIED_OBLIGATION",
-            justification = "Cleans up with closeAndRelease method")    
+            justification = "Cleans up with closeAndRelease method")
     public String getDOIProjectName(final int suffix) throws DOIDbException {
         LOGGER.traceEntry("Parameters:\n\tsuffix:{}", suffix);
         Connection conn = null;
@@ -825,7 +825,7 @@ public final class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService 
      */
     @Override
     @SuppressFBWarnings(value = "OBL_UNSATISFIED_OBLIGATION",
-            justification = "Cleans up with closeAndRelease method")    
+            justification = "Cleans up with closeAndRelease method")
     public void addToken(final String token) throws DOIDbException {
         LOGGER.traceEntry("Parameters:\n\ttoken:{}", token);
         Connection conn = null;
@@ -851,7 +851,7 @@ public final class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService 
      */
     @Override
     @SuppressFBWarnings(value = "OBL_UNSATISFIED_OBLIGATION",
-            justification = "Cleans up with closeAndRelease method")    
+            justification = "Cleans up with closeAndRelease method")
     public void deleteToken(final String token) throws DOIDbException {
         LOGGER.traceEntry("Parameters:\n\ttoken:{}", token);
         Connection conn = null;
@@ -877,7 +877,7 @@ public final class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService 
      */
     @Override
     @SuppressFBWarnings(value = "OBL_UNSATISFIED_OBLIGATION",
-            justification = "Cleans up with closeAndRelease method")    
+            justification = "Cleans up with closeAndRelease method")
     public List<String> getTokens() throws DOIDbException {
         LOGGER.traceEntry();
         final List<String> tokens = new ArrayList<>();
@@ -903,7 +903,7 @@ public final class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService 
      */
     @Override
     @SuppressFBWarnings(value = "OBL_UNSATISFIED_OBLIGATION",
-            justification = "Cleans up with closeAndRelease method")    
+            justification = "Cleans up with closeAndRelease method")
     public void removeDOIUser(final String username) throws DOIDbException {
         LOGGER.traceEntry("Parameters:\n\tusername:{}", username);
         Connection conn = null;
@@ -935,7 +935,7 @@ public final class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService 
      */
     @Override
     @SuppressFBWarnings(value = "OBL_UNSATISFIED_OBLIGATION",
-            justification = "Cleans up with closeAndRelease method")    
+            justification = "Cleans up with closeAndRelease method")
     public void addDOIUser(final String username, final Boolean admin, final String email) throws
             DOIDbException {
         LOGGER.traceEntry("Parameters:\n\tusername:{}\n\tadmin:{}\n\temail:{}", username, admin,
@@ -965,7 +965,7 @@ public final class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService 
      */
     @Override
     @SuppressFBWarnings(value = "OBL_UNSATISFIED_OBLIGATION",
-            justification = "Cleans up with closeAndRelease method")    
+            justification = "Cleans up with closeAndRelease method")
     public void removeDOIProject(final int suffix) throws DOIDbException {
         LOGGER.traceEntry("Parameters:\n\tsuffix:{}", suffix);
         Connection conn = null;
@@ -1014,7 +1014,7 @@ public final class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService 
      * @throws DOIDbException - if a database error occurs.
      */
     @SuppressFBWarnings(value = "OBL_UNSATISFIED_OBLIGATION",
-            justification = "Cleans up with closeAndRelease method")    
+            justification = "Cleans up with closeAndRelease method")
     private DOIUser getDoiUserFromDb(final String username) throws DOIDbException {
         LOGGER.traceEntry("Parameters:\n\tusername:{}", username);
         Connection conn = null;

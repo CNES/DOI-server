@@ -42,7 +42,6 @@ import fr.cnes.doi.utils.spec.Requirement;
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 import java.nio.charset.Charset;
-import java.util.logging.Level;
 
 /**
  * DOI server
@@ -69,9 +68,9 @@ public final class Starter {
     private static DoiServer doiServer;
 
     static {
-        java.util.logging.Logger rootLogger = java.util.logging.LogManager.getLogManager()
+        final java.util.logging.Logger rootLogger = java.util.logging.LogManager.getLogManager()
                 .getLogger("");
-        java.util.logging.Handler[] handlers = rootLogger.getHandlers();
+        final java.util.logging.Handler[] handlers = rootLogger.getHandlers();
         rootLogger.removeHandler(handlers[0]);
     }
 
@@ -248,7 +247,7 @@ public final class Starter {
                         break;
                     }
                 }
-            }        
+            }
         } catch (IOException ex) {
         } finally {
             if (reader != null) {
@@ -278,8 +277,8 @@ public final class Starter {
         int c;
         String arg;
 
-        StringBuffer sb = new StringBuffer();
-        LongOpt[] longopts = new LongOpt[9];
+        final StringBuffer sb = new StringBuffer();
+        final LongOpt[] longopts = new LongOpt[9];
         longopts[0] = new LongOpt("help", LongOpt.NO_ARGUMENT, null, 'h');
         longopts[1] = new LongOpt("version", LongOpt.NO_ARGUMENT, null, 'v');
         longopts[2] = new LongOpt("secret", LongOpt.REQUIRED_ARGUMENT, sb, 0);
@@ -306,7 +305,7 @@ public final class Starter {
                 //
                 case 'a':
                     LOG.debug("a option is selected");
-                    String secretSignToken = g.getOptarg();
+                    final String secretSignToken = g.getOptarg();
                     TokenSecurity.getInstance().setTokenKey(secretSignToken);
                     break;
                 case 'h':
@@ -370,7 +369,7 @@ public final class Starter {
                 case 'y':
                     LOG.debug("y option is selected");
                     try {
-                        byte[] encodedFile = Files.readAllBytes(Paths.get(g.getOptarg()));
+                        final byte[] encodedFile = Files.readAllBytes(Paths.get(g.getOptarg()));
                         String contentFile = new String(encodedFile, StandardCharsets.UTF_8);
                         contentFile = UtilsCryptography.encrypt(contentFile,
                                 settings.getSecretKey());

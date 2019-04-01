@@ -131,7 +131,8 @@ public class JDBCConnector {
 
         LOGGER.info("[CONF] Datasource database URL : {}", dbUrl);
         LOGGER.info("[CONF] Datasource database user : {}", dbUser);
-        LOGGER.info("[CONF] Datasource database password : {}", Utils.transformPasswordToStars(dbPwd));
+        LOGGER.info("[CONF] Datasource database password : {}", Utils.
+                transformPasswordToStars(dbPwd));
         LOGGER.info("[CONF] Datasource min IDLE connection : {}", minIdleConnection);
         LOGGER.info("[CONF] Datasource max IDLE connection : {}", maxIdleConnection);
         LOGGER.info("[CONF] Datasource max active connection : {}", maxActiveConnection);

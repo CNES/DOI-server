@@ -142,16 +142,16 @@ public class AdminApplication extends AbstractApplication {
      * URI {@value #SUFFIX_PROJECT_URI} to create a project suffix.
      */
     public static final String SUFFIX_PROJECT_URI = "/projects";
-    
+
     /**
-     *  Project suffix template.
+     * Project suffix template.
      */
-    public static final String SUFFIX_PROJECT_NAME_TEMPLATE = "suffixProject";     
+    public static final String SUFFIX_PROJECT_NAME_TEMPLATE = "suffixProject";
 
     /**
      * URI {@value #SUFFIX_PROJECT_NAME} to manage a project suffix.
      */
-    public static final String SUFFIX_PROJECT_NAME = "/{"+SUFFIX_PROJECT_NAME_TEMPLATE+"}";      
+    public static final String SUFFIX_PROJECT_NAME = "/{" + SUFFIX_PROJECT_NAME_TEMPLATE + "}";
 
     /**
      * URI {@value #DOIS_URI} to get dois from a specific project.
@@ -172,11 +172,11 @@ public class AdminApplication extends AbstractApplication {
      * Template user.
      */
     public static final String USERS_NAME_TEMPLATE = "userName";
-    
+
     /**
      * URI {@value #USERS_NAME} to handle user.
      */
-    public static final String USERS_NAME = "/{"+USERS_NAME_TEMPLATE+"}";
+    public static final String USERS_NAME = "/{" + USERS_NAME_TEMPLATE + "}";
 
     /**
      * URI {@value #TOKEN_URI} to create a token.
@@ -408,7 +408,7 @@ public class AdminApplication extends AbstractApplication {
                     if ("projects".equals(lastSeg) && requestReference.hasQuery()) {
                         ignoreVerification = true;
                     }
-                    if (requestReference.toString().contains(ADMIN_URI+SUPERUSERS_URI)) {
+                    if (requestReference.toString().contains(ADMIN_URI + SUPERUSERS_URI)) {
                         ignoreVerification = true;
                     }
                     // ignore method GET dois from project

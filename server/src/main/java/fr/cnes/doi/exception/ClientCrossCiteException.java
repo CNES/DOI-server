@@ -27,6 +27,9 @@ import org.restlet.data.Status;
  */
 public class ClientCrossCiteException extends Exception {
 
+    /**
+     * serialVersionUID.
+     */
     private static final long serialVersionUID = -246999030222838204L;
 
     /**

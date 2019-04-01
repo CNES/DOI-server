@@ -20,14 +20,10 @@ package fr.cnes.doi.client;
 
 import fr.cnes.httpclient.HttpClient;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.restlet.Client;
 import org.restlet.data.Parameter;
 import org.restlet.data.Status;
@@ -74,14 +70,15 @@ public class ClientLandingPage extends BaseClient {
         this.getClient().setLoggable(true);
         final Client cl = (Client) this.getClient().getNext();
         final Series<Parameter> parameters = cl.getContext().getParameters();
-        parameters.add(HttpClient.MAX_REDIRECTION, String.valueOf(this.getClient().getMaxRedirects()));
+        parameters.add(HttpClient.MAX_REDIRECTION, String.
+                valueOf(this.getClient().getMaxRedirects()));
         this.getLog().info("{} landing pages to check.", dois.size());
         for (final String doi : dois) {
             this.getClient().setReference(BASE_URI);
             this.getClient().addSegment(doi);
             this.getLog().info("Checking landing page {}", doi);
             try {
-                Representation rep = this.getClient().get();
+                final Representation rep = this.getClient().get();
                 rep.exhaust();
                 final Status status = this.getClient().getStatus();
                 if (status.isError()) {
@@ -95,7 +92,7 @@ public class ClientLandingPage extends BaseClient {
                 this.errors.put(doi, ex.getStatus());
             } catch (IOException ex) {
                 this.getLog().error("Checking landing pages", ex);
-                this.errors.put(doi, new Status(Status.SERVER_ERROR_INTERNAL, ex));                
+                this.errors.put(doi, new Status(Status.SERVER_ERROR_INTERNAL, ex));
             } finally {
                 this.getClient().release();
             }

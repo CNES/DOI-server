@@ -41,12 +41,12 @@ import org.restlet.util.Series;
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-public class HttpClientHelper extends org.restlet.engine.connector.HttpClientHelper {
+public class HttpDOIClientHelper extends org.restlet.engine.connector.HttpClientHelper {
 
     /**
      * Logger.
      */
-    private static final Logger LOG = LogManager.getLogger(HttpClientHelper.class.getName());
+    private static final Logger LOG = LogManager.getLogger(HttpDOIClientHelper.class.getName());
 
     /**
      * Http client.
@@ -58,7 +58,7 @@ public class HttpClientHelper extends org.restlet.engine.connector.HttpClientHel
      *
      * @param client client
      */
-    public HttpClientHelper(final Client client) {
+    public HttpDOIClientHelper(final Client client) {
         super(client);
         getProtocols().add(Protocol.HTTP);
         getProtocols().add(Protocol.HTTPS);
@@ -158,7 +158,7 @@ public class HttpClientHelper extends org.restlet.engine.connector.HttpClientHel
     public int getRetry() {
         return Integer.parseInt(getHelpedParameters().getFirstValue(HttpClient.MAX_RETRY, "3"));
     }
-    
+
     /**
      * Delay between two retries.
      *
@@ -166,16 +166,17 @@ public class HttpClientHelper extends org.restlet.engine.connector.HttpClientHel
      */
     public long getRetryDelay() {
         return Long.parseLong(getHelpedParameters().getFirstValue(HttpClient.RETRY_DELAY, "1000"));
-    }    
-    
+    }
+
     /**
      * Get Max retry.
      *
      * @return max retry
      */
     public int getMaxRedirects() {
-        return Integer.parseInt(getHelpedParameters().getFirstValue(HttpClient.MAX_REDIRECTION, "5"));
-    }           
+        return Integer.
+                parseInt(getHelpedParameters().getFirstValue(HttpClient.MAX_REDIRECTION, "5"));
+    }
 
     /**
      * Returns true if the SSL is disabled otherwise false.

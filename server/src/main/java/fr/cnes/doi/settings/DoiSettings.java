@@ -131,6 +131,9 @@ public final class DoiSettings {
         LOG.traceExit();
     }
 
+    /**
+     * Computes path of the application.
+     */
     private void computePathOfTheApplication() {
         LOG.traceEntry();
         try {
@@ -499,11 +502,11 @@ public final class DoiSettings {
      */
     private void copyStream(final InputStream inputStream, final OutputStream outputStream) {
         LOG.traceEntry("With an input and output stream");
-        final int buffer_size = 1024;
+        final int bufferSize = 1024;
         try {
-            final byte[] bytes = new byte[buffer_size];
+            final byte[] bytes = new byte[bufferSize];
             for (;;) {
-                final int count = inputStream.read(bytes, 0, buffer_size);
+                final int count = inputStream.read(bytes, 0, bufferSize);
                 if (count == -1) {
                     break;
                 }

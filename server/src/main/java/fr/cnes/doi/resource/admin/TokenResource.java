@@ -164,7 +164,7 @@ public class TokenResource extends AbstractResource {
             LOG.info("Token created {} for project {} during {} {}",
                     tokenJwt, projectID, amount, unit.name());
 
-            if(this.tokenDB.addToken(tokenJwt)) {
+            if (this.tokenDB.addToken(tokenJwt)) {
                 sendTokenToUser(user, userID, tokenJwt, amount, timeUnit);
             }
 
@@ -177,6 +177,7 @@ public class TokenResource extends AbstractResource {
 
     /**
      * Sends the token to the user when the administrator creates a token for theuser
+     *
      * @param userAdmin User administration
      * @param userID user to send the message
      * @param token created token for userID
@@ -201,9 +202,10 @@ public class TokenResource extends AbstractResource {
                     }
                 }
                 if (email.isEmpty()) {
-                   LOG.error("Email is not set for {}", userID);
+                    LOG.error("Email is not set for {}", userID);
                 }
-                EmailSettings.getInstance().sendMessage("Creating Token", builderMsg.toString(), email);
+                EmailSettings.getInstance().sendMessage("Creating Token", builderMsg.toString(),
+                        email);
             } catch (DOIDbException ex) {
                 LOG.error(ex);
             }
