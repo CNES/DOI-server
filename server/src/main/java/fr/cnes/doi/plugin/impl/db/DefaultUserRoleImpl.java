@@ -103,11 +103,11 @@ public final class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
      * Status of the plugin configuration.
      */
     private boolean configured = false;
-    
+
     /**
      * Options for JDBC.
      */
-    private final Map<String, Integer> options = new ConcurrentHashMap<>();    
+    private final Map<String, Integer> options = new ConcurrentHashMap<>();
 
     /**
      * {@inheritDoc }
@@ -137,16 +137,16 @@ public final class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
 
         this.configured = true;
     }
-    
+
     /**
      * {@inheritDoc }
-     */    
+     */
     @Override
     public void initConnection() throws DoiRuntimeException {
         DatabaseSingleton.getInstance().init(
                 this.conf.get(DB_URL), this.conf.get(DB_USER), this.conf.get(DB_PWD), this.options);
         this.das = DatabaseSingleton.getInstance().getDatabaseAccess();
-    }    
+    }
 
     /**
      * {@inheritDoc }
@@ -445,7 +445,9 @@ public final class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
     public void release() {
         this.conf.clear();
         try {
-            this.das.close();
+            if(this.das != null) {
+                this.das.close();
+            }
         } catch (DOIDbException ex) {
         }
         this.configured = false;
@@ -453,7 +455,7 @@ public final class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
 
     /**
      * {@inheritDoc}
-     */    
+     */
     @Override
     public boolean isConfigured() {
         return this.configured;

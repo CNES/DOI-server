@@ -158,7 +158,7 @@ public final class DefaultLDAPImpl extends AbstractAuthenticationPluginHelper {
         LOGGER.info("[CONF] Plugin LDAP search user : {}", LDAP_SEARCH_USER);
         this.configured = true;
     }
-    
+
     /**
      * {@inheritDoc }
      */
@@ -169,11 +169,11 @@ public final class DefaultLDAPImpl extends AbstractAuthenticationPluginHelper {
             if(context == null) {
                 throw new DoiRuntimeException("LDAPAccessImpl: Unable to connect to Ldap");
             } else {
-                context.close();   
-            }            
+                context.close();
+            }
         } catch (NamingException ex) {
             throw new DoiRuntimeException("LDAPAccessImpl: Unable to connect to Ldap", ex);
-        }    }    
+        }    }
 
     /**
      * {@inheritDoc}

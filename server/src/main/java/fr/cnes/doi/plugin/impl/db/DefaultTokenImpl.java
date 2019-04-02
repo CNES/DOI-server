@@ -99,7 +99,7 @@ public final class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
      * Status of the plugin configuration.
      */
     private boolean configured = false;
-    
+
     /**
      * Options for JDBC.
      */
@@ -135,14 +135,14 @@ public final class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
 
     /**
      * {@inheritDoc }
-     */    
+     */
     @Override
     public void initConnection() throws DoiRuntimeException {
         DatabaseSingleton.getInstance().init(
                 this.conf.get(DB_URL), this.conf.get(DB_USER), this.conf.get(DB_PWD), this.options);
         this.das = DatabaseSingleton.getInstance().getDatabaseAccess();
     }
-    
+
     /**
      * {@inheritDoc }
      */
@@ -309,7 +309,9 @@ public final class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
 
         this.conf.clear();
         try {
-            this.das.close();
+            if(this.das != null) {
+                this.das.close();
+            }
         } catch (DOIDbException ex) {
         }
         this.configured = false;
@@ -317,7 +319,7 @@ public final class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
 
     /**
      * {@inheritDoc}
-     */    
+     */
     @Override
     public boolean isConfigured() {
         return this.configured;

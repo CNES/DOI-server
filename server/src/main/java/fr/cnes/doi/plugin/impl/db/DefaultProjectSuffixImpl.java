@@ -88,11 +88,11 @@ public final class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginH
      * Configuration file.
      */
     private Map<String, String> conf;
-    
+
     /**
      * options for JDBC.
      */
-    private final Map<String, Integer> options = new ConcurrentHashMap<>();    
+    private final Map<String, Integer> options = new ConcurrentHashMap<>();
 
     /**
      * Status of the plugin configuration.
@@ -135,7 +135,7 @@ public final class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginH
                 this.conf.get(DB_URL), this.conf.get(DB_USER), this.conf.get(DB_PWD), this.options);
         this.das = DatabaseSingleton.getInstance().getDatabaseAccess();
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -363,7 +363,9 @@ public final class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginH
     public void release() {
         this.conf.clear();
         try {
-            this.das.close();
+            if(this.das != null) {
+                this.das.close();
+            }
         } catch (DOIDbException ex) {
         }
         this.configured = false;
