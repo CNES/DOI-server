@@ -21,6 +21,7 @@ package fr.cnes.doi.plugin.impl.db;
 import fr.cnes.doi.db.MyMemoryRealm;
 import fr.cnes.doi.db.model.DOIUser;
 import fr.cnes.doi.exception.DOIDbException;
+import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.plugin.AbstractUserRolePluginHelper;
 import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_MAX_ACTIVE_CONNECTIONS;
 import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_MAX_IDLE_CONNECTIONS;
@@ -39,6 +40,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.restlet.Application;
@@ -100,14 +102,12 @@ public final class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
     /**
      * Status of the plugin configuration.
      */
-    private boolean isConfigured = false;
-
+    private boolean configured = false;
+    
     /**
-     * Default constructor of the authentication plugin.
+     * Options for JDBC.
      */
-    public DefaultUserRoleImpl() {
-        super();
-    }
+    private final Map<String, Integer> options = new ConcurrentHashMap<>();    
 
     /**
      * {@inheritDoc }
@@ -118,17 +118,16 @@ public final class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
         final String dbUrl = this.conf.get(DB_URL);
         final String dbUser = this.conf.get(DB_USER);
         final String dbPwd = this.conf.get(DB_PWD);
-        final Map<String, Integer> options = new HashMap<>();
         if (this.conf.containsKey(DB_MIN_IDLE_CONNECTIONS)) {
-            options.put(DB_MIN_IDLE_CONNECTIONS,
+            this.options.put(DB_MIN_IDLE_CONNECTIONS,
                     Integer.valueOf(this.conf.get(DB_MIN_IDLE_CONNECTIONS)));
         }
         if (this.conf.containsKey(DB_MAX_IDLE_CONNECTIONS)) {
-            options.put(DB_MAX_IDLE_CONNECTIONS,
+            this.options.put(DB_MAX_IDLE_CONNECTIONS,
                     Integer.valueOf(this.conf.get(DB_MAX_IDLE_CONNECTIONS)));
         }
         if (this.conf.containsKey(DB_MAX_ACTIVE_CONNECTIONS)) {
-            options.put(DB_MAX_ACTIVE_CONNECTIONS,
+            this.options.put(DB_MAX_ACTIVE_CONNECTIONS,
                     Integer.valueOf(this.conf.get(DB_MAX_ACTIVE_CONNECTIONS)));
         }
         LOG.info("[CONF] Plugin database URL : {}", dbUrl);
@@ -136,10 +135,18 @@ public final class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
         LOG.info("[CONF] Plugin database password : {}", Utils.transformPasswordToStars(dbPwd));
         LOG.info("[CONF] Plugin options : {}", options);
 
-        DatabaseSingleton.getInstance().init(dbUrl, dbUser, dbPwd, options);
-        this.das = DatabaseSingleton.getInstance().getDatabaseAccess();
-        this.isConfigured = true;
+        this.configured = true;
     }
+    
+    /**
+     * {@inheritDoc }
+     */    
+    @Override
+    public void initConnection() throws DoiRuntimeException {
+        DatabaseSingleton.getInstance().init(
+                this.conf.get(DB_URL), this.conf.get(DB_USER), this.conf.get(DB_PWD), this.options);
+        this.das = DatabaseSingleton.getInstance().getDatabaseAccess();
+    }    
 
     /**
      * {@inheritDoc }
@@ -436,16 +443,19 @@ public final class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
      */
     @Override
     public void release() {
-        this.conf = null;
+        this.conf.clear();
         try {
             this.das.close();
         } catch (DOIDbException ex) {
         }
-        this.isConfigured = false;
+        this.configured = false;
     }
 
+    /**
+     * {@inheritDoc}
+     */    
     @Override
     public boolean isConfigured() {
-        return this.isConfigured;
+        return this.configured;
     }
 }

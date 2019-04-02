@@ -161,6 +161,9 @@ public class AuthenticationResource extends AbstractResource {
         LOG.traceExit();
     }
 
+    /**
+     * {@inheritDoc }
+     */    
     @Override
     protected void describePost(final MethodInfo info) {
         info.setName(Method.POST);

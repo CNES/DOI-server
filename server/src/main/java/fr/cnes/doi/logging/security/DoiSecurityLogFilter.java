@@ -39,18 +39,11 @@ import org.restlet.security.Role;
 public class DoiSecurityLogFilter extends Filter {
 
     /**
-     * The name of the logger to use.
-     */
-    private final String loggerName;
-
-    /**
      * Instantiates a new sitools log filter.
      *
-     * @param loggerName the name of the logger to use
      */
-    public DoiSecurityLogFilter(final String loggerName) {
+    public DoiSecurityLogFilter() {
         super();
-        this.loggerName = loggerName;
     }
 
     /**

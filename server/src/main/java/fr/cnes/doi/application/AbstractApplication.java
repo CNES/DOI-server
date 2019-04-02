@@ -41,7 +41,6 @@ import org.restlet.ext.wadl.ApplicationInfo;
 import org.restlet.ext.wadl.WadlApplication;
 import org.restlet.ext.wadl.WadlCnesRepresentation;
 import org.restlet.representation.Representation;
-import static org.restlet.routing.Filter.CONTINUE;
 import org.restlet.security.ChallengeAuthenticator;
 import org.restlet.service.CorsService;
 
@@ -165,7 +164,7 @@ public abstract class AbstractApplication extends WadlApplication {
                 final int status;
                 if (request.getMethod().equals(Method.OPTIONS)) {
                     response.setStatus(Status.SUCCESS_OK);
-                    status = CONTINUE;
+                    status = org.restlet.routing.Filter.CONTINUE;
                 } else {
                     status = super.beforeHandle(request, response);
                 }
@@ -202,7 +201,7 @@ public abstract class AbstractApplication extends WadlApplication {
                 final int status;
                 if (request.getMethod().equals(Method.OPTIONS)) {
                     response.setStatus(Status.SUCCESS_OK);
-                    status = CONTINUE;
+                    status = org.restlet.routing.Filter.CONTINUE;
                 } else {
                     status = super.beforeHandle(request, response);
                 }

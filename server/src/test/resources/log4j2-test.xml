@@ -43,7 +43,7 @@
         </Logger>
 
         <Root level="DEBUG">
-            <AppenderRef ref="INFO"/>
+            <AppenderRef ref="SHELL"/>
         </Root>
     </Loggers>
 

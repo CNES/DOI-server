@@ -35,11 +35,4 @@ public abstract class AbstractAuthenticationPluginHelper
     protected AbstractAuthenticationPluginHelper() {
     }
 
-    /**
-     * Sets the configuration.
-     *
-     * @param configuration configuration parameters
-     */
-    public abstract void setConfiguration(final Object configuration);
-
 }

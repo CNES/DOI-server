@@ -124,13 +124,13 @@ public final class RoleAuthorizer implements Observer {
             }
         }
         RoleAuthorizer.REALM.setUsers(users);
-        LOG.debug("List of users in realm :" + RoleAuthorizer.REALM.getUsers());
+        LOG.debug("List of users in realm : {}", RoleAuthorizer.REALM.getUsers());
 
         // Add Groups       
         final Group administrators = new Group(GROUP_ADMIN, "Administrators");
         LOG.debug("Add users to Administrators group");
         administrators.getMemberUsers().addAll(admins);
-        LOG.debug("List of users in Administrators group " + administrators.getMemberUsers());
+        LOG.debug("List of users in Administrators group {}", administrators.getMemberUsers());
 
         if (!RoleAuthorizer.REALM.getRootGroups().contains(administrators)) {
             LOG.debug("Add administators group to rootGroups in REALM");
@@ -181,7 +181,7 @@ public final class RoleAuthorizer implements Observer {
 
             // create a role authorizer for each user related to a project
             for (final User user : usersFromProject) {
-                LOG.debug("Add user " + user + " to role " + projectID + " for " + app.getName());
+                LOG.debug("Add user {} to role {} for {}", user, projectID, app.getName());
                 RoleAuthorizer.REALM.map(user, role);
             }
         }
@@ -284,7 +284,7 @@ public final class RoleAuthorizer implements Observer {
         final Application mds = loadApplicationBy(adminGroup, DoiMdsApplication.NAME);
 
         if (mds == null) {
-            LOG.info(DoiMdsApplication.NAME + " is not defined in the REALM");
+            LOG.info("{} is not defined in the REALM", DoiMdsApplication.NAME);
         } else {
             updateObserver(obs, obj, mds);
         }

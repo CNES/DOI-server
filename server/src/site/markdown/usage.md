@@ -3,18 +3,19 @@
 ## Table of contents
 1. [Getting Help](#getting_help)
 2. [Getting Version](#getting_version)
-3. [Encrypting a password](#encrypting_password)
+3. [Creating the configuration file](#creatin_conf_file)
+4. [Encrypting a password](#encrypting_password)
     1. [Encrypting the password with the default key](#encrypting_password_default_key)
     2. [Encrypting the password with a custom key](#encrypting_password_custom_key)
-4. [Decrypting the password](#decrypting_password)
+5. [Decrypting the password](#decrypting_password)
     1. [Decrypting the password with the default key](#decrypting_password_default_key)
     2. [Decrypting the password with a custom key](#decrypting_password_custom_key)
-5. [Configuration file](#configuration_file)
-6. [Log configuration file](#log_configuration_file)
-7. [Starting the server](#starting_server)
+6. [Configuration file](#configuration_file)
+7. [Log configuration file](#log_configuration_file)
+8. [Starting the server](#starting_server)
     1. [Starting the server with the default key to decrypt the passwords](#starting_server_default_key)
     2. [Starting the server with a custome key to decrypt the passwords](#starting_server_custom_key)
-8. [Stopping the server](#stopping_server)
+9. [Stopping the server](#stopping_server)
 
 
 
@@ -53,39 +54,43 @@ with OPTIONS:
 malapert@heulet-HP-ZBook-15-G4:~/DOI$ java -Dlog4j.configurationFile=./log4j2.xml -jar DOI-server.jar -v
 DOI-server (Copyright 2017-2019 CNES) - Version:1.0.0-SNAPSHOT
 ```
+## 3. Creating the configuration file <a name="creating_conf_file"/>
+```
+java -Dlog4j.configurationFile=server/target/log4j2.xml -jar server/target/DOI-server-1.0.0-SNAPSHOT.jar -d > doi.conf
+```
 
-## 3. Encrypting a password <a name="encrypting_password"/>
+## 4. Encrypting a password <a name="encrypting_password"/>
 
-### 3.1 Encrypting the password with the default key <a name="encrypting_password_default_key"/>
+### 4.1 Encrypting the password with the default key <a name="encrypting_password_default_key"/>
 ```
 malapert@heulet-HP-ZBook-15-G4:~/DOI$ java -Dlog4j.configurationFile=./log4j2.xml -jar DOI-server.jar -c test
 7nAsnRnwzGL+v/SsnQ4rXg==
 ```
 
-### 3.2 Encrypting the password with a custom key <a name="encrypting_password_custom_key"/>
+### 4.2 Encrypting the password with a custom key <a name="encrypting_password_custom_key"/>
 ```
 malapert@heulet-HP-ZBook-15-G4:~/DOI$ java -Dlog4j.configurationFile=./log4j2.xml -jar DOI-server.jar --secret wxcvbnqsdfg12345 -c test 
 giXEr40f5832YFYgAiWMRA==
 ```
 
-## 4. Decrypting a password <a name="decrypting_password"/>
+## 5. Decrypting a password <a name="decrypting_password"/>
 
-### 4.1 Decrypting the password with the default key <a name="decrypting_password_default_key"/>
+### 5.1 Decrypting the password with the default key <a name="decrypting_password_default_key"/>
 ```
 malapert@heulet-HP-ZBook-15-G4:~/DOI$ java -Dlog4j.configurationFile=./log4j2.xml -jar DOI-server.jar -e 7nAsnRnwzGL+v/SsnQ4rXg==
 test
 ```
 
-### 4.2 Decrypting the password with a custom key <a name="decrypting_password_custom_key"/>
+### 5.2 Decrypting the password with a custom key <a name="decrypting_password_custom_key"/>
 ```
 malapert@heulet-HP-ZBook-15-G4:~/DOI$ java -Dlog4j.configurationFile=./log4j2.xml -jar DOI-server.jar --secret wxcvbnqsdfg12345 -e giXEr40f5832YFYgAiWMRA==
 test
 ```
 
-## 5. Configuration file <a name="configuration_file"/>
+## 6. Configuration file <a name="configuration_file"/>
 See [configuration](./configuration.html)
 
-## 6. Log configuration file <a name="log_configuration_file"/>
+## 7. Log configuration file <a name="log_configuration_file"/>
 ```
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="INFO">
@@ -161,18 +166,18 @@ See [configuration](./configuration.html)
 </Configuration>
 ```
 
-## 7. Starting the server <a name="starting_server"/>
-### 7.1 Starting the server with the default key to decrypt the passwords <a name="starting_server_default_key"/>
+## 8. Starting the server <a name="starting_server"/>
+### 8.1 Starting the server with the default key to decrypt the passwords <a name="starting_server_default_key"/>
 ```
 java -Dlog4j.configurationFile=./log4j2.xml -jar DOI-server.jar -f config.properties --start
 ```
 
-### 7.2 Starting the server with a custom key to decrypt the passwords <a name="starting_server_custom_key"/>
+### 8.2 Starting the server with a custom key to decrypt the passwords <a name="starting_server_custom_key"/>
 ```
 java -Dlog4j.configurationFile=./log4j2.xml -jar DOI-server.jar --secret wxcvbnqsdfg12345 -f config.properties --start
 ```
 
-## 8. Stopping the server <a name="stopping_server"/>
+## 9. Stopping the server <a name="stopping_server"/>
 ```
 java -Dlog4j.configurationFile=./log4j2.xml -jar DOI-server.jar -f config.properties --stop
 ```

@@ -209,7 +209,7 @@ public class DoiServer extends Component {
              */
             @Override
             public Filter createInboundFilter(final Context context) {
-                return new DoiSecurityLogFilter(Utils.SECURITY_LOGGER_NAME);
+                return new DoiSecurityLogFilter();
             }
         };
         this.getServices().add(logServiceSecurity);

@@ -152,7 +152,7 @@ public class BaseMdsResource extends AbstractResource {
         } else if (hasSingleRole(roles)) {
             // the user has only one role, ok do it
             final Role role = roles.get(0);
-            LOG.debug("User has a single Role " + role);
+            LOG.debug("User has a single Role {}", role);
             return LOG.traceExit(role.getName());
         } else {
             // the user has several roles, he has to select a profile, go out
@@ -171,14 +171,14 @@ public class BaseMdsResource extends AbstractResource {
     private String getRoleNameWhenRoleInHeader(final String selectedRole) {
         LOG.traceEntry("Parameter : {}", selectedRole);
         // the role is selected in the Header
-        LOG.debug("Role selected : " + selectedRole);
+        LOG.debug("Role selected : {}", selectedRole);
         if (isInRole(selectedRole)) {
             // the selected role is well related to the user
-            LOG.debug("User is in Role : " + selectedRole);
+            LOG.debug("User is in Role : {}", selectedRole);
             return LOG.traceExit(selectedRole);
         } else {
             // the user is not contained in the selected role => a possible hacking
-            LOG.debug("User is not in Role :" + selectedRole);
+            LOG.debug("User is not in Role : {}", selectedRole);
             LOG.info("DOIServer : The role {} is not allowed to use this feature", selectedRole);
             throw LOG.throwing(Level.DEBUG,
                     new DoiServerException(getApplication(),

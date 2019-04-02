@@ -66,7 +66,7 @@ public class AllowerIP extends org.restlet.routing.Filter {
     /**
      * Service enabled/disabled.
      */
-    private final boolean isEnabled;
+    private final boolean enabled;
 
     /**
      * Constructor based on the context and a parameter to make enabled/disabled the service
@@ -77,7 +77,7 @@ public class AllowerIP extends org.restlet.routing.Filter {
     public AllowerIP(final Context context, final boolean isEnabledIP) {
         super(context);
         LOG.traceEntry();
-        this.isEnabled = isEnabledIP;
+        this.enabled = isEnabledIP;
         this.allowedAddresses = new CopyOnWriteArraySet<>();
         this.allowedAddresses.add(LOCALHOST_IPV6);
         this.allowedAddresses.add(LOCALHOST_IPV4);
@@ -118,9 +118,9 @@ public class AllowerIP extends org.restlet.routing.Filter {
         LOG.traceEntry(new JsonMessage(request));
         int result = STOP;
         final String ipClient = request.getClientInfo().getAddress();
-        if (this.isEnabled && getAllowedAddresses().contains(ipClient)) {
+        if (this.enabled && getAllowedAddresses().contains(ipClient)) {
             result = CONTINUE;
-        } else if (this.isEnabled && !getAllowedAddresses().contains(ipClient)) {
+        } else if (this.enabled && !getAllowedAddresses().contains(ipClient)) {
             LOG.info("You IP address {} was blocked", ipClient);
             response.setStatus(Status.CLIENT_ERROR_FORBIDDEN,
                     "Your IP address " + ipClient + " was blocked");
@@ -147,7 +147,7 @@ public class AllowerIP extends org.restlet.routing.Filter {
      * @return True when the service is enabled otherwise False
      */
     public boolean isEnabled() {
-        return this.isEnabled;
+        return this.enabled;
     }
 
 }

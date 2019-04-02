@@ -7,6 +7,7 @@ package fr.cnes.doi;
 
 import fr.cnes.doi.db.model.AuthSystemUser;
 import fr.cnes.doi.exception.AuthenticationAccessException;
+import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.plugin.AbstractAuthenticationPluginHelper;
 import static fr.cnes.doi.plugin.impl.db.DefaultLDAPImpl.LDAP_ATTR_FULLNAME;
 import static fr.cnes.doi.plugin.impl.db.DefaultLDAPImpl.LDAP_ATTR_MAIL;
@@ -108,6 +109,11 @@ public class AuthPluginTestImpl extends AbstractAuthenticationPluginHelper {
     public void setConfiguration(Object configuration) {
         this.conf = (Map<String, String>) configuration;
         this.isConfigured = true;
+    }   
+    
+
+    @Override
+    public void initConnection() throws DoiRuntimeException {
     }    
 
     @Override
@@ -199,7 +205,5 @@ public class AuthPluginTestImpl extends AbstractAuthenticationPluginHelper {
     public boolean isConfigured() {
         return this.isConfigured;
     }
-
-
     
 }

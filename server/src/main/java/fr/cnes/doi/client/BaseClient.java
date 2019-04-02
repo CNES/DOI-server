@@ -73,11 +73,11 @@ public class BaseClient {
         this.client.setRetryOnError(true);
         this.client.setRetryAttempts(NB_RETRY);
         this.client.setRetryDelay(NB_DELAY);
-        final Client cl = new Client(new Context(), Protocol.HTTPS);
-        final Series<Parameter> parameters = cl.getContext().getParameters();
+        final Client configureClient = new Client(new Context(), Protocol.HTTPS);
+        final Series<Parameter> parameters = configureClient.getContext().getParameters();
         parameters.add(HttpClient.MAX_RETRY, String.valueOf(this.client.getRetryAttempts()));
         parameters.add(HttpClient.RETRY_DELAY, String.valueOf(this.client.getRetryDelay()));
-        this.client.setNext(cl);
+        this.client.setNext(configureClient);
     }
 
     /**

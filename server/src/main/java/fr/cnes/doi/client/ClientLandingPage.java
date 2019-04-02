@@ -21,9 +21,9 @@ package fr.cnes.doi.client;
 import fr.cnes.httpclient.HttpClient;
 import java.io.IOException;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import org.restlet.Client;
 import org.restlet.data.Parameter;
 import org.restlet.data.Status;
@@ -46,7 +46,7 @@ public class ClientLandingPage extends BaseClient {
     /**
      * List of offline landing pages.
      */
-    private final Map<String, Status> errors = new HashMap<>();
+    private final Map<String, Status> errors = new ConcurrentHashMap<>();
 
     /**
      * Constructor
@@ -68,8 +68,8 @@ public class ClientLandingPage extends BaseClient {
         this.getLog().traceEntry("Parameters\n\tdois : {}", dois);
         this.getClient().setMaxRedirects(5);
         this.getClient().setLoggable(true);
-        final Client cl = (Client) this.getClient().getNext();
-        final Series<Parameter> parameters = cl.getContext().getParameters();
+        final Client configurationClient = (Client) this.getClient().getNext();
+        final Series<Parameter> parameters = configurationClient.getContext().getParameters();
         parameters.add(HttpClient.MAX_REDIRECTION, String.
                 valueOf(this.getClient().getMaxRedirects()));
         this.getLog().info("{} landing pages to check.", dois.size());

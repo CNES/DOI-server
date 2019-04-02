@@ -21,7 +21,7 @@ package fr.cnes.doi.exception;
 import org.restlet.data.Status;
 
 /**
- *
+ * Exception for tokenSecurity.
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class TokenSecurityException extends Exception {

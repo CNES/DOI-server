@@ -522,14 +522,7 @@ The interface AbstractProjectSuffixDBHelper:
         /**
          * Notification message when the record is added {@value #RENAME_RECORD}.
          */
-        public static final String RENAME_RECORD = "RENAME";
-    
-        /**
-         * Sets the configuration.
-         *
-         * @param configuration configuration parameters
-         */
-        public abstract void setConfiguration(final Object configuration);
+        public static final String RENAME_RECORD = "RENAME";   
     
         /**
          * Adds a suffix project in the database.
@@ -643,13 +636,6 @@ The interface AbstractUserRoleDBHelper:
         private static final MyMemoryRealm REALM = new MyMemoryRealm();
     
         /**
-         * Sets the configuration.
-         *
-         * @param configuration configuration parameters
-         */
-        public abstract void setConfiguration(final Object configuration);
-    
-        /**
          * Returns the realm.
          *
          * @return the realm
@@ -760,13 +746,6 @@ The interface AbstractTokenDBHelper:
 
 ```
     public abstract class AbstractTokenDBHelper extends Observable {
-    
-        /**
-         * Sets the configuration.
-         *
-         * @param configuration configuration parameters
-         */
-        public abstract void setConfiguration(final Object configuration);
     
         /**
          * Adds a token in the database

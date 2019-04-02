@@ -50,13 +50,6 @@ public abstract class AbstractUserRoleDBHelper extends Observable {
     private static final MyMemoryRealm REALM = new MyMemoryRealm();
 
     /**
-     * Sets the configuration.
-     *
-     * @param configuration configuration parameters
-     */
-    public abstract void setConfiguration(final Object configuration);
-
-    /**
      * Returns the realm.
      *
      * @return the realm

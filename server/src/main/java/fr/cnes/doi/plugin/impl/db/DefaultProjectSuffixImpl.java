@@ -40,6 +40,7 @@ import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_URL;
 import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_USER;
 import fr.cnes.doi.utils.Utils;
 import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -87,18 +88,16 @@ public final class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginH
      * Configuration file.
      */
     private Map<String, String> conf;
+    
+    /**
+     * options for JDBC.
+     */
+    private final Map<String, Integer> options = new ConcurrentHashMap<>();    
 
     /**
      * Status of the plugin configuration.
      */
-    private boolean isConfigured = false;
-
-    /**
-     * Default constructor of the project suffix database
-     */
-    public DefaultProjectSuffixImpl() {
-        super();
-    }
+    private boolean configured = false;
 
     /**
      * {@inheritDoc}
@@ -109,29 +108,34 @@ public final class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginH
         final String dbUrl = this.conf.get(DB_URL);
         final String dbUser = this.conf.get(DB_USER);
         final String dbPwd = this.conf.get(DB_PWD);
-        final Map<String, Integer> options = new HashMap<>();
         if (this.conf.containsKey(DB_MIN_IDLE_CONNECTIONS)) {
-            options.put(DB_MIN_IDLE_CONNECTIONS,
+            this.options.put(DB_MIN_IDLE_CONNECTIONS,
                     Integer.valueOf(this.conf.get(DB_MIN_IDLE_CONNECTIONS)));
         }
         if (this.conf.containsKey(DB_MAX_IDLE_CONNECTIONS)) {
-            options.put(DB_MAX_IDLE_CONNECTIONS,
+            this.options.put(DB_MAX_IDLE_CONNECTIONS,
                     Integer.valueOf(this.conf.get(DB_MAX_IDLE_CONNECTIONS)));
         }
         if (this.conf.containsKey(DB_MAX_ACTIVE_CONNECTIONS)) {
-            options.put(DB_MAX_ACTIVE_CONNECTIONS,
+            this.options.put(DB_MAX_ACTIVE_CONNECTIONS,
                     Integer.valueOf(this.conf.get(DB_MAX_ACTIVE_CONNECTIONS)));
         }
         LOG.info("[CONF] Plugin database URL : {}", dbUrl);
         LOG.info("[CONF] Plugin database user : {}", dbUser);
         LOG.info("[CONF] Plugin database password : {}", Utils.transformPasswordToStars(dbPwd));
-        LOG.info("[CONF] Plugin options : {}", options);
+        LOG.info("[CONF] Plugin options : {}", this.options);
 
-        DatabaseSingleton.getInstance().init(dbUrl, dbUser, dbPwd, options);
-        this.das = DatabaseSingleton.getInstance().getDatabaseAccess();
-        this.isConfigured = true;
+        this.configured = true;
     }
 
+
+    @Override
+    public void initConnection() throws DoiRuntimeException {
+        DatabaseSingleton.getInstance().init(
+                this.conf.get(DB_URL), this.conf.get(DB_USER), this.conf.get(DB_PWD), this.options);
+        this.das = DatabaseSingleton.getInstance().getDatabaseAccess();
+    }
+    
     /**
      * {@inheritDoc}
      */
@@ -357,17 +361,17 @@ public final class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginH
      */
     @Override
     public void release() {
-        this.conf = null;
+        this.conf.clear();
         try {
             this.das.close();
         } catch (DOIDbException ex) {
         }
-        this.isConfigured = false;
+        this.configured = false;
     }
 
     @Override
     public boolean isConfigured() {
-        return this.isConfigured;
+        return this.configured;
     }
 
 }

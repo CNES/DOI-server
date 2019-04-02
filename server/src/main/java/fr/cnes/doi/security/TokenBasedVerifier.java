@@ -96,7 +96,7 @@ public class TokenBasedVerifier implements Verifier {
         LOG.traceEntry(new JsonMessage(request));
         final int result;
         final String token = challResponse.getRawValue();
-        LOG.debug("Token from challenge response : " + token);
+        LOG.debug("Token from challenge response : {}", token);
 
         if (token == null) {
             LOG.warn("Token is missing !");
