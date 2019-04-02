@@ -361,7 +361,6 @@ public final class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginH
      */
     @Override
     public void release() {
-        this.conf.clear();
         try {
             if(this.das != null) {
                 this.das.close();

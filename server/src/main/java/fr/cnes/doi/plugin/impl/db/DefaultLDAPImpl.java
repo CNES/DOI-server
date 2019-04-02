@@ -513,7 +513,6 @@ public final class DefaultLDAPImpl extends AbstractAuthenticationPluginHelper {
      */
     @Override
     public void release() {
-        this.conf.clear();
         this.configured = false;
     }
 

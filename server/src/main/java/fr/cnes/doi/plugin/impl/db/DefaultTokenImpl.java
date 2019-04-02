@@ -305,9 +305,7 @@ public final class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
      * {@inheritDoc}
      */
     @Override
-    public void release() {
-
-        this.conf.clear();
+    public void release() {        
         try {
             if(this.das != null) {
                 this.das.close();

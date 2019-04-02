@@ -443,7 +443,6 @@ public final class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
      */
     @Override
     public void release() {
-        this.conf.clear();
         try {
             if(this.das != null) {
                 this.das.close();
