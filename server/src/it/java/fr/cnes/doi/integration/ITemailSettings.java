@@ -75,24 +75,6 @@ public class ITemailSettings {
     }
 
     /**
-     * Test of getAuthUser method, of class EmailSettings.
-     */
-    @Test
-    public void testGetAuthUser() {
-        String result = instance.getAuthUser();
-        assertTrue(result!=null && !result.isEmpty());
-    }
-
-    /**
-     * Test of getAuthPwd method, of class EmailSettings.
-     */
-    @Test
-    public void testGetAuthPwd() {
-        String result = instance.getAuthPwd();
-        assertTrue(result!=null && !result.isEmpty());
-    }
-
-    /**
      * Test of getContactAdmin method, of class EmailSettings.
      */
     @Test
