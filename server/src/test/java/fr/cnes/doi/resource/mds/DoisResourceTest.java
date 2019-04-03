@@ -63,6 +63,7 @@ import fr.cnes.doi.settings.DoiSettings;
 
 /**
  * Tests the DoisResource
+ *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 @Category(UnitTest.class)
@@ -70,11 +71,11 @@ public class DoisResourceTest {
 
     private static Client cl;
     private static boolean isDatabaseConfigured;
-    
-    private static MdsSpec mdsSpecStub;   
-    
+
+    private static MdsSpec mdsSpecStub;
+
     private static final String DOIS_SERVICE = "/mds/dois";
-    
+
     public DoisResourceTest() {
     }
 
@@ -84,13 +85,18 @@ public class DoisResourceTest {
             isDatabaseConfigured = true;
             InitServerForTest.init(InitSettingsForTest.CONFIG_TEST_PROPERTIES);
             cl = new Client(new Context(), Protocol.HTTPS);
-            Series<Parameter> parameters = cl.getContext().getParameters();       
-            parameters.set(RESTLET_MAX_TOTAL_CONNECTIONS, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_TOTAL_CONNECTIONS, DEFAULT_MAX_TOTAL_CONNECTIONS));        
-            parameters.set(RESTLET_MAX_CONNECTIONS_PER_HOST, DoiSettings.getInstance().getString(fr.cnes.doi.settings.Consts.RESTLET_MAX_CONNECTIONS_PER_HOST, DEFAULT_MAX_CONNECTIONS_PER_HOST));
-            parameters.add("truststorePath", JKS_DIRECTORY+File.separatorChar+JKS_FILE);
-            parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
+            Series<Parameter> parameters = cl.getContext().getParameters();
+            parameters.set(RESTLET_MAX_TOTAL_CONNECTIONS, DoiSettings.getInstance().getString(
+                    fr.cnes.doi.settings.Consts.RESTLET_MAX_TOTAL_CONNECTIONS,
+                    DEFAULT_MAX_TOTAL_CONNECTIONS));
+            parameters.set(RESTLET_MAX_CONNECTIONS_PER_HOST, DoiSettings.getInstance().getString(
+                    fr.cnes.doi.settings.Consts.RESTLET_MAX_CONNECTIONS_PER_HOST,
+                    DEFAULT_MAX_CONNECTIONS_PER_HOST));
+            parameters.add("truststorePath", JKS_DIRECTORY + File.separatorChar + JKS_FILE);
+            parameters.add("truststorePassword", DoiSettings.getInstance().getSecret(
+                    Consts.SERVER_HTTPS_TRUST_STORE_PASSWD));
             parameters.add("truststoreType", "JKS");
-        } catch(Error ex) {
+        } catch (Error ex) {
             isDatabaseConfigured = false;
         }
         mdsSpecStub = new MdsSpec(DATACITE_MOCKSERVER_PORT);
@@ -100,12 +106,14 @@ public class DoisResourceTest {
     public static void tearDownClass() throws IOException {
         try {
             Form doiForm = new Form();
-            doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b"));
+            doiForm.add(new Parameter(DoisResource.DOI_PARAMETER,
+                    "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b"));
             doiForm.add(new Parameter(DoisResource.URL_PARAMETER, "https://cfosat.cnes.fr/"));
 
             String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
             ClientResource client = new ClientResource("https://localhost:" + port + DOIS_SERVICE);
-            client.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "malapert", "pwd"));
+            client.setChallengeResponse(
+                    new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "malapert", "pwd"));
             final String RESTLET_HTTP_HEADERS = "org.restlet.http.headers";
             Map<String, Object> reqAttribs = client.getRequestAttributes();
             Series headers = (Series) reqAttribs.get(RESTLET_HTTP_HEADERS);
@@ -124,22 +132,23 @@ public class DoisResourceTest {
                 code = ex.getStatus().getCode();
             }
             client.release();
-            InitServerForTest.close();        
-        } catch(Error ex) {
-            
+            InitServerForTest.close();
+        } catch (Error ex) {
+
         }
         mdsSpecStub.finish();
     }
 
     @Before
-    public void setUp() {  
-        Assume.assumeTrue("Database is not configured, please configure it and rerun the tests", isDatabaseConfigured);                                
+    public void setUp() {
+        Assume.assumeTrue("Database is not configured, please configure it and rerun the tests",
+                isDatabaseConfigured);
         mdsSpecStub.reset();
     }
 
     @After
-    public void tearDown() {        
-    }    
+    public void tearDown() {
+    }
 
     /**
      * Test of getDois method through a HTTPS server, of class DoisResource.
@@ -173,22 +182,25 @@ public class DoisResourceTest {
         
         mdsSpecStub.verifySpec(MdsSpec.Spec.GET_COLLECTION_200);          
     }
-
+    
     /**
-     * Test of createDoi method when a user is contained in several roles without a selected role, of class DoisResource.
-     * CLIENT_ERROR_CONFLICT status is expected because the user is 
-     * associated to several roles. So, the user must selected one role so that
-     * the system applies his rights.
+     * Test of createDoi method when a user is contained in several roles without a selected role,
+     * of class DoisResource. CLIENT_ERROR_CONFLICT status is expected because the user is
+     * associated to several roles. So, the user must selected one role so that the system applies
+     * his rights.
+     *
      * @throws java.io.IOException - if OutOfMemoryErrors
      */
     @Test
-    public void testCreateDoiConflictHttps() throws IOException {        
+    public void testCreateDoiConflictHttps() throws IOException {
         Form doiForm = new Form();
-        doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b"));
+        doiForm.add(new Parameter(DoisResource.DOI_PARAMETER,
+                "10.5072/100378/8c3e91ad45ca855b477126bc073ae44b"));
         doiForm.add(new Parameter(DoisResource.URL_PARAMETER, "http://www.cnes.fr"));
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + DOIS_SERVICE);
-        client.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "malapert", "pwd"));
+        client.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "malapertjc",
+                "admin"));
         client.setNext(cl);
         int code;
         try {
@@ -199,7 +211,8 @@ public class DoisResourceTest {
             code = ex.getStatus().getCode();
         }
         client.release();
-        assertEquals("Test if the DOI is related to several accounts", Status.CLIENT_ERROR_CONFLICT.getCode(), code);
+        assertEquals("Test if the DOI is related to several accounts", Status.CLIENT_ERROR_CONFLICT.
+                getCode(), code);
     }
 
     /**
@@ -352,5 +365,4 @@ public class DoisResourceTest {
         client.release();
         assertEquals("Test an error of the creation of a DOI when the prefix is wrong", Status.CLIENT_ERROR_FORBIDDEN.getCode(), code);
     }        
-
 }

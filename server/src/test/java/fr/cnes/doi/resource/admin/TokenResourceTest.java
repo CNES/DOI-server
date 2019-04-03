@@ -97,14 +97,13 @@ public class TokenResourceTest {
     public static void tearDownClass() {
         try{
             InitServerForTest.close();
-        }catch(Error ex) {
-            
+        }catch(Error ex) {            
         }
     }
 
     @Before
     public void setUp() {
-        Assume.assumeTrue("Database is not configured, please configure it and rerun the tests", isDatabaseConfigured);        
+        Assume.assumeTrue("Database is not configured, please configure it and rerun the tests", isDatabaseConfigured); 
     }
 
     @After
@@ -129,30 +128,7 @@ public class TokenResourceTest {
         String token = response.getText();
         client.release();
         assertNotNull("Test if a token is returned", token);
-    }
-    
-    /**
-     * Test of createToken method with wrong parameters, of class TokenResource.
-     * A ResourceException is thrown because the send parameters are wrong.
-     *
-     * @throws ResourceException - 
-     */
-    @Test
-    public void testCreateTokenWithWrongParameters() {
-        exceptions.expect(ResourceException.class);
-        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-        ClientResource client = new ClientResource("https://localhost:" + port + "/admin/token");
-        client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
-        client.setNext(cl);
-        Form form = new Form();
-        form.add("identif", "jcm");
-        form.add("projec", "828606");
-        try {
-            Representation response = client.post(form);
-        } finally {
-            client.release();  
-        }            
-    }    
+    }      
     
     /**
      * Test of createToken method with wrong credentials, of class TokenResource.
@@ -186,7 +162,6 @@ public class TokenResourceTest {
      */
     @Test
     public void testGetTokenInformationWithWrongCredentials() throws IOException {
-    	// if LDAP isn't setted, ignore the test
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + "/admin/token");
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
@@ -213,5 +188,5 @@ public class TokenResourceTest {
         assertEquals("Test is the information is returned with wrong credentials",Status.CLIENT_ERROR_UNAUTHORIZED.getCode(), status.getCode());
 
     }
-
+         
 }

@@ -89,20 +89,32 @@ public class AuthPluginTestImpl extends AbstractAuthenticationPluginHelper {
         user5.setEmail("kerberos@mail.com");
         user5.setUsername("doi_kerberos");
         user5.setFullname("doi_kerberos"); 
+        
+        AuthSystemUser user6 = new AuthSystemUser();
+        user6.setEmail("testMe@mail.com");
+        user6.setUsername("testMe");
+        user6.setFullname("testMe");         
 
+        AuthSystemUser user7 = new AuthSystemUser();
+        user7.setEmail("nonadmin@mail.com");
+        user7.setUsername("nonadmin");
+        user7.setFullname("nonadmin");
         
         authUserList.add(user1);
         authUserList.add(user2);
         authUserList.add(user3);
         authUserList.add(user4);
         authUserList.add(user5);
-        
+        authUserList.add(user6);
+        authUserList.add(user7);
         
         credentials.put(user1.getUsername(), "admin");
         credentials.put(user2.getUsername(), "pwd");
         credentials.put(user3.getUsername(), "admin");
         credentials.put(user4.getUsername(), "norole");
         credentials.put(user5.getUsername(), "doi_kerberos");
+        credentials.put(user6.getUsername(), "testMe");
+        credentials.put(user7.getUsername(), "nonadmin");
     }
     
     @Override

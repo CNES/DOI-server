@@ -41,7 +41,6 @@ import fr.cnes.doi.utils.Utils;
 import fr.cnes.doi.plugin.AbstractAuthenticationPluginHelper;
 import fr.cnes.doi.settings.DoiSettings;
 import java.util.Map;
-import java.util.logging.Level;
 
 /**
  * Implementation of the LDAP.
@@ -146,16 +145,19 @@ public final class DefaultLDAPImpl extends AbstractAuthenticationPluginHelper {
     @Override
     public void setConfiguration(final Object configuration) {
         this.conf = (Map<String, String>) configuration;
-        LOGGER.info("[CONF] Plugin LDAP URL : {}", LDAP_URL);
-        LOGGER.info("[CONF] Plugin LDAP user : {}", LDAP_USER);
-        LOGGER.info("[CONF] Plugin LDAP password : {}", Utils.transformPasswordToStars(LDAP_PWD));
-        LOGGER.info("[CONF] Plugin LDAP project : {}", LDAP_PROJECT);
-        LOGGER.info("[CONF] Plugin LDAP admin for DOI : {}", LDAP_DOI_ADMIN);
-        LOGGER.info("[CONF] Plugin LDAP attribute for fullname : {}", LDAP_ATTR_FULLNAME);
-        LOGGER.info("[CONF] Plugin LDAP attribute for mail : {}", LDAP_ATTR_MAIL);
-        LOGGER.info("[CONF] Plugin LDAP attribute for username : {}", LDAP_ATTR_USERNAME);
-        LOGGER.info("[CONF] Plugin LDAP search group : {}", LDAP_SEARCH_GROUP);
-        LOGGER.info("[CONF] Plugin LDAP search user : {}", LDAP_SEARCH_USER);
+        LOGGER.info("[CONF] Plugin LDAP URL : {}", this.conf.get(LDAP_URL));
+        LOGGER.info("[CONF] Plugin LDAP user : {}", this.conf.get(LDAP_USER));
+        LOGGER.info("[CONF] Plugin LDAP password : {}", Utils.transformPasswordToStars(this.conf.
+                get(LDAP_PWD)));
+        LOGGER.info("[CONF] Plugin LDAP project : {}", this.conf.get(LDAP_PROJECT));
+        LOGGER.info("[CONF] Plugin LDAP admin for DOI : {}", this.conf.get(LDAP_DOI_ADMIN));
+        LOGGER.info("[CONF] Plugin LDAP attribute for fullname : {}", this.conf.get(
+                LDAP_ATTR_FULLNAME));
+        LOGGER.info("[CONF] Plugin LDAP attribute for mail : {}", this.conf.get(LDAP_ATTR_MAIL));
+        LOGGER.info("[CONF] Plugin LDAP attribute for username : {}", this.conf.get(
+                LDAP_ATTR_USERNAME));
+        LOGGER.info("[CONF] Plugin LDAP search group : {}", this.conf.get(LDAP_SEARCH_GROUP));
+        LOGGER.info("[CONF] Plugin LDAP search user : {}", this.conf.get(LDAP_SEARCH_USER));
         this.configured = true;
     }
 
@@ -166,14 +168,15 @@ public final class DefaultLDAPImpl extends AbstractAuthenticationPluginHelper {
     public void initConnection() throws DoiRuntimeException {
         try {
             InitialLdapContext context = getContext();
-            if(context == null) {
+            if (context == null) {
                 throw new DoiRuntimeException("LDAPAccessImpl: Unable to connect to Ldap");
             } else {
                 context.close();
             }
         } catch (NamingException ex) {
             throw new DoiRuntimeException("LDAPAccessImpl: Unable to connect to Ldap", ex);
-        }    }
+        }
+    }
 
     /**
      * {@inheritDoc}
@@ -494,7 +497,12 @@ public final class DefaultLDAPImpl extends AbstractAuthenticationPluginHelper {
         if (!this.conf.containsKey(LDAP_SEARCH_USER)) {
             validation.append(message).append(LDAP_SEARCH_USER).append("\n");
         }
-
+        if (!this.conf.containsKey(LDAP_USER)) {
+            validation.append(message).append(LDAP_USER).append("\n");
+        }
+        if (!this.conf.containsKey(LDAP_PWD)) {
+            validation.append(message).append(LDAP_PWD).append("\n");
+        }        
         return validation;
     }
 

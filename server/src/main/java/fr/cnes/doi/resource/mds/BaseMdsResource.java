@@ -20,15 +20,11 @@ package fr.cnes.doi.resource.mds;
 
 import fr.cnes.doi.application.DoiMdsApplication;
 import fr.cnes.doi.application.DoiMdsApplication.API_MDS;
-import fr.cnes.doi.db.model.DOIProject;
-import fr.cnes.doi.exception.DOIDbException;
 import fr.cnes.doi.exception.DoiServerException;
 import fr.cnes.doi.resource.AbstractResource;
 import static fr.cnes.doi.security.UtilsHeader.SELECTED_ROLE_PARAMETER;
 
-import fr.cnes.doi.utils.UniqueProjectName;
 import fr.cnes.doi.utils.spec.Requirement;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.logging.log4j.Level;
@@ -212,34 +208,8 @@ public class BaseMdsResource extends AbstractResource {
     protected void checkPermission(final String doiName, final String selectedRole)
             throws DoiServerException {
         LOG.traceEntry("Parameters : {} and {}", doiName, selectedRole);
-
         final String prefixCNES = this.getDoiApp().getDataCentrePrefix();
-
-        // Token-ihm isn't attached to any project, in this case, check role in database
-        if ("null".equals(selectedRole)) {
-            final String user = getClientInfo().getUser().getIdentifier();
-            List<DOIProject> projects;
-            try {
-                projects = UniqueProjectName.getInstance().getProjectsFromUser(user);
-            } catch (DOIDbException ex) {
-                projects = new ArrayList<>();
-            }
-            boolean isAuthorized = false;
-            for (final DOIProject project : projects) {
-                if (doiName.startsWith(prefixCNES + "/" + project.getSuffix() + "/")) {
-                    isAuthorized = true;
-                    break;
-                }
-            }
-            if (!isAuthorized) {
-                LOG.debug("The DOI {}  does not match with any user's role", doiName);
-                throw LOG.throwing(Level.DEBUG,
-                        new DoiServerException(getApplication(), API_MDS.SECURITY_USER_PERMISSION,
-                                "The DOI " + doiName + " does not match with any user's role"));
-            }
-        } else {
             final String projectRole = getRoleName(selectedRole);
-
             if (!doiName.startsWith(prefixCNES + "/" + projectRole + "/")) {
                 LOG.debug("The DOI {}  does not match with {}", doiName,
                         prefixCNES + "/" + projectRole);
@@ -248,7 +218,6 @@ public class BaseMdsResource extends AbstractResource {
                                 "The DOI " + doiName + " does not match with" + prefixCNES + "/"
                                 + projectRole));
             }
-        }
         LOG.traceExit();
     }
 

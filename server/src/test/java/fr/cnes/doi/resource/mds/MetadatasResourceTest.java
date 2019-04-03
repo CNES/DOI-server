@@ -66,6 +66,7 @@ import fr.cnes.doi.client.ClientProxyTest;
 import fr.cnes.doi.security.UtilsHeader;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
+import org.restlet.data.Form;
 
 /**
  * Test class for {@link fr.cnes.doi.resource.mds.MetadatasResource}
@@ -150,6 +151,99 @@ public class MetadatasResourceTest {
      * A SUCCESS_CREATED status is expected.
      */
     @Test
+    public void testCreateMetadataHttpsAsNonAdminWithWrongProjectDOIWithToken() throws IOException {
+        testSpecCreateMetadataAsObjWithToken(MdsSpec.Spec.POST_METADATA_403, inputStream, "testMe", "testMe", "100378", 0);        
+    }
+    
+    /**
+     * Test of createMetadata method through HTTPS server, of class MetadatasResource.
+     * A SUCCESS_CREATED status is expected.
+     */
+    @Test
+    public void testCreateMetadataHttpsAsNonAdminWithWrongUserWithToken() throws IOException {
+        testSpecCreateMetadataAsObjWithToken(MdsSpec.Spec.POST_METADATA_403, inputStream, "doi_kerberos", "doi_kerberos", "828606", 0);        
+    }   
+    
+    /**
+     * Test of createMetadata method through HTTPS server, of class MetadatasResource.
+     * A SUCCESS_CREATED status is expected.
+     */
+    @Test
+    public void testCreateMetadataHttpsAsNonAdminWithToken() throws IOException {
+        testSpecCreateMetadataAsObjWithToken(MdsSpec.Spec.POST_METADATA_201, inputStream, "nonadmin", "nonadmin", "828606", 1);        
+    }       
+    
+    /**
+     * Test of createMetadata method through HTTPS server, of class MetadatasResource.
+     * A SUCCESS_CREATED status is expected.
+     */
+    @Test
+    public void testCreateMetadataHttpsWithToken() throws IOException {
+        testSpecCreateMetadataAsObjWithToken(MdsSpec.Spec.POST_METADATA_201, inputStream, "malapert", "pwd", "828606", 1);        
+    }
+    
+    /**
+     * Test of createMetadata method through HTTPS server, of class MetadatasResource.
+     * A CLIENT_ERROR_BAD_REQUEST status is expected because the metadata file is not valid.
+     * The file is validated at the DOIServer level then DataCite is not requested.
+     */    
+    @Test
+    public void testCreateMetadataHttpsWithWrongFileWithToken() throws IOException {
+        testSpecCreateMetadataAsObjWithToken(MdsSpec.Spec.POST_METADATA_400, inputStreamFileError, "malapert", "pwd", "828606", 0);
+    }  
+    
+    
+    /**
+     * Test of createMetadata method through HTTPS server with no role, of class MetadatasResource.
+     * A CLIENT_ERROR_UNAUTHORIZED is expected because the user is not related to a project then he
+     * is not allowed to create a metadata.
+     */
+    @Test
+    public void testCreateMetadataHttpsWithNoRoleWithToken() throws IOException {
+        testSpecCreateMetadataAsObjWithToken(MdsSpec.Spec.POST_METADATA_401, inputStream, "norole", "norole", null, 0);        
+    }
+   
+    /**
+     * Test of createMetadata method through HTTPS server, of class MetadatasResource.
+     * A SUCCESS_CREATED status is expected.
+     */
+    @Test
+    public void testCreateMetadataHttpsAsNonAdminWithNonAllowProject() throws IOException {
+        testSpecCreateMetadataAsObj(MdsSpec.Spec.POST_METADATA_403, inputStream, "doi_kerberos", "doi_kerberos", "828606", 0);        
+    }
+    
+    /**
+     * Test of createMetadata method through HTTPS server, of class MetadatasResource.
+     * A SUCCESS_CREATED status is expected.
+     */
+    @Test
+    public void testCreateMetadataHttpsAsNonAdminWithWrongProjectDOI() throws IOException {
+        testSpecCreateMetadataAsObj(MdsSpec.Spec.POST_METADATA_403, inputStream, "testMe", "testMe", "100378", 0);        
+    }
+    
+    /**
+     * Test of createMetadata method through HTTPS server, of class MetadatasResource.
+     * A SUCCESS_CREATED status is expected.
+     */
+    @Test
+    public void testCreateMetadataHttpsAsNonAdminWithWrongUser() throws IOException {
+        testSpecCreateMetadataAsObj(MdsSpec.Spec.POST_METADATA_403, inputStream, "doi_kerberos", "doi_kerberos", "828606", 0);        
+    }   
+    
+    /**
+     * Test of createMetadata method through HTTPS server, of class MetadatasResource.
+     * A SUCCESS_CREATED status is expected.
+     */
+    @Test
+    public void testCreateMetadataHttpsAsNonAdmin() throws IOException {
+        testSpecCreateMetadataAsObj(MdsSpec.Spec.POST_METADATA_201, inputStream, "nonadmin", "nonadmin", "828606", 1);        
+    }       
+    
+    /**
+     * Test of createMetadata method through HTTPS server, of class MetadatasResource.
+     * A SUCCESS_CREATED status is expected.
+     */
+    @Test
     public void testCreateMetadataHttps() throws IOException {
         testSpecCreateMetadataAsObj(MdsSpec.Spec.POST_METADATA_201, inputStream, "malapert", "pwd", "828606", 1);        
     }
@@ -213,7 +307,7 @@ public class MetadatasResourceTest {
             reqAttribs.put(RESTLET_HTTP_HEADERS, headers);
         }
         if (role != null) {
-            headers.add(UtilsHeader.SELECTED_ROLE_PARAMETER, "828606");
+            headers.add(UtilsHeader.SELECTED_ROLE_PARAMETER, role);
         }
         int code;
         try {
@@ -234,7 +328,68 @@ public class MetadatasResourceTest {
             mdsServerStub.verifySpec(spec, exactly);   
         }
              
-    }      
+    }  
+
+    /**
+     * The test
+     * @param spec the spec
+     * @param is the file to register
+     * @param login login
+     * @param pwd password
+     * @param role the role to set (when no role, set to null)
+     * @param exactly the number of expected requests to Datacite (-1 when at least 1 request is done)
+     */
+    private void testSpecCreateMetadataAsObjWithToken(MdsSpec.Spec spec, InputStream is, String login, String pwd, String role, int exactly) throws IOException {        
+        // Creates the MetadataStoreService stub        
+        mdsServerStub.createSpec(spec);
+
+        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
+        ClientResource client = new ClientResource("https://localhost:" + port + "/admin/token");
+        client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, login, pwd);
+        client.setNext(cl);
+        Form form = new Form();
+        form.add("identifier", login);
+        form.add("projectID", role);
+        Representation response = client.post(form);
+        String token = response.getText();
+        client.release();        
+        
+        result = new BufferedReader(new InputStreamReader(is)).lines().collect(Collectors.joining("\n"));
+        client = new ClientResource("https://localhost:" + port + METADATA_SERVICE);
+        client.setNext(cl);
+        ChallengeResponse cr = new ChallengeResponse(ChallengeScheme.HTTP_OAUTH_BEARER);
+        cr.setRawValue(token);
+        client.setChallengeResponse(cr);
+        final String RESTLET_HTTP_HEADERS = "org.restlet.http.headers";
+        Map<String, Object> reqAttribs = client.getRequestAttributes();
+        Series headers = (Series) reqAttribs.get(RESTLET_HTTP_HEADERS);
+        if (headers == null) {
+            headers = new Series<>(Header.class);
+            reqAttribs.put(RESTLET_HTTP_HEADERS, headers);
+        }
+        if (role != null) {
+            headers.add(UtilsHeader.SELECTED_ROLE_PARAMETER, role);
+        }
+        int code;
+        try {
+            Representation rep = client.post(new StringRepresentation(result, MediaType.APPLICATION_XML));
+            code = client.getStatus().getCode();
+            rep.exhaust();
+        } catch (ResourceException ex) {
+            code = ex.getStatus().getCode();
+        } finally {
+            client.release();    
+        }        
+        assertEquals(spec.getStatus(), code);        
+        
+        // Checks the stub.        
+        if (exactly == -1) {
+            mdsServerStub.verifySpec(spec);       
+        } else {
+            mdsServerStub.verifySpec(spec, exactly);   
+        }
+             
+    }       
 
     /**
      * The test for which a status of 40 is expected.

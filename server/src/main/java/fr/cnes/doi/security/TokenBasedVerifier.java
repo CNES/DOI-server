@@ -136,7 +136,8 @@ public class TokenBasedVerifier implements Verifier {
             final Integer projectID = (Integer) body.get(TokenSecurity.PROJECT_ID);
             LOG.info("token {} is valid, {} for {} are authenticated", token, userID, projectID);
             request.getClientInfo().setUser(manageUsers.getRealm().findUser(userID));
-            request.getHeaders().set(UtilsHeader.SELECTED_ROLE_PARAMETER, String.valueOf(projectID));
+            //request.getHeaders().set(UtilsHeader.SELECTED_ROLE_PARAMETER,
+            //        projectID == null ? "" : String.valueOf(projectID));
         }
         return LOG.traceExit(result);
     }

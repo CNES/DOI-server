@@ -503,7 +503,8 @@
                     url: "/mds/dois",
                     data: formData,
                     headers: {
-                        'Authorization': "Bearer " + sessionStorage.getItem("token")
+                        'Authorization': "Bearer " + sessionStorage.getItem("token"),
+                        'selectedRole' : projectId
                     },
                     crossDomain: true,
                     cache: false,
@@ -529,8 +530,8 @@
                     contentType: "text",
                     dataType: "text",
                     headers: {
-// 			    	'Authorization': 'Basic ' + btoa('malapert:pwd'),  
-                        'Authorization': "Bearer " + sessionStorage.getItem("token")
+                        'Authorization': "Bearer " + sessionStorage.getItem("token"),
+                        'selectedRole' : projectId
                     },
                     crossDomain: true,
                     cache: false,

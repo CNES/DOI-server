@@ -42,7 +42,6 @@ import org.restlet.security.RoleAuthorizer;
 import org.restlet.service.TaskService;
 
 import fr.cnes.doi.logging.business.JsonMessage;
-import fr.cnes.doi.resource.admin.AuthenticationResource;
 import fr.cnes.doi.resource.admin.ConfigIhmResource;
 import fr.cnes.doi.resource.admin.FooterIhmResource;
 import fr.cnes.doi.resource.admin.ManageProjectsResource;
@@ -111,7 +110,7 @@ import fr.cnes.doi.utils.spec.Requirement;
 @Requirement(reqId = Requirement.DOI_SRV_190, reqName = Requirement.DOI_SRV_190_NAME,
         coverage = CoverageAnnotation.NONE)
 @Requirement(reqId = Requirement.DOI_DISPO_020, reqName = Requirement.DOI_DISPO_020_NAME)
-public class AdminApplication extends AbstractApplication {
+public final class AdminApplication extends AbstractApplication {
 
     /**
      * Application name.
@@ -404,6 +403,9 @@ public class AdminApplication extends AbstractApplication {
                 if (requestMethod.equals(Method.OPTIONS) || "admin".equals(lastSeg)) {
                     ignoreVerification = true;
                     // we want to access to the authentication page of the GUI without authentication
+                } else if (!requestMethod.equals(Method.DELETE) && !requestMethod.equals(Method.GET)
+                        && requestReference.toString().contains(ADMIN_URI + TOKEN_URI)) {
+                    ignoreVerification = true;
                 } else if (requestMethod.equals(Method.GET)) {
                     if ("projects".equals(lastSeg) && requestReference.hasQuery()) {
                         ignoreVerification = true;
@@ -455,8 +457,6 @@ public class AdminApplication extends AbstractApplication {
         LOG.traceEntry();
 
         final Router router = new Router(getContext());
-        // This route if for management of IHM tokens.
-        router.attachDefault(AuthenticationResource.class);
 
         router.attach(SUFFIX_PROJECT_URI, SuffixProjectsResource.class);
 

@@ -125,11 +125,8 @@ public final class InitServerForTest {
      *            config properties
      */
     public static void init(final String configProperties) {
-        LogManager.getLogger(InitServerForTest.class.getName()).debug("Init Setting for test");
 	InitSettingsForTest.init(configProperties);
-        LogManager.getLogger(InitServerForTest.class.getName()).debug("Init Database for test");        
         InitDataBaseForTest.init();
-        LogManager.getLogger(InitServerForTest.class.getName()).debug("Ready to start the server");
 	try {
 	    doiServer = new DoiServer(DoiSettings.getInstance());
 	    doiServer.start();

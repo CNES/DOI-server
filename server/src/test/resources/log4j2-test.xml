@@ -42,7 +42,7 @@
             <AppenderRef ref="CONSOLE"/>
         </Logger>
 
-        <Root level="DEBUG">
+        <Root level="OFF">
             <AppenderRef ref="SHELL"/>
         </Root>
     </Loggers>
