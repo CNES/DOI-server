@@ -137,13 +137,6 @@ public abstract class AbstractUserRoleDBHelper extends Observable {
      */
     public abstract boolean isUserExist(final String username);
 
-    /**
-     * Tests is the user is an administrator.
-     *
-     * @param username user
-     * @return True when the user is an administrator otherwise False
-     */
-    public abstract boolean isAdmin(final String username);
 
     /**
      * Removes the user

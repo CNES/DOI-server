@@ -44,11 +44,12 @@
 6. [Data view](#data_view)
     1. [Data model](#data_view_model)
     2. [Security](#data_view_security)
-        1. [Security for Citations](#data_view_citations)
-        2. [Security for MDS](#data_view_mds)
-        3. [Security for Admin](#data_view_admin)
-        4. [Login/password in the configuration file](#data_view_login_pwd)
-        5. [Crypt/Uncrypt the whole configuration file](#data_view_crypt)        
+        1. [Users and roles management](#user_roles_mgt)
+        2. [Security for Citations](#data_view_citations)
+        3. [Security for MDS](#data_view_mds)
+        4. [Security for Admin](#data_view_admin)
+        5. [Login/password in the configuration file](#data_view_login_pwd)
+        6. [Crypt/Uncrypt the whole configuration file](#data_view_crypt)        
 7. [Deployment View](#deployment)
 8. [Development and Test Factors](#dev_test)
     1. [Hardware Limitations](#hard_limit)
@@ -58,7 +59,6 @@
     5. [Running tests](#software_tests)
 
 
-9. [Notes](#notes)
 [Appendix A : Use Case template](#appendix_A)
 
 
@@ -165,7 +165,7 @@ Three actors handle the DOI-server:
 
 > - **Public user** : The public user can read all resources of MDS for any projects as well as Citations. He can also get access to some resources from admin application (Access to login page, list of created projects, list of registred DOI on DataCite)
 
-> - **Registerd user** : This registered user has the rights of the public user. For a specific project, he can create/update/delete a DOI and he can generate a token
+> - **Registered user** : This registered user has the rights of the public user. For a specific project, he can create/update/delete a DOI and he can generate a token
 
 > - **Administrator** : This administrator has the rights of a registered user and some extra rights as adding/removing user from a project, adding/removing a project
 
@@ -246,8 +246,6 @@ User credentials are authenticated and user is redirected to application home pa
 
 > #### Postconditions
 > > The user is located on the doiCreation.html or on the administration.html
-
-> #### Notes¶
 
 
 
@@ -360,7 +358,6 @@ User credentials are authenticated and user is redirected to application home pa
 > #### Postconditions
 > > The DOI metadata has been uploaded in DATACITE and the mapping DOI/landing page is uploaded to DATACITE
 
-> #### Notes¶
 
 #### 4.2.3 Update DOI <a name="use_case_update_doi"/>
 > Updates DOI metadata or landing page.
@@ -392,7 +389,6 @@ User credentials are authenticated and user is redirected to application home pa
 > #### Postconditions
 > > The landing page or/and DOI metadata have been updated on DataCite
 
-> #### Notes¶
 
 #### 4.2.4 Disable DOI <a name="use_case_delete_doi"/>
 > Updates DOI metadata or landing page.
@@ -419,8 +415,6 @@ User credentials are authenticated and user is redirected to application home pa
 
 > #### Postconditions
 > > The DOI is disabled on DataCite
-
-> #### Notes¶
 
 
 ## 5. Logical view <a name="logical"/>
@@ -720,14 +714,6 @@ The interface AbstractUserRoleDBHelper:
         public abstract boolean isUserExist(final String username);
     
         /**
-         * Tests is the user is an administrator.
-         *
-         * @param username user
-         * @return True when the user is an administrator otherwise False
-         */
-        public abstract boolean isAdmin(final String username);
-    
-        /**
          * Removes the user
          *
          * @param username user
@@ -767,14 +753,6 @@ The interface AbstractTokenDBHelper:
          * @return True when the token exists in the database otherwise False
          */
         public abstract boolean isExist(String jwt);
-    
-        /**
-         * Tests if the token is expirated.
-         *
-         * @param jwt the token
-         * @return True when the token is expirated otherwise False
-         */
-        public abstract boolean isExpired(String jwt);
     
         /**
          * Return the token list from database.
@@ -1282,27 +1260,31 @@ GRANT SELECT, UPDATE, INSERT, DELETE ON TABLE doi_schema.t_doi_tokens TO doiserv
 
 ### 6.2 Security <a name="data_view_security"/>
 
-#### 6.2.1 Security for Citations <a name="data_view_citations"/>
+#### 6.2.1 Users and roles management <a name="user_roles_mgt"/>
+
+![user and role mgt](images/roles.png)
+
+#### 6.2.2 Security for Citations <a name="data_view_citations"/>
 No security, that's only a query to a public web service : https://citation.crosscite.org/
 
-#### 6.2.2 Security for MDS <a name="data_view_mds"/>
+#### 6.2.3 Security for MDS <a name="data_view_mds"/>
 By default, the global authorization is for every users in DOI-server database.
 Some exceptions at this rule are represented by the following picture:
 
 ![MDS](images/securityMds.png)
 
-#### 6.2.3 Security for Admin <a name="data_view_admin"/>
+#### 6.2.4 Security for Admin <a name="data_view_admin"/>
 By default, the global authorization is for the administrator.
 Some exceptions at this rule are represented by the following picture:
 
-#### 6.2.4 Login/password in the configuration file <a name="data_view_login_pwd"/>
+#### 6.2.5 Login/password in the configuration file <a name="data_view_login_pwd"/>
 Login/password for each external server is crypted in the configuration file by AES algorithm. The default key is defined in the code. 
 
 ![MDS](images/securityAdmin.png)
 
 To change the default key, the DOI-server must be launched with a specific argument in the command line. The value of this argument is the 16 bits secret key (see exploitation manual).
 
-#### 6.2.5 Crypt/Uncrypt the whole configuration file <a name="data_view_crypt"/>
+#### 6.2.6 Crypt/Uncrypt the whole configuration file <a name="data_view_crypt"/>
 The whole configuration file can be crypted/uncrypted. To active this feature, the DOI-server must launched with a specific argument in the command line (see exploitation manual)
 
 ## 7. Deployment view <a name="deployment"/>
@@ -1490,6 +1472,6 @@ mvn verify -P integration-test
 > #### Postconditions
 > > List of postconditions (if apply)
 
-> #### Notes¶
+> #### Notes
 
 

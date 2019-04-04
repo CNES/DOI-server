@@ -209,15 +209,15 @@ public class BaseMdsResource extends AbstractResource {
             throws DoiServerException {
         LOG.traceEntry("Parameters : {} and {}", doiName, selectedRole);
         final String prefixCNES = this.getDoiApp().getDataCentrePrefix();
-            final String projectRole = getRoleName(selectedRole);
-            if (!doiName.startsWith(prefixCNES + "/" + projectRole + "/")) {
-                LOG.debug("The DOI {}  does not match with {}", doiName,
-                        prefixCNES + "/" + projectRole);
-                throw LOG.throwing(Level.DEBUG,
-                        new DoiServerException(getApplication(), API_MDS.SECURITY_USER_PERMISSION,
-                                "The DOI " + doiName + " does not match with" + prefixCNES + "/"
-                                + projectRole));
-            }
+        final String projectRole = getRoleName(selectedRole);
+        if (!doiName.startsWith(prefixCNES + "/" + projectRole + "/")) {
+            LOG.debug("The DOI {}  does not match with {}", doiName,
+                    prefixCNES + "/" + projectRole);
+            throw LOG.throwing(Level.DEBUG,
+                    new DoiServerException(getApplication(), API_MDS.SECURITY_USER_PERMISSION,
+                            "The DOI " + doiName + " does not match with" + prefixCNES + "/"
+                            + projectRole));
+        }
         LOG.traceExit();
     }
 

@@ -21,13 +21,13 @@ package fr.cnes.doi.resource.admin;
 import fr.cnes.doi.application.AdminApplication;
 import static fr.cnes.doi.application.AdminApplication.TOKEN_TEMPLATE;
 import fr.cnes.doi.db.AbstractTokenDBHelper;
-import fr.cnes.doi.db.AbstractUserRoleDBHelper;
 import fr.cnes.doi.db.model.DOIUser;
 import fr.cnes.doi.exception.DOIDbException;
 import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.exception.TokenSecurityException;
 import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.resource.AbstractResource;
+import fr.cnes.doi.security.RoleAuthorizer;
 import fr.cnes.doi.security.TokenSecurity;
 import fr.cnes.doi.security.TokenSecurity.TimeUnit;
 import fr.cnes.doi.settings.EmailSettings;
@@ -133,9 +133,8 @@ public class TokenResource extends AbstractResource {
         try {
             final String user = this.getClientInfo().getUser().getIdentifier();
             LOG.debug("Identified user : {}", user);
-            final AbstractUserRoleDBHelper manageUsers = PluginFactory.getUserManagement();
             final String userID;
-            if (manageUsers.isAdmin(user)) {
+            if(isInRole(RoleAuthorizer.ROLE_ADMIN)) {
                 // The admin can generate for everybody
                 LOG.debug("User {} is admin", user);
                 userID = info.getFirstValue(IDENTIFIER_PARAMETER, user);
@@ -146,7 +145,7 @@ public class TokenResource extends AbstractResource {
             final String projectID = info.getFirstValue(PROJECT_ID_PARAMETER, null);
             final String timeParam = info.getFirstValue(
                     UNIT_OF_TIME_PARAMETER, String.
-                            valueOf(TokenSecurity.TimeUnit.YEAR.getTimeUnit())
+                            valueOf(TokenSecurity.TimeUnit.HOUR.getTimeUnit())
             );
 
             final int timeUnit = Integer.parseInt(timeParam);

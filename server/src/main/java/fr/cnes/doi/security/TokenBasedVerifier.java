@@ -97,10 +97,12 @@ public class TokenBasedVerifier implements Verifier {
         final int result;
         final String token = challResponse.getRawValue();
         LOG.debug("Token from challenge response : {}", token);
-
         if (token == null) {
             LOG.warn("Token is missing !");
             result = Verifier.RESULT_MISSING;
+        } else if (TokenSecurity.getInstance().isExpired(token)) {
+            LOG.debug("Token is expired !");
+            result = Verifier.RESULT_STALE;
         } else if (this.tokenDB.isExist(token)) {
             LOG.debug("Token exists in the database.");
             result = processToken(request, token);
@@ -118,27 +120,18 @@ public class TokenBasedVerifier implements Verifier {
      * @param token token
      * @return the status given by {@link Verifier}
      */
-    private int processToken(final Request request,
-            final String token) {
+    private int processToken(final Request request, final String token) {
         LOG.traceEntry(new JsonMessage(request));
         LOG.traceEntry(token);
         final AbstractUserRoleDBHelper manageUsers = PluginFactory.getUserManagement();
-        final int result;
-        if (this.tokenDB.isExpired(token)) {
-            this.tokenDB.deleteToken(token);
-            LOG.info("token {} is expirated", token);
-            result = Verifier.RESULT_INVALID;
-        } else {
-            result = Verifier.RESULT_VALID;
-            final Jws<Claims> tokenInfo = TokenSecurity.getInstance().getTokenInformation(token);
-            final Claims body = tokenInfo.getBody();
-            final String userID = body.getSubject();
-            final Integer projectID = (Integer) body.get(TokenSecurity.PROJECT_ID);
-            LOG.info("token {} is valid, {} for {} are authenticated", token, userID, projectID);
-            request.getClientInfo().setUser(manageUsers.getRealm().findUser(userID));
-            //request.getHeaders().set(UtilsHeader.SELECTED_ROLE_PARAMETER,
-            //        projectID == null ? "" : String.valueOf(projectID));
-        }
+        final int result = Verifier.RESULT_VALID;
+        final Jws<Claims> tokenInfo = TokenSecurity.getInstance().getTokenInformation(token);
+        final Claims body = tokenInfo.getBody();
+        final String userID = body.getSubject();
+        final Integer projectID = (Integer) body.get(TokenSecurity.PROJECT_ID);
+        LOG.info("token {} is valid, {} for {} are authenticated", token, userID, projectID);
+        request.getClientInfo().setUser(manageUsers.getRealm().findUser(userID));
+
         return LOG.traceExit(result);
     }
 }

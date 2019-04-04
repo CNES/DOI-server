@@ -202,33 +202,6 @@ public final class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
      * {@inheritDoc }
      */
     @Override
-    public boolean isExpired(final String jwt) {
-        boolean isExpirated = true;
-        final Jws<Claims> jws = TokenSecurity.getInstance().getTokenInformation(jwt);
-
-        // Cannot get token information of an expired token...
-        if (jws == null) {
-            return isExpirated;
-        }
-
-        final String expirationDate = jws.getBody().getExpiration().toString();
-        try {
-            // Precise "Locale.ENGLISH" otherwise unparsable exception occur for day in week and month
-            final DateFormat dateFormat = new SimpleDateFormat(TokenSecurity.DATE_FORMAT,
-                    Locale.ENGLISH);
-            final Date expDate = dateFormat.parse(expirationDate);
-            isExpirated = new Date().after(expDate);
-        } catch (ParseException ex) {
-            LOG.fatal(ex);
-        }
-        //TODO delete an expired token?
-        return isExpirated;
-    }
-
-    /**
-     * {@inheritDoc }
-     */
-    @Override
     public List<String> getTokens() throws DOIDbException {
         final List<String> tokens = new ArrayList<>();
         tokens.addAll(das.getTokens());

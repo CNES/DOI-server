@@ -28,6 +28,7 @@ import static fr.cnes.doi.application.AdminApplication.USERS_NAME_TEMPLATE;
 import fr.cnes.doi.db.AbstractUserRoleDBHelper;
 import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.resource.AbstractResource;
+import fr.cnes.doi.security.RoleAuthorizer;
 import org.apache.logging.log4j.Level;
 import org.restlet.data.Method;
 import org.restlet.data.Status;
@@ -75,13 +76,13 @@ public class ManageSuperUserResource extends AbstractResource {
      */
     @Get
     public boolean isUserExistAndAdmin() {
-        LOG.traceEntry();
+        LOG.traceEntry();        
         final AbstractUserRoleDBHelper manageUsers = PluginFactory.getUserManagement();
         if (!manageUsers.isUserExist(userName)) {
             throw LOG.throwing(Level.ERROR, new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST,
                     "The user " + userName + " does not exist"));
         }
-        return LOG.traceExit(manageUsers.isAdmin(userName));
+        return LOG.traceExit(isInRole(RoleAuthorizer.ROLE_ADMIN));
     }
 
     // TODO requirement

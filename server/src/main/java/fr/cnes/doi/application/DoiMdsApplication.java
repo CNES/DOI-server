@@ -327,6 +327,7 @@ public final class DoiMdsApplication extends AbstractApplication {
      *
      * @return the token database
      */
+    @Override
     public AbstractTokenDBHelper getTokenDB() {
         LOG.traceEntry();
         return LOG.traceExit(this.tokenDB);

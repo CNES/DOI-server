@@ -147,8 +147,6 @@ public final class RoleAuthorizer implements Observer {
     private void initForMds(final Application app) {
         LOG.traceEntry(new JsonMessage(app));
 
-        //TODO why twice?
-//        initForAdmin(app);
         // we load projects from database
         List<DOIProject> projects;
         try {

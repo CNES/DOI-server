@@ -20,7 +20,6 @@ package fr.cnes.doi.plugin.impl.db;
 
 import fr.cnes.doi.plugin.impl.db.service.DatabaseSingleton;
 import fr.cnes.doi.plugin.impl.db.service.DOIDbDataAccessService;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

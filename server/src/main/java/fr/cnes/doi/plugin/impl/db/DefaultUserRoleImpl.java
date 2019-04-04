@@ -177,7 +177,8 @@ public final class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
         try {
             das.addDOIProjectToUser(user, role);
             isAdded = true;
-            LOG.info("The user {} is added to role {}.", user, role);
+            LOG.info("The user {} is added to role {} for {}.", user, role,
+                    Application.getCurrent().getName());
 
             final User userFromRealm = REALM.findUser(user);
             final Role roleFromRealm = new Role(Application.getCurrent(), String.valueOf(role),
@@ -200,7 +201,8 @@ public final class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
         try {
             das.removeDOIProjectFromUser(user, role);
             isRemoved = true;
-            LOG.info("The user {} is removed to role {}.", user, role);
+            LOG.info("The user {} is removed from role {} for {}.", user, role, Application.
+                    getCurrent().getName());
 
             final User userFromRealm = REALM.findUser(user);
             final Set<Role> rolesFromRealm = REALM.findRoles(userFromRealm);
@@ -287,21 +289,6 @@ public final class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
             isExist = das.isUserExist(username);
         } catch (DOIDbException e) {
             LOG.fatal("An error occured while trying to know if user " + username + " exist", e);
-        }
-        return isExist;
-    }
-
-    /**
-     * {@inheritDoc }
-     */
-    @Override
-    public boolean isAdmin(final String username) {
-        boolean isExist = false;
-        try {
-            isExist = das.isAdmin(username);
-        } catch (DOIDbException e) {
-            LOG.fatal("An error occured while trying to know if user " + username
-                    + " exist and is admin", e);
         }
         return isExist;
     }
@@ -444,7 +431,7 @@ public final class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
     @Override
     public void release() {
         try {
-            if(this.das != null) {
+            if (this.das != null) {
                 this.das.close();
             }
         } catch (DOIDbException ex) {

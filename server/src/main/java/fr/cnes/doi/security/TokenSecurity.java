@@ -234,12 +234,23 @@ public final class TokenSecurity {
         LOG.debug(String.format("Set tokenKey to %s", tokenKey));
         LOG.traceExit();
     }
+    
+    /**
+     * Returns true when the token is expired otherwise false.
+     * @param token token
+     * @return true when the token is expired otherwise false.
+     */
+    public boolean isExpired(final String token) {
+        LOG.traceEntry("Parameter\n\ttoken: {}", token);
+        final Jws<Claims> jws = this.getTokenInformation(token);
+        return LOG.traceExit(jws == null);
+    }
 
     /**
      * Returns the token information.
      *
      * @param jwtToken token JWT
-     * @return the information
+     * @return the information or null when the token is expired.
      * @throws DoiRuntimeException - if an error happens getting information from the token
      */
     public Jws<Claims> getTokenInformation(final String jwtToken) throws DoiRuntimeException {
@@ -256,6 +267,7 @@ public final class TokenSecurity {
             throw LOG.throwing(new DoiRuntimeException("Unable to get the token information", ex));
         } catch (ExpiredJwtException e) {
             LOG.info("Cannot get the token information", e);
+            getTokenDB().deleteToken(jwtToken);
             token = null;
         }
         return LOG.traceExit(token);
