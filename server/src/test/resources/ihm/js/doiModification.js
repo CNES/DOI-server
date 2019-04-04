@@ -2,7 +2,8 @@ var xmlDoc;
 
 function clearForm(){
 	var projet = $("#selection").val();
-	
+	var identifier = $("#doi").val();
+        var url = $("#url").val();
 	 $("button.delete").click();  	// Appuie sur tous boutons '-'
 	 $("input").val("");		  	// reset les inputs
 	 $("select").val("");		  	// reset les selects
@@ -10,6 +11,8 @@ function clearForm(){
 	 
 	 $("input[title='identifierType'").val("DOI");
 	 $("#selection").val(projet);
+         $("#doi").val(identifier);
+         $("#url").val(url);
 }
 
 function loadXML(file) {
