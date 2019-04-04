@@ -53,6 +53,11 @@
 8. [Development and Test Factors](#dev_test)
     1. [Hardware Limitations](#hard_limit)
     2. [Software validation and verification](#software validation)
+    3. [Prerequisite](#software_prerequisite)
+    4. [Installation and compilation](#software_install)
+    5. [Running tests](#software_tests)
+
+
 9. [Notes](#notes)
 [Appendix A : Use Case template](#appendix_A)
 
@@ -1315,11 +1320,157 @@ The application will interface with external APIs (LDAP server, Proxy server, Ma
 ![MDS](images/design.png)
 
 ## 8. Development and Test Factors <a name="dev_test"/>
-### 8.1 Hardware Limitations <a name="hard_limit"/>
+### 8.1 Hardware and software Limitations <a name="hard_limit"/>
 The DOI-server works on JAVA 8.
+
+The check of landing pages does not work with HTTP/2 protocole because of the Http library version.
 
 ### 8.2 Software validation and verification <a name="software_validation"/>
 See the README in the DOI-server sources.
+
+### 8.3 Prerequisite <a name="software_prerequisite"/>
+```
+Openjdk version 1.8
+Apache Maven 3.5.2
+Git version 2.17.1
+PostgreSQL version 9.2
+```
+
+PostgreSQL installation using yum
+
+```
+// installing database
+yum install postgresql-server postgresql-contrib
+
+// init database
+postgresql-setup initdb
+
+// changing authentication mode
+sed -i '/\(^host.*127.0.0.1\/32\)/s/ident/md5/' /var/lib/pgsql/data/pg_hba.conf
+
+// starting postgreSQL
+systemctl start postgresql
+
+// attaching postgreSQL at boot
+systemctl enable postgresql
+
+// changing postgres user
+su postgres
+psql
+\password
+<set the password>
+\q
+exit
+```
+
+### 8.4 Installation and compilation <a name="software_install"/>
+
+```
+git clone https://github.com/CNES/DOI-server.git
+git submodule init
+git submodule update
+```
+
+```
+mkdir $HOME/.m2
+echo "
+<settings>
+    <servers>
+        <server>
+            <id>dbpostgresql</id>
+            <!-- user for the Postgres database admin -->
+            <username></username>
+            <!-- password for the Postgres database admin -->
+            <password></password>
+        </server>
+    </servers>
+
+    <profiles>
+        <profile>
+            <id>inject-doiserver</id>
+            <properties>
+                <!-- password for doiserver user -->
+                <doiserver-pwd></doiserver-pwd>
+                <!-- password for the DOI-server admin -->
+                <doi-admin-pwd></doi-admin-pwd>
+            </properties>
+        </profile>
+    </profiles>
+
+    <activeProfiles>
+        <activeProfile>inject-doiserver</activeProfile>
+    </activeProfiles>
+
+</settings>
+" > $HOME/.m2/settings.xml
+
+// Defining the JAVA_HOME variable
+export $JAVA_HOME="..."
+export PATH=$JAVA_HOME/bin:$PATH
+
+cd DOI-server
+```
+
+### 8.5 Running tests <a name="software_tests"/>
+
+According to whether you have a proxy to go out to internet, you will need to configure the proxy in the configuration file for tests : *./server/src/test/resources/config-test.properties* and in the configuration file for integration : *./server/src/it/resources/config-it.properties*.
+```
+## ---- Proxy configuration ----
+## Used parameter allows to make enable/disable the proxy configuration
+## NoProxy.hosts contains hosts for which a proxy authentication is not needed
+
+## The Starter.Proxy.type must take one of the following values : 
+## NO_PROXY, PROXY_BASIC, PROXY_SPNEGO_API, PROXY_SPNEGO_JAAS
+## Password must be encrypted
+Starter.Proxy.type = NO_PROXY
+Starter.Proxy.host =
+Starter.Proxy.port =
+Starter.Proxy.login =
+Starter.Proxy.pwd =
+Starter.NoProxy.hosts=
+## Configuration for SPNEGO
+#Starter.Proxy.Jass.Spn =
+#Starter.Proxy.Jass.File =
+#Starter.Proxy.Jass.Context =
+
+```
+
+
+Then, for running tests:
+```
+mvn clean install
+```
+
+Then, the LDAP needs to be configured in the configuration file for integration (for the tests, the LDAP integration is a stub).
+```
+#LDAP config
+Starter.LDAP.url =
+# LDAP user to bind the LDAP connection
+# could be: uid=<login>,cn=users,cn=accounts,dc=sis,dc=cnes,dc=fr
+Starter.LDAP.user =
+# LDAP password, must be encrypted by the AES algorithm 
+Starter.LDAP.password =
+# LDAP group
+Starter.LDAP.project =
+# User in LDAP, which is administrator
+Starter.LDAP.user.admin =
+# LDAP filter to search group
+Starter.LDAP.search.group = cn=groups,cn=accounts,dc=sis,dc=cnes,dc=fr
+# LDAP filter to search user
+Starter.LDAP.search.user = cn=users,cn=accounts,dc=sis,dc=cnes,dc=fr
+# User name attribute in LDAP
+Starter.LDAP.attr.username = uid
+# mail name attribute in LDAP
+Starter.LDAP.attr.mail = mail
+# fullaname attribute in LDAP
+Starter.LDAP.attr.fullname = cn
+```
+
+Then, for running integration tests:
+
+```
+mvn verify -P integration-test
+```
 
 
 ## Appendix A : Use Case template <a name="appendix_A"/>
