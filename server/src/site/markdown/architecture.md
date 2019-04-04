@@ -65,10 +65,10 @@
 ## 1. Introduction <a name="introduction"/>
 This document provides a high level overview and explains the architecture of DOI-server system.
 
-The document defines goals of the architecture, the use cases supported by the system, architectural styles and components that have been selected. The document provides a rationale for the architecture and design decisions made from the conceptual idea to its implementation.
+The document defines goals of the architecture, the use cases supported by the system, architectural styles and the selected components. The document provides a rationale for the architecture and design decisions made from the conceptual idea to its implementation.
 
 ### 1.1 Purpose <a name="purpose"/>
-This document provides a comprehensive architectural overview of the system, using a number of different architectural views to depict different aspects of the system. It is intended to capture and convey the significant architectural decisions which have been made on the system.
+This document provides a comprehensive architectural overview of the system, using a number of architectural views to depict different aspects of the system. It is intended to capture and convey the significant architectural decisions which have been made on the system.
 
 ### 1.2 Scope <a name="scope"/>
 The scope of this SAD is to explain the architecture of the DOI-server system.
@@ -101,43 +101,35 @@ This document details the architecture using views. The views used to document t
 
 > **Area:** describes the set of scenarios and/or use cases that represent some significant, central functionality of the system. Describes the actors and use cases for the system, this view presents the needs of the user and is elaborated further at the design level to describe discrete flows and constraints in more detail. This domain vocabulary is independent of any processing model or representational syntax (i.e. XML).
 
-> **Related Artifacts:** Use-Case Model, Use-Case documents
-
 ### Logical view
 > **Audience:** Designers.
 
 > **Area:** Functional Requirements: describes the design's object model. Also describes the most important use-case realizations and business requirements of the system including interface and operation definitions.
-
-> **Related Artifacts:** Design model
 
 ### Data view
 > **Audience:** Data specialists, Database administrators
 
 > **Area:** Persistence: describes the architecturally significant persistent elements in the data model as well as how data flows through the system.
 
-> **Related Artifacts:** Data model.
-
 ### Deployment view
 > **Audience:** Deployment managers.
 
 > **Area:** Topology: describes the mapping of the software onto the hardware and shows the system's distributed aspects. Describes potential deployment structures, by including known and anticipated deployment scenarios in the architecture we allow the implementers to make certain assumptions on network performance, system interaction and so forth.
 
-> **Related Artifacts:** Deployment model.
-
 ## 3. Architectural Goals and Constraints <a name="arch_const"/>
 This section describes the software requirements and objectives that have some significant impact on the architecture
 
 ### 3.1 License <a name="arch_license"/>
-The DOI-server will be open source under the LGPLV3 license.
+The DOI-server is open source under the LGPLV3 license.
 
 ### 3.2 Languages <a name="arch_lang"/>
-The DOI-server will be written in JAVA, the GUI in HTML/JavaScript and the different client libraries to consume the DOI-server API will be written in JAVA and python
+The DOI-server is written in JAVA, the GUI in HTML/JavaScript and the different client libraries to consume the DOI-server API are written in JAVA and python
 
 ### 3.3 Persistence <a name="arch_persis"/>
-Data persistence will be addressed using any relational databases. By default, an implementation of PostgreSQL database will be used.
+Data persistence is addressed using any relational databases. By default, an implementation of PostgreSQL database is used.
 
 ### 3.4 Authentication <a name="arch_auth"/>
-The authentication will be addressed using an LDAP by default. Others systems could be used. 
+The authentication is addressed using an LDAP by default. Others systems could be used. 
 Authentication could be performed by providing a username/password or a token. A token could be revoked by the registered user or the amdinistrator.
 
 ### 3.5 Changes <a name="arch_changes"/>
@@ -171,11 +163,11 @@ Three actors handle the DOI-server:
 
 ![actors](images/actors.png)
 
-> - **Public user** : The public user can read all resources of MDS for any projects as well as Citations. He can also get access to some resources from admin application (GUI, list of created projects, list of registred DOI on DataCite)
+> - **Public user** : The public user can read all resources of MDS for any projects as well as Citations. He can also get access to some resources from admin application (Access to login page, list of created projects, list of registred DOI on DataCite)
 
 > - **Registerd user** : This registered user has the rights of the public user. For a specific project, he can create/update/delete a DOI and he can generate a token
 
-> - **Administrator** : This administrator has the rights of a registered user and some extra rights as adding/removing user from a project, adding/removing a project, generating a token for a registered user
+> - **Administrator** : This administrator has the rights of a registered user and some extra rights as adding/removing user from a project, adding/removing a project
 
 ### 4.2 Use-Case Realizations <a name="use_case_real"/>
 
@@ -278,14 +270,14 @@ User credentials are authenticated and user is redirected to application home pa
 > > - The user fills the landing page field.
 > > - The user click on **Create DOI**
 > > - The doiCreation.html page send the XML metadata and the token to MDS application
-> > - MDS application authentifies the user by the token
+> > - MDS application authenticates the user by the token
 > > - MDS application checks if the user is allowed to create the DOI for this project
 > > - MDS application sends the XML metadata to MDS Datacite
 > > - MDS accepts the metadata
 > > - MDS application returns to the doiCreation.hml page that the metadata was accepted
 > > - doiCreation.hml confirms to the user that the metadata is uploaded.
 > > - doiCreation.html sends the DOI and the landing page URL to MDS application
-> > - MDS application authentifies the user by the token
+> > - MDS application authenticates the user by the token
 > > - MDS application checks if the user is allowed to create the DOI for this project
 > > - MDS application sends the DOI and the landing page URL to MDS Datacite
 > > - MDS Datacite accepts the request
@@ -299,14 +291,14 @@ User credentials are authenticated and user is redirected to application home pa
 > > - The user fills the landing page field.
 > > - The user click on **Create DOI**
 > > - The doiCreation.html page send the XML metadata and the token to MDS application
-> > - MDS application authentifies the user by the token
+> > - MDS application authenticates the user by the token
 > > - MDS application checks if the user is allowed to create the DOI for this project
 > > - MDS application sends the XML metadata to MDS Datacite
 > > - MDS accepts the metadata
 > > - MDS application returns to the doiCreation.hml page that the metadata was accepted
 > > - doiCreation.hml confirms to the user that the metadata is uploaded.
 > > - doiCreation.html sends the DOI and the landing page URL to MDS application
-> > - MDS application authentifies the user by the token
+> > - MDS application authenticates the user by the token
 > > - MDS application checks if the user is allowed to create the DOI for this project
 > > - MDS application sends the DOI and the landing page URL to MDS Datacite
 > > - MDS Datacite refuse the request
@@ -320,14 +312,14 @@ User credentials are authenticated and user is redirected to application home pa
 > > - The user fills the landing page field.
 > > - The user click on **Create DOI**
 > > - The doiCreation.html page send the XML metadata and the token to MDS application
-> > - MDS application authentifies the user by the token
+> > - MDS application authenticates the user by the token
 > > - MDS application checks if the user is allowed to create the DOI for this project
 > > - MDS application sends the XML metadata to MDS Datacite
 > > - MDS accepts the metadata
 > > - MDS application returns to the doiCreation.hml page that the metadata was accepted
 > > - doiCreation.hml confirms to the user that the metadata is uploaded.
 > > - doiCreation.html sends the DOI and the landing page URL to MDS application
-> > - MDS application authentifies the user by the token
+> > - MDS application authenticates the user by the token
 > > - MDS application does not allow to create the DOI for this project
 > > - doiCreation.hml confirms to the user that the DOI is not created. 
 
@@ -338,7 +330,7 @@ User credentials are authenticated and user is redirected to application home pa
 > > - The user fills the landing page field.
 > > - The user click on **Create DOI**
 > > - The doiCreation.html page send the XML metadata and the token to MDS application
-> > - MDS application authentifies the user by the token
+> > - MDS application authenticates the user by the token
 > > - MDS application checks if the user is allowed to create the DOI for this project
 > > - MDS application sends the XML metadata to MDS Datacite
 > > - MDS refuses the metadata
@@ -352,7 +344,7 @@ User credentials are authenticated and user is redirected to application home pa
 > > - The user fills the landing page field.
 > > - The user click on **Create DOI**
 > > - The doiCreation.html page sends the XML metadata and the token to MDS application
-> > - MDS application authentifies the user by the token
+> > - MDS application authenticates the user by the token
 > > - MDS application does not allow to create the DOI for this project (the project suffix in the DOI number is not mapped to the user)
 > > - doiCreation.hml confirms to the user there is an error.
 
@@ -380,7 +372,7 @@ User credentials are authenticated and user is redirected to application home pa
 > > Critical
 
 > #### Preconditions
-> > The user is loggued on the doiModification.html page
+> > The user is logged on the doiModification.html page
 
 > #### Basic Course
 > > - The user selects a project
@@ -436,11 +428,11 @@ User credentials are authenticated and user is redirected to application home pa
 ### 5.1 Overview <a name="logical_overview"/>
 The main goal of the logical view is to define the components that will make up the system and to define the interfaces through which they will communicate and interact with one another.  The primary decision-making factor behind defining the system components is the need to isolate the components that are likely to change from the rest of the system.  By clearly defining the interfaces of these components and hiding their internal implementations from the rest of the system, the impact of expected changes can be minimized.  The Software Requirements Specification outlines the changes that are likely to be made to the system.  A summary of these changes and how the logical decomposition of the architecture addresses them is as follows:
 
-**1. Changes to the data persitance component**
-> The architecture addresses this by implementing the calls to the persistance database in three components : one for the user management, one for the project management and the last one for token management. The rest of the application will communicate with the persistance database only through the interface exposed by these three components. Therefore any changes to the system to deal with changes the persistance database technology only be made in the internal implementation of this three components. The frequency of this chnages could be high because it depends on the common services if the infrastructure on which the DOI-server is deployed. That's why the implementation of the interface is a plugin.
+**1. Changes to the data persistance component**
+> The architecture addresses this by implementing the calls to the persistance database in three components : one for the user management, one for the project management and the last one for token management. The rest of the application will communicate with the persistance database only through the interface exposed by these three components. Therefore any changes to the system to deal with changes the persistance database technology only be made in the internal implementation of this three components. The frequency of this changes could be high because it depends on the common services if the infrastructure on which the DOI-server is deployed. That's why the implementation of the interface is a plugin.
 
 **2. Changes to the authentication component**
-> Similar to the above, this is addressed by implementing calls to the LDAP API in an authentication component.  Changes required to deal with changes to the LDAP API need only be made in the internal implementation of this component and not to the rest of the system. The changes frequency of this chnages could be high because it depends on the common services if the infrastructure on which the DOI-server is deployed. That's why the implementation of the interface is a plugin.
+> Similar to the above, this is addressed by implementing calls to the LDAP API in an authentication component.  Changes required to deal with changes to the LDAP API need only be made in the internal implementation of this component and not to the rest of the system. The changes frequency of this changes could be high because it depends on the common services if the infrastructure on which the DOI-server is deployed. That's why the implementation of the interface is a plugin.
 
 **3. Changes to the MDS API**
 > Similar to the above, this is addressed by implementing calls to the MDS API in a MDS Client component.  Changes required to deal with changes to the MDS API need only be made in the internal implementation of this component and not to the rest of the system. The changes frequency should be low. No plugin is provided.
@@ -449,10 +441,10 @@ The main goal of the logical view is to define the components that will make up 
 > Similar to the above, this is addressed by implementing calls to the Cross-cite API in a Cross-cite Client component.  Changes required to deal with changes to the Cross-cite API need only be made in the internal implementation of this component and not to the rest of the system. The changes frequency should be low. No plugin is provided.
 
 **5. Changes to DataCite Search API**
-> Similar to the above, this is addressed by implementing calls to the DataCiteSearch API in a DataCiteSearch Client component.  Changes required to deal with changes to the DataCiteSearch API need only be made in the internal implementation of this component and not to the rest of the system. The chnages frequency should be low. No plugin is provided.
+> Similar to the above, this is addressed by implementing calls to the DataCiteSearch API in a DataCiteSearch Client component.  Changes required to deal with changes to the DataCiteSearch API need only be made in the internal implementation of this component and not to the rest of the system. The changes frequency should be low. No plugin is provided.
 
 **6. Changes to the DataCite schema.**
-> The architecture addresses at the server side this by generating the classes from the XSD using JAXB. The generation of the new classes will not have impact on the rest of the system. From the client side, the changes on the schema will have a small impact on the GUI because the GUI represents each element of the XSD as fields so that the user can fill them. The changes frequency should be high. We could implement the changes at the server side by a plugin to avoid to recompile/deploy the server. However, we do not have implemented a solution to adapt automatically the GUI to the new schema. Therefore, if a changes happens, we need to modify the client. It means we need to reploy the server. That's why we do not have taken the decision to provide a plugin at the server side to handle the changes.
+> The architecture addresses at the server-side this by generating the classes from the XSD using JAXB. The generation of the new classes will not have impact on the rest of the system. From the client side, the changes on the schema will have a small impact on the GUI because the GUI represents each element of the XSD as fields so that the user can fill them. The changes frequency should be high. We could implement the changes at the server-side by a plugin to avoid to recompile/deploy the server. However, we do not have implemented a solution to adapt automatically the GUI to the new schema. Therefore, if a changes happens, we need to change the client. It means we need to redeploy the server. That's why we do not have taken the decision to offer a plugin at the server-side to handle the changes.
 
 ![logical view](images/logicalView.png)
 
