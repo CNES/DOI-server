@@ -11,7 +11,7 @@ if(sessionStorage.getItem("token") === null){
 // loading the page before the token is checked
 $.ajax({
     type: "GET",
-    url: "/admin/token/" + sessionStorage.getItem("token"),
+    url: "/admin/roles/users",
     async: false,
     headers: {
         'Authorization': "Bearer " + sessionStorage.getItem("token")
