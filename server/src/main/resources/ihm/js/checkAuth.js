@@ -1,10 +1,10 @@
 var path = window.location.pathname;
 var page = path.split("/").pop();
 
-if(sessionStorage.getItem("user") == null){
+if(sessionStorage.getItem("user") === null){
 	window.location.href = "/ihm/authentication.html";
 }
-if(sessionStorage.getItem("token") == null){
+if(sessionStorage.getItem("token") === null){
 	window.location.href = "/ihm/authentication.html";
 }
 // check if token is expired --> Request is synchronous to avoid
@@ -26,16 +26,16 @@ $.ajax({
     	}
     },
     success: function (token) {
-        console.log("Token non expiré.")
+        console.log("Token non expiré.");
     }
 });
 
-if(page == "administration.html" || page == "administration"){
-	if(sessionStorage.getItem("admin") == "false"){
+if(page === "administration.html" || page === "administration"){
+	if(sessionStorage.getItem("admin") === "false"){
 		window.location.href = "/ihm/authentication.html";
 	}
 } else {
-	if(sessionStorage.getItem("projects") == null){
+	if(sessionStorage.getItem("projects") === null){
 		window.location.href = "/ihm/authentication.html";
 	}
 }

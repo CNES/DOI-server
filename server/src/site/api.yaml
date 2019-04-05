@@ -1,0 +1,328 @@
+swagger: "2.0"
+
+info:
+  version: "1.0.0"
+  title: Doi Server API
+  description: Doi Server API
+  contact:
+    name: CNES (DNO/ISA/VIP)
+    url: 'http://cnes.fr'
+  license:
+    name: LGPL
+    url: 'https://www.gnu.org/licenses/lgpl-3.0.txt'
+host: localhost:8182
+basePath: /
+schemes: [http,https]
+
+
+tags:
+ - name: "Mds"
+   description: "MDS endpoints "
+ - name: "Citation"
+   description: "Citation endpoints"
+ - name: "Admin"
+   description: "Admin endpoints"
+
+security:
+ - APIKeyHeader: []
+  
+paths:
+  /mds/dois:
+    get:
+      produces:
+      - text/uri-list
+      tags:
+      - "Mds"
+      description: Get all the dois
+      operationId: getAllDois
+      responses:
+        200:
+          description: All doi projects
+          schema:
+            type: string
+        204:
+          description: No Content - no DOIs founds
+          
+        401:
+          description: Unauthorized - The request requires user authentication  
+           
+        500:
+          description: Other type of errors
+          
+    
+    post:
+      produces:
+      - application/json
+      consumes:
+      - application/x-www-form-urlencoded
+      tags:
+      - "Mds"
+      description: Create a **new** doi project or update the landing page url if it the project already exists
+      operationId: postDoi
+      parameters:
+        - name: url
+          in: formData
+          description: the URL of the landing page
+          required: true
+          type: string
+        
+        - name: doi
+          in: formData
+          description: the project suffix, which is an unique identifier within the project
+          required: true
+          type: string  
+          
+      responses:
+        201:
+          description: Successful doi project Creation and return short explanation of status code e.g. CREATED, HANDLE_ALREADY_EXISTS, ...
+          schema:
+            type: string
+  
+  /mds/metadata:
+    post:
+      tags:
+      - "Mds"
+      consumes:
+      - application/xml
+      description: Create or update doi project metada
+      operationId: postDoiMetada
+      parameters:
+        - name: metada
+          in: body
+          description: metadata
+          required: true
+          schema: 
+            type: string
+            
+      responses:
+        200:
+          description: short explanation of status code e.g. CREATED, HANDLE_ALREADY_EXISTS, ...
+          schema:
+             type: string
+        
+        400:
+          description: Bad Request - invalid XML, wrong prefix
+        
+        401:
+          description: Unauthorized - no login
+          
+        403:
+          description: Forbidden - login problem or dataset belongs to another party
+             
+        500:
+          description: Internal Server Error - server internal error  
+
+  /mds/dois/{doi_name}:
+    get:
+      produces:
+      - application/json
+      tags:
+      - "Mds"
+      description: Renvoie l'url de la landing page du doi
+      operationId: getLandingPageUrl
+      parameters:
+        - name: doi_name
+          in: path
+          type: string
+          description: doi project name
+          required: true
+      responses:
+        200:
+          description: The landing page was retrieved successfully
+          schema:
+            type: string
+        
+        204:
+          description: the DOI is known to MDS, but is not minted (or not resolvable e.g. due to handle's latency)
+        
+        500:
+          description: Internal Server Error - server internal error 
+
+  /mds/metadata/{doi_name}:
+    get:
+      tags:
+      - "Mds"
+      produces:
+      - application/xml
+      description: Renvoie les metadata d'un doi
+      operationId: getAllDoiMetadata
+      parameters:
+       - name: doi_name
+         in: path
+         required: true
+         type: string
+
+      responses:
+        200:
+          description: Successful metadata of given doi project retrieval
+          schema:
+            type: string
+            
+        401:
+          description: Unauthorized - no login
+          
+        403:
+          description: Forbidden - login problem or dataset belongs to another party
+          
+        404:
+          description: Not Found - DOI does not exist in our database
+          
+        410:
+          description: Gone - the requested dataset was marked inactive
+        
+        500:
+          description: Internal Server Error - server internal error 
+         
+            
+    delete:
+      tags:
+      - "Mds"
+      description: This request marks a dataset as 'inactive'
+      operationId: cancelDoiProject
+      parameters:
+        - name: doi_name
+          in: path
+          type: string
+          description: doi project name
+          required: true
+      responses:
+        202:
+          description: Cancelling taken into account and return metadata that was deactivated
+          schema:
+            type: string
+          
+        401:
+          description: Unauthorized - no login
+          
+        403:
+          description: Forbidden - login problem or dataset belongs to another party
+          
+        404:
+          description: Not Found - DOI does not exist in our database
+          
+        500:
+          description: Internal Server Error
+          
+            
+  
+  /mds/media/{doi_name}:
+    get:
+      produces:
+      - text/uri-list
+      tags:
+      - "Mds" 
+      description: Retuen a list of pairs of media type and URLs
+      operationId: getDoiMedia
+      parameters:
+        - name: doi_name
+          in: path
+          description: DOI project name
+          required: true
+          type: string
+          
+      responses:
+      
+        200:
+          description: Successful media retrieval          
+          schema:
+            type: string
+            
+        500:
+          description: Internal Server Error    
+              
+    post:
+      tags:
+      - "Mds"
+      consumes:
+      - application/x-www-form-urlencoded
+      description: add an association media/url
+      operationId: postMedia
+      parameters:
+        - name: doi_name
+          in: path
+          description: DOI project name
+          required: true
+          type: string
+          
+        - name: data
+          in: body
+          description: an association types de media/url
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successful adding association
+          schema:
+            type: string
+          
+  /citation/language:
+    get:
+      tags:
+      - "Citation"
+      description: Renvoie la liste des langages disponibles
+      operationId: getCitationsLanguage
+      responses:
+        200:
+          description: The languages was retrieved successfully
+          schema:
+            type: array
+            items:
+              type: string
+        500:
+          description: Other type of errors
+             
+  
+  /citation/style:
+    get:
+      tags:
+      - "Citation"
+      description: Renvoie la liste des styles disponibles
+      operationId: getCitationsStyle
+      responses:
+        200:
+          description: The styles was retrieved successfully
+          schema:
+            type: array
+            items:
+              type: string
+        500:
+          description: Other type of errors
+            
+  /citation/format:
+    get:
+      tags:
+      - "Citation"
+      description: Returns the formatted citation
+      operationId: getCitation
+      parameters:
+        - name: doi
+          in: query
+          description: DOI project name
+          required: true
+          type: string
+        - name: style
+          in: query
+          description: style
+          required: true
+          type: string
+          
+        - name: lang
+          in: query
+          description: langage
+          required: true
+          type: string  
+             
+      responses:
+        200:
+          description: The citation was retrieved successfully
+          schema:
+            type: string
+        500:
+          description: Other type of errors
+             
+securityDefinitions:
+  APIKeyHeader:
+    type: apiKey
+    in: header
+    name: Authorization

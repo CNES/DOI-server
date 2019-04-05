@@ -810,8 +810,8 @@ info:
   title: Doi Server API
   description: Doi Server API
   contact:
-    name: Atos Team
-    url: 'http://atos.net/'
+    name: CNES (DNO/ISA/VIP)
+    url: 'http://cnes.fr'
   license:
     name: LGPL
     url: 'https://www.gnu.org/licenses/lgpl-3.0.txt'

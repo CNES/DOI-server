@@ -90,12 +90,12 @@ $(document).ready(function () {
 	$("body").on("click", "h3.recommended,h3.other", function (event) {
 		var div = $(this).next("div");
 		var text = $(this).html();
-		if (text.charAt(0) == "+") {
+		if (text.charAt(0) === "+") {
 			text = text.replace("+", "-");
 			$(this).html(text);
 			$(div).removeClass("hidden");
 		} else {
-			if (text.charAt(0) == "-") {
+			if (text.charAt(0) === "-") {
 				text = text.replace("-", "+");
 				$(this).html(text);
 				$(div).addClass("hidden");
