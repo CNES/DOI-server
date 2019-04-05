@@ -121,36 +121,23 @@
                 //isUserExist? save in session userName and admin(true or false)
                 $.ajax({
                     type: "GET",
-                    url: "/admin/superusers/" + userId,
+                    url: "/admin/roles/admin",
                     beforeSend : function( xhr ) {
                         xhr.setRequestHeader( 'Authorization', 'BEARER ' + sessionStorage.getItem("token") );
                     },
                     crossDomain: true,
                     cache: false,
                     error: function (XMLHttpRequest, textStatus, errorThrown) {
-                        var parser = new DOMParser();
-                        var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
-                        var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
-                        if(XMLHttpRequest.status === 404) {
-                            alert("Utilisateur ou mot de passe incorrect.");
-                        } else {
-                            alert("Erreur d'authentification.\n" +
-                                    "Erreur: " + errMessage + "\n"
-                                    );                                    
-                        }
-
+                        sessionStorage.setItem("user", userId);
+                        sessionStorage.setItem("admin", "false");   
+                        //get project associated to this user
+                        getAssociatedProject();                        
                     },
                     success: function (boo) {
                         sessionStorage.setItem("user", userId);
-                        if (boo) {
-                            sessionStorage.setItem("admin", "true");
-                        } else {
-                            sessionStorage.setItem("admin", "false");
-                        }
-
+                        sessionStorage.setItem("admin", "true");
                         //get project associated to this user
                         getAssociatedProject();
-
                     }
                 });                
             }

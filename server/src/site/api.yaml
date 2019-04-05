@@ -3,63 +3,69 @@ swagger: "2.0"
 info:
   version: "1.0.0"
   title: Doi Server API
-  description: Doi Server API
+  description: A Digital Object Identifier (DOI) is an alphanumeric string assigned to uniquely identify an object. It is tied to a metadata description of the object as well as to a digital location, such as a URL, where all the details about the object are accessible. This documentation provides an API to query the DOI-server.
   contact:
     name: CNES (DNO/ISA/VIP)
+    email : jean-christophe.malapert@cnes.fr
     url: 'http://cnes.fr'
   license:
     name: LGPL
     url: 'https://www.gnu.org/licenses/lgpl-3.0.txt'
 host: localhost:8182
 basePath: /
-schemes: [http,https]
+schemes: [https,http]
 
 
 tags:
- - name: "Mds"
-   description: "MDS endpoints "
- - name: "Citation"
-   description: "Citation endpoints"
- - name: "Admin"
-   description: "Admin endpoints"
-
+ - name: "DataCite Metadata Store (MDS) API"
+   description: "Allows users to register DataCite DOIs and associated metadata"
+ - name: "DOI Citation Formatter"
+   description: "Allows user to format a citation based on the DOI metadata "
+ - name: "Administration"
+   description: "Allows registered users to create token"
+   externalDocs:
+    description: "Find out more about our DOI-server"
+    url: "https://cnes.github.io/DOI-server"
+    
 security:
  - APIKeyHeader: []
-  
+ 
+    
 paths:
-  /mds/dois:
-    get:
+  /admin/token:
+    post:
       produces:
-      - text/uri-list
+      - text
+      consumes:
+      - application/x-www-form-urlencoded      
       tags:
-      - "Mds"
-      description: Get all the dois
-      operationId: getAllDois
+      - "Administration"      
+      description: Create a token
+      security:
+        - basicAuth: []
+      operationId: createToken        
       responses:
         200:
-          description: All doi projects
+          description: OK (successfully authenticated)
           schema:
-            type: string
-        204:
-          description: No Content - no DOIs founds
-          
-        401:
-          description: Unauthorized - The request requires user authentication  
-           
-        500:
-          description: Other type of errors
-          
-    
+            type: string          
+            
+  /mds/dois:
     post:
       produces:
       - application/json
       consumes:
       - application/x-www-form-urlencoded
       tags:
-      - "Mds"
+      - "DataCite Metadata Store (MDS) API"
       description: Create a **new** doi project or update the landing page url if it the project already exists
-      operationId: postDoi
+      operationId: postLandingPage
       parameters:
+        - name: selectedRole
+          in: header
+          description: the selected role when a user is connected to more than 2 roles.
+          required: false
+          type: string    
         - name: url
           in: formData
           description: the URL of the landing page
@@ -74,20 +80,39 @@ paths:
           
       responses:
         201:
-          description: Successful doi project Creation and return short explanation of status code e.g. CREATED, HANDLE_ALREADY_EXISTS, ...
-          schema:
-            type: string
+          description: Operation successful
+
+        400:
+          description: Validation error when defining the DOI and its landing page
+   
+        401:
+          description: Expired token
+  
+        403:
+          description: Forbidden
+            
+        412:
+          description: Metadata must be uploaded first
+   
+        500:
+          description: Interface problem between Datacite and DOI-Server
+
   
   /mds/metadata:
     post:
       tags:
-      - "Mds"
+      - "DataCite Metadata Store (MDS) API"
       consumes:
       - application/xml
-      description: Create or update doi project metada
-      operationId: postDoiMetada
+      description: Create or update doi project metadata
+      operationId: postDoiMetadata
       parameters:
-        - name: metada
+        - name: selectedRole
+          in: header
+          description: the selected role when a user is connected to more than 2 roles.
+          required: false
+          type: string        
+        - name: metadata
           in: body
           description: metadata
           required: true
@@ -95,36 +120,45 @@ paths:
             type: string
             
       responses:
-        200:
-          description: short explanation of status code e.g. CREATED, HANDLE_ALREADY_EXISTS, ...
-          schema:
-             type: string
-        
+        201:
+          description: Operation successfull
+
         400:
-          description: Bad Request - invalid XML, wrong prefix
+          description: Failed to validate the user inputs parameters
         
         401:
           description: Unauthorized - no login
           
         403:
           description: Forbidden - login problem or dataset belongs to another party
-             
+         
         500:
-          description: Internal Server Error - server internal error  
+          description: Interface problem between Datacite and DOI-Server"
+ 
 
-  /mds/dois/{doi_name}:
+  /mds/dois/{prefix}/{project}/{doi_name}:
     get:
       produces:
       - application/json
       tags:
-      - "Mds"
-      description: Renvoie l'url de la landing page du doi
+      - "DataCite Metadata Store (MDS) API"
+      description: Retrieves the landing page URL
       operationId: getLandingPageUrl
       parameters:
+        - name: prefix
+          in: path
+          type: string
+          description: DOI prefix
+          required: true
+        - name: project
+          in: path
+          type: string
+          description: Project identifier
+          required: true
         - name: doi_name
           in: path
           type: string
-          description: doi project name
+          description: Record ID
           required: true
       responses:
         200:
@@ -134,23 +168,50 @@ paths:
         
         204:
           description: the DOI is known to MDS, but is not minted (or not resolvable e.g. due to handle's latency)
-        
+          schema:
+            type: string        
+        401:
+          description: Unauthorized - no login
+          schema:
+            type: string          
+        403:
+          description: Forbidden - login problem or dataset belongs to another party
+          schema:
+            type: string 
+          
+        404: 
+          description: DOI does not exist in our database
+          schema:
+            type:  string
         500:
-          description: Internal Server Error - server internal error 
+          description: Internal Server Error - server internal error
+          schema:
+            type: string          
 
-  /mds/metadata/{doi_name}:
+  /mds/metadata/{prefix}/{project}/{doi_name}:
     get:
       tags:
-      - "Mds"
+      - "DataCite Metadata Store (MDS) API"
       produces:
       - application/xml
       description: Renvoie les metadata d'un doi
       operationId: getAllDoiMetadata
       parameters:
-       - name: doi_name
-         in: path
-         required: true
-         type: string
+        - name: prefix
+          in: path
+          type: string
+          description: DOI prefix
+          required: true
+        - name: project
+          in: path
+          type: string
+          description: Project identifier
+          required: true
+        - name: doi_name
+          in: path
+          type: string
+          description: Record ID
+          required: true
 
       responses:
         200:
@@ -176,14 +237,29 @@ paths:
             
     delete:
       tags:
-      - "Mds"
+      - "DataCite Metadata Store (MDS) API"
       description: This request marks a dataset as 'inactive'
       operationId: cancelDoiProject
       parameters:
+        - name: selectedRole
+          in: header
+          description: the selected role when a user is connected to more than 2 roles.
+          required: false
+          type: string      
+        - name: prefix
+          in: path
+          type: string
+          description: DOI prefix
+          required: true
+        - name: project
+          in: path
+          type: string
+          description: Project identifier
+          required: true
         - name: doi_name
           in: path
           type: string
-          description: doi project name
+          description: Record ID
           required: true
       responses:
         202:
@@ -205,20 +281,35 @@ paths:
           
             
   
-  /mds/media/{doi_name}:
+  /mds/media/{prefix}/{project}/{doi_name}:
     get:
       produces:
       - text/uri-list
       tags:
-      - "Mds" 
+      - "DataCite Metadata Store (MDS) API" 
       description: Retuen a list of pairs of media type and URLs
       operationId: getDoiMedia
       parameters:
+        - name: selectedRole
+          in: header
+          description: the selected role when a user is connected to more than 2 roles.
+          required: false
+          type: string      
+        - name: prefix
+          in: path
+          type: string
+          description: DOI prefix
+          required: true
+        - name: project
+          in: path
+          type: string
+          description: Project identifier
+          required: true
         - name: doi_name
           in: path
-          description: DOI project name
-          required: true
           type: string
+          description: Record ID
+          required: true
           
       responses:
       
@@ -232,34 +323,41 @@ paths:
               
     post:
       tags:
-      - "Mds"
+      - "DataCite Metadata Store (MDS) API"
       consumes:
       - application/x-www-form-urlencoded
       description: add an association media/url
       operationId: postMedia
       parameters:
+        - name: selectedRole
+          in: header
+          description: the selected role when a user is connected to more than 2 roles.
+          required: false
+          type: string      
+        - name: prefix
+          in: path
+          type: string
+          description: DOI prefix
+          required: true
+        - name: project
+          in: path
+          type: string
+          description: Project identifier
+          required: true
         - name: doi_name
           in: path
-          description: DOI project name
-          required: true
           type: string
-          
-        - name: data
-          in: body
-          description: an association types de media/url
+          description: Record ID
           required: true
-          schema:
-            type: string
       responses:
         200:
           description: Successful adding association
-          schema:
-            type: string
+
           
   /citation/language:
     get:
       tags:
-      - "Citation"
+      - "DOI Citation Formatter"
       description: Renvoie la liste des langages disponibles
       operationId: getCitationsLanguage
       responses:
@@ -276,7 +374,7 @@ paths:
   /citation/style:
     get:
       tags:
-      - "Citation"
+      - "DOI Citation Formatter"
       description: Renvoie la liste des styles disponibles
       operationId: getCitationsStyle
       responses:
@@ -292,7 +390,7 @@ paths:
   /citation/format:
     get:
       tags:
-      - "Citation"
+      - "DOI Citation Formatter"
       description: Returns the formatted citation
       operationId: getCitation
       parameters:
@@ -311,7 +409,7 @@ paths:
           in: query
           description: langage
           required: true
-          type: string  
+          type: string
              
       responses:
         200:
@@ -319,10 +417,12 @@ paths:
           schema:
             type: string
         500:
-          description: Other type of errors
+          description: Other type of error
              
 securityDefinitions:
   APIKeyHeader:
     type: apiKey
     in: header
     name: Authorization
+  basicAuth:
+    type: basic
