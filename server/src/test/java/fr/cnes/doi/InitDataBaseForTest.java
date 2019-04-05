@@ -65,6 +65,12 @@ public final class InitDataBaseForTest {
         DatabaseSingleton.getInstance().init(dbUrl, dbUser, dbPwd, new HashMap<>());
         das = DatabaseSingleton.getInstance().getDatabaseAccess();
         
+
+        // Test LAPD User with different roles
+        final DOIUser testUserWithRoles = new DOIUser();
+        testUserWithRoles.setUsername("testMe");
+        testUserWithRoles.setAdmin(false);
+        testUserWithRoles.setEmail("testMe@mail.com");
         
         // Test LAPD User
         final DOIUser testLdapUser = new DOIUser();
@@ -95,6 +101,12 @@ public final class InitDataBaseForTest {
         kerberos.setUsername("doi_kerberos");
         kerberos.setAdmin(false);
         kerberos.setEmail("kerberos@mail.com");
+        
+        // Test User
+        DOIUser nonAdmin = new DOIUser();
+        nonAdmin.setUsername("nonadmin");
+        nonAdmin.setAdmin(false);
+        nonAdmin.setEmail("nonadmin@mail.com");        
 
         // Test Project
         final DOIProject  testProject = new DOIProject();
@@ -117,15 +129,27 @@ public final class InitDataBaseForTest {
             das.addDOIUser(norole.getUsername(), norole.isAdmin(), norole.getEmail());
             // add doi_kerberos
             das.addDOIUser(kerberos.getUsername(), kerberos.isAdmin(), kerberos.getEmail());
-
+            // add testMe
+            das.addDOIUser(testUserWithRoles.getUsername(), testUserWithRoles.isAdmin(), testUserWithRoles.getEmail());
+            // add nonadmin
+            das.addDOIUser(nonAdmin.getUsername(), nonAdmin.isAdmin(), nonAdmin.getEmail());
+            
             // add project
             das.addDOIProject(testProject.getSuffix(), testProject.getProjectname());
             das.addDOIProject(testProject2.getSuffix(), testProject2.getProjectname());
+
             // assign user to project
+            das.addDOIProjectToUser(nonAdmin.getUsername(), testProject.getSuffix());
+                        
             das.addDOIProjectToUser(testuser.getUsername(), testProject.getSuffix());
+            
             das.addDOIProjectToUser(testLdapUser.getUsername(), testProject.getSuffix());
             das.addDOIProjectToUser(testLdapUser.getUsername(), testProject2.getSuffix());
+            
             das.addDOIProjectToUser(kerberos.getUsername(), testProject2.getSuffix());
+            
+            das.addDOIProjectToUser(testUserWithRoles.getUsername(), testProject.getSuffix());
+            das.addDOIProjectToUser(testUserWithRoles.getUsername(), testProject2.getSuffix());
         } catch (DOIDbException e) {
             logger.error("testDoiUsers failed: unexpected exception: ", e);
             fail();

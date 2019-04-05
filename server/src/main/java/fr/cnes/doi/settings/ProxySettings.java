@@ -122,7 +122,7 @@ public final class ProxySettings {
         this.proxyPort = settings.getString(Consts.SERVER_PROXY_PORT, "");
         LOG.info("proxyPort : {}", this.proxyPort);
 
-        this.proxyUser = settings.getSecret(Consts.SERVER_PROXY_LOGIN);
+        this.proxyUser = settings.getString(Consts.SERVER_PROXY_LOGIN, "");
         LOG.info("proxyUser : {}", this.proxyUser);
 
         this.proxyPassword = settings.getSecret(Consts.SERVER_PROXY_PWD);

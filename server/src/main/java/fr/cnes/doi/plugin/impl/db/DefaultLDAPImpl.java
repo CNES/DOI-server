@@ -36,7 +36,7 @@ import org.apache.logging.log4j.Logger;
 
 import fr.cnes.doi.exception.AuthenticationAccessException;
 import fr.cnes.doi.db.model.AuthSystemUser;
-import fr.cnes.doi.security.UtilsCryptography;
+import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.utils.Utils;
 import fr.cnes.doi.plugin.AbstractAuthenticationPluginHelper;
 import fr.cnes.doi.settings.DoiSettings;
@@ -137,29 +137,45 @@ public final class DefaultLDAPImpl extends AbstractAuthenticationPluginHelper {
     /**
      * Status of the plugin configuration.
      */
-    private boolean isConfigured = false;
+    private boolean configured = false;
 
     /**
-     * Constructor.
+     * {@inheritDoc }
      */
-    public DefaultLDAPImpl() {
-
+    @Override
+    public void setConfiguration(final Object configuration) {
+        this.conf = (Map<String, String>) configuration;
+        LOGGER.info("[CONF] Plugin LDAP URL : {}", this.conf.get(LDAP_URL));
+        LOGGER.info("[CONF] Plugin LDAP user : {}", this.conf.get(LDAP_USER));
+        LOGGER.info("[CONF] Plugin LDAP password : {}", Utils.transformPasswordToStars(this.conf.
+                get(LDAP_PWD)));
+        LOGGER.info("[CONF] Plugin LDAP project : {}", this.conf.get(LDAP_PROJECT));
+        LOGGER.info("[CONF] Plugin LDAP admin for DOI : {}", this.conf.get(LDAP_DOI_ADMIN));
+        LOGGER.info("[CONF] Plugin LDAP attribute for fullname : {}", this.conf.get(
+                LDAP_ATTR_FULLNAME));
+        LOGGER.info("[CONF] Plugin LDAP attribute for mail : {}", this.conf.get(LDAP_ATTR_MAIL));
+        LOGGER.info("[CONF] Plugin LDAP attribute for username : {}", this.conf.get(
+                LDAP_ATTR_USERNAME));
+        LOGGER.info("[CONF] Plugin LDAP search group : {}", this.conf.get(LDAP_SEARCH_GROUP));
+        LOGGER.info("[CONF] Plugin LDAP search user : {}", this.conf.get(LDAP_SEARCH_USER));
+        this.configured = true;
     }
 
+    /**
+     * {@inheritDoc }
+     */
     @Override
-    public void setConfiguration(Object configuration) {
-        this.conf = (Map<String, String>) configuration;
-        LOGGER.info("[CONF] Plugin LDAP URL : {}", LDAP_URL);
-        LOGGER.info("[CONF] Plugin LDAP user : {}", LDAP_USER);
-        LOGGER.info("[CONF] Plugin LDAP password : {}", Utils.transformPasswordToStars(LDAP_PWD));
-        LOGGER.info("[CONF] Plugin LDAP project : {}", LDAP_PROJECT);
-        LOGGER.info("[CONF] Plugin LDAP admin for DOI : {}", LDAP_DOI_ADMIN);
-        LOGGER.info("[CONF] Plugin LDAP attribute for fullname : {}", LDAP_ATTR_FULLNAME);
-        LOGGER.info("[CONF] Plugin LDAP attribute for mail : {}", LDAP_ATTR_MAIL);
-        LOGGER.info("[CONF] Plugin LDAP attribute for username : {}", LDAP_ATTR_USERNAME);
-        LOGGER.info("[CONF] Plugin LDAP search group : {}", LDAP_SEARCH_GROUP);
-        LOGGER.info("[CONF] Plugin LDAP search user : {}", LDAP_SEARCH_USER);
-        this.isConfigured = true;
+    public void initConnection() throws DoiRuntimeException {
+        try {
+            InitialLdapContext context = getContext();
+            if (context == null) {
+                throw new DoiRuntimeException("LDAPAccessImpl: Unable to connect to Ldap");
+            } else {
+                context.close();
+            }
+        } catch (NamingException ex) {
+            throw new DoiRuntimeException("LDAPAccessImpl: Unable to connect to Ldap", ex);
+        }
     }
 
     /**
@@ -170,7 +186,11 @@ public final class DefaultLDAPImpl extends AbstractAuthenticationPluginHelper {
         LOGGER.traceEntry();
         DirContext context = null;
         try {
-            context = getContext();
+            try {
+                context = getContext();
+            } catch (NamingException ex) {
+                LOGGER.error("LDAPAccessImpl getContext: Unable to connect to Ldap", ex);
+            }
             if (context == null) {
                 throw new AuthenticationAccessException("Configuration problem with the LDAP",
                         new Exception());
@@ -205,18 +225,16 @@ public final class DefaultLDAPImpl extends AbstractAuthenticationPluginHelper {
      * Init LDAP context.
      *
      * @return the context or null when a LDAP configuration is missing
+     * @throws NamingException Unable to connect to Ldap
      */
-    private InitialLdapContext getContext() {
+    private InitialLdapContext getContext() throws NamingException {
         LOGGER.traceEntry();
         InitialLdapContext context = null;
         if (isLdapConfigured()) {
             final Hashtable<String, String> prop = new Hashtable<>();
-            final String ldapUser = DoiSettings.getInstance().getSecretValue(conf.get(LDAP_USER));
+            final String ldapUser = conf.get(LDAP_USER);
             final String ldapPwd = DoiSettings.getInstance().getSecretValue(conf.get(LDAP_PWD));
-            final String securityPrincipal = String.format(
-                    "uid=%s,%s",
-                    ldapUser, conf.get(LDAP_SEARCH_USER)
-            );
+            final String securityPrincipal = ldapUser;
             final String ldapUrl = conf.get(LDAP_URL);
             prop.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
             prop.put(Context.PROVIDER_URL, ldapUrl);
@@ -230,12 +248,7 @@ public final class DefaultLDAPImpl extends AbstractAuthenticationPluginHelper {
                     Context.SECURITY_AUTHENTICATION, "simple",
                     Context.SECURITY_PRINCIPAL, securityPrincipal,
                     Context.SECURITY_CREDENTIALS, Utils.transformPasswordToStars(ldapPwd));
-
-            try {
-                context = new InitialLdapContext(prop, null);
-            } catch (NamingException e) {
-                LOGGER.error("LDAPAccessImpl getContext: Unable to connect to Ldap", e);
-            }
+            context = new InitialLdapContext(prop, null);
         } else {
             LOGGER.error("LDAP is not well configured. Checks the configuration file");
         }
@@ -484,7 +497,12 @@ public final class DefaultLDAPImpl extends AbstractAuthenticationPluginHelper {
         if (!this.conf.containsKey(LDAP_SEARCH_USER)) {
             validation.append(message).append(LDAP_SEARCH_USER).append("\n");
         }
-
+        if (!this.conf.containsKey(LDAP_USER)) {
+            validation.append(message).append(LDAP_USER).append("\n");
+        }
+        if (!this.conf.containsKey(LDAP_PWD)) {
+            validation.append(message).append(LDAP_PWD).append("\n");
+        }        
         return validation;
     }
 
@@ -494,7 +512,7 @@ public final class DefaultLDAPImpl extends AbstractAuthenticationPluginHelper {
      * @param key keyword to check
      * @return True when the keyword is a password otherwise False
      */
-    public static boolean isPassword(String key) {
+    public static boolean isPassword(final String key) {
         return LDAP_PWD.equals(key);
     }
 
@@ -503,12 +521,14 @@ public final class DefaultLDAPImpl extends AbstractAuthenticationPluginHelper {
      */
     @Override
     public void release() {
-        this.conf = null;
-        this.isConfigured = false;
+        this.configured = false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isConfigured() {
-        return this.isConfigured;
+        return this.configured;
     }
 }

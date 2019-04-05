@@ -41,7 +41,7 @@ import org.restlet.security.User;
  *
  * @author disto
  */
-public class MyMemoryRealm extends Realm {
+public final class MyMemoryRealm extends Realm {
 
     /**
      * The modifiable list of role mappings.
@@ -62,6 +62,7 @@ public class MyMemoryRealm extends Realm {
      * Constructor.
      */
     public MyMemoryRealm() {
+        super();
         setVerifier(new DefaultVerifier());
         setEnroler(new DefaultEnroler());
     }

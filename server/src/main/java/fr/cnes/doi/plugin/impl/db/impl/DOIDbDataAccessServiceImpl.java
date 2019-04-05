@@ -1051,8 +1051,10 @@ public final class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService 
     @Override
     public void close() throws DOIDbException {
         LOGGER.traceEntry();
-        this.dbConnector.close();
-        this.dbConnector = null;
+        if(this.dbConnector != null) {
+            this.dbConnector.close();
+            this.dbConnector = null;
+        }
         LOGGER.traceExit();
     }
 

@@ -447,7 +447,8 @@
                     contentType: "text/xml",
                     dataType: "xml",                     
                     headers: {
-                        'Authorization': "Bearer " + sessionStorage.getItem("token")
+                        'Authorization': "Bearer " + sessionStorage.getItem("token"),
+                        'selectedRole' : $("#projectID").val()
                     },
                     crossDomain: true,
                     cache: false,

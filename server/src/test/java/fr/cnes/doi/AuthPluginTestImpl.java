@@ -1,12 +1,26 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2017-2019 Centre National d'Etudes Spatiales (CNES).
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3.0 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301  USA
  */
 package fr.cnes.doi;
 
 import fr.cnes.doi.db.model.AuthSystemUser;
 import fr.cnes.doi.exception.AuthenticationAccessException;
+import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.plugin.AbstractAuthenticationPluginHelper;
 import static fr.cnes.doi.plugin.impl.db.DefaultLDAPImpl.LDAP_ATTR_FULLNAME;
 import static fr.cnes.doi.plugin.impl.db.DefaultLDAPImpl.LDAP_ATTR_MAIL;
@@ -88,26 +102,43 @@ public class AuthPluginTestImpl extends AbstractAuthenticationPluginHelper {
         user5.setEmail("kerberos@mail.com");
         user5.setUsername("doi_kerberos");
         user5.setFullname("doi_kerberos"); 
+        
+        AuthSystemUser user6 = new AuthSystemUser();
+        user6.setEmail("testMe@mail.com");
+        user6.setUsername("testMe");
+        user6.setFullname("testMe");         
 
+        AuthSystemUser user7 = new AuthSystemUser();
+        user7.setEmail("nonadmin@mail.com");
+        user7.setUsername("nonadmin");
+        user7.setFullname("nonadmin");
         
         authUserList.add(user1);
         authUserList.add(user2);
         authUserList.add(user3);
         authUserList.add(user4);
         authUserList.add(user5);
-        
+        authUserList.add(user6);
+        authUserList.add(user7);
         
         credentials.put(user1.getUsername(), "admin");
         credentials.put(user2.getUsername(), "pwd");
         credentials.put(user3.getUsername(), "admin");
         credentials.put(user4.getUsername(), "norole");
         credentials.put(user5.getUsername(), "doi_kerberos");
+        credentials.put(user6.getUsername(), "testMe");
+        credentials.put(user7.getUsername(), "nonadmin");
     }
     
     @Override
     public void setConfiguration(Object configuration) {
         this.conf = (Map<String, String>) configuration;
         this.isConfigured = true;
+    }   
+    
+
+    @Override
+    public void initConnection() throws DoiRuntimeException {
     }    
 
     @Override
@@ -199,7 +230,5 @@ public class AuthPluginTestImpl extends AbstractAuthenticationPluginHelper {
     public boolean isConfigured() {
         return this.isConfigured;
     }
-
-
     
 }

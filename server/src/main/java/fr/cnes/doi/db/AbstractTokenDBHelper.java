@@ -33,13 +33,6 @@ import fr.cnes.doi.utils.spec.Requirement;
 public abstract class AbstractTokenDBHelper extends Observable {
 
     /**
-     * Sets the configuration.
-     *
-     * @param configuration configuration parameters
-     */
-    public abstract void setConfiguration(final Object configuration);
-
-    /**
      * Adds a token in the database
      *
      * @param jwt a token
@@ -62,14 +55,6 @@ public abstract class AbstractTokenDBHelper extends Observable {
      * @return True when the token exists in the database otherwise False
      */
     public abstract boolean isExist(String jwt);
-
-    /**
-     * Tests if the token is expirated.
-     *
-     * @param jwt the token
-     * @return True when the token is expirated otherwise False
-     */
-    public abstract boolean isExpired(String jwt);
 
     /**
      * Return the token list from database.

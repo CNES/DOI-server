@@ -16,23 +16,28 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package fr.cnes.doi.plugin;
+package fr.cnes.doi.resource.admin;
 
-import fr.cnes.doi.utils.spec.Requirement;
-import fr.cnes.doi.db.IAuthenticationDBHelper;
+import fr.cnes.doi.application.AdminApplication;
+import fr.cnes.doi.resource.AbstractResource;
+import org.restlet.data.Reference;
+import org.restlet.representation.EmptyRepresentation;
+import org.restlet.representation.Representation;
+import org.restlet.resource.Get;
 
 /**
+ * Redirecting to IHM
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-@Requirement(reqId = Requirement.DOI_ARCHI_030, reqName = Requirement.DOI_ARCHI_030_NAME)
-public abstract class AbstractAuthenticationPluginHelper
-        implements IAuthenticationDBHelper, PluginMetadata, PluginConfiguration {
+public class RedirectingResource extends AbstractResource {
 
-    /**
-     * Empty constructor.
-     */
-    protected AbstractAuthenticationPluginHelper() {
+    @Get
+    public Representation doGet() {
+        final Reference newRef = new Reference(
+                getRootRef().toString() + AdminApplication.IHM_RESOURCE + "/authentication.html");
+        redirectSeeOther(newRef);
+        return new EmptyRepresentation();
     }
 
 }

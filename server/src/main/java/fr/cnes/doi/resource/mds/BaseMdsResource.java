@@ -20,15 +20,11 @@ package fr.cnes.doi.resource.mds;
 
 import fr.cnes.doi.application.DoiMdsApplication;
 import fr.cnes.doi.application.DoiMdsApplication.API_MDS;
-import fr.cnes.doi.db.model.DOIProject;
-import fr.cnes.doi.exception.DOIDbException;
 import fr.cnes.doi.exception.DoiServerException;
 import fr.cnes.doi.resource.AbstractResource;
 import static fr.cnes.doi.security.UtilsHeader.SELECTED_ROLE_PARAMETER;
 
-import fr.cnes.doi.utils.UniqueProjectName;
 import fr.cnes.doi.utils.spec.Requirement;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.logging.log4j.Level;
@@ -152,7 +148,7 @@ public class BaseMdsResource extends AbstractResource {
         } else if (hasSingleRole(roles)) {
             // the user has only one role, ok do it
             final Role role = roles.get(0);
-            LOG.debug("User has a single Role " + role);
+            LOG.debug("User has a single Role {}", role);
             return LOG.traceExit(role.getName());
         } else {
             // the user has several roles, he has to select a profile, go out
@@ -171,14 +167,14 @@ public class BaseMdsResource extends AbstractResource {
     private String getRoleNameWhenRoleInHeader(final String selectedRole) {
         LOG.traceEntry("Parameter : {}", selectedRole);
         // the role is selected in the Header
-        LOG.debug("Role selected : " + selectedRole);
+        LOG.debug("Role selected : {}", selectedRole);
         if (isInRole(selectedRole)) {
             // the selected role is well related to the user
-            LOG.debug("User is in Role : " + selectedRole);
+            LOG.debug("User is in Role : {}", selectedRole);
             return LOG.traceExit(selectedRole);
         } else {
             // the user is not contained in the selected role => a possible hacking
-            LOG.debug("User is not in Role :" + selectedRole);
+            LOG.debug("User is not in Role : {}", selectedRole);
             LOG.info("DOIServer : The role {} is not allowed to use this feature", selectedRole);
             throw LOG.throwing(Level.DEBUG,
                     new DoiServerException(getApplication(),
@@ -212,42 +208,15 @@ public class BaseMdsResource extends AbstractResource {
     protected void checkPermission(final String doiName, final String selectedRole)
             throws DoiServerException {
         LOG.traceEntry("Parameters : {} and {}", doiName, selectedRole);
-
         final String prefixCNES = this.getDoiApp().getDataCentrePrefix();
-
-        // Token-ihm isn't attached to any project, in this case, check role in database
-        if ("null".equals(selectedRole)) {
-            final String user = getClientInfo().getUser().getIdentifier();
-            List<DOIProject> projects;
-            try {
-                projects = UniqueProjectName.getInstance().getProjectsFromUser(user);
-            } catch (DOIDbException ex) {
-                projects = new ArrayList<>();
-            }
-            boolean isAuthorized = false;
-            for (final DOIProject project : projects) {
-                if (doiName.startsWith(prefixCNES + "/" + project.getSuffix() + "/")) {
-                    isAuthorized = true;
-                    break;
-                }
-            }
-            if (!isAuthorized) {
-                LOG.debug("The DOI {}  does not match with any user's role", doiName);
-                throw LOG.throwing(Level.DEBUG,
-                        new DoiServerException(getApplication(), API_MDS.SECURITY_USER_PERMISSION,
-                                "The DOI " + doiName + " does not match with any user's role"));
-            }
-        } else {
-            final String projectRole = getRoleName(selectedRole);
-
-            if (!doiName.startsWith(prefixCNES + "/" + projectRole + "/")) {
-                LOG.debug("The DOI {}  does not match with {}", doiName,
-                        prefixCNES + "/" + projectRole);
-                throw LOG.throwing(Level.DEBUG,
-                        new DoiServerException(getApplication(), API_MDS.SECURITY_USER_PERMISSION,
-                                "The DOI " + doiName + " does not match with" + prefixCNES + "/"
-                                + projectRole));
-            }
+        final String projectRole = getRoleName(selectedRole);
+        if (!doiName.startsWith(prefixCNES + "/" + projectRole + "/")) {
+            LOG.debug("The DOI {}  does not match with {}", doiName,
+                    prefixCNES + "/" + projectRole);
+            throw LOG.throwing(Level.DEBUG,
+                    new DoiServerException(getApplication(), API_MDS.SECURITY_USER_PERMISSION,
+                            "The DOI " + doiName + " does not match with" + prefixCNES + "/"
+                            + projectRole));
         }
         LOG.traceExit();
     }

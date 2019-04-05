@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -61,7 +62,7 @@ public class LandingPageMonitoring implements Runnable {
         final StringBuffer msg = new StringBuffer();
         try {
             final String subject;
-            final Map<String, Map<String, Status>> doiErrors = new HashMap<>();
+            final Map<String, Map<String, Status>> doiErrors = new ConcurrentHashMap<>();
             final ClientSearchDataCite client = new ClientSearchDataCite();
             final List<String> response = client.getDois();
             final ClientLandingPage clientLandingPage = new ClientLandingPage(response);
@@ -113,7 +114,7 @@ public class LandingPageMonitoring implements Runnable {
     /**
      * Build detail message for a record
      *
-     * @param record
+     * @param record record
      * @return the message
      */
     private StringBuffer buildDetailMessage(final Entry<String, Status> record) {

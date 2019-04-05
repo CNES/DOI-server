@@ -104,7 +104,9 @@ public final class Consts {
             = "Starter.Server.HTTPS.TrustStorePassword";
 
     /**
-     * TODO.
+     * Type of proxy.
+     * It can be one of the following values NO_PROXY, PROXY_BASIC, PROXY_SPNEGO_API, 
+     * PROXY_SPNEGO_JAAS.
      */
     public static final String SERVER_PROXY_TYPE = "Starter.Proxy.type";
 
@@ -119,7 +121,7 @@ public final class Consts {
     public static final String SERVER_PROXY_PORT = "Starter.Proxy.port";
 
     /**
-     * Proxy login. The login is encrypted
+     * Proxy login.
      */
     public static final String SERVER_PROXY_LOGIN = "Starter.Proxy.login";
 
@@ -182,7 +184,7 @@ public final class Consts {
     public static final String SMTP_STARTTLS_ENABLE = "Starter.mail.send.tls";
 
     /**
-     * SMTP login. The login is encrypted.
+     * SMTP login.
      */
     public static final String SMTP_AUTH_USER = "Starter.mail.send.identifier";
 

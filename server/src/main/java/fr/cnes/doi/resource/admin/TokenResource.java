@@ -21,13 +21,13 @@ package fr.cnes.doi.resource.admin;
 import fr.cnes.doi.application.AdminApplication;
 import static fr.cnes.doi.application.AdminApplication.TOKEN_TEMPLATE;
 import fr.cnes.doi.db.AbstractTokenDBHelper;
-import fr.cnes.doi.db.AbstractUserRoleDBHelper;
 import fr.cnes.doi.db.model.DOIUser;
 import fr.cnes.doi.exception.DOIDbException;
 import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.exception.TokenSecurityException;
 import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.resource.AbstractResource;
+import fr.cnes.doi.security.RoleAuthorizer;
 import fr.cnes.doi.security.TokenSecurity;
 import fr.cnes.doi.security.TokenSecurity.TimeUnit;
 import fr.cnes.doi.settings.EmailSettings;
@@ -112,34 +112,32 @@ public class TokenResource extends AbstractResource {
         LOG.debug("Token Param : {}", this.tokenParam);
         LOG.traceExit();
     }
-
+     
     /**
      * Creates and stores a token.
      *
      * The token creation is based on several actions :
      * <ul>
-     * <li>{@link #checkInputs checks the input parameters}</li>
      * <li>creates the {@link fr.cnes.doi.security.TokenSecurity#generate}</li>
      * <li>stores the token in {@link fr.cnes.doi.db.AbstractTokenDBHelper token database}</li>
      * </ul>
      *
-     * @param info submitted information when requesting the token creation
+     * @param infoForm submitted information when requesting the token creation
      * @return the token
      */
     @Requirement(reqId = Requirement.DOI_SRV_150, reqName = Requirement.DOI_SRV_150_NAME)
     @Post
-    public String createToken(final Form info) {
-        LOG.traceEntry("Paramater : {}", info);
-        checkInputs(info);
+    public String createToken(final Form infoForm) {
+        LOG.traceEntry("Paramater : {}", infoForm);
+        final Form info = (infoForm == null) ? new Form() : infoForm;
         try {
             final String user = this.getClientInfo().getUser().getIdentifier();
             LOG.debug("Identified user : {}", user);
-            final AbstractUserRoleDBHelper manageUsers = PluginFactory.getUserManagement();
             final String userID;
-            if (manageUsers.isAdmin(user)) {
+            if(isInRole(RoleAuthorizer.ROLE_ADMIN)) {
                 // The admin can generate for everybody
                 LOG.debug("User {} is admin", user);
-                userID = info.getFirstValue(IDENTIFIER_PARAMETER, null);
+                userID = info.getFirstValue(IDENTIFIER_PARAMETER, user);
             } else {
                 // The token is generated for the identified user.
                 userID = user;
@@ -147,7 +145,7 @@ public class TokenResource extends AbstractResource {
             final String projectID = info.getFirstValue(PROJECT_ID_PARAMETER, null);
             final String timeParam = info.getFirstValue(
                     UNIT_OF_TIME_PARAMETER, String.
-                            valueOf(TokenSecurity.TimeUnit.YEAR.getTimeUnit())
+                            valueOf(TokenSecurity.TimeUnit.HOUR.getTimeUnit())
             );
 
             final int timeUnit = Integer.parseInt(timeParam);
@@ -155,12 +153,22 @@ public class TokenResource extends AbstractResource {
 
             final int amount = Integer.parseInt(info.getFirstValue(AMOUNT_OF_TIME_PARAMETER, "1"));
 
-            final String tokenJwt = TokenSecurity.getInstance().generate(
-                    userID,
-                    Integer.parseInt(projectID),
-                    unit,
-                    amount
-            );
+            final String tokenJwt;
+            if (projectID == null) {
+                 tokenJwt = TokenSecurity.getInstance().generate(
+                        userID,
+                        unit,
+                        amount
+                );                  
+            } else {
+                tokenJwt = TokenSecurity.getInstance().generate(
+                        userID,
+                        Integer.parseInt(projectID),
+                        unit,
+                        amount
+                );                
+            }
+
             LOG.info("Token created {} for project {} during {} {}",
                     tokenJwt, projectID, amount, unit.name());
 
@@ -209,30 +217,6 @@ public class TokenResource extends AbstractResource {
             } catch (DOIDbException ex) {
                 LOG.error(ex);
             }
-        }
-    }
-
-    /**
-     * Checks input parameters.
-     *
-     * @param mediaForm the parameters
-     * @throws ResourceException - if {@link #PROJECT_ID_PARAMETER} and
-     * {@link #IDENTIFIER_PARAMETER} are not set
-     */
-    private void checkInputs(final Form mediaForm) throws ResourceException {
-        LOG.traceEntry("Parameter : {}", mediaForm);
-        final StringBuilder errorMsg = new StringBuilder();
-        if (isValueNotExist(mediaForm, IDENTIFIER_PARAMETER)) {
-            errorMsg.append(IDENTIFIER_PARAMETER).append(" value is not set.");
-        }
-        if (isValueNotExist(mediaForm, PROJECT_ID_PARAMETER)) {
-            errorMsg.append(PROJECT_ID_PARAMETER).append(" value is not set.");
-        }
-        if (errorMsg.length() == 0) {
-            LOG.debug("The form is valid");
-        } else {
-            throw LOG.throwing(Level.INFO, new ResourceException(
-                    Status.CLIENT_ERROR_BAD_REQUEST, errorMsg.toString()));
         }
     }
 

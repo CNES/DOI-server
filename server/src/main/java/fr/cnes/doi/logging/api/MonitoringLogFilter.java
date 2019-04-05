@@ -120,7 +120,6 @@ public class MonitoringLogFilter extends LogFilter {
                     + "--------\n" + " * Average : " + average + "\n" + " * current : "
                     + currentDuration + "\n";
             email.sendMessage(subject, msg);
-            System.out.println("email sent !");
         }
     }
 

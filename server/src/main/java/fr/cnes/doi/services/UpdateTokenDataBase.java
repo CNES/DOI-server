@@ -18,6 +18,7 @@
  */
 package fr.cnes.doi.services;
 
+import com.fasterxml.jackson.dataformat.yaml.snakeyaml.tokens.Token;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -59,8 +60,8 @@ public class UpdateTokenDataBase implements Runnable {
             tokenList = new ArrayList<>();
         }
         for (final String token : tokenList) {
-            if (tokenDB.isExpired(token)) {
-                tokenDB.deleteToken(token);
+            if (TokenSecurity.getInstance().isExpired(token)) {
+                LOG.info("Token {} is expired", token);
             }
         }
     }

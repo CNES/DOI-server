@@ -42,13 +42,14 @@ import org.restlet.security.RoleAuthorizer;
 import org.restlet.service.TaskService;
 
 import fr.cnes.doi.logging.business.JsonMessage;
-import fr.cnes.doi.resource.admin.AuthenticationResource;
+import fr.cnes.doi.resource.admin.AuthenticateResource;
 import fr.cnes.doi.resource.admin.ConfigIhmResource;
 import fr.cnes.doi.resource.admin.FooterIhmResource;
 import fr.cnes.doi.resource.admin.ManageProjectsResource;
 import fr.cnes.doi.resource.admin.ManageSuperUserResource;
 import fr.cnes.doi.resource.admin.ManageSuperUsersResource;
 import fr.cnes.doi.resource.admin.ManageUsersResource;
+import fr.cnes.doi.resource.admin.RedirectingResource;
 import fr.cnes.doi.resource.admin.SuffixProjectsDoisResource;
 import fr.cnes.doi.resource.admin.SuffixProjectsResource;
 import fr.cnes.doi.resource.admin.TokenResource;
@@ -59,6 +60,7 @@ import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.utils.spec.CoverageAnnotation;
 import fr.cnes.doi.utils.spec.Requirement;
+import org.restlet.routing.Template;
 
 /**
  * Provides an application for handling features related to the administration system of the DOI
@@ -111,7 +113,7 @@ import fr.cnes.doi.utils.spec.Requirement;
 @Requirement(reqId = Requirement.DOI_SRV_190, reqName = Requirement.DOI_SRV_190_NAME,
         coverage = CoverageAnnotation.NONE)
 @Requirement(reqId = Requirement.DOI_DISPO_020, reqName = Requirement.DOI_DISPO_020_NAME)
-public class AdminApplication extends AbstractApplication {
+public final class AdminApplication extends AbstractApplication {
 
     /**
      * Application name.
@@ -137,6 +139,16 @@ public class AdminApplication extends AbstractApplication {
      * URI {@value #STATS_URI} to access to Stats page.
      */
     public static final String STATS_URI = "/stats";
+
+    /**
+     * URI {@value #ROLE_USERS_URI} to check access rights.
+     */
+    public static final String ROLE_USERS_URI = "/roles/users";
+
+    /**
+     * URI {@value #ROLE_ADMIN_URI} to check admin access rights.
+     */
+    public static final String ROLE_ADMIN_URI = "/roles/admin";
 
     /**
      * URI {@value #SUFFIX_PROJECT_URI} to create a project suffix.
@@ -201,7 +213,7 @@ public class AdminApplication extends AbstractApplication {
     /**
      * URI {@value #IHM_RESOURCE} where the web site is located.
      */
-    private static final String IHM_RESOURCE = "/ihm";
+    public static final String IHM_RESOURCE = "/ihm";
 
     /**
      * URI {@value #IHM_CONFIG_RESOURCE} where the configuration file is located.
@@ -398,21 +410,30 @@ public class AdminApplication extends AbstractApplication {
                 final Method requestMethod = request.getMethod();
                 final Reference requestReference = request.getOriginalRef();
                 final String lastSeg = requestReference.getLastSegment();
-
+                final String path = requestReference.getPath();
                 boolean ignoreVerification = false;
 
-                if (requestMethod.equals(Method.OPTIONS) || "admin".equals(lastSeg)) {
+                if (requestMethod.equals(Method.OPTIONS)) {
+                    // options method is allowed independently of the role
+                    // just need to be authenticated
                     ignoreVerification = true;
-                    // we want to access to the authentication page of the GUI without authentication
+                } else if (!requestMethod.equals(Method.DELETE) && !requestMethod.equals(Method.GET)
+                        && requestReference.toString().contains(ADMIN_URI + TOKEN_URI)) {
+                    // token resource is allowed independently of the role
+                    // just need to be authenticated because we want to access to the 
+                    //authentication page of the GUI without authentication
+                    ignoreVerification = true;
                 } else if (requestMethod.equals(Method.GET)) {
+                    // no check of the role when getting the list of projects, superusers and dois 
                     if ("projects".equals(lastSeg) && requestReference.hasQuery()) {
-                        ignoreVerification = true;
-                    }
-                    if (requestReference.toString().contains(ADMIN_URI + SUPERUSERS_URI)) {
                         ignoreVerification = true;
                     }
                     // ignore method GET dois from project
                     if ("dois".equals(lastSeg)) {
+                        ignoreVerification = true;
+                    }
+                    // Checks authentication for "users" group
+                    if (path.contains(ADMIN_URI + ROLE_USERS_URI)) {
                         ignoreVerification = true;
                     }
                 }
@@ -455,8 +476,6 @@ public class AdminApplication extends AbstractApplication {
         LOG.traceEntry();
 
         final Router router = new Router(getContext());
-        // This route if for management of IHM tokens.
-        router.attachDefault(AuthenticationResource.class);
 
         router.attach(SUFFIX_PROJECT_URI, SuffixProjectsResource.class);
 
@@ -474,6 +493,9 @@ public class AdminApplication extends AbstractApplication {
 
         router.attach(TOKEN_URI, TokenResource.class);
         router.attach(TOKEN_URI + TOKEN_NAME_URI, TokenResource.class);
+
+        router.attach(ROLE_USERS_URI, AuthenticateResource.class);
+        router.attach(ROLE_ADMIN_URI, AuthenticateResource.class);
 
         return LOG.traceExit(router);
     }
@@ -589,6 +611,8 @@ public class AdminApplication extends AbstractApplication {
         ihm.setListingAllowed(false);
         ihm.setDeeplyAccessible(true);
         ihm.setIndexName("authentication");
+        router.attach(IHM_RESOURCE, RedirectingResource.class, Template.MODE_EQUALS);
+        router.attach(IHM_RESOURCE + "/", RedirectingResource.class, Template.MODE_EQUALS);        
         router.attach(IHM_RESOURCE + IHM_FOOTER_RESOURCE, FooterIhmResource.class);
         router.attach(IHM_RESOURCE + IHM_CONFIG_RESOURCE, ConfigIhmResource.class);
         router.attach(IHM_RESOURCE, ihm);

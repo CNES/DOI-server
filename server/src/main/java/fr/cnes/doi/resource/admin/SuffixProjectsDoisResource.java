@@ -96,9 +96,8 @@ public class SuffixProjectsDoisResource extends AbstractResource {
             response = client.getDois(this.suffixProject);
 
         } catch (Exception ex) {
-            LOG.error(ex + "\n"
-                    + "Error in SuffixProjectsDoisResource while searching for dois in project "
-                    + this.suffixProject);
+            LOG.error("Error in SuffixProjectsDoisResource while searching for dois in project {}",
+                    this.suffixProject, ex);
         }
         return LOG.traceExit(response);
     }

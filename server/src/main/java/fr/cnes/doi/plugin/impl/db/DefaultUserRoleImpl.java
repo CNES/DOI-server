@@ -21,6 +21,7 @@ package fr.cnes.doi.plugin.impl.db;
 import fr.cnes.doi.db.MyMemoryRealm;
 import fr.cnes.doi.db.model.DOIUser;
 import fr.cnes.doi.exception.DOIDbException;
+import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.plugin.AbstractUserRolePluginHelper;
 import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_MAX_ACTIVE_CONNECTIONS;
 import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_MAX_IDLE_CONNECTIONS;
@@ -39,6 +40,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.restlet.Application;
@@ -100,14 +102,12 @@ public final class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
     /**
      * Status of the plugin configuration.
      */
-    private boolean isConfigured = false;
+    private boolean configured = false;
 
     /**
-     * Default constructor of the authentication plugin.
+     * Options for JDBC.
      */
-    public DefaultUserRoleImpl() {
-        super();
-    }
+    private final Map<String, Integer> options = new ConcurrentHashMap<>();
 
     /**
      * {@inheritDoc }
@@ -118,17 +118,16 @@ public final class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
         final String dbUrl = this.conf.get(DB_URL);
         final String dbUser = this.conf.get(DB_USER);
         final String dbPwd = this.conf.get(DB_PWD);
-        final Map<String, Integer> options = new HashMap<>();
         if (this.conf.containsKey(DB_MIN_IDLE_CONNECTIONS)) {
-            options.put(DB_MIN_IDLE_CONNECTIONS,
+            this.options.put(DB_MIN_IDLE_CONNECTIONS,
                     Integer.valueOf(this.conf.get(DB_MIN_IDLE_CONNECTIONS)));
         }
         if (this.conf.containsKey(DB_MAX_IDLE_CONNECTIONS)) {
-            options.put(DB_MAX_IDLE_CONNECTIONS,
+            this.options.put(DB_MAX_IDLE_CONNECTIONS,
                     Integer.valueOf(this.conf.get(DB_MAX_IDLE_CONNECTIONS)));
         }
         if (this.conf.containsKey(DB_MAX_ACTIVE_CONNECTIONS)) {
-            options.put(DB_MAX_ACTIVE_CONNECTIONS,
+            this.options.put(DB_MAX_ACTIVE_CONNECTIONS,
                     Integer.valueOf(this.conf.get(DB_MAX_ACTIVE_CONNECTIONS)));
         }
         LOG.info("[CONF] Plugin database URL : {}", dbUrl);
@@ -136,9 +135,17 @@ public final class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
         LOG.info("[CONF] Plugin database password : {}", Utils.transformPasswordToStars(dbPwd));
         LOG.info("[CONF] Plugin options : {}", options);
 
-        DatabaseSingleton.getInstance().init(dbUrl, dbUser, dbPwd, options);
+        this.configured = true;
+    }
+
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public void initConnection() throws DoiRuntimeException {
+        DatabaseSingleton.getInstance().init(
+                this.conf.get(DB_URL), this.conf.get(DB_USER), this.conf.get(DB_PWD), this.options);
         this.das = DatabaseSingleton.getInstance().getDatabaseAccess();
-        this.isConfigured = true;
     }
 
     /**
@@ -170,7 +177,8 @@ public final class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
         try {
             das.addDOIProjectToUser(user, role);
             isAdded = true;
-            LOG.info("The user {} is added to role {}.", user, role);
+            LOG.info("The user {} is added to role {} for {}.", user, role,
+                    Application.getCurrent().getName());
 
             final User userFromRealm = REALM.findUser(user);
             final Role roleFromRealm = new Role(Application.getCurrent(), String.valueOf(role),
@@ -193,7 +201,8 @@ public final class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
         try {
             das.removeDOIProjectFromUser(user, role);
             isRemoved = true;
-            LOG.info("The user {} is removed to role {}.", user, role);
+            LOG.info("The user {} is removed from role {} for {}.", user, role, Application.
+                    getCurrent().getName());
 
             final User userFromRealm = REALM.findUser(user);
             final Set<Role> rolesFromRealm = REALM.findRoles(userFromRealm);
@@ -280,21 +289,6 @@ public final class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
             isExist = das.isUserExist(username);
         } catch (DOIDbException e) {
             LOG.fatal("An error occured while trying to know if user " + username + " exist", e);
-        }
-        return isExist;
-    }
-
-    /**
-     * {@inheritDoc }
-     */
-    @Override
-    public boolean isAdmin(final String username) {
-        boolean isExist = false;
-        try {
-            isExist = das.isAdmin(username);
-        } catch (DOIDbException e) {
-            LOG.fatal("An error occured while trying to know if user " + username
-                    + " exist and is admin", e);
         }
         return isExist;
     }
@@ -436,16 +430,20 @@ public final class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
      */
     @Override
     public void release() {
-        this.conf = null;
         try {
-            this.das.close();
+            if (this.das != null) {
+                this.das.close();
+            }
         } catch (DOIDbException ex) {
         }
-        this.isConfigured = false;
+        this.configured = false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isConfigured() {
-        return this.isConfigured;
+        return this.configured;
     }
 }

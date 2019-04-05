@@ -94,7 +94,7 @@ public class DoiMonitoring {
         LOG.traceEntry("Parameters : {} and {}", name.getName(), path);
         final String identifier = name.getName() + path;
         final boolean isRegistered = this.applications.containsKey(identifier);
-        LOG.debug(name + " " + path + " is registered : " + isRegistered);
+        LOG.debug("{} {}  is registered : {}", name, path, isRegistered);
         return LOG.traceExit(isRegistered);
     }
 

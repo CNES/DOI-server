@@ -17,7 +17,7 @@
         <!-- jquery lib useful for checkAuth.js -->
         <script src="js/bootstrap-min.js"></script>
 		<script src="js/jquery-min.js"></script>
-        <script src="js/checkAuth.js"></script>
+        <!--<script src="js/checkAuth.js"></script>-->
 
     </head>
 
@@ -503,7 +503,8 @@
                     url: "/mds/dois",
                     data: formData,
                     headers: {
-                        'Authorization': "Bearer " + sessionStorage.getItem("token")
+                        'Authorization': "Bearer " + sessionStorage.getItem("token"),
+                        'selectedRole' : projectId
                     },
                     crossDomain: true,
                     cache: false,
@@ -529,8 +530,8 @@
                     contentType: "text",
                     dataType: "text",
                     headers: {
-// 			    	'Authorization': 'Basic ' + btoa('malapert:pwd'),  
-                        'Authorization': "Bearer " + sessionStorage.getItem("token")
+                        'Authorization': "Bearer " + sessionStorage.getItem("token"),
+                        'selectedRole' : projectId
                     },
                     crossDomain: true,
                     cache: false,

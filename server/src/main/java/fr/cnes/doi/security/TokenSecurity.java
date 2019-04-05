@@ -59,6 +59,11 @@ import org.restlet.data.Status;
 public final class TokenSecurity {
 
     /**
+     * token key.
+     */
+    private String tokenKey;
+    
+    /**
      * Project ID name in token.
      */
     public static final String PROJECT_ID = "projectID";
@@ -109,10 +114,6 @@ public final class TokenSecurity {
         final Key key = MacProvider.generateKey(SignatureAlgorithm.HS256);
         return LOG.traceExit(TextCodec.BASE64.encode(key.getEncoded()));
     }
-    /**
-     * token key.
-     */
-    private String tokenKey;
 
     /**
      * Private constructor.
@@ -233,12 +234,23 @@ public final class TokenSecurity {
         LOG.debug(String.format("Set tokenKey to %s", tokenKey));
         LOG.traceExit();
     }
+    
+    /**
+     * Returns true when the token is expired otherwise false.
+     * @param token token
+     * @return true when the token is expired otherwise false.
+     */
+    public boolean isExpired(final String token) {
+        LOG.traceEntry("Parameter\n\ttoken: {}", token);
+        final Jws<Claims> jws = this.getTokenInformation(token);
+        return LOG.traceExit(jws == null);
+    }
 
     /**
      * Returns the token information.
      *
      * @param jwtToken token JWT
-     * @return the information
+     * @return the information or null when the token is expired.
      * @throws DoiRuntimeException - if an error happens getting information from the token
      */
     public Jws<Claims> getTokenInformation(final String jwtToken) throws DoiRuntimeException {
@@ -254,7 +266,8 @@ public final class TokenSecurity {
                 | IllegalArgumentException ex) {
             throw LOG.throwing(new DoiRuntimeException("Unable to get the token information", ex));
         } catch (ExpiredJwtException e) {
-            LOG.info("Cannot get the token information because : " + e.getMessage());
+            LOG.info("Cannot get the token information", e);
+            getTokenDB().deleteToken(jwtToken);
             token = null;
         }
         return LOG.traceExit(token);

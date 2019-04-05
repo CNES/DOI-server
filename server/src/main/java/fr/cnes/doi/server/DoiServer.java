@@ -209,7 +209,7 @@ public class DoiServer extends Component {
              */
             @Override
             public Filter createInboundFilter(final Context context) {
-                return new DoiSecurityLogFilter(Utils.SECURITY_LOGGER_NAME);
+                return new DoiSecurityLogFilter();
             }
         };
         this.getServices().add(logServiceSecurity);
@@ -507,9 +507,13 @@ public class DoiServer extends Component {
     public synchronized void stop() throws Exception {
         LOG.info("Stopping the server ...");
         super.stop();
+        LOG.info("Stopping Authentication plugin");
         PluginFactory.getAuthenticationSystem().release();
+        LOG.info("Stopping Project plugin");
         PluginFactory.getProjectSuffix().release();
+        LOG.info("Stopping Token plugin");
         PluginFactory.getToken().release();
+        LOG.info("Stopping UserManagement plugin");
         PluginFactory.getUserManagement().release();
         EmailSettings.getInstance().sendMessage("[DOI] Stopping Server",
                 "Ther server has been interrupted");

@@ -29,7 +29,6 @@ import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import fr.cnes.doi.security.UtilsCryptography;
 import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.utils.Utils;
 import java.util.Map;
@@ -90,7 +89,7 @@ public class JDBCConnector {
     /**
      * The data source.
      */
-    private final BasicDataSource ds = new BasicDataSource();
+    private final BasicDataSource dataSource = new BasicDataSource();
 
     /**
      * Creates the JDBC connector based on a specific configuration file.
@@ -138,19 +137,19 @@ public class JDBCConnector {
         LOGGER.info("[CONF] Datasource max IDLE connection : {}", maxIdleConnection);
         LOGGER.info("[CONF] Datasource max active connection : {}", maxActiveConnection);
 
-        ds.setUrl(dbUrl);
-        ds.setUsername(dbUser);
+        dataSource.setUrl(dbUrl);
+        dataSource.setUsername(dbUser);
         try {
             final String decryptedPasswd = DoiSettings.getInstance().getSecretValue(dbPwd);
-            ds.setPassword(decryptedPasswd);
+            dataSource.setPassword(decryptedPasswd);
         } catch (Exception e) {
             throw LOGGER.throwing(Level.ERROR, new DoiRuntimeException(
                     "Cannot decrypt the database "
-                    + "pwd " + dbPwd + " from the configuration file"));
+                    + "pwd " + dbPwd + " from the configuration file", e));
         }
-        ds.setMinIdle(minIdleConnection);
-        ds.setMaxIdle(maxIdleConnection);
-        ds.setMaxActive(maxActiveConnection);
+        dataSource.setMinIdle(minIdleConnection);
+        dataSource.setMaxIdle(maxIdleConnection);
+        dataSource.setMaxActive(maxActiveConnection);
         LOGGER.traceExit();
     }
 
@@ -162,7 +161,7 @@ public class JDBCConnector {
      */
     public Connection getConnection() throws SQLException {
         LOGGER.traceEntry();
-        return LOGGER.traceExit(ds.getConnection());
+        return LOGGER.traceExit(dataSource.getConnection());
     }
 
     /**
@@ -172,7 +171,7 @@ public class JDBCConnector {
     public void close() {
         LOGGER.traceEntry();
         try {
-            this.ds.close();
+            this.dataSource.close();
         } catch (SQLException ex) {
             LOGGER.error("Cannot close the datasource connection", ex);
         }

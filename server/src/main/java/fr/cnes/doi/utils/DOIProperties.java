@@ -16,48 +16,31 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  */
-package fr.cnes.doi.plugin;
+package fr.cnes.doi.utils;
 
-import fr.cnes.doi.exception.DoiRuntimeException;
+import java.util.Properties;
 
 /**
- * Provides validation for plugin configuration.
- *
+ * DOI properties.
+ * DOI properties trims the value
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-public interface PluginConfiguration {
+public class DOIProperties extends Properties {
 
     /**
-     * Validates the parameters in the configuration file.
-     *
-     * @return the error messages.
+     * {@inheritDoc } 
      */
-    public StringBuilder validate();
-    
-
-    /**
-     * Sets the configuration.
-     *
-     * @param configuration configuration parameters
-     */
-    public void setConfiguration(final Object configuration);    
-
-    /**
-     * Checks if the plugin is already configured
-     *
-     * @return True when the plugin is already configured otherwise false
-     */
-    public boolean isConfigured();
+    @Override
+    public String getProperty(final String string) {
+        return super.getProperty(string).trim(); 
+    }
     
     /**
-     * Inits the connection
-     * @throws DoiRuntimeException When an connection error happens
+     * {@inheritDoc } 
      */
-    public void initConnection() throws DoiRuntimeException;
-
-    /**
-     * Release the plugin.
-     */
-    public void release();
-
+    @Override
+    public String getProperty(final String string, final String string1) {
+        return super.getProperty(string, string1).trim();
+    }        
+    
 }

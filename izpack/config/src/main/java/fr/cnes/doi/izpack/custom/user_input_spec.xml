@@ -43,15 +43,7 @@
             </spec>
         </field>        
         <field type="text" variable="project.mail.identifier">
-            <spec txt="Login:" id="input.smtppanel.login" size="20" set="">                               
-                <processor class="fr.cnes.doi.izpack.processor.PasswordEncryptionProcessor" 
-                           backupVariable="project.mail.identifier.plain">
-                    <configuration>
-                        <encryptionKey>16BYTESSECRETKEY</encryptionKey>
-                        <algorithm>AES</algorithm>
-                    </configuration>
-                </processor>                              
-            </spec>
+            <spec txt="Login:" id="input.smtppanel.login" size="20" set=""/>                                                                     
         </field>                     
         <field type="password" variable="project.mail.secret">
             <spec>
@@ -120,10 +112,7 @@
             </validator>            
         </field>
         <field type="text" variable="project.proxy.login" conditionid="condition.proxy.basic">
-            <spec txt="Login:" id="input.proxypanel.login" size="20" set="">                               
-                <processor class="fr.cnes.doi.izpack.processor.PasswordEncryptionProcessor" 
-                           backupVariable="project.proxy.login.plain"/>
-            </spec>    
+            <spec txt="Login:" id="input.proxypanel.login" size="20" set=""/>   
         </field>
         <field type="password" variable="project.proxy.pwd" conditionid="condition.proxy.basic">
             <spec>
@@ -246,10 +235,7 @@
             </validator>                     
         </field>        
         <field type="text" variable="project.ldap.user">
-            <spec size="15" txt="Login" set="" id="input.ldappanel.user">
-                <processor class="fr.cnes.doi.izpack.processor.PasswordEncryptionProcessor" 
-                           backupVariable="project.ldap.user.plain"/>              
-            </spec>            
+            <spec size="15" txt="Login" set="" id="input.ldappanel.user"/>            
             <validator class="com.izforge.izpack.panels.userinput.validator.NotEmptyValidator" 
                        id="input.ldappanel.user.validation" txt="Login is a required field" />
         </field>

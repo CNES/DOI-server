@@ -23,7 +23,6 @@ import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.utils.spec.Requirement;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -42,7 +41,7 @@ public final class PluginFactory {
     /**
      * Settings.
      */
-    private static final Map<String, String> SETTINGS = new HashMap<>();
+    private static final Map<String, String> SETTINGS = new ConcurrentHashMap<>();
 
     /**
      * Stores the instances of plugin.
@@ -76,6 +75,7 @@ public final class PluginFactory {
         final AbstractUserRolePluginHelper plugin = getPlugin(implClassName);
         if (!plugin.isConfigured()) {
             plugin.setConfiguration(SETTINGS);
+            plugin.initConnection();
         }
         return plugin;
     }
@@ -90,6 +90,7 @@ public final class PluginFactory {
         final AbstractProjectSuffixPluginHelper plugin = getPlugin(implClassName);
         if (!plugin.isConfigured()) {
             plugin.setConfiguration(SETTINGS);
+            plugin.initConnection();
         }
         return plugin;
     }
@@ -104,6 +105,7 @@ public final class PluginFactory {
         final AbstractTokenDBPluginHelper plugin = getPlugin(implClassName);
         if (!plugin.isConfigured()) {
             plugin.setConfiguration(SETTINGS);
+            plugin.initConnection();
         }
         return plugin;
     }
@@ -118,6 +120,7 @@ public final class PluginFactory {
         final AbstractAuthenticationPluginHelper plugin = getPlugin(implClassName);
         if (!plugin.isConfigured()) {
             plugin.setConfiguration(SETTINGS);
+            plugin.initConnection();
         }
         return plugin;
     }

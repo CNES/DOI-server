@@ -49,13 +49,6 @@ public abstract class AbstractProjectSuffixDBHelper extends Observable {
     public static final String RENAME_RECORD = "RENAME";
 
     /**
-     * Sets the configuration.
-     *
-     * @param configuration configuration parameters
-     */
-    public abstract void setConfiguration(final Object configuration);
-
-    /**
      * Adds a suffix project in the database.
      *
      * @param projectID suffix project

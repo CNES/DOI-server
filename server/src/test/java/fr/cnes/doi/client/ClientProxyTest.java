@@ -41,7 +41,7 @@ import org.restlet.resource.ResourceException;
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
-@Category(UnitTest.class)
+//@Category(UnitTest.class)
 public class ClientProxyTest {
     
     private static Client cl;

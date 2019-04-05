@@ -22,6 +22,7 @@ import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.security.UtilsCryptography;
 import fr.cnes.doi.server.Starter;
+import fr.cnes.doi.utils.DOIProperties;
 import fr.cnes.doi.utils.Utils;
 import fr.cnes.doi.utils.spec.Requirement;
 import java.io.File;
@@ -156,7 +157,7 @@ public final class DoiSettings {
      */
     private Properties loadConfigurationFile() {
         LOG.traceEntry();
-        final Properties properties = new Properties();
+        final Properties properties = new DOIProperties();
         final ClientResource client = new ClientResource(LocalReference.createClapReference(
                 "class/config.properties"));
         final Representation configurationFile = client.get();
@@ -499,7 +500,7 @@ public final class DoiSettings {
      */
     public void setPropertiesFile(final InputStream inputStream) throws IOException {
         LOG.traceEntry("With an inputstream");
-        final Properties properties = new Properties();
+        final Properties properties = new DOIProperties();
         properties.load(inputStream);
         init(properties, Level.INFO);
         // the following singletons depend on DoiSettings.

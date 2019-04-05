@@ -92,12 +92,38 @@
                 userPwd = $("#password").val();
                 user = userId + ":" + userPwd;
 
+                $.ajax({
+                    type: "POST",
+                    url: "/admin/token",
+                    headers: {
+                        'Authorization': 'Basic ' + btoa(user)
+                    },
+                    data: {},
+                    crossDomain: true,
+                    cache: false,
+                    complete : function(result, status){
+                        if (result.status === 200) {
+                            sessionStorage.setItem("token", result.responseText);
+                            getAdmin();
+                        } else {
+                            var parser = new DOMParser();
+                            var htmlDoc = parser.parseFromString(result.responseText, 'text/html');
+                            var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
+                            alert("Erreur lors de l'authentification de l'utilisateur.\n" +
+                                "Erreur: " + result.status + ", " + result.statusText + "\n"
+                            );                           
+                        }
+                    }
+                });
+            }
+            
+            function getAdmin() {
                 //isUserExist? save in session userName and admin(true or false)
                 $.ajax({
                     type: "GET",
                     url: "/admin/superusers/" + userId,
-                    headers: {
-                        'Authorization': 'Basic ' + btoa(user)
+                    beforeSend : function( xhr ) {
+                        xhr.setRequestHeader( 'Authorization', 'BEARER ' + sessionStorage.getItem("token") );
                     },
                     crossDomain: true,
                     cache: false,
@@ -126,7 +152,7 @@
                         getAssociatedProject();
 
                     }
-                });
+                });                
             }
 
             function getAssociatedProject() {
@@ -134,8 +160,8 @@
                 $.ajax({
                     type: "GET",
                     url: "/admin/projects?user=" + userId,
-                    headers: {
-                        'Authorization': 'Basic ' + btoa(user)
+                    beforeSend : function( xhr ) {
+                        xhr.setRequestHeader( 'Authorization', 'BEARER ' + sessionStorage.getItem("token") );
                     },
                     crossDomain: true,
                     cache: false,
@@ -151,13 +177,13 @@
                     success: function (array) {
                         if (!isEmpty(array)) {
                             sessionStorage.setItem("projects", JSON.stringify(array));
-                            generateToken("doiCreation.html");
+                            window.location.href = "doiCreation.html";
                         } else {
                             sessionStorage.setItem("projects", null);
                             if (admin === "true") {
-                                generateToken("administration.html");
+                                window.location.href = "administration.html";
                             } else {
-                                alert("L'utilisateur n'est rattaché à aucun projets.");
+                                alert("L'utilisateur n'est rattaché à aucun projet.");
                                 //user is not attached to any project nor is admin
                                 sessionStorage.clear();
                             }
@@ -172,41 +198,12 @@
                 return true;
             }
 
-            function generateToken(redirection) {
-                var dataForm = {
-                    "user": userId
-                };
-                $.ajax({
-                    type: "POST",
-                    url: "/admin",
-                    headers: {
-                        'Authorization': 'Basic ' + btoa(user)
-                    },
-                    data: dataForm,
-                    crossDomain: true,
-                    cache: false,
-                    error: function (XMLHttpRequest, textStatus, errorThrown) {
-                        sessionStorage.clear();
-                        var parser = new DOMParser();
-                        var htmlDoc = parser.parseFromString(XMLHttpRequest.responseText, 'text/html');
-                        var errMessage = htmlDoc.getElementById("error").firstChild.nodeValue;
-                        alert("Erreur d'authentification.\n" +
-                                "Erreur: " + errMessage + "\n"
-                                );
-                    },
-                    success: function (token) {
-                        sessionStorage.setItem("token", token);
-                        window.location.href = redirection;
-                    }
-                });
-            }
-
             function deleteToken() {
                 token = sessionStorage.getItem("token");
 
                 $.ajax({
                     type: "DELETE",
-                    url: "/admin",
+                    url: "/admin/token/" + sessionStorage.getItem("token"),
                     headers: {
                         'Authorization': "Bearer " + sessionStorage.getItem("token")
                     },

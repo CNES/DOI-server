@@ -32,6 +32,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import fr.cnes.doi.exception.DOIDbException;
+import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.plugin.AbstractTokenDBPluginHelper;
 import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_MAX_ACTIVE_CONNECTIONS;
 import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_MAX_IDLE_CONNECTIONS;
@@ -45,6 +46,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Default implementation of the token database.
@@ -96,14 +98,12 @@ public final class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
     /**
      * Status of the plugin configuration.
      */
-    private boolean isConfigured = false;
+    private boolean configured = false;
 
     /**
-     * Default Constructor of the token database
+     * Options for JDBC.
      */
-    public DefaultTokenImpl() {
-        super();
-    }
+    private final Map<String, Integer> options = new ConcurrentHashMap<>();
 
     /**
      * {@inheritDoc }
@@ -114,27 +114,33 @@ public final class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
         final String dbUrl = this.conf.get(DB_URL);
         final String dbUser = this.conf.get(DB_USER);
         final String dbPwd = this.conf.get(DB_PWD);
-        final Map<String, Integer> options = new HashMap<>();
         if (this.conf.containsKey(DB_MIN_IDLE_CONNECTIONS)) {
-            options.put(DB_MIN_IDLE_CONNECTIONS,
+            this.options.put(DB_MIN_IDLE_CONNECTIONS,
                     Integer.valueOf(this.conf.get(DB_MIN_IDLE_CONNECTIONS)));
         }
         if (this.conf.containsKey(DB_MAX_IDLE_CONNECTIONS)) {
-            options.put(DB_MAX_IDLE_CONNECTIONS,
+            this.options.put(DB_MAX_IDLE_CONNECTIONS,
                     Integer.valueOf(this.conf.get(DB_MAX_IDLE_CONNECTIONS)));
         }
         if (this.conf.containsKey(DB_MAX_ACTIVE_CONNECTIONS)) {
-            options.put(DB_MAX_ACTIVE_CONNECTIONS,
+            this.options.put(DB_MAX_ACTIVE_CONNECTIONS,
                     Integer.valueOf(this.conf.get(DB_MAX_ACTIVE_CONNECTIONS)));
         }
         LOG.info("[CONF] Plugin database URL : {}", dbUrl);
         LOG.info("[CONF] Plugin database user : {}", dbUser);
         LOG.info("[CONF] Plugin database password : {}", Utils.transformPasswordToStars(dbPwd));
-        LOG.info("[CONF] Plugin options : {}", options);
+        LOG.info("[CONF] Plugin options : {}", this.options);
+        this.configured = true;
+    }
 
-        DatabaseSingleton.getInstance().init(dbUrl, dbUser, dbPwd, options);
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public void initConnection() throws DoiRuntimeException {
+        DatabaseSingleton.getInstance().init(
+                this.conf.get(DB_URL), this.conf.get(DB_USER), this.conf.get(DB_PWD), this.options);
         this.das = DatabaseSingleton.getInstance().getDatabaseAccess();
-        this.isConfigured = true;
     }
 
     /**
@@ -146,10 +152,10 @@ public final class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
         boolean isAdded = false;
         try {
             das.addToken(jwt);
-            LOG.info("token added : " + jwt);
+            LOG.info("token added : {}",jwt);
             isAdded = true;
         } catch (DOIDbException e) {
-            LOG.fatal("The token " + jwt + "cannot be saved in database", e);
+            LOG.fatal("The token {} cannot be saved in database", jwt, e);
         }
         return isAdded;
     }
@@ -163,10 +169,10 @@ public final class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
         try {
             das.deleteToken(jwt);
             isRemoved = true;
-            LOG.info("token deleted : " + jwt);
+            LOG.info("token deleted : {}",jwt);
         } catch (DOIDbException e) {
             isRemoved = false;
-            LOG.fatal("The token " + jwt + "cannot be deleted in database", e);
+            LOG.fatal("The token {} cannot be deleted in database", jwt, e);
         }
         return isRemoved;
     }
@@ -187,36 +193,9 @@ public final class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
                 }
             }
         } catch (DOIDbException e) {
-            LOG.fatal("The token " + jwt + "cannot access to token database", e);
+            LOG.fatal("The token {} cannot access to token database", jwt, e);
         }
         return isTokenExist;
-    }
-
-    /**
-     * {@inheritDoc }
-     */
-    @Override
-    public boolean isExpired(final String jwt) {
-        boolean isExpirated = true;
-        final Jws<Claims> jws = TokenSecurity.getInstance().getTokenInformation(jwt);
-
-        // Cannot get token information of an expired token...
-        if (jws == null) {
-            return isExpirated;
-        }
-
-        final String expirationDate = jws.getBody().getExpiration().toString();
-        try {
-            // Precise "Locale.ENGLISH" otherwise unparsable exception occur for day in week and month
-            final DateFormat dateFormat = new SimpleDateFormat(TokenSecurity.DATE_FORMAT,
-                    Locale.ENGLISH);
-            final Date expDate = dateFormat.parse(expirationDate);
-            isExpirated = new Date().after(expDate);
-        } catch (ParseException ex) {
-            LOG.fatal(ex);
-        }
-        //TODO delete an expired token?
-        return isExpirated;
     }
 
     /**
@@ -299,19 +278,22 @@ public final class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
      * {@inheritDoc}
      */
     @Override
-    public void release() {
-
-        this.conf = null;
+    public void release() {        
         try {
-            this.das.close();
+            if(this.das != null) {
+                this.das.close();
+            }
         } catch (DOIDbException ex) {
         }
-        this.isConfigured = false;
+        this.configured = false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isConfigured() {
-        return this.isConfigured;
+        return this.configured;
     }
 
 }

@@ -69,7 +69,7 @@ import org.restlet.routing.Router;
 @Requirement(reqId = Requirement.DOI_SRV_110, reqName = Requirement.DOI_SRV_110_NAME)
 @Requirement(reqId = Requirement.DOI_SRV_120, reqName = Requirement.DOI_SRV_120_NAME)
 @Requirement(reqId = Requirement.DOI_MONIT_020, reqName = Requirement.DOI_MONIT_020_NAME)
-public class DoiCrossCiteApplication extends AbstractApplication {
+public final class DoiCrossCiteApplication extends AbstractApplication {
 
     /**
      * URI {@value #STYLES_URI} to get the styles, which are used to format the citation.

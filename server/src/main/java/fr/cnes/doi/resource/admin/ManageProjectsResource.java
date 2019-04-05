@@ -154,6 +154,9 @@ public class ManageProjectsResource extends AbstractResource {
         LOG.traceExit();
     }
 
+    /**
+     * {@inheritDoc }
+     */    
     @Override
     protected void describePost(final MethodInfo info) {
         info.setName(Method.POST);
@@ -173,6 +176,9 @@ public class ManageProjectsResource extends AbstractResource {
         );
     }
 
+    /**
+     * {@inheritDoc }
+     */    
     @Override
     protected void describeDelete(final MethodInfo info) {
         info.setName(Method.DELETE);

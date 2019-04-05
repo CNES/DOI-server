@@ -48,6 +48,9 @@ public class ConfigIhmResource extends AbstractResource {
      */
     private volatile Logger LOG;
 
+    /**
+     * {@inheritDoc }
+     */    
     @Override
     protected void doInit() throws ResourceException {
         super.doInit();
@@ -86,6 +89,9 @@ public class ConfigIhmResource extends AbstractResource {
                 MediaType.APPLICATION_JAVASCRIPT));
     }
 
+    /**
+     * {@inheritDoc }
+     */    
     @Override
     protected void describeGet(final MethodInfo info) {
         info.setName(Method.GET);
