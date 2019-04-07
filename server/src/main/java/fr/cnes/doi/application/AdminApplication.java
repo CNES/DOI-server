@@ -179,6 +179,11 @@ public final class AdminApplication extends AbstractApplication {
      * URI {@value #SUPERUSERS_URI} to handle superusers.
      */
     public static final String SUPERUSERS_URI = "/superusers";
+    
+    /**
+     * URI {@value #API_URI} to get the API doc.
+     */
+    public static final String API_URI = "/docs";
 
     /**
      * Template user.
@@ -211,19 +216,19 @@ public final class AdminApplication extends AbstractApplication {
     private static final Logger LOG = LogManager.getLogger(AdminApplication.class.getName());
 
     /**
-     * URI {@value #IHM_RESOURCE} where the web site is located.
+     * URI {@value #IHM_URI} where the web site is located.
      */
-    public static final String IHM_RESOURCE = "/ihm";
+    public static final String IHM_URI = "/ihm";
 
     /**
-     * URI {@value #IHM_CONFIG_RESOURCE} where the configuration file is located.
+     * URI {@value #IHM_CONFIG_URI} where the configuration file is located.
      */
-    private static final String IHM_CONFIG_RESOURCE = "/js/config.js";
+    private static final String IHM_CONFIG_URI = "/js/config.js";
 
     /**
-     * URI {@value #IHM_FOOTER_RESOURCE} where the footer file is located.
+     * URI {@value #IHM_FOOTER_URI} where the footer file is located.
      */
-    private static final String IHM_FOOTER_RESOURCE = "/footer.txt";
+    private static final String IHM_FOOTER_URI = "/footer.txt";
 
     /**
      * Location of the resources for the status page in the classpath.
@@ -234,6 +239,11 @@ public final class AdminApplication extends AbstractApplication {
      * Location of the resources for the IHM in the classpath.
      */
     private static final String IHM_CLASSPATH = "class/ihm";
+    
+    /**
+     * Location of the resources for the API docs in the classpath.
+     */
+    private static final String API_CLASSPATH = "class/docs";    
 
     /**
      * The period between successive executions : {@value #PERIOD_SCHEDULER}.
@@ -507,7 +517,7 @@ public final class AdminApplication extends AbstractApplication {
      * page</li>
      * <li>the website resources attached by default when it is available</li>
      * </ul>
-     * The website is located to {@link AdminApplication#IHM_RESOURCE} directory when it is
+     * The website is located to {@link AdminApplication#IHM_URI} directory when it is
      * distributed by the DOI server.
      *
      * @return The router for the public web site
@@ -597,7 +607,7 @@ public final class AdminApplication extends AbstractApplication {
 
     /**
      * Adds default route to the website when it exists. The website must be located in the
-     * {@value #IHM_RESOURCE} directory.
+     * {@value #IHM_URI} directory.
      *
      * @param router router
      */
@@ -611,11 +621,14 @@ public final class AdminApplication extends AbstractApplication {
         ihm.setListingAllowed(false);
         ihm.setDeeplyAccessible(true);
         ihm.setIndexName("authentication");
-        router.attach(IHM_RESOURCE, RedirectingResource.class, Template.MODE_EQUALS);
-        router.attach(IHM_RESOURCE + "/", RedirectingResource.class, Template.MODE_EQUALS);        
-        router.attach(IHM_RESOURCE + IHM_FOOTER_RESOURCE, FooterIhmResource.class);
-        router.attach(IHM_RESOURCE + IHM_CONFIG_RESOURCE, ConfigIhmResource.class);
-        router.attach(IHM_RESOURCE, ihm);
+       
+        router.attach(IHM_URI, RedirectingResource.class, Template.MODE_EQUALS);
+        router.attach(IHM_URI + "/", RedirectingResource.class, Template.MODE_EQUALS);        
+        router.attach(IHM_URI + IHM_FOOTER_URI, FooterIhmResource.class);
+        router.attach(IHM_URI + IHM_CONFIG_URI, ConfigIhmResource.class);
+        router.attach(IHM_URI, ihm);
+        
+        router.attach(API_URI, new Redirector(getContext(), "https://editor.swagger.io/?url=https://raw.githubusercontent.com/CNES/DOI-server/master/server/src/site/api.yaml", Redirector.MODE_CLIENT_SEE_OTHER));
 
         LOG.traceExit();
     }

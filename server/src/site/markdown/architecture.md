@@ -802,75 +802,86 @@ The interface to handle the authentication:
 #### 5.2.2 REST API <a name="rest_interfaces"/>
 
 ```
-# YAML describing the DOI client
+# YAML describing the DOI-server
 swagger: "2.0"
 
 info:
   version: "1.0.0"
   title: Doi Server API
-  description: Doi Server API
+  description: A Digital Object Identifier (DOI) is an alphanumeric string assigned to uniquely identify an object. It is tied to a metadata description of the object as well as to a digital location, such as a URL, where all the details about the object are accessible. This documentation provides an API to query the DOI-server.
   contact:
     name: CNES (DNO/ISA/VIP)
+    email : jean-christophe.malapert@cnes.fr
     url: 'http://cnes.fr'
   license:
     name: LGPL
     url: 'https://www.gnu.org/licenses/lgpl-3.0.txt'
-host: localhost:8182
+host: localhost:8183
 basePath: /
-schemes: [http,https]
+schemes: [https,http]
 
 
 tags:
- - name: "Mds"
-   description: "MDS endpoints "
- - name: "Citation"
-   description: "Citation endpoints"
- - name: "Admin"
-   description: "Admin endpoints"
-
-security:
- - APIKeyHeader: []
+ - name: "DataCite Metadata Store (MDS) API"
+   description: "Allows users to register DataCite DOIs and associated metadata"
+ - name: "DOI Citation Formatter"
+   description: "Allows user to format a citation based on the DOI metadata "
+ - name: "Administration"
+   description: "Allows registered users to create token"
+   externalDocs:
+    description: "Find out more about our DOI-server"
+    url: "https://cnes.github.io/DOI-server"
   
-paths:
-  /mds/dois:
-    get:
-      produces:
-      - text/uri-list
-      tags:
-      - "Mds"
-      description: Get all the dois
-      operationId: getAllDois
-      responses:
-        200:
-          description: All doi projects
-          schema:
-            type: string
-        204:
-          description: No Content - no DOIs founds
-          
-        401:
-          description: Unauthorized - The request requires user authentication  
-           
-        500:
-          description: Other type of errors
-          
     
+paths:
+  /admin/token:
     post:
       produces:
-      - application/json
+      - text
+      consumes:
+      - application/x-www-form-urlencoded      
+      tags:
+      - "Administration"     
+      security:
+        - basicAuth: []      
+      description: Create a token
+      operationId: createToken        
+      responses:
+        200:
+          description: OK (successfully authenticated)
+          schema:
+            type: string
+            example: eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiIke3Byb2plY3QuYXJ0aWZhY3RJZH0iLCJpYXQiOjE1NTQ1ODQ2NTYsInN1YiI6Im1hbGFwZXJ0amMiLCJleHAiOjE1NTQ1ODgyNTZ9.mEhhAwyfmUf0THasfO6zIqVnUyfNkTUP5s5rbZyPJpE
+        401:
+          description: Expired token
+        403:
+          description: Forbidden         
+        500:
+          description: Other type of error
+            
+  /mds/dois:
+    post:
+      produces:
+      - text
       consumes:
       - application/x-www-form-urlencoded
       tags:
-      - "Mds"
+      - "DataCite Metadata Store (MDS) API"
+      security:
+        - Bearer: []      
       description: Create a **new** doi project or update the landing page url if it the project already exists
-      operationId: postDoi
+      operationId: postLandingPage
       parameters:
+        - name: selectedRole
+          in: header
+          description: the selected role when a user is connected to more than 2 roles.
+          required: false
+          type: string    
         - name: url
           in: formData
           description: the URL of the landing page
           required: true
           type: string
-        
         - name: doi
           in: formData
           description: the project suffix, which is an unique identifier within the project
@@ -879,20 +890,83 @@ paths:
           
       responses:
         201:
-          description: Successful doi project Creation and return short explanation of status code e.g. CREATED, HANDLE_ALREADY_EXISTS, ...
+          description: Operation successful (short explanation of status code e.g. CREATED, HANDLE_ALREADY_EXISTS etc)
           schema:
             type: string
-  
+            example: CREATED
+        400:
+          description: Validation error when defining the DOI and its landing page
+        401:
+          description: Fail to authorize the user or Expired token
+        403:
+          description: Forbidden to user this role to to make this operation
+        412:
+          description: Metadata must be uploaded first
+        409:
+          description: Error when an user is associated to more than one role without setting selectedRole parameter 
+        500:
+          description: Interface problem between Datacite and DOI-Server
+
+  /mds/dois/{prefix}/{project}/{doi_name}:
+    get:
+      produces:
+      - text
+      tags:
+      - "DataCite Metadata Store (MDS) API"
+      description: Retrieves the landing page URL
+      operationId: getLandingPageUrl
+      parameters:
+        - name: prefix
+          in: path
+          type: string
+          description: DOI prefix
+          required: true
+        - name: project
+          in: path
+          type: string
+          description: Project identifier
+          required: true
+        - name: doi_name
+          in: path
+          type: string
+          description: Record ID
+          required: true
+      responses:
+        200:
+          description: The landing page was retrieved successfully
+          schema:
+            type: string
+            example: https://edutheque.cnes.fr/fr/web/CNES-fr/10886-em-les-lanceurs.php
+        204:
+          description: the DOI is known to MDS, but is not minted (or not resolvable e.g. due to handle's latency)
+        400:
+          description: Character or prefix not allowed in the DOI         
+        404: 
+          description: DOI does not exist in our database
+        500:
+          description: Internal Server Error - server internal error        
+
+     
   /mds/metadata:
+          
     post:
       tags:
-      - "Mds"
+      - "DataCite Metadata Store (MDS) API"
+      security:
+        - Bearer: []  
+      produces:
+      - text        
       consumes:
       - application/xml
-      description: Create or update doi project metada
-      operationId: postDoiMetada
+      description: Create or update doi project metadata (short explanation of status code e.g. CREATED, HANDLE_ALREADY_EXISTS)
+      operationId: postDoiMetadata
       parameters:
-        - name: metada
+        - name: selectedRole
+          in: header
+          description: the selected role when a user is connected to more than 2 roles.
+          required: false
+          type: string        
+        - name: body
           in: body
           description: metadata
           required: true
@@ -900,75 +974,60 @@ paths:
             type: string
             
       responses:
-        200:
-          description: short explanation of status code e.g. CREATED, HANDLE_ALREADY_EXISTS, ...
+        201:
+          description: Operation successfull
           schema:
-             type: string
-        
+            type: string
+            example: CREATED
         400:
-          description: Bad Request - invalid XML, wrong prefix
-        
+          description: Failed to validate the user inputs parameters
         401:
-          description: Unauthorized - no login
-          
+          description: Fail to authorize the user or expired token
         403:
-          description: Forbidden - login problem or dataset belongs to another party
-             
+          description: Forbidden to use this role ot to make this opration
+        409:
+          description: Error when an user is associated to more than one role without setting selectedRole parameter
         500:
-          description: Internal Server Error - server internal error  
+          description: Interface problem between Datacite and DOI-Server
 
-  /mds/dois/{doi_name}:
+  /mds/metadata/{prefix}/{project}/{doi_name}:
     get:
-      produces:
-      - application/json
       tags:
-      - "Mds"
-      description: Renvoie l'url de la landing page du doi
-      operationId: getLandingPageUrl
+      - "DataCite Metadata Store (MDS) API"
+      produces:
+      - application/xml
+      description: Get all metdata oi
+      operationId: getAllDoiMetadata
       parameters:
+        - name: prefix
+          in: path
+          type: string
+          description: DOI prefix
+          required: true
+        - name: project
+          in: path
+          type: string
+          description: Project identifier
+          required: true
         - name: doi_name
           in: path
           type: string
-          description: doi project name
+          description: Record ID
           required: true
-      responses:
-        200:
-          description: The landing page was retrieved successfully
-          schema:
-            type: string
-        
-        204:
-          description: the DOI is known to MDS, but is not minted (or not resolvable e.g. due to handle's latency)
-        
-        500:
-          description: Internal Server Error - server internal error 
-
-  /mds/metadata/{doi_name}:
-    get:
-      tags:
-      - "Mds"
-      produces:
-      - application/xml
-      description: Renvoie les metadata d'un doi
-      operationId: getAllDoiMetadata
-      parameters:
-       - name: doi_name
-         in: path
-         required: true
-         type: string
 
       responses:
         200:
           description: Successful metadata of given doi project retrieval
           schema:
-            type: string
-            
-        401:
-          description: Unauthorized - no login
-          
-        403:
-          description: Forbidden - login problem or dataset belongs to another party
-          
+            type: object
+            example: "<resource xmlns=\"http://datacite.org/schema/kernel-4\">\
+            <identifier identifierType=\"DOI\">10.24400/989788/666451</identifier>\
+            <creators><creator><creatorName>CNES</creatorName></creator></creators>\
+            <titles><title>Les lanceurs</title></titles>\
+            <publisher>CNES</publisher>\
+            <publicationYear>2018</publicationYear>\
+            <resourceType resourceTypeGeneral=\"Other\">Eduthèque</resourceType>\
+            </resource>"
         404:
           description: Not Found - DOI does not exist in our database
           
@@ -981,90 +1040,162 @@ paths:
             
     delete:
       tags:
-      - "Mds"
+      - "DataCite Metadata Store (MDS) API"
       description: This request marks a dataset as 'inactive'
+      security:
+        - Bearer: []       
       operationId: cancelDoiProject
       parameters:
+        - name: selectedRole
+          in: header
+          description: the selected role when a user is connected to more than 2 roles.
+          required: false
+          type: string      
+        - name: prefix
+          in: path
+          type: string
+          description: DOI prefix
+          required: true
+        - name: project
+          in: path
+          type: string
+          description: Project identifier
+          required: true
         - name: doi_name
           in: path
           type: string
-          description: doi project name
+          description: Record ID
           required: true
       responses:
-        202:
+        200:
           description: Cancelling taken into account and return metadata that was deactivated
           schema:
-            type: string
+            type: object
+            example: "<resource xmlns=\"http://datacite.org/schema/kernel-4\"> \
+    <identifier identifierType=\"DOI\">10.24400/989788/666451</identifier> \
+    <creators> \
+        <creator> \
+            <creatorName>CNES</creatorName> \
+        </creator> \
+    </creators> \
+    <titles> \
+        <title>Les lanceurs</title> \
+    </titles> \
+    <publisher>CNES</publisher> \
+    <publicationYear>2018</publicationYear> \
+    <resourceType resourceTypeGeneral=\"Other\">Eduthèque</resourceType> \
+</resource>"          
           
         401:
-          description: Unauthorized - no login
+          description: Fail to authorize the user
           
         403:
-          description: Forbidden - login problem or dataset belongs to another party
+          description: Forbidden to use this role or to make this operation
           
         404:
           description: Not Found - DOI does not exist in our database
+
+        409:
+          description: Error when an user is associated to more than one role without setting selectedRole parameter 
           
         500:
           description: Internal Server Error
           
             
   
-  /mds/media/{doi_name}:
+  /mds/media/{prefix}/{project}/{doi_name}:
     get:
       produces:
       - text/uri-list
       tags:
-      - "Mds" 
+      - "DataCite Metadata Store (MDS) API" 
       description: Retuen a list of pairs of media type and URLs
       operationId: getDoiMedia
       parameters:
+        - name: selectedRole
+          in: header
+          description: the selected role when a user is connected to more than 2 roles.
+          required: false
+          type: string      
+        - name: prefix
+          in: path
+          type: string
+          description: DOI prefix
+          required: true
+        - name: project
+          in: path
+          type: string
+          description: Project identifier
+          required: true
         - name: doi_name
           in: path
-          description: DOI project name
-          required: true
           type: string
+          description: Record ID
+          required: true
           
-      responses:
-      
+      responses:      
         200:
-          description: Successful media retrieval          
+          description: Successful media retrieval   
           schema:
-            type: string
-            
+            type: array
+            items: 
+              type: string
+        404:
+          description: DOI does not exist in our database          
+  
         500:
           description: Internal Server Error    
               
     post:
       tags:
-      - "Mds"
+      - "DataCite Metadata Store (MDS) API"
       consumes:
       - application/x-www-form-urlencoded
       description: add an association media/url
+      security:
+        - Bearer: []       
       operationId: postMedia
       parameters:
+        - name: selectedRole
+          in: header
+          description: the selected role when a user is connected to more than 2 roles.
+          required: false
+          type: string      
+        - name: prefix
+          in: path
+          type: string
+          description: DOI prefix
+          required: true
+        - name: project
+          in: path
+          type: string
+          description: Project identifier
+          required: true
         - name: doi_name
           in: path
-          description: DOI project name
-          required: true
           type: string
-          
-        - name: data
-          in: body
-          description: an association types de media/url
+          description: Record ID
           required: true
-          schema:
-            type: string
       responses:
         200:
-          description: Successful adding association
+          description: Successful adding association (short explanation of status code)
           schema:
             type: string
-          
+        400:
+          description: DOI not provided or one or more of the specified mime-types or urls are invalid (e.g. non supported mime-type, not allowed url domain, etc.) 
+        401:
+          description: Fail to authorize the user          
+        403:
+          description: Forbidden to use this role or to make this operation	
+        409:
+          description: Error when an user is associated to more than one role without setting selectedRole parameter   
+        500:
+          description: Interface problem between Datacite and DOI-Server   
+
   /citation/language:
     get:
       tags:
-      - "Citation"
+      - "DOI Citation Formatter"
       description: Renvoie la liste des langages disponibles
       operationId: getCitationsLanguage
       responses:
@@ -1074,6 +1205,7 @@ paths:
             type: array
             items:
               type: string
+                       
         500:
           description: Other type of errors
              
@@ -1081,7 +1213,7 @@ paths:
   /citation/style:
     get:
       tags:
-      - "Citation"
+      - "DOI Citation Formatter"
       description: Renvoie la liste des styles disponibles
       operationId: getCitationsStyle
       responses:
@@ -1097,7 +1229,7 @@ paths:
   /citation/format:
     get:
       tags:
-      - "Citation"
+      - "DOI Citation Formatter"
       description: Returns the formatted citation
       operationId: getCitation
       parameters:
@@ -1116,7 +1248,7 @@ paths:
           in: query
           description: langage
           required: true
-          type: string  
+          type: string
              
       responses:
         200:
@@ -1124,14 +1256,28 @@ paths:
           schema:
             type: string
         500:
-          description: Other type of errors
-             
-securityDefinitions:
-  APIKeyHeader:
-    type: apiKey
-    in: header
-    name: Authorization
+          description: Other type of error
 
+
+securityDefinitions:
+  basicAuth:
+    type: basic
+  Bearer:
+    description: |
+     For accessing the API a valid JWT token must be passed in all the queries in
+     the 'Authorization' header.
+  
+  
+     A valid JWT token is generated by the API and retourned as answer of a call
+     to the route /login giving a valid user & password.
+  
+  
+     The following syntax must be used in the 'Authorization' header :
+  
+         Bearer xxxxxx.yyyyyyy.zzzzzz
+    type: apiKey
+    name: Authorization
+    in: header
 ```
 
 #### 5.2.3 The client libraries of the DOI-server <a name="client_lib"/>

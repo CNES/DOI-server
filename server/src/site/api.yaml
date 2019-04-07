@@ -11,7 +11,7 @@ info:
   license:
     name: LGPL
     url: 'https://www.gnu.org/licenses/lgpl-3.0.txt'
-host: localhost:8182
+host: localhost:8183
 basePath: /
 schemes: [https,http]
 
@@ -26,10 +26,7 @@ tags:
    externalDocs:
     description: "Find out more about our DOI-server"
     url: "https://cnes.github.io/DOI-server"
-    
-security:
- - APIKeyHeader: []
- 
+  
     
 paths:
   /admin/token:
@@ -39,25 +36,34 @@ paths:
       consumes:
       - application/x-www-form-urlencoded      
       tags:
-      - "Administration"      
-      description: Create a token
+      - "Administration"     
       security:
-        - basicAuth: []
+        - basicAuth: []      
+      description: Create a token
       operationId: createToken        
       responses:
         200:
           description: OK (successfully authenticated)
           schema:
-            type: string          
+            type: string
+            example: eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiIke3Byb2plY3QuYXJ0aWZhY3RJZH0iLCJpYXQiOjE1NTQ1ODQ2NTYsInN1YiI6Im1hbGFwZXJ0amMiLCJleHAiOjE1NTQ1ODgyNTZ9.mEhhAwyfmUf0THasfO6zIqVnUyfNkTUP5s5rbZyPJpE
+        401:
+          description: Expired token
+        403:
+          description: Forbidden         
+        500:
+          description: Other type of error
             
   /mds/dois:
     post:
       produces:
-      - application/json
+      - text
       consumes:
       - application/x-www-form-urlencoded
       tags:
       - "DataCite Metadata Store (MDS) API"
+      security:
+        - Bearer: []      
       description: Create a **new** doi project or update the landing page url if it the project already exists
       operationId: postLandingPage
       parameters:
@@ -71,7 +77,6 @@ paths:
           description: the URL of the landing page
           required: true
           type: string
-        
         - name: doi
           in: formData
           description: the project suffix, which is an unique identifier within the project
@@ -80,66 +85,27 @@ paths:
           
       responses:
         201:
-          description: Operation successful
-
+          description: Operation successful (short explanation of status code e.g. CREATED, HANDLE_ALREADY_EXISTS etc)
+          schema:
+            type: string
+            example: CREATED
         400:
           description: Validation error when defining the DOI and its landing page
-   
         401:
-          description: Expired token
-  
+          description: Fail to authorize the user or Expired token
         403:
-          description: Forbidden
-            
+          description: Forbidden to user this role to to make this operation
         412:
           description: Metadata must be uploaded first
-   
+        409:
+          description: Error when an user is associated to more than one role without setting selectedRole parameter 
         500:
           description: Interface problem between Datacite and DOI-Server
-
-  
-  /mds/metadata:
-    post:
-      tags:
-      - "DataCite Metadata Store (MDS) API"
-      consumes:
-      - application/xml
-      description: Create or update doi project metadata
-      operationId: postDoiMetadata
-      parameters:
-        - name: selectedRole
-          in: header
-          description: the selected role when a user is connected to more than 2 roles.
-          required: false
-          type: string        
-        - name: metadata
-          in: body
-          description: metadata
-          required: true
-          schema: 
-            type: string
-            
-      responses:
-        201:
-          description: Operation successfull
-
-        400:
-          description: Failed to validate the user inputs parameters
-        
-        401:
-          description: Unauthorized - no login
-          
-        403:
-          description: Forbidden - login problem or dataset belongs to another party
-         
-        500:
-          description: Interface problem between Datacite and DOI-Server"
- 
 
   /mds/dois/{prefix}/{project}/{doi_name}:
     get:
       produces:
-      - application/json
+      - text
       tags:
       - "DataCite Metadata Store (MDS) API"
       description: Retrieves the landing page URL
@@ -165,28 +131,59 @@ paths:
           description: The landing page was retrieved successfully
           schema:
             type: string
-        
+            example: https://edutheque.cnes.fr/fr/web/CNES-fr/10886-em-les-lanceurs.php
         204:
           description: the DOI is known to MDS, but is not minted (or not resolvable e.g. due to handle's latency)
-          schema:
-            type: string        
-        401:
-          description: Unauthorized - no login
-          schema:
-            type: string          
-        403:
-          description: Forbidden - login problem or dataset belongs to another party
-          schema:
-            type: string 
-          
+        400:
+          description: Character or prefix not allowed in the DOI         
         404: 
           description: DOI does not exist in our database
-          schema:
-            type:  string
         500:
-          description: Internal Server Error - server internal error
+          description: Internal Server Error - server internal error        
+
+     
+  /mds/metadata:
+          
+    post:
+      tags:
+      - "DataCite Metadata Store (MDS) API"
+      security:
+        - Bearer: []  
+      produces:
+      - text        
+      consumes:
+      - application/xml
+      description: Create or update doi project metadata (short explanation of status code e.g. CREATED, HANDLE_ALREADY_EXISTS)
+      operationId: postDoiMetadata
+      parameters:
+        - name: selectedRole
+          in: header
+          description: the selected role when a user is connected to more than 2 roles.
+          required: false
+          type: string        
+        - name: body
+          in: body
+          description: metadata
+          required: true
+          schema: 
+            type: string
+            
+      responses:
+        201:
+          description: Operation successfull
           schema:
-            type: string          
+            type: string
+            example: CREATED
+        400:
+          description: Failed to validate the user inputs parameters
+        401:
+          description: Fail to authorize the user or expired token
+        403:
+          description: Forbidden to use this role ot to make this opration
+        409:
+          description: Error when an user is associated to more than one role without setting selectedRole parameter
+        500:
+          description: Interface problem between Datacite and DOI-Server
 
   /mds/metadata/{prefix}/{project}/{doi_name}:
     get:
@@ -194,7 +191,7 @@ paths:
       - "DataCite Metadata Store (MDS) API"
       produces:
       - application/xml
-      description: Renvoie les metadata d'un doi
+      description: Get all metdata oi
       operationId: getAllDoiMetadata
       parameters:
         - name: prefix
@@ -217,14 +214,15 @@ paths:
         200:
           description: Successful metadata of given doi project retrieval
           schema:
-            type: string
-            
-        401:
-          description: Unauthorized - no login
-          
-        403:
-          description: Forbidden - login problem or dataset belongs to another party
-          
+            type: object
+            example: "<resource xmlns=\"http://datacite.org/schema/kernel-4\">\
+            <identifier identifierType=\"DOI\">10.24400/989788/666451</identifier>\
+            <creators><creator><creatorName>CNES</creatorName></creator></creators>\
+            <titles><title>Les lanceurs</title></titles>\
+            <publisher>CNES</publisher>\
+            <publicationYear>2018</publicationYear>\
+            <resourceType resourceTypeGeneral=\"Other\">Eduthèque</resourceType>\
+            </resource>"
         404:
           description: Not Found - DOI does not exist in our database
           
@@ -239,6 +237,8 @@ paths:
       tags:
       - "DataCite Metadata Store (MDS) API"
       description: This request marks a dataset as 'inactive'
+      security:
+        - Bearer: []       
       operationId: cancelDoiProject
       parameters:
         - name: selectedRole
@@ -262,19 +262,36 @@ paths:
           description: Record ID
           required: true
       responses:
-        202:
+        200:
           description: Cancelling taken into account and return metadata that was deactivated
           schema:
-            type: string
+            type: object
+            example: "<resource xmlns=\"http://datacite.org/schema/kernel-4\"> \
+    <identifier identifierType=\"DOI\">10.24400/989788/666451</identifier> \
+    <creators> \
+        <creator> \
+            <creatorName>CNES</creatorName> \
+        </creator> \
+    </creators> \
+    <titles> \
+        <title>Les lanceurs</title> \
+    </titles> \
+    <publisher>CNES</publisher> \
+    <publicationYear>2018</publicationYear> \
+    <resourceType resourceTypeGeneral=\"Other\">Eduthèque</resourceType> \
+</resource>"          
           
         401:
-          description: Unauthorized - no login
+          description: Fail to authorize the user
           
         403:
-          description: Forbidden - login problem or dataset belongs to another party
+          description: Forbidden to use this role or to make this operation
           
         404:
           description: Not Found - DOI does not exist in our database
+
+        409:
+          description: Error when an user is associated to more than one role without setting selectedRole parameter 
           
         500:
           description: Internal Server Error
@@ -311,13 +328,16 @@ paths:
           description: Record ID
           required: true
           
-      responses:
-      
+      responses:      
         200:
-          description: Successful media retrieval          
+          description: Successful media retrieval   
           schema:
-            type: string
-            
+            type: array
+            items: 
+              type: string
+        404:
+          description: DOI does not exist in our database          
+  
         500:
           description: Internal Server Error    
               
@@ -327,6 +347,8 @@ paths:
       consumes:
       - application/x-www-form-urlencoded
       description: add an association media/url
+      security:
+        - Bearer: []       
       operationId: postMedia
       parameters:
         - name: selectedRole
@@ -351,9 +373,20 @@ paths:
           required: true
       responses:
         200:
-          description: Successful adding association
+          description: Successful adding association (short explanation of status code)
+          schema:
+            type: string
+        400:
+          description: DOI not provided or one or more of the specified mime-types or urls are invalid (e.g. non supported mime-type, not allowed url domain, etc.) 
+        401:
+          description: Fail to authorize the user          
+        403:
+          description: Forbidden to use this role or to make this operation	
+        409:
+          description: Error when an user is associated to more than one role without setting selectedRole parameter   
+        500:
+          description: Interface problem between Datacite and DOI-Server   
 
-          
   /citation/language:
     get:
       tags:
@@ -367,6 +400,7 @@ paths:
             type: array
             items:
               type: string
+                       
         500:
           description: Other type of errors
              
@@ -418,11 +452,24 @@ paths:
             type: string
         500:
           description: Other type of error
-             
+
+
 securityDefinitions:
-  APIKeyHeader:
-    type: apiKey
-    in: header
-    name: Authorization
   basicAuth:
     type: basic
+  Bearer:
+    description: |
+     For accessing the API a valid JWT token must be passed in all the queries in
+     the 'Authorization' header.
+  
+  
+     A valid JWT token is generated by the API and retourned as answer of a call
+     to the route /login giving a valid user & password.
+  
+  
+     The following syntax must be used in the 'Authorization' header :
+  
+         Bearer xxxxxx.yyyyyyy.zzzzzz
+    type: apiKey
+    name: Authorization
+    in: header

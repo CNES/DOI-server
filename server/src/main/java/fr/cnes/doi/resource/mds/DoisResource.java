@@ -147,7 +147,7 @@ public class DoisResource extends BaseMdsResource {
         final String selectedRole = extractSelectedRoleFromRequestIfExists();
         checkPermission(doiForm.getFirstValue(DOI_PARAMETER), selectedRole);
         try {
-            setStatus(Status.SUCCESS_CREATED);
+            setStatus(Status.SUCCESS_CREATED, "Operation successful");
             result = this.getDoiApp().getClient().createDoi(doiForm);
         } catch (ClientMdsException ex) {
             if (ex.getStatus().getCode() == Status.CLIENT_ERROR_PRECONDITION_FAILED.getCode()) {

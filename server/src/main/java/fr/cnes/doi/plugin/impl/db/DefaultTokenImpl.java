@@ -20,13 +20,8 @@ package fr.cnes.doi.plugin.impl.db;
 
 import fr.cnes.doi.plugin.impl.db.service.DatabaseSingleton;
 import fr.cnes.doi.plugin.impl.db.service.DOIDbDataAccessService;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -40,11 +35,7 @@ import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_MIN_
 import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_PWD;
 import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_URL;
 import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_USER;
-import fr.cnes.doi.security.TokenSecurity;
 import fr.cnes.doi.utils.Utils;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
