@@ -782,14 +782,15 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-changelog-plugin</artifactId>
-                <version>2.3</version> <!--  
+                <version>2.3</version>   
                 <configuration>
-                    <type>tag</type>
-                    <tags>
-                        <tag implementation="java.lang.String">1.0.0</tag>
-                        <tag implementation="java.lang.String">2.0.0</tag>
-                    </tags>
-		</configuration>           -->              
+                    <type>date</type>
+                    <dates>
+                        <date implementation="java.lang.String">2019-04-08</date>
+                        <date implementation="java.lang.String">2029-01-01</date>
+                    </dates>
+                    <dateFormat>yyyy-MM-dd</dateFormat>
+                </configuration>                        
             </plugin>                      
         </plugins>
     </reporting>
