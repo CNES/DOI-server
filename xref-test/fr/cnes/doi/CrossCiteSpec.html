@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+<title>CrossCiteSpec xref</title>
+<link type="text/css" rel="stylesheet" href="../../../stylesheet.css" />
+</head>
+<body>
+<pre>
+
+<a name="1" href="#1">1</a>   <em class="jxr_comment">/*</em>
+<a name="2" href="#2">2</a>   <em class="jxr_comment"> * Copyright (C) 2017-2019 Centre National d'Etudes Spatiales (CNES).</em>
+<a name="3" href="#3">3</a>   <em class="jxr_comment"> *</em>
+<a name="4" href="#4">4</a>   <em class="jxr_comment"> * This library is free software; you can redistribute it and/or</em>
+<a name="5" href="#5">5</a>   <em class="jxr_comment"> * modify it under the terms of the GNU Lesser General Public</em>
+<a name="6" href="#6">6</a>   <em class="jxr_comment"> * License as published by the Free Software Foundation; either</em>
+<a name="7" href="#7">7</a>   <em class="jxr_comment"> * version 3.0 of the License, or (at your option) any later version.</em>
+<a name="8" href="#8">8</a>   <em class="jxr_comment"> *</em>
+<a name="9" href="#9">9</a>   <em class="jxr_comment"> * This library is distributed in the hope that it will be useful,</em>
+<a name="10" href="#10">10</a>  <em class="jxr_comment"> * but WITHOUT ANY WARRANTY; without even the implied warranty of</em>
+<a name="11" href="#11">11</a>  <em class="jxr_comment"> * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU</em>
+<a name="12" href="#12">12</a>  <em class="jxr_comment"> * Lesser General Public License for more details.</em>
+<a name="13" href="#13">13</a>  <em class="jxr_comment"> *</em>
+<a name="14" href="#14">14</a>  <em class="jxr_comment"> * You should have received a copy of the GNU Lesser General Public</em>
+<a name="15" href="#15">15</a>  <em class="jxr_comment"> * License along with this library; if not, write to the Free Software</em>
+<a name="16" href="#16">16</a>  <em class="jxr_comment"> * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,</em>
+<a name="17" href="#17">17</a>  <em class="jxr_comment"> * MA 02110-1301  USA</em>
+<a name="18" href="#18">18</a>  <em class="jxr_comment"> */</em>
+<a name="19" href="#19">19</a>  <strong class="jxr_keyword">package</strong> fr.cnes.doi;
+<a name="20" href="#20">20</a>  
+<a name="21" href="#21">21</a>  <strong class="jxr_keyword">import</strong> fr.cnes.doi.client.ClientCrossCiteCitation;
+<a name="22" href="#22">22</a>  <strong class="jxr_keyword">import</strong> java.util.Arrays;
+<a name="23" href="#23">23</a>  <strong class="jxr_keyword">import</strong> java.util.List;
+<a name="24" href="#24">24</a>  <strong class="jxr_keyword">import</strong> org.mortbay.jetty.HttpMethods;
+<a name="25" href="#25">25</a>  
+<a name="26" href="#26">26</a>  <em class="jxr_javadoccomment">/**</em>
+<a name="27" href="#27">27</a>  <em class="jxr_javadoccomment"> *</em>
+<a name="28" href="#28">28</a>  <em class="jxr_javadoccomment"> * @author Jean-Christophe Malapert</em>
+<a name="29" href="#29">29</a>  <em class="jxr_javadoccomment"> */</em>
+<a name="30" href="#30">30</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../fr/cnes/doi/CrossCiteSpec.html">CrossCiteSpec</a> <strong class="jxr_keyword">extends</strong> <a href="../../../fr/cnes/doi/AbstractSpec.html">AbstractSpec</a> {
+<a name="31" href="#31">31</a>          
+<a name="32" href="#32">32</a>      <strong class="jxr_keyword">public</strong> enum <a href="../../../fr/cnes/doi/CrossCiteSpec.html">Spec</a> {
+<a name="33" href="#33">33</a>          
+<a name="34" href="#34">34</a>          GET_STYLE_200(<span class="jxr_string">"Get styles"</span>, HttpMethods.GET, <span class="jxr_string">"/"</span>+ClientCrossCiteCitation.STYLE_URI, 200, <span class="jxr_string">"[\&quot;academy-of-management-review\&quot;,\&quot;accident-analysis-and-prevention\&quot;,\&quot;acm-sig-proceedings-long-author-list\&quot;]"</span>),
+<a name="35" href="#35">35</a>          GET_LANGUAGE_200(<span class="jxr_string">"Get languages"</span>, HttpMethods.GET, <span class="jxr_string">"/"</span>+ClientCrossCiteCitation.LOCALE_URI, 200, <span class="jxr_string">"[\&quot;af-ZA\&quot;,\&quot;ar\&quot;,\&quot;bg-BG\&quot;,\&quot;ca-AD\&quot;,\&quot;cs-CZ\&quot;,\&quot;cy-GB\&quot;,\&quot;da-DK\&quot;,\&quot;de-AT\&quot;,\&quot;de-CH\&quot;,\&quot;de-DE\&quot;,\&quot;el-GR\&quot;,\&quot;en-GB\&quot;,\&quot;en-US\&quot;,\&quot;es-CL\&quot;,\&quot;es-ES\&quot;,\&quot;es-MX\&quot;,\&quot;et-EE\&quot;,\&quot;eu\&quot;,\&quot;fa-IR\&quot;,\&quot;fi-FI\&quot;,\&quot;fr-CA\&quot;,\&quot;fr-FR\&quot;,\&quot;he-IL\&quot;,\&quot;hr-HR\&quot;,\&quot;hu-HU\&quot;,\&quot;id-ID\&quot;,\&quot;is-IS\&quot;,\&quot;it-IT\&quot;,\&quot;ja-JP\&quot;,\&quot;km-KH\&quot;,\&quot;ko-KR\&quot;,\&quot;lt-LT\&quot;,\&quot;lv-LV\&quot;,\&quot;mn-MN\&quot;,\&quot;nb-NO\&quot;,\&quot;nl-NL\&quot;,\&quot;nn-NO\&quot;,\&quot;pl-PL\&quot;,\&quot;pt-BR\&quot;,\&quot;pt-PT\&quot;,\&quot;ro-RO\&quot;,\&quot;ru-RU\&quot;,\&quot;sk-SK\&quot;,\&quot;sl-SI\&quot;,\&quot;sr-RS\&quot;,\&quot;sv-SE\&quot;,\&quot;th-TH\&quot;,\&quot;tr-TR\&quot;,\&quot;uk-UA\&quot;,\&quot;vi-VN\&quot;,\&quot;zh-CN\&quot;,\&quot;zh-TW\&quot;]"</span>),
+<a name="36" href="#36">36</a>          GET_FORMAT_200(<span class="jxr_string">"Get format"</span>, HttpMethods.GET, <span class="jxr_string">"/"</span>+ClientCrossCiteCitation.FORMAT_URI, 200, <span class="jxr_string">"Garza, K., Goble, C., Brooke, J., &amp; Jay, C. 2015. Framing the community data system interface. Proceedings of the 2015 British HCI Conference on - British HCI '15. Presented at the the 2015 British HCI Conference, ACM Press. https://doi.org/10.1145/2783446.2783605.\n"</span>),
+<a name="37" href="#37">37</a>          GET_FORMAT_400(<span class="jxr_string">"Fail to get format due to a bad request"</span>, HttpMethods.GET, <span class="jxr_string">"/"</span>+ClientCrossCiteCitation.FORMAT_URI, 400, <span class="jxr_string">""</span>),
+<a name="38" href="#38">38</a>          GET_FORMAT_404(<span class="jxr_string">"Fail to get format due to a bad DOI"</span>, HttpMethods.GET, <span class="jxr_string">"/"</span>+ClientCrossCiteCitation.FORMAT_URI, 404, <span class="jxr_string">"DOI not found"</span>);                
+<a name="39" href="#39">39</a>          
+<a name="40" href="#40">40</a>          <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> String description;
+<a name="41" href="#41">41</a>          <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> String httVerb;
+<a name="42" href="#42">42</a>          <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> String path;
+<a name="43" href="#43">43</a>          <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> status;
+<a name="44" href="#44">44</a>          <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> String body;
+<a name="45" href="#45">45</a>          
+<a name="46" href="#46">46</a>          <a href="../../../fr/cnes/doi/CrossCiteSpec.html">Spec</a>(<strong class="jxr_keyword">final</strong> String description, <strong class="jxr_keyword">final</strong> String httpVerb, <strong class="jxr_keyword">final</strong> String path, 
+<a name="47" href="#47">47</a>                  <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> status, <strong class="jxr_keyword">final</strong> String body) {
+<a name="48" href="#48">48</a>              <strong class="jxr_keyword">this</strong>.description = description;
+<a name="49" href="#49">49</a>              <strong class="jxr_keyword">this</strong>.httVerb = httpVerb;
+<a name="50" href="#50">50</a>              <strong class="jxr_keyword">this</strong>.path = path;
+<a name="51" href="#51">51</a>              <strong class="jxr_keyword">this</strong>.status = status;
+<a name="52" href="#52">52</a>              <strong class="jxr_keyword">this</strong>.body = body;
+<a name="53" href="#53">53</a>          }
+<a name="54" href="#54">54</a>          
+<a name="55" href="#55">55</a>          <strong class="jxr_keyword">public</strong> String getDescription() {
+<a name="56" href="#56">56</a>              <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.description;
+<a name="57" href="#57">57</a>          }
+<a name="58" href="#58">58</a>          
+<a name="59" href="#59">59</a>          <strong class="jxr_keyword">public</strong> String getHttpVerb() {
+<a name="60" href="#60">60</a>              <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.httVerb;
+<a name="61" href="#61">61</a>          }
+<a name="62" href="#62">62</a>          
+<a name="63" href="#63">63</a>          <strong class="jxr_keyword">public</strong> String getPath() {
+<a name="64" href="#64">64</a>              <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.path;
+<a name="65" href="#65">65</a>          }  
+<a name="66" href="#66">66</a>          
+<a name="67" href="#67">67</a>          <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> getStatus() {
+<a name="68" href="#68">68</a>              <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.status;
+<a name="69" href="#69">69</a>          }   
+<a name="70" href="#70">70</a>          
+<a name="71" href="#71">71</a>          <strong class="jxr_keyword">public</strong> String getBody() {
+<a name="72" href="#72">72</a>              <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.body;
+<a name="73" href="#73">73</a>          }
+<a name="74" href="#74">74</a>          
+<a name="75" href="#75">75</a>          <strong class="jxr_keyword">public</strong> List&lt;String&gt; getBodyAsList() {
+<a name="76" href="#76">76</a>              String values = <strong class="jxr_keyword">this</strong>.body.substring(1, <strong class="jxr_keyword">this</strong>.body.length()-1).replaceAll(<span class="jxr_string">"\&quot;"</span>, <span class="jxr_string">""</span>);            
+<a name="77" href="#77">77</a>              <strong class="jxr_keyword">return</strong> Arrays.asList(values.split(<span class="jxr_string">","</span>));
+<a name="78" href="#78">78</a>          }
+<a name="79" href="#79">79</a>      }
+<a name="80" href="#80">80</a>      
+<a name="81" href="#81">81</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../fr/cnes/doi/AbstractSpec.html">MockupServer</a> mockServer;
+<a name="82" href="#82">82</a>      
+<a name="83" href="#83">83</a>      <strong class="jxr_keyword">public</strong> <a href="../../../fr/cnes/doi/CrossCiteSpec.html">CrossCiteSpec</a>(<strong class="jxr_keyword">int</strong> port) {
+<a name="84" href="#84">84</a>          <strong class="jxr_keyword">this</strong>.mockServer = <strong class="jxr_keyword">new</strong> <a href="../../../fr/cnes/doi/AbstractSpec.html">MockupServer</a>(port);
+<a name="85" href="#85">85</a>      }   
+<a name="86" href="#86">86</a>        
+<a name="87" href="#87">87</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> createSpec(<strong class="jxr_keyword">final</strong> <a href="../../../fr/cnes/doi/CrossCiteSpec.html">Spec</a> specification) {
+<a name="88" href="#88">88</a>          <strong class="jxr_keyword">this</strong>.mockServer.createSpec(
+<a name="89" href="#89">89</a>                  specification.getHttpVerb(), specification.getPath(), 
+<a name="90" href="#90">90</a>                  specification.getStatus(), specification.getBody()
+<a name="91" href="#91">91</a>          );
+<a name="92" href="#92">92</a>      }
+<a name="93" href="#93">93</a>      
+<a name="94" href="#94">94</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> verifySpec(<strong class="jxr_keyword">final</strong> <a href="../../../fr/cnes/doi/CrossCiteSpec.html">Spec</a> specification) {
+<a name="95" href="#95">95</a>          <strong class="jxr_keyword">this</strong>.mockServer.verifySpec(specification.getHttpVerb(), specification.getPath());
+<a name="96" href="#96">96</a>      }
+<a name="97" href="#97">97</a>      
+<a name="98" href="#98">98</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> reset() {
+<a name="99" href="#99">99</a>          <strong class="jxr_keyword">this</strong>.mockServer.reset();
+<a name="100" href="#100">100</a>     }    
+<a name="101" href="#101">101</a>     
+<a name="102" href="#102">102</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> finish() {
+<a name="103" href="#103">103</a>         <strong class="jxr_keyword">this</strong>.mockServer.close();
+<a name="104" href="#104">104</a>     }
+<a name="105" href="#105">105</a>         
+<a name="106" href="#106">106</a> }
+</pre>
+<hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
+</html>
+

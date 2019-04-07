@@ -1,0 +1,11 @@
+fr.cnes.doi
+fr.cnes.doi.application
+fr.cnes.doi.client
+fr.cnes.doi.integration
+fr.cnes.doi.persistence
+fr.cnes.doi.resource.admin
+fr.cnes.doi.resource.citation
+fr.cnes.doi.resource.mds
+fr.cnes.doi.server
+fr.cnes.doi.settings
+fr.cnes.doi.utils
