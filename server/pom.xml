@@ -43,9 +43,9 @@
     <url>https://cnes.github.com/DOI-server</url>
 
     <scm>
-        <connection>scm:git::https://github.com/CNES/DOI-server</connection>
-        <developerConnection>scm:git:https://github.com/CNES/DOI-server</developerConnection>
-        <url>scm:git:https://github.com/CNES/DOI-server</url>
+        <connection>scm:git:git@github.com:CNES/DOI-server.git</connection>
+        <developerConnection>scm:git:git@github.com:CNES/DOI-server.git</developerConnection>
+        <url>https://github.com/CNES/DOI-server</url>
     </scm>
 
     <repositories>
@@ -69,7 +69,8 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <skip.unit.tests>false</skip.unit.tests>
         <skip.integration.tests>true</skip.integration.tests>
-        <dependency.locations.enabled>false</dependency.locations.enabled>          
+        <dependency.locations.enabled>false</dependency.locations.enabled>    
+        <github.global.server>github</github.global.server>
     </properties>
     <profiles>
         <profile>
@@ -91,7 +92,7 @@
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
-                 <filtering>true</filtering>
+                <filtering>true</filtering>
                 <targetPath>${project.build.directory}</targetPath>
                 <includes>
                     <include>log4j2.xml</include>
@@ -471,7 +472,32 @@
                         </group>                          
                     </groups>
                 </configuration>                
-            </plugin>                                              
+            </plugin>
+            <plugin>
+                <!-- Deploy the web site -->
+                <groupId>com.github.github</groupId>
+                <artifactId>site-maven-plugin</artifactId>
+                <version>0.9</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>site</goal>
+                        </goals>
+                        <!-- select the Maven phase in which the plugin will be executed -->
+                        <phase>site-deploy</phase>
+                        <configuration>
+                            <!-- Plugin configuration ges here -->
+
+                            <server>doiserver-github</server>
+
+                            <!-- The commit message -->
+                            <message>Building site for my project</message>
+                            <!-- Use merge or override the content -->
+                            <merge>true</merge>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>                                                                    
         </plugins>
     </build>
     <dependencies>    
@@ -756,7 +782,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-changelog-plugin</artifactId>
-		<version>2.3</version> <!--  
+                <version>2.3</version> <!--  
                 <configuration>
                     <type>tag</type>
                     <tags>

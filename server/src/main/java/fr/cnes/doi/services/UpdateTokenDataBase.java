@@ -18,7 +18,6 @@
  */
 package fr.cnes.doi.services;
 
-import com.fasterxml.jackson.dataformat.yaml.snakeyaml.tokens.Token;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
