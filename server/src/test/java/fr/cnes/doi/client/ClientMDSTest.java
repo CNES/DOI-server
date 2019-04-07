@@ -133,35 +133,7 @@ public class ClientMDSTest {
 
         // Checks the stub.
         mdsServerStub.verifySpec(spec);
-    }
-    
-    /**
-     * Test the getDoi collection
-     * @param spec spec
-     */
-    private void testSpecGetDoiCollection(MdsSpec.Spec spec) throws ClientMdsException {
-        // Creates the MetadataStoreService stub        
-        mdsServerStub.createSpec(spec);
-
-        // Requests the DOIServer using the stub (mode DEV)        
-        ClientMDS instance = new ClientMDS(ClientMDS.Context.DEV, login, pwd);
-        int expResult = spec.getStatus();
-        String expMessage = spec.getBody();
-        int result;
-        String message;
-        try {
-            message = instance.getDoiCollection();
-            result = spec.getStatus();
-        } catch (ClientMdsException ex) {
-            result = ex.getStatus().getCode();
-            message = ex.getDetailMessage();
-        }
-        assertEquals("Test the status code", expResult, result);
-        assertEquals("Test the response", expMessage, message);
-
-        // Checks the stub.        
-        mdsServerStub.verifySpec(spec);
-    }    
+    }   
 
     /**
      * Test of creating DOI.
@@ -326,20 +298,6 @@ public class ClientMDSTest {
     @Test
     public void testGetDoi200() throws Exception {
         testSpecGetDoi(MdsSpec.Spec.GET_DOI_200);
-    }
-
-    /**
-     * Test of getDoiCollection method, of class ClientMDS.
-     * @throws java.lang.Exception
-     */
-    @Test
-    public void testGetDoiCollection200() throws Exception {
-        testSpecGetDoiCollection(MdsSpec.Spec.GET_COLLECTION_200);
-    }
-
-    @Test
-    public void testGetDoiCollection204() throws Exception {
-        testSpecGetDoiCollection(MdsSpec.Spec.GET_COLLECTION_204);
     }
 
     /**

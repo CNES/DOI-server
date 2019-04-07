@@ -5,7 +5,7 @@
     <parent>
         <artifactId>DOI-installer</artifactId>
         <groupId>fr.cnes.doi</groupId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
   
     <artifactId>izpack-doi-panels</artifactId>

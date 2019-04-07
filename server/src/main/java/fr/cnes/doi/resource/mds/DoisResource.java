@@ -28,6 +28,7 @@ import fr.cnes.doi.exception.DoiServerException;
 import static fr.cnes.doi.security.UtilsHeader.SELECTED_ROLE_PARAMETER;
 import fr.cnes.doi.utils.spec.Requirement;
 import java.util.Arrays;
+import java.util.List;
 import org.apache.logging.log4j.Level;
 import org.restlet.data.Form;
 import org.restlet.data.MediaType;
@@ -37,8 +38,6 @@ import org.restlet.ext.wadl.DocumentationInfo;
 import org.restlet.ext.wadl.MethodInfo;
 import org.restlet.ext.wadl.ParameterStyle;
 import org.restlet.ext.wadl.RepresentationInfo;
-import org.restlet.representation.Representation;
-import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 
@@ -80,24 +79,16 @@ public class DoisResource extends BaseMdsResource {
      * @throws DoiServerException 204 No Content - no DOIs founds
      */
     @Get
-    public Representation getDois() throws DoiServerException {
+    public List<String> getDois() throws DoiServerException {
         LOG.traceEntry();
-        final Representation rep;
-        try {
+        setStatus(Status.SUCCESS_OK);
+        final List<String> dois = this.getDoiApp().getClientSearch().getDois();
+        if (dois == null || dois.isEmpty()) {
+            setStatus(Status.SUCCESS_NO_CONTENT);
+        } else {
             setStatus(Status.SUCCESS_OK);
-            final String dois = this.getDoiApp().getClient().getDoiCollection();
-            if (dois == null || dois.isEmpty()) {
-                setStatus(Status.SUCCESS_NO_CONTENT);
-            } else {
-                setStatus(Status.SUCCESS_OK);
-            }
-            rep = new StringRepresentation(dois, MediaType.TEXT_URI_LIST);
-        } catch (ClientMdsException ex) {
-            throw LOG.throwing(
-                    Level.ERROR,
-                    new DoiServerException(getApplication(), API_MDS.DATACITE_PROBLEM, ex));
         }
-        return LOG.traceExit(rep);
+        return LOG.traceExit(dois);
     }
 
     /**

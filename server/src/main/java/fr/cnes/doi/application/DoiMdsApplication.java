@@ -40,7 +40,9 @@ import org.restlet.security.ChallengeAuthenticator;
 import org.restlet.security.MethodAuthorizer;
 
 import fr.cnes.doi.client.ClientMDS;
+import fr.cnes.doi.client.ClientSearchDataCite;
 import fr.cnes.doi.db.AbstractTokenDBHelper;
+import fr.cnes.doi.exception.ClienSearchDataCiteException;
 import fr.cnes.doi.exception.ClientMdsException;
 import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.resource.mds.DoiResource;
@@ -156,6 +158,11 @@ public final class DoiMdsApplication extends AbstractApplication {
      * Client to query Mds Datacite.
      */
     private final ClientMDS client;
+    
+    /**
+     * Client to query Search Data Cite.
+     */
+    private final ClientSearchDataCite clientSearchDataCite;    
 
     /**
      * Token DB that contains the set of generated token.
@@ -181,10 +188,11 @@ public final class DoiMdsApplication extends AbstractApplication {
             final String contextMode = this.getConfig().getString(Consts.CONTEXT_MODE);
             client = new ClientMDS(ClientMDS.Context.valueOf(contextMode), getLoginMds(),
                     getPwdMds());
+            clientSearchDataCite = new ClientSearchDataCite(getDataCentrePrefix());
             this.tokenDB = TokenSecurity.getInstance().getTokenDB();
-        } catch (ClientMdsException ex) {
+        } catch (ClientMdsException | ClienSearchDataCiteException ex) {
             throw LOG.throwing(new DoiRuntimeException(ex));
-        }
+        } 
     }
 
     /**
@@ -291,7 +299,7 @@ public final class DoiMdsApplication extends AbstractApplication {
         LOG.traceEntry();
         return LOG.traceExit(this.getConfig().getSecret(Consts.INIST_LOGIN));
     }
-
+       
     /**
      * Returns the decrypted password for DataCite.
      *
@@ -321,6 +329,16 @@ public final class DoiMdsApplication extends AbstractApplication {
         LOG.traceEntry();
         return LOG.traceExit(this.client);
     }
+    
+    /**
+     * Returns the client.
+     *
+     * @return the client
+     */
+    public ClientSearchDataCite getClientSearch() {
+        LOG.traceEntry();
+        return LOG.traceExit(this.clientSearchDataCite);
+    }    
 
     /**
      * Returns the token database.

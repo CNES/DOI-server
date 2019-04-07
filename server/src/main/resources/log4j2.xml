@@ -43,4 +43,4 @@
 
 </Configuration>
 <!-- https://fabianlee.org/2016/10/17/syslog-sending-java-log4j2-to-rsyslog-on-ubuntu/ -->
-<!-- java -Dlog4j.configurationFile=./log4j2.xml -jar DOI-0.0.1-SNAPSHOT.jar -->
+<!-- java -Dlog4j.configurationFile=./log4j2.xml -jar DOI-1.0.0.jar -->

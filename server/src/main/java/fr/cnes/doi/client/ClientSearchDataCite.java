@@ -19,6 +19,7 @@
 package fr.cnes.doi.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.cnes.doi.exception.ClienSearchDataCiteException;
 import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
@@ -28,6 +29,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 
@@ -57,9 +60,9 @@ public class ClientSearchDataCite extends BaseClient {
     /**
      * Constructor.
      *
-     * @throws Exception when an error happens
+     * @throws fr.cnes.doi.exception.ClienSearchDataCiteException when an error happens
      */
-    public ClientSearchDataCite() throws Exception {
+    public ClientSearchDataCite() throws ClienSearchDataCiteException {
         this(DoiSettings.getInstance().getString(Consts.INIST_DOI));
     }
 
@@ -67,11 +70,15 @@ public class ClientSearchDataCite extends BaseClient {
      * Constructor.
      *
      * @param doiPrefix DOI prefix
-     * @throws Exception when an error happens
+     * @throws ClienSearchDataCiteException when an error happens
      */
-    public ClientSearchDataCite(final String doiPrefix) throws Exception {
+    public ClientSearchDataCite(final String doiPrefix) throws ClienSearchDataCiteException {
         super(BASE_URI);
-        computeListDOI(0, doiPrefix);
+        try {
+            computeListDOI(0, doiPrefix);
+        } catch (DoiRuntimeException | IOException ex) {
+            throw new ClienSearchDataCiteException(Status.SERVER_ERROR_INTERNAL, ex);
+        }
     }
 
     /**

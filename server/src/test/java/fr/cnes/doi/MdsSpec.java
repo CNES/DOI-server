@@ -38,8 +38,6 @@ public class MdsSpec extends AbstractSpec {
         GET_DOI_403("Get unauthorized DOI", HttpMethods.GET, "/" + ClientMDS.DOI_RESOURCE, "10.5072/2783446.2783605", 403, "login problem or dataset belongs to another party"),
         GET_DOI_404("Get not found DOI", HttpMethods.GET, "/" + ClientMDS.DOI_RESOURCE, "10.5072/2783446.2783605", 404, "DOI not found"),        
         GET_DOI_500("Get DOI with internal server error", HttpMethods.GET, "/" + ClientMDS.DOI_RESOURCE, "10.5072/2783446.2783605", 500, "server internal error, try later and if problem persists please contact us"),
-        GET_COLLECTION_200("Get collection", HttpMethods.GET, "/" + ClientMDS.DOI_RESOURCE, "", 200, "10.5072/EDU/TESTID"),    
-        GET_COLLECTION_204("Get empty collection", HttpMethods.GET, "/" + ClientMDS.DOI_RESOURCE, "", 204, ""),
         POST_DOI_201("Create a DOI", HttpMethods.POST, "/" + ClientMDS.DOI_RESOURCE, "", 201, "CREATED"),
         POST_DOI_400("Create a DOI with a bad request", HttpMethods.POST, "/" + ClientMDS.DOI_RESOURCE, "", 400, "request body must be exactly two lines: DOI and URL; wrong domain, wrong prefix"),        
         POST_DOI_401("Create unauthorized DOI", HttpMethods.POST, "/" + ClientMDS.DOI_RESOURCE, "", 401, "no login"), 

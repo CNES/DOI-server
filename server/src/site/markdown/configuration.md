@@ -10,10 +10,10 @@
 
 # In this configuration file, a set of properties must be encrypted.
 # To encrypt, a tool provided in the DOI-server can be used:
-# java -jar DOI-server-1.0.0-SNAPSHOT.jar -c <string to encrypt>
+# java -jar DOI-server-1.0.0.jar -c <string to encrypt>
 #
 # To decrypt :
-# java -jar DOI-server-1.0.0-SNAPSHOT.jar -e <string to decrypt>
+# java -jar DOI-server-1.0.0.jar -e <string to decrypt>
 
 ## ---- Application Name ----
 ## The application's name is automatically updated by maven

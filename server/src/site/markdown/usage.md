@@ -26,7 +26,7 @@ malapert@heulet-HP-ZBook-15-G4:~/DOI$ java -Dlog4j.configurationFile=./log4j2.xm
 
 ------------ Help for DOI Server -----------
 
-Usage: java -jar DOI-server-1.0.0-SNAPSHOT.jar [--secret <key>] [OPTIONS] [-s]
+Usage: java -jar DOI-server-1.0.0.jar [--secret <key>] [OPTIONS] [-s]
 
 
 with :
@@ -52,11 +52,11 @@ with OPTIONS:
 
 ```
 malapert@heulet-HP-ZBook-15-G4:~/DOI$ java -Dlog4j.configurationFile=./log4j2.xml -jar DOI-server.jar -v
-DOI-server (Copyright 2017-2019 CNES) - Version:1.0.0-SNAPSHOT
+DOI-server (Copyright 2017-2019 CNES) - Version:1.0.0
 ```
 ## 3. Creating the configuration file <a name="creating_conf_file"/>
 ```
-java -Dlog4j.configurationFile=server/target/log4j2.xml -jar server/target/DOI-server-1.0.0-SNAPSHOT.jar -d > doi.conf
+java -Dlog4j.configurationFile=server/target/log4j2.xml -jar server/target/DOI-server-1.0.0.jar -d > doi.conf
 ```
 
 ## 4. Encrypting a password <a name="encrypting_password"/>

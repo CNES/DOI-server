@@ -391,31 +391,6 @@ public class ClientMDS extends BaseClient {
     }
 
     /**
-     * This request returns a list of all DOIs for the requesting datacentre. There is no guaranteed
-     * order. A 200 status is an operation successful. A 204 status means no Content (no DOIs found)
-     *
-     * @return a list of all DOI or no content when no DOIs founds
-     * @throws ClientMdsException 204 No Content - no DOIs founds
-     * @see "https://mds.datacite.org/static/apidoc#tocAnchor-14"
-     */
-    public String getDoiCollection() throws ClientMdsException {
-        final Reference url = createReference(DOI_RESOURCE);
-        this.getLog().info("GET {0}", url.toString());
-
-        this.getClient().setReference(url);
-        final Representation rep;
-        try {
-            rep = this.getClient().get();
-            return (rep == null) ? "" : this.getText(rep);
-        } catch (ResourceException ex) {
-            throw new ClientMdsException(ex.getStatus(), ex.getMessage(), this.getClient().
-                    getResponseEntity(), ex);
-        } finally {
-            this.getClient().release();
-        }
-    }
-
-    /**
      * Will mint new DOI if specified DOI doesn't exist.
      *
      * This method will attempt to update URL if you specify existing DOI. Standard domains and

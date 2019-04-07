@@ -124,7 +124,7 @@ cd DOI-server && mvn clean install
 mvn verify -P integration-test
 
 // Installing
-java -jar DOI-server-1.0.0-SNAPSHOT.jar
+java -jar DOI-server-1.0.0.jar
 
 ```
 
@@ -133,7 +133,7 @@ java -jar DOI-server-1.0.0-SNAPSHOT.jar
 Creating the configuration file
 
 ```
-java -Dlog4j.configurationFile=server/target/log4j2.xml -jar server/target/DOI-server-1.0.0-SNAPSHOT.jar -d > doi.conf
+java -Dlog4j.configurationFile=server/target/log4j2.xml -jar server/target/DOI-server-1.0.0.jar -d > doi.conf
 ```
 
 Filling the configuration file 
@@ -145,7 +145,7 @@ vim doi.conf
 Starting the server
 
 ```
-java -Dlog4j.configurationFile=server/target/log4j2.xml -jar server/target/DOI-server-1.0.0-SNAPSHOT.jar -f doi.conf --start
+java -Dlog4j.configurationFile=server/target/log4j2.xml -jar server/target/DOI-server-1.0.0.jar -f doi.conf --start
 ```
 
 ### 3.3- Installing for end-users (izpack)
@@ -155,7 +155,7 @@ java -Dlog4j.configurationFile=server/target/log4j2.xml -jar server/target/DOI-s
 Installing the package by IzPack
 
 ```
-java -jar DOI-1.0.0-SNAPSHOT.jar
+java -jar DOI-1.0.0.jar
 ```
 
 #### 3.3.2- Runnig DOI-server

@@ -26,7 +26,6 @@ import static fr.cnes.doi.server.DoiServer.JKS_FILE;
 import static fr.cnes.doi.server.DoiServer.RESTLET_MAX_CONNECTIONS_PER_HOST;
 import static fr.cnes.doi.server.DoiServer.RESTLET_MAX_TOTAL_CONNECTIONS;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -148,39 +147,6 @@ public class DoisResourceTest {
 
     @After
     public void tearDown() {
-    }
-
-    /**
-     * Test of getDois method through a HTTPS server, of class DoisResource.
-     * @throws java.io.IOException - if OutOfMemoryErrors
-     */
-    @Test
-    public void testGetDoisHttps() throws IOException {        
-        mdsSpecStub.createSpec(MdsSpec.Spec.GET_COLLECTION_200);
-
-        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-        ClientResource client = new ClientResource("https://localhost:" + port + DOIS_SERVICE);
-        client.setNext(cl);
-        Representation rep = client.get();
-        assertNotNull("Test if the response is not null", rep.getText());
-        client.release();
-        mdsSpecStub.verifySpec(MdsSpec.Spec.GET_COLLECTION_200);
-    }
-
-    /**
-     * Test of getDois method  though a HTTP server, of class DoisResource.
-     * @throws java.io.IOException - if OutOfMemoryErrors
-     */
-    @Test
-    public void testGetDoisHttp() throws IOException {        
-        mdsSpecStub.createSpec(MdsSpec.Spec.GET_COLLECTION_200);
-        
-        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);
-        ClientResource client = new ClientResource("http://localhost:" + port + DOIS_SERVICE);
-        Representation rep = client.get();
-        assertNotNull("Test if the response is not null", rep.getText());
-        
-        mdsSpecStub.verifySpec(MdsSpec.Spec.GET_COLLECTION_200);          
     }
     
     /**
