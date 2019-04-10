@@ -124,9 +124,12 @@
             <file override="true" src="config/config.properties" targetdir="$INSTALL_PATH/" />   
             <file override="true" src="config/log4j2.xml" targetdir="$INSTALL_PATH/" />
             <file override="true" src="res/doi.sh" targetdir="$INSTALL_PATH/" />
+            <file override="true" src="res/doi.service" targetdir="$INSTALL_PATH/" />
             <file override="true" src="db/doidb.sql" targetdir="$INSTALL_PATH/db" />
             <executable targetfile="$INSTALL_PATH/doi.sh" stage="never" />
             <parsable targetfile="$INSTALL_PATH/config.properties"/>
+            <parsable targetfile="$INSTALL_PATH/doi.sh"/>
+            <parsable targetfile="$INSTALL_PATH/doi.service"/>
         </pack>     
         <pack name="Configuration" preselected="yes" required="no" parent="Server">
             <description>This package configures the DOI server</description>            

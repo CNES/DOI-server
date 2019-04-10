@@ -1,0 +1,6 @@
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/java -Dlog4j.configurationFile=${INSTALL_PATH}/log4j2.xml -jar ${INSTALL_PATH}/DOI-server.jar -f ${INSTALL_PATH}/config.properties --start
+ExecStop=/usr/bin/java -Dlog4j.configurationFile=${INSTALL_PATH}/log4j2.xml -jar ${INSTALL_PATH}/DOI-server.jar -f ${INSTALL_PATH}/config.properties --stop
+
