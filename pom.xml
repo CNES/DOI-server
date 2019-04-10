@@ -43,15 +43,44 @@
             <organizationUrl>https://cnes.fr</organizationUrl>                       
             <id>jcmalapert</id>
             <name>Jean-Christophe Malapert</name>
-            <email>jean-christophe.malapert@cnes.fr</email>
+	    <email>jean-christophe.malapert@cnes.fr</email>
+	    <roles>
+        	<role>architect</role>
+		<role>developer</role>
+                <role>project manager for CNES</role>		
+      	    </roles>
         </developer>
         <developer>
             <organization>ATOS</organization>
             <organizationUrl>https://atos.net</organizationUrl>
             <id>jperrin</id>
             <name>Julien Perrin</name>
-            <email>julien.perrin@atos.net</email>
-        </developer>        
+	    <email>julien.perrin@atos.net</email>
+            <roles>                
+                <role>developer</role>
+            </roles>	    
+    	</developer>
+        <developer>
+            <organization>ATOS</organization>
+            <organizationUrl>https://atos.net</organizationUrl>
+            <id>smoros</id>
+            <name>Sébastien Moros</name>
+            <email>sebastien.moros@atos.net</email>
+	    <roles>
+                <role>architect</role>		    
+                <role>developer</role>
+            </roles>
+    	</developer>
+        <developer>
+            <organization>ATOS</organization>
+            <organizationUrl>https://atos.net</organizationUrl>
+            <id>sgouel</id>
+            <name>Sonia Gouel</name>
+            <email>sonia.gouel@atos.net</email>
+            <roles>
+                <role>project manager for ATOS</role>                
+            </roles>
+        </developer>
     </developers> 
     <contributors>
         <contributor>
