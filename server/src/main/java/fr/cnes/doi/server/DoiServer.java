@@ -516,7 +516,7 @@ public class DoiServer extends Component {
         LOG.info("Stopping UserManagement plugin");
         PluginFactory.getUserManagement().release();
         EmailSettings.getInstance().sendMessage("[DOI] Stopping Server",
-                "Ther server has been interrupted");
+                "The server has been interrupted");
         LOG.info("Server stopped");
     }
 
