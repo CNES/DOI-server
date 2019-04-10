@@ -179,11 +179,6 @@ public final class AdminApplication extends AbstractApplication {
      * URI {@value #SUPERUSERS_URI} to handle superusers.
      */
     public static final String SUPERUSERS_URI = "/superusers";
-    
-    /**
-     * URI {@value #API_URI} to get the API doc.
-     */
-    public static final String API_URI = "/docs";
 
     /**
      * Template user.
@@ -628,8 +623,6 @@ public final class AdminApplication extends AbstractApplication {
         router.attach(IHM_URI + IHM_CONFIG_URI, ConfigIhmResource.class);
         router.attach(IHM_URI, ihm);
         
-        router.attach(API_URI, new Redirector(getContext(), "https://editor.swagger.io/?url=https://raw.githubusercontent.com/CNES/DOI-server/master/server/src/site/api.yaml", Redirector.MODE_CLIENT_SEE_OTHER));
-
         LOG.traceExit();
     }
 

@@ -10,6 +10,8 @@
 </div>
 
 <div id="footer_right">
+    <a href="https://editor.swagger.io/?url=https://raw.githubusercontent.com/CNES/DOI-server/master/server/src/site/api.yaml" target="_blank">DOI-server API</a>
+    &nbsp;|&nbsp;
     <a href="https://status.datacite.org/" target="_blank">Datacite status</a>
     &nbsp;|&nbsp;
     <a href="https://stats.datacite.org/?fq=prefix%3A%22${doi_prefix}%22&#tab-resolution-report" target="_blank">DOI stats</a>
