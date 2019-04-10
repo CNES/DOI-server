@@ -30,6 +30,8 @@ import fr.cnes.doi.resource.AbstractResource;
 import fr.cnes.doi.security.RoleAuthorizer;
 import fr.cnes.doi.security.TokenSecurity;
 import fr.cnes.doi.security.TokenSecurity.TimeUnit;
+import fr.cnes.doi.settings.Consts;
+import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.settings.EmailSettings;
 import fr.cnes.doi.utils.spec.Requirement;
 import io.jsonwebtoken.Claims;
@@ -143,15 +145,18 @@ public class TokenResource extends AbstractResource {
                 userID = user;
             }
             final String projectID = info.getFirstValue(PROJECT_ID_PARAMETER, null);
-            final String timeParam = info.getFirstValue(
-                    UNIT_OF_TIME_PARAMETER, String.
-                            valueOf(TokenSecurity.TimeUnit.HOUR.getTimeUnit())
+            final String defaultTimeUnit = DoiSettings.getInstance().getString(
+                    Consts.TOKEN_EXPIRATION_UNIT, 
+                    String.valueOf(TokenSecurity.TimeUnit.HOUR.getTimeUnit())
             );
-
+            final String defaultTimeDelay = DoiSettings.getInstance().getString(
+                    Consts.TOKEN_EXPIRATION_DELAY, "1");
+            
+            final String timeParam = info.getFirstValue(UNIT_OF_TIME_PARAMETER, defaultTimeUnit);
             final int timeUnit = Integer.parseInt(timeParam);
             final TimeUnit unit = TokenSecurity.TimeUnit.getTimeUnitFrom(timeUnit);
 
-            final int amount = Integer.parseInt(info.getFirstValue(AMOUNT_OF_TIME_PARAMETER, "1"));
+            final int amount = Integer.parseInt(defaultTimeDelay);
 
             final String tokenJwt;
             if (projectID == null) {
