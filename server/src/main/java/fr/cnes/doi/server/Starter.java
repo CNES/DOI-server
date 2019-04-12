@@ -145,13 +145,29 @@ public final class Starter {
         final String stopPid = getCurrentPid(progName);
         if (stopPid == null) {
             try {
-                server.start();
+                server.start();  
+                infoProject();
             } catch (Exception ex) {
                 LOG.info("Unable to start the server");
             }
         } else {
             LOG.info("The server is already started");
         }
+    }
+    
+    /**
+     * Info about project.
+     */
+    private static void infoProject() {
+        LOG.info("-------------------------------------------------");
+        LOG.info("              DOI-server project");
+        LOG.info("-------------------------------------------------");
+        LOG.info("Project : https://cnes.github.io/DOI-server");
+        LOG.info("Source : https://github.com/cnes/DOI-server");
+        LOG.info("Issues : https://github.com/CNES/DOI-server");
+        LOG.info("Copyright (C) 2017-2019 Centre National d'Etudes Spatiales (CNES)");
+        LOG.info("License : LGPLV3");
+        
     }
 
     /**
