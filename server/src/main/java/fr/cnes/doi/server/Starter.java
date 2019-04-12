@@ -90,6 +90,7 @@ public final class Starter {
         help.append("                                 If not provided, a default one is used\n");
         help.append("  -s|--start                   : Starts the server\n");
         help.append("  -t|--stop                    : Stops the server\n");
+        help.append("  -l|--status                  : Status of the server\n");        
         help.append("with OPTIONS:\n");
         help.append("  -h|--help                    : This output\n");
         help.append("  -k|--key-sign                : Creates a key to sign JWT token\n");
@@ -173,7 +174,22 @@ public final class Starter {
             LOG.info("Stopping the DOI server .... Failed");
         }
     }
-
+    
+    /**
+     * Status of the server
+     *
+     */
+    private static void statusServer() {
+        final DoiSettings settings = DoiSettings.getInstance();
+        final String progName = settings.getString(Consts.APP_NAME) + "-" + settings.getString(
+                Consts.VERSION) + ".jar";
+        final String stopPid = getCurrentPid(progName);
+        if (stopPid != null) {
+            LOG.info("The DOI server is running with the pid {}", stopPid);
+        } else {
+            LOG.info("The DOI server is stopped");
+        }      
+    }
     /**
      * Launches the server.
      *
@@ -278,7 +294,7 @@ public final class Starter {
         String arg;
 
         final StringBuffer sb = new StringBuffer();
-        final LongOpt[] longopts = new LongOpt[9];
+        final LongOpt[] longopts = new LongOpt[10];
         longopts[0] = new LongOpt("help", LongOpt.NO_ARGUMENT, null, 'h');
         longopts[1] = new LongOpt("version", LongOpt.NO_ARGUMENT, null, 'v');
         longopts[2] = new LongOpt("secret", LongOpt.REQUIRED_ARGUMENT, sb, 0);
@@ -288,6 +304,7 @@ public final class Starter {
         longopts[6] = new LongOpt("key-sign-secret", LongOpt.REQUIRED_ARGUMENT, null, 'a');
         longopts[7] = new LongOpt("start", LongOpt.NO_ARGUMENT, null, 's');
         longopts[8] = new LongOpt("stop", LongOpt.NO_ARGUMENT, null, 't');
+        longopts[8] = new LongOpt("status", LongOpt.NO_ARGUMENT, null, 'l');        
         //
         final Getopt g = new Getopt(progNameWithJar, argv, "hvdstke:c:f:y:z:a:b:", longopts);
         //
@@ -321,6 +338,10 @@ public final class Starter {
                     LOG.debug("t option is selected");
                     stopServer();
                     break;
+                case 'l':
+                    LOG.debug("l option is selected");
+                    statusServer();
+                    break ;                   
                 //
                 case 'k':
                     LOG.debug("k option is selected");

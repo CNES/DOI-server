@@ -18,13 +18,18 @@ case "$1" in
           cd ${INSTALL_PATH}
           java -Dlog4j.configurationFile=./log4j2.xml -jar DOI-server.jar -f config.properties --start
           ;;
+   status)
+          echo -n "Status DOI-server"
+          cd ${INSTALL_PATH}
+          java -Dlog4j.configurationFile=./log4j2.xml -jar DOI-server.jar -f config.properties --status
+          ;;
    version)
           echo -n "DOI-server version"
           cd ${INSTALL_PATH}
           java -Dlog4j.configurationFile=./log4j2.xml -jar DOI-server.jar -f config.properties --version
           ;;
         *)
-          echo "Usage: doi.sh start|stop|restart"
+          echo "Usage: doi.sh start|stop|restart|status"
           exit 1
           ;;   
     esac
