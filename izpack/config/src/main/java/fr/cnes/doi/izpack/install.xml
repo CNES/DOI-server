@@ -126,6 +126,7 @@
             <file override="true" src="res/doi.sh" targetdir="$INSTALL_PATH/" />
             <file override="true" src="res/doi.service" targetdir="$INSTALL_PATH/" />
             <file override="true" src="db/doidb.sql" targetdir="$INSTALL_PATH/db" />
+            <file override="true" src="../../../../COPYING.LESSER" targetdir="$INSTALL_PATH/db" />
             <executable targetfile="$INSTALL_PATH/doi.sh" stage="never" />
             <parsable targetfile="$INSTALL_PATH/config.properties"/>
             <parsable targetfile="$INSTALL_PATH/doi.sh"/>
