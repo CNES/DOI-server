@@ -53,7 +53,7 @@
 7. [Deployment View](#deployment)
 8. [Development and Test Factors](#dev_test)
     1. [Hardware Limitations](#hard_limit)
-    2. [Software validation and verification](#software validation)
+    2. [Software validation and verification](#software_validation)
     3. [Prerequisite](#software_prerequisite)
     4. [Installation and compilation](#software_install)
     5. [Running tests](#software_tests)

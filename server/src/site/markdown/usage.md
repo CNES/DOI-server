@@ -14,7 +14,7 @@
 7. [Log configuration file](#log_configuration_file)
 8. [Starting the server](#starting_server)
     1. [Starting the server with the default key to decrypt the passwords](#starting_server_default_key)
-    2. [Starting the server with a custome key to decrypt the passwords](#starting_server_custom_key)
+    2. [Starting the server with a custom key to decrypt the passwords](#starting_server_custom_key)
 9. [Stopping the server](#stopping_server)
 
 
@@ -26,7 +26,7 @@ malapert@heulet-HP-ZBook-15-G4:~/DOI$ java -Dlog4j.configurationFile=./log4j2.xm
 
 ------------ Help for DOI Server -----------
 
-Usage: java -jar DOI-server-1.0.0.jar [--secret <key>] [OPTIONS] [-s]
+Usage: java -jar DOI-server.jar [--secret <key>] [OPTIONS] [-s]
 
 
 with :
@@ -35,6 +35,7 @@ with :
                                  If not provided, a default one is used
   -s|--start                   : Starts the server
   -t|--stop                    : Stops the server
+  -l|--status                  : Status of the server
 with OPTIONS:
   -h|--help                    : This output
   -k|--key-sign                : Creates a key to sign JWT token
@@ -94,43 +95,53 @@ See [configuration](./configuration.html)
 ```
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="INFO">
-   
-	<Appenders>
-
-    <Syslog name="syslog" format="RFC5424" host="localhost" port="514"
-            protocol="UDP" appName="DOI-SERVER" includeMDC="false" mdcId="doiserver"
-            facility="LOCAL0" enterpriseNumber="18060" newLine="false" 
-	    messageId="Audit">
-            <LoggerFields>
-                  <KeyValuePair key="thread" value="%t"/>
-                  <KeyValuePair key="priority" value="%p"/>
-		  <KeyValuePair key="category" value="%c"/>
-		  <KeyValuePair key="message" value="%m"/>
-                  <KeyValuePair key="exception" value="%ex"/>
-	    </LoggerFields>
-                        
-    </Syslog>
-
-    <Socket name="syslogsocket" host="localhost" port="514" protocol="UDP">
-          <PatternLayout
-        pattern="&lt;134&gt;%d{MMM dd HH:mm:ss} ${hostName} testlog4j: {
-              &quot;thread&quot;:&quot;%t&quot;,
-              &quot;priority&quot;:&quot;%p&quot;,
-              &quot;category&quot;:&quot;%c{1}&quot;,
-              &quot;exception&quot;:&quot;%exception&quot;
-              }%n"
-          />
-    </Socket>      
-
-        <File name="PERFO" fileName="perfo.log" append="true">     
-            <PatternLayout pattern="%-5p | %d{yyyy-MM-dd HH:mm:ss} | [%t] %C{2} (%F:%L) - %m%n"/>   
-        </File>
-        <File name="FILE" fileName="logfile.log" append="true">
-            <PatternLayout pattern="%-5level %d{yyyy-MM-dd HH:mm:ss} %C{2} (%F:%L) - %m%n"/>
-        </File>
-        <File name="API" fileName="api.log" append="true">                
-            <PatternLayout pattern="[%-5p - %t] %d %c - %m%n"/>
-        </File>
+    <properties>
+            <property name="servicename">doiserver</property>
+            <property name="patternPerfo">%-5p | %d{yyyy-MM-dd HH:mm:ss} | [%t] %C{2} (%F:%L) - %m%n</property>
+            <property name="patternFile">%-5level %d{yyyy-MM-dd HH:mm:ss} %C{2} (%F:%L) - %m%n</property> 
+            <property name="patternApi">[%-5p - %t] %d %c - %m%n</property>     
+            <property name="patternSecurity">%d{yyyy-MM-dd HH:mm:ss} %C{2} (%F:%L) - %m%n</property>                                                                             
+    </properties>
+    
+    <Appenders>
+        <Syslog name="syslog" host="localhost" port="514" protocol="UDP" appName="${servicename}">
+        </Syslog>        
+        <RollingFile name="RollingFilePerfo" fileName="logs/doi-perfo.log"
+                         filePattern="logs/$${date:yyyy-MM}/perfo-%d{yyyy-MM-dd}-%i.log.gz">
+                <PatternLayout>
+                        <pattern>${patternPerfo}</pattern>
+                </PatternLayout>
+                <Policies>
+                        <SizeBasedTriggeringPolicy size="100 MB"/> <!-- Or every 100 MB -->
+                </Policies>
+        </RollingFile>    
+        <RollingFile name="RollingFileFile" fileName="logs/doi-file.log"
+                         filePattern="logs/$${date:yyyy-MM}/file-%d{yyyy-MM-dd}-%i.log.gz">
+                <PatternLayout>
+                        <pattern>${patternFile}</pattern>
+                </PatternLayout>
+                <Policies>
+                        <SizeBasedTriggeringPolicy size="100 MB"/> <!-- Or every 100 MB -->
+                </Policies>
+        </RollingFile>      
+        <RollingFile name="RollingFileApi" fileName="logs/doi-api.log"
+                         filePattern="logs/$${date:yyyy-MM}/api-%d{yyyy-MM-dd}-%i.log.gz">
+                <PatternLayout>
+                        <pattern>${patternApi}</pattern>
+                </PatternLayout>
+                <Policies>
+                        <SizeBasedTriggeringPolicy size="100 MB"/> <!-- Or every 100 MB -->
+                </Policies>
+        </RollingFile>  
+        <RollingFile name="RollingFileSecurity" fileName="logs/doi-security.log"
+                         filePattern="logs/$${date:yyyy-MM}/security-%d{yyyy-MM-dd}-%i.log.gz">
+                <PatternLayout>
+                        <pattern>${patternSecurity}</pattern>
+                </PatternLayout>
+                <Policies>
+                        <SizeBasedTriggeringPolicy size="100 MB"/> <!-- Or every 100 MB -->
+                </Policies>
+        </RollingFile>                    
         <Console name="CONSOLE" target="SYSTEM_OUT">
             <PatternLayout pattern="%highlight{%d [%t] %-5level}: %msg%n%throwable"/><!--%highlight{%d [%t] %-5level}: %msg%n%throwable-->
         </Console>
@@ -140,26 +151,29 @@ See [configuration](./configuration.html)
     </Appenders>
 
     <Loggers>
-     
+        <Logger name="fr.cnes.doi.logging.security" level="INFO">
+            <AppenderRef ref="RollingFileSecurity"/>
+            <appender-ref ref="syslog"/>
+        </Logger>
         <Logger name="fr.cnes.doi.logging.app" level="INFO">
-            <AppenderRef ref="PERFO"/>                        
+            <AppenderRef ref="RollingFilePerfo"/>                        
         </Logger>        
         <Logger name="fr.cnes.doi.logging.api" level="INFO">
-            <AppenderRef ref="API"/>                        
+            <AppenderRef ref="RollingFileApi"/>
+            <appender-ref ref="syslog"/>                        
         </Logger>
         <Logger name="fr.cnes.doi.application" level="INFO">
-            <AppenderRef ref="FILE"/>            
+            <AppenderRef ref="RollingFileFile"/>            
         </Logger>      
         <Logger name="fr.cnes.doi.logging.shell" level="INFO">
+             <AppenderRef ref="SHELL"/>
+        </Logger>          
+        <Logger name="fr.cnes.doi.server" level="INFO">
              <AppenderRef ref="FILE"/>
         </Logger>  
-	<Logger name="fr.cnes.doi.server" level="INFO">
-             <AppenderRef ref="syslogsocket"/>
-             <AppenderRef ref="SHELL"/>
-        </Logger>                    
-	<Root level="INFO">
-	    <AppenderRef ref="syslog"/>
-            <AppenderRef ref="FILE"/>
+                          
+        <Root level="INFO">
+            <AppenderRef ref="FILE"/>            
         </Root>
     </Loggers>
 

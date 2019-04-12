@@ -1,6 +1,9 @@
 # Generate keystore
 keytool -keystore doiServerKey.jks -alias doiServer -genkey -keyalg RSA -keysize 2048 -dname "CN=localhost,OU=DNO/ISA/VIP,O=CNES,L=Toulouse,ST=Unknown,C=FR" -sigalg "SHA1withRSA"
 
+# or import the certificate in the keystore
+keytool -import -alias <hostname> -keystore doiServerKey.jks -file <certificat file>
+
 # List records in keystore (validity date for instance)
 keytool -list -v -keystore doiServerKey.jks
 

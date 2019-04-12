@@ -36,6 +36,7 @@ import fr.cnes.doi.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -429,6 +430,16 @@ public final class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
      */
     @Override
     public void release() {
+        final List<User> users = REALM.getUsers();
+        // we unmap all roles for each user
+        for (final User user:users) {            
+            final Set<Role> roles = REALM.findRoles(user);
+            final Iterator<Role> roleIter  = roles.iterator();
+            while(roleIter.hasNext()) {
+                final Role role = roleIter.next();                ;
+                REALM.unmap(user, role);
+            }
+        }        
         try {
             if (this.das != null) {
                 this.das.close();

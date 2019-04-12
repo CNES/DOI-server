@@ -1,16 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="INFO">
-   
+    <properties>
+            <property name="servicename">doiserver</property>
+            <property name="patternPerfo">%-5p | %d{yyyy-MM-dd HH:mm:ss} | [%t] %C{2} (%F:%L) - %m%n</property>
+            <property name="patternFile">%-5level %d{yyyy-MM-dd HH:mm:ss} %C{2} (%F:%L) - %m%n</property> 
+            <property name="patternApi">[%-5p - %t] %d %c - %m%n</property>     
+            <property name="patternSecurity">%d{yyyy-MM-dd HH:mm:ss} %C{2} (%F:%L) - %m%n</property>                                                                             
+    </properties>
+    
     <Appenders>
-        <File name="PERFO" fileName="perfo.log" append="true">     
-            <PatternLayout pattern="%-5p | %d{yyyy-MM-dd HH:mm:ss} | [%t] %C{2} (%F:%L) - %m%n"/>   
-        </File>
-        <File name="FILE" fileName="logfile.log" append="true">
-            <PatternLayout pattern="%-5level %d{yyyy-MM-dd HH:mm:ss} %C{2} (%F:%L) - %m%n"/>
-        </File>
-        <File name="API" fileName="api.log" append="true">                
-            <PatternLayout pattern="[%-5p - %t] %d %c - %m%n"/>
-        </File>
+        <Syslog name="syslog" host="localhost" port="514" protocol="UDP" appName="${servicename}">
+        </Syslog>        
+        <RollingFile name="RollingFilePerfo" fileName="logs/doi-perfo.log"
+                         filePattern="logs/$${date:yyyy-MM}/perfo-%d{yyyy-MM-dd}-%i.log.gz">
+                <PatternLayout>
+                        <pattern>${patternPerfo}</pattern>
+                </PatternLayout>
+                <Policies>
+                        <SizeBasedTriggeringPolicy size="100 MB"/> <!-- Or every 100 MB -->
+                </Policies>
+        </RollingFile>    
+        <RollingFile name="RollingFileFile" fileName="logs/doi-file.log"
+                         filePattern="logs/$${date:yyyy-MM}/file-%d{yyyy-MM-dd}-%i.log.gz">
+                <PatternLayout>
+                        <pattern>${patternFile}</pattern>
+                </PatternLayout>
+                <Policies>
+                        <SizeBasedTriggeringPolicy size="100 MB"/> <!-- Or every 100 MB -->
+                </Policies>
+        </RollingFile>      
+        <RollingFile name="RollingFileApi" fileName="logs/doi-api.log"
+                         filePattern="logs/$${date:yyyy-MM}/api-%d{yyyy-MM-dd}-%i.log.gz">
+                <PatternLayout>
+                        <pattern>${patternApi}</pattern>
+                </PatternLayout>
+                <Policies>
+                        <SizeBasedTriggeringPolicy size="100 MB"/> <!-- Or every 100 MB -->
+                </Policies>
+        </RollingFile>  
+        <RollingFile name="RollingFileSecurity" fileName="logs/doi-security.log"
+                         filePattern="logs/$${date:yyyy-MM}/security-%d{yyyy-MM-dd}-%i.log.gz">
+                <PatternLayout>
+                        <pattern>${patternSecurity}</pattern>
+                </PatternLayout>
+                <Policies>
+                        <SizeBasedTriggeringPolicy size="100 MB"/> <!-- Or every 100 MB -->
+                </Policies>
+        </RollingFile>                    
         <Console name="CONSOLE" target="SYSTEM_OUT">
             <PatternLayout pattern="%highlight{%d [%t] %-5level}: %msg%n%throwable"/><!--%highlight{%d [%t] %-5level}: %msg%n%throwable-->
         </Console>
@@ -20,27 +56,30 @@
     </Appenders>
 
     <Loggers>
-     
+        <Logger name="fr.cnes.doi.logging.security" level="INFO">
+            <AppenderRef ref="RollingFileSecurity"/>
+            <appender-ref ref="syslog"/>
+        </Logger>
         <Logger name="fr.cnes.doi.logging.app" level="INFO">
-            <AppenderRef ref="PERFO"/>                        
+            <AppenderRef ref="RollingFilePerfo"/>                        
         </Logger>        
         <Logger name="fr.cnes.doi.logging.api" level="INFO">
-            <AppenderRef ref="API"/>                        
+            <AppenderRef ref="RollingFileApi"/>
+            <appender-ref ref="syslog"/>                        
         </Logger>
         <Logger name="fr.cnes.doi.application" level="INFO">
-            <AppenderRef ref="FILE"/>            
+            <AppenderRef ref="RollingFileFile"/>            
         </Logger>      
         <Logger name="fr.cnes.doi.logging.shell" level="INFO">
+             <AppenderRef ref="SHELL"/>
+        </Logger>          
+        <Logger name="fr.cnes.doi.server" level="INFO">
              <AppenderRef ref="FILE"/>
         </Logger>  
-        <Logger name="fr.cnes.doi.server" level="INFO">
-             <AppenderRef ref="SHELL"/>
-        </Logger>                    
+                          
         <Root level="INFO">
-            <AppenderRef ref="FILE"/>
+            <AppenderRef ref="FILE"/>            
         </Root>
     </Loggers>
 
 </Configuration>
-<!-- https://fabianlee.org/2016/10/17/syslog-sending-java-log4j2-to-rsyslog-on-ubuntu/ -->
-<!-- java -Dlog4j.configurationFile=./log4j2.xml -jar DOI-1.0.0.jar -->
