@@ -121,7 +121,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment"> */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;51</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;@Requirement(reqId = Requirement.DOI_CONFIG_010, reqName = Requirement.DOI_CONFIG_010_NAME)</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;52</td>  <td class="nbHitsCovered">&nbsp;1</td>  <td class="src"><pre class="src">&nbsp;<span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> EmailSettings {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;52</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;<span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> EmailSettings {</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;53</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;54</td>  <td class="nbHits">&nbsp;</td>
@@ -140,7 +140,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     * Logger.</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;61</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;62</td>  <td class="nbHitsCovered">&nbsp;1</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger LOG = LogManager.getLogger(EmailSettings.<span class="keyword">class</span>.getName());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;62</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger LOG = LogManager.getLogger(EmailSettings.<span class="keyword">class</span>.getName());</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;63</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;64</td>  <td class="nbHits">&nbsp;</td>
@@ -209,7 +209,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     * debug.</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;96</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;97</td>  <td class="nbHitsCovered">&nbsp;1</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">boolean</span> debug = DEFAULT_DEBUG;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;97</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">boolean</span> debug = DEFAULT_DEBUG;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;98</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;99</td>  <td class="nbHits">&nbsp;</td>
@@ -218,9 +218,9 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     * Constructor</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;101</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;102</td>  <td class="nbHitsCovered">&nbsp;1</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> EmailSettings() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;103</td>  <td class="nbHitsCovered">&nbsp;1</td>  <td class="src"><pre class="src">&nbsp;        init();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;104</td>  <td class="nbHitsCovered">&nbsp;1</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;102</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> EmailSettings() {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;103</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;        init();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;104</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;105</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;106</td>  <td class="nbHits">&nbsp;</td>
@@ -235,7 +235,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;111</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> EmailSettings getInstance() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;112</td>  <td class="nbHitsCovered">&nbsp;114</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> EmailSettingsHolder.INSTANCE;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;112</td>  <td class="nbHitsCovered">&nbsp;570</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> EmailSettingsHolder.INSTANCE;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;113</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;114</td>  <td class="nbHits">&nbsp;</td>
@@ -248,43 +248,43 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;118</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">void</span> init() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;119</td>  <td class="nbHitsCovered">&nbsp;25</td>  <td class="src"><pre class="src">&nbsp;        LOG.traceEntry();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;120</td>  <td class="nbHitsCovered">&nbsp;25</td>  <td class="src"><pre class="src">&nbsp;        LOG.info(<span class="string">"----- Email parameters ----"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;119</td>  <td class="nbHitsCovered">&nbsp;125</td>  <td class="src"><pre class="src">&nbsp;        LOG.traceEntry();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;120</td>  <td class="nbHitsCovered">&nbsp;125</td>  <td class="src"><pre class="src">&nbsp;        LOG.info(<span class="string">"----- Email parameters ----"</span>);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;121</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;122</td>  <td class="nbHitsCovered">&nbsp;25</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> DoiSettings settings = DoiSettings.getInstance();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;122</td>  <td class="nbHitsCovered">&nbsp;125</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> DoiSettings settings = DoiSettings.getInstance();</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;123</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;124</td>  <td class="nbHitsCovered">&nbsp;25</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.smtpProtocol = settings.getString(Consts.SMTP_PROTOCOL, <span class="string">""</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;125</td>  <td class="nbHitsCovered">&nbsp;25</td>  <td class="src"><pre class="src">&nbsp;        LOG.info(String.format(<span class="string">"smtp protocol : %s"</span>, <span class="keyword">this</span>.smtpProtocol));</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;124</td>  <td class="nbHitsCovered">&nbsp;125</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.smtpProtocol = settings.getString(Consts.SMTP_PROTOCOL, <span class="string">""</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;125</td>  <td class="nbHitsCovered">&nbsp;125</td>  <td class="src"><pre class="src">&nbsp;        LOG.info(String.format(<span class="string">"smtp protocol : %s"</span>, <span class="keyword">this</span>.smtpProtocol));</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;126</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;127</td>  <td class="nbHitsCovered">&nbsp;25</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.smtpUrl = settings.getString(Consts.SMTP_URL, <span class="string">""</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;128</td>  <td class="nbHitsCovered">&nbsp;25</td>  <td class="src"><pre class="src">&nbsp;        LOG.info(String.format(<span class="string">"smtp URL : %s"</span>, <span class="keyword">this</span>.smtpUrl));</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;127</td>  <td class="nbHitsCovered">&nbsp;125</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.smtpUrl = settings.getString(Consts.SMTP_URL, <span class="string">""</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;128</td>  <td class="nbHitsCovered">&nbsp;125</td>  <td class="src"><pre class="src">&nbsp;        LOG.info(String.format(<span class="string">"smtp URL : %s"</span>, <span class="keyword">this</span>.smtpUrl));</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;129</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;130</td>  <td class="nbHitsCovered">&nbsp;25</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.authUser = settings.getString(Consts.SMTP_AUTH_USER, <span class="string">""</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;131</td>  <td class="nbHitsCovered">&nbsp;25</td>  <td class="src"><pre class="src">&nbsp;        LOG.info(String.format(<span class="string">"auth user : %s"</span>, <span class="keyword">this</span>.authUser));</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;130</td>  <td class="nbHitsCovered">&nbsp;125</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.authUser = settings.getString(Consts.SMTP_AUTH_USER, <span class="string">""</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;131</td>  <td class="nbHitsCovered">&nbsp;125</td>  <td class="src"><pre class="src">&nbsp;        LOG.info(String.format(<span class="string">"auth user : %s"</span>, <span class="keyword">this</span>.authUser));</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;132</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;133</td>  <td class="nbHitsCovered">&nbsp;25</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.authPwd = settings.getSecret(Consts.SMTP_AUTH_PWD);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;134</td>  <td class="nbHitsCovered">&nbsp;25</td>  <td class="src"><pre class="src">&nbsp;        LOG.info(String.format(<span class="string">"auth pwd : %s"</span>, <span class="keyword">this</span>.authPwd));</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;133</td>  <td class="nbHitsCovered">&nbsp;125</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.authPwd = settings.getSecret(Consts.SMTP_AUTH_PWD);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;134</td>  <td class="nbHitsCovered">&nbsp;125</td>  <td class="src"><pre class="src">&nbsp;        LOG.info(String.format(<span class="string">"auth pwd : %s"</span>, <span class="keyword">this</span>.authPwd));</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;135</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;136</td>  <td class="nbHitsCovered">&nbsp;25</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.tlsEnable = settings.getString(Consts.SMTP_STARTTLS_ENABLE, <span class="string">"false"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;137</td>  <td class="nbHitsCovered">&nbsp;25</td>  <td class="src"><pre class="src">&nbsp;        LOG.info(String.format(<span class="string">"TLS enable : %s"</span>, <span class="keyword">this</span>.tlsEnable));</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;136</td>  <td class="nbHitsCovered">&nbsp;125</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.tlsEnable = settings.getString(Consts.SMTP_STARTTLS_ENABLE, <span class="string">"false"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;137</td>  <td class="nbHitsCovered">&nbsp;125</td>  <td class="src"><pre class="src">&nbsp;        LOG.info(String.format(<span class="string">"TLS enable : %s"</span>, <span class="keyword">this</span>.tlsEnable));</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;138</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;139</td>  <td class="nbHitsCovered">&nbsp;25</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.contactAdmin = settings.getString(Consts.SERVER_CONTACT_ADMIN, <span class="string">"L-doi-support@cnes.fr"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;140</td>  <td class="nbHitsCovered">&nbsp;25</td>  <td class="src"><pre class="src">&nbsp;        LOG.info(String.format(<span class="string">"Contact admin : %s"</span>, <span class="keyword">this</span>.contactAdmin));</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;139</td>  <td class="nbHitsCovered">&nbsp;125</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.contactAdmin = settings.getString(Consts.SERVER_CONTACT_ADMIN, <span class="string">"L-doi-support@cnes.fr"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;140</td>  <td class="nbHitsCovered">&nbsp;125</td>  <td class="src"><pre class="src">&nbsp;        LOG.info(String.format(<span class="string">"Contact admin : %s"</span>, <span class="keyword">this</span>.contactAdmin));</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;141</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;142</td>  <td class="nbHitsCovered">&nbsp;25</td>  <td class="src"><pre class="src">&nbsp;        LOG.info(<span class="string">"Email settings have been loaded"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;143</td>  <td class="nbHitsCovered">&nbsp;25</td>  <td class="src"><pre class="src">&nbsp;        LOG.info(<span class="string">"---------------------------"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;142</td>  <td class="nbHitsCovered">&nbsp;125</td>  <td class="src"><pre class="src">&nbsp;        LOG.info(<span class="string">"Email settings have been loaded"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;143</td>  <td class="nbHitsCovered">&nbsp;125</td>  <td class="src"><pre class="src">&nbsp;        LOG.info(<span class="string">"---------------------------"</span>);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;144</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;145</td>  <td class="nbHitsCovered">&nbsp;25</td>  <td class="src"><pre class="src">&nbsp;        LOG.traceExit();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;146</td>  <td class="nbHitsCovered">&nbsp;25</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;145</td>  <td class="nbHitsCovered">&nbsp;125</td>  <td class="src"><pre class="src">&nbsp;        LOG.traceExit();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;146</td>  <td class="nbHitsCovered">&nbsp;125</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;147</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;148</td>  <td class="nbHits">&nbsp;</td>
@@ -337,8 +337,8 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;174</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">boolean</span> sendMessage(<span class="keyword">final</span> String subject, <span class="keyword">final</span> String msg) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;175</td>  <td class="nbHitsCovered">&nbsp;36</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> String email = EmailSettings.getInstance().getContactAdmin();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;176</td>  <td class="nbHitsCovered">&nbsp;36</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> <span class="keyword">this</span>.sendMessage(subject, msg, email);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;175</td>  <td class="nbHitsCovered">&nbsp;180</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> String email = EmailSettings.getInstance().getContactAdmin();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;176</td>  <td class="nbHitsCovered">&nbsp;180</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> <span class="keyword">this</span>.sendMessage(subject, msg, email);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;177</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;178</td>  <td class="nbHits">&nbsp;</td>
@@ -361,14 +361,14 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;187</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">boolean</span> sendMessage(<span class="keyword">final</span> String subject, <span class="keyword">final</span> String msg, <span class="keyword">final</span> String receiverEmail) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;188</td>  <td class="nbHitsCovered">&nbsp;38</td>  <td class="src"><pre class="src">&nbsp;        LOG.traceEntry(<span class="string">"Parameters : {}, {} and {}"</span>, subject, msg, receiverEmail);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;188</td>  <td class="nbHitsCovered">&nbsp;190</td>  <td class="src"><pre class="src">&nbsp;        LOG.traceEntry(<span class="string">"Parameters : {}, {} and {}"</span>, subject, msg, receiverEmail);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;189</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">boolean</span> result;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;190</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">try</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;191</td>  <td class="nbHitsUncovered"><a title="Line 191: Conditional coverage 50% (1/2).">&nbsp;38</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 191: Conditional coverage 50% (1/2).">            <span class="keyword">if</span> (isConfigureForSendingEmail()) {</a></span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;192</td>  <td class="nbHitsCovered">&nbsp;38</td>  <td class="src"><pre class="src">&nbsp;                LOG.info(<span class="string">"Try to send this message {} to {}"</span>, msg, receiverEmail);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;193</td>  <td class="nbHitsCovered">&nbsp;38</td>  <td class="src"><pre class="src">&nbsp;                result = processMessage(subject, msg, receiverEmail);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;191</td>  <td class="nbHitsUncovered"><a title="Line 191: Conditional coverage 50% (1/2).">&nbsp;190</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 191: Conditional coverage 50% (1/2).">            <span class="keyword">if</span> (isConfigureForSendingEmail()) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;192</td>  <td class="nbHitsCovered">&nbsp;190</td>  <td class="src"><pre class="src">&nbsp;                LOG.info(<span class="string">"Try to send this message {} to {}"</span>, msg, receiverEmail);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;193</td>  <td class="nbHitsCovered">&nbsp;190</td>  <td class="src"><pre class="src">&nbsp;                result = processMessage(subject, msg, receiverEmail);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;194</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            } <span class="keyword">else</span> {</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;195</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                LOG.warn(<span class="string">"Cannot send the email, please fill the configuration file"</span>);</span></pre></td></tr>
@@ -383,8 +383,8 @@
 <tr>  <td class="numLineCover">&nbsp;203</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;            LOG.catching(Level.DEBUG, ex);</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;204</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;            LOG.error(<span class="string">"Cannot send the message with the subject {} : {}"</span>, subject, msg);</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;205</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;            result = <span class="keyword">false</span>;</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;206</td>  <td class="nbHitsCovered">&nbsp;38</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;207</td>  <td class="nbHitsCovered">&nbsp;38</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> LOG.traceExit(result);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;206</td>  <td class="nbHitsCovered">&nbsp;190</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;207</td>  <td class="nbHitsCovered">&nbsp;190</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> LOG.traceExit(result);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;208</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;209</td>  <td class="nbHits">&nbsp;</td>
@@ -411,11 +411,11 @@
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">boolean</span> processMessage(<span class="keyword">final</span> String subject,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;220</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> String message, <span class="keyword">final</span> String receiverEmail) <span class="keyword">throws</span> Exception {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;221</td>  <td class="nbHitsCovered">&nbsp;38</td>  <td class="src"><pre class="src">&nbsp;        LOG.debug(<span class="string">"Enough information to send the email."</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;222</td>  <td class="nbHitsCovered">&nbsp;38</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Request request = <span class="keyword">new</span> Request(Method.POST, getSmtpURL());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;223</td>  <td class="nbHitsCovered">&nbsp;38</td>  <td class="src"><pre class="src">&nbsp;        setSmtpCredentials(request);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;224</td>  <td class="nbHitsCovered">&nbsp;76</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> sendMail(Protocol.valueOf(getSmtpProtocol()), request, Boolean.getBoolean(</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;225</td>  <td class="nbHitsCovered">&nbsp;38</td>  <td class="src"><pre class="src">&nbsp;                getTlsEnable()), subject, message, receiverEmail);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;221</td>  <td class="nbHitsCovered">&nbsp;190</td>  <td class="src"><pre class="src">&nbsp;        LOG.debug(<span class="string">"Enough information to send the email."</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;222</td>  <td class="nbHitsCovered">&nbsp;190</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Request request = <span class="keyword">new</span> Request(Method.POST, getSmtpURL());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;223</td>  <td class="nbHitsCovered">&nbsp;190</td>  <td class="src"><pre class="src">&nbsp;        setSmtpCredentials(request);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;224</td>  <td class="nbHitsCovered">&nbsp;380</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> sendMail(Protocol.valueOf(getSmtpProtocol()), request, Boolean.getBoolean(</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;225</td>  <td class="nbHitsCovered">&nbsp;190</td>  <td class="src"><pre class="src">&nbsp;                getTlsEnable()), subject, message, receiverEmail);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;226</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;227</td>  <td class="nbHits">&nbsp;</td>
@@ -432,17 +432,17 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;233</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">void</span> setSmtpCredentials(<span class="keyword">final</span> Request request) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;234</td>  <td class="nbHitsUncovered"><a title="Line 234: Conditional coverage 50% (1/2).">&nbsp;38</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 234: Conditional coverage 50% (1/2).">        <span class="keyword">if</span> (isAuthenticate()) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;234</td>  <td class="nbHitsUncovered"><a title="Line 234: Conditional coverage 50% (1/2).">&nbsp;190</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 234: Conditional coverage 50% (1/2).">        <span class="keyword">if</span> (isAuthenticate()) {</a></span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;235</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;            LOG.debug(<span class="string">"Sets the login/passwd for the SMTP server"</span>);</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;236</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;            request.setChallengeResponse(</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;237</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                    <span class="keyword">new</span> ChallengeResponse(ChallengeScheme.SMTP_PLAIN, getAuthUser(), getAuthPwd()));</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;238</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        } <span class="keyword">else</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;239</td>  <td class="nbHitsCovered">&nbsp;38</td>  <td class="src"><pre class="src">&nbsp;            LOG.debug(<span class="string">"No required login/pwd for the SMTP server"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;240</td>  <td class="nbHitsCovered">&nbsp;38</td>  <td class="src"><pre class="src">&nbsp;            request.setChallengeResponse(<span class="keyword">new</span> ChallengeResponse(ChallengeScheme.SMTP_PLAIN));</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;239</td>  <td class="nbHitsCovered">&nbsp;190</td>  <td class="src"><pre class="src">&nbsp;            LOG.debug(<span class="string">"No required login/pwd for the SMTP server"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;240</td>  <td class="nbHitsCovered">&nbsp;190</td>  <td class="src"><pre class="src">&nbsp;            request.setChallengeResponse(<span class="keyword">new</span> ChallengeResponse(ChallengeScheme.SMTP_PLAIN));</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;241</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;242</td>  <td class="nbHitsCovered">&nbsp;38</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;242</td>  <td class="nbHitsCovered">&nbsp;190</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;243</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;244</td>  <td class="nbHits">&nbsp;</td>
@@ -459,7 +459,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;250</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">boolean</span> isConfigureForSendingEmail() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;251</td>  <td class="nbHitsUncovered"><a title="Line 251: Conditional coverage 50% (2/4) [each condition: 50%, 50%].">&nbsp;38</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 251: Conditional coverage 50% (2/4) [each condition: 50%, 50%].">        <span class="keyword">return</span> !(<span class="keyword">this</span>.getSmtpURL().isEmpty() &amp;&amp; <span class="keyword">this</span>.getSmtpProtocol().isEmpty());</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;251</td>  <td class="nbHitsUncovered"><a title="Line 251: Conditional coverage 50% (2/4) [each condition: 50%, 50%].">&nbsp;190</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 251: Conditional coverage 50% (2/4) [each condition: 50%, 50%].">        <span class="keyword">return</span> !(<span class="keyword">this</span>.getSmtpURL().isEmpty() &amp;&amp; <span class="keyword">this</span>.getSmtpProtocol().isEmpty());</a></span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;252</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;253</td>  <td class="nbHits">&nbsp;</td>
@@ -476,7 +476,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;259</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">boolean</span> isAuthenticate() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;260</td>  <td class="nbHitsUncovered"><a title="Line 260: Conditional coverage 50% (2/4) [each condition: 50%, 50%].">&nbsp;38</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 260: Conditional coverage 50% (2/4) [each condition: 50%, 50%].">        <span class="keyword">return</span> !(<span class="keyword">this</span>.getAuthUser().isEmpty() &amp;&amp; <span class="keyword">this</span>.getAuthPwd().isEmpty());</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;260</td>  <td class="nbHitsUncovered"><a title="Line 260: Conditional coverage 50% (2/4) [each condition: 50%, 50%].">&nbsp;190</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 260: Conditional coverage 50% (2/4) [each condition: 50%, 50%].">        <span class="keyword">return</span> !(<span class="keyword">this</span>.getAuthUser().isEmpty() &amp;&amp; <span class="keyword">this</span>.getAuthPwd().isEmpty());</a></span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;261</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;262</td>  <td class="nbHits">&nbsp;</td>
@@ -501,14 +501,14 @@
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> Representation createMailRepresentation(<span class="keyword">final</span> String subject, <span class="keyword">final</span> String msg,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;272</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> String to) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;273</td>  <td class="nbHitsCovered">&nbsp;38</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Map&lt;String, String&gt; dataModel = <span class="keyword">new</span> ConcurrentHashMap&lt;&gt;();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;274</td>  <td class="nbHitsCovered">&nbsp;38</td>  <td class="src"><pre class="src">&nbsp;        dataModel.put(<span class="string">"subject"</span>, subject);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;275</td>  <td class="nbHitsCovered">&nbsp;38</td>  <td class="src"><pre class="src">&nbsp;        dataModel.put(<span class="string">"message"</span>, msg);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;276</td>  <td class="nbHitsCovered">&nbsp;38</td>  <td class="src"><pre class="src">&nbsp;        dataModel.put(<span class="string">"from"</span>, <span class="keyword">this</span>.getContactAdmin());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;277</td>  <td class="nbHitsCovered">&nbsp;38</td>  <td class="src"><pre class="src">&nbsp;        dataModel.put(<span class="string">"to"</span>, to);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;278</td>  <td class="nbHitsCovered">&nbsp;38</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Representation mailFtl = <span class="keyword">new</span> ClientResource(LocalReference.createClapReference(</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;279</td>  <td class="nbHitsCovered">&nbsp;38</td>  <td class="src"><pre class="src">&nbsp;                <span class="string">"class/email.ftl"</span>)).get();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;280</td>  <td class="nbHitsCovered">&nbsp;38</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> <span class="keyword">new</span> TemplateRepresentation(mailFtl, dataModel, MediaType.TEXT_XML);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;273</td>  <td class="nbHitsCovered">&nbsp;190</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Map&lt;String, String&gt; dataModel = <span class="keyword">new</span> ConcurrentHashMap&lt;&gt;();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;274</td>  <td class="nbHitsCovered">&nbsp;190</td>  <td class="src"><pre class="src">&nbsp;        dataModel.put(<span class="string">"subject"</span>, subject);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;275</td>  <td class="nbHitsCovered">&nbsp;190</td>  <td class="src"><pre class="src">&nbsp;        dataModel.put(<span class="string">"message"</span>, msg);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;276</td>  <td class="nbHitsCovered">&nbsp;190</td>  <td class="src"><pre class="src">&nbsp;        dataModel.put(<span class="string">"from"</span>, <span class="keyword">this</span>.getContactAdmin());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;277</td>  <td class="nbHitsCovered">&nbsp;190</td>  <td class="src"><pre class="src">&nbsp;        dataModel.put(<span class="string">"to"</span>, to);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;278</td>  <td class="nbHitsCovered">&nbsp;190</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Representation mailFtl = <span class="keyword">new</span> ClientResource(LocalReference.createClapReference(</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;279</td>  <td class="nbHitsCovered">&nbsp;190</td>  <td class="src"><pre class="src">&nbsp;                <span class="string">"class/email.ftl"</span>)).get();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;280</td>  <td class="nbHitsCovered">&nbsp;190</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> <span class="keyword">new</span> TemplateRepresentation(mailFtl, dataModel, MediaType.TEXT_XML);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;281</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;282</td>  <td class="nbHits">&nbsp;</td>
@@ -549,16 +549,16 @@
   <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> String msg,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;300</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> String to) <span class="keyword">throws</span> Exception {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;301</td>  <td class="nbHitsCovered">&nbsp;76</td>  <td class="src"><pre class="src">&nbsp;        LOG.traceEntry(<span class="string">"Parameters\n  protocol:{}\n  startTls:{}, request:{}\n  subject:{}\n  "</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;301</td>  <td class="nbHitsCovered">&nbsp;380</td>  <td class="src"><pre class="src">&nbsp;        LOG.traceEntry(<span class="string">"Parameters\n  protocol:{}\n  startTls:{}, request:{}\n  subject:{}\n  "</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;302</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                + <span class="string">"msg:{}\n  to:{}"</span>,</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;303</td>  <td class="nbHitsCovered">&nbsp;38</td>  <td class="src"><pre class="src">&nbsp;                protocol, request, startTls, subject, msg, to);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;304</td>  <td class="nbHitsCovered">&nbsp;38</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> String contextMode = DoiSettings.getInstance().getString(Consts.CONTEXT_MODE);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;305</td>  <td class="nbHitsCovered">&nbsp;38</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Representation mail = <span class="keyword">this</span>.createMailRepresentation(subject, msg, to);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;306</td>  <td class="nbHitsCovered">&nbsp;38</td>  <td class="src"><pre class="src">&nbsp;        request.setEntity(mail);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;303</td>  <td class="nbHitsCovered">&nbsp;190</td>  <td class="src"><pre class="src">&nbsp;                protocol, request, startTls, subject, msg, to);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;304</td>  <td class="nbHitsCovered">&nbsp;190</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> String contextMode = DoiSettings.getInstance().getString(Consts.CONTEXT_MODE);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;305</td>  <td class="nbHitsCovered">&nbsp;190</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Representation mail = <span class="keyword">this</span>.createMailRepresentation(subject, msg, to);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;306</td>  <td class="nbHitsCovered">&nbsp;190</td>  <td class="src"><pre class="src">&nbsp;        request.setEntity(mail);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;307</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> <span class="keyword">boolean</span> result;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;308</td>  <td class="nbHitsUncovered"><a title="Line 308: Conditional coverage 50% (1/2).">&nbsp;38</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 308: Conditional coverage 50% (1/2).">        <span class="keyword">if</span> (<span class="string">"PROD"</span>.equals(contextMode)) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;308</td>  <td class="nbHitsUncovered"><a title="Line 308: Conditional coverage 50% (1/2).">&nbsp;190</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 308: Conditional coverage 50% (1/2).">        <span class="keyword">if</span> (<span class="string">"PROD"</span>.equals(contextMode)) {</a></span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;309</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;            <span class="keyword">final</span> Client client = <span class="keyword">new</span> Client(<span class="keyword">new</span> Context(), protocol);</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;310</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;            <span class="keyword">final</span> Series&lt;Parameter&gt; parameters = client.getContext().getParameters();</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;311</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;            parameters.add(<span class="string">"debug"</span>, String.valueOf(isDebug()));</span></pre></td></tr>
@@ -577,12 +577,12 @@
 <tr>  <td class="numLine">&nbsp;323</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            }</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;324</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        } <span class="keyword">else</span> {</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;325</td>  <td class="nbHitsCovered">&nbsp;38</td>  <td class="src"><pre class="src">&nbsp;            result = <span class="keyword">true</span>;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;326</td>  <td class="nbHitsCovered">&nbsp;76</td>  <td class="src"><pre class="src">&nbsp;            LOG.warn(<span class="string">"The configuration context {} is not PROD, do not send the email : {}"</span>,</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;327</td>  <td class="nbHitsCovered">&nbsp;38</td>  <td class="src"><pre class="src">&nbsp;                    contextMode, mail.getText());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;325</td>  <td class="nbHitsCovered">&nbsp;190</td>  <td class="src"><pre class="src">&nbsp;            result = <span class="keyword">true</span>;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;326</td>  <td class="nbHitsCovered">&nbsp;380</td>  <td class="src"><pre class="src">&nbsp;            LOG.warn(<span class="string">"The configuration context {} is not PROD, do not send the email : {}"</span>,</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;327</td>  <td class="nbHitsCovered">&nbsp;190</td>  <td class="src"><pre class="src">&nbsp;                    contextMode, mail.getText());</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;328</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;329</td>  <td class="nbHitsCovered">&nbsp;38</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> LOG.traceExit(result);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;329</td>  <td class="nbHitsCovered">&nbsp;189</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> LOG.traceExit(result);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;330</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;331</td>  <td class="nbHits">&nbsp;</td>
@@ -599,8 +599,8 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;337</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> String getSmtpURL() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;338</td>  <td class="nbHitsCovered">&nbsp;76</td>  <td class="src"><pre class="src">&nbsp;        LOG.traceEntry();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;339</td>  <td class="nbHitsCovered">&nbsp;76</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> LOG.traceExit(smtpUrl);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;338</td>  <td class="nbHitsCovered">&nbsp;380</td>  <td class="src"><pre class="src">&nbsp;        LOG.traceEntry();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;339</td>  <td class="nbHitsCovered">&nbsp;380</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> LOG.traceExit(smtpUrl);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;340</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;341</td>  <td class="nbHits">&nbsp;</td>
@@ -617,8 +617,8 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;347</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> String getSmtpProtocol() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;348</td>  <td class="nbHitsCovered">&nbsp;76</td>  <td class="src"><pre class="src">&nbsp;        LOG.traceEntry();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;349</td>  <td class="nbHitsCovered">&nbsp;76</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> LOG.traceExit(smtpProtocol);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;348</td>  <td class="nbHitsCovered">&nbsp;380</td>  <td class="src"><pre class="src">&nbsp;        LOG.traceEntry();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;349</td>  <td class="nbHitsCovered">&nbsp;380</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> LOG.traceExit(smtpProtocol);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;350</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;351</td>  <td class="nbHits">&nbsp;</td>
@@ -635,8 +635,8 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;357</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> String getTlsEnable() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;358</td>  <td class="nbHitsCovered">&nbsp;38</td>  <td class="src"><pre class="src">&nbsp;        LOG.traceEntry();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;359</td>  <td class="nbHitsCovered">&nbsp;38</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> LOG.traceExit(tlsEnable);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;358</td>  <td class="nbHitsCovered">&nbsp;190</td>  <td class="src"><pre class="src">&nbsp;        LOG.traceEntry();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;359</td>  <td class="nbHitsCovered">&nbsp;190</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> LOG.traceExit(tlsEnable);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;360</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;361</td>  <td class="nbHits">&nbsp;</td>
@@ -653,8 +653,8 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;367</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> String getAuthUser() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;368</td>  <td class="nbHitsCovered">&nbsp;38</td>  <td class="src"><pre class="src">&nbsp;        LOG.traceEntry();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;369</td>  <td class="nbHitsCovered">&nbsp;38</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> LOG.traceExit(authUser);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;368</td>  <td class="nbHitsCovered">&nbsp;190</td>  <td class="src"><pre class="src">&nbsp;        LOG.traceEntry();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;369</td>  <td class="nbHitsCovered">&nbsp;190</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> LOG.traceExit(authUser);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;370</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;371</td>  <td class="nbHits">&nbsp;</td>
@@ -671,8 +671,8 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;377</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> String getAuthPwd() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;378</td>  <td class="nbHitsCovered">&nbsp;38</td>  <td class="src"><pre class="src">&nbsp;        LOG.traceEntry();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;379</td>  <td class="nbHitsCovered">&nbsp;38</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> LOG.traceExit(authPwd);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;378</td>  <td class="nbHitsCovered">&nbsp;190</td>  <td class="src"><pre class="src">&nbsp;        LOG.traceEntry();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;379</td>  <td class="nbHitsCovered">&nbsp;190</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> LOG.traceExit(authPwd);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;380</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;381</td>  <td class="nbHits">&nbsp;</td>
@@ -689,8 +689,8 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;387</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> String getContactAdmin() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;388</td>  <td class="nbHitsCovered">&nbsp;74</td>  <td class="src"><pre class="src">&nbsp;        LOG.traceEntry();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;389</td>  <td class="nbHitsCovered">&nbsp;74</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> LOG.traceExit(contactAdmin);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;388</td>  <td class="nbHitsCovered">&nbsp;370</td>  <td class="src"><pre class="src">&nbsp;        LOG.traceEntry();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;389</td>  <td class="nbHitsCovered">&nbsp;370</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> LOG.traceExit(contactAdmin);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;390</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;391</td>  <td class="nbHits">&nbsp;</td>
@@ -701,7 +701,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     *</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;394</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;395</td>  <td class="nbHitsCovered">&nbsp;114</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">class</span> EmailSettingsHolder {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;395</td>  <td class="nbHitsCovered">&nbsp;570</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">class</span> EmailSettingsHolder {</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;396</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;397</td>  <td class="nbHits">&nbsp;</td>
@@ -710,7 +710,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">         * Unique Instance unique not pre-initiliaze</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;399</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">         */</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;400</td>  <td class="nbHitsCovered">&nbsp;1</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> EmailSettings INSTANCE = <span class="keyword">new</span> EmailSettings();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;400</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> EmailSettings INSTANCE = <span class="keyword">new</span> EmailSettings();</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;401</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;402</td>  <td class="nbHits">&nbsp;</td>
@@ -719,6 +719,6 @@
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.1.1 on 4/7/19 6:36 AM.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.1.1 on 4/13/19 12:07 AM.</div>
 </body>
 </html>

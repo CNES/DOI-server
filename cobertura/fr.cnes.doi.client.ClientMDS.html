@@ -210,7 +210,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     * Test mode sets to true.</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;95</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;96</td>  <td class="nbHitsCovered">&nbsp;1</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Parameter TEST_MODE = <span class="keyword">new</span> Parameter(<span class="string">"testMode"</span>, <span class="string">"true"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;96</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Parameter TEST_MODE = <span class="keyword">new</span> Parameter(<span class="string">"testMode"</span>, <span class="string">"true"</span>);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;97</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;98</td>  <td class="nbHits">&nbsp;</td>
@@ -259,7 +259,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     * SCHEMA_FACTORY.</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;120</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;121</td>  <td class="nbHitsCovered">&nbsp;1</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> SchemaFactory SCHEMA_FACTORY = SchemaFactory.newInstance(</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;121</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> SchemaFactory SCHEMA_FACTORY = SchemaFactory.newInstance(</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;122</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            XMLConstants.W3C_XML_SCHEMA_NS_URI</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;123</td>  <td class="nbHits">&nbsp;</td>
@@ -272,7 +272,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     * Loads DOI settings.</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;127</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;128</td>  <td class="nbHitsCovered">&nbsp;1</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> DoiSettings DOI_SETTINGS = DoiSettings.getInstance();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;128</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> DoiSettings DOI_SETTINGS = DoiSettings.getInstance();</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;129</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;130</td>  <td class="nbHits">&nbsp;</td>
@@ -313,13 +313,13 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;148</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> checkIfAllCharsAreValid(<span class="keyword">final</span> String test) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;149</td>  <td class="nbHitsCovered"><a title="Line 149: Conditional coverage 100% (2/2).">&nbsp;224</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 149: Conditional coverage 100% (2/2).">        <span class="keyword">if</span> (!test.matches(<span class="string">"^[0-9a-zA-Z\\-._+:/\\s]+$"</span>)) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;150</td>  <td class="nbHitsCovered">&nbsp;1</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Only these characters are allowed "</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;149</td>  <td class="nbHitsCovered"><a title="Line 149: Conditional coverage 100% (2/2).">&nbsp;1136</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 149: Conditional coverage 100% (2/2).">        <span class="keyword">if</span> (!test.matches(<span class="string">"^[0-9a-zA-Z\\-._+:/\\s]+$"</span>)) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;150</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Only these characters are allowed "</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;151</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                    + <span class="string">"0-9a-zA-Z\\-._+:/ in a DOI name"</span>);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;152</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;153</td>  <td class="nbHitsCovered">&nbsp;221</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;153</td>  <td class="nbHitsCovered">&nbsp;1126</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;154</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="comment">/**</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;155</td>  <td class="nbHits">&nbsp;</td>
@@ -388,10 +388,10 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;187</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> ClientMDS(<span class="keyword">final</span> Context context) <span class="keyword">throws</span> ClientMdsException {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;188</td>  <td class="nbHitsCovered">&nbsp;65</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">super</span>(context.getDataCiteUrl());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;189</td>  <td class="nbHitsCovered">&nbsp;65</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.context = context;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;190</td>  <td class="nbHitsUncovered"><a title="Line 190: Conditional coverage 50% (1/2).">&nbsp;65</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 190: Conditional coverage 50% (1/2).">        <span class="keyword">this</span>.testMode = <span class="keyword">this</span>.context.hasTestMode() ? TEST_MODE : <span class="keyword">null</span>;</a></span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;191</td>  <td class="nbHitsCovered">&nbsp;65</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;188</td>  <td class="nbHitsCovered">&nbsp;325</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">super</span>(context.getDataCiteUrl());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;189</td>  <td class="nbHitsCovered">&nbsp;325</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.context = context;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;190</td>  <td class="nbHitsUncovered"><a title="Line 190: Conditional coverage 50% (1/2).">&nbsp;325</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 190: Conditional coverage 50% (1/2).">        <span class="keyword">this</span>.testMode = <span class="keyword">this</span>.context.hasTestMode() ? TEST_MODE : <span class="keyword">null</span>;</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;191</td>  <td class="nbHitsCovered">&nbsp;325</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;192</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;193</td>  <td class="nbHits">&nbsp;</td>
@@ -444,11 +444,11 @@
   <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> String login,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;217</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> String pwd) <span class="keyword">throws</span> ClientMdsException {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;218</td>  <td class="nbHitsCovered">&nbsp;65</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>(context);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;219</td>  <td class="nbHitsCovered">&nbsp;130</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.getLog().debug(<span class="string">"Authentication with HTTP_BASIC : {}/{}"</span>,</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;220</td>  <td class="nbHitsCovered">&nbsp;65</td>  <td class="src"><pre class="src">&nbsp;                login, Utils.transformPasswordToStars(pwd));</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;221</td>  <td class="nbHitsCovered">&nbsp;65</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.getClient().setChallengeResponse(ChallengeScheme.HTTP_BASIC, login, pwd);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;222</td>  <td class="nbHitsCovered">&nbsp;65</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;218</td>  <td class="nbHitsCovered">&nbsp;325</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>(context);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;219</td>  <td class="nbHitsCovered">&nbsp;650</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.getLog().debug(<span class="string">"Authentication with HTTP_BASIC : {}/{}"</span>,</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;220</td>  <td class="nbHitsCovered">&nbsp;325</td>  <td class="src"><pre class="src">&nbsp;                login, Utils.transformPasswordToStars(pwd));</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;221</td>  <td class="nbHitsCovered">&nbsp;325</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.getClient().setChallengeResponse(ChallengeScheme.HTTP_BASIC, login, pwd);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;222</td>  <td class="nbHitsCovered">&nbsp;325</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;223</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;224</td>  <td class="nbHits">&nbsp;</td>
@@ -490,7 +490,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;245</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> Parameter getTestMode() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;246</td>  <td class="nbHitsCovered">&nbsp;267</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> <span class="keyword">this</span>.testMode;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;246</td>  <td class="nbHitsCovered">&nbsp;1347</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> <span class="keyword">this</span>.testMode;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;247</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;248</td>  <td class="nbHits">&nbsp;</td>
@@ -509,16 +509,16 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;255</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> String useTestPrefix(<span class="keyword">final</span> String doiName) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;256</td>  <td class="nbHitsCovered">&nbsp;267</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> String[] split = doiName.split(<span class="string">"/"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;257</td>  <td class="nbHitsCovered">&nbsp;266</td>  <td class="src"><pre class="src">&nbsp;        split[0] = TEST_DOI_PREFIX;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;258</td>  <td class="nbHitsCovered">&nbsp;266</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> String testingPrefix = String.join(<span class="string">"/"</span>, split);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;259</td>  <td class="nbHitsCovered">&nbsp;269</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> String message = String.format(</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;256</td>  <td class="nbHitsCovered">&nbsp;1345</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> String[] split = doiName.split(<span class="string">"/"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;257</td>  <td class="nbHitsCovered">&nbsp;1348</td>  <td class="src"><pre class="src">&nbsp;        split[0] = TEST_DOI_PREFIX;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;258</td>  <td class="nbHitsCovered">&nbsp;1342</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> String testingPrefix = String.join(<span class="string">"/"</span>, split);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;259</td>  <td class="nbHitsCovered">&nbsp;1344</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> String message = String.format(</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;260</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                <span class="string">"DOI %s has been renamed as %s for testing"</span>, doiName, testingPrefix</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;261</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        );</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;262</td>  <td class="nbHitsCovered">&nbsp;270</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.getLog().warn(message);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;263</td>  <td class="nbHitsCovered">&nbsp;269</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> testingPrefix;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;262</td>  <td class="nbHitsCovered">&nbsp;1344</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.getLog().warn(message);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;263</td>  <td class="nbHitsCovered">&nbsp;1343</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> testingPrefix;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;264</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;265</td>  <td class="nbHits">&nbsp;</td>
@@ -531,8 +531,8 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;269</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">void</span> initReference() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;270</td>  <td class="nbHitsCovered">&nbsp;266</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.getClient().setReference(<span class="keyword">this</span>.context.getDataCiteUrl());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;271</td>  <td class="nbHitsCovered">&nbsp;270</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;270</td>  <td class="nbHitsCovered">&nbsp;1341</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.getClient().setReference(<span class="keyword">this</span>.context.getDataCiteUrl());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;271</td>  <td class="nbHitsCovered">&nbsp;1346</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;272</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;273</td>  <td class="nbHits">&nbsp;</td>
@@ -549,13 +549,13 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;279</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> Reference createReference(<span class="keyword">final</span> String segment) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;280</td>  <td class="nbHitsCovered">&nbsp;268</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.initReference();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;281</td>  <td class="nbHitsCovered">&nbsp;268</td>  <td class="src"><pre class="src">&nbsp;        Reference url = <span class="keyword">this</span>.getClient().addSegment(segment);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;282</td>  <td class="nbHitsUncovered"><a title="Line 282: Conditional coverage 50% (1/2).">&nbsp;269</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 282: Conditional coverage 50% (1/2).">        <span class="keyword">if</span> (<span class="keyword">this</span>.getTestMode() != <span class="keyword">null</span>) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;280</td>  <td class="nbHitsCovered">&nbsp;1342</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.initReference();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;281</td>  <td class="nbHitsCovered">&nbsp;1347</td>  <td class="src"><pre class="src">&nbsp;        Reference url = <span class="keyword">this</span>.getClient().addSegment(segment);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;282</td>  <td class="nbHitsUncovered"><a title="Line 282: Conditional coverage 50% (1/2).">&nbsp;1350</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 282: Conditional coverage 50% (1/2).">        <span class="keyword">if</span> (<span class="keyword">this</span>.getTestMode() != <span class="keyword">null</span>) {</a></span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;283</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;            url = url.addQueryParameter(<span class="keyword">this</span>.getTestMode());</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;284</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;285</td>  <td class="nbHitsCovered">&nbsp;268</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> url;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;285</td>  <td class="nbHitsCovered">&nbsp;1347</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> url;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;286</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;287</td>  <td class="nbHits">&nbsp;</td>
@@ -578,14 +578,14 @@
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> Reference createReferenceWithDOI(<span class="keyword">final</span> String segment,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;296</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> String doiName) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;297</td>  <td class="nbHitsCovered">&nbsp;45</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> String requestDOI = getDoiAccorgindToContext(doiName);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;298</td>  <td class="nbHitsCovered">&nbsp;45</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Reference ref = createReference(segment);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;299</td>  <td class="nbHitsCovered">&nbsp;45</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> String[] split = requestDOI.split(<span class="string">"/"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;300</td>  <td class="nbHitsCovered"><a title="Line 300: Conditional coverage 100% (2/2).">&nbsp;171</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 300: Conditional coverage 100% (2/2).">        <span class="keyword">for</span> (<span class="keyword">final</span> String segmentUri : split) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;301</td>  <td class="nbHitsCovered">&nbsp;126</td>  <td class="src"><pre class="src">&nbsp;            ref.addSegment(segmentUri);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;297</td>  <td class="nbHitsCovered">&nbsp;225</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> String requestDOI = getDoiAccorgindToContext(doiName);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;298</td>  <td class="nbHitsCovered">&nbsp;225</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Reference ref = createReference(segment);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;299</td>  <td class="nbHitsCovered">&nbsp;225</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> String[] split = requestDOI.split(<span class="string">"/"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;300</td>  <td class="nbHitsCovered"><a title="Line 300: Conditional coverage 100% (2/2).">&nbsp;855</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 300: Conditional coverage 100% (2/2).">        <span class="keyword">for</span> (<span class="keyword">final</span> String segmentUri : split) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;301</td>  <td class="nbHitsCovered">&nbsp;630</td>  <td class="src"><pre class="src">&nbsp;            ref.addSegment(segmentUri);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;302</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;303</td>  <td class="nbHitsCovered">&nbsp;45</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> ref;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;303</td>  <td class="nbHitsCovered">&nbsp;225</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> ref;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;304</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;305</td>  <td class="nbHits">&nbsp;</td>
@@ -606,7 +606,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;313</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> String getDoiAccorgindToContext(<span class="keyword">final</span> String doiName) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;314</td>  <td class="nbHitsUncovered"><a title="Line 314: Conditional coverage 50% (1/2).">&nbsp;269</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 314: Conditional coverage 50% (1/2).">        <span class="keyword">return</span> <span class="keyword">this</span>.context.hasDoiTestPrefix() ? useTestPrefix(doiName) : doiName;</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;314</td>  <td class="nbHitsUncovered"><a title="Line 314: Conditional coverage 50% (1/2).">&nbsp;1350</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 314: Conditional coverage 50% (1/2).">        <span class="keyword">return</span> <span class="keyword">this</span>.context.hasDoiTestPrefix() ? useTestPrefix(doiName) : doiName;</a></span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;315</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;316</td>  <td class="nbHits">&nbsp;</td>
@@ -631,12 +631,12 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;326</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">void</span> checkInputForm(<span class="keyword">final</span> Form form) <span class="keyword">throws</span> IllegalArgumentException {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;327</td>  <td class="nbHitsCovered">&nbsp;107</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Map&lt;String, String&gt; map = form.getValuesMap();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;328</td>  <td class="nbHitsUncovered"><a title="Line 328: Conditional coverage 50% (2/4) [each condition: 50%, 50%].">&nbsp;108</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 328: Conditional coverage 50% (2/4) [each condition: 50%, 50%].">        <span class="keyword">if</span> (map.containsKey(POST_DOI) &amp;&amp; map.containsKey(POST_URL)) {</a></span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;329</td>  <td class="nbHitsCovered">&nbsp;109</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> String doiName = form.getFirstValue(POST_DOI);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;330</td>  <td class="nbHitsCovered">&nbsp;111</td>  <td class="src"><pre class="src">&nbsp;            checkIfAllCharsAreValid(doiName);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;331</td>  <td class="nbHitsCovered">&nbsp;109</td>  <td class="src"><pre class="src">&nbsp;            form.set(POST_DOI, getDoiAccorgindToContext(doiName));</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;332</td>  <td class="nbHitsCovered">&nbsp;110</td>  <td class="src"><pre class="src">&nbsp;        } <span class="keyword">else</span> {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;327</td>  <td class="nbHitsCovered">&nbsp;536</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Map&lt;String, String&gt; map = form.getValuesMap();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;328</td>  <td class="nbHitsUncovered"><a title="Line 328: Conditional coverage 50% (2/4) [each condition: 50%, 50%].">&nbsp;545</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 328: Conditional coverage 50% (2/4) [each condition: 50%, 50%].">        <span class="keyword">if</span> (map.containsKey(POST_DOI) &amp;&amp; map.containsKey(POST_URL)) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;329</td>  <td class="nbHitsCovered">&nbsp;545</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> String doiName = form.getFirstValue(POST_DOI);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;330</td>  <td class="nbHitsCovered">&nbsp;553</td>  <td class="src"><pre class="src">&nbsp;            checkIfAllCharsAreValid(doiName);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;331</td>  <td class="nbHitsCovered">&nbsp;552</td>  <td class="src"><pre class="src">&nbsp;            form.set(POST_DOI, getDoiAccorgindToContext(doiName));</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;332</td>  <td class="nbHitsCovered">&nbsp;547</td>  <td class="src"><pre class="src">&nbsp;        } <span class="keyword">else</span> {</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;333</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(MessageFormat.format(</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;334</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                    <span class="string">"{0} and {1} parameters are required"</span>,</pre></td></tr>
@@ -646,7 +646,7 @@
   <td class="src"><pre class="src">&nbsp;            );</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;337</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;338</td>  <td class="nbHitsCovered">&nbsp;109</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;338</td>  <td class="nbHitsCovered">&nbsp;547</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;339</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;340</td>  <td class="nbHits">&nbsp;</td>
@@ -671,11 +671,11 @@
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> String result;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;350</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">try</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;351</td>  <td class="nbHitsCovered">&nbsp;219</td>  <td class="src"><pre class="src">&nbsp;            result = rep.getText();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;351</td>  <td class="nbHitsCovered">&nbsp;1086</td>  <td class="src"><pre class="src">&nbsp;            result = rep.getText();</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;352</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        } <span class="keyword">catch</span> (IOException ex) {</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;353</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;            <span class="keyword">throw</span> <span class="keyword">new</span> ClientMdsException(Status.SERVER_ERROR_INTERNAL, ex);</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;354</td>  <td class="nbHitsCovered">&nbsp;219</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;355</td>  <td class="nbHitsCovered">&nbsp;219</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> result;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;354</td>  <td class="nbHitsCovered">&nbsp;1091</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;355</td>  <td class="nbHitsCovered">&nbsp;1091</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> result;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;356</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;357</td>  <td class="nbHits">&nbsp;</td>
@@ -718,24 +718,24 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;376</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> String getDoi(<span class="keyword">final</span> String doiName) <span class="keyword">throws</span> ClientMdsException {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;377</td>  <td class="nbHitsCovered">&nbsp;9</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Reference url = createReferenceWithDOI(DOI_RESOURCE, doiName);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;378</td>  <td class="nbHitsCovered">&nbsp;9</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.getLog().info(<span class="string">"GET {0}"</span>, url.toString());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;377</td>  <td class="nbHitsCovered">&nbsp;45</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Reference url = createReferenceWithDOI(DOI_RESOURCE, doiName);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;378</td>  <td class="nbHitsCovered">&nbsp;45</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.getLog().info(<span class="string">"GET {0}"</span>, url.toString());</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;379</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;380</td>  <td class="nbHitsCovered">&nbsp;9</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.getClient().setReference(url);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;380</td>  <td class="nbHitsCovered">&nbsp;45</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.getClient().setReference(url);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;381</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        Representation rep;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;382</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">try</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;383</td>  <td class="nbHitsCovered">&nbsp;9</td>  <td class="src"><pre class="src">&nbsp;            rep = <span class="keyword">this</span>.getClient().get();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;384</td>  <td class="nbHitsCovered"><a title="Line 384: Conditional coverage 100% (2/2).">&nbsp;8</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 384: Conditional coverage 100% (2/2).">            <span class="keyword">return</span> (rep == <span class="keyword">null</span>) ? <span class="string">""</span> : <span class="keyword">this</span>.getText(rep);</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;385</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;        } <span class="keyword">catch</span> (ResourceException ex) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;386</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">throw</span> <span class="keyword">new</span> ClientMdsException(ex.getStatus(), ex.getMessage(), <span class="keyword">this</span>.getClient().</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;387</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;                    getResponseEntity(), ex);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;383</td>  <td class="nbHitsCovered">&nbsp;45</td>  <td class="src"><pre class="src">&nbsp;            rep = <span class="keyword">this</span>.getClient().get();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;384</td>  <td class="nbHitsCovered"><a title="Line 384: Conditional coverage 100% (2/2).">&nbsp;40</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 384: Conditional coverage 100% (2/2).">            <span class="keyword">return</span> (rep == <span class="keyword">null</span>) ? <span class="string">""</span> : <span class="keyword">this</span>.getText(rep);</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;385</td>  <td class="nbHitsCovered">&nbsp;25</td>  <td class="src"><pre class="src">&nbsp;        } <span class="keyword">catch</span> (ResourceException ex) {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;386</td>  <td class="nbHitsCovered">&nbsp;25</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">throw</span> <span class="keyword">new</span> ClientMdsException(ex.getStatus(), ex.getMessage(), <span class="keyword">this</span>.getClient().</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;387</td>  <td class="nbHitsCovered">&nbsp;25</td>  <td class="src"><pre class="src">&nbsp;                    getResponseEntity(), ex);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;388</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        } <span class="keyword">finally</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;389</td>  <td class="nbHitsCovered">&nbsp;9</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.getClient().release();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;390</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;389</td>  <td class="nbHitsCovered">&nbsp;45</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.getClient().release();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;390</td>  <td class="nbHitsCovered">&nbsp;20</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;391</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;392</td>  <td class="nbHits">&nbsp;</td>
@@ -788,18 +788,18 @@
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> String createDoi(<span class="keyword">final</span> Form form) <span class="keyword">throws</span> ClientMdsException {</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;416</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">try</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;417</td>  <td class="nbHitsCovered">&nbsp;108</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.checkInputForm(form);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;418</td>  <td class="nbHitsCovered">&nbsp;109</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> Reference url = createReference(DOI_RESOURCE);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;419</td>  <td class="nbHitsCovered">&nbsp;109</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.getLog().debug(<span class="string">"POST {0}"</span>, url.toString());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;420</td>  <td class="nbHitsCovered">&nbsp;109</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> Representation rep = createRequest(url, form);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;421</td>  <td class="nbHitsCovered">&nbsp;210</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> getText(rep);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;422</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;        } <span class="keyword">catch</span> (ResourceException ex) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;423</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">throw</span> <span class="keyword">new</span> ClientMdsException(ex.getStatus(), ex.getMessage(), <span class="keyword">this</span>.getClient().</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;424</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;                    getResponseEntity(), ex);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;417</td>  <td class="nbHitsCovered">&nbsp;542</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.checkInputForm(form);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;418</td>  <td class="nbHitsCovered">&nbsp;547</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> Reference url = createReference(DOI_RESOURCE);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;419</td>  <td class="nbHitsCovered">&nbsp;548</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.getLog().debug(<span class="string">"POST {0}"</span>, url.toString());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;420</td>  <td class="nbHitsCovered">&nbsp;549</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> Representation rep = createRequest(url, form);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;421</td>  <td class="nbHitsCovered">&nbsp;1046</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> getText(rep);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;422</td>  <td class="nbHitsCovered">&nbsp;30</td>  <td class="src"><pre class="src">&nbsp;        } <span class="keyword">catch</span> (ResourceException ex) {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;423</td>  <td class="nbHitsCovered">&nbsp;30</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">throw</span> <span class="keyword">new</span> ClientMdsException(ex.getStatus(), ex.getMessage(), <span class="keyword">this</span>.getClient().</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;424</td>  <td class="nbHitsCovered">&nbsp;30</td>  <td class="src"><pre class="src">&nbsp;                    getResponseEntity(), ex);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;425</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        } <span class="keyword">finally</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;426</td>  <td class="nbHitsCovered">&nbsp;111</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.getClient().release();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;427</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;426</td>  <td class="nbHitsCovered">&nbsp;553</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.getClient().release();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;427</td>  <td class="nbHitsCovered">&nbsp;24</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;428</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;429</td>  <td class="nbHits">&nbsp;</td>
@@ -820,21 +820,21 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;437</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> Representation createRequest(<span class="keyword">final</span> Reference url, <span class="keyword">final</span> Form form) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;438</td>  <td class="nbHitsCovered">&nbsp;107</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.getClient().setReference(url);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;439</td>  <td class="nbHitsCovered">&nbsp;110</td>  <td class="src"><pre class="src">&nbsp;        String requestBody = POST_DOI + <span class="string">"="</span> + form.getFirstValue(POST_DOI) + <span class="string">"\n"</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;440</td>  <td class="nbHitsCovered">&nbsp;109</td>  <td class="src"><pre class="src">&nbsp;                + POST_URL + <span class="string">"="</span> + form.getFirstValue(POST_URL);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;441</td>  <td class="nbHitsCovered">&nbsp;108</td>  <td class="src"><pre class="src">&nbsp;        requestBody = <span class="keyword">new</span> String(requestBody.getBytes(</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;438</td>  <td class="nbHitsCovered">&nbsp;545</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.getClient().setReference(url);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;439</td>  <td class="nbHitsCovered">&nbsp;550</td>  <td class="src"><pre class="src">&nbsp;        String requestBody = POST_DOI + <span class="string">"="</span> + form.getFirstValue(POST_DOI) + <span class="string">"\n"</span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;440</td>  <td class="nbHitsCovered">&nbsp;549</td>  <td class="src"><pre class="src">&nbsp;                + POST_URL + <span class="string">"="</span> + form.getFirstValue(POST_URL);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;441</td>  <td class="nbHitsCovered">&nbsp;550</td>  <td class="src"><pre class="src">&nbsp;        requestBody = <span class="keyword">new</span> String(requestBody.getBytes(</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;442</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                StandardCharsets.UTF_8),</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;443</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                StandardCharsets.UTF_8</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;444</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        );</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;445</td>  <td class="nbHitsCovered">&nbsp;108</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Map&lt;String, Object&gt; requestAttributes = <span class="keyword">this</span>.getClient().getRequestAttributes();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;446</td>  <td class="nbHitsCovered">&nbsp;111</td>  <td class="src"><pre class="src">&nbsp;        requestAttributes.put(<span class="string">"charset"</span>, StandardCharsets.UTF_8);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;447</td>  <td class="nbHitsCovered">&nbsp;111</td>  <td class="src"><pre class="src">&nbsp;        requestAttributes.put(<span class="string">"Content-Type"</span>, <span class="string">"text/plain"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;448</td>  <td class="nbHitsCovered">&nbsp;111</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.getLog().info(<span class="string">"POST {} with parameters {}"</span>, url, requestBody);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;449</td>  <td class="nbHitsCovered">&nbsp;109</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> <span class="keyword">this</span>.getClient().post(requestBody, MediaType.TEXT_PLAIN);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;445</td>  <td class="nbHitsCovered">&nbsp;542</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Map&lt;String, Object&gt; requestAttributes = <span class="keyword">this</span>.getClient().getRequestAttributes();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;446</td>  <td class="nbHitsCovered">&nbsp;550</td>  <td class="src"><pre class="src">&nbsp;        requestAttributes.put(<span class="string">"charset"</span>, StandardCharsets.UTF_8);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;447</td>  <td class="nbHitsCovered">&nbsp;555</td>  <td class="src"><pre class="src">&nbsp;        requestAttributes.put(<span class="string">"Content-Type"</span>, <span class="string">"text/plain"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;448</td>  <td class="nbHitsCovered">&nbsp;555</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.getLog().info(<span class="string">"POST {} with parameters {}"</span>, url, requestBody);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;449</td>  <td class="nbHitsCovered">&nbsp;553</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> <span class="keyword">this</span>.getClient().post(requestBody, MediaType.TEXT_PLAIN);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;450</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;451</td>  <td class="nbHits">&nbsp;</td>
@@ -857,10 +857,10 @@
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">synchronized</span> Resource parseDataciteResource(<span class="keyword">final</span> Representation rep) <span class="keyword">throws</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;460</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            ClientMdsException {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;461</td>  <td class="nbHitsCovered">&nbsp;12</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> JaxbRepresentation&lt;Resource&gt; resource = <span class="keyword">new</span> JaxbRepresentation&lt;&gt;(rep, Resource.<span class="keyword">class</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;461</td>  <td class="nbHitsCovered">&nbsp;60</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> JaxbRepresentation&lt;Resource&gt; resource = <span class="keyword">new</span> JaxbRepresentation&lt;&gt;(rep, Resource.<span class="keyword">class</span>);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;462</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">try</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;463</td>  <td class="nbHitsCovered">&nbsp;12</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> resource.getObject();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;463</td>  <td class="nbHitsCovered">&nbsp;60</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> resource.getObject();</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;464</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        } <span class="keyword">catch</span> (IOException ex) {</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;465</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;            <span class="keyword">throw</span> <span class="keyword">new</span> ClientMdsException(Status.SERVER_ERROR_INTERNAL, ex);</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;466</td>  <td class="nbHits">&nbsp;</td>
@@ -903,8 +903,8 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;485</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> Resource getMetadataAsObject(<span class="keyword">final</span> String doiName) <span class="keyword">throws</span> ClientMdsException {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;486</td>  <td class="nbHitsCovered">&nbsp;1</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Representation rep = getMetadata(doiName);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;487</td>  <td class="nbHitsCovered">&nbsp;1</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> parseDataciteResource(rep);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;486</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Representation rep = getMetadata(doiName);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;487</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> parseDataciteResource(rep);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;488</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;489</td>  <td class="nbHits">&nbsp;</td>
@@ -945,17 +945,17 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;507</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> Representation getMetadata(<span class="keyword">final</span> String doiName) <span class="keyword">throws</span> ClientMdsException {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;508</td>  <td class="nbHitsCovered">&nbsp;11</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Reference url = createReferenceWithDOI(METADATA_RESOURCE, doiName);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;509</td>  <td class="nbHitsCovered">&nbsp;11</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.getLog().debug(<span class="string">"GET {}"</span>, url.toString());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;510</td>  <td class="nbHitsCovered">&nbsp;11</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.getClient().setReference(url);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;511</td>  <td class="nbHitsCovered">&nbsp;11</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.getLog().info(<span class="string">"GET {}"</span>, url);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;508</td>  <td class="nbHitsCovered">&nbsp;55</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Reference url = createReferenceWithDOI(METADATA_RESOURCE, doiName);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;509</td>  <td class="nbHitsCovered">&nbsp;55</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.getLog().debug(<span class="string">"GET {}"</span>, url.toString());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;510</td>  <td class="nbHitsCovered">&nbsp;55</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.getClient().setReference(url);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;511</td>  <td class="nbHitsCovered">&nbsp;55</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.getLog().info(<span class="string">"GET {}"</span>, url);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;512</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">try</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;513</td>  <td class="nbHitsCovered">&nbsp;11</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> <span class="keyword">this</span>.getClient().get(MediaType.APPLICATION_XML);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;514</td>  <td class="nbHitsCovered">&nbsp;7</td>  <td class="src"><pre class="src">&nbsp;        } <span class="keyword">catch</span> (ResourceException ex) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;515</td>  <td class="nbHitsCovered">&nbsp;7</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.getClient().release();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;516</td>  <td class="nbHitsCovered">&nbsp;7</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">throw</span> <span class="keyword">new</span> ClientMdsException(ex.getStatus(), ex.getMessage(), <span class="keyword">this</span>.getClient().</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;517</td>  <td class="nbHitsCovered">&nbsp;7</td>  <td class="src"><pre class="src">&nbsp;                    getResponseEntity(), ex);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;513</td>  <td class="nbHitsCovered">&nbsp;55</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> <span class="keyword">this</span>.getClient().get(MediaType.APPLICATION_XML);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;514</td>  <td class="nbHitsCovered">&nbsp;35</td>  <td class="src"><pre class="src">&nbsp;        } <span class="keyword">catch</span> (ResourceException ex) {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;515</td>  <td class="nbHitsCovered">&nbsp;35</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.getClient().release();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;516</td>  <td class="nbHitsCovered">&nbsp;35</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">throw</span> <span class="keyword">new</span> ClientMdsException(ex.getStatus(), ex.getMessage(), <span class="keyword">this</span>.getClient().</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;517</td>  <td class="nbHitsCovered">&nbsp;35</td>  <td class="src"><pre class="src">&nbsp;                    getResponseEntity(), ex);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;518</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;519</td>  <td class="nbHits">&nbsp;</td>
@@ -994,8 +994,8 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;536</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> String createMetadata(<span class="keyword">final</span> Representation entity) <span class="keyword">throws</span> ClientMdsException {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;537</td>  <td class="nbHitsCovered">&nbsp;10</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Resource resource = parseDataciteResource(entity);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;538</td>  <td class="nbHitsCovered">&nbsp;10</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> <span class="keyword">this</span>.createMetadata(resource);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;537</td>  <td class="nbHitsCovered">&nbsp;50</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Resource resource = parseDataciteResource(entity);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;538</td>  <td class="nbHitsCovered">&nbsp;50</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> <span class="keyword">this</span>.createMetadata(resource);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;539</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;540</td>  <td class="nbHits">&nbsp;</td>
@@ -1038,25 +1038,25 @@
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> String createMetadata(<span class="keyword">final</span> Resource entity) <span class="keyword">throws</span> ClientMdsException {</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;559</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">try</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;560</td>  <td class="nbHitsCovered">&nbsp;115</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> Identifier identifier = entity.getIdentifier();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;561</td>  <td class="nbHitsCovered">&nbsp;115</td>  <td class="src"><pre class="src">&nbsp;            identifier.setValue(getDoiAccorgindToContext(identifier.getValue()));</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;562</td>  <td class="nbHitsCovered">&nbsp;115</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> Reference url = createReference(METADATA_RESOURCE);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;563</td>  <td class="nbHitsCovered">&nbsp;115</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.getLog().debug(<span class="string">"PUT {}"</span>, url.toString());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;564</td>  <td class="nbHitsCovered">&nbsp;115</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> JaxbRepresentation&lt;Resource&gt; result = <span class="keyword">new</span> JaxbRepresentation&lt;&gt;(entity);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;565</td>  <td class="nbHitsCovered">&nbsp;115</td>  <td class="src"><pre class="src">&nbsp;            result.setCharacterSet(CharacterSet.UTF_8);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;566</td>  <td class="nbHitsCovered">&nbsp;115</td>  <td class="src"><pre class="src">&nbsp;            result.setMediaType(MediaType.APPLICATION_XML);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;567</td>  <td class="nbHitsCovered">&nbsp;115</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.getClient().setReference(url);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;568</td>  <td class="nbHitsCovered">&nbsp;115</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.getClient().getRequestAttributes().put(<span class="string">"charset"</span>, <span class="string">"UTF-8"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;569</td>  <td class="nbHitsCovered">&nbsp;115</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.getClient().setMethod(<span class="keyword">null</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;570</td>  <td class="nbHitsCovered">&nbsp;115</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> Representation response = <span class="keyword">this</span>.getClient().post(result);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;571</td>  <td class="nbHitsCovered">&nbsp;214</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> getText(response);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;572</td>  <td class="nbHitsCovered">&nbsp;8</td>  <td class="src"><pre class="src">&nbsp;        } <span class="keyword">catch</span> (ResourceException ex) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;573</td>  <td class="nbHitsCovered">&nbsp;8</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">throw</span> <span class="keyword">new</span> ClientMdsException(ex.getStatus(), ex.getMessage(), <span class="keyword">this</span>.getClient().</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;574</td>  <td class="nbHitsCovered">&nbsp;8</td>  <td class="src"><pre class="src">&nbsp;                    getResponseEntity(), ex);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;560</td>  <td class="nbHitsCovered">&nbsp;575</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> Identifier identifier = entity.getIdentifier();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;561</td>  <td class="nbHitsCovered">&nbsp;575</td>  <td class="src"><pre class="src">&nbsp;            identifier.setValue(getDoiAccorgindToContext(identifier.getValue()));</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;562</td>  <td class="nbHitsCovered">&nbsp;575</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> Reference url = createReference(METADATA_RESOURCE);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;563</td>  <td class="nbHitsCovered">&nbsp;575</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.getLog().debug(<span class="string">"PUT {}"</span>, url.toString());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;564</td>  <td class="nbHitsCovered">&nbsp;575</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> JaxbRepresentation&lt;Resource&gt; result = <span class="keyword">new</span> JaxbRepresentation&lt;&gt;(entity);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;565</td>  <td class="nbHitsCovered">&nbsp;575</td>  <td class="src"><pre class="src">&nbsp;            result.setCharacterSet(CharacterSet.UTF_8);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;566</td>  <td class="nbHitsCovered">&nbsp;575</td>  <td class="src"><pre class="src">&nbsp;            result.setMediaType(MediaType.APPLICATION_XML);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;567</td>  <td class="nbHitsCovered">&nbsp;575</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.getClient().setReference(url);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;568</td>  <td class="nbHitsCovered">&nbsp;575</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.getClient().getRequestAttributes().put(<span class="string">"charset"</span>, <span class="string">"UTF-8"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;569</td>  <td class="nbHitsCovered">&nbsp;575</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.getClient().setMethod(<span class="keyword">null</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;570</td>  <td class="nbHitsCovered">&nbsp;575</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> Representation response = <span class="keyword">this</span>.getClient().post(result);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;571</td>  <td class="nbHitsCovered">&nbsp;1068</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> getText(response);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;572</td>  <td class="nbHitsCovered">&nbsp;40</td>  <td class="src"><pre class="src">&nbsp;        } <span class="keyword">catch</span> (ResourceException ex) {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;573</td>  <td class="nbHitsCovered">&nbsp;40</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">throw</span> <span class="keyword">new</span> ClientMdsException(ex.getStatus(), ex.getMessage(), <span class="keyword">this</span>.getClient().</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;574</td>  <td class="nbHitsCovered">&nbsp;40</td>  <td class="src"><pre class="src">&nbsp;                    getResponseEntity(), ex);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;575</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        } <span class="keyword">finally</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;576</td>  <td class="nbHitsCovered">&nbsp;115</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.getClient().release();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;577</td>  <td class="nbHitsCovered">&nbsp;8</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;576</td>  <td class="nbHitsCovered">&nbsp;574</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.getClient().release();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;577</td>  <td class="nbHitsCovered">&nbsp;32</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;578</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;579</td>  <td class="nbHits">&nbsp;</td>
@@ -1087,22 +1087,22 @@
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;592</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">try</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;593</td>  <td class="nbHitsCovered">&nbsp;115</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> JaxbRepresentation&lt;Resource&gt; resourceEntity = <span class="keyword">new</span> JaxbRepresentation&lt;&gt;(entity,</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;593</td>  <td class="nbHitsCovered">&nbsp;575</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> JaxbRepresentation&lt;Resource&gt; resourceEntity = <span class="keyword">new</span> JaxbRepresentation&lt;&gt;(entity,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;594</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                    Resource.<span class="keyword">class</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;595</td>  <td class="nbHitsCovered">&nbsp;115</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> MyValidationEventHandler validationHandler = <span class="keyword">new</span> MyValidationEventHandler(<span class="keyword">this</span>.</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;596</td>  <td class="nbHitsCovered">&nbsp;115</td>  <td class="src"><pre class="src">&nbsp;                    getClient().getLogger());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;597</td>  <td class="nbHitsCovered">&nbsp;115</td>  <td class="src"><pre class="src">&nbsp;            resourceEntity.setValidationEventHandler(validationHandler);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;598</td>  <td class="nbHitsCovered">&nbsp;115</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> Resource resource = resourceEntity.getObject();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;599</td>  <td class="nbHitsCovered"><a title="Line 599: Conditional coverage 100% (2/2).">&nbsp;115</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 599: Conditional coverage 100% (2/2).">            <span class="keyword">if</span> (validationHandler.isValid()) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;600</td>  <td class="nbHitsCovered">&nbsp;113</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">return</span> resource;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;595</td>  <td class="nbHitsCovered">&nbsp;575</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> MyValidationEventHandler validationHandler = <span class="keyword">new</span> MyValidationEventHandler(<span class="keyword">this</span>.</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;596</td>  <td class="nbHitsCovered">&nbsp;575</td>  <td class="src"><pre class="src">&nbsp;                    getClient().getLogger());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;597</td>  <td class="nbHitsCovered">&nbsp;575</td>  <td class="src"><pre class="src">&nbsp;            resourceEntity.setValidationEventHandler(validationHandler);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;598</td>  <td class="nbHitsCovered">&nbsp;575</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> Resource resource = resourceEntity.getObject();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;599</td>  <td class="nbHitsCovered"><a title="Line 599: Conditional coverage 100% (2/2).">&nbsp;575</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 599: Conditional coverage 100% (2/2).">            <span class="keyword">if</span> (validationHandler.isValid()) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;600</td>  <td class="nbHitsCovered">&nbsp;565</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">return</span> resource;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;601</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            } <span class="keyword">else</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;602</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">throw</span> <span class="keyword">new</span> ValidationException(validationHandler.getErrorMsg());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;602</td>  <td class="nbHitsCovered">&nbsp;10</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">throw</span> <span class="keyword">new</span> ValidationException(validationHandler.getErrorMsg());</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;603</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;604</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;        } <span class="keyword">catch</span> (IOException | JAXBException ex) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;605</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">throw</span> <span class="keyword">new</span> ValidationException(<span class="string">"Cannot read the metadata"</span>, ex);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;604</td>  <td class="nbHitsCovered">&nbsp;10</td>  <td class="src"><pre class="src">&nbsp;        } <span class="keyword">catch</span> (IOException | JAXBException ex) {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;605</td>  <td class="nbHitsCovered">&nbsp;10</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">throw</span> <span class="keyword">new</span> ValidationException(<span class="string">"Cannot read the metadata"</span>, ex);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;606</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;607</td>  <td class="nbHits">&nbsp;</td>
@@ -1147,8 +1147,8 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;627</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> Resource deleteMetadataDoiAsObject(<span class="keyword">final</span> String doiName) <span class="keyword">throws</span> ClientMdsException {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;628</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Representation rep = <span class="keyword">this</span>.deleteMetadata(doiName);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;629</td>  <td class="nbHitsCovered">&nbsp;1</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> parseDataciteResource(rep);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;628</td>  <td class="nbHitsCovered">&nbsp;25</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Representation rep = <span class="keyword">this</span>.deleteMetadata(doiName);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;629</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> parseDataciteResource(rep);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;630</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;631</td>  <td class="nbHits">&nbsp;</td>
@@ -1191,16 +1191,16 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;650</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> Representation deleteMetadata(<span class="keyword">final</span> String doiName) <span class="keyword">throws</span> ClientMdsException {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;651</td>  <td class="nbHitsCovered">&nbsp;11</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Reference url = createReferenceWithDOI(METADATA_RESOURCE, doiName);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;652</td>  <td class="nbHitsCovered">&nbsp;11</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.getLog().debug(<span class="string">"DELETE {}"</span>, url.toString());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;653</td>  <td class="nbHitsCovered">&nbsp;11</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.getClient().setReference(url);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;651</td>  <td class="nbHitsCovered">&nbsp;55</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Reference url = createReferenceWithDOI(METADATA_RESOURCE, doiName);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;652</td>  <td class="nbHitsCovered">&nbsp;55</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.getLog().debug(<span class="string">"DELETE {}"</span>, url.toString());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;653</td>  <td class="nbHitsCovered">&nbsp;55</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.getClient().setReference(url);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;654</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">try</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;655</td>  <td class="nbHitsCovered">&nbsp;11</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> <span class="keyword">this</span>.getClient().delete();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;656</td>  <td class="nbHitsCovered">&nbsp;8</td>  <td class="src"><pre class="src">&nbsp;        } <span class="keyword">catch</span> (ResourceException ex) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;657</td>  <td class="nbHitsCovered">&nbsp;8</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.getClient().release();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;658</td>  <td class="nbHitsCovered">&nbsp;8</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">throw</span> <span class="keyword">new</span> ClientMdsException(ex.getStatus(), ex.getMessage(), <span class="keyword">this</span>.getClient().</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;659</td>  <td class="nbHitsCovered">&nbsp;8</td>  <td class="src"><pre class="src">&nbsp;                    getResponseEntity(), ex);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;655</td>  <td class="nbHitsCovered">&nbsp;55</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> <span class="keyword">this</span>.getClient().delete();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;656</td>  <td class="nbHitsCovered">&nbsp;40</td>  <td class="src"><pre class="src">&nbsp;        } <span class="keyword">catch</span> (ResourceException ex) {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;657</td>  <td class="nbHitsCovered">&nbsp;40</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.getClient().release();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;658</td>  <td class="nbHitsCovered">&nbsp;40</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">throw</span> <span class="keyword">new</span> ClientMdsException(ex.getStatus(), ex.getMessage(), <span class="keyword">this</span>.getClient().</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;659</td>  <td class="nbHitsCovered">&nbsp;40</td>  <td class="src"><pre class="src">&nbsp;                    getResponseEntity(), ex);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;660</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;661</td>  <td class="nbHits">&nbsp;</td>
@@ -1243,21 +1243,21 @@
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> String getMedia(<span class="keyword">final</span> String doiName) <span class="keyword">throws</span> ClientMdsException {</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;680</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> String result;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;681</td>  <td class="nbHitsCovered">&nbsp;9</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Reference url = createReferenceWithDOI(MEDIA_RESOURCE, doiName);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;682</td>  <td class="nbHitsCovered">&nbsp;9</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.getLog().debug(<span class="string">"GET {}"</span>, url.toString());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;683</td>  <td class="nbHitsCovered">&nbsp;9</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.getClient().setReference(url);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;681</td>  <td class="nbHitsCovered">&nbsp;45</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Reference url = createReferenceWithDOI(MEDIA_RESOURCE, doiName);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;682</td>  <td class="nbHitsCovered">&nbsp;45</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.getLog().debug(<span class="string">"GET {}"</span>, url.toString());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;683</td>  <td class="nbHitsCovered">&nbsp;45</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.getClient().setReference(url);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;684</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">try</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;685</td>  <td class="nbHitsCovered">&nbsp;9</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> Representation response = <span class="keyword">this</span>.getClient().get();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;686</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;            result = <span class="keyword">this</span>.getText(response);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;687</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> result;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;688</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;        } <span class="keyword">catch</span> (ResourceException ex) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;689</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">throw</span> <span class="keyword">new</span> ClientMdsException(ex.getStatus(), ex.getMessage(), <span class="keyword">this</span>.getClient().</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;690</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;                    getResponseEntity(), ex);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;685</td>  <td class="nbHitsCovered">&nbsp;45</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> Representation response = <span class="keyword">this</span>.getClient().get();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;686</td>  <td class="nbHitsCovered">&nbsp;15</td>  <td class="src"><pre class="src">&nbsp;            result = <span class="keyword">this</span>.getText(response);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;687</td>  <td class="nbHitsCovered">&nbsp;30</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> result;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;688</td>  <td class="nbHitsCovered">&nbsp;30</td>  <td class="src"><pre class="src">&nbsp;        } <span class="keyword">catch</span> (ResourceException ex) {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;689</td>  <td class="nbHitsCovered">&nbsp;30</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">throw</span> <span class="keyword">new</span> ClientMdsException(ex.getStatus(), ex.getMessage(), <span class="keyword">this</span>.getClient().</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;690</td>  <td class="nbHitsCovered">&nbsp;30</td>  <td class="src"><pre class="src">&nbsp;                    getResponseEntity(), ex);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;691</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        } <span class="keyword">finally</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;692</td>  <td class="nbHitsCovered">&nbsp;9</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.getClient().release();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;693</td>  <td class="nbHitsCovered">&nbsp;6</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;692</td>  <td class="nbHitsCovered">&nbsp;45</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.getClient().release();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;693</td>  <td class="nbHitsCovered">&nbsp;24</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;694</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;695</td>  <td class="nbHits">&nbsp;</td>
@@ -1306,22 +1306,22 @@
   <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> Form form) <span class="keyword">throws</span> ClientMdsException {</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;717</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> String result;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;718</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Reference url = createReferenceWithDOI(MEDIA_RESOURCE, doiName);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;719</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.getLog().debug(<span class="string">"POST {}"</span>, url.toString());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;720</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.getClient().setReference(url);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;721</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Representation entity = createEntity(form);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;718</td>  <td class="nbHitsCovered">&nbsp;25</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Reference url = createReferenceWithDOI(MEDIA_RESOURCE, doiName);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;719</td>  <td class="nbHitsCovered">&nbsp;25</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.getLog().debug(<span class="string">"POST {}"</span>, url.toString());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;720</td>  <td class="nbHitsCovered">&nbsp;25</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.getClient().setReference(url);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;721</td>  <td class="nbHitsCovered">&nbsp;25</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Representation entity = createEntity(form);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;722</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">try</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;723</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> Representation response = <span class="keyword">this</span>.getClient().post(entity, MediaType.TEXT_PLAIN);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;724</td>  <td class="nbHitsCovered">&nbsp;1</td>  <td class="src"><pre class="src">&nbsp;            result = <span class="keyword">this</span>.getText(response);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;725</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> result;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;726</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;        } <span class="keyword">catch</span> (ResourceException ex) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;727</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">throw</span> <span class="keyword">new</span> ClientMdsException(ex.getStatus(), ex.getMessage(), <span class="keyword">this</span>.getClient().</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;728</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;                    getResponseEntity(), ex);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;723</td>  <td class="nbHitsCovered">&nbsp;25</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> Representation response = <span class="keyword">this</span>.getClient().post(entity, MediaType.TEXT_PLAIN);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;724</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;            result = <span class="keyword">this</span>.getText(response);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;725</td>  <td class="nbHitsCovered">&nbsp;10</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> result;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;726</td>  <td class="nbHitsCovered">&nbsp;20</td>  <td class="src"><pre class="src">&nbsp;        } <span class="keyword">catch</span> (ResourceException ex) {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;727</td>  <td class="nbHitsCovered">&nbsp;20</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">throw</span> <span class="keyword">new</span> ClientMdsException(ex.getStatus(), ex.getMessage(), <span class="keyword">this</span>.getClient().</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;728</td>  <td class="nbHitsCovered">&nbsp;20</td>  <td class="src"><pre class="src">&nbsp;                    getResponseEntity(), ex);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;729</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        } <span class="keyword">finally</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;730</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.getClient().release();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;731</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;730</td>  <td class="nbHitsCovered">&nbsp;25</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.getClient().release();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;731</td>  <td class="nbHitsCovered">&nbsp;16</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;732</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;733</td>  <td class="nbHits">&nbsp;</td>
@@ -1340,16 +1340,16 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;740</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> Representation createEntity(<span class="keyword">final</span> Form mediaForm) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;741</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Iterator&lt;Parameter&gt; iter = mediaForm.iterator();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;742</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;        StringBuilder entity = <span class="keyword">new</span> StringBuilder();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;743</td>  <td class="nbHitsCovered"><a title="Line 743: Conditional coverage 100% (2/2).">&nbsp;10</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 743: Conditional coverage 100% (2/2).">        <span class="keyword">while</span> (iter.hasNext()) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;744</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> Parameter param = iter.next();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;745</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> String mimeType = param.getName();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;746</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> String url = param.getValue();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;747</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;            entity = entity.append(mimeType).append(<span class="string">"="</span>).append(url).append(<span class="string">"\n"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;748</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;749</td>  <td class="nbHitsCovered">&nbsp;10</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> <span class="keyword">new</span> StringRepresentation(</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;750</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;                entity.toString(),</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;741</td>  <td class="nbHitsCovered">&nbsp;25</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Iterator&lt;Parameter&gt; iter = mediaForm.iterator();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;742</td>  <td class="nbHitsCovered">&nbsp;25</td>  <td class="src"><pre class="src">&nbsp;        StringBuilder entity = <span class="keyword">new</span> StringBuilder();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;743</td>  <td class="nbHitsCovered"><a title="Line 743: Conditional coverage 100% (2/2).">&nbsp;50</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 743: Conditional coverage 100% (2/2).">        <span class="keyword">while</span> (iter.hasNext()) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;744</td>  <td class="nbHitsCovered">&nbsp;25</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> Parameter param = iter.next();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;745</td>  <td class="nbHitsCovered">&nbsp;25</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> String mimeType = param.getName();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;746</td>  <td class="nbHitsCovered">&nbsp;25</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> String url = param.getValue();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;747</td>  <td class="nbHitsCovered">&nbsp;25</td>  <td class="src"><pre class="src">&nbsp;            entity = entity.append(mimeType).append(<span class="string">"="</span>).append(url).append(<span class="string">"\n"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;748</td>  <td class="nbHitsCovered">&nbsp;25</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;749</td>  <td class="nbHitsCovered">&nbsp;50</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> <span class="keyword">new</span> StringRepresentation(</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;750</td>  <td class="nbHitsCovered">&nbsp;25</td>  <td class="src"><pre class="src">&nbsp;                entity.toString(),</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;751</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                MediaType.TEXT_PLAIN,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;752</td>  <td class="nbHits">&nbsp;</td>
@@ -1390,7 +1390,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">         * Indicates if an error was happening.</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;770</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">         */</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;771</td>  <td class="nbHitsCovered">&nbsp;115</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">private</span> <span class="keyword">boolean</span> hasError = <span class="keyword">false</span>;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;771</td>  <td class="nbHitsCovered">&nbsp;575</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">private</span> <span class="keyword">boolean</span> hasError = <span class="keyword">false</span>;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;772</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;773</td>  <td class="nbHits">&nbsp;</td>
@@ -1399,7 +1399,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">         * Error message.</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;775</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">         */</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;776</td>  <td class="nbHitsCovered">&nbsp;115</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">private</span> String errorMsg = <span class="keyword">null</span>;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;776</td>  <td class="nbHitsCovered">&nbsp;575</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">private</span> String errorMsg = <span class="keyword">null</span>;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;777</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;778</td>  <td class="nbHits">&nbsp;</td>
@@ -1412,9 +1412,9 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">         * @param logger logger</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;782</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">         */</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;783</td>  <td class="nbHitsCovered">&nbsp;115</td>  <td class="src"><pre class="src">&nbsp;        MyValidationEventHandler(<span class="keyword">final</span> java.util.logging.Logger logger) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;784</td>  <td class="nbHitsCovered">&nbsp;115</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.logger = logger;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;785</td>  <td class="nbHitsCovered">&nbsp;115</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;783</td>  <td class="nbHitsCovered">&nbsp;575</td>  <td class="src"><pre class="src">&nbsp;        MyValidationEventHandler(<span class="keyword">final</span> java.util.logging.Logger logger) {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;784</td>  <td class="nbHitsCovered">&nbsp;575</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.logger = logger;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;785</td>  <td class="nbHitsCovered">&nbsp;575</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;786</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;787</td>  <td class="nbHits">&nbsp;</td>
@@ -1433,27 +1433,27 @@
   <td class="src"><pre class="src">&nbsp;        @Override</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;794</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">public</span> <span class="keyword">boolean</span> handleEvent(<span class="keyword">final</span> ValidationEvent event) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;795</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> StringBuilder stringBuilder = <span class="keyword">new</span> StringBuilder(<span class="string">"\nEVENT"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;796</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;            stringBuilder.append(<span class="string">"SEVERITY:  "</span>).append(event.getSeverity()).append(<span class="string">"\n"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;797</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;            stringBuilder.append(<span class="string">"MESSAGE:  "</span>).append(event.getMessage()).append(<span class="string">"\n"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;798</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;            stringBuilder.append(<span class="string">"LINKED EXCEPTION:  "</span>).append(event.getLinkedException()).append(</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;795</td>  <td class="nbHitsCovered">&nbsp;10</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> StringBuilder stringBuilder = <span class="keyword">new</span> StringBuilder(<span class="string">"\nEVENT"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;796</td>  <td class="nbHitsCovered">&nbsp;10</td>  <td class="src"><pre class="src">&nbsp;            stringBuilder.append(<span class="string">"SEVERITY:  "</span>).append(event.getSeverity()).append(<span class="string">"\n"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;797</td>  <td class="nbHitsCovered">&nbsp;10</td>  <td class="src"><pre class="src">&nbsp;            stringBuilder.append(<span class="string">"MESSAGE:  "</span>).append(event.getMessage()).append(<span class="string">"\n"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;798</td>  <td class="nbHitsCovered">&nbsp;10</td>  <td class="src"><pre class="src">&nbsp;            stringBuilder.append(<span class="string">"LINKED EXCEPTION:  "</span>).append(event.getLinkedException()).append(</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;799</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                    <span class="string">"\n"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;800</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;            stringBuilder.append(<span class="string">"LOCATOR\n"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;801</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;            stringBuilder.append(<span class="string">"    LINE NUMBER:  "</span>).append(event.getLocator().getLineNumber()).</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;802</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;                    append(<span class="string">"\n"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;803</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;            stringBuilder.append(<span class="string">"    COLUMN NUMBER:  "</span>).</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;804</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;                    append(event.getLocator().getColumnNumber()).append(<span class="string">"\n"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;805</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;            stringBuilder.append(<span class="string">"    OFFSET:  "</span>).append(event.getLocator().getOffset()).</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;806</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;                    append(<span class="string">"\n"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;807</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;            stringBuilder.append(<span class="string">"    OBJECT:  "</span>).append(event.getLocator().getObject()).</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;808</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;                    append(<span class="string">"\n"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;809</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;            stringBuilder.append(<span class="string">"    NODE:  "</span>).append(event.getLocator().getNode()).append(<span class="string">"\n"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;810</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;            stringBuilder.append(<span class="string">"    URL  "</span>).append(event.getLocator().getURL()).append(<span class="string">"\n"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;811</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.errorMsg = stringBuilder.toString();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;812</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.logger.info(<span class="keyword">this</span>.errorMsg);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;813</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.hasError = <span class="keyword">true</span>;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;814</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> <span class="keyword">true</span>;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;800</td>  <td class="nbHitsCovered">&nbsp;10</td>  <td class="src"><pre class="src">&nbsp;            stringBuilder.append(<span class="string">"LOCATOR\n"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;801</td>  <td class="nbHitsCovered">&nbsp;10</td>  <td class="src"><pre class="src">&nbsp;            stringBuilder.append(<span class="string">"    LINE NUMBER:  "</span>).append(event.getLocator().getLineNumber()).</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;802</td>  <td class="nbHitsCovered">&nbsp;10</td>  <td class="src"><pre class="src">&nbsp;                    append(<span class="string">"\n"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;803</td>  <td class="nbHitsCovered">&nbsp;10</td>  <td class="src"><pre class="src">&nbsp;            stringBuilder.append(<span class="string">"    COLUMN NUMBER:  "</span>).</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;804</td>  <td class="nbHitsCovered">&nbsp;10</td>  <td class="src"><pre class="src">&nbsp;                    append(event.getLocator().getColumnNumber()).append(<span class="string">"\n"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;805</td>  <td class="nbHitsCovered">&nbsp;10</td>  <td class="src"><pre class="src">&nbsp;            stringBuilder.append(<span class="string">"    OFFSET:  "</span>).append(event.getLocator().getOffset()).</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;806</td>  <td class="nbHitsCovered">&nbsp;10</td>  <td class="src"><pre class="src">&nbsp;                    append(<span class="string">"\n"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;807</td>  <td class="nbHitsCovered">&nbsp;10</td>  <td class="src"><pre class="src">&nbsp;            stringBuilder.append(<span class="string">"    OBJECT:  "</span>).append(event.getLocator().getObject()).</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;808</td>  <td class="nbHitsCovered">&nbsp;10</td>  <td class="src"><pre class="src">&nbsp;                    append(<span class="string">"\n"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;809</td>  <td class="nbHitsCovered">&nbsp;10</td>  <td class="src"><pre class="src">&nbsp;            stringBuilder.append(<span class="string">"    NODE:  "</span>).append(event.getLocator().getNode()).append(<span class="string">"\n"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;810</td>  <td class="nbHitsCovered">&nbsp;10</td>  <td class="src"><pre class="src">&nbsp;            stringBuilder.append(<span class="string">"    URL  "</span>).append(event.getLocator().getURL()).append(<span class="string">"\n"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;811</td>  <td class="nbHitsCovered">&nbsp;10</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.errorMsg = stringBuilder.toString();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;812</td>  <td class="nbHitsCovered">&nbsp;10</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.logger.info(<span class="keyword">this</span>.errorMsg);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;813</td>  <td class="nbHitsCovered">&nbsp;10</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.hasError = <span class="keyword">true</span>;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;814</td>  <td class="nbHitsCovered">&nbsp;10</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> <span class="keyword">true</span>;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;815</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;816</td>  <td class="nbHits">&nbsp;</td>
@@ -1470,7 +1470,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">         */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;822</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">public</span> <span class="keyword">boolean</span> isValid() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;823</td>  <td class="nbHitsCovered"><a title="Line 823: Conditional coverage 100% (2/2).">&nbsp;115</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 823: Conditional coverage 100% (2/2).">            <span class="keyword">return</span> !<span class="keyword">this</span>.isNotValid();</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;823</td>  <td class="nbHitsCovered"><a title="Line 823: Conditional coverage 100% (2/2).">&nbsp;575</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 823: Conditional coverage 100% (2/2).">            <span class="keyword">return</span> !<span class="keyword">this</span>.isNotValid();</a></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;824</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;825</td>  <td class="nbHits">&nbsp;</td>
@@ -1489,7 +1489,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">         */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;832</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">public</span> <span class="keyword">boolean</span> isNotValid() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;833</td>  <td class="nbHitsCovered">&nbsp;115</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> <span class="keyword">this</span>.hasError;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;833</td>  <td class="nbHitsCovered">&nbsp;575</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> <span class="keyword">this</span>.hasError;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;834</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;835</td>  <td class="nbHits">&nbsp;</td>
@@ -1506,7 +1506,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">         */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;841</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">public</span> String getErrorMsg() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;842</td>  <td class="nbHitsCovered">&nbsp;2</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> <span class="keyword">this</span>.errorMsg;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;842</td>  <td class="nbHitsCovered">&nbsp;10</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> <span class="keyword">this</span>.errorMsg;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;843</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;844</td>  <td class="nbHits">&nbsp;</td>
@@ -1519,28 +1519,28 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     * Datacite API.</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;848</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;849</td>  <td class="nbHitsCovered">&nbsp;1</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> enum DATACITE_API_RESPONSE {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;849</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> enum DATACITE_API_RESPONSE {</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;850</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="comment">/**</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;851</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">         * Get/Delete successfully a DOI or a media. SUCCESS_OK is used as status</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;852</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">         */</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;853</td>  <td class="nbHitsCovered">&nbsp;1</td>  <td class="src"><pre class="src">&nbsp;        SUCCESS(Status.SUCCESS_OK, <span class="string">"Operation successful"</span>),</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;853</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;        SUCCESS(Status.SUCCESS_OK, <span class="string">"Operation successful"</span>),</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;854</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="comment">/**</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;855</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">         * Create successfully a DOI. SUCCESS_CREATED is as used as status.</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;856</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">         */</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;857</td>  <td class="nbHitsCovered">&nbsp;1</td>  <td class="src"><pre class="src">&nbsp;        SUCESS_CREATED(Status.SUCCESS_CREATED, <span class="string">"Operation successful"</span>),</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;857</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;        SUCESS_CREATED(Status.SUCCESS_CREATED, <span class="string">"Operation successful"</span>),</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;858</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="comment">/**</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;859</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">         * Get a DOI without metadata. SUCCESS_NO_CONTENT is used as status</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;860</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">         */</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;861</td>  <td class="nbHitsCovered">&nbsp;1</td>  <td class="src"><pre class="src">&nbsp;        SUCCESS_NO_CONTENT(Status.SUCCESS_NO_CONTENT,</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;861</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;        SUCCESS_NO_CONTENT(Status.SUCCESS_NO_CONTENT,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;862</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                <span class="string">" the DOI is known to DataCite Metadata Store (MDS), but no metadata have been registered"</span>),</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;863</td>  <td class="nbHits">&nbsp;</td>
@@ -1549,7 +1549,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">         * Fail to create a media or the metadata. CLIENT_ERROR_BAD_REQUEST is used as status</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;865</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">         */</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;866</td>  <td class="nbHitsCovered">&nbsp;1</td>  <td class="src"><pre class="src">&nbsp;        BAD_REQUEST(Status.CLIENT_ERROR_BAD_REQUEST,</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;866</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;        BAD_REQUEST(Status.CLIENT_ERROR_BAD_REQUEST,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;867</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                <span class="string">"invalid XML, wrong prefix or request body must be exactly two lines: DOI and URL; wrong domain, wrong prefix"</span>),</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;868</td>  <td class="nbHits">&nbsp;</td>
@@ -1560,7 +1560,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">         * status</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;871</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">         */</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;872</td>  <td class="nbHitsCovered">&nbsp;1</td>  <td class="src"><pre class="src">&nbsp;        UNAUTHORIZED(Status.CLIENT_ERROR_UNAUTHORIZED, <span class="string">"no login"</span>),</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;872</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;        UNAUTHORIZED(Status.CLIENT_ERROR_UNAUTHORIZED, <span class="string">"no login"</span>),</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;873</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="comment">/**</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;874</td>  <td class="nbHits">&nbsp;</td>
@@ -1569,7 +1569,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">         * status</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;876</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">         */</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;877</td>  <td class="nbHitsCovered">&nbsp;1</td>  <td class="src"><pre class="src">&nbsp;        FORBIDDEN(Status.CLIENT_ERROR_FORBIDDEN,</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;877</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;        FORBIDDEN(Status.CLIENT_ERROR_FORBIDDEN,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;878</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                <span class="string">"login problem, wrong prefix, permission problem or dataset belongs to another party"</span>),</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;879</td>  <td class="nbHits">&nbsp;</td>
@@ -1578,14 +1578,14 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">         * Fail to get the DOI. CLIENT_ERROR_NOT_FOUND is used as status</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;881</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">         */</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;882</td>  <td class="nbHitsCovered">&nbsp;1</td>  <td class="src"><pre class="src">&nbsp;        DOI_NOT_FOUND(Status.CLIENT_ERROR_NOT_FOUND, <span class="string">"DOI does not exist in our database"</span>),</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;882</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;        DOI_NOT_FOUND(Status.CLIENT_ERROR_NOT_FOUND, <span class="string">"DOI does not exist in our database"</span>),</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;883</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="comment">/**</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;884</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">         * Get an inactive DOI. CLIENT_ERROR_GONE is used as status</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;885</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">         */</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;886</td>  <td class="nbHitsCovered">&nbsp;1</td>  <td class="src"><pre class="src">&nbsp;        DOI_INACTIVE(Status.CLIENT_ERROR_GONE,</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;886</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;        DOI_INACTIVE(Status.CLIENT_ERROR_GONE,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;887</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                <span class="string">"the requested dataset was marked inactive (using DELETE method)"</span>),</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;888</td>  <td class="nbHits">&nbsp;</td>
@@ -1596,14 +1596,14 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">         * CLIENT_ERROR_PRECONDITION_FAILED is used as status</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;891</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">         */</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;892</td>  <td class="nbHitsCovered">&nbsp;1</td>  <td class="src"><pre class="src">&nbsp;        PROCESS_ERROR(Status.CLIENT_ERROR_PRECONDITION_FAILED, <span class="string">"metadata must be uploaded first"</span>),</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;892</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;        PROCESS_ERROR(Status.CLIENT_ERROR_PRECONDITION_FAILED, <span class="string">"metadata must be uploaded first"</span>),</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;893</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="comment">/**</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;894</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">         * Internal server Error. INTERNAL_SERVER_ERROR is used as status.</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;895</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">         */</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;896</td>  <td class="nbHitsCovered">&nbsp;1</td>  <td class="src"><pre class="src">&nbsp;        INTERNAL_SERVER_ERROR(Status.SERVER_ERROR_INTERNAL, <span class="string">"Internal server error"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;896</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;        INTERNAL_SERVER_ERROR(Status.SERVER_ERROR_INTERNAL, <span class="string">"Internal server error"</span>);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;897</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;898</td>  <td class="nbHits">&nbsp;</td>
@@ -1638,10 +1638,10 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">         * @param message message</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;913</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">         */</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;914</td>  <td class="nbHitsCovered">&nbsp;10</td>  <td class="src"><pre class="src">&nbsp;        DATACITE_API_RESPONSE(<span class="keyword">final</span> Status status, <span class="keyword">final</span> String message) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;915</td>  <td class="nbHitsCovered">&nbsp;10</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.status = status;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;916</td>  <td class="nbHitsCovered">&nbsp;10</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.message = message;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;917</td>  <td class="nbHitsCovered">&nbsp;10</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;914</td>  <td class="nbHitsCovered">&nbsp;50</td>  <td class="src"><pre class="src">&nbsp;        DATACITE_API_RESPONSE(<span class="keyword">final</span> Status status, <span class="keyword">final</span> String message) {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;915</td>  <td class="nbHitsCovered">&nbsp;50</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.status = status;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;916</td>  <td class="nbHitsCovered">&nbsp;50</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.message = message;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;917</td>  <td class="nbHitsCovered">&nbsp;50</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;918</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;919</td>  <td class="nbHits">&nbsp;</td>
@@ -1656,7 +1656,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">         */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;924</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">public</span> Status getStatus() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;925</td>  <td class="nbHitsCovered">&nbsp;63</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> <span class="keyword">this</span>.status;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;925</td>  <td class="nbHitsCovered">&nbsp;315</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> <span class="keyword">this</span>.status;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;926</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;927</td>  <td class="nbHits">&nbsp;</td>
@@ -1673,7 +1673,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">         */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;933</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">public</span> String getShortMessage() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;934</td>  <td class="nbHitsCovered">&nbsp;51</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> <span class="keyword">this</span>.message;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;934</td>  <td class="nbHitsCovered">&nbsp;255</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> <span class="keyword">this</span>.message;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;935</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;936</td>  <td class="nbHits">&nbsp;</td>
@@ -1718,7 +1718,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     * Options for each context</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;961</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;962</td>  <td class="nbHitsCovered">&nbsp;18</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> enum Context {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;962</td>  <td class="nbHitsCovered">&nbsp;90</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> enum Context {</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;963</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;964</td>  <td class="nbHits">&nbsp;</td>
@@ -1727,28 +1727,28 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">         * Development context.</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;966</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">         */</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;967</td>  <td class="nbHitsCovered">&nbsp;1</td>  <td class="src"><pre class="src">&nbsp;        DEV(<span class="keyword">false</span>, <span class="keyword">true</span>, DATA_CITE_MOCK_URL, Level.ALL),</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;967</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;        DEV(<span class="keyword">false</span>, <span class="keyword">true</span>, DATA_CITE_MOCK_URL, Level.ALL),</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;968</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="comment">/**</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;969</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">         * Post development context.</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;970</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">         */</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;971</td>  <td class="nbHitsCovered">&nbsp;1</td>  <td class="src"><pre class="src">&nbsp;        POST_DEV(<span class="keyword">false</span>, <span class="keyword">true</span>, DATA_CITE_TEST_URL, Level.ALL),</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;971</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;        POST_DEV(<span class="keyword">false</span>, <span class="keyword">true</span>, DATA_CITE_TEST_URL, Level.ALL),</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;972</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="comment">/**</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;973</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">         * Pre production context.</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;974</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">         */</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;975</td>  <td class="nbHitsCovered">&nbsp;1</td>  <td class="src"><pre class="src">&nbsp;        PRE_PROD(<span class="keyword">false</span>, <span class="keyword">true</span>, DATA_CITE_URL, Level.FINE),</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;975</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;        PRE_PROD(<span class="keyword">false</span>, <span class="keyword">true</span>, DATA_CITE_URL, Level.FINE),</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;976</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="comment">/**</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;977</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">         * Production context.</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;978</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">         */</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;979</td>  <td class="nbHitsCovered">&nbsp;1</td>  <td class="src"><pre class="src">&nbsp;        PROD(<span class="keyword">false</span>, <span class="keyword">false</span>, DATA_CITE_URL, Level.INFO);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;979</td>  <td class="nbHitsCovered">&nbsp;5</td>  <td class="src"><pre class="src">&nbsp;        PROD(<span class="keyword">false</span>, <span class="keyword">false</span>, DATA_CITE_URL, Level.INFO);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;980</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;981</td>  <td class="nbHits">&nbsp;</td>
@@ -1811,12 +1811,12 @@
   <td class="src"><pre class="src">&nbsp;                <span class="keyword">final</span> <span class="keyword">boolean</span> isDoiPrefix,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1010</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                <span class="keyword">final</span> String dataciteUrl,</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1011</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">final</span> Level levelLog) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1012</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.isTestMode = isTestMode;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1013</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.isDoiPrefix = isDoiPrefix;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1014</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.dataCiteUrl = dataciteUrl;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1015</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.levelLog = levelLog;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1016</td>  <td class="nbHitsCovered">&nbsp;4</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1011</td>  <td class="nbHitsCovered">&nbsp;20</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">final</span> Level levelLog) {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1012</td>  <td class="nbHitsCovered">&nbsp;20</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.isTestMode = isTestMode;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1013</td>  <td class="nbHitsCovered">&nbsp;20</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.isDoiPrefix = isDoiPrefix;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1014</td>  <td class="nbHitsCovered">&nbsp;20</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.dataCiteUrl = dataciteUrl;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1015</td>  <td class="nbHitsCovered">&nbsp;20</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.levelLog = levelLog;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1016</td>  <td class="nbHitsCovered">&nbsp;20</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1017</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1018</td>  <td class="nbHits">&nbsp;</td>
@@ -1831,7 +1831,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">         */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1023</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">public</span> <span class="keyword">boolean</span> hasDoiTestPrefix() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1024</td>  <td class="nbHitsCovered">&nbsp;269</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> <span class="keyword">this</span>.isDoiPrefix;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1024</td>  <td class="nbHitsCovered">&nbsp;1352</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> <span class="keyword">this</span>.isDoiPrefix;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1025</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1026</td>  <td class="nbHits">&nbsp;</td>
@@ -1848,7 +1848,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">         */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1032</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">public</span> <span class="keyword">boolean</span> hasTestMode() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1033</td>  <td class="nbHitsCovered">&nbsp;65</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> <span class="keyword">this</span>.isTestMode;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1033</td>  <td class="nbHitsCovered">&nbsp;325</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> <span class="keyword">this</span>.isTestMode;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1034</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1035</td>  <td class="nbHits">&nbsp;</td>
@@ -1882,7 +1882,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">         */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1050</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">public</span> String getDataCiteUrl() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;1051</td>  <td class="nbHitsCovered">&nbsp;333</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> <span class="keyword">this</span>.dataCiteUrl;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;1051</td>  <td class="nbHitsCovered">&nbsp;1663</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">return</span> <span class="keyword">this</span>.dataCiteUrl;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1052</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;1053</td>  <td class="nbHits">&nbsp;</td>
@@ -1967,6 +1967,6 @@
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.1.1 on 4/7/19 6:36 AM.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.1.1 on 4/13/19 12:07 AM.</div>
 </body>
 </html>

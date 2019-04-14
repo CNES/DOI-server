@@ -27,7 +27,7 @@ under the License.
     <item>
       <title>File: 117,
              Errors: 0,
-             Warnings: 277,
+             Warnings: 279,
              Infos: 0
       </title>
             <link>https://cnes.github.com/DOI-server/checkstyle.html</link>
@@ -780,7 +780,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  20
+                  22
                 </td>
                 <td>
                   0
@@ -976,7 +976,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  4
+                  3
                 </td>
                 <td>
                   0
@@ -1242,7 +1242,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  13
+                  14
                 </td>
                 <td>
                   0
