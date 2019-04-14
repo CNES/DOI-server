@@ -63,6 +63,9 @@ psql
 <set the password>
 \q
 exit
+
+// installing syslog
+yum install rsyslog
 ```
 
 
