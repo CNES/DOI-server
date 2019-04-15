@@ -107,8 +107,8 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;45</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> DoiSecurityLogFilter() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;46</td>  <td class="nbHitsCovered">&nbsp;80</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">super</span>();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;47</td>  <td class="nbHitsCovered">&nbsp;80</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;46</td>  <td class="nbHitsCovered">&nbsp;16</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">super</span>();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;47</td>  <td class="nbHitsCovered">&nbsp;16</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;48</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;49</td>  <td class="nbHits">&nbsp;</td>
@@ -131,28 +131,28 @@
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">protected</span> <span class="keyword">void</span> afterHandle(<span class="keyword">final</span> Request request,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;58</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> Response response) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;59</td>  <td class="nbHitsCovered">&nbsp;1379</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">super</span>.afterHandle(request, response);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;59</td>  <td class="nbHitsCovered">&nbsp;276</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">super</span>.afterHandle(request, response);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;60</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;61</td>  <td class="nbHitsCovered">&nbsp;1371</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> String targetUri = request.getResourceRef().getIdentifier();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;62</td>  <td class="nbHitsCovered">&nbsp;1378</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> String method = request.getMethod().getName();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;63</td>  <td class="nbHitsCovered">&nbsp;1376</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> ClientInfo clientInfo = request.getClientInfo();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;64</td>  <td class="nbHitsCovered">&nbsp;1374</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> String upStreamIp = clientInfo.getUpstreamAddress();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;65</td>  <td class="nbHitsCovered"><a title="Line 65: Conditional coverage 100% (2/2).">&nbsp;1375</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 65: Conditional coverage 100% (2/2).">        <span class="keyword">if</span> (request.getClientInfo().isAuthenticated()) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;66</td>  <td class="nbHitsCovered">&nbsp;1174</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> String authenticationMethod = request.getChallengeResponse().getScheme().</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;67</td>  <td class="nbHitsCovered">&nbsp;1172</td>  <td class="src"><pre class="src">&nbsp;                    getTechnicalName();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;68</td>  <td class="nbHitsCovered">&nbsp;1167</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> String identifier = request.getClientInfo().getUser().getIdentifier();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;69</td>  <td class="nbHitsCovered">&nbsp;1170</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> String profiles = computeProfiles(clientInfo);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;70</td>  <td class="nbHitsCovered">&nbsp;2340</td>  <td class="src"><pre class="src">&nbsp;            LogManager.getLogger(Utils.SECURITY_LOGGER_NAME).info(</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;61</td>  <td class="nbHitsCovered">&nbsp;276</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> String targetUri = request.getResourceRef().getIdentifier();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;62</td>  <td class="nbHitsCovered">&nbsp;276</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> String method = request.getMethod().getName();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;63</td>  <td class="nbHitsCovered">&nbsp;277</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> ClientInfo clientInfo = request.getClientInfo();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;64</td>  <td class="nbHitsCovered">&nbsp;276</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> String upStreamIp = clientInfo.getUpstreamAddress();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;65</td>  <td class="nbHitsCovered"><a title="Line 65: Conditional coverage 100% (2/2).">&nbsp;276</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 65: Conditional coverage 100% (2/2).">        <span class="keyword">if</span> (request.getClientInfo().isAuthenticated()) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;66</td>  <td class="nbHitsCovered">&nbsp;236</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> String authenticationMethod = request.getChallengeResponse().getScheme().</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;67</td>  <td class="nbHitsCovered">&nbsp;236</td>  <td class="src"><pre class="src">&nbsp;                    getTechnicalName();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;68</td>  <td class="nbHitsCovered">&nbsp;236</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> String identifier = request.getClientInfo().getUser().getIdentifier();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;69</td>  <td class="nbHitsCovered">&nbsp;235</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> String profiles = computeProfiles(clientInfo);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;70</td>  <td class="nbHitsCovered">&nbsp;468</td>  <td class="src"><pre class="src">&nbsp;            LogManager.getLogger(Utils.SECURITY_LOGGER_NAME).info(</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;71</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                    <span class="string">"User: {} \tProfile(s): {}\t - [{}] - [{}] {} {} {} - {}"</span>,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;72</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                    identifier, profiles, upStreamIp, authenticationMethod,</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;73</td>  <td class="nbHitsCovered">&nbsp;1171</td>  <td class="src"><pre class="src">&nbsp;                    method, targetUri, response.getStatus().getCode(),</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;74</td>  <td class="nbHitsCovered">&nbsp;1168</td>  <td class="src"><pre class="src">&nbsp;                    clientInfo.getAgent());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;73</td>  <td class="nbHitsCovered">&nbsp;234</td>  <td class="src"><pre class="src">&nbsp;                    method, targetUri, response.getStatus().getCode(),</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;74</td>  <td class="nbHitsCovered">&nbsp;234</td>  <td class="src"><pre class="src">&nbsp;                    clientInfo.getAgent());</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;75</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;76</td>  <td class="nbHitsCovered">&nbsp;1385</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;76</td>  <td class="nbHitsCovered">&nbsp;277</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;77</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;78</td>  <td class="nbHits">&nbsp;</td>
@@ -169,18 +169,18 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;84</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> String computeProfiles(<span class="keyword">final</span> ClientInfo clientInfo) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;85</td>  <td class="nbHitsCovered">&nbsp;1165</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> List&lt;Role&gt; roles = clientInfo.getRoles();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;86</td>  <td class="nbHitsCovered">&nbsp;1168</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Collection&lt;String&gt; rolesStr = <span class="keyword">new</span> ArrayList&lt;&gt;();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;87</td>  <td class="nbHitsCovered"><a title="Line 87: Conditional coverage 100% (2/2).">&nbsp;1169</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 87: Conditional coverage 100% (2/2).">        <span class="keyword">for</span> (<span class="keyword">final</span> Role role : roles) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;88</td>  <td class="nbHitsCovered">&nbsp;12051</td>  <td class="src"><pre class="src">&nbsp;            rolesStr.add(role.getName());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;89</td>  <td class="nbHitsCovered">&nbsp;12086</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;90</td>  <td class="nbHitsCovered">&nbsp;1172</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> String.join(<span class="string">","</span>, rolesStr);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;85</td>  <td class="nbHitsCovered">&nbsp;235</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> List&lt;Role&gt; roles = clientInfo.getRoles();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;86</td>  <td class="nbHitsCovered">&nbsp;235</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Collection&lt;String&gt; rolesStr = <span class="keyword">new</span> ArrayList&lt;&gt;();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;87</td>  <td class="nbHitsCovered"><a title="Line 87: Conditional coverage 100% (2/2).">&nbsp;235</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 87: Conditional coverage 100% (2/2).">        <span class="keyword">for</span> (<span class="keyword">final</span> Role role : roles) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;88</td>  <td class="nbHitsCovered">&nbsp;2435</td>  <td class="src"><pre class="src">&nbsp;            rolesStr.add(role.getName());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;89</td>  <td class="nbHitsCovered">&nbsp;2438</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;90</td>  <td class="nbHitsCovered">&nbsp;236</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> String.join(<span class="string">","</span>, rolesStr);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;91</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;92</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.1.1 on 4/13/19 12:07 AM.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.1.1 on 4/15/19 11:03 PM.</div>
 </body>
 </html>
