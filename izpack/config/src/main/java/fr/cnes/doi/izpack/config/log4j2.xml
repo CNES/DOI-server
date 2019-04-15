@@ -74,11 +74,11 @@
              <AppenderRef ref="SHELL"/>
         </Logger>          
         <Logger name="fr.cnes.doi.server" level="INFO">
-             <AppenderRef ref="FILE"/>
+             <AppenderRef ref="SHELL"/>
         </Logger>  
                           
         <Root level="INFO">
-            <AppenderRef ref="FILE"/>            
+            <AppenderRef ref="RollingFileFile"/>            
         </Root>
     </Loggers>
 
