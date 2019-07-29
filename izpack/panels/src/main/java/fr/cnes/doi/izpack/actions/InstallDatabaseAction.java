@@ -88,7 +88,7 @@ public class InstallDatabaseAction extends AbstractProgressInstallerListener {
 
     public void installDatabase() throws Exception {
         LOG.info(this.getDbName());
-        LOG.log(Level.INFO, "Creating tables in {0}", this.getDbName());     
+        LOG.log(Level.INFO, "Creating schema and tables in {0}", this.getDbName());     
         String installPath = this.installData.getInstallPath();
         String request;
         String ligne;
@@ -97,6 +97,13 @@ public class InstallDatabaseAction extends AbstractProgressInstallerListener {
         try {
             Class.forName(getDriver());
             cnx = DriverManager.getConnection(getUrl(), getUser(), getPassword());
+            cnx.setAutoCommit(false);
+            LOG.log(Level.INFO, "Creating schema {0}", this.getSchema()); 
+            stat = cnx.createStatement();
+            stat.execute("CREATE SCHEMA IF NOT EXISTS "+this.getSchema()+";SET search_path TO "+this.getSchema()+";");
+            cnx.commit();
+            stat.close();
+            LOG.info("Schema created");
             for (Iterator<String> iterator = listPostgreSQLFiles.iterator(); iterator.hasNext();) {
                 String fileName = installPath + "/" + iterator.next();
                 InputStream ips = new FileInputStream(fileName);
@@ -111,7 +118,7 @@ public class InstallDatabaseAction extends AbstractProgressInstallerListener {
                 request = stringBuilder.toString();
                 br.close();
 
-                cnx.setAutoCommit(false);
+                
                 stat = cnx.createStatement();
                 stat.execute(request);
                 cnx.commit();
