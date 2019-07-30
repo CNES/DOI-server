@@ -249,7 +249,7 @@
                        txt="Both passwords must match." id="input.ldappanel.password.validation" />
         </field> 
         <field type="text" variable="project.ldap.group">
-            <spec txt="Group: " set="doiserver" id="input.ldappanel.group" size="15" />
+            <spec txt="Group: " set="doi_server" id="input.ldappanel.group" size="15" />
             <validator class="com.izforge.izpack.panels.userinput.validator.NotEmptyValidator" 
                        id="input.ldappanel.group.validation" txt="Group is a required field" />
         </field>    
