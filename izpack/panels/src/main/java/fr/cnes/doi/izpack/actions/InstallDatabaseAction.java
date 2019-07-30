@@ -100,7 +100,7 @@ public class InstallDatabaseAction extends AbstractProgressInstallerListener {
             cnx.setAutoCommit(false);
             LOG.log(Level.INFO, "Creating schema {0}", this.getSchema()); 
             stat = cnx.createStatement();
-            stat.execute("CREATE SCHEMA IF NOT EXISTS "+this.getSchema()+";SET search_path TO "+this.getSchema()+";");
+            stat.execute("CREATE SCHEMA "+this.getSchema()+";SET search_path TO "+this.getSchema()+";");
             cnx.commit();
             stat.close();
             LOG.info("Schema created");
