@@ -64,6 +64,7 @@ import fr.cnes.doi.utils.spec.Requirement;
 import fr.cnes.doi.plugin.PluginFactory;
 import static fr.cnes.doi.plugin.Utils.addPath;
 import fr.cnes.doi.db.IAuthenticationDBHelper;
+import static fr.cnes.doi.settings.Consts.USE_FORWARDED_FOR_HEADER;
 
 /**
  * DoiServer contains the configuration of this server and the methods to start/stop it.
@@ -405,7 +406,10 @@ public class DoiServer extends Component {
         // create embedding https jetty server
         final Server server = new Server(new Context(), Protocol.HTTPS, port, this);
         final Series<Parameter> parameters = server.getContext().getParameters();
-
+        
+        LOG.debug(MESSAGE_TPL, USE_FORWARDED_FOR_HEADER, "true", "true");        
+        parameters.set(USE_FORWARDED_FOR_HEADER, "true");
+        
         LOG.debug(MESSAGE_TPL, RESTLET_MAX_TOTAL_CONNECTIONS, DoiSettings.getInstance().getString(
                 fr.cnes.doi.settings.Consts.RESTLET_MAX_TOTAL_CONNECTIONS,
                 DEFAULT_MAX_TOTAL_CONNECTIONS));

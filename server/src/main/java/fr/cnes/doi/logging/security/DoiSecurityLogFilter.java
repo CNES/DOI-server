@@ -27,6 +27,7 @@ import org.apache.logging.log4j.LogManager;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.data.ClientInfo;
+import org.restlet.data.Status;
 import org.restlet.routing.Filter;
 import org.restlet.security.Role;
 
@@ -62,7 +63,7 @@ public class DoiSecurityLogFilter extends Filter {
         final String method = request.getMethod().getName();
         final ClientInfo clientInfo = request.getClientInfo();
         final String upStreamIp = clientInfo.getUpstreamAddress();
-        if (request.getClientInfo().isAuthenticated()) {
+        if (request.getClientInfo().isAuthenticated()) {            
             final String authenticationMethod = request.getChallengeResponse().getScheme().
                     getTechnicalName();
             final String identifier = request.getClientInfo().getUser().getIdentifier();
@@ -72,7 +73,15 @@ public class DoiSecurityLogFilter extends Filter {
                     identifier, profiles, upStreamIp, authenticationMethod,
                     method, targetUri, response.getStatus().getCode(),
                     clientInfo.getAgent());
-        }
+        } else if(response.getStatus().equals(Status.CLIENT_ERROR_UNAUTHORIZED)) {            
+            final String authenticationMethod = request.getChallengeResponse().getScheme().
+                    getTechnicalName();
+            final String identifier = request.getClientInfo().getUser().getIdentifier();
+            LogManager.getLogger(Utils.SECURITY_LOGGER_NAME).info(
+                    "Authentication failed for user: {} \t - [{}] - [{}] {} {} - {}",
+                    identifier, upStreamIp, authenticationMethod,
+                    method, targetUri, clientInfo.getAgent());                    
+        } 
     }
 
     /**

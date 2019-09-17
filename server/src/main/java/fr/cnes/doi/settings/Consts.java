@@ -365,6 +365,11 @@ public final class Consts {
      * True when login/password are encoded otherwise false.
      */
     public static final String ENCRYPTED_FIELDS = "Starter.encrypted_fields";
+    
+    /**
+     * Get IP client from proxy
+     */
+    public static final String USE_FORWARDED_FOR_HEADER = "useForwardedForHeader";
 
     /**
      * "Static" class cannot be instantiated

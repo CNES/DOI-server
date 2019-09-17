@@ -3,9 +3,8 @@
     <properties>
             <property name="servicename">doiserver</property>
             <property name="patternPerfo">%-5p | %d{yyyy-MM-dd HH:mm:ss} | [%t] %C{2} (%F:%L) - %m%n</property>
-            <property name="patternFile">%-5level %d{yyyy-MM-dd HH:mm:ss} %X{IP} %C{2} (%F:%L) - %m%n</property> 
-            <property name="patternApi">[%-5p - %t] %d %c %X{IP} - %m%n</property>     
-            <property name="patternSecurity">%d{yyyy-MM-dd HH:mm:ss} %X{IP} %C{2} (%F:%L) - %m%n</property>                                                                             
+            <property name="patternFile">%-5level %d{yyyy-MM-dd HH:mm:ss} [%X{IP}] %C{2} (%F:%L) - %m%n</property> 
+            <property name="patternApi">[%-5p - %t] %d %c [%X{IP}] - %m%n</property>     
     </properties>
     
     <Appenders>
@@ -40,9 +39,6 @@
         </RollingFile>  
         <RollingFile name="RollingFileSecurity" fileName="logs/doi-security.log"
                          filePattern="logs/$${date:yyyy-MM}/security-%d{yyyy-MM-dd}-%i.log.gz">
-                <PatternLayout>
-                        <pattern>${patternSecurity}</pattern>
-                </PatternLayout>
                 <Policies>
                         <SizeBasedTriggeringPolicy size="100 MB"/> <!-- Or every 100 MB -->
                 </Policies>
