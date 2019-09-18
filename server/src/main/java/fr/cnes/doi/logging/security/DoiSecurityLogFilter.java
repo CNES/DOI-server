@@ -30,6 +30,7 @@ import org.restlet.data.ClientInfo;
 import org.restlet.data.Status;
 import org.restlet.routing.Filter;
 import org.restlet.security.Role;
+import org.restlet.security.User;
 
 /**
  * Log filter for DOI security
@@ -75,8 +76,14 @@ public class DoiSecurityLogFilter extends Filter {
                     clientInfo.getAgent());
         } else if(response.getStatus().equals(Status.CLIENT_ERROR_UNAUTHORIZED)) {            
             final String authenticationMethod = request.getChallengeResponse().getScheme().
-                    getTechnicalName();
-            final String identifier = request.getClientInfo().getUser().getIdentifier();
+                    getTechnicalName();            
+            final String identifier;
+            final User user = request.getClientInfo().getUser();
+            if(user != null) {
+                identifier = user.getIdentifier();
+            } else {
+                identifier = "";
+            }
             LogManager.getLogger(Utils.SECURITY_LOGGER_NAME).info(
                     "Authentication failed for user: {} \t - [{}] - [{}] {} {} - {}",
                     identifier, upStreamIp, authenticationMethod,

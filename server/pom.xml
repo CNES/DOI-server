@@ -33,7 +33,7 @@
     <parent>
         <artifactId>DOI</artifactId>
         <groupId>fr.cnes.doi</groupId>
-        <version>1.0.1</version>
+        <version>1.0.2</version>
     </parent>
         
     <artifactId>DOI-server</artifactId>

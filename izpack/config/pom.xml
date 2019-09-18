@@ -6,7 +6,7 @@
     <parent>
         <artifactId>DOI-installer</artifactId>
         <groupId>fr.cnes.doi</groupId>
-        <version>1.0.1</version>
+        <version>1.0.2</version>
     </parent>
 
     <artifactId>izpack-doi-config</artifactId>
