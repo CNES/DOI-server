@@ -121,7 +121,7 @@
 <a name="111" href="#111">111</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <a href="../../../../fr/cnes/doi/settings/EmailSettings.html">EmailSettings</a> getInstance() {
 <a name="112" href="#112">112</a>         <strong class="jxr_keyword">return</strong> EmailSettingsHolder.INSTANCE;
 <a name="113" href="#113">113</a>     }
-<a name="114" href="#114">114</a>     
+<a name="114" href="#114">114</a> 
 <a name="115" href="#115">115</a>     <em class="jxr_javadoccomment">/**</em>
 <a name="116" href="#116">116</a> <em class="jxr_javadoccomment">     * Init singleton.</em>
 <a name="117" href="#117">117</a> <em class="jxr_javadoccomment">     */</em>
@@ -252,8 +252,8 @@
 <a name="242" href="#242">242</a>     }
 <a name="243" href="#243">243</a> 
 <a name="244" href="#244">244</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="245" href="#245">245</a> <em class="jxr_javadoccomment">     * Returns true when configuration may be enough to send an email. Checks the SMTP URL and the</em>
-<a name="246" href="#246">246</a> <em class="jxr_javadoccomment">     * SMTP protocol.</em>
+<a name="245" href="#245">245</a> <em class="jxr_javadoccomment">     * Returns true when configuration may be enough to send an email. Checks</em>
+<a name="246" href="#246">246</a> <em class="jxr_javadoccomment">     * the SMTP URL and the SMTP protocol.</em>
 <a name="247" href="#247">247</a> <em class="jxr_javadoccomment">     *</em>
 <a name="248" href="#248">248</a> <em class="jxr_javadoccomment">     * @return true when configuration may be enough to send an email</em>
 <a name="249" href="#249">249</a> <em class="jxr_javadoccomment">     */</em>
@@ -291,126 +291,127 @@
 <a name="281" href="#281">281</a>     }
 <a name="282" href="#282">282</a> 
 <a name="283" href="#283">283</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="284" href="#284">284</a> <em class="jxr_javadoccomment">     * Sends an email only when {@value fr.cnes.doi.settings.Consts#CONTEXT_MODE} is set to PROD.</em>
-<a name="285" href="#285">285</a> <em class="jxr_javadoccomment">     *</em>
-<a name="286" href="#286">286</a> <em class="jxr_javadoccomment">     * @param protocol Protocol (SMTP or SMTPS)</em>
-<a name="287" href="#287">287</a> <em class="jxr_javadoccomment">     * @param request request</em>
-<a name="288" href="#288">288</a> <em class="jxr_javadoccomment">     * @param startTls startTls</em>
-<a name="289" href="#289">289</a> <em class="jxr_javadoccomment">     * @param subject Email's subject</em>
-<a name="290" href="#290">290</a> <em class="jxr_javadoccomment">     * @param msg Email's message</em>
-<a name="291" href="#291">291</a> <em class="jxr_javadoccomment">     * @param to receiver</em>
-<a name="292" href="#292">292</a> <em class="jxr_javadoccomment">     * @return True when the message is sent</em>
-<a name="293" href="#293">293</a> <em class="jxr_javadoccomment">     * @throws Exception - if an error happens when stopping the request</em>
-<a name="294" href="#294">294</a> <em class="jxr_javadoccomment">     */</em>
-<a name="295" href="#295">295</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> sendMail(<strong class="jxr_keyword">final</strong> Protocol protocol,
-<a name="296" href="#296">296</a>             <strong class="jxr_keyword">final</strong> Request request,
-<a name="297" href="#297">297</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">boolean</strong> startTls,
-<a name="298" href="#298">298</a>             <strong class="jxr_keyword">final</strong> String subject,
-<a name="299" href="#299">299</a>             <strong class="jxr_keyword">final</strong> String msg,
-<a name="300" href="#300">300</a>             <strong class="jxr_keyword">final</strong> String to) <strong class="jxr_keyword">throws</strong> Exception {
-<a name="301" href="#301">301</a>         LOG.traceEntry(<span class="jxr_string">"Parameters\n  protocol:{}\n  startTls:{}, request:{}\n  subject:{}\n  "</span>
-<a name="302" href="#302">302</a>                 + <span class="jxr_string">"msg:{}\n  to:{}"</span>,
-<a name="303" href="#303">303</a>                 protocol, request, startTls, subject, msg, to);
-<a name="304" href="#304">304</a>         <strong class="jxr_keyword">final</strong> String contextMode = DoiSettings.getInstance().getString(Consts.CONTEXT_MODE);
-<a name="305" href="#305">305</a>         <strong class="jxr_keyword">final</strong> Representation mail = <strong class="jxr_keyword">this</strong>.createMailRepresentation(subject, msg, to);
-<a name="306" href="#306">306</a>         request.setEntity(mail);
-<a name="307" href="#307">307</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">boolean</strong> result;
-<a name="308" href="#308">308</a>         <strong class="jxr_keyword">if</strong> (<span class="jxr_string">"PROD"</span>.equals(contextMode)) {
-<a name="309" href="#309">309</a>             <strong class="jxr_keyword">final</strong> Client client = <strong class="jxr_keyword">new</strong> Client(<strong class="jxr_keyword">new</strong> Context(), protocol);
-<a name="310" href="#310">310</a>             <strong class="jxr_keyword">final</strong> Series&lt;Parameter&gt; parameters = client.getContext().getParameters();
-<a name="311" href="#311">311</a>             parameters.add(<span class="jxr_string">"debug"</span>, String.valueOf(isDebug()));
-<a name="312" href="#312">312</a>             parameters.add(<span class="jxr_string">"startTls"</span>, Boolean.toString(startTls).toLowerCase(Locale.ENGLISH));
-<a name="313" href="#313">313</a>             <strong class="jxr_keyword">final</strong> JavaMailClientHelper smtpClient = <strong class="jxr_keyword">new</strong> JavaMailClientHelper(client);
-<a name="314" href="#314">314</a>             <strong class="jxr_keyword">final</strong> Response response = <strong class="jxr_keyword">new</strong> Response(request);
-<a name="315" href="#315">315</a>             smtpClient.handle(request, response);
-<a name="316" href="#316">316</a>             <strong class="jxr_keyword">final</strong> Status status = response.getStatus();
-<a name="317" href="#317">317</a>             <strong class="jxr_keyword">if</strong> (status.isSuccess()) {
-<a name="318" href="#318">318</a>                 result = <strong class="jxr_keyword">true</strong>;
-<a name="319" href="#319">319</a>                 LOG.info(<span class="jxr_string">"Message sent to {}"</span>, to);
-<a name="320" href="#320">320</a>             } <strong class="jxr_keyword">else</strong> {
-<a name="321" href="#321">321</a>                 result = false;
-<a name="322" href="#322">322</a>                 LOG.error(<span class="jxr_string">"Cannot connect to SMTP server"</span>, status.getThrowable());
-<a name="323" href="#323">323</a>             }
-<a name="324" href="#324">324</a>         } <strong class="jxr_keyword">else</strong> {
-<a name="325" href="#325">325</a>             result = <strong class="jxr_keyword">true</strong>;
-<a name="326" href="#326">326</a>             LOG.warn(<span class="jxr_string">"The configuration context {} is not PROD, do not send the email : {}"</span>,
-<a name="327" href="#327">327</a>                     contextMode, mail.getText());
-<a name="328" href="#328">328</a>         }
-<a name="329" href="#329">329</a>         <strong class="jxr_keyword">return</strong> LOG.traceExit(result);
-<a name="330" href="#330">330</a>     }
-<a name="331" href="#331">331</a> 
-<a name="332" href="#332">332</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="333" href="#333">333</a> <em class="jxr_javadoccomment">     * Returns the protocol URL.</em>
-<a name="334" href="#334">334</a> <em class="jxr_javadoccomment">     *</em>
-<a name="335" href="#335">335</a> <em class="jxr_javadoccomment">     * @return the URL</em>
-<a name="336" href="#336">336</a> <em class="jxr_javadoccomment">     */</em>
-<a name="337" href="#337">337</a>     <strong class="jxr_keyword">public</strong> String getSmtpURL() {
-<a name="338" href="#338">338</a>         LOG.traceEntry();
-<a name="339" href="#339">339</a>         <strong class="jxr_keyword">return</strong> LOG.traceExit(smtpUrl);
-<a name="340" href="#340">340</a>     }
-<a name="341" href="#341">341</a> 
-<a name="342" href="#342">342</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="343" href="#343">343</a> <em class="jxr_javadoccomment">     * Returns the protocol.</em>
-<a name="344" href="#344">344</a> <em class="jxr_javadoccomment">     *</em>
-<a name="345" href="#345">345</a> <em class="jxr_javadoccomment">     * @return the port</em>
-<a name="346" href="#346">346</a> <em class="jxr_javadoccomment">     */</em>
-<a name="347" href="#347">347</a>     <strong class="jxr_keyword">public</strong> String getSmtpProtocol() {
-<a name="348" href="#348">348</a>         LOG.traceEntry();
-<a name="349" href="#349">349</a>         <strong class="jxr_keyword">return</strong> LOG.traceExit(smtpProtocol);
-<a name="350" href="#350">350</a>     }
-<a name="351" href="#351">351</a> 
-<a name="352" href="#352">352</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="353" href="#353">353</a> <em class="jxr_javadoccomment">     * Returns True when TLS is enable otherwise False.</em>
-<a name="354" href="#354">354</a> <em class="jxr_javadoccomment">     *</em>
-<a name="355" href="#355">355</a> <em class="jxr_javadoccomment">     * @return the tlsEnable</em>
-<a name="356" href="#356">356</a> <em class="jxr_javadoccomment">     */</em>
-<a name="357" href="#357">357</a>     <strong class="jxr_keyword">public</strong> String getTlsEnable() {
-<a name="358" href="#358">358</a>         LOG.traceEntry();
-<a name="359" href="#359">359</a>         <strong class="jxr_keyword">return</strong> LOG.traceExit(tlsEnable);
-<a name="360" href="#360">360</a>     }
-<a name="361" href="#361">361</a> 
-<a name="362" href="#362">362</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="363" href="#363">363</a> <em class="jxr_javadoccomment">     * Returns the decrypted login.</em>
-<a name="364" href="#364">364</a> <em class="jxr_javadoccomment">     *</em>
-<a name="365" href="#365">365</a> <em class="jxr_javadoccomment">     * @return the authUser</em>
-<a name="366" href="#366">366</a> <em class="jxr_javadoccomment">     */</em>
-<a name="367" href="#367">367</a>     <strong class="jxr_keyword">public</strong> String getAuthUser() {
-<a name="368" href="#368">368</a>         LOG.traceEntry();
-<a name="369" href="#369">369</a>         <strong class="jxr_keyword">return</strong> LOG.traceExit(authUser);
-<a name="370" href="#370">370</a>     }
-<a name="371" href="#371">371</a> 
-<a name="372" href="#372">372</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="373" href="#373">373</a> <em class="jxr_javadoccomment">     * Returns the decrypted password.</em>
-<a name="374" href="#374">374</a> <em class="jxr_javadoccomment">     *</em>
-<a name="375" href="#375">375</a> <em class="jxr_javadoccomment">     * @return the authPwd</em>
-<a name="376" href="#376">376</a> <em class="jxr_javadoccomment">     */</em>
-<a name="377" href="#377">377</a>     <strong class="jxr_keyword">public</strong> String getAuthPwd() {
-<a name="378" href="#378">378</a>         LOG.traceEntry();
-<a name="379" href="#379">379</a>         <strong class="jxr_keyword">return</strong> LOG.traceExit(authPwd);
-<a name="380" href="#380">380</a>     }
-<a name="381" href="#381">381</a> 
-<a name="382" href="#382">382</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="383" href="#383">383</a> <em class="jxr_javadoccomment">     * Returns the administrator's email.</em>
-<a name="384" href="#384">384</a> <em class="jxr_javadoccomment">     *</em>
-<a name="385" href="#385">385</a> <em class="jxr_javadoccomment">     * @return the contactAdmin</em>
-<a name="386" href="#386">386</a> <em class="jxr_javadoccomment">     */</em>
-<a name="387" href="#387">387</a>     <strong class="jxr_keyword">public</strong> String getContactAdmin() {
-<a name="388" href="#388">388</a>         LOG.traceEntry();
-<a name="389" href="#389">389</a>         <strong class="jxr_keyword">return</strong> LOG.traceExit(contactAdmin);
-<a name="390" href="#390">390</a>     }
-<a name="391" href="#391">391</a> 
-<a name="392" href="#392">392</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="393" href="#393">393</a> <em class="jxr_javadoccomment">     *</em>
-<a name="394" href="#394">394</a> <em class="jxr_javadoccomment">     */</em>
-<a name="395" href="#395">395</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../fr/cnes/doi/settings/EmailSettings.html">EmailSettingsHolder</a> {
-<a name="396" href="#396">396</a> 
-<a name="397" href="#397">397</a>         <em class="jxr_javadoccomment">/**</em>
-<a name="398" href="#398">398</a> <em class="jxr_javadoccomment">         * Unique Instance unique not pre-initiliaze</em>
-<a name="399" href="#399">399</a> <em class="jxr_javadoccomment">         */</em>
-<a name="400" href="#400">400</a>         <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../fr/cnes/doi/settings/EmailSettings.html">EmailSettings</a> INSTANCE = <strong class="jxr_keyword">new</strong> <a href="../../../../fr/cnes/doi/settings/EmailSettings.html">EmailSettings</a>();
-<a name="401" href="#401">401</a>     }
-<a name="402" href="#402">402</a> 
-<a name="403" href="#403">403</a> }
+<a name="284" href="#284">284</a> <em class="jxr_javadoccomment">     * Sends an email only when</em>
+<a name="285" href="#285">285</a> <em class="jxr_javadoccomment">     * {@value fr.cnes.doi.settings.Consts#CONTEXT_MODE} is set to PROD.</em>
+<a name="286" href="#286">286</a> <em class="jxr_javadoccomment">     *</em>
+<a name="287" href="#287">287</a> <em class="jxr_javadoccomment">     * @param protocol Protocol (SMTP or SMTPS)</em>
+<a name="288" href="#288">288</a> <em class="jxr_javadoccomment">     * @param request request</em>
+<a name="289" href="#289">289</a> <em class="jxr_javadoccomment">     * @param startTls startTls</em>
+<a name="290" href="#290">290</a> <em class="jxr_javadoccomment">     * @param subject Email's subject</em>
+<a name="291" href="#291">291</a> <em class="jxr_javadoccomment">     * @param msg Email's message</em>
+<a name="292" href="#292">292</a> <em class="jxr_javadoccomment">     * @param to receiver</em>
+<a name="293" href="#293">293</a> <em class="jxr_javadoccomment">     * @return True when the message is sent</em>
+<a name="294" href="#294">294</a> <em class="jxr_javadoccomment">     * @throws Exception - if an error happens when stopping the request</em>
+<a name="295" href="#295">295</a> <em class="jxr_javadoccomment">     */</em>
+<a name="296" href="#296">296</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> sendMail(<strong class="jxr_keyword">final</strong> Protocol protocol,
+<a name="297" href="#297">297</a>             <strong class="jxr_keyword">final</strong> Request request,
+<a name="298" href="#298">298</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">boolean</strong> startTls,
+<a name="299" href="#299">299</a>             <strong class="jxr_keyword">final</strong> String subject,
+<a name="300" href="#300">300</a>             <strong class="jxr_keyword">final</strong> String msg,
+<a name="301" href="#301">301</a>             <strong class="jxr_keyword">final</strong> String to) <strong class="jxr_keyword">throws</strong> Exception {
+<a name="302" href="#302">302</a>         LOG.traceEntry(<span class="jxr_string">"Parameters\n  protocol:{}\n  startTls:{}, request:{}\n  subject:{}\n  "</span>
+<a name="303" href="#303">303</a>                 + <span class="jxr_string">"msg:{}\n  to:{}"</span>,
+<a name="304" href="#304">304</a>                 protocol, request, startTls, subject, msg, to);
+<a name="305" href="#305">305</a>         <strong class="jxr_keyword">final</strong> String contextMode = DoiSettings.getInstance().getString(Consts.CONTEXT_MODE);
+<a name="306" href="#306">306</a>         <strong class="jxr_keyword">final</strong> Representation mail = <strong class="jxr_keyword">this</strong>.createMailRepresentation(subject, msg, to);
+<a name="307" href="#307">307</a>         request.setEntity(mail);
+<a name="308" href="#308">308</a>         <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">boolean</strong> result;
+<a name="309" href="#309">309</a>         <strong class="jxr_keyword">if</strong> (<span class="jxr_string">"PROD"</span>.equals(contextMode)) {
+<a name="310" href="#310">310</a>             <strong class="jxr_keyword">final</strong> Client client = <strong class="jxr_keyword">new</strong> Client(<strong class="jxr_keyword">new</strong> Context(), protocol);
+<a name="311" href="#311">311</a>             <strong class="jxr_keyword">final</strong> Series&lt;Parameter&gt; parameters = client.getContext().getParameters();
+<a name="312" href="#312">312</a>             parameters.add(<span class="jxr_string">"debug"</span>, String.valueOf(isDebug()));
+<a name="313" href="#313">313</a>             parameters.add(<span class="jxr_string">"startTls"</span>, Boolean.toString(startTls).toLowerCase(Locale.ENGLISH));
+<a name="314" href="#314">314</a>             <strong class="jxr_keyword">final</strong> JavaMailClientHelper smtpClient = <strong class="jxr_keyword">new</strong> JavaMailClientHelper(client);
+<a name="315" href="#315">315</a>             <strong class="jxr_keyword">final</strong> Response response = <strong class="jxr_keyword">new</strong> Response(request);
+<a name="316" href="#316">316</a>             smtpClient.handle(request, response);
+<a name="317" href="#317">317</a>             <strong class="jxr_keyword">final</strong> Status status = response.getStatus();
+<a name="318" href="#318">318</a>             <strong class="jxr_keyword">if</strong> (status.isSuccess()) {
+<a name="319" href="#319">319</a>                 result = <strong class="jxr_keyword">true</strong>;
+<a name="320" href="#320">320</a>                 LOG.info(<span class="jxr_string">"Message sent to {}"</span>, to);
+<a name="321" href="#321">321</a>             } <strong class="jxr_keyword">else</strong> {
+<a name="322" href="#322">322</a>                 result = false;
+<a name="323" href="#323">323</a>                 LOG.error(<span class="jxr_string">"Cannot connect to SMTP server"</span>, status.getThrowable());
+<a name="324" href="#324">324</a>             }
+<a name="325" href="#325">325</a>         } <strong class="jxr_keyword">else</strong> {
+<a name="326" href="#326">326</a>             result = <strong class="jxr_keyword">true</strong>;
+<a name="327" href="#327">327</a>             LOG.warn(<span class="jxr_string">"The configuration context {} is not PROD, do not send the email : {}"</span>,
+<a name="328" href="#328">328</a>                     contextMode, mail.getText());
+<a name="329" href="#329">329</a>         }
+<a name="330" href="#330">330</a>         <strong class="jxr_keyword">return</strong> LOG.traceExit(result);
+<a name="331" href="#331">331</a>     }
+<a name="332" href="#332">332</a> 
+<a name="333" href="#333">333</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="334" href="#334">334</a> <em class="jxr_javadoccomment">     * Returns the protocol URL.</em>
+<a name="335" href="#335">335</a> <em class="jxr_javadoccomment">     *</em>
+<a name="336" href="#336">336</a> <em class="jxr_javadoccomment">     * @return the URL</em>
+<a name="337" href="#337">337</a> <em class="jxr_javadoccomment">     */</em>
+<a name="338" href="#338">338</a>     <strong class="jxr_keyword">public</strong> String getSmtpURL() {
+<a name="339" href="#339">339</a>         LOG.traceEntry();
+<a name="340" href="#340">340</a>         <strong class="jxr_keyword">return</strong> LOG.traceExit(smtpUrl);
+<a name="341" href="#341">341</a>     }
+<a name="342" href="#342">342</a> 
+<a name="343" href="#343">343</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="344" href="#344">344</a> <em class="jxr_javadoccomment">     * Returns the protocol.</em>
+<a name="345" href="#345">345</a> <em class="jxr_javadoccomment">     *</em>
+<a name="346" href="#346">346</a> <em class="jxr_javadoccomment">     * @return the port</em>
+<a name="347" href="#347">347</a> <em class="jxr_javadoccomment">     */</em>
+<a name="348" href="#348">348</a>     <strong class="jxr_keyword">public</strong> String getSmtpProtocol() {
+<a name="349" href="#349">349</a>         LOG.traceEntry();
+<a name="350" href="#350">350</a>         <strong class="jxr_keyword">return</strong> LOG.traceExit(smtpProtocol);
+<a name="351" href="#351">351</a>     }
+<a name="352" href="#352">352</a> 
+<a name="353" href="#353">353</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="354" href="#354">354</a> <em class="jxr_javadoccomment">     * Returns True when TLS is enable otherwise False.</em>
+<a name="355" href="#355">355</a> <em class="jxr_javadoccomment">     *</em>
+<a name="356" href="#356">356</a> <em class="jxr_javadoccomment">     * @return the tlsEnable</em>
+<a name="357" href="#357">357</a> <em class="jxr_javadoccomment">     */</em>
+<a name="358" href="#358">358</a>     <strong class="jxr_keyword">public</strong> String getTlsEnable() {
+<a name="359" href="#359">359</a>         LOG.traceEntry();
+<a name="360" href="#360">360</a>         <strong class="jxr_keyword">return</strong> LOG.traceExit(tlsEnable);
+<a name="361" href="#361">361</a>     }
+<a name="362" href="#362">362</a> 
+<a name="363" href="#363">363</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="364" href="#364">364</a> <em class="jxr_javadoccomment">     * Returns the decrypted login.</em>
+<a name="365" href="#365">365</a> <em class="jxr_javadoccomment">     *</em>
+<a name="366" href="#366">366</a> <em class="jxr_javadoccomment">     * @return the authUser</em>
+<a name="367" href="#367">367</a> <em class="jxr_javadoccomment">     */</em>
+<a name="368" href="#368">368</a>     <strong class="jxr_keyword">public</strong> String getAuthUser() {
+<a name="369" href="#369">369</a>         LOG.traceEntry();
+<a name="370" href="#370">370</a>         <strong class="jxr_keyword">return</strong> LOG.traceExit(authUser);
+<a name="371" href="#371">371</a>     }
+<a name="372" href="#372">372</a> 
+<a name="373" href="#373">373</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="374" href="#374">374</a> <em class="jxr_javadoccomment">     * Returns the decrypted password.</em>
+<a name="375" href="#375">375</a> <em class="jxr_javadoccomment">     *</em>
+<a name="376" href="#376">376</a> <em class="jxr_javadoccomment">     * @return the authPwd</em>
+<a name="377" href="#377">377</a> <em class="jxr_javadoccomment">     */</em>
+<a name="378" href="#378">378</a>     <strong class="jxr_keyword">public</strong> String getAuthPwd() {
+<a name="379" href="#379">379</a>         LOG.traceEntry();
+<a name="380" href="#380">380</a>         <strong class="jxr_keyword">return</strong> LOG.traceExit(authPwd);
+<a name="381" href="#381">381</a>     }
+<a name="382" href="#382">382</a> 
+<a name="383" href="#383">383</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="384" href="#384">384</a> <em class="jxr_javadoccomment">     * Returns the administrator's email.</em>
+<a name="385" href="#385">385</a> <em class="jxr_javadoccomment">     *</em>
+<a name="386" href="#386">386</a> <em class="jxr_javadoccomment">     * @return the contactAdmin</em>
+<a name="387" href="#387">387</a> <em class="jxr_javadoccomment">     */</em>
+<a name="388" href="#388">388</a>     <strong class="jxr_keyword">public</strong> String getContactAdmin() {
+<a name="389" href="#389">389</a>         LOG.traceEntry();
+<a name="390" href="#390">390</a>         <strong class="jxr_keyword">return</strong> LOG.traceExit(contactAdmin);
+<a name="391" href="#391">391</a>     }
+<a name="392" href="#392">392</a> 
+<a name="393" href="#393">393</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="394" href="#394">394</a> <em class="jxr_javadoccomment">     *</em>
+<a name="395" href="#395">395</a> <em class="jxr_javadoccomment">     */</em>
+<a name="396" href="#396">396</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../fr/cnes/doi/settings/EmailSettings.html">EmailSettingsHolder</a> {
+<a name="397" href="#397">397</a> 
+<a name="398" href="#398">398</a>         <em class="jxr_javadoccomment">/**</em>
+<a name="399" href="#399">399</a> <em class="jxr_javadoccomment">         * Unique Instance unique not pre-initiliaze</em>
+<a name="400" href="#400">400</a> <em class="jxr_javadoccomment">         */</em>
+<a name="401" href="#401">401</a>         <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../fr/cnes/doi/settings/EmailSettings.html">EmailSettings</a> INSTANCE = <strong class="jxr_keyword">new</strong> <a href="../../../../fr/cnes/doi/settings/EmailSettings.html">EmailSettings</a>();
+<a name="402" href="#402">402</a>     }
+<a name="403" href="#403">403</a> 
+<a name="404" href="#404">404</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>

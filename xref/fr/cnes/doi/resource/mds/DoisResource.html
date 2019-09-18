@@ -82,283 +82,290 @@
 <a name="72" href="#72">72</a>      }
 <a name="73" href="#73">73</a>  
 <a name="74" href="#74">74</a>      <em class="jxr_javadoccomment">/**</em>
-<a name="75" href="#75">75</a>  <em class="jxr_javadoccomment">     * Returns the collection of DOI. This request returns a list of all DOIs for the requesting</em>
-<a name="76" href="#76">76</a>  <em class="jxr_javadoccomment">     * datacentre. Status 200 is returned when operation is successful.</em>
-<a name="77" href="#77">77</a>  <em class="jxr_javadoccomment">     *</em>
-<a name="78" href="#78">78</a>  <em class="jxr_javadoccomment">     * @return the list of DOI</em>
-<a name="79" href="#79">79</a>  <em class="jxr_javadoccomment">     * @throws DoiServerException 204 No Content - no DOIs founds</em>
-<a name="80" href="#80">80</a>  <em class="jxr_javadoccomment">     */</em>
-<a name="81" href="#81">81</a>      @Get
-<a name="82" href="#82">82</a>      <strong class="jxr_keyword">public</strong> List&lt;String&gt; getDois() <strong class="jxr_keyword">throws</strong> DoiServerException {
-<a name="83" href="#83">83</a>          LOG.traceEntry();
-<a name="84" href="#84">84</a>          setStatus(Status.SUCCESS_OK);
-<a name="85" href="#85">85</a>          <strong class="jxr_keyword">final</strong> List&lt;String&gt; dois = <strong class="jxr_keyword">this</strong>.getDoiApp().getClientSearch().getDois();
-<a name="86" href="#86">86</a>          <strong class="jxr_keyword">if</strong> (dois == <strong class="jxr_keyword">null</strong> || dois.isEmpty()) {
-<a name="87" href="#87">87</a>              setStatus(Status.SUCCESS_NO_CONTENT);
-<a name="88" href="#88">88</a>          } <strong class="jxr_keyword">else</strong> {
-<a name="89" href="#89">89</a>              setStatus(Status.SUCCESS_OK);
-<a name="90" href="#90">90</a>          }
-<a name="91" href="#91">91</a>          <strong class="jxr_keyword">return</strong> LOG.traceExit(dois);
-<a name="92" href="#92">92</a>      }
-<a name="93" href="#93">93</a>  
-<a name="94" href="#94">94</a>      <em class="jxr_javadoccomment">/**</em>
-<a name="95" href="#95">95</a>  <em class="jxr_javadoccomment">     * Creates a new DOI based on the doi and url parameters</em>
-<a name="96" href="#96">96</a>  <em class="jxr_javadoccomment">     *</em>
-<a name="97" href="#97">97</a>  <em class="jxr_javadoccomment">     * The DOI name is built following this syntax:</em>
-<a name="98" href="#98">98</a>  <em class="jxr_javadoccomment">     * &lt;i&gt;CNES_prefix&lt;/i&gt;/&lt;i&gt;project_provided_the_DOI_server&lt;/i&gt;/project_suffix.</em>
-<a name="99" href="#99">99</a>  <em class="jxr_javadoccomment">     *</em>
-<a name="100" href="#100">100</a> <em class="jxr_javadoccomment">     * &lt;p&gt;</em>
-<a name="101" href="#101">101</a> <em class="jxr_javadoccomment">     * The client provides :</em>
-<a name="102" href="#102">102</a> <em class="jxr_javadoccomment">     * &lt;ul&gt;</em>
-<a name="103" href="#103">103</a> <em class="jxr_javadoccomment">     * &lt;li&gt;&lt;i&gt;doi&lt;/i&gt; : the project suffix, which is an unique identifier within the project.&lt;/li&gt;</em>
-<a name="104" href="#104">104</a> <em class="jxr_javadoccomment">     * &lt;li&gt;&lt;i&gt;url&lt;/i&gt; : the URL of the landing page.</em>
-<a name="105" href="#105">105</a> <em class="jxr_javadoccomment">     * &lt;/ul&gt;</em>
-<a name="106" href="#106">106</a> <em class="jxr_javadoccomment">     * &lt;b&gt;Note 1&lt;/b&gt; : the landing page should be accessible from www</em>
-<a name="107" href="#107">107</a> <em class="jxr_javadoccomment">     * &lt;b&gt;Note 2&lt;/b&gt; : Metadata must be uploaded first</em>
-<a name="108" href="#108">108</a> <em class="jxr_javadoccomment">     *</em>
-<a name="109" href="#109">109</a> <em class="jxr_javadoccomment">     * &lt;p&gt;</em>
-<a name="110" href="#110">110</a> <em class="jxr_javadoccomment">     * Will mint new DOI if specified DOI doesn't exist. This method will attempt to update URL if</em>
-<a name="111" href="#111">111</a> <em class="jxr_javadoccomment">     * you specify existing DOI. Standard domains and quota restrictions check will be performed. A</em>
-<a name="112" href="#112">112</a> <em class="jxr_javadoccomment">     * Datacentre's doiQuotaUsed will be increased by 1. A new record in Datasets will be created by</em>
-<a name="113" href="#113">113</a> <em class="jxr_javadoccomment">     * returning a 201 status for operation successful.</em>
-<a name="114" href="#114">114</a> <em class="jxr_javadoccomment">     *</em>
-<a name="115" href="#115">115</a> <em class="jxr_javadoccomment">     * @param doiForm doi and url</em>
-<a name="116" href="#116">116</a> <em class="jxr_javadoccomment">     * @return short explanation of status code e.g. CREATED, HANDLE_ALREADY_EXISTS etc</em>
-<a name="117" href="#117">117</a> <em class="jxr_javadoccomment">     * @throws DoiServerException - if the response is not a success</em>
-<a name="118" href="#118">118</a> <em class="jxr_javadoccomment">     * &lt;ul&gt;</em>
-<a name="119" href="#119">119</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link DATACITE_API_RESPONSE#PROCESS_ERROR}&lt;/li&gt;</em>
-<a name="120" href="#120">120</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link API_MDS#DATACITE_PROBLEM}&lt;/li&gt;</em>
-<a name="121" href="#121">121</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link API_MDS#SECURITY_USER_NO_ROLE}&lt;/li&gt;</em>
-<a name="122" href="#122">122</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link API_MDS#SECURITY_USER_NOT_IN_SELECTED_ROLE}&lt;/li&gt;</em>
-<a name="123" href="#123">123</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link API_MDS#SECURITY_USER_PERMISSION}&lt;/li&gt;</em>
-<a name="124" href="#124">124</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link API_MDS#SECURITY_USER_CONFLICT}&lt;/li&gt;</em>
-<a name="125" href="#125">125</a> <em class="jxr_javadoccomment">     * &lt;/ul&gt;</em>
-<a name="126" href="#126">126</a> <em class="jxr_javadoccomment">     */</em>
-<a name="127" href="#127">127</a>     @Requirement(reqId = Requirement.DOI_SRV_020, reqName = Requirement.DOI_SRV_020_NAME)
-<a name="128" href="#128">128</a>     @Requirement(reqId = Requirement.DOI_SRV_030, reqName = Requirement.DOI_SRV_030_NAME)
-<a name="129" href="#129">129</a>     @Requirement(reqId = Requirement.DOI_MONIT_020, reqName = Requirement.DOI_MONIT_020_NAME)
-<a name="130" href="#130">130</a>     @Requirement(reqId = Requirement.DOI_INTER_070, reqName = Requirement.DOI_INTER_070_NAME)
-<a name="131" href="#131">131</a>     @Requirement(reqId = Requirement.DOI_AUTO_020, reqName = Requirement.DOI_AUTO_020_NAME)
-<a name="132" href="#132">132</a>     @Requirement(reqId = Requirement.DOI_AUTO_030, reqName = Requirement.DOI_AUTO_030_NAME)
-<a name="133" href="#133">133</a>     @Post(<span class="jxr_string">"form"</span>)
-<a name="134" href="#134">134</a>     <strong class="jxr_keyword">public</strong> String createDoi(<strong class="jxr_keyword">final</strong> Form doiForm) <strong class="jxr_keyword">throws</strong> DoiServerException {
-<a name="135" href="#135">135</a>         LOG.traceEntry(<span class="jxr_string">"Parameters\n\tdoiForm : {}"</span>, doiForm);
-<a name="136" href="#136">136</a>         checkInputs(doiForm);
-<a name="137" href="#137">137</a>         <strong class="jxr_keyword">final</strong> String result;
-<a name="138" href="#138">138</a>         <strong class="jxr_keyword">final</strong> String selectedRole = extractSelectedRoleFromRequestIfExists();
-<a name="139" href="#139">139</a>         checkPermission(doiForm.getFirstValue(DOI_PARAMETER), selectedRole);
-<a name="140" href="#140">140</a>         <strong class="jxr_keyword">try</strong> {
-<a name="141" href="#141">141</a>             setStatus(Status.SUCCESS_CREATED, <span class="jxr_string">"Operation successful"</span>);
-<a name="142" href="#142">142</a>             result = <strong class="jxr_keyword">this</strong>.getDoiApp().getClient().createDoi(doiForm);
-<a name="143" href="#143">143</a>         } <strong class="jxr_keyword">catch</strong> (ClientMdsException ex) {
-<a name="144" href="#144">144</a>             <strong class="jxr_keyword">if</strong> (ex.getStatus().getCode() == Status.CLIENT_ERROR_PRECONDITION_FAILED.getCode()) {
-<a name="145" href="#145">145</a>                 <strong class="jxr_keyword">throw</strong> LOG.throwing(
-<a name="146" href="#146">146</a>                         Level.ERROR,
-<a name="147" href="#147">147</a>                         <strong class="jxr_keyword">new</strong> <a href="../../../../../fr/cnes/doi/exception/DoiServerException.html">DoiServerException</a>(getApplication(), DATACITE_API_RESPONSE.PROCESS_ERROR,
-<a name="148" href="#148">148</a>                                 ex)
-<a name="149" href="#149">149</a>                 );
-<a name="150" href="#150">150</a>             } <strong class="jxr_keyword">else</strong> {
-<a name="151" href="#151">151</a>                 <strong class="jxr_keyword">throw</strong> LOG.throwing(
-<a name="152" href="#152">152</a>                         Level.ERROR,
-<a name="153" href="#153">153</a>                         <strong class="jxr_keyword">new</strong> <a href="../../../../../fr/cnes/doi/exception/DoiServerException.html">DoiServerException</a>(getApplication(), API_MDS.DATACITE_PROBLEM, ex)
-<a name="154" href="#154">154</a>                 );
-<a name="155" href="#155">155</a>             }
-<a name="156" href="#156">156</a>         }
-<a name="157" href="#157">157</a> 
-<a name="158" href="#158">158</a>         <strong class="jxr_keyword">return</strong> LOG.traceExit(result);
-<a name="159" href="#159">159</a>     }
-<a name="160" href="#160">160</a> 
-<a name="161" href="#161">161</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="162" href="#162">162</a> <em class="jxr_javadoccomment">     * Checks input parameters. Checks that</em>
-<a name="163" href="#163">163</a> <em class="jxr_javadoccomment">     * {@value fr.cnes.doi.resource.mds.BaseMdsResource#DOI_PARAMETER} and</em>
-<a name="164" href="#164">164</a> <em class="jxr_javadoccomment">     * {@value fr.cnes.doi.resource.mds.BaseMdsResource#URL_PARAMETER} are provided in the</em>
-<a name="165" href="#165">165</a> <em class="jxr_javadoccomment">     * mediaForm.</em>
-<a name="166" href="#166">166</a> <em class="jxr_javadoccomment">     *</em>
-<a name="167" href="#167">167</a> <em class="jxr_javadoccomment">     * @param mediaForm the parameters</em>
-<a name="168" href="#168">168</a> <em class="jxr_javadoccomment">     * {@value fr.cnes.doi.resource.mds.BaseMdsResource#DOI_PARAMETER} and</em>
-<a name="169" href="#169">169</a> <em class="jxr_javadoccomment">     * {@value fr.cnes.doi.resource.mds.BaseMdsResource#URL_PARAMETER}</em>
-<a name="170" href="#170">170</a> <em class="jxr_javadoccomment">     * @throws DoiServerException - 400 Bad Request if DOI_PARAMETER and</em>
-<a name="171" href="#171">171</a> <em class="jxr_javadoccomment">     * {@value fr.cnes.doi.resource.mds.BaseMdsResource#URL_PARAMETER} are not set</em>
-<a name="172" href="#172">172</a> <em class="jxr_javadoccomment">     */</em>
-<a name="173" href="#173">173</a>     @Requirement(reqId = Requirement.DOI_INTER_070, reqName = Requirement.DOI_INTER_070_NAME)
-<a name="174" href="#174">174</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> checkInputs(<strong class="jxr_keyword">final</strong> Form mediaForm) <strong class="jxr_keyword">throws</strong> DoiServerException {
-<a name="175" href="#175">175</a>         LOG.traceEntry(<span class="jxr_string">"Parameter : {}"</span>, mediaForm);
-<a name="176" href="#176">176</a>         StringBuilder errorMsg = <strong class="jxr_keyword">new</strong> StringBuilder();
-<a name="177" href="#177">177</a>         <strong class="jxr_keyword">if</strong> (isValueNotExist(mediaForm, DOI_PARAMETER)) {
-<a name="178" href="#178">178</a>             errorMsg = errorMsg.append(DOI_PARAMETER).append(<span class="jxr_string">" value is not set."</span>);
-<a name="179" href="#179">179</a>         } <strong class="jxr_keyword">else</strong> {
-<a name="180" href="#180">180</a>             <strong class="jxr_keyword">try</strong> {
-<a name="181" href="#181">181</a>                 ClientMDS.checkIfAllCharsAreValid(mediaForm.getFirstValue(DOI_PARAMETER));
-<a name="182" href="#182">182</a>             } <strong class="jxr_keyword">catch</strong> (IllegalArgumentException ex) {
-<a name="183" href="#183">183</a>                 errorMsg = errorMsg.append(DOI_PARAMETER).append(<span class="jxr_string">" no valid syntax."</span>);
-<a name="184" href="#184">184</a>             }
-<a name="185" href="#185">185</a>         }
-<a name="186" href="#186">186</a>         <strong class="jxr_keyword">if</strong> (isValueNotExist(mediaForm, URL_PARAMETER)) {
-<a name="187" href="#187">187</a>             errorMsg = errorMsg.append(URL_PARAMETER).append(<span class="jxr_string">" value is not set."</span>);
-<a name="188" href="#188">188</a>         }
-<a name="189" href="#189">189</a>         <strong class="jxr_keyword">if</strong> (errorMsg.length() == 0) {
-<a name="190" href="#190">190</a>             LOG.debug(<span class="jxr_string">"The form is valid"</span>);
-<a name="191" href="#191">191</a>         } <strong class="jxr_keyword">else</strong> {
-<a name="192" href="#192">192</a>             <strong class="jxr_keyword">throw</strong> LOG.throwing(
-<a name="193" href="#193">193</a>                     Level.ERROR,
-<a name="194" href="#194">194</a>                     <strong class="jxr_keyword">new</strong> <a href="../../../../../fr/cnes/doi/exception/DoiServerException.html">DoiServerException</a>(getApplication(), API_MDS.LANGING_PAGE_VALIDATION,
-<a name="195" href="#195">195</a>                             errorMsg.toString())
-<a name="196" href="#196">196</a>             );
-<a name="197" href="#197">197</a>         }
-<a name="198" href="#198">198</a>         LOG.traceExit();
-<a name="199" href="#199">199</a>     }
-<a name="200" href="#200">200</a> 
-<a name="201" href="#201">201</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="202" href="#202">202</a> <em class="jxr_javadoccomment">     * Returns the sucessfull representation.</em>
-<a name="203" href="#203">203</a> <em class="jxr_javadoccomment">     *</em>
-<a name="204" href="#204">204</a> <em class="jxr_javadoccomment">     * @return the Wadl Representation</em>
-<a name="205" href="#205">205</a> <em class="jxr_javadoccomment">     */</em>
-<a name="206" href="#206">206</a>     @Requirement(reqId = Requirement.DOI_DOC_010, reqName = Requirement.DOI_DOC_010_NAME)
-<a name="207" href="#207">207</a>     <strong class="jxr_keyword">private</strong> RepresentationInfo successFullRepresentation() {
-<a name="208" href="#208">208</a>         <strong class="jxr_keyword">final</strong> RepresentationInfo repInfo = <strong class="jxr_keyword">new</strong> RepresentationInfo();
-<a name="209" href="#209">209</a>         repInfo.setMediaType(MediaType.TEXT_URI_LIST);
-<a name="210" href="#210">210</a>         <strong class="jxr_keyword">final</strong> DocumentationInfo docInfo = <strong class="jxr_keyword">new</strong> DocumentationInfo();
-<a name="211" href="#211">211</a>         docInfo.setTitle(<span class="jxr_string">"DOI collection representation"</span>);
-<a name="212" href="#212">212</a>         docInfo.setTextContent(<span class="jxr_string">"This request returns a list of all DOIs for the "</span>
-<a name="213" href="#213">213</a>                 + <span class="jxr_string">"requesting datacentre. There is no guaranteed order."</span>);
-<a name="214" href="#214">214</a>         repInfo.setDocumentation(docInfo);
-<a name="215" href="#215">215</a>         <strong class="jxr_keyword">return</strong> repInfo;
-<a name="216" href="#216">216</a>     }
-<a name="217" href="#217">217</a> 
-<a name="218" href="#218">218</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="219" href="#219">219</a> <em class="jxr_javadoccomment">     * Returns the no content representation.</em>
-<a name="220" href="#220">220</a> <em class="jxr_javadoccomment">     *</em>
-<a name="221" href="#221">221</a> <em class="jxr_javadoccomment">     * @return the Wadl description</em>
-<a name="222" href="#222">222</a> <em class="jxr_javadoccomment">     */</em>
-<a name="223" href="#223">223</a>     @Requirement(reqId = Requirement.DOI_DOC_010, reqName = Requirement.DOI_DOC_010_NAME)
-<a name="224" href="#224">224</a>     <strong class="jxr_keyword">private</strong> RepresentationInfo noContentRepresentation() {
-<a name="225" href="#225">225</a>         <strong class="jxr_keyword">final</strong> RepresentationInfo repInfo = <strong class="jxr_keyword">new</strong> RepresentationInfo();
-<a name="226" href="#226">226</a>         repInfo.setMediaType(MediaType.TEXT_PLAIN);
-<a name="227" href="#227">227</a>         <strong class="jxr_keyword">final</strong> DocumentationInfo docInfo = <strong class="jxr_keyword">new</strong> DocumentationInfo();
-<a name="228" href="#228">228</a>         docInfo.setTitle(<span class="jxr_string">"Empty representation"</span>);
-<a name="229" href="#229">229</a>         docInfo.setTextContent(<span class="jxr_string">"No contain"</span>);
-<a name="230" href="#230">230</a>         repInfo.setDocumentation(docInfo);
-<a name="231" href="#231">231</a>         <strong class="jxr_keyword">return</strong> repInfo;
-<a name="232" href="#232">232</a>     }
-<a name="233" href="#233">233</a> 
-<a name="234" href="#234">234</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="235" href="#235">235</a> <em class="jxr_javadoccomment">     * Returns the exit status representation.</em>
-<a name="236" href="#236">236</a> <em class="jxr_javadoccomment">     *</em>
-<a name="237" href="#237">237</a> <em class="jxr_javadoccomment">     * @return the exit status representation</em>
-<a name="238" href="#238">238</a> <em class="jxr_javadoccomment">     */</em>
-<a name="239" href="#239">239</a>     @Requirement(reqId = Requirement.DOI_DOC_010, reqName = Requirement.DOI_DOC_010_NAME)
-<a name="240" href="#240">240</a>     <strong class="jxr_keyword">private</strong> RepresentationInfo explainStatusRepresentation() {
-<a name="241" href="#241">241</a>         <strong class="jxr_keyword">final</strong> RepresentationInfo repInfo = <strong class="jxr_keyword">new</strong> RepresentationInfo();
-<a name="242" href="#242">242</a>         repInfo.setIdentifier(<span class="jxr_string">"explainRepresentation"</span>);
-<a name="243" href="#243">243</a>         repInfo.setMediaType(MediaType.TEXT_PLAIN);
-<a name="244" href="#244">244</a>         <strong class="jxr_keyword">final</strong> DocumentationInfo docInfo = <strong class="jxr_keyword">new</strong> DocumentationInfo();
-<a name="245" href="#245">245</a>         docInfo.setTitle(<span class="jxr_string">"Explain representation"</span>);
-<a name="246" href="#246">246</a>         docInfo.setTextContent(<span class="jxr_string">"short explanation of status code e.g. CREATED, "</span>
-<a name="247" href="#247">247</a>                 + <span class="jxr_string">"HANDLE_ALREADY_EXISTS etc"</span>);
-<a name="248" href="#248">248</a>         repInfo.setDocumentation(docInfo);
-<a name="249" href="#249">249</a>         <strong class="jxr_keyword">return</strong> repInfo;
-<a name="250" href="#250">250</a>     }
-<a name="251" href="#251">251</a> 
-<a name="252" href="#252">252</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="253" href="#253">253</a> <em class="jxr_javadoccomment">     * Describes the GET method. The different representations are the followings:</em>
-<a name="254" href="#254">254</a> <em class="jxr_javadoccomment">     * &lt;ul&gt;</em>
-<a name="255" href="#255">255</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link DATACITE_API_RESPONSE#SUCCESS}&lt;/li&gt;</em>
-<a name="256" href="#256">256</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link DATACITE_API_RESPONSE#SUCCESS_NO_CONTENT}&lt;/li&gt;</em>
-<a name="257" href="#257">257</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link API_MDS#DATACITE_PROBLEM}&lt;/li&gt;</em>
-<a name="258" href="#258">258</a> <em class="jxr_javadoccomment">     * &lt;/ul&gt;</em>
-<a name="259" href="#259">259</a> <em class="jxr_javadoccomment">     *</em>
-<a name="260" href="#260">260</a> <em class="jxr_javadoccomment">     * @param info Wadl description</em>
-<a name="261" href="#261">261</a> <em class="jxr_javadoccomment">     */</em>
-<a name="262" href="#262">262</a>     @Requirement(reqId = Requirement.DOI_DOC_010, reqName = Requirement.DOI_DOC_010_NAME)
-<a name="263" href="#263">263</a>     @Override
-<a name="264" href="#264">264</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">void</strong> describeGet(<strong class="jxr_keyword">final</strong> MethodInfo info) {
-<a name="265" href="#265">265</a>         info.setName(Method.GET);
-<a name="266" href="#266">266</a>         info.setDocumentation(<span class="jxr_string">"Retrieves the DOI collection"</span>);
-<a name="267" href="#267">267</a>         addResponseDocToMethod(info, createResponseDoc(
-<a name="268" href="#268">268</a>                 DATACITE_API_RESPONSE.SUCCESS.getStatus(),
-<a name="269" href="#269">269</a>                 DATACITE_API_RESPONSE.SUCCESS.getShortMessage(),
-<a name="270" href="#270">270</a>                 successFullRepresentation()));
-<a name="271" href="#271">271</a>         addResponseDocToMethod(info, createResponseDoc(
-<a name="272" href="#272">272</a>                 DATACITE_API_RESPONSE.SUCCESS_NO_CONTENT.getStatus(),
-<a name="273" href="#273">273</a>                 DATACITE_API_RESPONSE.SUCCESS_NO_CONTENT.getShortMessage(),
-<a name="274" href="#274">274</a>                 noContentRepresentation()));
-<a name="275" href="#275">275</a>         addResponseDocToMethod(info, createResponseDoc(
-<a name="276" href="#276">276</a>                 API_MDS.DATACITE_PROBLEM.getStatus(),
-<a name="277" href="#277">277</a>                 API_MDS.DATACITE_PROBLEM.getShortMessage()));
-<a name="278" href="#278">278</a>     }
-<a name="279" href="#279">279</a> 
-<a name="280" href="#280">280</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="281" href="#281">281</a> <em class="jxr_javadoccomment">     * Request representation.</em>
-<a name="282" href="#282">282</a> <em class="jxr_javadoccomment">     *</em>
-<a name="283" href="#283">283</a> <em class="jxr_javadoccomment">     * @return representation</em>
-<a name="284" href="#284">284</a> <em class="jxr_javadoccomment">     */</em>
-<a name="285" href="#285">285</a>     @Requirement(reqId = Requirement.DOI_DOC_010, reqName = Requirement.DOI_DOC_010_NAME)
-<a name="286" href="#286">286</a>     <strong class="jxr_keyword">private</strong> RepresentationInfo requestRepresentation() {
-<a name="287" href="#287">287</a>         <strong class="jxr_keyword">final</strong> RepresentationInfo rep = <strong class="jxr_keyword">new</strong> RepresentationInfo(MediaType.APPLICATION_WWW_FORM);
-<a name="288" href="#288">288</a>         rep.getParameters().add(createQueryParamDoc(
-<a name="289" href="#289">289</a>                 POST_DOI, ParameterStyle.PLAIN, <span class="jxr_string">"DOI name"</span>, <strong class="jxr_keyword">true</strong>, <span class="jxr_string">"xs:string"</span>));
-<a name="290" href="#290">290</a>         rep.getParameters().add(createQueryParamDoc(
-<a name="291" href="#291">291</a>                 POST_URL, ParameterStyle.PLAIN, <span class="jxr_string">"URL of the landing page"</span>, <strong class="jxr_keyword">true</strong>, <span class="jxr_string">"xs:string"</span>));
-<a name="292" href="#292">292</a>         <strong class="jxr_keyword">return</strong> rep;
-<a name="293" href="#293">293</a>     }
-<a name="294" href="#294">294</a> 
-<a name="295" href="#295">295</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="296" href="#296">296</a> <em class="jxr_javadoccomment">     * Describes the POST method. The different representations are the followings:</em>
-<a name="297" href="#297">297</a> <em class="jxr_javadoccomment">     * &lt;ul&gt;</em>
-<a name="298" href="#298">298</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link DATACITE_API_RESPONSE#SUCESS_CREATED}&lt;/li&gt;</em>
-<a name="299" href="#299">299</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link API_MDS#LANGING_PAGE_VALIDATION}&lt;/li&gt;</em>
-<a name="300" href="#300">300</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link DATACITE_API_RESPONSE#PROCESS_ERROR}&lt;/li&gt;</em>
-<a name="301" href="#301">301</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link API_MDS#SECURITY_USER_NO_ROLE}&lt;/li&gt;</em>
-<a name="302" href="#302">302</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link API_MDS#SECURITY_USER_NOT_IN_SELECTED_ROLE}&lt;/li&gt;</em>
-<a name="303" href="#303">303</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link API_MDS#SECURITY_USER_PERMISSION}&lt;/li&gt;</em>
-<a name="304" href="#304">304</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link API_MDS#SECURITY_USER_CONFLICT}&lt;/li&gt;</em>
-<a name="305" href="#305">305</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link API_MDS#DATACITE_PROBLEM}&lt;/li&gt;</em>
-<a name="306" href="#306">306</a> <em class="jxr_javadoccomment">     * &lt;/ul&gt;</em>
-<a name="307" href="#307">307</a> <em class="jxr_javadoccomment">     *</em>
-<a name="308" href="#308">308</a> <em class="jxr_javadoccomment">     * @param info Wadl description</em>
-<a name="309" href="#309">309</a> <em class="jxr_javadoccomment">     */</em>
-<a name="310" href="#310">310</a>     @Requirement(reqId = Requirement.DOI_DOC_010, reqName = Requirement.DOI_DOC_010_NAME)
-<a name="311" href="#311">311</a>     @Override
-<a name="312" href="#312">312</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">void</strong> describePost(<strong class="jxr_keyword">final</strong> MethodInfo info) {
-<a name="313" href="#313">313</a>         info.setName(Method.POST);
-<a name="314" href="#314">314</a>         info.setDocumentation(<span class="jxr_string">"POST will mint new DOI if specified DOI doesn't exist. "</span>
-<a name="315" href="#315">315</a>                 + <span class="jxr_string">"This method will attempt to update URL if you specify existing DOI. "</span>
-<a name="316" href="#316">316</a>                 + <span class="jxr_string">"Standard domains and quota restrictions check will be performed. "</span>
-<a name="317" href="#317">317</a>                 + <span class="jxr_string">"A Datacentre's doiQuotaUsed will be increased by 1. "</span>
-<a name="318" href="#318">318</a>                 + <span class="jxr_string">"A new record in Datasets will be created."</span>);
-<a name="319" href="#319">319</a> 
-<a name="320" href="#320">320</a>         addRequestDocToMethod(info,
-<a name="321" href="#321">321</a>                 Arrays.asList(
-<a name="322" href="#322">322</a>                         createQueryParamDoc(SELECTED_ROLE_PARAMETER,
-<a name="323" href="#323">323</a>                                 ParameterStyle.HEADER,
-<a name="324" href="#324">324</a>                                 <span class="jxr_string">"A user can select one role when he is associated "</span>
-<a name="325" href="#325">325</a>                                 + <span class="jxr_string">"to several roles"</span>, false, <span class="jxr_string">"xs:string"</span>)
-<a name="326" href="#326">326</a>                 ),
-<a name="327" href="#327">327</a>                 requestRepresentation());
-<a name="328" href="#328">328</a> 
-<a name="329" href="#329">329</a>         addResponseDocToMethod(info, createResponseDoc(
-<a name="330" href="#330">330</a>                 DATACITE_API_RESPONSE.SUCESS_CREATED.getStatus(),
-<a name="331" href="#331">331</a>                 DATACITE_API_RESPONSE.SUCESS_CREATED.getShortMessage(),
-<a name="332" href="#332">332</a>                 explainStatusRepresentation())
-<a name="333" href="#333">333</a>         );
-<a name="334" href="#334">334</a>         addResponseDocToMethod(info, createResponseDoc(
-<a name="335" href="#335">335</a>                 API_MDS.LANGING_PAGE_VALIDATION.getStatus(),
-<a name="336" href="#336">336</a>                 API_MDS.LANGING_PAGE_VALIDATION.getShortMessage(),
-<a name="337" href="#337">337</a>                 <span class="jxr_string">"explainRepresentationID"</span>)
-<a name="338" href="#338">338</a>         );
-<a name="339" href="#339">339</a>         addResponseDocToMethod(info, createResponseDoc(
-<a name="340" href="#340">340</a>                 DATACITE_API_RESPONSE.PROCESS_ERROR.getStatus(),
-<a name="341" href="#341">341</a>                 DATACITE_API_RESPONSE.PROCESS_ERROR.getShortMessage(),
-<a name="342" href="#342">342</a>                 <span class="jxr_string">"explainRepresentationID"</span>)
-<a name="343" href="#343">343</a>         );
-<a name="344" href="#344">344</a>         addResponseDocToMethod(info, createResponseDoc(
-<a name="345" href="#345">345</a>                 API_MDS.DATACITE_PROBLEM.getStatus(),
-<a name="346" href="#346">346</a>                 API_MDS.DATACITE_PROBLEM.getShortMessage(),
-<a name="347" href="#347">347</a>                 <span class="jxr_string">"explainRepresentationID"</span>)
-<a name="348" href="#348">348</a>         );
-<a name="349" href="#349">349</a>         <strong class="jxr_keyword">super</strong>.describePost(info);
-<a name="350" href="#350">350</a>     }
-<a name="351" href="#351">351</a> }
+<a name="75" href="#75">75</a>  <em class="jxr_javadoccomment">     * Returns the collection of DOI. This request returns a list of all DOIs</em>
+<a name="76" href="#76">76</a>  <em class="jxr_javadoccomment">     * for the requesting datacentre. Status 200 is returned when operation is</em>
+<a name="77" href="#77">77</a>  <em class="jxr_javadoccomment">     * successful.</em>
+<a name="78" href="#78">78</a>  <em class="jxr_javadoccomment">     *</em>
+<a name="79" href="#79">79</a>  <em class="jxr_javadoccomment">     * @return the list of DOI</em>
+<a name="80" href="#80">80</a>  <em class="jxr_javadoccomment">     * @throws DoiServerException 204 No Content - no DOIs founds</em>
+<a name="81" href="#81">81</a>  <em class="jxr_javadoccomment">     */</em>
+<a name="82" href="#82">82</a>      @Get
+<a name="83" href="#83">83</a>      <strong class="jxr_keyword">public</strong> List&lt;String&gt; getDois() <strong class="jxr_keyword">throws</strong> DoiServerException {
+<a name="84" href="#84">84</a>          LOG.traceEntry();
+<a name="85" href="#85">85</a>          setStatus(Status.SUCCESS_OK);
+<a name="86" href="#86">86</a>          <strong class="jxr_keyword">final</strong> List&lt;String&gt; dois = <strong class="jxr_keyword">this</strong>.getDoiApp().getClientSearch().getDois();
+<a name="87" href="#87">87</a>          <strong class="jxr_keyword">if</strong> (dois == <strong class="jxr_keyword">null</strong> || dois.isEmpty()) {
+<a name="88" href="#88">88</a>              setStatus(Status.SUCCESS_NO_CONTENT);
+<a name="89" href="#89">89</a>          } <strong class="jxr_keyword">else</strong> {
+<a name="90" href="#90">90</a>              setStatus(Status.SUCCESS_OK);
+<a name="91" href="#91">91</a>          }
+<a name="92" href="#92">92</a>          <strong class="jxr_keyword">return</strong> LOG.traceExit(dois);
+<a name="93" href="#93">93</a>      }
+<a name="94" href="#94">94</a>  
+<a name="95" href="#95">95</a>      <em class="jxr_javadoccomment">/**</em>
+<a name="96" href="#96">96</a>  <em class="jxr_javadoccomment">     * Creates a new DOI based on the doi and url parameters</em>
+<a name="97" href="#97">97</a>  <em class="jxr_javadoccomment">     *</em>
+<a name="98" href="#98">98</a>  <em class="jxr_javadoccomment">     * The DOI name is built following this syntax:</em>
+<a name="99" href="#99">99</a>  <em class="jxr_javadoccomment">     * &lt;i&gt;CNES_prefix&lt;/i&gt;/&lt;i&gt;project_provided_the_DOI_server&lt;/i&gt;/project_suffix.</em>
+<a name="100" href="#100">100</a> <em class="jxr_javadoccomment">     *</em>
+<a name="101" href="#101">101</a> <em class="jxr_javadoccomment">     * &lt;p&gt;</em>
+<a name="102" href="#102">102</a> <em class="jxr_javadoccomment">     * The client provides :</em>
+<a name="103" href="#103">103</a> <em class="jxr_javadoccomment">     * &lt;ul&gt;</em>
+<a name="104" href="#104">104</a> <em class="jxr_javadoccomment">     * &lt;li&gt;&lt;i&gt;doi&lt;/i&gt; : the project suffix, which is an unique identifier within</em>
+<a name="105" href="#105">105</a> <em class="jxr_javadoccomment">     * the project.&lt;/li&gt;</em>
+<a name="106" href="#106">106</a> <em class="jxr_javadoccomment">     * &lt;li&gt;&lt;i&gt;url&lt;/i&gt; : the URL of the landing page.</em>
+<a name="107" href="#107">107</a> <em class="jxr_javadoccomment">     * &lt;/ul&gt;</em>
+<a name="108" href="#108">108</a> <em class="jxr_javadoccomment">     * &lt;b&gt;Note 1&lt;/b&gt; : the landing page should be accessible from www</em>
+<a name="109" href="#109">109</a> <em class="jxr_javadoccomment">     * &lt;b&gt;Note 2&lt;/b&gt; : Metadata must be uploaded first</em>
+<a name="110" href="#110">110</a> <em class="jxr_javadoccomment">     *</em>
+<a name="111" href="#111">111</a> <em class="jxr_javadoccomment">     * &lt;p&gt;</em>
+<a name="112" href="#112">112</a> <em class="jxr_javadoccomment">     * Will mint new DOI if specified DOI doesn't exist. This method will</em>
+<a name="113" href="#113">113</a> <em class="jxr_javadoccomment">     * attempt to update URL if you specify existing DOI. Standard domains and</em>
+<a name="114" href="#114">114</a> <em class="jxr_javadoccomment">     * quota restrictions check will be performed. A Datacentre's doiQuotaUsed</em>
+<a name="115" href="#115">115</a> <em class="jxr_javadoccomment">     * will be increased by 1. A new record in Datasets will be created by</em>
+<a name="116" href="#116">116</a> <em class="jxr_javadoccomment">     * returning a 201 status for operation successful.</em>
+<a name="117" href="#117">117</a> <em class="jxr_javadoccomment">     *</em>
+<a name="118" href="#118">118</a> <em class="jxr_javadoccomment">     * @param doiForm doi and url</em>
+<a name="119" href="#119">119</a> <em class="jxr_javadoccomment">     * @return short explanation of status code e.g. CREATED,</em>
+<a name="120" href="#120">120</a> <em class="jxr_javadoccomment">     * HANDLE_ALREADY_EXISTS etc</em>
+<a name="121" href="#121">121</a> <em class="jxr_javadoccomment">     * @throws DoiServerException - if the response is not a success</em>
+<a name="122" href="#122">122</a> <em class="jxr_javadoccomment">     * &lt;ul&gt;</em>
+<a name="123" href="#123">123</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link DATACITE_API_RESPONSE#PROCESS_ERROR}&lt;/li&gt;</em>
+<a name="124" href="#124">124</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link API_MDS#DATACITE_PROBLEM}&lt;/li&gt;</em>
+<a name="125" href="#125">125</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link API_MDS#SECURITY_USER_NO_ROLE}&lt;/li&gt;</em>
+<a name="126" href="#126">126</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link API_MDS#SECURITY_USER_NOT_IN_SELECTED_ROLE}&lt;/li&gt;</em>
+<a name="127" href="#127">127</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link API_MDS#SECURITY_USER_PERMISSION}&lt;/li&gt;</em>
+<a name="128" href="#128">128</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link API_MDS#SECURITY_USER_CONFLICT}&lt;/li&gt;</em>
+<a name="129" href="#129">129</a> <em class="jxr_javadoccomment">     * &lt;/ul&gt;</em>
+<a name="130" href="#130">130</a> <em class="jxr_javadoccomment">     */</em>
+<a name="131" href="#131">131</a>     @Requirement(reqId = Requirement.DOI_SRV_020, reqName = Requirement.DOI_SRV_020_NAME)
+<a name="132" href="#132">132</a>     @Requirement(reqId = Requirement.DOI_SRV_030, reqName = Requirement.DOI_SRV_030_NAME)
+<a name="133" href="#133">133</a>     @Requirement(reqId = Requirement.DOI_MONIT_020, reqName = Requirement.DOI_MONIT_020_NAME)
+<a name="134" href="#134">134</a>     @Requirement(reqId = Requirement.DOI_INTER_070, reqName = Requirement.DOI_INTER_070_NAME)
+<a name="135" href="#135">135</a>     @Requirement(reqId = Requirement.DOI_AUTO_020, reqName = Requirement.DOI_AUTO_020_NAME)
+<a name="136" href="#136">136</a>     @Requirement(reqId = Requirement.DOI_AUTO_030, reqName = Requirement.DOI_AUTO_030_NAME)
+<a name="137" href="#137">137</a>     @Post(<span class="jxr_string">"form"</span>)
+<a name="138" href="#138">138</a>     <strong class="jxr_keyword">public</strong> String createDoi(<strong class="jxr_keyword">final</strong> Form doiForm) <strong class="jxr_keyword">throws</strong> DoiServerException {
+<a name="139" href="#139">139</a>         LOG.traceEntry(<span class="jxr_string">"Parameters\n\tdoiForm : {}"</span>, doiForm);
+<a name="140" href="#140">140</a>         checkInputs(doiForm);
+<a name="141" href="#141">141</a>         <strong class="jxr_keyword">final</strong> String result;
+<a name="142" href="#142">142</a>         <strong class="jxr_keyword">final</strong> String selectedRole = extractSelectedRoleFromRequestIfExists();
+<a name="143" href="#143">143</a>         checkPermission(doiForm.getFirstValue(DOI_PARAMETER), selectedRole);
+<a name="144" href="#144">144</a>         <strong class="jxr_keyword">try</strong> {
+<a name="145" href="#145">145</a>             setStatus(Status.SUCCESS_CREATED, <span class="jxr_string">"Operation successful"</span>);
+<a name="146" href="#146">146</a>             result = <strong class="jxr_keyword">this</strong>.getDoiApp().getClient().createDoi(doiForm);
+<a name="147" href="#147">147</a>         } <strong class="jxr_keyword">catch</strong> (ClientMdsException ex) {
+<a name="148" href="#148">148</a>             <strong class="jxr_keyword">if</strong> (ex.getStatus().getCode() == Status.CLIENT_ERROR_PRECONDITION_FAILED.getCode()) {
+<a name="149" href="#149">149</a>                 <strong class="jxr_keyword">throw</strong> LOG.throwing(
+<a name="150" href="#150">150</a>                         Level.ERROR,
+<a name="151" href="#151">151</a>                         <strong class="jxr_keyword">new</strong> <a href="../../../../../fr/cnes/doi/exception/DoiServerException.html">DoiServerException</a>(getApplication(), DATACITE_API_RESPONSE.PROCESS_ERROR,
+<a name="152" href="#152">152</a>                                 ex)
+<a name="153" href="#153">153</a>                 );
+<a name="154" href="#154">154</a>             } <strong class="jxr_keyword">else</strong> {
+<a name="155" href="#155">155</a>                 <strong class="jxr_keyword">throw</strong> LOG.throwing(
+<a name="156" href="#156">156</a>                         Level.ERROR,
+<a name="157" href="#157">157</a>                         <strong class="jxr_keyword">new</strong> <a href="../../../../../fr/cnes/doi/exception/DoiServerException.html">DoiServerException</a>(getApplication(), API_MDS.DATACITE_PROBLEM, ex)
+<a name="158" href="#158">158</a>                 );
+<a name="159" href="#159">159</a>             }
+<a name="160" href="#160">160</a>         }
+<a name="161" href="#161">161</a> 
+<a name="162" href="#162">162</a>         <strong class="jxr_keyword">return</strong> LOG.traceExit(result);
+<a name="163" href="#163">163</a>     }
+<a name="164" href="#164">164</a> 
+<a name="165" href="#165">165</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="166" href="#166">166</a> <em class="jxr_javadoccomment">     * Checks input parameters. Checks that</em>
+<a name="167" href="#167">167</a> <em class="jxr_javadoccomment">     * {@value fr.cnes.doi.resource.mds.BaseMdsResource#DOI_PARAMETER} and</em>
+<a name="168" href="#168">168</a> <em class="jxr_javadoccomment">     * {@value fr.cnes.doi.resource.mds.BaseMdsResource#URL_PARAMETER} are</em>
+<a name="169" href="#169">169</a> <em class="jxr_javadoccomment">     * provided in the mediaForm.</em>
+<a name="170" href="#170">170</a> <em class="jxr_javadoccomment">     *</em>
+<a name="171" href="#171">171</a> <em class="jxr_javadoccomment">     * @param mediaForm the parameters</em>
+<a name="172" href="#172">172</a> <em class="jxr_javadoccomment">     * {@value fr.cnes.doi.resource.mds.BaseMdsResource#DOI_PARAMETER} and</em>
+<a name="173" href="#173">173</a> <em class="jxr_javadoccomment">     * {@value fr.cnes.doi.resource.mds.BaseMdsResource#URL_PARAMETER}</em>
+<a name="174" href="#174">174</a> <em class="jxr_javadoccomment">     * @throws DoiServerException - 400 Bad Request if DOI_PARAMETER and</em>
+<a name="175" href="#175">175</a> <em class="jxr_javadoccomment">     * {@value fr.cnes.doi.resource.mds.BaseMdsResource#URL_PARAMETER} are not</em>
+<a name="176" href="#176">176</a> <em class="jxr_javadoccomment">     * set</em>
+<a name="177" href="#177">177</a> <em class="jxr_javadoccomment">     */</em>
+<a name="178" href="#178">178</a>     @Requirement(reqId = Requirement.DOI_INTER_070, reqName = Requirement.DOI_INTER_070_NAME)
+<a name="179" href="#179">179</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> checkInputs(<strong class="jxr_keyword">final</strong> Form mediaForm) <strong class="jxr_keyword">throws</strong> DoiServerException {
+<a name="180" href="#180">180</a>         LOG.traceEntry(<span class="jxr_string">"Parameter : {}"</span>, mediaForm);
+<a name="181" href="#181">181</a>         StringBuilder errorMsg = <strong class="jxr_keyword">new</strong> StringBuilder();
+<a name="182" href="#182">182</a>         <strong class="jxr_keyword">if</strong> (isValueNotExist(mediaForm, DOI_PARAMETER)) {
+<a name="183" href="#183">183</a>             errorMsg = errorMsg.append(DOI_PARAMETER).append(<span class="jxr_string">" value is not set."</span>);
+<a name="184" href="#184">184</a>         } <strong class="jxr_keyword">else</strong> {
+<a name="185" href="#185">185</a>             <strong class="jxr_keyword">try</strong> {
+<a name="186" href="#186">186</a>                 ClientMDS.checkIfAllCharsAreValid(mediaForm.getFirstValue(DOI_PARAMETER));
+<a name="187" href="#187">187</a>             } <strong class="jxr_keyword">catch</strong> (IllegalArgumentException ex) {
+<a name="188" href="#188">188</a>                 errorMsg = errorMsg.append(DOI_PARAMETER).append(<span class="jxr_string">" no valid syntax."</span>);
+<a name="189" href="#189">189</a>             }
+<a name="190" href="#190">190</a>         }
+<a name="191" href="#191">191</a>         <strong class="jxr_keyword">if</strong> (isValueNotExist(mediaForm, URL_PARAMETER)) {
+<a name="192" href="#192">192</a>             errorMsg = errorMsg.append(URL_PARAMETER).append(<span class="jxr_string">" value is not set."</span>);
+<a name="193" href="#193">193</a>         }
+<a name="194" href="#194">194</a>         <strong class="jxr_keyword">if</strong> (errorMsg.length() == 0) {
+<a name="195" href="#195">195</a>             LOG.debug(<span class="jxr_string">"The form is valid"</span>);
+<a name="196" href="#196">196</a>         } <strong class="jxr_keyword">else</strong> {
+<a name="197" href="#197">197</a>             <strong class="jxr_keyword">throw</strong> LOG.throwing(
+<a name="198" href="#198">198</a>                     Level.ERROR,
+<a name="199" href="#199">199</a>                     <strong class="jxr_keyword">new</strong> <a href="../../../../../fr/cnes/doi/exception/DoiServerException.html">DoiServerException</a>(getApplication(), API_MDS.LANGING_PAGE_VALIDATION,
+<a name="200" href="#200">200</a>                             errorMsg.toString())
+<a name="201" href="#201">201</a>             );
+<a name="202" href="#202">202</a>         }
+<a name="203" href="#203">203</a>         LOG.traceExit();
+<a name="204" href="#204">204</a>     }
+<a name="205" href="#205">205</a> 
+<a name="206" href="#206">206</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="207" href="#207">207</a> <em class="jxr_javadoccomment">     * Returns the sucessfull representation.</em>
+<a name="208" href="#208">208</a> <em class="jxr_javadoccomment">     *</em>
+<a name="209" href="#209">209</a> <em class="jxr_javadoccomment">     * @return the Wadl Representation</em>
+<a name="210" href="#210">210</a> <em class="jxr_javadoccomment">     */</em>
+<a name="211" href="#211">211</a>     @Requirement(reqId = Requirement.DOI_DOC_010, reqName = Requirement.DOI_DOC_010_NAME)
+<a name="212" href="#212">212</a>     <strong class="jxr_keyword">private</strong> RepresentationInfo successFullRepresentation() {
+<a name="213" href="#213">213</a>         <strong class="jxr_keyword">final</strong> RepresentationInfo repInfo = <strong class="jxr_keyword">new</strong> RepresentationInfo();
+<a name="214" href="#214">214</a>         repInfo.setMediaType(MediaType.TEXT_URI_LIST);
+<a name="215" href="#215">215</a>         <strong class="jxr_keyword">final</strong> DocumentationInfo docInfo = <strong class="jxr_keyword">new</strong> DocumentationInfo();
+<a name="216" href="#216">216</a>         docInfo.setTitle(<span class="jxr_string">"DOI collection representation"</span>);
+<a name="217" href="#217">217</a>         docInfo.setTextContent(<span class="jxr_string">"This request returns a list of all DOIs for the "</span>
+<a name="218" href="#218">218</a>                 + <span class="jxr_string">"requesting datacentre. There is no guaranteed order."</span>);
+<a name="219" href="#219">219</a>         repInfo.setDocumentation(docInfo);
+<a name="220" href="#220">220</a>         <strong class="jxr_keyword">return</strong> repInfo;
+<a name="221" href="#221">221</a>     }
+<a name="222" href="#222">222</a> 
+<a name="223" href="#223">223</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="224" href="#224">224</a> <em class="jxr_javadoccomment">     * Returns the no content representation.</em>
+<a name="225" href="#225">225</a> <em class="jxr_javadoccomment">     *</em>
+<a name="226" href="#226">226</a> <em class="jxr_javadoccomment">     * @return the Wadl description</em>
+<a name="227" href="#227">227</a> <em class="jxr_javadoccomment">     */</em>
+<a name="228" href="#228">228</a>     @Requirement(reqId = Requirement.DOI_DOC_010, reqName = Requirement.DOI_DOC_010_NAME)
+<a name="229" href="#229">229</a>     <strong class="jxr_keyword">private</strong> RepresentationInfo noContentRepresentation() {
+<a name="230" href="#230">230</a>         <strong class="jxr_keyword">final</strong> RepresentationInfo repInfo = <strong class="jxr_keyword">new</strong> RepresentationInfo();
+<a name="231" href="#231">231</a>         repInfo.setMediaType(MediaType.TEXT_PLAIN);
+<a name="232" href="#232">232</a>         <strong class="jxr_keyword">final</strong> DocumentationInfo docInfo = <strong class="jxr_keyword">new</strong> DocumentationInfo();
+<a name="233" href="#233">233</a>         docInfo.setTitle(<span class="jxr_string">"Empty representation"</span>);
+<a name="234" href="#234">234</a>         docInfo.setTextContent(<span class="jxr_string">"No contain"</span>);
+<a name="235" href="#235">235</a>         repInfo.setDocumentation(docInfo);
+<a name="236" href="#236">236</a>         <strong class="jxr_keyword">return</strong> repInfo;
+<a name="237" href="#237">237</a>     }
+<a name="238" href="#238">238</a> 
+<a name="239" href="#239">239</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="240" href="#240">240</a> <em class="jxr_javadoccomment">     * Returns the exit status representation.</em>
+<a name="241" href="#241">241</a> <em class="jxr_javadoccomment">     *</em>
+<a name="242" href="#242">242</a> <em class="jxr_javadoccomment">     * @return the exit status representation</em>
+<a name="243" href="#243">243</a> <em class="jxr_javadoccomment">     */</em>
+<a name="244" href="#244">244</a>     @Requirement(reqId = Requirement.DOI_DOC_010, reqName = Requirement.DOI_DOC_010_NAME)
+<a name="245" href="#245">245</a>     <strong class="jxr_keyword">private</strong> RepresentationInfo explainStatusRepresentation() {
+<a name="246" href="#246">246</a>         <strong class="jxr_keyword">final</strong> RepresentationInfo repInfo = <strong class="jxr_keyword">new</strong> RepresentationInfo();
+<a name="247" href="#247">247</a>         repInfo.setIdentifier(<span class="jxr_string">"explainRepresentation"</span>);
+<a name="248" href="#248">248</a>         repInfo.setMediaType(MediaType.TEXT_PLAIN);
+<a name="249" href="#249">249</a>         <strong class="jxr_keyword">final</strong> DocumentationInfo docInfo = <strong class="jxr_keyword">new</strong> DocumentationInfo();
+<a name="250" href="#250">250</a>         docInfo.setTitle(<span class="jxr_string">"Explain representation"</span>);
+<a name="251" href="#251">251</a>         docInfo.setTextContent(<span class="jxr_string">"short explanation of status code e.g. CREATED, "</span>
+<a name="252" href="#252">252</a>                 + <span class="jxr_string">"HANDLE_ALREADY_EXISTS etc"</span>);
+<a name="253" href="#253">253</a>         repInfo.setDocumentation(docInfo);
+<a name="254" href="#254">254</a>         <strong class="jxr_keyword">return</strong> repInfo;
+<a name="255" href="#255">255</a>     }
+<a name="256" href="#256">256</a> 
+<a name="257" href="#257">257</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="258" href="#258">258</a> <em class="jxr_javadoccomment">     * Describes the GET method. The different representations are the</em>
+<a name="259" href="#259">259</a> <em class="jxr_javadoccomment">     * followings:</em>
+<a name="260" href="#260">260</a> <em class="jxr_javadoccomment">     * &lt;ul&gt;</em>
+<a name="261" href="#261">261</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link DATACITE_API_RESPONSE#SUCCESS}&lt;/li&gt;</em>
+<a name="262" href="#262">262</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link DATACITE_API_RESPONSE#SUCCESS_NO_CONTENT}&lt;/li&gt;</em>
+<a name="263" href="#263">263</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link API_MDS#DATACITE_PROBLEM}&lt;/li&gt;</em>
+<a name="264" href="#264">264</a> <em class="jxr_javadoccomment">     * &lt;/ul&gt;</em>
+<a name="265" href="#265">265</a> <em class="jxr_javadoccomment">     *</em>
+<a name="266" href="#266">266</a> <em class="jxr_javadoccomment">     * @param info Wadl description</em>
+<a name="267" href="#267">267</a> <em class="jxr_javadoccomment">     */</em>
+<a name="268" href="#268">268</a>     @Requirement(reqId = Requirement.DOI_DOC_010, reqName = Requirement.DOI_DOC_010_NAME)
+<a name="269" href="#269">269</a>     @Override
+<a name="270" href="#270">270</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">void</strong> describeGet(<strong class="jxr_keyword">final</strong> MethodInfo info) {
+<a name="271" href="#271">271</a>         info.setName(Method.GET);
+<a name="272" href="#272">272</a>         info.setDocumentation(<span class="jxr_string">"Retrieves the DOI collection"</span>);
+<a name="273" href="#273">273</a>         addResponseDocToMethod(info, createResponseDoc(
+<a name="274" href="#274">274</a>                 DATACITE_API_RESPONSE.SUCCESS.getStatus(),
+<a name="275" href="#275">275</a>                 DATACITE_API_RESPONSE.SUCCESS.getShortMessage(),
+<a name="276" href="#276">276</a>                 successFullRepresentation()));
+<a name="277" href="#277">277</a>         addResponseDocToMethod(info, createResponseDoc(
+<a name="278" href="#278">278</a>                 DATACITE_API_RESPONSE.SUCCESS_NO_CONTENT.getStatus(),
+<a name="279" href="#279">279</a>                 DATACITE_API_RESPONSE.SUCCESS_NO_CONTENT.getShortMessage(),
+<a name="280" href="#280">280</a>                 noContentRepresentation()));
+<a name="281" href="#281">281</a>         addResponseDocToMethod(info, createResponseDoc(
+<a name="282" href="#282">282</a>                 API_MDS.DATACITE_PROBLEM.getStatus(),
+<a name="283" href="#283">283</a>                 API_MDS.DATACITE_PROBLEM.getShortMessage()));
+<a name="284" href="#284">284</a>     }
+<a name="285" href="#285">285</a> 
+<a name="286" href="#286">286</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="287" href="#287">287</a> <em class="jxr_javadoccomment">     * Request representation.</em>
+<a name="288" href="#288">288</a> <em class="jxr_javadoccomment">     *</em>
+<a name="289" href="#289">289</a> <em class="jxr_javadoccomment">     * @return representation</em>
+<a name="290" href="#290">290</a> <em class="jxr_javadoccomment">     */</em>
+<a name="291" href="#291">291</a>     @Requirement(reqId = Requirement.DOI_DOC_010, reqName = Requirement.DOI_DOC_010_NAME)
+<a name="292" href="#292">292</a>     <strong class="jxr_keyword">private</strong> RepresentationInfo requestRepresentation() {
+<a name="293" href="#293">293</a>         <strong class="jxr_keyword">final</strong> RepresentationInfo rep = <strong class="jxr_keyword">new</strong> RepresentationInfo(MediaType.APPLICATION_WWW_FORM);
+<a name="294" href="#294">294</a>         rep.getParameters().add(createQueryParamDoc(
+<a name="295" href="#295">295</a>                 POST_DOI, ParameterStyle.PLAIN, <span class="jxr_string">"DOI name"</span>, <strong class="jxr_keyword">true</strong>, <span class="jxr_string">"xs:string"</span>));
+<a name="296" href="#296">296</a>         rep.getParameters().add(createQueryParamDoc(
+<a name="297" href="#297">297</a>                 POST_URL, ParameterStyle.PLAIN, <span class="jxr_string">"URL of the landing page"</span>, <strong class="jxr_keyword">true</strong>, <span class="jxr_string">"xs:string"</span>));
+<a name="298" href="#298">298</a>         <strong class="jxr_keyword">return</strong> rep;
+<a name="299" href="#299">299</a>     }
+<a name="300" href="#300">300</a> 
+<a name="301" href="#301">301</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="302" href="#302">302</a> <em class="jxr_javadoccomment">     * Describes the POST method. The different representations are the</em>
+<a name="303" href="#303">303</a> <em class="jxr_javadoccomment">     * followings:</em>
+<a name="304" href="#304">304</a> <em class="jxr_javadoccomment">     * &lt;ul&gt;</em>
+<a name="305" href="#305">305</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link DATACITE_API_RESPONSE#SUCESS_CREATED}&lt;/li&gt;</em>
+<a name="306" href="#306">306</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link API_MDS#LANGING_PAGE_VALIDATION}&lt;/li&gt;</em>
+<a name="307" href="#307">307</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link DATACITE_API_RESPONSE#PROCESS_ERROR}&lt;/li&gt;</em>
+<a name="308" href="#308">308</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link API_MDS#SECURITY_USER_NO_ROLE}&lt;/li&gt;</em>
+<a name="309" href="#309">309</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link API_MDS#SECURITY_USER_NOT_IN_SELECTED_ROLE}&lt;/li&gt;</em>
+<a name="310" href="#310">310</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link API_MDS#SECURITY_USER_PERMISSION}&lt;/li&gt;</em>
+<a name="311" href="#311">311</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link API_MDS#SECURITY_USER_CONFLICT}&lt;/li&gt;</em>
+<a name="312" href="#312">312</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link API_MDS#DATACITE_PROBLEM}&lt;/li&gt;</em>
+<a name="313" href="#313">313</a> <em class="jxr_javadoccomment">     * &lt;/ul&gt;</em>
+<a name="314" href="#314">314</a> <em class="jxr_javadoccomment">     *</em>
+<a name="315" href="#315">315</a> <em class="jxr_javadoccomment">     * @param info Wadl description</em>
+<a name="316" href="#316">316</a> <em class="jxr_javadoccomment">     */</em>
+<a name="317" href="#317">317</a>     @Requirement(reqId = Requirement.DOI_DOC_010, reqName = Requirement.DOI_DOC_010_NAME)
+<a name="318" href="#318">318</a>     @Override
+<a name="319" href="#319">319</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">void</strong> describePost(<strong class="jxr_keyword">final</strong> MethodInfo info) {
+<a name="320" href="#320">320</a>         info.setName(Method.POST);
+<a name="321" href="#321">321</a>         info.setDocumentation(<span class="jxr_string">"POST will mint new DOI if specified DOI doesn't exist. "</span>
+<a name="322" href="#322">322</a>                 + <span class="jxr_string">"This method will attempt to update URL if you specify existing DOI. "</span>
+<a name="323" href="#323">323</a>                 + <span class="jxr_string">"Standard domains and quota restrictions check will be performed. "</span>
+<a name="324" href="#324">324</a>                 + <span class="jxr_string">"A Datacentre's doiQuotaUsed will be increased by 1. "</span>
+<a name="325" href="#325">325</a>                 + <span class="jxr_string">"A new record in Datasets will be created."</span>);
+<a name="326" href="#326">326</a> 
+<a name="327" href="#327">327</a>         addRequestDocToMethod(info,
+<a name="328" href="#328">328</a>                 Arrays.asList(
+<a name="329" href="#329">329</a>                         createQueryParamDoc(SELECTED_ROLE_PARAMETER,
+<a name="330" href="#330">330</a>                                 ParameterStyle.HEADER,
+<a name="331" href="#331">331</a>                                 <span class="jxr_string">"A user can select one role when he is associated "</span>
+<a name="332" href="#332">332</a>                                 + <span class="jxr_string">"to several roles"</span>, false, <span class="jxr_string">"xs:string"</span>)
+<a name="333" href="#333">333</a>                 ),
+<a name="334" href="#334">334</a>                 requestRepresentation());
+<a name="335" href="#335">335</a> 
+<a name="336" href="#336">336</a>         addResponseDocToMethod(info, createResponseDoc(
+<a name="337" href="#337">337</a>                 DATACITE_API_RESPONSE.SUCESS_CREATED.getStatus(),
+<a name="338" href="#338">338</a>                 DATACITE_API_RESPONSE.SUCESS_CREATED.getShortMessage(),
+<a name="339" href="#339">339</a>                 explainStatusRepresentation())
+<a name="340" href="#340">340</a>         );
+<a name="341" href="#341">341</a>         addResponseDocToMethod(info, createResponseDoc(
+<a name="342" href="#342">342</a>                 API_MDS.LANGING_PAGE_VALIDATION.getStatus(),
+<a name="343" href="#343">343</a>                 API_MDS.LANGING_PAGE_VALIDATION.getShortMessage(),
+<a name="344" href="#344">344</a>                 <span class="jxr_string">"explainRepresentationID"</span>)
+<a name="345" href="#345">345</a>         );
+<a name="346" href="#346">346</a>         addResponseDocToMethod(info, createResponseDoc(
+<a name="347" href="#347">347</a>                 DATACITE_API_RESPONSE.PROCESS_ERROR.getStatus(),
+<a name="348" href="#348">348</a>                 DATACITE_API_RESPONSE.PROCESS_ERROR.getShortMessage(),
+<a name="349" href="#349">349</a>                 <span class="jxr_string">"explainRepresentationID"</span>)
+<a name="350" href="#350">350</a>         );
+<a name="351" href="#351">351</a>         addResponseDocToMethod(info, createResponseDoc(
+<a name="352" href="#352">352</a>                 API_MDS.DATACITE_PROBLEM.getStatus(),
+<a name="353" href="#353">353</a>                 API_MDS.DATACITE_PROBLEM.getShortMessage(),
+<a name="354" href="#354">354</a>                 <span class="jxr_string">"explainRepresentationID"</span>)
+<a name="355" href="#355">355</a>         );
+<a name="356" href="#356">356</a>         <strong class="jxr_keyword">super</strong>.describePost(info);
+<a name="357" href="#357">357</a>     }
+<a name="358" href="#358">358</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>

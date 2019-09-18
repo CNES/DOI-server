@@ -272,131 +272,133 @@
 <a name="262" href="#262">262</a>     }
 <a name="263" href="#263">263</a> 
 <a name="264" href="#264">264</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="265" href="#265">265</a> <em class="jxr_javadoccomment">     * Adds/removes the &lt;i&gt;users&lt;/i&gt; group to the new role name related to the application MDS</em>
-<a name="266" href="#266">266</a> <em class="jxr_javadoccomment">     *</em>
-<a name="267" href="#267">267</a> <em class="jxr_javadoccomment">     * @param obs observable</em>
-<a name="268" href="#268">268</a> <em class="jxr_javadoccomment">     * @param obj message</em>
-<a name="269" href="#269">269</a> <em class="jxr_javadoccomment">     */</em>
-<a name="270" href="#270">270</a>     @Requirement(reqId = Requirement.DOI_SRV_130, reqName = Requirement.DOI_SRV_130_NAME)
-<a name="271" href="#271">271</a>     @Requirement(reqId = Requirement.DOI_INTER_030, reqName = Requirement.DOI_INTER_030_NAME)
-<a name="272" href="#272">272</a>     @Override
-<a name="273" href="#273">273</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> update(<strong class="jxr_keyword">final</strong> Observable obs,
-<a name="274" href="#274">274</a>             <strong class="jxr_keyword">final</strong> Object obj) {
-<a name="275" href="#275">275</a>         LOG.traceEntry(<strong class="jxr_keyword">new</strong> <a href="../../../../fr/cnes/doi/logging/business/JsonMessage.html">JsonMessage</a>(obs));
-<a name="276" href="#276">276</a>         LOG.traceEntry(<strong class="jxr_keyword">new</strong> <a href="../../../../fr/cnes/doi/logging/business/JsonMessage.html">JsonMessage</a>(obj));
-<a name="277" href="#277">277</a> 
-<a name="278" href="#278">278</a>         <em class="jxr_comment">// Loads the admin group - admin group is defined by default</em>
-<a name="279" href="#279">279</a>         <strong class="jxr_keyword">final</strong> Group adminGroup = findGroupByName(GROUP_ADMIN);
-<a name="280" href="#280">280</a> 
-<a name="281" href="#281">281</a>         <em class="jxr_comment">// Loads the application MDS related to admin group</em>
-<a name="282" href="#282">282</a>         <strong class="jxr_keyword">final</strong> Application mds = loadApplicationBy(adminGroup, DoiMdsApplication.NAME);
-<a name="283" href="#283">283</a> 
-<a name="284" href="#284">284</a>         <strong class="jxr_keyword">if</strong> (mds == <strong class="jxr_keyword">null</strong>) {
-<a name="285" href="#285">285</a>             LOG.info(<span class="jxr_string">"{} is not defined in the REALM"</span>, DoiMdsApplication.NAME);
-<a name="286" href="#286">286</a>         } <strong class="jxr_keyword">else</strong> {
-<a name="287" href="#287">287</a>             updateObserver(obs, obj, mds);
-<a name="288" href="#288">288</a>         }
-<a name="289" href="#289">289</a>         LOG.traceExit();
-<a name="290" href="#290">290</a>     }
-<a name="291" href="#291">291</a> 
-<a name="292" href="#292">292</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="293" href="#293">293</a> <em class="jxr_javadoccomment">     * Updates REALM for mds.</em>
-<a name="294" href="#294">294</a> <em class="jxr_javadoccomment">     *</em>
-<a name="295" href="#295">295</a> <em class="jxr_javadoccomment">     * @param obs observable</em>
-<a name="296" href="#296">296</a> <em class="jxr_javadoccomment">     * @param obj message</em>
-<a name="297" href="#297">297</a> <em class="jxr_javadoccomment">     * @param mds application</em>
-<a name="298" href="#298">298</a> <em class="jxr_javadoccomment">     */</em>
-<a name="299" href="#299">299</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> updateObserver(<strong class="jxr_keyword">final</strong> Observable obs,
-<a name="300" href="#300">300</a>             <strong class="jxr_keyword">final</strong> Object obj,
-<a name="301" href="#301">301</a>             <strong class="jxr_keyword">final</strong> Application mds) {
-<a name="302" href="#302">302</a>         LOG.traceEntry(<strong class="jxr_keyword">new</strong> <a href="../../../../fr/cnes/doi/logging/business/JsonMessage.html">JsonMessage</a>(obs));
-<a name="303" href="#303">303</a>         LOG.traceEntry(<strong class="jxr_keyword">new</strong> <a href="../../../../fr/cnes/doi/logging/business/JsonMessage.html">JsonMessage</a>(obj));
-<a name="304" href="#304">304</a>         LOG.traceEntry(<strong class="jxr_keyword">new</strong> <a href="../../../../fr/cnes/doi/logging/business/JsonMessage.html">JsonMessage</a>(mds));
-<a name="305" href="#305">305</a> 
-<a name="306" href="#306">306</a>         <strong class="jxr_keyword">if</strong> (obs instanceof AbstractProjectSuffixDBHelper) {
-<a name="307" href="#307">307</a>             LOG.debug(<span class="jxr_string">"Observable is a ProjectSuffixDB type"</span>);
-<a name="308" href="#308">308</a> 
-<a name="309" href="#309">309</a>             <strong class="jxr_keyword">final</strong> String[] message = (String[]) obj;
-<a name="310" href="#310">310</a> 
-<a name="311" href="#311">311</a>             <strong class="jxr_keyword">final</strong> String operation = message[0];
-<a name="312" href="#312">312</a>             <strong class="jxr_keyword">final</strong> String roleName = message[1];
-<a name="313" href="#313">313</a>             <strong class="jxr_keyword">final</strong> <a href="../../../../fr/cnes/doi/db/AbstractUserRoleDBHelper.html">AbstractUserRoleDBHelper</a> manageUsers = PluginFactory.getUserManagement();
-<a name="314" href="#314">314</a>             List&lt;DOIUser&gt; doiUsers;
-<a name="315" href="#315">315</a>             <strong class="jxr_keyword">try</strong> {
-<a name="316" href="#316">316</a>                 doiUsers = manageUsers.getUsersFromRole(Integer.parseInt(roleName));
-<a name="317" href="#317">317</a>             } <strong class="jxr_keyword">catch</strong> (DOIDbException ex) {
-<a name="318" href="#318">318</a>                 doiUsers = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
-<a name="319" href="#319">319</a>             }
-<a name="320" href="#320">320</a>             <strong class="jxr_keyword">final</strong> List&lt;User&gt; usersFromProject = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
-<a name="321" href="#321">321</a>             <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> DOIUser doiUser : doiUsers) {
-<a name="322" href="#322">322</a>                 <strong class="jxr_keyword">final</strong> User user = <strong class="jxr_keyword">new</strong> User(doiUser.getUsername());
-<a name="323" href="#323">323</a>                 usersFromProject.add(user);
-<a name="324" href="#324">324</a>             }
-<a name="325" href="#325">325</a>             <strong class="jxr_keyword">final</strong> List&lt;User&gt; users = usersFromProject;
-<a name="326" href="#326">326</a>             <strong class="jxr_keyword">switch</strong> (operation) {
-<a name="327" href="#327">327</a>                 <strong class="jxr_keyword">case</strong> AbstractProjectSuffixDBHelper.ADD_RECORD:
-<a name="328" href="#328">328</a>                     <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> User user : users) {
-<a name="329" href="#329">329</a>                         RoleAuthorizer.REALM.map(user, Role.get(mds, roleName));
-<a name="330" href="#330">330</a>                         LOG.debug(<span class="jxr_string">"Adds the user {} to the new role {} related to the {}"</span>, user,
-<a name="331" href="#331">331</a>                                 roleName, mds.getName());
-<a name="332" href="#332">332</a>                     }
-<a name="333" href="#333">333</a>                     <strong class="jxr_keyword">break</strong>;
-<a name="334" href="#334">334</a>                 <strong class="jxr_keyword">case</strong> AbstractProjectSuffixDBHelper.DELETE_RECORD:
-<a name="335" href="#335">335</a>                     <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> User user : users) {
-<a name="336" href="#336">336</a>                         RoleAuthorizer.REALM.unmap(user, mds, roleName);
-<a name="337" href="#337">337</a>                         LOG.info(<span class="jxr_string">"Remove the user {} to the role {} related to the {}"</span>, user,
-<a name="338" href="#338">338</a>                                 roleName, mds.getName());
-<a name="339" href="#339">339</a>                     }
-<a name="340" href="#340">340</a>                     <strong class="jxr_keyword">break</strong>;
-<a name="341" href="#341">341</a>                 <strong class="jxr_keyword">default</strong>:
-<a name="342" href="#342">342</a>                     LOG.error(<span class="jxr_string">"operation {} was not expected"</span>, operation);
-<a name="343" href="#343">343</a>                     <strong class="jxr_keyword">break</strong>;
-<a name="344" href="#344">344</a>             }
-<a name="345" href="#345">345</a>         }
-<a name="346" href="#346">346</a>         LOG.traceExit();
-<a name="347" href="#347">347</a>     }
-<a name="348" href="#348">348</a> 
-<a name="349" href="#349">349</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="350" href="#350">350</a> <em class="jxr_javadoccomment">     * Loads the application related to a group with a name</em>
-<a name="351" href="#351">351</a> <em class="jxr_javadoccomment">     *</em>
-<a name="352" href="#352">352</a> <em class="jxr_javadoccomment">     * @param group group linked to an application</em>
-<a name="353" href="#353">353</a> <em class="jxr_javadoccomment">     * @param appName application name</em>
-<a name="354" href="#354">354</a> <em class="jxr_javadoccomment">     * @return the application or null if the application is not defined in the REALM</em>
-<a name="355" href="#355">355</a> <em class="jxr_javadoccomment">     */</em>
-<a name="356" href="#356">356</a>     <strong class="jxr_keyword">private</strong> Application loadApplicationBy(<strong class="jxr_keyword">final</strong> Group group,
-<a name="357" href="#357">357</a>             <strong class="jxr_keyword">final</strong> String appName) {
-<a name="358" href="#358">358</a>         LOG.traceEntry(<span class="jxr_string">"Parameters : {} and {}"</span>, group, appName);
-<a name="359" href="#359">359</a> 
-<a name="360" href="#360">360</a>         <strong class="jxr_keyword">final</strong> Set&lt;Role&gt; roles = RoleAuthorizer.REALM.findRoles(group);
-<a name="361" href="#361">361</a>         <strong class="jxr_keyword">final</strong> Iterator&lt;Role&gt; roleIter = roles.iterator();
-<a name="362" href="#362">362</a>         Application searchedApp = <strong class="jxr_keyword">null</strong>;
-<a name="363" href="#363">363</a>         <strong class="jxr_keyword">boolean</strong> isFound = false;
-<a name="364" href="#364">364</a>         <strong class="jxr_keyword">while</strong> (roleIter.hasNext() &amp;&amp; !isFound) {
-<a name="365" href="#365">365</a>             <strong class="jxr_keyword">final</strong> Role role = roleIter.next();
-<a name="366" href="#366">366</a>             <strong class="jxr_keyword">final</strong> Application app = role.getApplication();
-<a name="367" href="#367">367</a>             <strong class="jxr_keyword">if</strong> (app.getName().equals(appName)) {
-<a name="368" href="#368">368</a>                 searchedApp = app;
-<a name="369" href="#369">369</a>                 isFound = <strong class="jxr_keyword">true</strong>;
-<a name="370" href="#370">370</a>                 <strong class="jxr_keyword">break</strong>;
-<a name="371" href="#371">371</a>             }
-<a name="372" href="#372">372</a>         }
-<a name="373" href="#373">373</a> 
-<a name="374" href="#374">374</a>         <strong class="jxr_keyword">return</strong> LOG.traceExit(searchedApp);
-<a name="375" href="#375">375</a>     }
-<a name="376" href="#376">376</a> 
-<a name="377" href="#377">377</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="378" href="#378">378</a> <em class="jxr_javadoccomment">     * Class to handle the instance</em>
-<a name="379" href="#379">379</a> <em class="jxr_javadoccomment">     *</em>
-<a name="380" href="#380">380</a> <em class="jxr_javadoccomment">     */</em>
-<a name="381" href="#381">381</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../fr/cnes/doi/security/RoleAuthorizer.html">RoleAuthorizerHolder</a> {
-<a name="382" href="#382">382</a> 
-<a name="383" href="#383">383</a>         <em class="jxr_javadoccomment">/**</em>
-<a name="384" href="#384">384</a> <em class="jxr_javadoccomment">         * Unique Instance unique</em>
-<a name="385" href="#385">385</a> <em class="jxr_javadoccomment">         */</em>
-<a name="386" href="#386">386</a>         <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../fr/cnes/doi/security/RoleAuthorizer.html">RoleAuthorizer</a> INSTANCE = <strong class="jxr_keyword">new</strong> <a href="../../../../fr/cnes/doi/security/RoleAuthorizer.html">RoleAuthorizer</a>();
-<a name="387" href="#387">387</a>     }
-<a name="388" href="#388">388</a> 
-<a name="389" href="#389">389</a> }
+<a name="265" href="#265">265</a> <em class="jxr_javadoccomment">     * Adds/removes the &lt;i&gt;users&lt;/i&gt; group to the new role name related to the</em>
+<a name="266" href="#266">266</a> <em class="jxr_javadoccomment">     * application MDS</em>
+<a name="267" href="#267">267</a> <em class="jxr_javadoccomment">     *</em>
+<a name="268" href="#268">268</a> <em class="jxr_javadoccomment">     * @param obs observable</em>
+<a name="269" href="#269">269</a> <em class="jxr_javadoccomment">     * @param obj message</em>
+<a name="270" href="#270">270</a> <em class="jxr_javadoccomment">     */</em>
+<a name="271" href="#271">271</a>     @Requirement(reqId = Requirement.DOI_SRV_130, reqName = Requirement.DOI_SRV_130_NAME)
+<a name="272" href="#272">272</a>     @Requirement(reqId = Requirement.DOI_INTER_030, reqName = Requirement.DOI_INTER_030_NAME)
+<a name="273" href="#273">273</a>     @Override
+<a name="274" href="#274">274</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> update(<strong class="jxr_keyword">final</strong> Observable obs,
+<a name="275" href="#275">275</a>             <strong class="jxr_keyword">final</strong> Object obj) {
+<a name="276" href="#276">276</a>         LOG.traceEntry(<strong class="jxr_keyword">new</strong> <a href="../../../../fr/cnes/doi/logging/business/JsonMessage.html">JsonMessage</a>(obs));
+<a name="277" href="#277">277</a>         LOG.traceEntry(<strong class="jxr_keyword">new</strong> <a href="../../../../fr/cnes/doi/logging/business/JsonMessage.html">JsonMessage</a>(obj));
+<a name="278" href="#278">278</a> 
+<a name="279" href="#279">279</a>         <em class="jxr_comment">// Loads the admin group - admin group is defined by default</em>
+<a name="280" href="#280">280</a>         <strong class="jxr_keyword">final</strong> Group adminGroup = findGroupByName(GROUP_ADMIN);
+<a name="281" href="#281">281</a> 
+<a name="282" href="#282">282</a>         <em class="jxr_comment">// Loads the application MDS related to admin group</em>
+<a name="283" href="#283">283</a>         <strong class="jxr_keyword">final</strong> Application mds = loadApplicationBy(adminGroup, DoiMdsApplication.NAME);
+<a name="284" href="#284">284</a> 
+<a name="285" href="#285">285</a>         <strong class="jxr_keyword">if</strong> (mds == <strong class="jxr_keyword">null</strong>) {
+<a name="286" href="#286">286</a>             LOG.info(<span class="jxr_string">"{} is not defined in the REALM"</span>, DoiMdsApplication.NAME);
+<a name="287" href="#287">287</a>         } <strong class="jxr_keyword">else</strong> {
+<a name="288" href="#288">288</a>             updateObserver(obs, obj, mds);
+<a name="289" href="#289">289</a>         }
+<a name="290" href="#290">290</a>         LOG.traceExit();
+<a name="291" href="#291">291</a>     }
+<a name="292" href="#292">292</a> 
+<a name="293" href="#293">293</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="294" href="#294">294</a> <em class="jxr_javadoccomment">     * Updates REALM for mds.</em>
+<a name="295" href="#295">295</a> <em class="jxr_javadoccomment">     *</em>
+<a name="296" href="#296">296</a> <em class="jxr_javadoccomment">     * @param obs observable</em>
+<a name="297" href="#297">297</a> <em class="jxr_javadoccomment">     * @param obj message</em>
+<a name="298" href="#298">298</a> <em class="jxr_javadoccomment">     * @param mds application</em>
+<a name="299" href="#299">299</a> <em class="jxr_javadoccomment">     */</em>
+<a name="300" href="#300">300</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> updateObserver(<strong class="jxr_keyword">final</strong> Observable obs,
+<a name="301" href="#301">301</a>             <strong class="jxr_keyword">final</strong> Object obj,
+<a name="302" href="#302">302</a>             <strong class="jxr_keyword">final</strong> Application mds) {
+<a name="303" href="#303">303</a>         LOG.traceEntry(<strong class="jxr_keyword">new</strong> <a href="../../../../fr/cnes/doi/logging/business/JsonMessage.html">JsonMessage</a>(obs));
+<a name="304" href="#304">304</a>         LOG.traceEntry(<strong class="jxr_keyword">new</strong> <a href="../../../../fr/cnes/doi/logging/business/JsonMessage.html">JsonMessage</a>(obj));
+<a name="305" href="#305">305</a>         LOG.traceEntry(<strong class="jxr_keyword">new</strong> <a href="../../../../fr/cnes/doi/logging/business/JsonMessage.html">JsonMessage</a>(mds));
+<a name="306" href="#306">306</a> 
+<a name="307" href="#307">307</a>         <strong class="jxr_keyword">if</strong> (obs instanceof AbstractProjectSuffixDBHelper) {
+<a name="308" href="#308">308</a>             LOG.debug(<span class="jxr_string">"Observable is a ProjectSuffixDB type"</span>);
+<a name="309" href="#309">309</a> 
+<a name="310" href="#310">310</a>             <strong class="jxr_keyword">final</strong> String[] message = (String[]) obj;
+<a name="311" href="#311">311</a> 
+<a name="312" href="#312">312</a>             <strong class="jxr_keyword">final</strong> String operation = message[0];
+<a name="313" href="#313">313</a>             <strong class="jxr_keyword">final</strong> String roleName = message[1];
+<a name="314" href="#314">314</a>             <strong class="jxr_keyword">final</strong> <a href="../../../../fr/cnes/doi/db/AbstractUserRoleDBHelper.html">AbstractUserRoleDBHelper</a> manageUsers = PluginFactory.getUserManagement();
+<a name="315" href="#315">315</a>             List&lt;DOIUser&gt; doiUsers;
+<a name="316" href="#316">316</a>             <strong class="jxr_keyword">try</strong> {
+<a name="317" href="#317">317</a>                 doiUsers = manageUsers.getUsersFromRole(Integer.parseInt(roleName));
+<a name="318" href="#318">318</a>             } <strong class="jxr_keyword">catch</strong> (DOIDbException ex) {
+<a name="319" href="#319">319</a>                 doiUsers = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
+<a name="320" href="#320">320</a>             }
+<a name="321" href="#321">321</a>             <strong class="jxr_keyword">final</strong> List&lt;User&gt; usersFromProject = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
+<a name="322" href="#322">322</a>             <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> DOIUser doiUser : doiUsers) {
+<a name="323" href="#323">323</a>                 <strong class="jxr_keyword">final</strong> User user = <strong class="jxr_keyword">new</strong> User(doiUser.getUsername());
+<a name="324" href="#324">324</a>                 usersFromProject.add(user);
+<a name="325" href="#325">325</a>             }
+<a name="326" href="#326">326</a>             <strong class="jxr_keyword">final</strong> List&lt;User&gt; users = usersFromProject;
+<a name="327" href="#327">327</a>             <strong class="jxr_keyword">switch</strong> (operation) {
+<a name="328" href="#328">328</a>                 <strong class="jxr_keyword">case</strong> AbstractProjectSuffixDBHelper.ADD_RECORD:
+<a name="329" href="#329">329</a>                     <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> User user : users) {
+<a name="330" href="#330">330</a>                         RoleAuthorizer.REALM.map(user, Role.get(mds, roleName));
+<a name="331" href="#331">331</a>                         LOG.debug(<span class="jxr_string">"Adds the user {} to the new role {} related to the {}"</span>, user,
+<a name="332" href="#332">332</a>                                 roleName, mds.getName());
+<a name="333" href="#333">333</a>                     }
+<a name="334" href="#334">334</a>                     <strong class="jxr_keyword">break</strong>;
+<a name="335" href="#335">335</a>                 <strong class="jxr_keyword">case</strong> AbstractProjectSuffixDBHelper.DELETE_RECORD:
+<a name="336" href="#336">336</a>                     <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> User user : users) {
+<a name="337" href="#337">337</a>                         RoleAuthorizer.REALM.unmap(user, mds, roleName);
+<a name="338" href="#338">338</a>                         LOG.info(<span class="jxr_string">"Remove the user {} to the role {} related to the {}"</span>, user,
+<a name="339" href="#339">339</a>                                 roleName, mds.getName());
+<a name="340" href="#340">340</a>                     }
+<a name="341" href="#341">341</a>                     <strong class="jxr_keyword">break</strong>;
+<a name="342" href="#342">342</a>                 <strong class="jxr_keyword">default</strong>:
+<a name="343" href="#343">343</a>                     LOG.error(<span class="jxr_string">"operation {} was not expected"</span>, operation);
+<a name="344" href="#344">344</a>                     <strong class="jxr_keyword">break</strong>;
+<a name="345" href="#345">345</a>             }
+<a name="346" href="#346">346</a>         }
+<a name="347" href="#347">347</a>         LOG.traceExit();
+<a name="348" href="#348">348</a>     }
+<a name="349" href="#349">349</a> 
+<a name="350" href="#350">350</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="351" href="#351">351</a> <em class="jxr_javadoccomment">     * Loads the application related to a group with a name</em>
+<a name="352" href="#352">352</a> <em class="jxr_javadoccomment">     *</em>
+<a name="353" href="#353">353</a> <em class="jxr_javadoccomment">     * @param group group linked to an application</em>
+<a name="354" href="#354">354</a> <em class="jxr_javadoccomment">     * @param appName application name</em>
+<a name="355" href="#355">355</a> <em class="jxr_javadoccomment">     * @return the application or null if the application is not defined in the</em>
+<a name="356" href="#356">356</a> <em class="jxr_javadoccomment">     * REALM</em>
+<a name="357" href="#357">357</a> <em class="jxr_javadoccomment">     */</em>
+<a name="358" href="#358">358</a>     <strong class="jxr_keyword">private</strong> Application loadApplicationBy(<strong class="jxr_keyword">final</strong> Group group,
+<a name="359" href="#359">359</a>             <strong class="jxr_keyword">final</strong> String appName) {
+<a name="360" href="#360">360</a>         LOG.traceEntry(<span class="jxr_string">"Parameters : {} and {}"</span>, group, appName);
+<a name="361" href="#361">361</a> 
+<a name="362" href="#362">362</a>         <strong class="jxr_keyword">final</strong> Set&lt;Role&gt; roles = RoleAuthorizer.REALM.findRoles(group);
+<a name="363" href="#363">363</a>         <strong class="jxr_keyword">final</strong> Iterator&lt;Role&gt; roleIter = roles.iterator();
+<a name="364" href="#364">364</a>         Application searchedApp = <strong class="jxr_keyword">null</strong>;
+<a name="365" href="#365">365</a>         <strong class="jxr_keyword">boolean</strong> isFound = false;
+<a name="366" href="#366">366</a>         <strong class="jxr_keyword">while</strong> (roleIter.hasNext() &amp;&amp; !isFound) {
+<a name="367" href="#367">367</a>             <strong class="jxr_keyword">final</strong> Role role = roleIter.next();
+<a name="368" href="#368">368</a>             <strong class="jxr_keyword">final</strong> Application app = role.getApplication();
+<a name="369" href="#369">369</a>             <strong class="jxr_keyword">if</strong> (app.getName().equals(appName)) {
+<a name="370" href="#370">370</a>                 searchedApp = app;
+<a name="371" href="#371">371</a>                 isFound = <strong class="jxr_keyword">true</strong>;
+<a name="372" href="#372">372</a>                 <strong class="jxr_keyword">break</strong>;
+<a name="373" href="#373">373</a>             }
+<a name="374" href="#374">374</a>         }
+<a name="375" href="#375">375</a> 
+<a name="376" href="#376">376</a>         <strong class="jxr_keyword">return</strong> LOG.traceExit(searchedApp);
+<a name="377" href="#377">377</a>     }
+<a name="378" href="#378">378</a> 
+<a name="379" href="#379">379</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="380" href="#380">380</a> <em class="jxr_javadoccomment">     * Class to handle the instance</em>
+<a name="381" href="#381">381</a> <em class="jxr_javadoccomment">     *</em>
+<a name="382" href="#382">382</a> <em class="jxr_javadoccomment">     */</em>
+<a name="383" href="#383">383</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../fr/cnes/doi/security/RoleAuthorizer.html">RoleAuthorizerHolder</a> {
+<a name="384" href="#384">384</a> 
+<a name="385" href="#385">385</a>         <em class="jxr_javadoccomment">/**</em>
+<a name="386" href="#386">386</a> <em class="jxr_javadoccomment">         * Unique Instance unique</em>
+<a name="387" href="#387">387</a> <em class="jxr_javadoccomment">         */</em>
+<a name="388" href="#388">388</a>         <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../fr/cnes/doi/security/RoleAuthorizer.html">RoleAuthorizer</a> INSTANCE = <strong class="jxr_keyword">new</strong> <a href="../../../../fr/cnes/doi/security/RoleAuthorizer.html">RoleAuthorizer</a>();
+<a name="389" href="#389">389</a>     }
+<a name="390" href="#390">390</a> 
+<a name="391" href="#391">391</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>

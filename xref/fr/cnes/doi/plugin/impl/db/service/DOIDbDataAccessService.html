@@ -183,42 +183,46 @@
 <a name="173" href="#173">173</a> <em class="jxr_javadoccomment">     *</em>
 <a name="174" href="#174">174</a> <em class="jxr_javadoccomment">     * @param suffix suffix</em>
 <a name="175" href="#175">175</a> <em class="jxr_javadoccomment">     * @return project name</em>
-<a name="176" href="#176">176</a> <em class="jxr_javadoccomment">     * @throws fr.cnes.doi.exception.DOIDbException When an Database exception happens</em>
-<a name="177" href="#177">177</a> <em class="jxr_javadoccomment">     */</em>
-<a name="178" href="#178">178</a>     <strong class="jxr_keyword">public</strong> String getDOIProjectName(<strong class="jxr_keyword">int</strong> suffix) <strong class="jxr_keyword">throws</strong> DOIDbException;
-<a name="179" href="#179">179</a> 
-<a name="180" href="#180">180</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="181" href="#181">181</a> <em class="jxr_javadoccomment">     * Add token</em>
-<a name="182" href="#182">182</a> <em class="jxr_javadoccomment">     *</em>
-<a name="183" href="#183">183</a> <em class="jxr_javadoccomment">     * @param token Adds a token to the database</em>
-<a name="184" href="#184">184</a> <em class="jxr_javadoccomment">     * @throws fr.cnes.doi.exception.DOIDbException When an Database exception happens</em>
-<a name="185" href="#185">185</a> <em class="jxr_javadoccomment">     */</em>
-<a name="186" href="#186">186</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addToken(String token) <strong class="jxr_keyword">throws</strong> DOIDbException;
-<a name="187" href="#187">187</a> 
-<a name="188" href="#188">188</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="189" href="#189">189</a> <em class="jxr_javadoccomment">     * Delete token</em>
-<a name="190" href="#190">190</a> <em class="jxr_javadoccomment">     *</em>
-<a name="191" href="#191">191</a> <em class="jxr_javadoccomment">     * @param token token to delete</em>
-<a name="192" href="#192">192</a> <em class="jxr_javadoccomment">     * @throws fr.cnes.doi.exception.DOIDbException When an Database exception happens</em>
-<a name="193" href="#193">193</a> <em class="jxr_javadoccomment">     */</em>
-<a name="194" href="#194">194</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> deleteToken(String token) <strong class="jxr_keyword">throws</strong> DOIDbException;
-<a name="195" href="#195">195</a> 
-<a name="196" href="#196">196</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="197" href="#197">197</a> <em class="jxr_javadoccomment">     * Get tokens</em>
-<a name="198" href="#198">198</a> <em class="jxr_javadoccomment">     *</em>
-<a name="199" href="#199">199</a> <em class="jxr_javadoccomment">     * @return List of tokens</em>
-<a name="200" href="#200">200</a> <em class="jxr_javadoccomment">     * @throws fr.cnes.doi.exception.DOIDbException When an Database exception happens</em>
-<a name="201" href="#201">201</a> <em class="jxr_javadoccomment">     */</em>
-<a name="202" href="#202">202</a>     <strong class="jxr_keyword">public</strong> List&lt;String&gt; getTokens() <strong class="jxr_keyword">throws</strong> DOIDbException;
-<a name="203" href="#203">203</a> 
-<a name="204" href="#204">204</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="205" href="#205">205</a> <em class="jxr_javadoccomment">     * Close and release all the Data access connections.</em>
-<a name="206" href="#206">206</a> <em class="jxr_javadoccomment">     *</em>
-<a name="207" href="#207">207</a> <em class="jxr_javadoccomment">     * @throws DOIDbException When an error occurs</em>
-<a name="208" href="#208">208</a> <em class="jxr_javadoccomment">     */</em>
-<a name="209" href="#209">209</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> close() <strong class="jxr_keyword">throws</strong> DOIDbException;
-<a name="210" href="#210">210</a> 
-<a name="211" href="#211">211</a> }
+<a name="176" href="#176">176</a> <em class="jxr_javadoccomment">     * @throws fr.cnes.doi.exception.DOIDbException When an Database exception</em>
+<a name="177" href="#177">177</a> <em class="jxr_javadoccomment">     * happens</em>
+<a name="178" href="#178">178</a> <em class="jxr_javadoccomment">     */</em>
+<a name="179" href="#179">179</a>     <strong class="jxr_keyword">public</strong> String getDOIProjectName(<strong class="jxr_keyword">int</strong> suffix) <strong class="jxr_keyword">throws</strong> DOIDbException;
+<a name="180" href="#180">180</a> 
+<a name="181" href="#181">181</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="182" href="#182">182</a> <em class="jxr_javadoccomment">     * Add token</em>
+<a name="183" href="#183">183</a> <em class="jxr_javadoccomment">     *</em>
+<a name="184" href="#184">184</a> <em class="jxr_javadoccomment">     * @param token Adds a token to the database</em>
+<a name="185" href="#185">185</a> <em class="jxr_javadoccomment">     * @throws fr.cnes.doi.exception.DOIDbException When an Database exception</em>
+<a name="186" href="#186">186</a> <em class="jxr_javadoccomment">     * happens</em>
+<a name="187" href="#187">187</a> <em class="jxr_javadoccomment">     */</em>
+<a name="188" href="#188">188</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> addToken(String token) <strong class="jxr_keyword">throws</strong> DOIDbException;
+<a name="189" href="#189">189</a> 
+<a name="190" href="#190">190</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="191" href="#191">191</a> <em class="jxr_javadoccomment">     * Delete token</em>
+<a name="192" href="#192">192</a> <em class="jxr_javadoccomment">     *</em>
+<a name="193" href="#193">193</a> <em class="jxr_javadoccomment">     * @param token token to delete</em>
+<a name="194" href="#194">194</a> <em class="jxr_javadoccomment">     * @throws fr.cnes.doi.exception.DOIDbException When an Database exception</em>
+<a name="195" href="#195">195</a> <em class="jxr_javadoccomment">     * happens</em>
+<a name="196" href="#196">196</a> <em class="jxr_javadoccomment">     */</em>
+<a name="197" href="#197">197</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> deleteToken(String token) <strong class="jxr_keyword">throws</strong> DOIDbException;
+<a name="198" href="#198">198</a> 
+<a name="199" href="#199">199</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="200" href="#200">200</a> <em class="jxr_javadoccomment">     * Get tokens</em>
+<a name="201" href="#201">201</a> <em class="jxr_javadoccomment">     *</em>
+<a name="202" href="#202">202</a> <em class="jxr_javadoccomment">     * @return List of tokens</em>
+<a name="203" href="#203">203</a> <em class="jxr_javadoccomment">     * @throws fr.cnes.doi.exception.DOIDbException When an Database exception</em>
+<a name="204" href="#204">204</a> <em class="jxr_javadoccomment">     * happens</em>
+<a name="205" href="#205">205</a> <em class="jxr_javadoccomment">     */</em>
+<a name="206" href="#206">206</a>     <strong class="jxr_keyword">public</strong> List&lt;String&gt; getTokens() <strong class="jxr_keyword">throws</strong> DOIDbException;
+<a name="207" href="#207">207</a> 
+<a name="208" href="#208">208</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="209" href="#209">209</a> <em class="jxr_javadoccomment">     * Close and release all the Data access connections.</em>
+<a name="210" href="#210">210</a> <em class="jxr_javadoccomment">     *</em>
+<a name="211" href="#211">211</a> <em class="jxr_javadoccomment">     * @throws DOIDbException When an error occurs</em>
+<a name="212" href="#212">212</a> <em class="jxr_javadoccomment">     */</em>
+<a name="213" href="#213">213</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> close() <strong class="jxr_keyword">throws</strong> DOIDbException;
+<a name="214" href="#214">214</a> 
+<a name="215" href="#215">215</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>

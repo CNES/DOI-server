@@ -350,198 +350,200 @@
 <a name="340" href="#340">340</a>     }
 <a name="341" href="#341">341</a> 
 <a name="342" href="#342">342</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="343" href="#343">343</a> <em class="jxr_javadoccomment">     * Search on LDAP all users which are in the group Consts.LDAP_PROJECT in a LDAP group</em>
-<a name="344" href="#344">344</a> <em class="jxr_javadoccomment">     *</em>
-<a name="345" href="#345">345</a> <em class="jxr_javadoccomment">     * @param context context</em>
-<a name="346" href="#346">346</a> <em class="jxr_javadoccomment">     * @param gidNumber LDAP group ID</em>
-<a name="347" href="#347">347</a> <em class="jxr_javadoccomment">     * @return all LDAP users which are in the group Consts.LDAP_PROJECT for a specific LDAP group</em>
-<a name="348" href="#348">348</a> <em class="jxr_javadoccomment">     * @throws NamingException Exception</em>
-<a name="349" href="#349">349</a> <em class="jxr_javadoccomment">     */</em>
-<a name="350" href="#350">350</a>     <strong class="jxr_keyword">private</strong> List&lt;AuthSystemUser&gt; getLdapUsers(<strong class="jxr_keyword">final</strong> DirContext context, <strong class="jxr_keyword">final</strong> String gidNumber)
-<a name="351" href="#351">351</a>             <strong class="jxr_keyword">throws</strong> NamingException {
-<a name="352" href="#352">352</a>         LOGGER.traceEntry(<span class="jxr_string">"Parameters : {}"</span>, context, gidNumber);
-<a name="353" href="#353">353</a>         <strong class="jxr_keyword">final</strong> List&lt;AuthSystemUser&gt; ldapuserList = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
-<a name="354" href="#354">354</a>         <strong class="jxr_keyword">final</strong> SearchControls controls = <strong class="jxr_keyword">new</strong> SearchControls();
-<a name="355" href="#355">355</a>         controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-<a name="356" href="#356">356</a>         <strong class="jxr_keyword">final</strong> String[] attrIDs = {
-<a name="357" href="#357">357</a>             conf.get(LDAP_ATTR_USERNAME),
-<a name="358" href="#358">358</a>             conf.get(LDAP_ATTR_MAIL),
-<a name="359" href="#359">359</a>             conf.get(LDAP_ATTR_FULLNAME)
-<a name="360" href="#360">360</a>         };
-<a name="361" href="#361">361</a>         LOGGER.info(<span class="jxr_string">"Getting attributes from LDAP: {}"</span>, (Object[]) attrIDs);
-<a name="362" href="#362">362</a>         controls.setReturningAttributes(attrIDs);
-<a name="363" href="#363">363</a> 
-<a name="364" href="#364">364</a>         <strong class="jxr_keyword">final</strong> String ldapProject = conf.get(LDAP_PROJECT);
-<a name="365" href="#365">365</a>         <strong class="jxr_keyword">final</strong> String ldapSearchGroup = conf.get(LDAP_SEARCH_GROUP);
-<a name="366" href="#366">366</a>         <strong class="jxr_keyword">final</strong> String ldapSearchUser = conf.get(LDAP_SEARCH_USER);
-<a name="367" href="#367">367</a>         <strong class="jxr_keyword">final</strong> String ldapSearchAttr = String.format(
-<a name="368" href="#368">368</a>                 <span class="jxr_string">"(|(gidNumber=%s)(memberOf=cn=%s,%s))"</span>,
-<a name="369" href="#369">369</a>                 gidNumber, ldapProject, ldapSearchGroup
-<a name="370" href="#370">370</a>         );
-<a name="371" href="#371">371</a> 
-<a name="372" href="#372">372</a>         LOGGER.info(<span class="jxr_string">"LDAP search({},{},{}"</span>, ldapSearchUser, ldapSearchAttr, controls);
-<a name="373" href="#373">373</a>         <strong class="jxr_keyword">final</strong> NamingEnumeration answer = context.search(ldapSearchUser, ldapSearchAttr, controls);
-<a name="374" href="#374">374</a>         LOGGER.info(<span class="jxr_string">"LDAP search : OK"</span>);
-<a name="375" href="#375">375</a>         <strong class="jxr_keyword">while</strong> (answer.hasMore()) {
-<a name="376" href="#376">376</a>             <strong class="jxr_keyword">final</strong> NamingEnumeration&lt;? <strong class="jxr_keyword">extends</strong> Attribute&gt; attrbs = ((SearchResult) answer.next())
-<a name="377" href="#377">377</a>                     .getAttributes().getAll();
-<a name="378" href="#378">378</a>             String fullname = <strong class="jxr_keyword">null</strong>;
-<a name="379" href="#379">379</a>             String uid = <strong class="jxr_keyword">null</strong>;
-<a name="380" href="#380">380</a>             String mail = <strong class="jxr_keyword">null</strong>;
-<a name="381" href="#381">381</a>             <strong class="jxr_keyword">while</strong> (attrbs.hasMore()) {
-<a name="382" href="#382">382</a>                 <strong class="jxr_keyword">final</strong> Attribute att = attrbs.next();
-<a name="383" href="#383">383</a>                 <strong class="jxr_keyword">final</strong> String attId = att.getID();
-<a name="384" href="#384">384</a>                 <strong class="jxr_keyword">if</strong> (attrIDs[0].equals(attId)) {
-<a name="385" href="#385">385</a>                     <strong class="jxr_keyword">final</strong> NamingEnumeration&lt;?&gt; values = att.getAll();
-<a name="386" href="#386">386</a>                     <strong class="jxr_keyword">while</strong> (values.hasMoreElements()) {
-<a name="387" href="#387">387</a>                         uid = values.next().toString();
-<a name="388" href="#388">388</a>                         <strong class="jxr_keyword">break</strong>;
-<a name="389" href="#389">389</a>                     }
-<a name="390" href="#390">390</a>                 } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (attrIDs[1].equals(attId)) {
-<a name="391" href="#391">391</a>                     <strong class="jxr_keyword">final</strong> NamingEnumeration&lt;?&gt; values = att.getAll();
-<a name="392" href="#392">392</a>                     <strong class="jxr_keyword">while</strong> (values.hasMoreElements()) {
-<a name="393" href="#393">393</a>                         mail = values.next().toString();
-<a name="394" href="#394">394</a>                         <strong class="jxr_keyword">break</strong>;
-<a name="395" href="#395">395</a>                     }
-<a name="396" href="#396">396</a>                 } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (attrIDs[2].equals(attId)) {
-<a name="397" href="#397">397</a>                     <strong class="jxr_keyword">final</strong> NamingEnumeration&lt;?&gt; values = att.getAll();
-<a name="398" href="#398">398</a>                     <strong class="jxr_keyword">while</strong> (values.hasMoreElements()) {
-<a name="399" href="#399">399</a>                         fullname = values.next().toString();
-<a name="400" href="#400">400</a>                         <strong class="jxr_keyword">break</strong>;
-<a name="401" href="#401">401</a>                     }
-<a name="402" href="#402">402</a>                 }
-<a name="403" href="#403">403</a>             }
-<a name="404" href="#404">404</a>             <strong class="jxr_keyword">if</strong> ((mail != <strong class="jxr_keyword">null</strong>) &amp;&amp; (uid != <strong class="jxr_keyword">null</strong>)) {
-<a name="405" href="#405">405</a>                 <strong class="jxr_keyword">final</strong> <a href="../../../../../../fr/cnes/doi/db/model/AuthSystemUser.html">AuthSystemUser</a> ldapuser = <strong class="jxr_keyword">new</strong> <a href="../../../../../../fr/cnes/doi/db/model/AuthSystemUser.html">AuthSystemUser</a>();
-<a name="406" href="#406">406</a>                 ldapuser.setFullname(fullname);
-<a name="407" href="#407">407</a>                 ldapuser.setEmail(mail);
-<a name="408" href="#408">408</a>                 ldapuser.setUsername(uid);
-<a name="409" href="#409">409</a>                 ldapuserList.add(ldapuser);
-<a name="410" href="#410">410</a>                 LOGGER.debug(<span class="jxr_string">"Create LDAP user : {}"</span>, ldapuser);
-<a name="411" href="#411">411</a>             }
-<a name="412" href="#412">412</a>         }
-<a name="413" href="#413">413</a>         <strong class="jxr_keyword">return</strong> LOGGER.traceExit(ldapuserList);
-<a name="414" href="#414">414</a>     }
-<a name="415" href="#415">415</a> 
-<a name="416" href="#416">416</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="417" href="#417">417</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
-<a name="418" href="#418">418</a> <em class="jxr_javadoccomment">     */</em>
-<a name="419" href="#419">419</a>     @Override
-<a name="420" href="#420">420</a>     <strong class="jxr_keyword">public</strong> String getName() {
-<a name="421" href="#421">421</a>         <strong class="jxr_keyword">return</strong> NAME;
-<a name="422" href="#422">422</a>     }
-<a name="423" href="#423">423</a> 
-<a name="424" href="#424">424</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="425" href="#425">425</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
-<a name="426" href="#426">426</a> <em class="jxr_javadoccomment">     */</em>
-<a name="427" href="#427">427</a>     @Override
-<a name="428" href="#428">428</a>     <strong class="jxr_keyword">public</strong> String getDescription() {
-<a name="429" href="#429">429</a>         <strong class="jxr_keyword">return</strong> DESCRIPTION;
-<a name="430" href="#430">430</a>     }
-<a name="431" href="#431">431</a> 
-<a name="432" href="#432">432</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="433" href="#433">433</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
-<a name="434" href="#434">434</a> <em class="jxr_javadoccomment">     */</em>
-<a name="435" href="#435">435</a>     @Override
-<a name="436" href="#436">436</a>     <strong class="jxr_keyword">public</strong> String getVersion() {
-<a name="437" href="#437">437</a>         <strong class="jxr_keyword">return</strong> VERSION;
-<a name="438" href="#438">438</a>     }
-<a name="439" href="#439">439</a> 
-<a name="440" href="#440">440</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="441" href="#441">441</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
-<a name="442" href="#442">442</a> <em class="jxr_javadoccomment">     */</em>
-<a name="443" href="#443">443</a>     @Override
-<a name="444" href="#444">444</a>     <strong class="jxr_keyword">public</strong> String getAuthor() {
-<a name="445" href="#445">445</a>         <strong class="jxr_keyword">return</strong> AUTHOR;
-<a name="446" href="#446">446</a>     }
-<a name="447" href="#447">447</a> 
-<a name="448" href="#448">448</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="449" href="#449">449</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
-<a name="450" href="#450">450</a> <em class="jxr_javadoccomment">     */</em>
-<a name="451" href="#451">451</a>     @Override
-<a name="452" href="#452">452</a>     <strong class="jxr_keyword">public</strong> String getOwner() {
-<a name="453" href="#453">453</a>         <strong class="jxr_keyword">return</strong> OWNER;
-<a name="454" href="#454">454</a>     }
-<a name="455" href="#455">455</a> 
-<a name="456" href="#456">456</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="457" href="#457">457</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
-<a name="458" href="#458">458</a> <em class="jxr_javadoccomment">     */</em>
-<a name="459" href="#459">459</a>     @Override
-<a name="460" href="#460">460</a>     <strong class="jxr_keyword">public</strong> String getLicense() {
-<a name="461" href="#461">461</a>         <strong class="jxr_keyword">return</strong> LICENSE;
-<a name="462" href="#462">462</a>     }
-<a name="463" href="#463">463</a> 
-<a name="464" href="#464">464</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="465" href="#465">465</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
-<a name="466" href="#466">466</a> <em class="jxr_javadoccomment">     */</em>
-<a name="467" href="#467">467</a>     @Override
-<a name="468" href="#468">468</a>     <strong class="jxr_keyword">public</strong> String getDOIAdmin() {
-<a name="469" href="#469">469</a>         <strong class="jxr_keyword">return</strong> conf.get(LDAP_DOI_ADMIN);
-<a name="470" href="#470">470</a>     }
-<a name="471" href="#471">471</a> 
-<a name="472" href="#472">472</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="473" href="#473">473</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
-<a name="474" href="#474">474</a> <em class="jxr_javadoccomment">     */</em>
-<a name="475" href="#475">475</a>     @Override
-<a name="476" href="#476">476</a>     <strong class="jxr_keyword">public</strong> StringBuilder validate() {
-<a name="477" href="#477">477</a>         <strong class="jxr_keyword">final</strong> StringBuilder validation = <strong class="jxr_keyword">new</strong> StringBuilder();
-<a name="478" href="#478">478</a>         <strong class="jxr_keyword">final</strong> String message = <span class="jxr_string">"Sets "</span>;
-<a name="479" href="#479">479</a>         <strong class="jxr_keyword">if</strong> (!<strong class="jxr_keyword">this</strong>.conf.containsKey(LDAP_ATTR_FULLNAME)) {
-<a name="480" href="#480">480</a>             validation.append(message).append(LDAP_ATTR_FULLNAME).append(<span class="jxr_string">"\n"</span>);
-<a name="481" href="#481">481</a>         }
-<a name="482" href="#482">482</a>         <strong class="jxr_keyword">if</strong> (!<strong class="jxr_keyword">this</strong>.conf.containsKey(LDAP_ATTR_MAIL)) {
-<a name="483" href="#483">483</a>             validation.append(message).append(LDAP_ATTR_MAIL).append(<span class="jxr_string">"\n"</span>);
-<a name="484" href="#484">484</a>         }
-<a name="485" href="#485">485</a>         <strong class="jxr_keyword">if</strong> (!<strong class="jxr_keyword">this</strong>.conf.containsKey(LDAP_ATTR_USERNAME)) {
-<a name="486" href="#486">486</a>             validation.append(message).append(LDAP_ATTR_USERNAME).append(<span class="jxr_string">"\n"</span>);
-<a name="487" href="#487">487</a>         }
-<a name="488" href="#488">488</a>         <strong class="jxr_keyword">if</strong> (!<strong class="jxr_keyword">this</strong>.conf.containsKey(LDAP_PROJECT)) {
-<a name="489" href="#489">489</a>             validation.append(message).append(LDAP_PROJECT).append(<span class="jxr_string">"\n"</span>);
-<a name="490" href="#490">490</a>         }
-<a name="491" href="#491">491</a>         <strong class="jxr_keyword">if</strong> (!<strong class="jxr_keyword">this</strong>.conf.containsKey(LDAP_URL)) {
-<a name="492" href="#492">492</a>             validation.append(message).append(LDAP_URL).append(<span class="jxr_string">"\n"</span>);
-<a name="493" href="#493">493</a>         }
-<a name="494" href="#494">494</a>         <strong class="jxr_keyword">if</strong> (!<strong class="jxr_keyword">this</strong>.conf.containsKey(LDAP_SEARCH_GROUP)) {
-<a name="495" href="#495">495</a>             validation.append(message).append(LDAP_SEARCH_GROUP).append(<span class="jxr_string">"\n"</span>);
-<a name="496" href="#496">496</a>         }
-<a name="497" href="#497">497</a>         <strong class="jxr_keyword">if</strong> (!<strong class="jxr_keyword">this</strong>.conf.containsKey(LDAP_SEARCH_USER)) {
-<a name="498" href="#498">498</a>             validation.append(message).append(LDAP_SEARCH_USER).append(<span class="jxr_string">"\n"</span>);
-<a name="499" href="#499">499</a>         }
-<a name="500" href="#500">500</a>         <strong class="jxr_keyword">if</strong> (!<strong class="jxr_keyword">this</strong>.conf.containsKey(LDAP_USER)) {
-<a name="501" href="#501">501</a>             validation.append(message).append(LDAP_USER).append(<span class="jxr_string">"\n"</span>);
-<a name="502" href="#502">502</a>         }
-<a name="503" href="#503">503</a>         <strong class="jxr_keyword">if</strong> (!<strong class="jxr_keyword">this</strong>.conf.containsKey(LDAP_PWD)) {
-<a name="504" href="#504">504</a>             validation.append(message).append(LDAP_PWD).append(<span class="jxr_string">"\n"</span>);
-<a name="505" href="#505">505</a>         }        
-<a name="506" href="#506">506</a>         <strong class="jxr_keyword">return</strong> validation;
-<a name="507" href="#507">507</a>     }
-<a name="508" href="#508">508</a> 
-<a name="509" href="#509">509</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="510" href="#510">510</a> <em class="jxr_javadoccomment">     * Checks if the keyword is a password.</em>
-<a name="511" href="#511">511</a> <em class="jxr_javadoccomment">     *</em>
-<a name="512" href="#512">512</a> <em class="jxr_javadoccomment">     * @param key keyword to check</em>
-<a name="513" href="#513">513</a> <em class="jxr_javadoccomment">     * @return True when the keyword is a password otherwise False</em>
-<a name="514" href="#514">514</a> <em class="jxr_javadoccomment">     */</em>
-<a name="515" href="#515">515</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">boolean</strong> isPassword(<strong class="jxr_keyword">final</strong> String key) {
-<a name="516" href="#516">516</a>         <strong class="jxr_keyword">return</strong> LDAP_PWD.equals(key);
-<a name="517" href="#517">517</a>     }
-<a name="518" href="#518">518</a> 
-<a name="519" href="#519">519</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="520" href="#520">520</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
-<a name="521" href="#521">521</a> <em class="jxr_javadoccomment">     */</em>
-<a name="522" href="#522">522</a>     @Override
-<a name="523" href="#523">523</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> release() {
-<a name="524" href="#524">524</a>         <strong class="jxr_keyword">this</strong>.configured = false;
-<a name="525" href="#525">525</a>     }
-<a name="526" href="#526">526</a> 
-<a name="527" href="#527">527</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="528" href="#528">528</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
-<a name="529" href="#529">529</a> <em class="jxr_javadoccomment">     */</em>
-<a name="530" href="#530">530</a>     @Override
-<a name="531" href="#531">531</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> isConfigured() {
-<a name="532" href="#532">532</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.configured;
-<a name="533" href="#533">533</a>     }
-<a name="534" href="#534">534</a> }
+<a name="343" href="#343">343</a> <em class="jxr_javadoccomment">     * Search on LDAP all users which are in the group Consts.LDAP_PROJECT in a</em>
+<a name="344" href="#344">344</a> <em class="jxr_javadoccomment">     * LDAP group</em>
+<a name="345" href="#345">345</a> <em class="jxr_javadoccomment">     *</em>
+<a name="346" href="#346">346</a> <em class="jxr_javadoccomment">     * @param context context</em>
+<a name="347" href="#347">347</a> <em class="jxr_javadoccomment">     * @param gidNumber LDAP group ID</em>
+<a name="348" href="#348">348</a> <em class="jxr_javadoccomment">     * @return all LDAP users which are in the group Consts.LDAP_PROJECT for a</em>
+<a name="349" href="#349">349</a> <em class="jxr_javadoccomment">     * specific LDAP group</em>
+<a name="350" href="#350">350</a> <em class="jxr_javadoccomment">     * @throws NamingException Exception</em>
+<a name="351" href="#351">351</a> <em class="jxr_javadoccomment">     */</em>
+<a name="352" href="#352">352</a>     <strong class="jxr_keyword">private</strong> List&lt;AuthSystemUser&gt; getLdapUsers(<strong class="jxr_keyword">final</strong> DirContext context, <strong class="jxr_keyword">final</strong> String gidNumber)
+<a name="353" href="#353">353</a>             <strong class="jxr_keyword">throws</strong> NamingException {
+<a name="354" href="#354">354</a>         LOGGER.traceEntry(<span class="jxr_string">"Parameters : {}"</span>, context, gidNumber);
+<a name="355" href="#355">355</a>         <strong class="jxr_keyword">final</strong> List&lt;AuthSystemUser&gt; ldapuserList = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
+<a name="356" href="#356">356</a>         <strong class="jxr_keyword">final</strong> SearchControls controls = <strong class="jxr_keyword">new</strong> SearchControls();
+<a name="357" href="#357">357</a>         controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+<a name="358" href="#358">358</a>         <strong class="jxr_keyword">final</strong> String[] attrIDs = {
+<a name="359" href="#359">359</a>             conf.get(LDAP_ATTR_USERNAME),
+<a name="360" href="#360">360</a>             conf.get(LDAP_ATTR_MAIL),
+<a name="361" href="#361">361</a>             conf.get(LDAP_ATTR_FULLNAME)
+<a name="362" href="#362">362</a>         };
+<a name="363" href="#363">363</a>         LOGGER.info(<span class="jxr_string">"Getting attributes from LDAP: {}"</span>, (Object[]) attrIDs);
+<a name="364" href="#364">364</a>         controls.setReturningAttributes(attrIDs);
+<a name="365" href="#365">365</a> 
+<a name="366" href="#366">366</a>         <strong class="jxr_keyword">final</strong> String ldapProject = conf.get(LDAP_PROJECT);
+<a name="367" href="#367">367</a>         <strong class="jxr_keyword">final</strong> String ldapSearchGroup = conf.get(LDAP_SEARCH_GROUP);
+<a name="368" href="#368">368</a>         <strong class="jxr_keyword">final</strong> String ldapSearchUser = conf.get(LDAP_SEARCH_USER);
+<a name="369" href="#369">369</a>         <strong class="jxr_keyword">final</strong> String ldapSearchAttr = String.format(
+<a name="370" href="#370">370</a>                 <span class="jxr_string">"(|(gidNumber=%s)(memberOf=cn=%s,%s))"</span>,
+<a name="371" href="#371">371</a>                 gidNumber, ldapProject, ldapSearchGroup
+<a name="372" href="#372">372</a>         );
+<a name="373" href="#373">373</a> 
+<a name="374" href="#374">374</a>         LOGGER.info(<span class="jxr_string">"LDAP search({},{},{}"</span>, ldapSearchUser, ldapSearchAttr, controls);
+<a name="375" href="#375">375</a>         <strong class="jxr_keyword">final</strong> NamingEnumeration answer = context.search(ldapSearchUser, ldapSearchAttr, controls);
+<a name="376" href="#376">376</a>         LOGGER.info(<span class="jxr_string">"LDAP search : OK"</span>);
+<a name="377" href="#377">377</a>         <strong class="jxr_keyword">while</strong> (answer.hasMore()) {
+<a name="378" href="#378">378</a>             <strong class="jxr_keyword">final</strong> NamingEnumeration&lt;? <strong class="jxr_keyword">extends</strong> Attribute&gt; attrbs = ((SearchResult) answer.next())
+<a name="379" href="#379">379</a>                     .getAttributes().getAll();
+<a name="380" href="#380">380</a>             String fullname = <strong class="jxr_keyword">null</strong>;
+<a name="381" href="#381">381</a>             String uid = <strong class="jxr_keyword">null</strong>;
+<a name="382" href="#382">382</a>             String mail = <strong class="jxr_keyword">null</strong>;
+<a name="383" href="#383">383</a>             <strong class="jxr_keyword">while</strong> (attrbs.hasMore()) {
+<a name="384" href="#384">384</a>                 <strong class="jxr_keyword">final</strong> Attribute att = attrbs.next();
+<a name="385" href="#385">385</a>                 <strong class="jxr_keyword">final</strong> String attId = att.getID();
+<a name="386" href="#386">386</a>                 <strong class="jxr_keyword">if</strong> (attrIDs[0].equals(attId)) {
+<a name="387" href="#387">387</a>                     <strong class="jxr_keyword">final</strong> NamingEnumeration&lt;?&gt; values = att.getAll();
+<a name="388" href="#388">388</a>                     <strong class="jxr_keyword">while</strong> (values.hasMoreElements()) {
+<a name="389" href="#389">389</a>                         uid = values.next().toString();
+<a name="390" href="#390">390</a>                         <strong class="jxr_keyword">break</strong>;
+<a name="391" href="#391">391</a>                     }
+<a name="392" href="#392">392</a>                 } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (attrIDs[1].equals(attId)) {
+<a name="393" href="#393">393</a>                     <strong class="jxr_keyword">final</strong> NamingEnumeration&lt;?&gt; values = att.getAll();
+<a name="394" href="#394">394</a>                     <strong class="jxr_keyword">while</strong> (values.hasMoreElements()) {
+<a name="395" href="#395">395</a>                         mail = values.next().toString();
+<a name="396" href="#396">396</a>                         <strong class="jxr_keyword">break</strong>;
+<a name="397" href="#397">397</a>                     }
+<a name="398" href="#398">398</a>                 } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (attrIDs[2].equals(attId)) {
+<a name="399" href="#399">399</a>                     <strong class="jxr_keyword">final</strong> NamingEnumeration&lt;?&gt; values = att.getAll();
+<a name="400" href="#400">400</a>                     <strong class="jxr_keyword">while</strong> (values.hasMoreElements()) {
+<a name="401" href="#401">401</a>                         fullname = values.next().toString();
+<a name="402" href="#402">402</a>                         <strong class="jxr_keyword">break</strong>;
+<a name="403" href="#403">403</a>                     }
+<a name="404" href="#404">404</a>                 }
+<a name="405" href="#405">405</a>             }
+<a name="406" href="#406">406</a>             <strong class="jxr_keyword">if</strong> ((mail != <strong class="jxr_keyword">null</strong>) &amp;&amp; (uid != <strong class="jxr_keyword">null</strong>)) {
+<a name="407" href="#407">407</a>                 <strong class="jxr_keyword">final</strong> <a href="../../../../../../fr/cnes/doi/db/model/AuthSystemUser.html">AuthSystemUser</a> ldapuser = <strong class="jxr_keyword">new</strong> <a href="../../../../../../fr/cnes/doi/db/model/AuthSystemUser.html">AuthSystemUser</a>();
+<a name="408" href="#408">408</a>                 ldapuser.setFullname(fullname);
+<a name="409" href="#409">409</a>                 ldapuser.setEmail(mail);
+<a name="410" href="#410">410</a>                 ldapuser.setUsername(uid);
+<a name="411" href="#411">411</a>                 ldapuserList.add(ldapuser);
+<a name="412" href="#412">412</a>                 LOGGER.debug(<span class="jxr_string">"Create LDAP user : {}"</span>, ldapuser);
+<a name="413" href="#413">413</a>             }
+<a name="414" href="#414">414</a>         }
+<a name="415" href="#415">415</a>         <strong class="jxr_keyword">return</strong> LOGGER.traceExit(ldapuserList);
+<a name="416" href="#416">416</a>     }
+<a name="417" href="#417">417</a> 
+<a name="418" href="#418">418</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="419" href="#419">419</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
+<a name="420" href="#420">420</a> <em class="jxr_javadoccomment">     */</em>
+<a name="421" href="#421">421</a>     @Override
+<a name="422" href="#422">422</a>     <strong class="jxr_keyword">public</strong> String getName() {
+<a name="423" href="#423">423</a>         <strong class="jxr_keyword">return</strong> NAME;
+<a name="424" href="#424">424</a>     }
+<a name="425" href="#425">425</a> 
+<a name="426" href="#426">426</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="427" href="#427">427</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
+<a name="428" href="#428">428</a> <em class="jxr_javadoccomment">     */</em>
+<a name="429" href="#429">429</a>     @Override
+<a name="430" href="#430">430</a>     <strong class="jxr_keyword">public</strong> String getDescription() {
+<a name="431" href="#431">431</a>         <strong class="jxr_keyword">return</strong> DESCRIPTION;
+<a name="432" href="#432">432</a>     }
+<a name="433" href="#433">433</a> 
+<a name="434" href="#434">434</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="435" href="#435">435</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
+<a name="436" href="#436">436</a> <em class="jxr_javadoccomment">     */</em>
+<a name="437" href="#437">437</a>     @Override
+<a name="438" href="#438">438</a>     <strong class="jxr_keyword">public</strong> String getVersion() {
+<a name="439" href="#439">439</a>         <strong class="jxr_keyword">return</strong> VERSION;
+<a name="440" href="#440">440</a>     }
+<a name="441" href="#441">441</a> 
+<a name="442" href="#442">442</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="443" href="#443">443</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
+<a name="444" href="#444">444</a> <em class="jxr_javadoccomment">     */</em>
+<a name="445" href="#445">445</a>     @Override
+<a name="446" href="#446">446</a>     <strong class="jxr_keyword">public</strong> String getAuthor() {
+<a name="447" href="#447">447</a>         <strong class="jxr_keyword">return</strong> AUTHOR;
+<a name="448" href="#448">448</a>     }
+<a name="449" href="#449">449</a> 
+<a name="450" href="#450">450</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="451" href="#451">451</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
+<a name="452" href="#452">452</a> <em class="jxr_javadoccomment">     */</em>
+<a name="453" href="#453">453</a>     @Override
+<a name="454" href="#454">454</a>     <strong class="jxr_keyword">public</strong> String getOwner() {
+<a name="455" href="#455">455</a>         <strong class="jxr_keyword">return</strong> OWNER;
+<a name="456" href="#456">456</a>     }
+<a name="457" href="#457">457</a> 
+<a name="458" href="#458">458</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="459" href="#459">459</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
+<a name="460" href="#460">460</a> <em class="jxr_javadoccomment">     */</em>
+<a name="461" href="#461">461</a>     @Override
+<a name="462" href="#462">462</a>     <strong class="jxr_keyword">public</strong> String getLicense() {
+<a name="463" href="#463">463</a>         <strong class="jxr_keyword">return</strong> LICENSE;
+<a name="464" href="#464">464</a>     }
+<a name="465" href="#465">465</a> 
+<a name="466" href="#466">466</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="467" href="#467">467</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
+<a name="468" href="#468">468</a> <em class="jxr_javadoccomment">     */</em>
+<a name="469" href="#469">469</a>     @Override
+<a name="470" href="#470">470</a>     <strong class="jxr_keyword">public</strong> String getDOIAdmin() {
+<a name="471" href="#471">471</a>         <strong class="jxr_keyword">return</strong> conf.get(LDAP_DOI_ADMIN);
+<a name="472" href="#472">472</a>     }
+<a name="473" href="#473">473</a> 
+<a name="474" href="#474">474</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="475" href="#475">475</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
+<a name="476" href="#476">476</a> <em class="jxr_javadoccomment">     */</em>
+<a name="477" href="#477">477</a>     @Override
+<a name="478" href="#478">478</a>     <strong class="jxr_keyword">public</strong> StringBuilder validate() {
+<a name="479" href="#479">479</a>         <strong class="jxr_keyword">final</strong> StringBuilder validation = <strong class="jxr_keyword">new</strong> StringBuilder();
+<a name="480" href="#480">480</a>         <strong class="jxr_keyword">final</strong> String message = <span class="jxr_string">"Sets "</span>;
+<a name="481" href="#481">481</a>         <strong class="jxr_keyword">if</strong> (!<strong class="jxr_keyword">this</strong>.conf.containsKey(LDAP_ATTR_FULLNAME)) {
+<a name="482" href="#482">482</a>             validation.append(message).append(LDAP_ATTR_FULLNAME).append(<span class="jxr_string">"\n"</span>);
+<a name="483" href="#483">483</a>         }
+<a name="484" href="#484">484</a>         <strong class="jxr_keyword">if</strong> (!<strong class="jxr_keyword">this</strong>.conf.containsKey(LDAP_ATTR_MAIL)) {
+<a name="485" href="#485">485</a>             validation.append(message).append(LDAP_ATTR_MAIL).append(<span class="jxr_string">"\n"</span>);
+<a name="486" href="#486">486</a>         }
+<a name="487" href="#487">487</a>         <strong class="jxr_keyword">if</strong> (!<strong class="jxr_keyword">this</strong>.conf.containsKey(LDAP_ATTR_USERNAME)) {
+<a name="488" href="#488">488</a>             validation.append(message).append(LDAP_ATTR_USERNAME).append(<span class="jxr_string">"\n"</span>);
+<a name="489" href="#489">489</a>         }
+<a name="490" href="#490">490</a>         <strong class="jxr_keyword">if</strong> (!<strong class="jxr_keyword">this</strong>.conf.containsKey(LDAP_PROJECT)) {
+<a name="491" href="#491">491</a>             validation.append(message).append(LDAP_PROJECT).append(<span class="jxr_string">"\n"</span>);
+<a name="492" href="#492">492</a>         }
+<a name="493" href="#493">493</a>         <strong class="jxr_keyword">if</strong> (!<strong class="jxr_keyword">this</strong>.conf.containsKey(LDAP_URL)) {
+<a name="494" href="#494">494</a>             validation.append(message).append(LDAP_URL).append(<span class="jxr_string">"\n"</span>);
+<a name="495" href="#495">495</a>         }
+<a name="496" href="#496">496</a>         <strong class="jxr_keyword">if</strong> (!<strong class="jxr_keyword">this</strong>.conf.containsKey(LDAP_SEARCH_GROUP)) {
+<a name="497" href="#497">497</a>             validation.append(message).append(LDAP_SEARCH_GROUP).append(<span class="jxr_string">"\n"</span>);
+<a name="498" href="#498">498</a>         }
+<a name="499" href="#499">499</a>         <strong class="jxr_keyword">if</strong> (!<strong class="jxr_keyword">this</strong>.conf.containsKey(LDAP_SEARCH_USER)) {
+<a name="500" href="#500">500</a>             validation.append(message).append(LDAP_SEARCH_USER).append(<span class="jxr_string">"\n"</span>);
+<a name="501" href="#501">501</a>         }
+<a name="502" href="#502">502</a>         <strong class="jxr_keyword">if</strong> (!<strong class="jxr_keyword">this</strong>.conf.containsKey(LDAP_USER)) {
+<a name="503" href="#503">503</a>             validation.append(message).append(LDAP_USER).append(<span class="jxr_string">"\n"</span>);
+<a name="504" href="#504">504</a>         }
+<a name="505" href="#505">505</a>         <strong class="jxr_keyword">if</strong> (!<strong class="jxr_keyword">this</strong>.conf.containsKey(LDAP_PWD)) {
+<a name="506" href="#506">506</a>             validation.append(message).append(LDAP_PWD).append(<span class="jxr_string">"\n"</span>);
+<a name="507" href="#507">507</a>         }
+<a name="508" href="#508">508</a>         <strong class="jxr_keyword">return</strong> validation;
+<a name="509" href="#509">509</a>     }
+<a name="510" href="#510">510</a> 
+<a name="511" href="#511">511</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="512" href="#512">512</a> <em class="jxr_javadoccomment">     * Checks if the keyword is a password.</em>
+<a name="513" href="#513">513</a> <em class="jxr_javadoccomment">     *</em>
+<a name="514" href="#514">514</a> <em class="jxr_javadoccomment">     * @param key keyword to check</em>
+<a name="515" href="#515">515</a> <em class="jxr_javadoccomment">     * @return True when the keyword is a password otherwise False</em>
+<a name="516" href="#516">516</a> <em class="jxr_javadoccomment">     */</em>
+<a name="517" href="#517">517</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">boolean</strong> isPassword(<strong class="jxr_keyword">final</strong> String key) {
+<a name="518" href="#518">518</a>         <strong class="jxr_keyword">return</strong> LDAP_PWD.equals(key);
+<a name="519" href="#519">519</a>     }
+<a name="520" href="#520">520</a> 
+<a name="521" href="#521">521</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="522" href="#522">522</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
+<a name="523" href="#523">523</a> <em class="jxr_javadoccomment">     */</em>
+<a name="524" href="#524">524</a>     @Override
+<a name="525" href="#525">525</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> release() {
+<a name="526" href="#526">526</a>         <strong class="jxr_keyword">this</strong>.configured = false;
+<a name="527" href="#527">527</a>     }
+<a name="528" href="#528">528</a> 
+<a name="529" href="#529">529</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="530" href="#530">530</a> <em class="jxr_javadoccomment">     * {@inheritDoc}</em>
+<a name="531" href="#531">531</a> <em class="jxr_javadoccomment">     */</em>
+<a name="532" href="#532">532</a>     @Override
+<a name="533" href="#533">533</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> isConfigured() {
+<a name="534" href="#534">534</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.configured;
+<a name="535" href="#535">535</a>     }
+<a name="536" href="#536">536</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>

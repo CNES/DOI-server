@@ -72,7 +72,7 @@
 <a name="62" href="#62">62</a>  <em class="jxr_javadoccomment">     * token key.</em>
 <a name="63" href="#63">63</a>  <em class="jxr_javadoccomment">     */</em>
 <a name="64" href="#64">64</a>      <strong class="jxr_keyword">private</strong> String tokenKey;
-<a name="65" href="#65">65</a>      
+<a name="65" href="#65">65</a>  
 <a name="66" href="#66">66</a>      <em class="jxr_javadoccomment">/**</em>
 <a name="67" href="#67">67</a>  <em class="jxr_javadoccomment">     * Project ID name in token.</em>
 <a name="68" href="#68">68</a>  <em class="jxr_javadoccomment">     */</em>
@@ -152,236 +152,237 @@
 <a name="142" href="#142">142</a> <em class="jxr_javadoccomment">     * @param timeUnit The time unit for the date expiration</em>
 <a name="143" href="#143">143</a> <em class="jxr_javadoccomment">     * @param amount the amount of timeUnit for the date expiration</em>
 <a name="144" href="#144">144</a> <em class="jxr_javadoccomment">     * @return JWT token</em>
-<a name="145" href="#145">145</a> <em class="jxr_javadoccomment">     * @throws fr.cnes.doi.exception.TokenSecurityException if the projectID is not first registered</em>
-<a name="146" href="#146">146</a> <em class="jxr_javadoccomment">     */</em>
-<a name="147" href="#147">147</a>     <strong class="jxr_keyword">public</strong> String generate(<strong class="jxr_keyword">final</strong> String userID,
-<a name="148" href="#148">148</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> projectID,
-<a name="149" href="#149">149</a>             <strong class="jxr_keyword">final</strong> TokenSecurity.TimeUnit timeUnit,
-<a name="150" href="#150">150</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> amount) <strong class="jxr_keyword">throws</strong> TokenSecurityException {
-<a name="151" href="#151">151</a>         LOG.traceEntry(<span class="jxr_string">"Parameters : {}, {}, {} and {}"</span>, userID, projectID, timeUnit, amount);
-<a name="152" href="#152">152</a>         List&lt;DOIProject&gt; projects;
-<a name="153" href="#153">153</a>         <strong class="jxr_keyword">try</strong> {
-<a name="154" href="#154">154</a>             projects = UniqueProjectName.getInstance().getProjects();
-<a name="155" href="#155">155</a>         } <strong class="jxr_keyword">catch</strong> (DOIDbException ex) {
-<a name="156" href="#156">156</a>             projects = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
-<a name="157" href="#157">157</a>         }
-<a name="158" href="#158">158</a>         <strong class="jxr_keyword">final</strong> Map&lt;Integer, String&gt; result = projects.stream().collect(
-<a name="159" href="#159">159</a>                 Collectors.toMap(DOIProject::getSuffix, DOIProject::getProjectname));
-<a name="160" href="#160">160</a>         <strong class="jxr_keyword">final</strong> String projectName = result.get(projectID);
-<a name="161" href="#161">161</a>         <strong class="jxr_keyword">if</strong> (projectName.isEmpty()) {
-<a name="162" href="#162">162</a>             <strong class="jxr_keyword">throw</strong> LOG.throwing(<strong class="jxr_keyword">new</strong> <a href="../../../../fr/cnes/doi/exception/TokenSecurityException.html">TokenSecurityException</a>(
-<a name="163" href="#163">163</a>                     Status.CLIENT_ERROR_BAD_REQUEST,
-<a name="164" href="#164">164</a>                     <span class="jxr_string">"No register "</span> + PROJECT_ID + <span class="jxr_string">", please create one"</span>)
-<a name="165" href="#165">165</a>             );
-<a name="166" href="#166">166</a>         }
-<a name="167" href="#167">167</a>         <strong class="jxr_keyword">final</strong> Date now = Date.from(Instant.now());
-<a name="168" href="#168">168</a>         <strong class="jxr_keyword">final</strong> Date expirationTime = computeExpirationDate(now, timeUnit.getTimeUnit(), amount);
-<a name="169" href="#169">169</a> 
-<a name="170" href="#170">170</a>         <strong class="jxr_keyword">final</strong> String token = Jwts.builder()
-<a name="171" href="#171">171</a>                 .setIssuer(DoiSettings.getInstance().getString(Consts.APP_NAME))
-<a name="172" href="#172">172</a>                 .setIssuedAt(Date.from(Instant.now()))
-<a name="173" href="#173">173</a>                 .setSubject(userID)
-<a name="174" href="#174">174</a>                 .claim(PROJECT_ID, projectID)
-<a name="175" href="#175">175</a>                 .claim(PROJECT_NAME, projectName)
-<a name="176" href="#176">176</a>                 .setExpiration(expirationTime)
-<a name="177" href="#177">177</a>                 .signWith(
-<a name="178" href="#178">178</a>                         SignatureAlgorithm.HS256,
-<a name="179" href="#179">179</a>                         TextCodec.BASE64.decode(getTokenKey())
-<a name="180" href="#180">180</a>                 )
-<a name="181" href="#181">181</a>                 .compact();
-<a name="182" href="#182">182</a>         LOG.debug(String.format(<span class="jxr_string">"token generated : %s"</span>, token));
-<a name="183" href="#183">183</a>         <strong class="jxr_keyword">return</strong> LOG.traceExit(token);
-<a name="184" href="#184">184</a>     }
-<a name="185" href="#185">185</a> 
-<a name="186" href="#186">186</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="187" href="#187">187</a> <em class="jxr_javadoccomment">     * Creates a token. (no project ID required)</em>
-<a name="188" href="#188">188</a> <em class="jxr_javadoccomment">     *</em>
-<a name="189" href="#189">189</a> <em class="jxr_javadoccomment">     * @param userID The user that creates the token</em>
-<a name="190" href="#190">190</a> <em class="jxr_javadoccomment">     * @param timeUnit The time unit for the date expiration</em>
-<a name="191" href="#191">191</a> <em class="jxr_javadoccomment">     * @param amount the amount of timeUnit for the date expiration</em>
-<a name="192" href="#192">192</a> <em class="jxr_javadoccomment">     * @return JWT token</em>
-<a name="193" href="#193">193</a> <em class="jxr_javadoccomment">     */</em>
-<a name="194" href="#194">194</a>     <strong class="jxr_keyword">public</strong> String generate(<strong class="jxr_keyword">final</strong> String userID,
-<a name="195" href="#195">195</a>             <strong class="jxr_keyword">final</strong> TokenSecurity.TimeUnit timeUnit,
-<a name="196" href="#196">196</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> amount) {
-<a name="197" href="#197">197</a>         LOG.traceEntry(<span class="jxr_string">"Parameters : {}, {} and {}"</span>, userID, timeUnit, amount);
-<a name="198" href="#198">198</a> 
-<a name="199" href="#199">199</a>         <strong class="jxr_keyword">final</strong> Date now = Date.from(Instant.now());
-<a name="200" href="#200">200</a>         <strong class="jxr_keyword">final</strong> Date expirationTime = computeExpirationDate(now, timeUnit.getTimeUnit(), amount);
-<a name="201" href="#201">201</a> 
-<a name="202" href="#202">202</a>         <strong class="jxr_keyword">final</strong> String token = Jwts.builder()
-<a name="203" href="#203">203</a>                 .setIssuer(DoiSettings.getInstance().getString(Consts.APP_NAME))
-<a name="204" href="#204">204</a>                 .setIssuedAt(Date.from(Instant.now()))
-<a name="205" href="#205">205</a>                 .setSubject(userID)
-<a name="206" href="#206">206</a>                 .setExpiration(expirationTime)
-<a name="207" href="#207">207</a>                 .signWith(
-<a name="208" href="#208">208</a>                         SignatureAlgorithm.HS256,
-<a name="209" href="#209">209</a>                         TextCodec.BASE64.decode(getTokenKey())
-<a name="210" href="#210">210</a>                 )
-<a name="211" href="#211">211</a>                 .compact();
-<a name="212" href="#212">212</a>         LOG.debug(String.format(<span class="jxr_string">"token generated : %s"</span>, token));
-<a name="213" href="#213">213</a>         <strong class="jxr_keyword">return</strong> LOG.traceExit(token);
-<a name="214" href="#214">214</a>     }
-<a name="215" href="#215">215</a> 
-<a name="216" href="#216">216</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="217" href="#217">217</a> <em class="jxr_javadoccomment">     * Returns the token key computed by the algorithm HS256.</em>
-<a name="218" href="#218">218</a> <em class="jxr_javadoccomment">     *</em>
-<a name="219" href="#219">219</a> <em class="jxr_javadoccomment">     * @return the token key encoded in base64</em>
-<a name="220" href="#220">220</a> <em class="jxr_javadoccomment">     */</em>
-<a name="221" href="#221">221</a>     <strong class="jxr_keyword">public</strong> String getTokenKey() {
-<a name="222" href="#222">222</a>         LOG.traceEntry();
-<a name="223" href="#223">223</a>         <strong class="jxr_keyword">return</strong> LOG.traceExit(<strong class="jxr_keyword">this</strong>.tokenKey);
-<a name="224" href="#224">224</a>     }
-<a name="225" href="#225">225</a> 
-<a name="226" href="#226">226</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="227" href="#227">227</a> <em class="jxr_javadoccomment">     * Sets a custom token key.</em>
-<a name="228" href="#228">228</a> <em class="jxr_javadoccomment">     *</em>
-<a name="229" href="#229">229</a> <em class="jxr_javadoccomment">     * @param tokenKey token key</em>
-<a name="230" href="#230">230</a> <em class="jxr_javadoccomment">     */</em>
-<a name="231" href="#231">231</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setTokenKey(<strong class="jxr_keyword">final</strong> String tokenKey) {
-<a name="232" href="#232">232</a>         LOG.traceEntry(<span class="jxr_string">"Parameter : {}"</span>, tokenKey);
-<a name="233" href="#233">233</a>         <strong class="jxr_keyword">this</strong>.tokenKey = tokenKey;
-<a name="234" href="#234">234</a>         LOG.debug(String.format(<span class="jxr_string">"Set tokenKey to %s"</span>, tokenKey));
-<a name="235" href="#235">235</a>         LOG.traceExit();
-<a name="236" href="#236">236</a>     }
-<a name="237" href="#237">237</a>     
-<a name="238" href="#238">238</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="239" href="#239">239</a> <em class="jxr_javadoccomment">     * Returns true when the token is expired otherwise false.</em>
-<a name="240" href="#240">240</a> <em class="jxr_javadoccomment">     * @param token token</em>
-<a name="241" href="#241">241</a> <em class="jxr_javadoccomment">     * @return true when the token is expired otherwise false.</em>
-<a name="242" href="#242">242</a> <em class="jxr_javadoccomment">     */</em>
-<a name="243" href="#243">243</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> isExpired(<strong class="jxr_keyword">final</strong> String token) {
-<a name="244" href="#244">244</a>         LOG.traceEntry(<span class="jxr_string">"Parameter\n\ttoken: {}"</span>, token);
-<a name="245" href="#245">245</a>         <strong class="jxr_keyword">final</strong> Jws&lt;Claims&gt; jws = <strong class="jxr_keyword">this</strong>.getTokenInformation(token);
-<a name="246" href="#246">246</a>         <strong class="jxr_keyword">return</strong> LOG.traceExit(jws == <strong class="jxr_keyword">null</strong>);
-<a name="247" href="#247">247</a>     }
-<a name="248" href="#248">248</a> 
-<a name="249" href="#249">249</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="250" href="#250">250</a> <em class="jxr_javadoccomment">     * Returns the token information.</em>
-<a name="251" href="#251">251</a> <em class="jxr_javadoccomment">     *</em>
-<a name="252" href="#252">252</a> <em class="jxr_javadoccomment">     * @param jwtToken token JWT</em>
-<a name="253" href="#253">253</a> <em class="jxr_javadoccomment">     * @return the information or null when the token is expired.</em>
-<a name="254" href="#254">254</a> <em class="jxr_javadoccomment">     * @throws DoiRuntimeException - if an error happens getting information from the token</em>
-<a name="255" href="#255">255</a> <em class="jxr_javadoccomment">     */</em>
-<a name="256" href="#256">256</a>     <strong class="jxr_keyword">public</strong> Jws&lt;Claims&gt; getTokenInformation(<strong class="jxr_keyword">final</strong> String jwtToken) <strong class="jxr_keyword">throws</strong> DoiRuntimeException {
-<a name="257" href="#257">257</a>         LOG.traceEntry(<span class="jxr_string">"Parameter : {}"</span>, jwtToken);
-<a name="258" href="#258">258</a>         Jws&lt;Claims&gt; token;
-<a name="259" href="#259">259</a>         <strong class="jxr_keyword">try</strong> {
-<a name="260" href="#260">260</a>             token = Jwts.parser()
-<a name="261" href="#261">261</a>                     .requireIssuer(DoiSettings.getInstance().getString(Consts.APP_NAME))
-<a name="262" href="#262">262</a>                     .setSigningKey(TextCodec.BASE64.decode(getTokenKey()))
-<a name="263" href="#263">263</a>                     .parseClaimsJws(jwtToken);
-<a name="264" href="#264">264</a>         } <strong class="jxr_keyword">catch</strong> (UnsupportedJwtException
-<a name="265" href="#265">265</a>                 | MalformedJwtException | SignatureException
-<a name="266" href="#266">266</a>                 | IllegalArgumentException ex) {
-<a name="267" href="#267">267</a>             <strong class="jxr_keyword">throw</strong> LOG.throwing(<strong class="jxr_keyword">new</strong> <a href="../../../../fr/cnes/doi/exception/DoiRuntimeException.html">DoiRuntimeException</a>(<span class="jxr_string">"Unable to get the token information"</span>, ex));
-<a name="268" href="#268">268</a>         } <strong class="jxr_keyword">catch</strong> (ExpiredJwtException e) {
-<a name="269" href="#269">269</a>             LOG.info(<span class="jxr_string">"Cannot get the token information"</span>, e);
-<a name="270" href="#270">270</a>             getTokenDB().deleteToken(jwtToken);
-<a name="271" href="#271">271</a>             token = <strong class="jxr_keyword">null</strong>;
-<a name="272" href="#272">272</a>         }
-<a name="273" href="#273">273</a>         <strong class="jxr_keyword">return</strong> LOG.traceExit(token);
-<a name="274" href="#274">274</a>     }
-<a name="275" href="#275">275</a> 
-<a name="276" href="#276">276</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="277" href="#277">277</a> <em class="jxr_javadoccomment">     * Returns the token DB.</em>
-<a name="278" href="#278">278</a> <em class="jxr_javadoccomment">     *</em>
-<a name="279" href="#279">279</a> <em class="jxr_javadoccomment">     * @return the token DB</em>
-<a name="280" href="#280">280</a> <em class="jxr_javadoccomment">     */</em>
-<a name="281" href="#281">281</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../fr/cnes/doi/db/AbstractTokenDBHelper.html">AbstractTokenDBHelper</a> getTokenDB() {
-<a name="282" href="#282">282</a>         LOG.traceEntry();
-<a name="283" href="#283">283</a>         <strong class="jxr_keyword">return</strong> LOG.traceExit(TokenSecurity.TOKEN_DB);
-<a name="284" href="#284">284</a>     }
-<a name="285" href="#285">285</a> 
-<a name="286" href="#286">286</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="287" href="#287">287</a> <em class="jxr_javadoccomment">     * Computes the expiration date.</em>
-<a name="288" href="#288">288</a> <em class="jxr_javadoccomment">     *</em>
-<a name="289" href="#289">289</a> <em class="jxr_javadoccomment">     * @param now the current date</em>
-<a name="290" href="#290">290</a> <em class="jxr_javadoccomment">     * @param calendarTime the unit time associated to the amount</em>
-<a name="291" href="#291">291</a> <em class="jxr_javadoccomment">     * @param amount amount</em>
-<a name="292" href="#292">292</a> <em class="jxr_javadoccomment">     * @return the expiration date</em>
-<a name="293" href="#293">293</a> <em class="jxr_javadoccomment">     */</em>
-<a name="294" href="#294">294</a>     <strong class="jxr_keyword">private</strong> Date computeExpirationDate(<strong class="jxr_keyword">final</strong> Date now,
-<a name="295" href="#295">295</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> calendarTime,
-<a name="296" href="#296">296</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> amount) {
-<a name="297" href="#297">297</a>         LOG.traceEntry(<span class="jxr_string">"Parameters : {}, {} and {}"</span>, now, calendarTime, amount);
-<a name="298" href="#298">298</a>         <strong class="jxr_keyword">final</strong> Calendar calendar = Calendar.getInstance();
-<a name="299" href="#299">299</a>         calendar.setTime(now);
-<a name="300" href="#300">300</a>         calendar.add(calendarTime, amount);
-<a name="301" href="#301">301</a>         <strong class="jxr_keyword">return</strong> LOG.traceExit(calendar.getTime());
-<a name="302" href="#302">302</a>     }
-<a name="303" href="#303">303</a> 
-<a name="304" href="#304">304</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="305" href="#305">305</a> <em class="jxr_javadoccomment">     * Class to handle the instance</em>
-<a name="306" href="#306">306</a> <em class="jxr_javadoccomment">     *</em>
-<a name="307" href="#307">307</a> <em class="jxr_javadoccomment">     */</em>
-<a name="308" href="#308">308</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../fr/cnes/doi/security/TokenSecurity.html">TokenSecurityHolder</a> {
-<a name="309" href="#309">309</a> 
-<a name="310" href="#310">310</a>         <em class="jxr_javadoccomment">/**</em>
-<a name="311" href="#311">311</a> <em class="jxr_javadoccomment">         * Unique Instance unique</em>
-<a name="312" href="#312">312</a> <em class="jxr_javadoccomment">         */</em>
-<a name="313" href="#313">313</a>         <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../fr/cnes/doi/security/TokenSecurity.html">TokenSecurity</a> INSTANCE = <strong class="jxr_keyword">new</strong> <a href="../../../../fr/cnes/doi/security/TokenSecurity.html">TokenSecurity</a>();
-<a name="314" href="#314">314</a>     }
-<a name="315" href="#315">315</a> 
-<a name="316" href="#316">316</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="317" href="#317">317</a> <em class="jxr_javadoccomment">     * Time unit.</em>
-<a name="318" href="#318">318</a> <em class="jxr_javadoccomment">     */</em>
-<a name="319" href="#319">319</a>     <strong class="jxr_keyword">public</strong> enum <a href="../../../../fr/cnes/doi/security/TokenSecurity.html">TimeUnit</a> {
-<a name="320" href="#320">320</a>         <em class="jxr_javadoccomment">/**</em>
-<a name="321" href="#321">321</a> <em class="jxr_javadoccomment">         * Hour.</em>
-<a name="322" href="#322">322</a> <em class="jxr_javadoccomment">         */</em>
-<a name="323" href="#323">323</a>         HOUR(Calendar.HOUR),
-<a name="324" href="#324">324</a>         <em class="jxr_javadoccomment">/**</em>
-<a name="325" href="#325">325</a> <em class="jxr_javadoccomment">         * Day.</em>
-<a name="326" href="#326">326</a> <em class="jxr_javadoccomment">         */</em>
-<a name="327" href="#327">327</a>         DAY(Calendar.DATE),
-<a name="328" href="#328">328</a>         <em class="jxr_javadoccomment">/**</em>
-<a name="329" href="#329">329</a> <em class="jxr_javadoccomment">         * Year.</em>
-<a name="330" href="#330">330</a> <em class="jxr_javadoccomment">         */</em>
-<a name="331" href="#331">331</a>         YEAR(Calendar.YEAR);
-<a name="332" href="#332">332</a> 
-<a name="333" href="#333">333</a>         <em class="jxr_javadoccomment">/**</em>
-<a name="334" href="#334">334</a> <em class="jxr_javadoccomment">         * time unit</em>
-<a name="335" href="#335">335</a> <em class="jxr_javadoccomment">         */</em>
-<a name="336" href="#336">336</a>         <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> timeUnit;
-<a name="337" href="#337">337</a> 
-<a name="338" href="#338">338</a>         <em class="jxr_javadoccomment">/**</em>
-<a name="339" href="#339">339</a> <em class="jxr_javadoccomment">         * Constructor.</em>
-<a name="340" href="#340">340</a> <em class="jxr_javadoccomment">         *</em>
-<a name="341" href="#341">341</a> <em class="jxr_javadoccomment">         * @param timeUnit time unit</em>
-<a name="342" href="#342">342</a> <em class="jxr_javadoccomment">         */</em>
-<a name="343" href="#343">343</a>         <a href="../../../../fr/cnes/doi/security/TokenSecurity.html">TimeUnit</a>(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> timeUnit) {
-<a name="344" href="#344">344</a>             <strong class="jxr_keyword">this</strong>.timeUnit = timeUnit;
-<a name="345" href="#345">345</a>         }
-<a name="346" href="#346">346</a> 
-<a name="347" href="#347">347</a>         <em class="jxr_javadoccomment">/**</em>
-<a name="348" href="#348">348</a> <em class="jxr_javadoccomment">         * Returns the time unit.</em>
-<a name="349" href="#349">349</a> <em class="jxr_javadoccomment">         *</em>
-<a name="350" href="#350">350</a> <em class="jxr_javadoccomment">         * @return the time unit</em>
-<a name="351" href="#351">351</a> <em class="jxr_javadoccomment">         */</em>
-<a name="352" href="#352">352</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> getTimeUnit() {
-<a name="353" href="#353">353</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.timeUnit;
-<a name="354" href="#354">354</a>         }
-<a name="355" href="#355">355</a> 
-<a name="356" href="#356">356</a>         <em class="jxr_javadoccomment">/**</em>
-<a name="357" href="#357">357</a> <em class="jxr_javadoccomment">         * Returns the time unit from a value.</em>
-<a name="358" href="#358">358</a> <em class="jxr_javadoccomment">         *</em>
-<a name="359" href="#359">359</a> <em class="jxr_javadoccomment">         * @param value vale</em>
-<a name="360" href="#360">360</a> <em class="jxr_javadoccomment">         * @return time unit</em>
-<a name="361" href="#361">361</a> <em class="jxr_javadoccomment">         */</em>
-<a name="362" href="#362">362</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <a href="../../../../fr/cnes/doi/security/TokenSecurity.html">TimeUnit</a> getTimeUnitFrom(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> value) {
-<a name="363" href="#363">363</a>             <a href="../../../../fr/cnes/doi/security/TokenSecurity.html">TimeUnit</a> result = <strong class="jxr_keyword">null</strong>;
-<a name="364" href="#364">364</a>             <strong class="jxr_keyword">final</strong> <a href="../../../../fr/cnes/doi/security/TokenSecurity.html">TimeUnit</a>[] units = TimeUnit.values();
-<a name="365" href="#365">365</a>             <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> TimeUnit unit : units) {
-<a name="366" href="#366">366</a>                 <strong class="jxr_keyword">if</strong> (unit.getTimeUnit() == value) {
-<a name="367" href="#367">367</a>                     result = unit;
-<a name="368" href="#368">368</a>                     <strong class="jxr_keyword">break</strong>;
-<a name="369" href="#369">369</a>                 }
-<a name="370" href="#370">370</a>             }
-<a name="371" href="#371">371</a>             <strong class="jxr_keyword">return</strong> result;
-<a name="372" href="#372">372</a>         }
-<a name="373" href="#373">373</a>     }
-<a name="374" href="#374">374</a> }
+<a name="145" href="#145">145</a> <em class="jxr_javadoccomment">     * @throws fr.cnes.doi.exception.TokenSecurityException if the projectID is</em>
+<a name="146" href="#146">146</a> <em class="jxr_javadoccomment">     * not first registered</em>
+<a name="147" href="#147">147</a> <em class="jxr_javadoccomment">     */</em>
+<a name="148" href="#148">148</a>     <strong class="jxr_keyword">public</strong> String generate(<strong class="jxr_keyword">final</strong> String userID,
+<a name="149" href="#149">149</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> projectID,
+<a name="150" href="#150">150</a>             <strong class="jxr_keyword">final</strong> TokenSecurity.TimeUnit timeUnit,
+<a name="151" href="#151">151</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> amount) <strong class="jxr_keyword">throws</strong> TokenSecurityException {
+<a name="152" href="#152">152</a>         LOG.traceEntry(<span class="jxr_string">"Parameters : {}, {}, {} and {}"</span>, userID, projectID, timeUnit, amount);
+<a name="153" href="#153">153</a>         List&lt;DOIProject&gt; projects;
+<a name="154" href="#154">154</a>         <strong class="jxr_keyword">try</strong> {
+<a name="155" href="#155">155</a>             projects = UniqueProjectName.getInstance().getProjects();
+<a name="156" href="#156">156</a>         } <strong class="jxr_keyword">catch</strong> (DOIDbException ex) {
+<a name="157" href="#157">157</a>             projects = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;();
+<a name="158" href="#158">158</a>         }
+<a name="159" href="#159">159</a>         <strong class="jxr_keyword">final</strong> Map&lt;Integer, String&gt; result = projects.stream().collect(
+<a name="160" href="#160">160</a>                 Collectors.toMap(DOIProject::getSuffix, DOIProject::getProjectname));
+<a name="161" href="#161">161</a>         <strong class="jxr_keyword">final</strong> String projectName = result.get(projectID);
+<a name="162" href="#162">162</a>         <strong class="jxr_keyword">if</strong> (projectName.isEmpty()) {
+<a name="163" href="#163">163</a>             <strong class="jxr_keyword">throw</strong> LOG.throwing(<strong class="jxr_keyword">new</strong> <a href="../../../../fr/cnes/doi/exception/TokenSecurityException.html">TokenSecurityException</a>(
+<a name="164" href="#164">164</a>                     Status.CLIENT_ERROR_BAD_REQUEST,
+<a name="165" href="#165">165</a>                     <span class="jxr_string">"No register "</span> + PROJECT_ID + <span class="jxr_string">", please create one"</span>)
+<a name="166" href="#166">166</a>             );
+<a name="167" href="#167">167</a>         }
+<a name="168" href="#168">168</a>         <strong class="jxr_keyword">final</strong> Date now = Date.from(Instant.now());
+<a name="169" href="#169">169</a>         <strong class="jxr_keyword">final</strong> Date expirationTime = computeExpirationDate(now, timeUnit.getTimeUnit(), amount);
+<a name="170" href="#170">170</a> 
+<a name="171" href="#171">171</a>         <strong class="jxr_keyword">final</strong> String token = Jwts.builder()
+<a name="172" href="#172">172</a>                 .setIssuer(DoiSettings.getInstance().getString(Consts.APP_NAME))
+<a name="173" href="#173">173</a>                 .setIssuedAt(Date.from(Instant.now()))
+<a name="174" href="#174">174</a>                 .setSubject(userID)
+<a name="175" href="#175">175</a>                 .claim(PROJECT_ID, projectID)
+<a name="176" href="#176">176</a>                 .claim(PROJECT_NAME, projectName)
+<a name="177" href="#177">177</a>                 .setExpiration(expirationTime)
+<a name="178" href="#178">178</a>                 .signWith(
+<a name="179" href="#179">179</a>                         SignatureAlgorithm.HS256,
+<a name="180" href="#180">180</a>                         TextCodec.BASE64.decode(getTokenKey())
+<a name="181" href="#181">181</a>                 )
+<a name="182" href="#182">182</a>                 .compact();
+<a name="183" href="#183">183</a>         LOG.debug(String.format(<span class="jxr_string">"token generated : %s"</span>, token));
+<a name="184" href="#184">184</a>         <strong class="jxr_keyword">return</strong> LOG.traceExit(token);
+<a name="185" href="#185">185</a>     }
+<a name="186" href="#186">186</a> 
+<a name="187" href="#187">187</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="188" href="#188">188</a> <em class="jxr_javadoccomment">     * Creates a token. (no project ID required)</em>
+<a name="189" href="#189">189</a> <em class="jxr_javadoccomment">     *</em>
+<a name="190" href="#190">190</a> <em class="jxr_javadoccomment">     * @param userID The user that creates the token</em>
+<a name="191" href="#191">191</a> <em class="jxr_javadoccomment">     * @param timeUnit The time unit for the date expiration</em>
+<a name="192" href="#192">192</a> <em class="jxr_javadoccomment">     * @param amount the amount of timeUnit for the date expiration</em>
+<a name="193" href="#193">193</a> <em class="jxr_javadoccomment">     * @return JWT token</em>
+<a name="194" href="#194">194</a> <em class="jxr_javadoccomment">     */</em>
+<a name="195" href="#195">195</a>     <strong class="jxr_keyword">public</strong> String generate(<strong class="jxr_keyword">final</strong> String userID,
+<a name="196" href="#196">196</a>             <strong class="jxr_keyword">final</strong> TokenSecurity.TimeUnit timeUnit,
+<a name="197" href="#197">197</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> amount) {
+<a name="198" href="#198">198</a>         LOG.traceEntry(<span class="jxr_string">"Parameters : {}, {} and {}"</span>, userID, timeUnit, amount);
+<a name="199" href="#199">199</a> 
+<a name="200" href="#200">200</a>         <strong class="jxr_keyword">final</strong> Date now = Date.from(Instant.now());
+<a name="201" href="#201">201</a>         <strong class="jxr_keyword">final</strong> Date expirationTime = computeExpirationDate(now, timeUnit.getTimeUnit(), amount);
+<a name="202" href="#202">202</a> 
+<a name="203" href="#203">203</a>         <strong class="jxr_keyword">final</strong> String token = Jwts.builder()
+<a name="204" href="#204">204</a>                 .setIssuer(DoiSettings.getInstance().getString(Consts.APP_NAME))
+<a name="205" href="#205">205</a>                 .setIssuedAt(Date.from(Instant.now()))
+<a name="206" href="#206">206</a>                 .setSubject(userID)
+<a name="207" href="#207">207</a>                 .setExpiration(expirationTime)
+<a name="208" href="#208">208</a>                 .signWith(
+<a name="209" href="#209">209</a>                         SignatureAlgorithm.HS256,
+<a name="210" href="#210">210</a>                         TextCodec.BASE64.decode(getTokenKey())
+<a name="211" href="#211">211</a>                 )
+<a name="212" href="#212">212</a>                 .compact();
+<a name="213" href="#213">213</a>         LOG.debug(String.format(<span class="jxr_string">"token generated : %s"</span>, token));
+<a name="214" href="#214">214</a>         <strong class="jxr_keyword">return</strong> LOG.traceExit(token);
+<a name="215" href="#215">215</a>     }
+<a name="216" href="#216">216</a> 
+<a name="217" href="#217">217</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="218" href="#218">218</a> <em class="jxr_javadoccomment">     * Returns the token key computed by the algorithm HS256.</em>
+<a name="219" href="#219">219</a> <em class="jxr_javadoccomment">     *</em>
+<a name="220" href="#220">220</a> <em class="jxr_javadoccomment">     * @return the token key encoded in base64</em>
+<a name="221" href="#221">221</a> <em class="jxr_javadoccomment">     */</em>
+<a name="222" href="#222">222</a>     <strong class="jxr_keyword">public</strong> String getTokenKey() {
+<a name="223" href="#223">223</a>         LOG.traceEntry();
+<a name="224" href="#224">224</a>         <strong class="jxr_keyword">return</strong> LOG.traceExit(<strong class="jxr_keyword">this</strong>.tokenKey);
+<a name="225" href="#225">225</a>     }
+<a name="226" href="#226">226</a> 
+<a name="227" href="#227">227</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="228" href="#228">228</a> <em class="jxr_javadoccomment">     * Sets a custom token key.</em>
+<a name="229" href="#229">229</a> <em class="jxr_javadoccomment">     *</em>
+<a name="230" href="#230">230</a> <em class="jxr_javadoccomment">     * @param tokenKey token key</em>
+<a name="231" href="#231">231</a> <em class="jxr_javadoccomment">     */</em>
+<a name="232" href="#232">232</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setTokenKey(<strong class="jxr_keyword">final</strong> String tokenKey) {
+<a name="233" href="#233">233</a>         LOG.traceEntry(<span class="jxr_string">"Parameter : {}"</span>, tokenKey);
+<a name="234" href="#234">234</a>         <strong class="jxr_keyword">this</strong>.tokenKey = tokenKey;
+<a name="235" href="#235">235</a>         LOG.debug(String.format(<span class="jxr_string">"Set tokenKey to %s"</span>, tokenKey));
+<a name="236" href="#236">236</a>         LOG.traceExit();
+<a name="237" href="#237">237</a>     }
+<a name="238" href="#238">238</a> 
+<a name="239" href="#239">239</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="240" href="#240">240</a> <em class="jxr_javadoccomment">     * Returns true when the token is expired otherwise false.</em>
+<a name="241" href="#241">241</a> <em class="jxr_javadoccomment">     *</em>
+<a name="242" href="#242">242</a> <em class="jxr_javadoccomment">     * @param token token</em>
+<a name="243" href="#243">243</a> <em class="jxr_javadoccomment">     * @return true when the token is expired otherwise false.</em>
+<a name="244" href="#244">244</a> <em class="jxr_javadoccomment">     */</em>
+<a name="245" href="#245">245</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">boolean</strong> isExpired(<strong class="jxr_keyword">final</strong> String token) {
+<a name="246" href="#246">246</a>         LOG.traceEntry(<span class="jxr_string">"Parameter\n\ttoken: {}"</span>, token);
+<a name="247" href="#247">247</a>         <strong class="jxr_keyword">final</strong> Jws&lt;Claims&gt; jws = <strong class="jxr_keyword">this</strong>.getTokenInformation(token);
+<a name="248" href="#248">248</a>         <strong class="jxr_keyword">return</strong> LOG.traceExit(jws == <strong class="jxr_keyword">null</strong>);
+<a name="249" href="#249">249</a>     }
+<a name="250" href="#250">250</a> 
+<a name="251" href="#251">251</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="252" href="#252">252</a> <em class="jxr_javadoccomment">     * Returns the token information.</em>
+<a name="253" href="#253">253</a> <em class="jxr_javadoccomment">     *</em>
+<a name="254" href="#254">254</a> <em class="jxr_javadoccomment">     * @param jwtToken token JWT</em>
+<a name="255" href="#255">255</a> <em class="jxr_javadoccomment">     * @return the information or null when the token is expired.</em>
+<a name="256" href="#256">256</a> <em class="jxr_javadoccomment">     * @throws DoiRuntimeException - if an error happens getting information</em>
+<a name="257" href="#257">257</a> <em class="jxr_javadoccomment">     * from the token</em>
+<a name="258" href="#258">258</a> <em class="jxr_javadoccomment">     */</em>
+<a name="259" href="#259">259</a>     <strong class="jxr_keyword">public</strong> Jws&lt;Claims&gt; getTokenInformation(<strong class="jxr_keyword">final</strong> String jwtToken) <strong class="jxr_keyword">throws</strong> DoiRuntimeException {
+<a name="260" href="#260">260</a>         LOG.traceEntry(<span class="jxr_string">"Parameter : {}"</span>, jwtToken);
+<a name="261" href="#261">261</a>         Jws&lt;Claims&gt; token;
+<a name="262" href="#262">262</a>         <strong class="jxr_keyword">try</strong> {
+<a name="263" href="#263">263</a>             token = Jwts.parser()
+<a name="264" href="#264">264</a>                     .requireIssuer(DoiSettings.getInstance().getString(Consts.APP_NAME))
+<a name="265" href="#265">265</a>                     .setSigningKey(TextCodec.BASE64.decode(getTokenKey()))
+<a name="266" href="#266">266</a>                     .parseClaimsJws(jwtToken);
+<a name="267" href="#267">267</a>         } <strong class="jxr_keyword">catch</strong> (UnsupportedJwtException | MalformedJwtException | SignatureException | IllegalArgumentException ex) {
+<a name="268" href="#268">268</a>             <strong class="jxr_keyword">throw</strong> LOG.throwing(<strong class="jxr_keyword">new</strong> <a href="../../../../fr/cnes/doi/exception/DoiRuntimeException.html">DoiRuntimeException</a>(<span class="jxr_string">"Unable to get the token information"</span>, ex));
+<a name="269" href="#269">269</a>         } <strong class="jxr_keyword">catch</strong> (ExpiredJwtException e) {
+<a name="270" href="#270">270</a>             LOG.info(<span class="jxr_string">"Cannot get the token information"</span>, e);
+<a name="271" href="#271">271</a>             getTokenDB().deleteToken(jwtToken);
+<a name="272" href="#272">272</a>             token = <strong class="jxr_keyword">null</strong>;
+<a name="273" href="#273">273</a>         }
+<a name="274" href="#274">274</a>         <strong class="jxr_keyword">return</strong> LOG.traceExit(token);
+<a name="275" href="#275">275</a>     }
+<a name="276" href="#276">276</a> 
+<a name="277" href="#277">277</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="278" href="#278">278</a> <em class="jxr_javadoccomment">     * Returns the token DB.</em>
+<a name="279" href="#279">279</a> <em class="jxr_javadoccomment">     *</em>
+<a name="280" href="#280">280</a> <em class="jxr_javadoccomment">     * @return the token DB</em>
+<a name="281" href="#281">281</a> <em class="jxr_javadoccomment">     */</em>
+<a name="282" href="#282">282</a>     <strong class="jxr_keyword">public</strong> <a href="../../../../fr/cnes/doi/db/AbstractTokenDBHelper.html">AbstractTokenDBHelper</a> getTokenDB() {
+<a name="283" href="#283">283</a>         LOG.traceEntry();
+<a name="284" href="#284">284</a>         <strong class="jxr_keyword">return</strong> LOG.traceExit(TokenSecurity.TOKEN_DB);
+<a name="285" href="#285">285</a>     }
+<a name="286" href="#286">286</a> 
+<a name="287" href="#287">287</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="288" href="#288">288</a> <em class="jxr_javadoccomment">     * Computes the expiration date.</em>
+<a name="289" href="#289">289</a> <em class="jxr_javadoccomment">     *</em>
+<a name="290" href="#290">290</a> <em class="jxr_javadoccomment">     * @param now the current date</em>
+<a name="291" href="#291">291</a> <em class="jxr_javadoccomment">     * @param calendarTime the unit time associated to the amount</em>
+<a name="292" href="#292">292</a> <em class="jxr_javadoccomment">     * @param amount amount</em>
+<a name="293" href="#293">293</a> <em class="jxr_javadoccomment">     * @return the expiration date</em>
+<a name="294" href="#294">294</a> <em class="jxr_javadoccomment">     */</em>
+<a name="295" href="#295">295</a>     <strong class="jxr_keyword">private</strong> Date computeExpirationDate(<strong class="jxr_keyword">final</strong> Date now,
+<a name="296" href="#296">296</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> calendarTime,
+<a name="297" href="#297">297</a>             <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> amount) {
+<a name="298" href="#298">298</a>         LOG.traceEntry(<span class="jxr_string">"Parameters : {}, {} and {}"</span>, now, calendarTime, amount);
+<a name="299" href="#299">299</a>         <strong class="jxr_keyword">final</strong> Calendar calendar = Calendar.getInstance();
+<a name="300" href="#300">300</a>         calendar.setTime(now);
+<a name="301" href="#301">301</a>         calendar.add(calendarTime, amount);
+<a name="302" href="#302">302</a>         <strong class="jxr_keyword">return</strong> LOG.traceExit(calendar.getTime());
+<a name="303" href="#303">303</a>     }
+<a name="304" href="#304">304</a> 
+<a name="305" href="#305">305</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="306" href="#306">306</a> <em class="jxr_javadoccomment">     * Class to handle the instance</em>
+<a name="307" href="#307">307</a> <em class="jxr_javadoccomment">     *</em>
+<a name="308" href="#308">308</a> <em class="jxr_javadoccomment">     */</em>
+<a name="309" href="#309">309</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../fr/cnes/doi/security/TokenSecurity.html">TokenSecurityHolder</a> {
+<a name="310" href="#310">310</a> 
+<a name="311" href="#311">311</a>         <em class="jxr_javadoccomment">/**</em>
+<a name="312" href="#312">312</a> <em class="jxr_javadoccomment">         * Unique Instance unique</em>
+<a name="313" href="#313">313</a> <em class="jxr_javadoccomment">         */</em>
+<a name="314" href="#314">314</a>         <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../fr/cnes/doi/security/TokenSecurity.html">TokenSecurity</a> INSTANCE = <strong class="jxr_keyword">new</strong> <a href="../../../../fr/cnes/doi/security/TokenSecurity.html">TokenSecurity</a>();
+<a name="315" href="#315">315</a>     }
+<a name="316" href="#316">316</a> 
+<a name="317" href="#317">317</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="318" href="#318">318</a> <em class="jxr_javadoccomment">     * Time unit.</em>
+<a name="319" href="#319">319</a> <em class="jxr_javadoccomment">     */</em>
+<a name="320" href="#320">320</a>     <strong class="jxr_keyword">public</strong> enum <a href="../../../../fr/cnes/doi/security/TokenSecurity.html">TimeUnit</a> {
+<a name="321" href="#321">321</a>         <em class="jxr_javadoccomment">/**</em>
+<a name="322" href="#322">322</a> <em class="jxr_javadoccomment">         * Hour.</em>
+<a name="323" href="#323">323</a> <em class="jxr_javadoccomment">         */</em>
+<a name="324" href="#324">324</a>         HOUR(Calendar.HOUR),
+<a name="325" href="#325">325</a>         <em class="jxr_javadoccomment">/**</em>
+<a name="326" href="#326">326</a> <em class="jxr_javadoccomment">         * Day.</em>
+<a name="327" href="#327">327</a> <em class="jxr_javadoccomment">         */</em>
+<a name="328" href="#328">328</a>         DAY(Calendar.DATE),
+<a name="329" href="#329">329</a>         <em class="jxr_javadoccomment">/**</em>
+<a name="330" href="#330">330</a> <em class="jxr_javadoccomment">         * Year.</em>
+<a name="331" href="#331">331</a> <em class="jxr_javadoccomment">         */</em>
+<a name="332" href="#332">332</a>         YEAR(Calendar.YEAR);
+<a name="333" href="#333">333</a> 
+<a name="334" href="#334">334</a>         <em class="jxr_javadoccomment">/**</em>
+<a name="335" href="#335">335</a> <em class="jxr_javadoccomment">         * time unit</em>
+<a name="336" href="#336">336</a> <em class="jxr_javadoccomment">         */</em>
+<a name="337" href="#337">337</a>         <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> timeUnit;
+<a name="338" href="#338">338</a> 
+<a name="339" href="#339">339</a>         <em class="jxr_javadoccomment">/**</em>
+<a name="340" href="#340">340</a> <em class="jxr_javadoccomment">         * Constructor.</em>
+<a name="341" href="#341">341</a> <em class="jxr_javadoccomment">         *</em>
+<a name="342" href="#342">342</a> <em class="jxr_javadoccomment">         * @param timeUnit time unit</em>
+<a name="343" href="#343">343</a> <em class="jxr_javadoccomment">         */</em>
+<a name="344" href="#344">344</a>         <a href="../../../../fr/cnes/doi/security/TokenSecurity.html">TimeUnit</a>(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> timeUnit) {
+<a name="345" href="#345">345</a>             <strong class="jxr_keyword">this</strong>.timeUnit = timeUnit;
+<a name="346" href="#346">346</a>         }
+<a name="347" href="#347">347</a> 
+<a name="348" href="#348">348</a>         <em class="jxr_javadoccomment">/**</em>
+<a name="349" href="#349">349</a> <em class="jxr_javadoccomment">         * Returns the time unit.</em>
+<a name="350" href="#350">350</a> <em class="jxr_javadoccomment">         *</em>
+<a name="351" href="#351">351</a> <em class="jxr_javadoccomment">         * @return the time unit</em>
+<a name="352" href="#352">352</a> <em class="jxr_javadoccomment">         */</em>
+<a name="353" href="#353">353</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">int</strong> getTimeUnit() {
+<a name="354" href="#354">354</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.timeUnit;
+<a name="355" href="#355">355</a>         }
+<a name="356" href="#356">356</a> 
+<a name="357" href="#357">357</a>         <em class="jxr_javadoccomment">/**</em>
+<a name="358" href="#358">358</a> <em class="jxr_javadoccomment">         * Returns the time unit from a value.</em>
+<a name="359" href="#359">359</a> <em class="jxr_javadoccomment">         *</em>
+<a name="360" href="#360">360</a> <em class="jxr_javadoccomment">         * @param value vale</em>
+<a name="361" href="#361">361</a> <em class="jxr_javadoccomment">         * @return time unit</em>
+<a name="362" href="#362">362</a> <em class="jxr_javadoccomment">         */</em>
+<a name="363" href="#363">363</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <a href="../../../../fr/cnes/doi/security/TokenSecurity.html">TimeUnit</a> getTimeUnitFrom(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> value) {
+<a name="364" href="#364">364</a>             <a href="../../../../fr/cnes/doi/security/TokenSecurity.html">TimeUnit</a> result = <strong class="jxr_keyword">null</strong>;
+<a name="365" href="#365">365</a>             <strong class="jxr_keyword">final</strong> <a href="../../../../fr/cnes/doi/security/TokenSecurity.html">TimeUnit</a>[] units = TimeUnit.values();
+<a name="366" href="#366">366</a>             <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> TimeUnit unit : units) {
+<a name="367" href="#367">367</a>                 <strong class="jxr_keyword">if</strong> (unit.getTimeUnit() == value) {
+<a name="368" href="#368">368</a>                     result = unit;
+<a name="369" href="#369">369</a>                     <strong class="jxr_keyword">break</strong>;
+<a name="370" href="#370">370</a>                 }
+<a name="371" href="#371">371</a>             }
+<a name="372" href="#372">372</a>             <strong class="jxr_keyword">return</strong> result;
+<a name="373" href="#373">373</a>         }
+<a name="374" href="#374">374</a>     }
+<a name="375" href="#375">375</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>

@@ -79,8 +79,8 @@
 <a name="69" href="#69">69</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../fr/cnes/doi/client/ClientMDS.html">Context</a> contextUse;
 <a name="70" href="#70">70</a>  
 <a name="71" href="#71">71</a>      <em class="jxr_javadoccomment">/**</em>
-<a name="72" href="#72">72</a>  <em class="jxr_javadoccomment">     * Creates a client to {@value CROSS_CITE_URL} with a {@link Context#PROD prod} context and</em>
-<a name="73" href="#73">73</a>  <em class="jxr_javadoccomment">     * without a proxy.</em>
+<a name="72" href="#72">72</a>  <em class="jxr_javadoccomment">     * Creates a client to {@value CROSS_CITE_URL} with a</em>
+<a name="73" href="#73">73</a>  <em class="jxr_javadoccomment">     * {@link Context#PROD prod} context and without a proxy.</em>
 <a name="74" href="#74">74</a>  <em class="jxr_javadoccomment">     */</em>
 <a name="75" href="#75">75</a>      <strong class="jxr_keyword">public</strong> <a href="../../../../fr/cnes/doi/client/ClientCrossCiteCitation.html">ClientCrossCiteCitation</a>() {
 <a name="76" href="#76">76</a>          <strong class="jxr_keyword">super</strong>(CROSS_CITE_URL);
@@ -109,197 +109,198 @@
 <a name="99" href="#99">99</a>  <em class="jxr_javadoccomment">     *</em>
 <a name="100" href="#100">100</a> <em class="jxr_javadoccomment">     * @param segment resource name</em>
 <a name="101" href="#101">101</a> <em class="jxr_javadoccomment">     * @return the response</em>
-<a name="102" href="#102">102</a> <em class="jxr_javadoccomment">     * @throws ClientCrossCiteException - if an error happens when requesting CrossCite</em>
-<a name="103" href="#103">103</a> <em class="jxr_javadoccomment">     */</em>
-<a name="104" href="#104">104</a>     <strong class="jxr_keyword">private</strong> List&lt;String&gt; getList(<strong class="jxr_keyword">final</strong> String segment) <strong class="jxr_keyword">throws</strong> ClientCrossCiteException {
-<a name="105" href="#105">105</a>         <strong class="jxr_keyword">try</strong> {
-<a name="106" href="#106">106</a>             <strong class="jxr_keyword">final</strong> Reference ref = getClient().addSegment(segment);
-<a name="107" href="#107">107</a>             <strong class="jxr_keyword">this</strong>.getClient().setReference(ref);
-<a name="108" href="#108">108</a>             <strong class="jxr_keyword">final</strong> Representation rep = <strong class="jxr_keyword">this</strong>.getClient().get();
-<a name="109" href="#109">109</a>             <strong class="jxr_keyword">final</strong> Status status = <strong class="jxr_keyword">this</strong>.getClient().getStatus();
-<a name="110" href="#110">110</a>             <strong class="jxr_keyword">if</strong> (status.isSuccess()) {
-<a name="111" href="#111">111</a>                 <strong class="jxr_keyword">final</strong> ObjectMapper mapper = <strong class="jxr_keyword">new</strong> ObjectMapper();
-<a name="112" href="#112">112</a>                 <strong class="jxr_keyword">return</strong> mapper.readValue(rep.getStream(), List.<strong class="jxr_keyword">class</strong>);
-<a name="113" href="#113">113</a>             } <strong class="jxr_keyword">else</strong> {
-<a name="114" href="#114">114</a>                 <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../fr/cnes/doi/exception/ClientCrossCiteException.html">ClientCrossCiteException</a>(status, status.getDescription());
-<a name="115" href="#115">115</a>             }
-<a name="116" href="#116">116</a>         } <strong class="jxr_keyword">catch</strong> (IOException | ResourceException ex) {
-<a name="117" href="#117">117</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../fr/cnes/doi/exception/ClientCrossCiteException.html">ClientCrossCiteException</a>(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex);
-<a name="118" href="#118">118</a>         } <strong class="jxr_keyword">finally</strong> {
-<a name="119" href="#119">119</a>             <strong class="jxr_keyword">this</strong>.getClient().release();
-<a name="120" href="#120">120</a>         }
-<a name="121" href="#121">121</a>     }
-<a name="122" href="#122">122</a> 
-<a name="123" href="#123">123</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="124" href="#124">124</a> <em class="jxr_javadoccomment">     * Returns styles by calling {@value #STYLE_URI}.</em>
-<a name="125" href="#125">125</a> <em class="jxr_javadoccomment">     *</em>
-<a name="126" href="#126">126</a> <em class="jxr_javadoccomment">     * @return list of possible styles</em>
-<a name="127" href="#127">127</a> <em class="jxr_javadoccomment">     * @throws fr.cnes.doi.exception.ClientCrossCiteException Will thrown an Exception when a</em>
-<a name="128" href="#128">128</a> <em class="jxr_javadoccomment">     * problem happens during the request to Cross Cite</em>
-<a name="129" href="#129">129</a> <em class="jxr_javadoccomment">     */</em>
-<a name="130" href="#130">130</a>     <strong class="jxr_keyword">public</strong> List&lt;String&gt; getStyles() <strong class="jxr_keyword">throws</strong> ClientCrossCiteException {
-<a name="131" href="#131">131</a>         init();
-<a name="132" href="#132">132</a>         <strong class="jxr_keyword">return</strong> getList(STYLE_URI);
-<a name="133" href="#133">133</a>     }
-<a name="134" href="#134">134</a> 
-<a name="135" href="#135">135</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="136" href="#136">136</a> <em class="jxr_javadoccomment">     * Returns languages by calling {@value #LOCALE_URI}.</em>
-<a name="137" href="#137">137</a> <em class="jxr_javadoccomment">     *</em>
-<a name="138" href="#138">138</a> <em class="jxr_javadoccomment">     * @return List of possible languages</em>
-<a name="139" href="#139">139</a> <em class="jxr_javadoccomment">     * @throws fr.cnes.doi.exception.ClientCrossCiteException Will thrown an Exception when a</em>
-<a name="140" href="#140">140</a> <em class="jxr_javadoccomment">     * problem happens during the request to Cross Cite</em>
-<a name="141" href="#141">141</a> <em class="jxr_javadoccomment">     */</em>
-<a name="142" href="#142">142</a>     <strong class="jxr_keyword">public</strong> List&lt;String&gt; getLanguages() <strong class="jxr_keyword">throws</strong> ClientCrossCiteException {
-<a name="143" href="#143">143</a>         init();
-<a name="144" href="#144">144</a>         <strong class="jxr_keyword">return</strong> getList(LOCALE_URI);
-<a name="145" href="#145">145</a>     }
-<a name="146" href="#146">146</a> 
-<a name="147" href="#147">147</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="148" href="#148">148</a> <em class="jxr_javadoccomment">     * Returns the citation of a DOI based on the selected style and language.</em>
-<a name="149" href="#149">149</a> <em class="jxr_javadoccomment">     *</em>
-<a name="150" href="#150">150</a> <em class="jxr_javadoccomment">     * @param doiName DOI name</em>
-<a name="151" href="#151">151</a> <em class="jxr_javadoccomment">     * @param style Selected style to format the citation</em>
-<a name="152" href="#152">152</a> <em class="jxr_javadoccomment">     * @param language Selected language to format the citation</em>
-<a name="153" href="#153">153</a> <em class="jxr_javadoccomment">     * @return The formatted citation</em>
-<a name="154" href="#154">154</a> <em class="jxr_javadoccomment">     * @throws fr.cnes.doi.exception.ClientCrossCiteException Will thrown an Exception when a</em>
-<a name="155" href="#155">155</a> <em class="jxr_javadoccomment">     * problem happens during the request to Cross Cite</em>
-<a name="156" href="#156">156</a> <em class="jxr_javadoccomment">     */</em>
-<a name="157" href="#157">157</a>     <strong class="jxr_keyword">public</strong> String getFormat(<strong class="jxr_keyword">final</strong> String doiName,
-<a name="158" href="#158">158</a>             <strong class="jxr_keyword">final</strong> String style,
-<a name="159" href="#159">159</a>             <strong class="jxr_keyword">final</strong> String language) <strong class="jxr_keyword">throws</strong> ClientCrossCiteException {
-<a name="160" href="#160">160</a>         init();
-<a name="161" href="#161">161</a>         <strong class="jxr_keyword">final</strong> String result;
-<a name="162" href="#162">162</a>         <strong class="jxr_keyword">try</strong> {
-<a name="163" href="#163">163</a>             Reference ref = <strong class="jxr_keyword">this</strong>.getClient().addSegment(FORMAT_URI);
-<a name="164" href="#164">164</a>             ref = ref.addQueryParameter(<span class="jxr_string">"doi"</span>, doiName);
-<a name="165" href="#165">165</a>             ref = ref.addQueryParameter(<span class="jxr_string">"style"</span>, style);
-<a name="166" href="#166">166</a>             ref = ref.addQueryParameter(<span class="jxr_string">"lang"</span>, language);
-<a name="167" href="#167">167</a>             <strong class="jxr_keyword">this</strong>.getClient().setReference(ref);
-<a name="168" href="#168">168</a>             <strong class="jxr_keyword">final</strong> Representation rep = <strong class="jxr_keyword">this</strong>.getClient().get();
-<a name="169" href="#169">169</a>             <strong class="jxr_keyword">final</strong> Status status = <strong class="jxr_keyword">this</strong>.getClient().getStatus();
-<a name="170" href="#170">170</a>             <strong class="jxr_keyword">if</strong> (status.isSuccess()) {
-<a name="171" href="#171">171</a>                 result = rep.getText();
-<a name="172" href="#172">172</a>             } <strong class="jxr_keyword">else</strong> {
-<a name="173" href="#173">173</a>                 <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../fr/cnes/doi/exception/ClientCrossCiteException.html">ClientCrossCiteException</a>(status, status.getDescription());
-<a name="174" href="#174">174</a>             }
-<a name="175" href="#175">175</a>             <strong class="jxr_keyword">return</strong> result;
-<a name="176" href="#176">176</a>         } <strong class="jxr_keyword">catch</strong> (IOException ex) {
-<a name="177" href="#177">177</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../fr/cnes/doi/exception/ClientCrossCiteException.html">ClientCrossCiteException</a>(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex);
-<a name="178" href="#178">178</a>         } <strong class="jxr_keyword">catch</strong> (ResourceException ex) {
-<a name="179" href="#179">179</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../fr/cnes/doi/exception/ClientCrossCiteException.html">ClientCrossCiteException</a>(ex.getStatus(), ex.getMessage(), ex);
-<a name="180" href="#180">180</a>         } <strong class="jxr_keyword">finally</strong> {
-<a name="181" href="#181">181</a>             <strong class="jxr_keyword">this</strong>.getClient().release();
-<a name="182" href="#182">182</a>         }
-<a name="183" href="#183">183</a>     }
-<a name="184" href="#184">184</a> 
-<a name="185" href="#185">185</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="186" href="#186">186</a> <em class="jxr_javadoccomment">     * Options for each context.</em>
-<a name="187" href="#187">187</a> <em class="jxr_javadoccomment">     */</em>
-<a name="188" href="#188">188</a>     <strong class="jxr_keyword">public</strong> enum <a href="../../../../fr/cnes/doi/client/ClientMDS.html">Context</a> {
-<a name="189" href="#189">189</a> 
-<a name="190" href="#190">190</a>         <em class="jxr_javadoccomment">/**</em>
-<a name="191" href="#191">191</a> <em class="jxr_javadoccomment">         * Development context. This context uses the {@link #CROSS_CITE_MOCK_URL} end point with a</em>
-<a name="192" href="#192">192</a> <em class="jxr_javadoccomment">         * log level sets to OFF.</em>
-<a name="193" href="#193">193</a> <em class="jxr_javadoccomment">         */</em>
-<a name="194" href="#194">194</a>         DEV(CROSS_CITE_MOCK_URL, Level.OFF),
-<a name="195" href="#195">195</a>         <em class="jxr_javadoccomment">/**</em>
-<a name="196" href="#196">196</a> <em class="jxr_javadoccomment">         * Post development context. This context uses the {@link #CROSS_CITE_URL} end point with a</em>
-<a name="197" href="#197">197</a> <em class="jxr_javadoccomment">         * log level sets to ALL.</em>
-<a name="198" href="#198">198</a> <em class="jxr_javadoccomment">         */</em>
-<a name="199" href="#199">199</a>         POST_DEV(CROSS_CITE_URL, Level.ALL),
-<a name="200" href="#200">200</a>         <em class="jxr_javadoccomment">/**</em>
-<a name="201" href="#201">201</a> <em class="jxr_javadoccomment">         * Pre production context. This context uses the {@link #CROSS_CITE_URL} end point with a</em>
-<a name="202" href="#202">202</a> <em class="jxr_javadoccomment">         * log level sets to FINE.</em>
-<a name="203" href="#203">203</a> <em class="jxr_javadoccomment">         */</em>
-<a name="204" href="#204">204</a>         PRE_PROD(CROSS_CITE_URL, Level.FINE),
-<a name="205" href="#205">205</a>         <em class="jxr_javadoccomment">/**</em>
-<a name="206" href="#206">206</a> <em class="jxr_javadoccomment">         * Production context. This context uses the {@link #CROSS_CITE_URL} end point with a log</em>
-<a name="207" href="#207">207</a> <em class="jxr_javadoccomment">         * level sets to INFO.</em>
-<a name="208" href="#208">208</a> <em class="jxr_javadoccomment">         */</em>
-<a name="209" href="#209">209</a>         PROD(CROSS_CITE_URL, Level.INFO);
-<a name="210" href="#210">210</a> 
-<a name="211" href="#211">211</a>         <em class="jxr_javadoccomment">/**</em>
-<a name="212" href="#212">212</a> <em class="jxr_javadoccomment">         * Level log.</em>
-<a name="213" href="#213">213</a> <em class="jxr_javadoccomment">         */</em>
-<a name="214" href="#214">214</a>         <strong class="jxr_keyword">private</strong> Level levelLog;
-<a name="215" href="#215">215</a> 
-<a name="216" href="#216">216</a>         <em class="jxr_javadoccomment">/**</em>
-<a name="217" href="#217">217</a> <em class="jxr_javadoccomment">         * CrossCite URL.</em>
-<a name="218" href="#218">218</a> <em class="jxr_javadoccomment">         */</em>
-<a name="219" href="#219">219</a>         <strong class="jxr_keyword">private</strong> String crossCiteUrl;
-<a name="220" href="#220">220</a> 
-<a name="221" href="#221">221</a>         <em class="jxr_javadoccomment">/**</em>
-<a name="222" href="#222">222</a> <em class="jxr_javadoccomment">         * Construct a development context</em>
-<a name="223" href="#223">223</a> <em class="jxr_javadoccomment">         *</em>
-<a name="224" href="#224">224</a> <em class="jxr_javadoccomment">         * @param dataciteUrl dataciteURL according to the context</em>
-<a name="225" href="#225">225</a> <em class="jxr_javadoccomment">         * @param levelLog level log</em>
-<a name="226" href="#226">226</a> <em class="jxr_javadoccomment">         */</em>
-<a name="227" href="#227">227</a>         <a href="../../../../fr/cnes/doi/client/ClientMDS.html">Context</a>(<strong class="jxr_keyword">final</strong> String dataciteUrl,
-<a name="228" href="#228">228</a>                 <strong class="jxr_keyword">final</strong> Level levelLog) {
-<a name="229" href="#229">229</a>             <strong class="jxr_keyword">this</strong>.crossCiteUrl = dataciteUrl;
-<a name="230" href="#230">230</a>             <strong class="jxr_keyword">this</strong>.levelLog = levelLog;
-<a name="231" href="#231">231</a>         }
-<a name="232" href="#232">232</a> 
-<a name="233" href="#233">233</a>         <em class="jxr_javadoccomment">/**</em>
-<a name="234" href="#234">234</a> <em class="jxr_javadoccomment">         * Returns the log level.</em>
-<a name="235" href="#235">235</a> <em class="jxr_javadoccomment">         *</em>
-<a name="236" href="#236">236</a> <em class="jxr_javadoccomment">         * @return the log level</em>
-<a name="237" href="#237">237</a> <em class="jxr_javadoccomment">         */</em>
-<a name="238" href="#238">238</a>         <strong class="jxr_keyword">public</strong> Level getLevelLog() {
-<a name="239" href="#239">239</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.levelLog;
-<a name="240" href="#240">240</a>         }
-<a name="241" href="#241">241</a> 
-<a name="242" href="#242">242</a>         <em class="jxr_javadoccomment">/**</em>
-<a name="243" href="#243">243</a> <em class="jxr_javadoccomment">         * Returns the service end point.</em>
-<a name="244" href="#244">244</a> <em class="jxr_javadoccomment">         *</em>
-<a name="245" href="#245">245</a> <em class="jxr_javadoccomment">         * @return the service end point</em>
-<a name="246" href="#246">246</a> <em class="jxr_javadoccomment">         */</em>
-<a name="247" href="#247">247</a>         <strong class="jxr_keyword">public</strong> String getCrossCiteUrl() {
-<a name="248" href="#248">248</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.crossCiteUrl;
-<a name="249" href="#249">249</a>         }
-<a name="250" href="#250">250</a> 
-<a name="251" href="#251">251</a>         <em class="jxr_javadoccomment">/**</em>
-<a name="252" href="#252">252</a> <em class="jxr_javadoccomment">         * Sets the level log for the context</em>
-<a name="253" href="#253">253</a> <em class="jxr_javadoccomment">         *</em>
-<a name="254" href="#254">254</a> <em class="jxr_javadoccomment">         * @param levelLog level log</em>
-<a name="255" href="#255">255</a> <em class="jxr_javadoccomment">         */</em>
-<a name="256" href="#256">256</a>         <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> setLevelLog(<strong class="jxr_keyword">final</strong> Level levelLog) {
-<a name="257" href="#257">257</a>             <strong class="jxr_keyword">this</strong>.levelLog = levelLog;
-<a name="258" href="#258">258</a>         }
-<a name="259" href="#259">259</a> 
-<a name="260" href="#260">260</a>         <em class="jxr_javadoccomment">/**</em>
-<a name="261" href="#261">261</a> <em class="jxr_javadoccomment">         * Sets the Cross Cite URL for the context.</em>
-<a name="262" href="#262">262</a> <em class="jxr_javadoccomment">         *</em>
-<a name="263" href="#263">263</a> <em class="jxr_javadoccomment">         * @param crossCiteUrl Cross Cite URL</em>
-<a name="264" href="#264">264</a> <em class="jxr_javadoccomment">         */</em>
-<a name="265" href="#265">265</a>         <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> setCrossCiteUrl(<strong class="jxr_keyword">final</strong> String crossCiteUrl) {
-<a name="266" href="#266">266</a>             <strong class="jxr_keyword">this</strong>.crossCiteUrl = crossCiteUrl;
-<a name="267" href="#267">267</a>         }
-<a name="268" href="#268">268</a> 
-<a name="269" href="#269">269</a>         <em class="jxr_javadoccomment">/**</em>
-<a name="270" href="#270">270</a> <em class="jxr_javadoccomment">         * Sets the level log for a given context</em>
-<a name="271" href="#271">271</a> <em class="jxr_javadoccomment">         *</em>
-<a name="272" href="#272">272</a> <em class="jxr_javadoccomment">         * @param context the context</em>
-<a name="273" href="#273">273</a> <em class="jxr_javadoccomment">         * @param levelLog the level log</em>
-<a name="274" href="#274">274</a> <em class="jxr_javadoccomment">         */</em>
-<a name="275" href="#275">275</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> setLevelLog(<strong class="jxr_keyword">final</strong> <a href="../../../../fr/cnes/doi/client/ClientMDS.html">Context</a> context,
-<a name="276" href="#276">276</a>                 <strong class="jxr_keyword">final</strong> Level levelLog) {
-<a name="277" href="#277">277</a>             context.setLevelLog(levelLog);
-<a name="278" href="#278">278</a>         }
-<a name="279" href="#279">279</a> 
-<a name="280" href="#280">280</a>         <em class="jxr_javadoccomment">/**</em>
-<a name="281" href="#281">281</a> <em class="jxr_javadoccomment">         * Sets the Cross Cite URL for a given context</em>
-<a name="282" href="#282">282</a> <em class="jxr_javadoccomment">         *</em>
-<a name="283" href="#283">283</a> <em class="jxr_javadoccomment">         * @param context the context</em>
-<a name="284" href="#284">284</a> <em class="jxr_javadoccomment">         * @param crossCiteUrl Cross Cite URL</em>
-<a name="285" href="#285">285</a> <em class="jxr_javadoccomment">         */</em>
-<a name="286" href="#286">286</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> setCrossCiteUrl(<strong class="jxr_keyword">final</strong> <a href="../../../../fr/cnes/doi/client/ClientMDS.html">Context</a> context,
-<a name="287" href="#287">287</a>                 <strong class="jxr_keyword">final</strong> String crossCiteUrl) {
-<a name="288" href="#288">288</a>             context.setCrossCiteUrl(crossCiteUrl);
-<a name="289" href="#289">289</a>         }
-<a name="290" href="#290">290</a> 
-<a name="291" href="#291">291</a>     }
-<a name="292" href="#292">292</a> }
+<a name="102" href="#102">102</a> <em class="jxr_javadoccomment">     * @throws ClientCrossCiteException - if an error happens when requesting</em>
+<a name="103" href="#103">103</a> <em class="jxr_javadoccomment">     * CrossCite</em>
+<a name="104" href="#104">104</a> <em class="jxr_javadoccomment">     */</em>
+<a name="105" href="#105">105</a>     <strong class="jxr_keyword">private</strong> List&lt;String&gt; getList(<strong class="jxr_keyword">final</strong> String segment) <strong class="jxr_keyword">throws</strong> ClientCrossCiteException {
+<a name="106" href="#106">106</a>         <strong class="jxr_keyword">try</strong> {
+<a name="107" href="#107">107</a>             <strong class="jxr_keyword">final</strong> Reference ref = getClient().addSegment(segment);
+<a name="108" href="#108">108</a>             <strong class="jxr_keyword">this</strong>.getClient().setReference(ref);
+<a name="109" href="#109">109</a>             <strong class="jxr_keyword">final</strong> Representation rep = <strong class="jxr_keyword">this</strong>.getClient().get();
+<a name="110" href="#110">110</a>             <strong class="jxr_keyword">final</strong> Status status = <strong class="jxr_keyword">this</strong>.getClient().getStatus();
+<a name="111" href="#111">111</a>             <strong class="jxr_keyword">if</strong> (status.isSuccess()) {
+<a name="112" href="#112">112</a>                 <strong class="jxr_keyword">final</strong> ObjectMapper mapper = <strong class="jxr_keyword">new</strong> ObjectMapper();
+<a name="113" href="#113">113</a>                 <strong class="jxr_keyword">return</strong> mapper.readValue(rep.getStream(), List.<strong class="jxr_keyword">class</strong>);
+<a name="114" href="#114">114</a>             } <strong class="jxr_keyword">else</strong> {
+<a name="115" href="#115">115</a>                 <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../fr/cnes/doi/exception/ClientCrossCiteException.html">ClientCrossCiteException</a>(status, status.getDescription());
+<a name="116" href="#116">116</a>             }
+<a name="117" href="#117">117</a>         } <strong class="jxr_keyword">catch</strong> (IOException | ResourceException ex) {
+<a name="118" href="#118">118</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../fr/cnes/doi/exception/ClientCrossCiteException.html">ClientCrossCiteException</a>(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex);
+<a name="119" href="#119">119</a>         } <strong class="jxr_keyword">finally</strong> {
+<a name="120" href="#120">120</a>             <strong class="jxr_keyword">this</strong>.getClient().release();
+<a name="121" href="#121">121</a>         }
+<a name="122" href="#122">122</a>     }
+<a name="123" href="#123">123</a> 
+<a name="124" href="#124">124</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="125" href="#125">125</a> <em class="jxr_javadoccomment">     * Returns styles by calling {@value #STYLE_URI}.</em>
+<a name="126" href="#126">126</a> <em class="jxr_javadoccomment">     *</em>
+<a name="127" href="#127">127</a> <em class="jxr_javadoccomment">     * @return list of possible styles</em>
+<a name="128" href="#128">128</a> <em class="jxr_javadoccomment">     * @throws fr.cnes.doi.exception.ClientCrossCiteException Will thrown an</em>
+<a name="129" href="#129">129</a> <em class="jxr_javadoccomment">     * Exception when a problem happens during the request to Cross Cite</em>
+<a name="130" href="#130">130</a> <em class="jxr_javadoccomment">     */</em>
+<a name="131" href="#131">131</a>     <strong class="jxr_keyword">public</strong> List&lt;String&gt; getStyles() <strong class="jxr_keyword">throws</strong> ClientCrossCiteException {
+<a name="132" href="#132">132</a>         init();
+<a name="133" href="#133">133</a>         <strong class="jxr_keyword">return</strong> getList(STYLE_URI);
+<a name="134" href="#134">134</a>     }
+<a name="135" href="#135">135</a> 
+<a name="136" href="#136">136</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="137" href="#137">137</a> <em class="jxr_javadoccomment">     * Returns languages by calling {@value #LOCALE_URI}.</em>
+<a name="138" href="#138">138</a> <em class="jxr_javadoccomment">     *</em>
+<a name="139" href="#139">139</a> <em class="jxr_javadoccomment">     * @return List of possible languages</em>
+<a name="140" href="#140">140</a> <em class="jxr_javadoccomment">     * @throws fr.cnes.doi.exception.ClientCrossCiteException Will thrown an</em>
+<a name="141" href="#141">141</a> <em class="jxr_javadoccomment">     * Exception when a problem happens during the request to Cross Cite</em>
+<a name="142" href="#142">142</a> <em class="jxr_javadoccomment">     */</em>
+<a name="143" href="#143">143</a>     <strong class="jxr_keyword">public</strong> List&lt;String&gt; getLanguages() <strong class="jxr_keyword">throws</strong> ClientCrossCiteException {
+<a name="144" href="#144">144</a>         init();
+<a name="145" href="#145">145</a>         <strong class="jxr_keyword">return</strong> getList(LOCALE_URI);
+<a name="146" href="#146">146</a>     }
+<a name="147" href="#147">147</a> 
+<a name="148" href="#148">148</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="149" href="#149">149</a> <em class="jxr_javadoccomment">     * Returns the citation of a DOI based on the selected style and language.</em>
+<a name="150" href="#150">150</a> <em class="jxr_javadoccomment">     *</em>
+<a name="151" href="#151">151</a> <em class="jxr_javadoccomment">     * @param doiName DOI name</em>
+<a name="152" href="#152">152</a> <em class="jxr_javadoccomment">     * @param style Selected style to format the citation</em>
+<a name="153" href="#153">153</a> <em class="jxr_javadoccomment">     * @param language Selected language to format the citation</em>
+<a name="154" href="#154">154</a> <em class="jxr_javadoccomment">     * @return The formatted citation</em>
+<a name="155" href="#155">155</a> <em class="jxr_javadoccomment">     * @throws fr.cnes.doi.exception.ClientCrossCiteException Will thrown an</em>
+<a name="156" href="#156">156</a> <em class="jxr_javadoccomment">     * Exception when a problem happens during the request to Cross Cite</em>
+<a name="157" href="#157">157</a> <em class="jxr_javadoccomment">     */</em>
+<a name="158" href="#158">158</a>     <strong class="jxr_keyword">public</strong> String getFormat(<strong class="jxr_keyword">final</strong> String doiName,
+<a name="159" href="#159">159</a>             <strong class="jxr_keyword">final</strong> String style,
+<a name="160" href="#160">160</a>             <strong class="jxr_keyword">final</strong> String language) <strong class="jxr_keyword">throws</strong> ClientCrossCiteException {
+<a name="161" href="#161">161</a>         init();
+<a name="162" href="#162">162</a>         <strong class="jxr_keyword">final</strong> String result;
+<a name="163" href="#163">163</a>         <strong class="jxr_keyword">try</strong> {
+<a name="164" href="#164">164</a>             Reference ref = <strong class="jxr_keyword">this</strong>.getClient().addSegment(FORMAT_URI);
+<a name="165" href="#165">165</a>             ref = ref.addQueryParameter(<span class="jxr_string">"doi"</span>, doiName);
+<a name="166" href="#166">166</a>             ref = ref.addQueryParameter(<span class="jxr_string">"style"</span>, style);
+<a name="167" href="#167">167</a>             ref = ref.addQueryParameter(<span class="jxr_string">"lang"</span>, language);
+<a name="168" href="#168">168</a>             <strong class="jxr_keyword">this</strong>.getClient().setReference(ref);
+<a name="169" href="#169">169</a>             <strong class="jxr_keyword">final</strong> Representation rep = <strong class="jxr_keyword">this</strong>.getClient().get();
+<a name="170" href="#170">170</a>             <strong class="jxr_keyword">final</strong> Status status = <strong class="jxr_keyword">this</strong>.getClient().getStatus();
+<a name="171" href="#171">171</a>             <strong class="jxr_keyword">if</strong> (status.isSuccess()) {
+<a name="172" href="#172">172</a>                 result = rep.getText();
+<a name="173" href="#173">173</a>             } <strong class="jxr_keyword">else</strong> {
+<a name="174" href="#174">174</a>                 <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../fr/cnes/doi/exception/ClientCrossCiteException.html">ClientCrossCiteException</a>(status, status.getDescription());
+<a name="175" href="#175">175</a>             }
+<a name="176" href="#176">176</a>             <strong class="jxr_keyword">return</strong> result;
+<a name="177" href="#177">177</a>         } <strong class="jxr_keyword">catch</strong> (IOException ex) {
+<a name="178" href="#178">178</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../fr/cnes/doi/exception/ClientCrossCiteException.html">ClientCrossCiteException</a>(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex);
+<a name="179" href="#179">179</a>         } <strong class="jxr_keyword">catch</strong> (ResourceException ex) {
+<a name="180" href="#180">180</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../fr/cnes/doi/exception/ClientCrossCiteException.html">ClientCrossCiteException</a>(ex.getStatus(), ex.getMessage(), ex);
+<a name="181" href="#181">181</a>         } <strong class="jxr_keyword">finally</strong> {
+<a name="182" href="#182">182</a>             <strong class="jxr_keyword">this</strong>.getClient().release();
+<a name="183" href="#183">183</a>         }
+<a name="184" href="#184">184</a>     }
+<a name="185" href="#185">185</a> 
+<a name="186" href="#186">186</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="187" href="#187">187</a> <em class="jxr_javadoccomment">     * Options for each context.</em>
+<a name="188" href="#188">188</a> <em class="jxr_javadoccomment">     */</em>
+<a name="189" href="#189">189</a>     <strong class="jxr_keyword">public</strong> enum <a href="../../../../fr/cnes/doi/client/ClientMDS.html">Context</a> {
+<a name="190" href="#190">190</a> 
+<a name="191" href="#191">191</a>         <em class="jxr_javadoccomment">/**</em>
+<a name="192" href="#192">192</a> <em class="jxr_javadoccomment">         * Development context. This context uses the</em>
+<a name="193" href="#193">193</a> <em class="jxr_javadoccomment">         * {@link #CROSS_CITE_MOCK_URL} end point with a log level sets to OFF.</em>
+<a name="194" href="#194">194</a> <em class="jxr_javadoccomment">         */</em>
+<a name="195" href="#195">195</a>         DEV(CROSS_CITE_MOCK_URL, Level.OFF),
+<a name="196" href="#196">196</a>         <em class="jxr_javadoccomment">/**</em>
+<a name="197" href="#197">197</a> <em class="jxr_javadoccomment">         * Post development context. This context uses the</em>
+<a name="198" href="#198">198</a> <em class="jxr_javadoccomment">         * {@link #CROSS_CITE_URL} end point with a log level sets to ALL.</em>
+<a name="199" href="#199">199</a> <em class="jxr_javadoccomment">         */</em>
+<a name="200" href="#200">200</a>         POST_DEV(CROSS_CITE_URL, Level.ALL),
+<a name="201" href="#201">201</a>         <em class="jxr_javadoccomment">/**</em>
+<a name="202" href="#202">202</a> <em class="jxr_javadoccomment">         * Pre production context. This context uses the {@link #CROSS_CITE_URL}</em>
+<a name="203" href="#203">203</a> <em class="jxr_javadoccomment">         * end point with a log level sets to FINE.</em>
+<a name="204" href="#204">204</a> <em class="jxr_javadoccomment">         */</em>
+<a name="205" href="#205">205</a>         PRE_PROD(CROSS_CITE_URL, Level.FINE),
+<a name="206" href="#206">206</a>         <em class="jxr_javadoccomment">/**</em>
+<a name="207" href="#207">207</a> <em class="jxr_javadoccomment">         * Production context. This context uses the {@link #CROSS_CITE_URL} end</em>
+<a name="208" href="#208">208</a> <em class="jxr_javadoccomment">         * point with a log level sets to INFO.</em>
+<a name="209" href="#209">209</a> <em class="jxr_javadoccomment">         */</em>
+<a name="210" href="#210">210</a>         PROD(CROSS_CITE_URL, Level.INFO);
+<a name="211" href="#211">211</a> 
+<a name="212" href="#212">212</a>         <em class="jxr_javadoccomment">/**</em>
+<a name="213" href="#213">213</a> <em class="jxr_javadoccomment">         * Level log.</em>
+<a name="214" href="#214">214</a> <em class="jxr_javadoccomment">         */</em>
+<a name="215" href="#215">215</a>         <strong class="jxr_keyword">private</strong> Level levelLog;
+<a name="216" href="#216">216</a> 
+<a name="217" href="#217">217</a>         <em class="jxr_javadoccomment">/**</em>
+<a name="218" href="#218">218</a> <em class="jxr_javadoccomment">         * CrossCite URL.</em>
+<a name="219" href="#219">219</a> <em class="jxr_javadoccomment">         */</em>
+<a name="220" href="#220">220</a>         <strong class="jxr_keyword">private</strong> String crossCiteUrl;
+<a name="221" href="#221">221</a> 
+<a name="222" href="#222">222</a>         <em class="jxr_javadoccomment">/**</em>
+<a name="223" href="#223">223</a> <em class="jxr_javadoccomment">         * Construct a development context</em>
+<a name="224" href="#224">224</a> <em class="jxr_javadoccomment">         *</em>
+<a name="225" href="#225">225</a> <em class="jxr_javadoccomment">         * @param dataciteUrl dataciteURL according to the context</em>
+<a name="226" href="#226">226</a> <em class="jxr_javadoccomment">         * @param levelLog level log</em>
+<a name="227" href="#227">227</a> <em class="jxr_javadoccomment">         */</em>
+<a name="228" href="#228">228</a>         <a href="../../../../fr/cnes/doi/client/ClientMDS.html">Context</a>(<strong class="jxr_keyword">final</strong> String dataciteUrl,
+<a name="229" href="#229">229</a>                 <strong class="jxr_keyword">final</strong> Level levelLog) {
+<a name="230" href="#230">230</a>             <strong class="jxr_keyword">this</strong>.crossCiteUrl = dataciteUrl;
+<a name="231" href="#231">231</a>             <strong class="jxr_keyword">this</strong>.levelLog = levelLog;
+<a name="232" href="#232">232</a>         }
+<a name="233" href="#233">233</a> 
+<a name="234" href="#234">234</a>         <em class="jxr_javadoccomment">/**</em>
+<a name="235" href="#235">235</a> <em class="jxr_javadoccomment">         * Returns the log level.</em>
+<a name="236" href="#236">236</a> <em class="jxr_javadoccomment">         *</em>
+<a name="237" href="#237">237</a> <em class="jxr_javadoccomment">         * @return the log level</em>
+<a name="238" href="#238">238</a> <em class="jxr_javadoccomment">         */</em>
+<a name="239" href="#239">239</a>         <strong class="jxr_keyword">public</strong> Level getLevelLog() {
+<a name="240" href="#240">240</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.levelLog;
+<a name="241" href="#241">241</a>         }
+<a name="242" href="#242">242</a> 
+<a name="243" href="#243">243</a>         <em class="jxr_javadoccomment">/**</em>
+<a name="244" href="#244">244</a> <em class="jxr_javadoccomment">         * Returns the service end point.</em>
+<a name="245" href="#245">245</a> <em class="jxr_javadoccomment">         *</em>
+<a name="246" href="#246">246</a> <em class="jxr_javadoccomment">         * @return the service end point</em>
+<a name="247" href="#247">247</a> <em class="jxr_javadoccomment">         */</em>
+<a name="248" href="#248">248</a>         <strong class="jxr_keyword">public</strong> String getCrossCiteUrl() {
+<a name="249" href="#249">249</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.crossCiteUrl;
+<a name="250" href="#250">250</a>         }
+<a name="251" href="#251">251</a> 
+<a name="252" href="#252">252</a>         <em class="jxr_javadoccomment">/**</em>
+<a name="253" href="#253">253</a> <em class="jxr_javadoccomment">         * Sets the level log for the context</em>
+<a name="254" href="#254">254</a> <em class="jxr_javadoccomment">         *</em>
+<a name="255" href="#255">255</a> <em class="jxr_javadoccomment">         * @param levelLog level log</em>
+<a name="256" href="#256">256</a> <em class="jxr_javadoccomment">         */</em>
+<a name="257" href="#257">257</a>         <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> setLevelLog(<strong class="jxr_keyword">final</strong> Level levelLog) {
+<a name="258" href="#258">258</a>             <strong class="jxr_keyword">this</strong>.levelLog = levelLog;
+<a name="259" href="#259">259</a>         }
+<a name="260" href="#260">260</a> 
+<a name="261" href="#261">261</a>         <em class="jxr_javadoccomment">/**</em>
+<a name="262" href="#262">262</a> <em class="jxr_javadoccomment">         * Sets the Cross Cite URL for the context.</em>
+<a name="263" href="#263">263</a> <em class="jxr_javadoccomment">         *</em>
+<a name="264" href="#264">264</a> <em class="jxr_javadoccomment">         * @param crossCiteUrl Cross Cite URL</em>
+<a name="265" href="#265">265</a> <em class="jxr_javadoccomment">         */</em>
+<a name="266" href="#266">266</a>         <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> setCrossCiteUrl(<strong class="jxr_keyword">final</strong> String crossCiteUrl) {
+<a name="267" href="#267">267</a>             <strong class="jxr_keyword">this</strong>.crossCiteUrl = crossCiteUrl;
+<a name="268" href="#268">268</a>         }
+<a name="269" href="#269">269</a> 
+<a name="270" href="#270">270</a>         <em class="jxr_javadoccomment">/**</em>
+<a name="271" href="#271">271</a> <em class="jxr_javadoccomment">         * Sets the level log for a given context</em>
+<a name="272" href="#272">272</a> <em class="jxr_javadoccomment">         *</em>
+<a name="273" href="#273">273</a> <em class="jxr_javadoccomment">         * @param context the context</em>
+<a name="274" href="#274">274</a> <em class="jxr_javadoccomment">         * @param levelLog the level log</em>
+<a name="275" href="#275">275</a> <em class="jxr_javadoccomment">         */</em>
+<a name="276" href="#276">276</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> setLevelLog(<strong class="jxr_keyword">final</strong> <a href="../../../../fr/cnes/doi/client/ClientMDS.html">Context</a> context,
+<a name="277" href="#277">277</a>                 <strong class="jxr_keyword">final</strong> Level levelLog) {
+<a name="278" href="#278">278</a>             context.setLevelLog(levelLog);
+<a name="279" href="#279">279</a>         }
+<a name="280" href="#280">280</a> 
+<a name="281" href="#281">281</a>         <em class="jxr_javadoccomment">/**</em>
+<a name="282" href="#282">282</a> <em class="jxr_javadoccomment">         * Sets the Cross Cite URL for a given context</em>
+<a name="283" href="#283">283</a> <em class="jxr_javadoccomment">         *</em>
+<a name="284" href="#284">284</a> <em class="jxr_javadoccomment">         * @param context the context</em>
+<a name="285" href="#285">285</a> <em class="jxr_javadoccomment">         * @param crossCiteUrl Cross Cite URL</em>
+<a name="286" href="#286">286</a> <em class="jxr_javadoccomment">         */</em>
+<a name="287" href="#287">287</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> setCrossCiteUrl(<strong class="jxr_keyword">final</strong> <a href="../../../../fr/cnes/doi/client/ClientMDS.html">Context</a> context,
+<a name="288" href="#288">288</a>                 <strong class="jxr_keyword">final</strong> String crossCiteUrl) {
+<a name="289" href="#289">289</a>             context.setCrossCiteUrl(crossCiteUrl);
+<a name="290" href="#290">290</a>         }
+<a name="291" href="#291">291</a> 
+<a name="292" href="#292">292</a>     }
+<a name="293" href="#293">293</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>
