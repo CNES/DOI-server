@@ -25,13 +25,14 @@ import org.restlet.resource.Get;
 
 /**
  * Test authentication.
+ *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class AuthenticateResource extends AbstractResource {
-    
+
     @Get
     public Representation checkAuth() {
         return new EmptyRepresentation();
     }
-    
+
 }

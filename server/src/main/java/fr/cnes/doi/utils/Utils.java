@@ -43,7 +43,8 @@ public final class Utils {
     public static final String SHELL_LOGGER_NAME = "fr.cnes.doi.logging.shell";
 
     /**
-     * Name of the logger for http requests and answers {@value #HTTP_LOGGER_NAME}.
+     * Name of the logger for http requests and answers
+     * {@value #HTTP_LOGGER_NAME}.
      */
     public static final String HTTP_LOGGER_NAME = "fr.cnes.doi.logging.api";
 
@@ -53,7 +54,8 @@ public final class Utils {
     public static final String APP_LOGGER_NAME = "fr.cnes.doi.logging.app";
 
     /**
-     * Name of the logger to measure performances {@value #SECURITY_LOGGER_NAME}.
+     * Name of the logger to measure performances
+     * {@value #SECURITY_LOGGER_NAME}.
      */
     public static final String SECURITY_LOGGER_NAME = "fr.cnes.doi.logging.security";
 
@@ -105,7 +107,8 @@ public final class Utils {
 
     /**
      * <p>
-     * Defensive programming technique to change a {@code null} reference to an empty one.
+     * Defensive programming technique to change a {@code null} reference to an
+     * empty one.
      *
      * <p>
      * This method returns an empty array for a {@code null} input array.
@@ -134,17 +137,19 @@ public final class Utils {
 
     /**
      * <p>
-     * Defensive programming technique to change a {@code null} reference to an empty one.
+     * Defensive programming technique to change a {@code null} reference to an
+     * empty one.
      *
      * <p>
      * This method returns an empty array for a {@code null} input array.
      *
      * <p>
-     * As a memory optimizing technique an empty array passed in will be overridden with the empty
-     * {@code public static} references in this class.
+     * As a memory optimizing technique an empty array passed in will be
+     * overridden with the empty {@code public static} references in this class.
      *
      * @param array the array to check for {@code null} or empty
-     * @return the same array, {@code public static} empty array if {@code null} or empty input
+     * @return the same array, {@code public static} empty array if {@code null}
+     * or empty input
      */
     public static Object[] nullToEmpty(final Object[] array) {
         Object[] result;
@@ -169,8 +174,8 @@ public final class Utils {
 
     /**
      * <p>
-     * Returns the length of the specified array. This method can deal with {@code Object} arrays
-     * and with primitive arrays.
+     * Returns the length of the specified array. This method can deal with
+     * {@code Object} arrays and with primitive arrays.
      *
      * <p>
      * If the input array is {@code null}, {@code 0} is returned.
@@ -185,7 +190,8 @@ public final class Utils {
      * </pre>
      *
      * @param array the array to retrieve the length from, may be null
-     * @return The length of the array, or {@code 0} if the array is {@code null}
+     * @return The length of the array, or {@code 0} if the array is
+     * {@code null}
      * @throws IllegalArgumentException if the object argument is not an array.
      */
     public static int getLength(final Object array) throws IllegalArgumentException {

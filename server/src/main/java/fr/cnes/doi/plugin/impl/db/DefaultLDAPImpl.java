@@ -340,11 +340,13 @@ public final class DefaultLDAPImpl extends AbstractAuthenticationPluginHelper {
     }
 
     /**
-     * Search on LDAP all users which are in the group Consts.LDAP_PROJECT in a LDAP group
+     * Search on LDAP all users which are in the group Consts.LDAP_PROJECT in a
+     * LDAP group
      *
      * @param context context
      * @param gidNumber LDAP group ID
-     * @return all LDAP users which are in the group Consts.LDAP_PROJECT for a specific LDAP group
+     * @return all LDAP users which are in the group Consts.LDAP_PROJECT for a
+     * specific LDAP group
      * @throws NamingException Exception
      */
     private List<AuthSystemUser> getLdapUsers(final DirContext context, final String gidNumber)
@@ -502,7 +504,7 @@ public final class DefaultLDAPImpl extends AbstractAuthenticationPluginHelper {
         }
         if (!this.conf.containsKey(LDAP_PWD)) {
             validation.append(message).append(LDAP_PWD).append("\n");
-        }        
+        }
         return validation;
     }
 

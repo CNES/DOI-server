@@ -44,8 +44,8 @@ import java.util.ArrayList;
 public class ManageUsersResource extends AbstractResource {
 
     /**
-     * Parameter for the user name {@value #USER_NAME_PARAMETER}. This parameter is send to
-     * associate an user to a project.
+     * Parameter for the user name {@value #USER_NAME_PARAMETER}. This parameter
+     * is send to associate an user to a project.
      */
     public static final String USER_NAME_PARAMETER = "user";
 
@@ -65,7 +65,8 @@ public class ManageUsersResource extends AbstractResource {
     private volatile String userName;
 
     /**
-     * Set-up method that can be overridden in order to initialize the state of the resource.
+     * Set-up method that can be overridden in order to initialize the state of
+     * the resource.
      *
      * @throws ResourceException - if a problem happens
      */

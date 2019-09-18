@@ -34,8 +34,8 @@ import org.restlet.data.Status;
 /**
  * IP filtering.
  *
- * When the service is disabled, no filtering is applied. When the service is enabled, the service
- * allows IPs such as 127.0.0.1 and IPs coming from {@link fr.cnes.doi.security.AllowerIP#addCustomIP(java.util.Set)
+ * When the service is disabled, no filtering is applied. When the service is
+ * enabled, the service allows IPs such as 127.0.0.1 and IPs coming from {@link fr.cnes.doi.security.AllowerIP#addCustomIP(java.util.Set)
  * }
  * Allowed IPs are set based on a parameter from the configuration file
  * {@link fr.cnes.doi.settings.Consts#ADMIN_IP_ALLOWER}
@@ -69,7 +69,8 @@ public class AllowerIP extends org.restlet.routing.Filter {
     private final boolean enabled;
 
     /**
-     * Constructor based on the context and a parameter to make enabled/disabled the service
+     * Constructor based on the context and a parameter to make enabled/disabled
+     * the service
      *
      * @param context context
      * @param isEnabledIP True when the service is enabled otherwise False

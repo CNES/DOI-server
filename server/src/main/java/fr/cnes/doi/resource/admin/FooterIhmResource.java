@@ -59,8 +59,8 @@ public class FooterIhmResource extends AbstractResource {
     }
 
     /**
-     * Creates a data model. The data model is used to replace values in the template
-     * ihm_footer.ftl.
+     * Creates a data model. The data model is used to replace values in the
+     * template ihm_footer.ftl.
      *
      * @return the data model
      */

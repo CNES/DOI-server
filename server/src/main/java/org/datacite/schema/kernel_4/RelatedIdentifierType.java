@@ -16,7 +16,8 @@ import javax.xml.bind.annotation.XmlType;
  * Java class for relatedIdentifierType.
  *
  * <p>
- * The following schema fragment specifies the expected content contained within this class.
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * <p>
  * &nbsp;
  * <pre>
@@ -53,9 +54,9 @@ import javax.xml.bind.annotation.XmlType;
 public enum RelatedIdentifierType {
 
     /**
-     * Archival Resource Key; URL designed to support long‐term access to information objects. In
-     * general, ARK syntax is of the form (brackets indicate [optional] elements:
-     * [http://NMA/]ark:/NAAN/Name[Qualifier]
+     * Archival Resource Key; URL designed to support long‐term access to
+     * information objects. In general, ARK syntax is of the form (brackets
+     * indicate [optional] elements: [http://NMA/]ark:/NAAN/Name[Qualifier]
      * <pre>
      * {@code
      * <relatedIdentifier relatedIdentifierType="ARK" relationType="IsCitedBy">
@@ -66,9 +67,9 @@ public enum RelatedIdentifierType {
      */
     ARK("ARK"),
     /**
-     * arXiv identifier; arXiv.org is a repository of preprints of scientific papers in the fields
-     * of mathematics, physics, astronomy, computer science, quantitative biology, statistics, and
-     * quantitative finance.
+     * arXiv identifier; arXiv.org is a repository of preprints of scientific
+     * papers in the fields of mathematics, physics, astronomy, computer
+     * science, quantitative biology, statistics, and quantitative finance.
      * <pre>
      * {@code
      * <relatedIdentifier relatedIdentifierType=”arXiv” relationType=”IsCitedBy”>
@@ -80,8 +81,8 @@ public enum RelatedIdentifierType {
     @XmlEnumValue("arXiv")
     AR_XIV("arXiv"),
     /**
-     * Astrophysics Data System bibliographic codes; a standardized 19 character identifier
-     * according to the syntax yyyyjjjjjvvvvmppppa.
+     * Astrophysics Data System bibliographic codes; a standardized 19 character
+     * identifier according to the syntax yyyyjjjjjvvvvmppppa.
      * {@code http://info‐uri.info/registry/OAIHandler?verb=GetRecord&metadataPrefix=reg&identifier=info:bibcode/}
      * <pre>
      * {@code
@@ -89,13 +90,15 @@ public enum RelatedIdentifierType {
      *   2014Wthr…69…72C
      * </relatedIdentifier>
      * }
-     * </pre> Note:  bibcodes can be resolved via http://adsabs.harvard.edu/abs/bibcode
+     * </pre> Note:  bibcodes can be resolved via
+     * http://adsabs.harvard.edu/abs/bibcode
      */
     @XmlEnumValue("bibcode")
     BIBCODE("bibcode"),
     /**
-     * Digital Object Identifier; a character string used to uniquely identify an object. A DOI name
-     * is divided into two parts, a prefix and a suffix, separated by a slash.
+     * Digital Object Identifier; a character string used to uniquely identify
+     * an object. A DOI name is divided into two parts, a prefix and a suffix,
+     * separated by a slash.
      * <pre>
      * {@code
      * <relatedIdentifier relatedIdentifierType="DOI" relationType=”IsSupplementTo”>
@@ -106,9 +109,9 @@ public enum RelatedIdentifierType {
      */
     DOI("DOI"),
     /**
-     * European Article Number, now renamed International Article Number, but retaining the original
-     * acronym, is a 13‐digit barcoding standard which is a superset of the original 12‐digit
-     * Universal Product Code (UPC) system.
+     * European Article Number, now renamed International Article Number, but
+     * retaining the original acronym, is a 13‐digit barcoding standard which is
+     * a superset of the original 12‐digit Universal Product Code (UPC) system.
      * <pre>
      * {@code
      * <relatedIdentifier relatedIdentifierType="EAN13" relationType="Cites">
@@ -120,8 +123,8 @@ public enum RelatedIdentifierType {
     @XmlEnumValue("EAN13")
     EAN_13("EAN13"),
     /**
-     * Electronic International Standard Serial Number; ISSN used to identify periodicals in
-     * electronic form (eISSN or e‐ISSN).
+     * Electronic International Standard Serial Number; ISSN used to identify
+     * periodicals in electronic form (eISSN or e‐ISSN).
      * <pre>
      * {@code
      * <relatedIdentifier relatedIdentifierType="eISSN” relationType=”Cites”>
@@ -144,8 +147,9 @@ public enum RelatedIdentifierType {
     @XmlEnumValue("Handle")
     HANDLE("Handle"),
     /**
-     * International Geo Sample Number; a 9‐digit alphanumeric code that uniquely identifies samples
-     * from our natural environment and related sampling features.
+     * International Geo Sample Number; a 9‐digit alphanumeric code that
+     * uniquely identifies samples from our natural environment and related
+     * sampling features.
      * <pre>
      * {@code
      * <relatedIdentifier relatedIdentifierType="IGSN" relationType="References">
@@ -156,8 +160,8 @@ public enum RelatedIdentifierType {
      */
     IGSN("IGSN"),
     /**
-     * International Standard Book Number; a unique numeric book identifier. There are 2 formats: a
-     * 10‐digit ISBN format and a 13‐digit ISBN.
+     * International Standard Book Number; a unique numeric book identifier.
+     * There are 2 formats: a 10‐digit ISBN format and a 13‐digit ISBN.
      * <pre>
      * {@code
      * <relatedIdentifier><relatedIdentifier relatedIdentifierType="ISBN" relationType="IsPartOf">
@@ -168,8 +172,8 @@ public enum RelatedIdentifierType {
      */
     ISBN("ISBN"),
     /**
-     * International Standard Serial Number; a unique 8‐digit number used to identify a print or
-     * electronic periodical publication.
+     * International Standard Serial Number; a unique 8‐digit number used to
+     * identify a print or electronic periodical publication.
      * <pre>
      * {@code
      * <relatedIdentifier relatedIdentifierType="ISSN" relationType="IsPartOf">
@@ -180,8 +184,8 @@ public enum RelatedIdentifierType {
      */
     ISSN("ISSN"),
     /**
-     * International Standard Text Code; a unique "number" assigned to a textual work. An ISTC
-     * consists of 16 numbers and/or letters.
+     * International Standard Text Code; a unique "number" assigned to a textual
+     * work. An ISTC consists of 16 numbers and/or letters.
      * <pre>
      * {@code
      * <relatedIdentifier relatedIdentifierType="ISTC" relationType="Cites">
@@ -192,8 +196,8 @@ public enum RelatedIdentifierType {
      */
     ISTC("ISTC"),
     /**
-     * The linking ISSN or ISSN‐L enables collocation or linking among different media versions of a
-     * continuing resource.
+     * The linking ISSN or ISSN‐L enables collocation or linking among different
+     * media versions of a continuing resource.
      * <pre>
      * {@code
      * <relatedIdentifier relatedIdentifierType="LISSN" relationType="Cites">
@@ -204,8 +208,8 @@ public enum RelatedIdentifierType {
      */
     LISSN("LISSN"),
     /**
-     * Life Science Identifiers; a unique identifier for data in the Life Science domain. Format:
-     * urn:lsid:authority:namespace:id entifier:revision
+     * Life Science Identifiers; a unique identifier for data in the Life
+     * Science domain. Format: urn:lsid:authority:namespace:id entifier:revision
      * <pre>
      * {@code
      * <relatedIdentifier relatedIdentifierType="LSID" relationType="Cites">
@@ -227,8 +231,8 @@ public enum RelatedIdentifierType {
      */
     PMID("PMID"),
     /**
-     * Persistent Uniform Resource Locator. A PURL has three parts: (1) a protocol, (2) a resolver
-     * address, and (3) a name.
+     * Persistent Uniform Resource Locator. A PURL has three parts: (1) a
+     * protocol, (2) a resolver address, and (3) a name.
      * <pre>
      * {@code
      * <relatedIdentifier relatedIdentifierType="PURL" relationType="Cites">
@@ -239,8 +243,9 @@ public enum RelatedIdentifierType {
      */
     PURL("PURL"),
     /**
-     * Universal Product Code is a barcode symbology used for tracking trade items in stores. Its
-     * most common form, the UPC‐A, consists of 12 numerical digits.
+     * Universal Product Code is a barcode symbology used for tracking trade
+     * items in stores. Its most common form, the UPC‐A, consists of 12
+     * numerical digits.
      * <pre>
      * {@code
      * <relatedIdentifier relatedIdentifierType="UPC" relationType="Cites">
@@ -251,9 +256,9 @@ public enum RelatedIdentifierType {
      */
     UPC("UPC"),
     /**
-     * Uniform Resource Locator, also known as web address, is a specific character string that
-     * constitutes a reference to a resource. The syntax is:
-     * scheme://domain:port/path?query_string#fragment_id
+     * Uniform Resource Locator, also known as web address, is a specific
+     * character string that constitutes a reference to a resource. The syntax
+     * is: scheme://domain:port/path?query_string#fragment_id
      * <pre>
      * {@code
      * <relatedIdentifier relatedIdentifierType="URL" relationType="IsCitedBy">
@@ -264,8 +269,8 @@ public enum RelatedIdentifierType {
      */
     URL("URL"),
     /**
-     * Uniform Resource Name; is a unique and persistent identifier of an electronic document. null
-     * null null null null     {@code 
+     * Uniform Resource Name; is a unique and persistent identifier of an
+     * electronic document. null null null null null null     {@code 
      * The syntax is: urn:< NID>:<NSS>
      * The leading urn: sequence is case‐insensitive, <br>
      * <NID> is the namespace identifier,<br>

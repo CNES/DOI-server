@@ -33,14 +33,13 @@ public interface PluginConfiguration {
      * @return the error messages.
      */
     public StringBuilder validate();
-    
 
     /**
      * Sets the configuration.
      *
      * @param configuration configuration parameters
      */
-    public void setConfiguration(final Object configuration);    
+    public void setConfiguration(final Object configuration);
 
     /**
      * Checks if the plugin is already configured
@@ -48,9 +47,10 @@ public interface PluginConfiguration {
      * @return True when the plugin is already configured otherwise false
      */
     public boolean isConfigured();
-    
+
     /**
      * Inits the connection
+     *
      * @throws DoiRuntimeException When an connection error happens
      */
     public void initConnection() throws DoiRuntimeException;

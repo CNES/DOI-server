@@ -22,6 +22,7 @@ import org.restlet.data.Status;
 
 /**
  * Exception for tokenSecurity.
+ *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class TokenSecurityException extends Exception {
@@ -47,7 +48,8 @@ public class TokenSecurityException extends Exception {
     }
 
     /**
-     * Constructs a new exception with the specified HTTP status and detail message.
+     * Constructs a new exception with the specified HTTP status and detail
+     * message.
      *
      * @param status HTTP message
      * @param message message
@@ -71,7 +73,8 @@ public class TokenSecurityException extends Exception {
     }
 
     /**
-     * Constructs a new exception with the specified detail HTTP status, message and cause.
+     * Constructs a new exception with the specified detail HTTP status, message
+     * and cause.
      *
      * @param status HTTP status
      * @param message message

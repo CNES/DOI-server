@@ -54,7 +54,8 @@ public class ClientCrossCiteException extends Exception {
     }
 
     /**
-     * Constructs a new exception with the specified HTTP status and detail message.
+     * Constructs a new exception with the specified HTTP status and detail
+     * message.
      *
      * @param status HTTP message
      * @param message message
@@ -80,7 +81,8 @@ public class ClientCrossCiteException extends Exception {
     }
 
     /**
-     * Constructs a new exception with the specified detail HTTP status, message and cause.
+     * Constructs a new exception with the specified detail HTTP status, message
+     * and cause.
      *
      * @param status HTTP status
      * @param message message

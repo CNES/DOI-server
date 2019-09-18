@@ -49,7 +49,8 @@ public class BaseMdsResource extends AbstractResource {
     public static final String DOI_PARAMETER = "doi";
 
     /**
-     * The parameter that describes the landing page related to the DOI {@value #URL_PARAMETER}.
+     * The parameter that describes the landing page related to the DOI
+     * {@value #URL_PARAMETER}.
      */
     public static final String URL_PARAMETER = "url";
     /**
@@ -110,16 +111,19 @@ public class BaseMdsResource extends AbstractResource {
     }
 
     /**
-     * Returns the suffix project with which the user is associated. For each suffix project, a role
-     * is associated. To get the suffix projet, the role must be get in the HTTP header. When
-     * several roles are associated to a user, a
-     * <i>selectedRole</i> must be provided to select the role that the user wants to get.
+     * Returns the suffix project with which the user is associated. For each
+     * suffix project, a role is associated. To get the suffix projet, the role
+     * must be get in the HTTP header. When several roles are associated to a
+     * user, a
+     * <i>selectedRole</i> must be provided to select the role that the user
+     * wants to get.
      *
      * @param selectedRole selected role
      * @return the project name associated to the user
-     * @throws DoiServerException - CLIENT_ERROR_FORBIDDEN if the role is not allowed to use this
-     * feature - CLIENT_ERROR_UNAUTHORIZED if no role is provided - CLIENT_ERROR_CONFLICT if a user
-     * is associated to more than one role
+     * @throws DoiServerException - CLIENT_ERROR_FORBIDDEN if the role is not
+     * allowed to use this feature - CLIENT_ERROR_UNAUTHORIZED if no role is
+     * provided - CLIENT_ERROR_CONFLICT if a user is associated to more than one
+     * role
      */
     private String getRoleName(final String selectedRole) throws DoiServerException {
         LOG.traceEntry("Parameter : {}", selectedRole);
@@ -184,13 +188,15 @@ public class BaseMdsResource extends AbstractResource {
     }
 
     /**
-     * Checks permissions to access according to the role of the user and the DOI name. The
-     * authorization in DOI server is based on <b>role</b>. Each projectSuffix is
+     * Checks permissions to access according to the role of the user and the
+     * DOI name. The authorization in DOI server is based on <b>role</b>. Each
+     * projectSuffix is
      * <ul>
      * <li>a <b>role</b></li>
      * <li>related to a projectName</li>
      * </ul>
-     * When the DOI name does not start with <i>prefixDOI/role</i>, an exception is send.
+     * When the DOI name does not start with <i>prefixDOI/role</i>, an exception
+     * is send.
      *
      * @param doiName DOI name
      * @param selectedRole Selected role
@@ -201,8 +207,8 @@ public class BaseMdsResource extends AbstractResource {
      * <li>{@link API_MDS#SECURITY_USER_PERMISSION}</li>
      * <li>{@link API_MDS#SECURITY_USER_CONFLICT}</li>
      * </ul>
-     * @see fr.cnes.doi.resource.admin.SuffixProjectsResource Creates a suffixProject for a given
-     * project name
+     * @see fr.cnes.doi.resource.admin.SuffixProjectsResource Creates a
+     * suffixProject for a given project name
      */
     @Requirement(reqId = Requirement.DOI_AUTO_030, reqName = Requirement.DOI_AUTO_030_NAME)
     protected void checkPermission(final String doiName, final String selectedRole)
@@ -224,7 +230,8 @@ public class BaseMdsResource extends AbstractResource {
     /**
      * Extract <i>selectedRole</i> from HTTP header.
      *
-     * @return the selected role or an empty string when there is no selected role
+     * @return the selected role or an empty string when there is no selected
+     * role
      */
     @Requirement(reqId = Requirement.DOI_AUTO_020, reqName = Requirement.DOI_AUTO_020_NAME)
     public String extractSelectedRoleFromRequestIfExists() {
@@ -251,8 +258,8 @@ public class BaseMdsResource extends AbstractResource {
     }
 
     /**
-     * Describes WADL representation for {@link #checkPermission} method. The different
-     * representations are the followings:
+     * Describes WADL representation for {@link #checkPermission} method. The
+     * different representations are the followings:
      * <ul>
      * <li>{@link API_MDS#SECURITY_USER_NO_ROLE}</li>
      * <li>{@link API_MDS#SECURITY_USER_NOT_IN_SELECTED_ROLE}</li>
@@ -277,8 +284,8 @@ public class BaseMdsResource extends AbstractResource {
     }
 
     /**
-     * Describes WADL representation for {@link #checkPermission} method. The different
-     * representations are the followings:
+     * Describes WADL representation for {@link #checkPermission} method. The
+     * different representations are the followings:
      * <ul>
      * <li>{@link API_MDS#SECURITY_USER_NO_ROLE}</li>
      * <li>{@link API_MDS#SECURITY_USER_NOT_IN_SELECTED_ROLE}</li>

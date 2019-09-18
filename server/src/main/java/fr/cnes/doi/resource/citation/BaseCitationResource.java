@@ -34,7 +34,8 @@ import org.restlet.resource.ResourceException;
 public class BaseCitationResource extends AbstractResource {
 
     /**
-     * Parameter providing the digital object identifier {@value #DOI_PARAMETER}.
+     * Parameter providing the digital object identifier
+     * {@value #DOI_PARAMETER}.
      */
     public static final String DOI_PARAMETER = "doi";
 

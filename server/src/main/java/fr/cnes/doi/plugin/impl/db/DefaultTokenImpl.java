@@ -143,7 +143,7 @@ public final class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
         boolean isAdded = false;
         try {
             das.addToken(jwt);
-            LOG.info("token added : {}",jwt);
+            LOG.info("token added : {}", jwt);
             isAdded = true;
         } catch (DOIDbException e) {
             LOG.fatal("The token {} cannot be saved in database", jwt, e);
@@ -160,7 +160,7 @@ public final class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
         try {
             das.deleteToken(jwt);
             isRemoved = true;
-            LOG.info("token deleted : {}",jwt);
+            LOG.info("token deleted : {}", jwt);
         } catch (DOIDbException e) {
             isRemoved = false;
             LOG.fatal("The token {} cannot be deleted in database", jwt, e);
@@ -269,9 +269,9 @@ public final class DefaultTokenImpl extends AbstractTokenDBPluginHelper {
      * {@inheritDoc}
      */
     @Override
-    public void release() {        
+    public void release() {
         try {
-            if(this.das != null) {
+            if (this.das != null) {
                 this.das.close();
             }
         } catch (DOIDbException ex) {

@@ -36,8 +36,8 @@ import org.restlet.ext.wadl.MethodInfo;
 import org.restlet.ext.wadl.ParameterStyle;
 
 /**
- * Provide a resource to ask if a user belong to the super user group and another one to remove a
- * user from the super user group.
+ * Provide a resource to ask if a user belong to the super user group and
+ * another one to remove a user from the super user group.
  */
 public class ManageSuperUserResource extends AbstractResource {
 
@@ -52,7 +52,8 @@ public class ManageSuperUserResource extends AbstractResource {
     private volatile String userName;
 
     /**
-     * Set-up method that can be overridden in order to initialize the state of the resource.
+     * Set-up method that can be overridden in order to initialize the state of
+     * the resource.
      *
      * @throws ResourceException - if a problem happens
      */
@@ -70,13 +71,14 @@ public class ManageSuperUserResource extends AbstractResource {
 
     // TODO requirement
     /**
-     * Returns null is user doesn't exist otherwise return true or false if user is admin or not.
+     * Returns null is user doesn't exist otherwise return true or false if user
+     * is admin or not.
      *
      * @return boolean.
      */
     @Get
     public boolean isUserExistAndAdmin() {
-        LOG.traceEntry();        
+        LOG.traceEntry();
         final AbstractUserRoleDBHelper manageUsers = PluginFactory.getUserManagement();
         if (!manageUsers.isUserExist(userName)) {
             throw LOG.throwing(Level.ERROR, new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST,

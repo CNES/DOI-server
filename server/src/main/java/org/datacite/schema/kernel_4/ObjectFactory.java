@@ -12,13 +12,14 @@ import javax.xml.bind.annotation.XmlRegistry;
 import javax.xml.namespace.QName;
 
 /**
- * This object contains factory methods for each Java content interface and Java element interface
- * generated in the org.datacite.schema.kernel_4 package.
+ * This object contains factory methods for each Java content interface and Java
+ * element interface generated in the org.datacite.schema.kernel_4 package.
  * <p>
- * An ObjectFactory allows you to programatically construct new instances of the Java representation
- * for XML content. The Java representation of XML content can consist of schema derived interfaces
- * and classes representing the binding of schema type definitions, element declarations and model
- * groups. Factory methods for each of these are provided in this class.
+ * An ObjectFactory allows you to programatically construct new instances of the
+ * Java representation for XML content. The Java representation of XML content
+ * can consist of schema derived interfaces and classes representing the binding
+ * of schema type definitions, element declarations and model groups. Factory
+ * methods for each of these are provided in this class.
  *
  */
 @XmlRegistry
@@ -28,8 +29,8 @@ public class ObjectFactory {
             "http://datacite.org/schema/kernel-4", "br");
 
     /**
-     * Create a new ObjectFactory that can be used to create new instances of schema derived classes
-     * for package: org.datacite.schema.kernel_4
+     * Create a new ObjectFactory that can be used to create new instances of
+     * schema derived classes for package: org.datacite.schema.kernel_4
      *
      */
     public ObjectFactory() {
@@ -54,7 +55,8 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link Resource.FundingReferences.FundingReference }
+     * Create an instance of {@link Resource.FundingReferences.FundingReference
+     * }
      *
      * @return the FundingReference
      */
@@ -234,7 +236,8 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link Resource.FundingReferences.FundingReference.FunderIdentifier }
+     * Create an instance of {@link Resource.FundingReferences.FundingReference.FunderIdentifier
+     * }
      *
      * @return the FunderIdentifier
      */
@@ -243,7 +246,8 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link Resource.FundingReferences.FundingReference.AwardNumber }
+     * Create an instance of {@link Resource.FundingReferences.FundingReference.AwardNumber
+     * }
      *
      * @return the AwardNumber
      */
@@ -252,7 +256,8 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link Resource.GeoLocations.GeoLocation.GeoLocationPolygon }
+     * Create an instance of {@link Resource.GeoLocations.GeoLocation.GeoLocationPolygon
+     * }
      *
      * @return the GeoLocationPolygon
      */
@@ -279,7 +284,8 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link Resource.RelatedIdentifiers.RelatedIdentifier }
+     * Create an instance of {@link Resource.RelatedIdentifiers.RelatedIdentifier
+     * }
      *
      * @return the RelatedIdentifier
      */
@@ -288,7 +294,8 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link Resource.AlternateIdentifiers.AlternateIdentifier }
+     * Create an instance of {@link Resource.AlternateIdentifiers.AlternateIdentifier
+     * }
      *
      * @return the AlternateIdentifier
      */
@@ -306,7 +313,8 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link Resource.Contributors.Contributor.ContributorName }
+     * Create an instance of {@link Resource.Contributors.Contributor.ContributorName
+     * }
      *
      * @return the ContributorName
      */
@@ -315,7 +323,8 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link Resource.Contributors.Contributor.NameIdentifier }
+     * Create an instance of {@link Resource.Contributors.Contributor.NameIdentifier
+     * }
      *
      * @return the NameIdentifier
      */
@@ -360,7 +369,8 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
+     * Create an instance of
+     * {@link JAXBElement }{@code <}{@link String }{@code >}}
      *
      * @param value description
      * @return the JAXBElement

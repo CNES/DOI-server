@@ -26,7 +26,8 @@ import org.restlet.data.Parameter;
 import org.restlet.ext.jetty.JettyServerHelper;
 
 /**
- * Fills Jetty configuration file based on DoiSettings and registers it in Jetty.
+ * Fills Jetty configuration file based on DoiSettings and registers it in
+ * Jetty.
  *
  * @author Jean-Christophe Malapert
  */
@@ -64,9 +65,10 @@ public final class JettySettings extends JettyServerHelper {
     }
 
     /**
-     * HTTP request header size in bytes. Defaults to 8*1024. Larger headers will allow for more
-     * and/or larger cookies plus larger form content encoded in a URL. However, larger headers
-     * consume more memory and can make a server more vulnerable to denial of service attacks.
+     * HTTP request header size in bytes. Defaults to 8*1024. Larger headers
+     * will allow for more and/or larger cookies plus larger form content
+     * encoded in a URL. However, larger headers consume more memory and can
+     * make a server more vulnerable to denial of service attacks.
      *
      * @return HTTP request header size.
      */
@@ -86,9 +88,9 @@ public final class JettySettings extends JettyServerHelper {
     }
 
     /**
-     * HTTP response header size in bytes. Defaults to 8*1024. Larger headers will allow for more
-     * and/or larger cookies and longer HTTP headers (e.g. for redirection). However, larger headers
-     * will also consume more memory.
+     * HTTP response header size in bytes. Defaults to 8*1024. Larger headers
+     * will allow for more and/or larger cookies and longer HTTP headers (e.g.
+     * for redirection). However, larger headers will also consume more memory.
      *
      * @return HTTP response header size.
      */
@@ -169,8 +171,8 @@ public final class JettySettings extends JettyServerHelper {
     }
 
     /**
-     * Thread pool idle timeout in milliseconds. Defaults to 60000. Threads that are idle for longer
-     * than this period may be stopped.
+     * Thread pool idle timeout in milliseconds. Defaults to 60000. Threads that
+     * are idle for longer than this period may be stopped.
      *
      * @return Thread pool idle timeout.
      */
@@ -190,8 +192,8 @@ public final class JettySettings extends JettyServerHelper {
     }
 
     /**
-     * Thread pool stop timeout in milliseconds. Defaults to 5000. The maximum time allowed for the
-     * service to shutdown.
+     * Thread pool stop timeout in milliseconds. Defaults to 5000. The maximum
+     * time allowed for the service to shutdown.
      *
      * @return Thread pool stop timeout.
      */
@@ -211,8 +213,8 @@ public final class JettySettings extends JettyServerHelper {
     }
 
     /**
-     * Connector acceptor thread count. Defaults to -1. When -1, Jetty will default to
-     * Runtime.availableProcessors() / 2, with a minimum of 1.
+     * Connector acceptor thread count. Defaults to -1. When -1, Jetty will
+     * default to Runtime.availableProcessors() / 2, with a minimum of 1.
      *
      * @return Connector acceptor thread count.
      */
@@ -232,8 +234,8 @@ public final class JettySettings extends JettyServerHelper {
     }
 
     /**
-     * Connector selector thread count. Defaults to -1. When 0, Jetty will default to
-     * Runtime.availableProcessors().
+     * Connector selector thread count. Defaults to -1. When 0, Jetty will
+     * default to Runtime.availableProcessors().
      *
      * @return Connector acceptor thread count.
      */
@@ -253,8 +255,8 @@ public final class JettySettings extends JettyServerHelper {
     }
 
     /**
-     * Low resource monitor idle timeout in milliseconds. Defaults to 1000. Applied to EndPoints
-     * when in the low resources state.
+     * Low resource monitor idle timeout in milliseconds. Defaults to 1000.
+     * Applied to EndPoints when in the low resources state.
      *
      * @return Low resource monitor idle timeout.
      */
@@ -275,8 +277,8 @@ public final class JettySettings extends JettyServerHelper {
     }
 
     /**
-     * Low resource monitor period in milliseconds. Defaults to 1000. When 0, low resource
-     * monitoring is disabled.
+     * Low resource monitor period in milliseconds. Defaults to 1000. When 0,
+     * low resource monitoring is disabled.
      *
      * @return Low resource monitor period.
      */
@@ -296,8 +298,8 @@ public final class JettySettings extends JettyServerHelper {
     }
 
     /**
-     * Low resource monitor max memory in bytes. Defaults to 0. When 0, the check disabled. Memory
-     * used is calculated as (totalMemory-freeMemory).
+     * Low resource monitor max memory in bytes. Defaults to 0. When 0, the
+     * check disabled. Memory used is calculated as (totalMemory-freeMemory).
      *
      * @return Low resource monitor max memory.
      */
@@ -318,7 +320,8 @@ public final class JettySettings extends JettyServerHelper {
     }
 
     /**
-     * Low resource monitor max connections. Defaults to 0. When 0, the check is disabled.
+     * Low resource monitor max connections. Defaults to 0. When 0, the check is
+     * disabled.
      *
      * @return Low resource monitor max connections.
      */
@@ -339,7 +342,8 @@ public final class JettySettings extends JettyServerHelper {
     }
 
     /**
-     * Low resource monitor, whether to check if we're low on threads. Defaults to true.
+     * Low resource monitor, whether to check if we're low on threads. Defaults
+     * to true.
      *
      * @return Low resource monitor threads.
      */
@@ -379,7 +383,8 @@ public final class JettySettings extends JettyServerHelper {
     }
 
     /**
-     * Connector TCP/IP SO linger time in milliseconds. Defaults to -1 (disabled).
+     * Connector TCP/IP SO linger time in milliseconds. Defaults to -1
+     * (disabled).
      *
      * @return Connector TCP/IP SO linger time.
      */
@@ -399,9 +404,10 @@ public final class JettySettings extends JettyServerHelper {
     }
 
     /**
-     * Connector idle timeout in milliseconds. Defaults to 30000. This value is interpreted as the
-     * maximum time between some progress being made on the connection. So if a single byte is read
-     * or written, then the timeout is reset.
+     * Connector idle timeout in milliseconds. Defaults to 30000. This value is
+     * interpreted as the maximum time between some progress being made on the
+     * connection. So if a single byte is read or written, then the timeout is
+     * reset.
      *
      * @return Connector idle timeout.
      */
@@ -421,10 +427,10 @@ public final class JettySettings extends JettyServerHelper {
     }
 
     /**
-     * HTTP output buffer size in bytes. Defaults to 32*1024. A larger buffer can improve
-     * performance by allowing a content producer to run without blocking, however larger buffers
-     * consume more memory and may induce some latency before a client starts processing the
-     * content.
+     * HTTP output buffer size in bytes. Defaults to 32*1024. A larger buffer
+     * can improve performance by allowing a content producer to run without
+     * blocking, however larger buffers consume more memory and may induce some
+     * latency before a client starts processing the content.
      *
      * @return HTTP output buffer size.
      */
@@ -464,8 +470,8 @@ public final class JettySettings extends JettyServerHelper {
     }
 
     /**
-     * Connector stop timeout in milliseconds. Defaults to 30000. The maximum time allowed for the
-     * service to shutdown.
+     * Connector stop timeout in milliseconds. Defaults to 30000. The maximum
+     * time allowed for the service to shutdown.
      *
      * @return Connector stop timeout.
      */
@@ -485,8 +491,8 @@ public final class JettySettings extends JettyServerHelper {
     }
 
     /**
-     * Low resource monitor stop timeout in milliseconds. Defaults to 30000. The maximum time
-     * allowed for the service to shutdown.
+     * Low resource monitor stop timeout in milliseconds. Defaults to 30000. The
+     * maximum time allowed for the service to shutdown.
      *
      * @return Low resource monitor stop timeout.
      */

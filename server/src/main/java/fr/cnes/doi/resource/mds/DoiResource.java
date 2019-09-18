@@ -58,7 +58,8 @@ public class DoiResource extends BaseMdsResource {
     private volatile String doiName;
 
     /**
-     * Init by getting the DOI name in the {@link DoiMdsApplication#DOI_TEMPLATE template URL}.
+     * Init by getting the DOI name in the
+     * {@link DoiMdsApplication#DOI_TEMPLATE template URL}.
      *
      * @throws DoiServerException - if a problem happens
      */
@@ -73,12 +74,13 @@ public class DoiResource extends BaseMdsResource {
     }
 
     /**
-     * Returns the URL associated to a given DOI or no content. When the status is 200, the URL
-     * associated to a DOI is returnes. When the status is 204, the DOI is known to MDS, but is not
-     * minted (or not resolvable e.g. due to handle's latency)
+     * Returns the URL associated to a given DOI or no content. When the status
+     * is 200, the URL associated to a DOI is returnes. When the status is 204,
+     * the DOI is known to MDS, but is not minted (or not resolvable e.g. due to
+     * handle's latency)
      *
-     * @return an URL or no content (DOI is known to MDS, but is not minted (or not resolvable e.g.
-     * due to handle's latency))
+     * @return an URL or no content (DOI is known to MDS, but is not minted (or
+     * not resolvable e.g. due to handle's latency))
      * @throws DoiServerException - if the response is not a success
      * <ul>
      * <li>{@link DATACITE_API_RESPONSE#DOI_NOT_FOUND}</li>
@@ -123,8 +125,8 @@ public class DoiResource extends BaseMdsResource {
      * Checks if doiName is not empty and contains the institution's prefix
      *
      * @param doiName DOI name
-     * @throws DoiServerException 400 Bad Request if the DOI does not contain the institution
-     * suffix.
+     * @throws DoiServerException 400 Bad Request if the DOI does not contain
+     * the institution suffix.
      */
     @Requirement(reqId = Requirement.DOI_INTER_070, reqName = Requirement.DOI_INTER_070_NAME)
     private void checkInput(final String doiName) throws DoiServerException {
@@ -171,7 +173,8 @@ public class DoiResource extends BaseMdsResource {
     }
 
     /**
-     * Describes the Get Method. The different representations are the followings:
+     * Describes the Get Method. The different representations are the
+     * followings:
      * <ul>
      * <li>{@link DATACITE_API_RESPONSE#SUCCESS}</li>
      * <li>{@link DATACITE_API_RESPONSE#SUCCESS_NO_CONTENT}</li>

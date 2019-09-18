@@ -46,8 +46,8 @@ public class ClienSearchDataCiteException extends Exception {
     public static final int SUCCESS_NO_CONTENT = 204;
 
     /**
-     * invalid XML, wrong prefix or request body must be exactly two lines: "DOI and URL; wrong
-     * domain, wrong prefix". 400
+     * invalid XML, wrong prefix or request body must be exactly two lines: "DOI
+     * and URL; wrong domain, wrong prefix". 400
      */
     public static final int CLIENT_BAD_REQUEST = 400;
 
@@ -60,7 +60,6 @@ public class ClienSearchDataCiteException extends Exception {
      * DOI does not exist in our database. 404
      */
     public static final int CLIENT_ERROR_NOT_FOUND = 404;
-
 
     /**
      * SeralVersionUID
@@ -89,7 +88,8 @@ public class ClienSearchDataCiteException extends Exception {
     }
 
     /**
-     * Constructs a new exception with the specified HTTP status and detail message.
+     * Constructs a new exception with the specified HTTP status and detail
+     * message.
      *
      * @param status HTTP message
      * @param message message
@@ -115,7 +115,8 @@ public class ClienSearchDataCiteException extends Exception {
     }
 
     /**
-     * Constructs a new exception with the specified detail HTTP status, message and cause.
+     * Constructs a new exception with the specified detail HTTP status, message
+     * and cause.
      *
      * @param status HTTP status
      * @param message message
@@ -130,7 +131,8 @@ public class ClienSearchDataCiteException extends Exception {
     }
 
     /**
-     * Constructs a new exception with the specified detail HTTP status, response and cause.
+     * Constructs a new exception with the specified detail HTTP status,
+     * response and cause.
      *
      * @param status HTTP status
      * @param message message

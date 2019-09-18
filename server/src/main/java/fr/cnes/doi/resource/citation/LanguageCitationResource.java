@@ -57,8 +57,8 @@ public class LanguageCitationResource extends BaseCitationResource {
      * Returns the languages as JSON to format the citation.
      *
      * @return the languages
-     * @throws ResourceException - Will thrown an Exception when a problem happens during the
-     * request to Cross Cite
+     * @throws ResourceException - Will thrown an Exception when a problem
+     * happens during the request to Cross Cite
      */
     @Requirement(reqId = Requirement.DOI_SRV_110, reqName = Requirement.DOI_SRV_110_NAME)
     @Requirement(reqId = Requirement.DOI_MONIT_020, reqName = Requirement.DOI_MONIT_020_NAME)

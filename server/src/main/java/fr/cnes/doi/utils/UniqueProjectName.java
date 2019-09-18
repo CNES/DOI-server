@@ -117,8 +117,8 @@ public final class UniqueProjectName {
      * Build a unique String from the project name
      *
      * @param project the project name
-     * @param length length of the short name to generate (the short name must be an int to the
-     * length cannot be up to 9)
+     * @param length length of the short name to generate (the short name must
+     * be an int to the length cannot be up to 9)
      * @return the unique string
      * @throws fr.cnes.doi.exception.DOIDbException When a problem occurs
      */
@@ -143,8 +143,8 @@ public final class UniqueProjectName {
     }
 
     /**
-     * Check if the generated suffixID is unique (does not already exists) or not. If not add it
-     * associated with the project
+     * Check if the generated suffixID is unique (does not already exists) or
+     * not. If not add it associated with the project
      *
      * @param idToCheck the identifier to check
      * @param projectName Project associated to the suffixID

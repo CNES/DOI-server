@@ -79,8 +79,8 @@ public class CnesStatusService extends StatusService {
     }
 
     /**
-     * Creates a data model. The data model is used to replace values in the template
-     * CnesStatus.ftl.
+     * Creates a data model. The data model is used to replace values in the
+     * template CnesStatus.ftl.
      *
      * @param response Response from server
      * @return the data model

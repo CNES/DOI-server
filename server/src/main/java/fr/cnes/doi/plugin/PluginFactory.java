@@ -34,7 +34,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class PluginFactory {
 
     /**
-     * Map the name of an interface to the name of a corresponding concrete implementation class.
+     * Map the name of an interface to the name of a corresponding concrete
+     * implementation class.
      */
     private static final Map<String, String> PLUGINS_IMPL = new ConcurrentHashMap<>();
 
@@ -126,8 +127,8 @@ public final class PluginFactory {
     }
 
     /**
-     * Checks if the key is a password in the class keywordClassName related to the configuration
-     * file
+     * Checks if the key is a password in the class keywordClassName related to
+     * the configuration file
      *
      * @param keywordClassName plugin related to the configuration file
      * @param key keyword
@@ -142,9 +143,7 @@ public final class PluginFactory {
             final Method method = implClass.getMethod("isPassword", String.class);
             final Object obj = method.invoke(null, key);
             return Boolean.getBoolean(String.valueOf(obj));
-        } catch (ClassNotFoundException | NoSuchMethodException | SecurityException
-                | IllegalAccessException | IllegalArgumentException
-                | InvocationTargetException ex) {
+        } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             throw new DoiRuntimeException(ex);
         }
     }

@@ -108,7 +108,8 @@ public class MetadataResource extends BaseMdsResource {
     }
 
     /**
-     * Retuns the metadata for a given DOI. 200 status is returned when the operation is successful.
+     * Retuns the metadata for a given DOI. 200 status is returned when the
+     * operation is successful.
      *
      * @return the metadata for a given DOI as Json or XML
      * @throws DoiServerException - if the response is not a success
@@ -165,7 +166,8 @@ public class MetadataResource extends BaseMdsResource {
     }
 
     /**
-     * Deletes a representation for a given DOI. 200 status when the operation is successful.
+     * Deletes a representation for a given DOI. 200 status when the operation
+     * is successful.
      *
      * @return the deleted representation
      * @throws DoiServerException - if the response is not a success
@@ -211,7 +213,8 @@ public class MetadataResource extends BaseMdsResource {
     }
 
     /**
-     * Describes the GET method. The different representations are the followings:
+     * Describes the GET method. The different representations are the
+     * followings:
      * <ul>
      * <li>{@link DATACITE_API_RESPONSE#SUCCESS}</li>
      * <li>{@link DATACITE_API_RESPONSE#DOI_NOT_FOUND}</li>
@@ -255,7 +258,8 @@ public class MetadataResource extends BaseMdsResource {
     }
 
     /**
-     * Describes the DELETE method. The different representations are the followings:
+     * Describes the DELETE method. The different representations are the
+     * followings:
      * <ul>
      * <li>{@link DATACITE_API_RESPONSE#SUCCESS}</li>
      * <li>{@link DATACITE_API_RESPONSE#DOI_NOT_FOUND}</li>

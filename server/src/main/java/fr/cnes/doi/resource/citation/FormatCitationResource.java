@@ -32,13 +32,14 @@ import org.restlet.resource.Get;
 import org.restlet.resource.ResourceException;
 
 /**
- * Formats a citation. CrossRef, DataCite and mEDRA support formatted citations via the
- * text/bibliography content type. These are the output of the Citation Style Language processor,
- * citeproc-js. The content type can take two additional parameters to customise its response
- * format.
+ * Formats a citation. CrossRef, DataCite and mEDRA support formatted citations
+ * via the text/bibliography content type. These are the output of the Citation
+ * Style Language processor, citeproc-js. The content type can take two
+ * additional parameters to customise its response format.
  * <p>
- * "\"style\" can be chosen from the list of style names found in the CSL style repository. Many
- * styles are supported, including common styles such as apa and harvard3
+ * "\"style\" can be chosen from the list of style names found in the CSL style
+ * repository. Many styles are supported, including common styles such as apa
+ * and harvard3
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
@@ -93,8 +94,9 @@ public class FormatCitationResource extends BaseCitationResource {
      * Returns the formatted citation.
      *
      * @return the formatted citation
-     * @throws ResourceException - if a problem happens when requesting Cross Cite or if
-     * {@link #DOI_PARAMETER} and {@link #LANG_PARAMETER} and {@link #STYLE_PARAMETER} are not set
+     * @throws ResourceException - if a problem happens when requesting Cross
+     * Cite or if {@link #DOI_PARAMETER} and {@link #LANG_PARAMETER} and
+     * {@link #STYLE_PARAMETER} are not set
      */
     @Requirement(reqId = Requirement.DOI_SRV_120, reqName = Requirement.DOI_SRV_120_NAME)
     @Requirement(reqId = Requirement.DOI_MONIT_020, reqName = Requirement.DOI_MONIT_020_NAME)
@@ -117,8 +119,8 @@ public class FormatCitationResource extends BaseCitationResource {
     /**
      * Checks input parameters
      *
-     * @throws ResourceException - if {@link #DOI_PARAMETER} and {@link #LANG_PARAMETER} and
-     * {@link #STYLE_PARAMETER} are not set
+     * @throws ResourceException - if {@link #DOI_PARAMETER} and
+     * {@link #LANG_PARAMETER} and {@link #STYLE_PARAMETER} are not set
      */
     private void checkInputs() throws ResourceException {
         LOG.traceEntry();

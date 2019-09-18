@@ -49,11 +49,13 @@ public class DoiSecurityLogFilter extends Filter {
     }
 
     /**
-     * Allows filtering after processing by the next Restlet. Does nothing by default.
+     * Allows filtering after processing by the next Restlet. Does nothing by
+     * default.
      *
      * @param request request
      * @param response response
-     * @see org.restlet.routing.Filter#afterHandle(org.restlet.Request, org.restlet.Response)
+     * @see org.restlet.routing.Filter#afterHandle(org.restlet.Request,
+     * org.restlet.Response)
      */
     @Override
     protected void afterHandle(final Request request,
@@ -64,7 +66,7 @@ public class DoiSecurityLogFilter extends Filter {
         final String method = request.getMethod().getName();
         final ClientInfo clientInfo = request.getClientInfo();
         final String upStreamIp = clientInfo.getUpstreamAddress();
-        if (request.getClientInfo().isAuthenticated()) {            
+        if (request.getClientInfo().isAuthenticated()) {
             final String authenticationMethod = request.getChallengeResponse().getScheme().
                     getTechnicalName();
             final String identifier = request.getClientInfo().getUser().getIdentifier();
@@ -74,21 +76,21 @@ public class DoiSecurityLogFilter extends Filter {
                     identifier, profiles, upStreamIp, authenticationMethod,
                     method, targetUri, response.getStatus().getCode(),
                     clientInfo.getAgent());
-        } else if(response.getStatus().equals(Status.CLIENT_ERROR_UNAUTHORIZED)) {            
+        } else if (response.getStatus().equals(Status.CLIENT_ERROR_UNAUTHORIZED)) {
             final String authenticationMethod = request.getChallengeResponse().getScheme().
-                    getTechnicalName();            
+                    getTechnicalName();
             final String identifier;
             final User user = request.getClientInfo().getUser();
-            if(user != null) {
-                identifier = user.getIdentifier();
+            if (user == null) {
+                identifier = "";                
             } else {
-                identifier = "";
+                identifier = user.getIdentifier();                
             }
             LogManager.getLogger(Utils.SECURITY_LOGGER_NAME).info(
                     "Authentication failed for user: {} \t - [{}] - [{}] {} {} - {}",
                     identifier, upStreamIp, authenticationMethod,
-                    method, targetUri, clientInfo.getAgent());                    
-        } 
+                    method, targetUri, clientInfo.getAgent());
+        }
     }
 
     /**

@@ -85,7 +85,8 @@ public class HttpMethodCall extends ClientCall {
      * @param helper The parent HTTP client helper.
      * @param method The method name.
      * @param requestUri The request URI.
-     * @param hasEntity Indicates if the call will have an entity to send to the server.
+     * @param hasEntity Indicates if the call will have an entity to send to the
+     * server.
      * @throws IOException when an error happens
      */
     public HttpMethodCall(final HttpDOIClientHelper helper, final String method,
@@ -240,7 +241,7 @@ public class HttpMethodCall extends ClientCall {
             // needed
             final InputStream responseStream = (getHttpResponse() == null) ? null
                     : (getHttpResponse().getEntity() == null) ? null
-                    : getHttpResponse().getEntity().getContent();
+                            : getHttpResponse().getEntity().getContent();
             if (responseStream != null) {
                 result = new FilterInputStream(responseStream) {
                     @Override
@@ -353,8 +354,8 @@ public class HttpMethodCall extends ClientCall {
                     public Header getContentType() {
                         return new BasicHeader(
                                 HeaderConstants.HEADER_CONTENT_TYPE, (entity
-                                        .getMediaType() != null) ? entity
-                                                .getMediaType().toString() : null);
+                                .getMediaType() != null) ? entity
+                                        .getMediaType().toString() : null);
                     }
 
                     /**

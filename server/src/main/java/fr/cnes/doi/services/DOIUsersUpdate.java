@@ -49,9 +49,11 @@ public class DOIUsersUpdate implements Runnable {
             getAuthenticationSystem();
 
     /**
-     * Fills the DOI users database from the members of the authentication system.
+     * Fills the DOI users database from the members of the authentication
+     * system.
      *
-     * @throws AuthenticationAccessException When an authentication problem occurs
+     * @throws AuthenticationAccessException When an authentication problem
+     * occurs
      * @throws DOIDbException When a SQL problem occurs
      */
     private void updateDoiServerDataBaseFromAuthSystem() throws AuthenticationAccessException,
@@ -82,12 +84,13 @@ public class DOIUsersUpdate implements Runnable {
     }
 
     /**
-     * Tests if the authMember of the authentication mechanism is contained in the users from the
-     * database.
+     * Tests if the authMember of the authentication mechanism is contained in
+     * the users from the database.
      *
      * @param authMember authMember of the authentication mechanism
      * @param dbusers users database
-     * @return True when the authMember is contained in the users from database otherwise false
+     * @return True when the authMember is contained in the users from database
+     * otherwise false
      */
     private boolean isContained(final AuthSystemUser authMember, final List<DOIUser> dbusers) {
         LOG.traceEntry("Parameters {},", authMember, dbusers);
@@ -102,12 +105,13 @@ public class DOIUsersUpdate implements Runnable {
     }
 
     /**
-     * Tests if a user from the database is contained in the members from the authentication system.
+     * Tests if a user from the database is contained in the members from the
+     * authentication system.
      *
      * @param dbuser the user from the database
      * @param authMembers the users from the authentication system
-     * @return True when the user from the database is contained from the users from the
-     * authentication system
+     * @return True when the user from the database is contained from the users
+     * from the authentication system
      */
     private boolean isContained(final DOIUser dbuser, final List<AuthSystemUser> authMembers) {
         LOG.traceEntry("Parameters {},", dbuser, authMembers);

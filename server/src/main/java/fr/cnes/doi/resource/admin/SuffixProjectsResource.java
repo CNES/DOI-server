@@ -46,26 +46,28 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Provides a unique identifier to the project. This identifier is used as part of the DOI name.
+ * Provides a unique identifier to the project. This identifier is used as part
+ * of the DOI name.
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class SuffixProjectsResource extends AbstractResource {
 
     /**
-     * Parameter for the project name {@value #PROJECT_NAME_PARAMETER}. This parameter is send to
-     * create an identifier for the project.
+     * Parameter for the project name {@value #PROJECT_NAME_PARAMETER}. This
+     * parameter is send to create an identifier for the project.
      */
     public static final String PROJECT_NAME_PARAMETER = "projectName";
     /**
-     * Number of digits ({@value #NB_DIGITS}) in which the suffix project is encoded.
+     * Number of digits ({@value #NB_DIGITS}) in which the suffix project is
+     * encoded.
      */
     public static final int NB_DIGITS = 6;
-    
+
     /**
      * Query parameter for user {@value #USER_PARAMETER}.
      */
-    public static final String USER_PARAMETER = "user";    
+    public static final String USER_PARAMETER = "user";
 
     /**
      * Logger.
@@ -78,7 +80,8 @@ public class SuffixProjectsResource extends AbstractResource {
     private volatile String userName;
 
     /**
-     * Set-up method that can be overridden in order to initialize the state of the resource.
+     * Set-up method that can be overridden in order to initialize the state of
+     * the resource.
      *
      * @throws ResourceException - if a problem happens
      */
@@ -121,10 +124,11 @@ public class SuffixProjectsResource extends AbstractResource {
     }
 
     /**
-     * Creates a suffix projet based on the project name. The project name is passed as parameter(
-     * {@link #PROJECT_NAME_PARAMETER} ) in the mediaForm.
+     * Creates a suffix projet based on the project name. The project name is
+     * passed as parameter( {@link #PROJECT_NAME_PARAMETER} ) in the mediaForm.
      *
-     * When a project suffix is created, a role with the same name is also automatically created.
+     * When a project suffix is created, a role with the same name is also
+     * automatically created.
      *
      * @param mediaForm submitted form
      * @return A text representation of the encoded project name

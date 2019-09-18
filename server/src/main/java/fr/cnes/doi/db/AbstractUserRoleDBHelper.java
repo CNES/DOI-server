@@ -26,8 +26,8 @@ import fr.cnes.doi.exception.DOIDbException;
 import fr.cnes.doi.utils.spec.Requirement;
 
 /**
- * Interface for handling users and role database. This database is used to authenticate the
- * requests.
+ * Interface for handling users and role database. This database is used to
+ * authenticate the requests.
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
@@ -35,12 +35,14 @@ import fr.cnes.doi.utils.spec.Requirement;
 public abstract class AbstractUserRoleDBHelper extends Observable {
 
     /**
-     * Notification message when an user is added {@value #ADD_USER_NOTIFICATION}.
+     * Notification message when an user is added
+     * {@value #ADD_USER_NOTIFICATION}.
      */
     public static final String ADD_USER_NOTIFICATION = "AddUserNotification";
 
     /**
-     * Notification message when an user is deleted {@value #REMOVE_USER_NOTIFICATION}.
+     * Notification message when an user is deleted
+     * {@value #REMOVE_USER_NOTIFICATION}.
      */
     public static final String REMOVE_USER_NOTIFICATION = "RemoveUserNotification";
 
@@ -105,7 +107,8 @@ public abstract class AbstractUserRoleDBHelper extends Observable {
      * Remove user to Administrators group
      *
      * @param admin user to add
-     * @return True when the user is removed from the admin group otherwise False
+     * @return True when the user is removed from the admin group otherwise
+     * False
      */
     public abstract boolean unsetUserFromAdminGroup(final String admin);
 
@@ -113,7 +116,8 @@ public abstract class AbstractUserRoleDBHelper extends Observable {
      * Add a DOI user
      *
      * @param username username
-     * @param admin True when the user must be added in the admin group otherwise False
+     * @param admin True when the user must be added in the admin group
+     * otherwise False
      * @return True when the user is added otherwise False
      */
     public abstract boolean addDOIUser(final String username, final Boolean admin);
@@ -122,7 +126,8 @@ public abstract class AbstractUserRoleDBHelper extends Observable {
      * Add a DOI user
      *
      * @param username username
-     * @param admin True when the user must be added in the admin group otherwise False
+     * @param admin True when the user must be added in the admin group
+     * otherwise False
      * @param email email
      * @return True when the the user is added otherwise false
      */
@@ -136,7 +141,6 @@ public abstract class AbstractUserRoleDBHelper extends Observable {
      * @return True when the user exists otherwise False
      */
     public abstract boolean isUserExist(final String username);
-
 
     /**
      * Removes the user

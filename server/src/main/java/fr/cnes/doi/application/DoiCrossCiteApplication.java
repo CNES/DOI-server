@@ -30,11 +30,12 @@ import org.restlet.Restlet;
 import org.restlet.routing.Router;
 
 /**
- * Provides an application to get citation from a registered DOI. Books and journal articles have
- * long benefited from an infrastructure that makes them easy to cite, a key element in the process
- * of research and academic discourse. In this mind, a data should cited in just the same way.
- * DataCite DOIs help further research and assures reliable, predictable, and unambiguous access to
- * research data in order to:
+ * Provides an application to get citation from a registered DOI. Books and
+ * journal articles have long benefited from an infrastructure that makes them
+ * easy to cite, a key element in the process of research and academic
+ * discourse. In this mind, a data should cited in just the same way. DataCite
+ * DOIs help further research and assures reliable, predictable, and unambiguous
+ * access to research data in order to:
  * <ul>
  * <li>support proper attribution and credit</li>
  * <li>support collaboration and reuse of data</li>
@@ -42,12 +43,13 @@ import org.restlet.routing.Router;
  * <li>foster faster and more efficient research progress, and</li>
  * <li>provide the means to share data with future researchers</li>
  * </ul>
- * DataCite also looks to community practices that provide data citation guidance. The Joint
- * Declaration of Data Citation Principles is a set of guiding principles for data within scholarly
- * literature, another dataset, or any other research object (Data Citation Synthesis Group 2014).
+ * DataCite also looks to community practices that provide data citation
+ * guidance. The Joint Declaration of Data Citation Principles is a set of
+ * guiding principles for data within scholarly literature, another dataset, or
+ * any other research object (Data Citation Synthesis Group 2014).
  * <p>
- * The FAIR Guiding Principles provide a guideline for the those that want to enhance reuse of their
- * data (Wilkinson 2016).
+ * The FAIR Guiding Principles provide a guideline for the those that want to
+ * enhance reuse of their data (Wilkinson 2016).
  * <p>
  * <b>Security</b><br>
  * --------------<br>
@@ -72,11 +74,13 @@ import org.restlet.routing.Router;
 public final class DoiCrossCiteApplication extends AbstractApplication {
 
     /**
-     * URI {@value #STYLES_URI} to get the styles, which are used to format the citation.
+     * URI {@value #STYLES_URI} to get the styles, which are used to format the
+     * citation.
      */
     public static final String STYLES_URI = "/style";
     /**
-     * URI {@value #LANGUAGE_URI} to get the languages, which are used to format the citation.
+     * URI {@value #LANGUAGE_URI} to get the languages, which are used to format
+     * the citation.
      */
     public static final String LANGUAGE_URI = "/language";
     /**
@@ -136,13 +140,15 @@ public final class DoiCrossCiteApplication extends AbstractApplication {
     }
 
     /**
-     * Creates router the DOICrossCiteApplication. This routes routes the following resources:
+     * Creates router the DOICrossCiteApplication. This routes routes the
+     * following resources:
      * <ul>
-     * <li>{@link DoiCrossCiteApplication#STYLES_URI} to access to the different styles for a
+     * <li>{@link DoiCrossCiteApplication#STYLES_URI} to access to the different
+     * styles for a citation</li>
+     * <li>{@link DoiCrossCiteApplication#LANGUAGE_URI} to access to the
+     * different languages for a citation</li>
+     * <li>{@link DoiCrossCiteApplication#FORMAT_URI} to access to the formatted
      * citation</li>
-     * <li>{@link DoiCrossCiteApplication#LANGUAGE_URI} to access to the different languages for a
-     * citation</li>
-     * <li>{@link DoiCrossCiteApplication#FORMAT_URI} to access to the formatted citation</li>
      * </ul>
      *
      * @return router

@@ -63,13 +63,13 @@ import fr.cnes.doi.utils.spec.Requirement;
 import org.restlet.routing.Template;
 
 /**
- * Provides an application for handling features related to the administration system of the DOI
- * server.
+ * Provides an application for handling features related to the administration
+ * system of the DOI server.
  *
  * The administration application provides the following features:
  * <ul>
- * <li>An asynchronous task to check the availability of created landing pages each
- * {@value #PERIOD_SCHEDULER} days</li>
+ * <li>An asynchronous task to check the availability of created landing pages
+ * each {@value #PERIOD_SCHEDULER} days</li>
  * <li>The form for creating DOI</li>
  * <li>The Datacite status page to check Datacite services availability</li>
  * <li>The Datacite stats page</li>
@@ -79,11 +79,12 @@ import org.restlet.routing.Template;
  * <p>
  * <b>Security</b><br>
  * --------------<br>
- * The authentication is done by a simple login/password. Only users having the group "admin" will
- * be allowed to log in to this application.<br>
- * The website for creating DOI is opened on the net whereas the others services are filtered by IP.
- * The allowed IPs are localhost and the IPs defined in
- * {@value fr.cnes.doi.settings.Consts#ADMIN_IP_ALLOWER} attribute from the configuration file
+ * The authentication is done by a simple login/password. Only users having the
+ * group "admin" will be allowed to log in to this application.<br>
+ * The website for creating DOI is opened on the net whereas the others services
+ * are filtered by IP. The allowed IPs are localhost and the IPs defined in
+ * {@value fr.cnes.doi.settings.Consts#ADMIN_IP_ALLOWER} attribute from the
+ * configuration file
  *
  * <p>
  * <b>Routing</b><br>
@@ -97,10 +98,12 @@ import org.restlet.routing.Template;
  * |_ ____________<br>
  * |_|************|____ suffixProject (Get a random suffix - authorization)<br>
  * |_|IP_filtering|____ token (Create a token - authorization)<br>
- * |_|____________|____ token/{tokenID} (Get token information - authorization)<br>
+ * |_|____________|____ token/{tokenID} (Get token information -
+ * authorization)<br>
  *
  * @see <a href="http://status.datacite.org">Datacite status page</a>
- * @see <a href="https://stats.datacite.org/#tab-prefixes">Datacite stats page</a>
+ * @see <a href="https://stats.datacite.org/#tab-prefixes">Datacite stats
+ * page</a>
  * @see SuffixProjectsResource Creating a project suffix for DOI
  * @see TokenResource Creating a token and getting information about a token
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
@@ -121,7 +124,8 @@ public final class AdminApplication extends AbstractApplication {
     public static final String NAME = "Admin Application";
 
     /**
-     * URI {@value #ADMIN_URI} to access to the resources of the system administration.
+     * URI {@value #ADMIN_URI} to access to the resources of the system
+     * administration.
      */
     public static final String ADMIN_URI = "/admin";
 
@@ -234,11 +238,11 @@ public final class AdminApplication extends AbstractApplication {
      * Location of the resources for the IHM in the classpath.
      */
     private static final String IHM_CLASSPATH = "class/ihm";
-    
+
     /**
      * Location of the resources for the API docs in the classpath.
      */
-    private static final String API_CLASSPATH = "class/docs";    
+    private static final String API_CLASSPATH = "class/docs";
 
     /**
      * The period between successive executions : {@value #PERIOD_SCHEDULER}.
@@ -246,7 +250,8 @@ public final class AdminApplication extends AbstractApplication {
     private static final int PERIOD_SCHEDULER = 30;
 
     /**
-     * The period between successive executions : {@value #PERIOD_SCHEDULER_FOR_TOKEN_DB}.
+     * The period between successive executions :
+     * {@value #PERIOD_SCHEDULER_FOR_TOKEN_DB}.
      */
     private static final int PERIOD_SCHEDULER_FOR_TOKEN_DB = 1;
 
@@ -321,8 +326,8 @@ public final class AdminApplication extends AbstractApplication {
     }
 
     /**
-     * A task updating DOI users database from authentication service at each configurable period of
-     * time.
+     * A task updating DOI users database from authentication service at each
+     * configurable period of time.
      *
      * @return A task
      */
@@ -341,13 +346,17 @@ public final class AdminApplication extends AbstractApplication {
      * Creates a router for the AdminApplication. This router routes :
      * <ul>
      * <li>the web resources for the website with no authentication</li>
-     * <li>the REST resources for the system administration with authentication/authorization</li>
+     * <li>the REST resources for the system administration with
+     * authentication/authorization</li>
      * </ul>
-     * The web resources are attached by default to the AdminApplication where as the REST resources
-     * for the system administration are attached with the {@link AdminApplication#ADMIN_URI}
+     * The web resources are attached by default to the AdminApplication where
+     * as the REST resources for the system administration are attached with the
+     * {@link AdminApplication#ADMIN_URI}
      *
-     * @see AdminApplication#createWebSiteRouter() the router that contains the the web resources
-     * @see AdminApplication#createAdminRouter() the router that contains the REST resources
+     * @see AdminApplication#createWebSiteRouter() the router that contains the
+     * the web resources
+     * @see AdminApplication#createAdminRouter() the router that contains the
+     * REST resources
      * @see AdminApplication#createAuthenticator() the authentication mechanism
      * @see AdminApplication#createRoleAuthorizer() the authorization mechanism
      * @return Router
@@ -393,10 +402,11 @@ public final class AdminApplication extends AbstractApplication {
     }
 
     /**
-     * Creates a authorization based on the role. Only users attached to the role
-     * {@link fr.cnes.doi.security.RoleAuthorizer#ROLE_ADMIN} are allowed
+     * Creates a authorization based on the role. Only users attached to the
+     * role {@link fr.cnes.doi.security.RoleAuthorizer#ROLE_ADMIN} are allowed
      *
-     * @return the authorization that contains the access rights to the resources.
+     * @return the authorization that contains the access rights to the
+     * resources.
      */
     private RoleAuthorizer createRoleAuthorizer() {
         LOG.traceEntry();
@@ -464,13 +474,13 @@ public final class AdminApplication extends AbstractApplication {
     }
 
     /**
-     * Creates a router for REST services for the system administration. This router contains the
-     * following resources :
+     * Creates a router for REST services for the system administration. This
+     * router contains the following resources :
      * <ul>
-     * <li>{@link AdminApplication#SUFFIX_PROJECT_URI} resource to handle the project suffix, which
-     * is used in the Digital Object Identifier</li>
-     * <li>{@link AdminApplication#TOKEN_URI} resource to handle the token for the
-     * authentication</li>
+     * <li>{@link AdminApplication#SUFFIX_PROJECT_URI} resource to handle the
+     * project suffix, which is used in the Digital Object Identifier</li>
+     * <li>{@link AdminApplication#TOKEN_URI} resource to handle the token for
+     * the authentication</li>
      * </ul>
      *
      * @see SuffixProjectsResource Resource to handle the the project suffix
@@ -506,14 +516,15 @@ public final class AdminApplication extends AbstractApplication {
     }
 
     /**
-     * Creates a router for the web site resources. This router contains the following resources:
+     * Creates a router for the web site resources. This router contains the
+     * following resources:
      * <ul>
-     * <li>{@link AdminApplication#RESOURCE_URI} to distribute the web resources for the status
-     * page</li>
+     * <li>{@link AdminApplication#RESOURCE_URI} to distribute the web resources
+     * for the status page</li>
      * <li>the website resources attached by default when it is available</li>
      * </ul>
-     * The website is located to {@link AdminApplication#IHM_URI} directory when it is
-     * distributed by the DOI server.
+     * The website is located to {@link AdminApplication#IHM_URI} directory when
+     * it is distributed by the DOI server.
      *
      * @return The router for the public web site
      */
@@ -583,7 +594,8 @@ public final class AdminApplication extends AbstractApplication {
     }
 
     /**
-     * Adds route {@value #STATUS_URI} to the services describing the DataCite status.
+     * Adds route {@value #STATUS_URI} to the services describing the DataCite
+     * status.
      *
      * @param router router
      */
@@ -601,8 +613,8 @@ public final class AdminApplication extends AbstractApplication {
     }
 
     /**
-     * Adds default route to the website when it exists. The website must be located in the
-     * {@value #IHM_URI} directory.
+     * Adds default route to the website when it exists. The website must be
+     * located in the {@value #IHM_URI} directory.
      *
      * @param router router
      */
@@ -616,13 +628,13 @@ public final class AdminApplication extends AbstractApplication {
         ihm.setListingAllowed(false);
         ihm.setDeeplyAccessible(true);
         ihm.setIndexName("authentication");
-       
+
         router.attach(IHM_URI, RedirectingResource.class, Template.MODE_EQUALS);
-        router.attach(IHM_URI + "/", RedirectingResource.class, Template.MODE_EQUALS);        
+        router.attach(IHM_URI + "/", RedirectingResource.class, Template.MODE_EQUALS);
         router.attach(IHM_URI + IHM_FOOTER_URI, FooterIhmResource.class);
         router.attach(IHM_URI + IHM_CONFIG_URI, ConfigIhmResource.class);
         router.attach(IHM_URI, ihm);
-        
+
         LOG.traceExit();
     }
 

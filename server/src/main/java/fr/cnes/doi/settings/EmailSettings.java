@@ -111,7 +111,7 @@ public final class EmailSettings {
     public static EmailSettings getInstance() {
         return EmailSettingsHolder.INSTANCE;
     }
-    
+
     /**
      * Init singleton.
      */
@@ -242,8 +242,8 @@ public final class EmailSettings {
     }
 
     /**
-     * Returns true when configuration may be enough to send an email. Checks the SMTP URL and the
-     * SMTP protocol.
+     * Returns true when configuration may be enough to send an email. Checks
+     * the SMTP URL and the SMTP protocol.
      *
      * @return true when configuration may be enough to send an email
      */
@@ -281,7 +281,8 @@ public final class EmailSettings {
     }
 
     /**
-     * Sends an email only when {@value fr.cnes.doi.settings.Consts#CONTEXT_MODE} is set to PROD.
+     * Sends an email only when
+     * {@value fr.cnes.doi.settings.Consts#CONTEXT_MODE} is set to PROD.
      *
      * @param protocol Protocol (SMTP or SMTPS)
      * @param request request

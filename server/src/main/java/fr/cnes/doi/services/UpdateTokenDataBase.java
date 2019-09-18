@@ -29,8 +29,8 @@ import fr.cnes.doi.security.TokenSecurity;
 import java.util.ArrayList;
 
 /**
- * Updates token database. The service checks if the token is expired. When it is expired, the token
- * is removed from the database.
+ * Updates token database. The service checks if the token is expired. When it
+ * is expired, the token is removed from the database.
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */

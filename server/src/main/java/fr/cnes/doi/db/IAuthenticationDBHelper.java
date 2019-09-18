@@ -48,8 +48,8 @@ public interface IAuthenticationDBHelper {
     public boolean authenticateUser(final String login, final String password);
 
     /**
-     * Returns the user from the authentication access, which will be the administrator of DOI
-     * server.
+     * Returns the user from the authentication access, which will be the
+     * administrator of DOI server.
      *
      * @return the administrator
      */

@@ -68,7 +68,8 @@ public class MonitoringLogFilter extends LogFilter {
     }
 
     /**
-     * Allows filtering after processing by the next Restlet. Does nothing by default.
+     * Allows filtering after processing by the next Restlet. Does nothing by
+     * default.
      *
      * @param request request
      * @param response response

@@ -71,8 +71,9 @@ public class MediaResource extends BaseMdsResource {
     }
 
     /**
-     * Returns the media related to a DOI. This request returns list of pairs of media type and URLs
-     * associated with a given DOI when 200 status is returned (operation successful).
+     * Returns the media related to a DOI. This request returns list of pairs of
+     * media type and URLs associated with a given DOI when 200 status is
+     * returned (operation successful).
      *
      * @return the media related to a DOI
      * @throws DoiServerException - if the response is not a success
@@ -111,9 +112,9 @@ public class MediaResource extends BaseMdsResource {
     }
 
     /**
-     * Creates a media related to an URL for a given DOI. Will add/update media type/urls pairs to a
-     * DOI. Standard domain restrictions check will be performed. 200 status is returned when the
-     * operation is successful.
+     * Creates a media related to an URL for a given DOI. Will add/update media
+     * type/urls pairs to a DOI. Standard domain restrictions check will be
+     * performed. 200 status is returned when the operation is successful.
      *
      * @param mediaForm Form
      * @return short explanation of status code
@@ -210,7 +211,8 @@ public class MediaResource extends BaseMdsResource {
     }
 
     /**
-     * Describes the GET method. The different representations are the followings:
+     * Describes the GET method. The different representations are the
+     * followings:
      * <ul>
      * <li>{@link DATACITE_API_RESPONSE#SUCCESS}</li>
      * <li>{@link DATACITE_API_RESPONSE#DOI_NOT_FOUND}</li>
@@ -247,7 +249,8 @@ public class MediaResource extends BaseMdsResource {
     }
 
     /**
-     * Describes the POST method. The different representations are the followings:
+     * Describes the POST method. The different representations are the
+     * followings:
      * <ul>
      * <li>{@link DATACITE_API_RESPONSE#SUCCESS}</li>
      * <li>{@link API_MDS#MEDIA_VALIDATION}</li>

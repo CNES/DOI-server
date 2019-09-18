@@ -37,13 +37,14 @@ import fr.cnes.doi.resource.AbstractResource;
 import java.util.ArrayList;
 
 /**
- * Provide a resource to get all super users and add a user to the super user group.
+ * Provide a resource to get all super users and add a user to the super user
+ * group.
  */
 public class ManageSuperUsersResource extends AbstractResource {
 
     /**
-     * Parameter for the SUPERUSER name {@value #SUPERUSER_NAME_PARAMETER}. This parameter is send
-     * to create a new identifier for the SUPERUSER.
+     * Parameter for the SUPERUSER name {@value #SUPERUSER_NAME_PARAMETER}. This
+     * parameter is send to create a new identifier for the SUPERUSER.
      */
     public static final String SUPERUSER_NAME_PARAMETER = "superUserName";
 
@@ -53,7 +54,8 @@ public class ManageSuperUsersResource extends AbstractResource {
     private volatile Logger LOG;
 
     /**
-     * Set-up method that can be overridden in order to initialize the state of the resource.
+     * Set-up method that can be overridden in order to initialize the state of
+     * the resource.
      *
      * @throws ResourceException - if a problem happens
      */
@@ -71,7 +73,8 @@ public class ManageSuperUsersResource extends AbstractResource {
     /**
      * Rename the SUPERUSER from the SUPERUSER id sent in url.
      *
-     * @param mediaForm Data sent with request containing the user name to be super user.
+     * @param mediaForm Data sent with request containing the user name to be
+     * super user.
      */
     // @Requirement(reqId = Requirement.DOI_SRV_140, reqName =
     // Requirement.DOI_SRV_140_NAME)

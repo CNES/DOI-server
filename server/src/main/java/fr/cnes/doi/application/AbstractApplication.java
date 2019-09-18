@@ -45,7 +45,8 @@ import org.restlet.security.ChallengeAuthenticator;
 import org.restlet.service.CorsService;
 
 /**
- * Creates a base application by setting both the CORS, the DOI status page, the proxy and the DOI.
+ * Creates a base application by setting both the CORS, the DOI status page, the
+ * proxy and the DOI.
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
@@ -78,15 +79,17 @@ public abstract class AbstractApplication extends WadlApplication {
     private final DoiSettings config = DoiSettings.getInstance();
 
     /**
-     * This constructor creates an instance of proxySettings and doiSettings. By creating the
-     * instance, the constructor creates :
+     * This constructor creates an instance of proxySettings and doiSettings. By
+     * creating the instance, the constructor creates :
      * <ul>
-     * <li>the CORS service using the default value {@link AbstractApplication#DEFAULT_CORS_ORIGIN}
-     * and {@link AbstractApplication#DEFAULT_CORS_CREDENTIALS}</li>
+     * <li>the CORS service using the default value
+     * {@link AbstractApplication#DEFAULT_CORS_ORIGIN} and
+     * {@link AbstractApplication#DEFAULT_CORS_CREDENTIALS}</li>
      * <li>the custom status page</li>
      * </ul>
      *
-     * @see <a href="https://en.wikipedia.org/wiki/Cross-origin_resource_sharing">CORS</a>
+     * @see
+     * <a href="https://en.wikipedia.org/wiki/Cross-origin_resource_sharing">CORS</a>
      * @see AbstractApplication#createCoreService
      */
     public AbstractApplication() {
@@ -124,8 +127,8 @@ public abstract class AbstractApplication extends WadlApplication {
     }
 
     /**
-     * Creates the authenticator based on a HTTP basic. Creates the user, role and mapping
-     * user/role.
+     * Creates the authenticator based on a HTTP basic. Creates the user, role
+     * and mapping user/role.
      *
      * @return Authenticator based on a challenge scheme
      */
@@ -142,8 +145,8 @@ public abstract class AbstractApplication extends WadlApplication {
     }
 
     /**
-     * Creates the authenticator based on a HTTP basic. Creates the user, role and mapping
-     * user/role.
+     * Creates the authenticator based on a HTTP basic. Creates the user, role
+     * and mapping user/role.
      *
      * @return Authenticator based on a challenge scheme
      */

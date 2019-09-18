@@ -262,7 +262,8 @@ public final class RoleAuthorizer implements Observer {
     }
 
     /**
-     * Adds/removes the <i>users</i> group to the new role name related to the application MDS
+     * Adds/removes the <i>users</i> group to the new role name related to the
+     * application MDS
      *
      * @param obs observable
      * @param obj message
@@ -351,7 +352,8 @@ public final class RoleAuthorizer implements Observer {
      *
      * @param group group linked to an application
      * @param appName application name
-     * @return the application or null if the application is not defined in the REALM
+     * @return the application or null if the application is not defined in the
+     * REALM
      */
     private Application loadApplicationBy(final Group group,
             final String appName) {

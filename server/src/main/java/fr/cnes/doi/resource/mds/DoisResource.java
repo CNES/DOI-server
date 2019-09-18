@@ -72,8 +72,9 @@ public class DoisResource extends BaseMdsResource {
     }
 
     /**
-     * Returns the collection of DOI. This request returns a list of all DOIs for the requesting
-     * datacentre. Status 200 is returned when operation is successful.
+     * Returns the collection of DOI. This request returns a list of all DOIs
+     * for the requesting datacentre. Status 200 is returned when operation is
+     * successful.
      *
      * @return the list of DOI
      * @throws DoiServerException 204 No Content - no DOIs founds
@@ -100,20 +101,23 @@ public class DoisResource extends BaseMdsResource {
      * <p>
      * The client provides :
      * <ul>
-     * <li><i>doi</i> : the project suffix, which is an unique identifier within the project.</li>
+     * <li><i>doi</i> : the project suffix, which is an unique identifier within
+     * the project.</li>
      * <li><i>url</i> : the URL of the landing page.
      * </ul>
      * <b>Note 1</b> : the landing page should be accessible from www
      * <b>Note 2</b> : Metadata must be uploaded first
      *
      * <p>
-     * Will mint new DOI if specified DOI doesn't exist. This method will attempt to update URL if
-     * you specify existing DOI. Standard domains and quota restrictions check will be performed. A
-     * Datacentre's doiQuotaUsed will be increased by 1. A new record in Datasets will be created by
+     * Will mint new DOI if specified DOI doesn't exist. This method will
+     * attempt to update URL if you specify existing DOI. Standard domains and
+     * quota restrictions check will be performed. A Datacentre's doiQuotaUsed
+     * will be increased by 1. A new record in Datasets will be created by
      * returning a 201 status for operation successful.
      *
      * @param doiForm doi and url
-     * @return short explanation of status code e.g. CREATED, HANDLE_ALREADY_EXISTS etc
+     * @return short explanation of status code e.g. CREATED,
+     * HANDLE_ALREADY_EXISTS etc
      * @throws DoiServerException - if the response is not a success
      * <ul>
      * <li>{@link DATACITE_API_RESPONSE#PROCESS_ERROR}</li>
@@ -161,14 +165,15 @@ public class DoisResource extends BaseMdsResource {
     /**
      * Checks input parameters. Checks that
      * {@value fr.cnes.doi.resource.mds.BaseMdsResource#DOI_PARAMETER} and
-     * {@value fr.cnes.doi.resource.mds.BaseMdsResource#URL_PARAMETER} are provided in the
-     * mediaForm.
+     * {@value fr.cnes.doi.resource.mds.BaseMdsResource#URL_PARAMETER} are
+     * provided in the mediaForm.
      *
      * @param mediaForm the parameters
      * {@value fr.cnes.doi.resource.mds.BaseMdsResource#DOI_PARAMETER} and
      * {@value fr.cnes.doi.resource.mds.BaseMdsResource#URL_PARAMETER}
      * @throws DoiServerException - 400 Bad Request if DOI_PARAMETER and
-     * {@value fr.cnes.doi.resource.mds.BaseMdsResource#URL_PARAMETER} are not set
+     * {@value fr.cnes.doi.resource.mds.BaseMdsResource#URL_PARAMETER} are not
+     * set
      */
     @Requirement(reqId = Requirement.DOI_INTER_070, reqName = Requirement.DOI_INTER_070_NAME)
     private void checkInputs(final Form mediaForm) throws DoiServerException {
@@ -250,7 +255,8 @@ public class DoisResource extends BaseMdsResource {
     }
 
     /**
-     * Describes the GET method. The different representations are the followings:
+     * Describes the GET method. The different representations are the
+     * followings:
      * <ul>
      * <li>{@link DATACITE_API_RESPONSE#SUCCESS}</li>
      * <li>{@link DATACITE_API_RESPONSE#SUCCESS_NO_CONTENT}</li>
@@ -293,7 +299,8 @@ public class DoisResource extends BaseMdsResource {
     }
 
     /**
-     * Describes the POST method. The different representations are the followings:
+     * Describes the POST method. The different representations are the
+     * followings:
      * <ul>
      * <li>{@link DATACITE_API_RESPONSE#SUCESS_CREATED}</li>
      * <li>{@link API_MDS#LANGING_PAGE_VALIDATION}</li>

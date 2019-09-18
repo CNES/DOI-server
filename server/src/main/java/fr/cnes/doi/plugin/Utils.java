@@ -47,11 +47,12 @@ public final class Utils {
      * @param path path
      * @throws IllegalArgumentException - if path is null
      * @throws NoSuchMethodException - if a matching method is not found.
-     * @throws IllegalAccessException - if this Method object is enforcing Java language access
-     * control and the underlying method is inaccessible.
-     * @throws InvocationTargetException - if the underlying method throws an exception.
-     * @throws MalformedURLException - If a protocol handler for the URL could not be found, or if
-     * some other error occurred while constructing the URL
+     * @throws IllegalAccessException - if this Method object is enforcing Java
+     * language access control and the underlying method is inaccessible.
+     * @throws InvocationTargetException - if the underlying method throws an
+     * exception.
+     * @throws MalformedURLException - If a protocol handler for the URL could
+     * not be found, or if some other error occurred while constructing the URL
      */
     @Requirement(reqId = Requirement.DOI_ARCHI_040, reqName = Requirement.DOI_ARCHI_040_NAME)
     public static void addPath(final String path)
@@ -75,11 +76,12 @@ public final class Utils {
      *
      * @param file file
      * @throws NoSuchMethodException - if a matching method is not found.
-     * @throws IllegalAccessException - if this Method object is enforcing Java language access
-     * control and the underlying method is inaccessible.
-     * @throws InvocationTargetException - if the underlying method throws an exception.
-     * @throws MalformedURLException - If a protocol handler for the URL could not be found, or if
-     * some other error occurred while constructing the URL
+     * @throws IllegalAccessException - if this Method object is enforcing Java
+     * language access control and the underlying method is inaccessible.
+     * @throws InvocationTargetException - if the underlying method throws an
+     * exception.
+     * @throws MalformedURLException - If a protocol handler for the URL could
+     * not be found, or if some other error occurred while constructing the URL
      */
     public static void loadFileInClassPath(final File file)
             throws NoSuchMethodException, IllegalAccessException,

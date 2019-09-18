@@ -21,26 +21,26 @@ package fr.cnes.doi.utils;
 import java.util.Properties;
 
 /**
- * DOI properties.
- * DOI properties trims the value
+ * DOI properties. DOI properties trims the value
+ *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class DOIProperties extends Properties {
 
     /**
-     * {@inheritDoc } 
+     * {@inheritDoc }
      */
     @Override
     public String getProperty(final String string) {
-        return super.getProperty(string).trim(); 
+        return super.getProperty(string).trim();
     }
-    
+
     /**
-     * {@inheritDoc } 
+     * {@inheritDoc }
      */
     @Override
     public String getProperty(final String string, final String string1) {
         return super.getProperty(string, string1).trim();
-    }        
-    
+    }
+
 }

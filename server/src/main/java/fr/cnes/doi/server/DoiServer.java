@@ -67,14 +67,16 @@ import fr.cnes.doi.db.IAuthenticationDBHelper;
 import static fr.cnes.doi.settings.Consts.USE_FORWARDED_FOR_HEADER;
 
 /**
- * DoiServer contains the configuration of this server and the methods to start/stop it.
+ * DoiServer contains the configuration of this server and the methods to
+ * start/stop it.
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 public class DoiServer extends Component {
 
     /**
-     * Default value for {@link #SSL_CTX_FACTORY} parameter : {@value #DEFAULT_SSL_CTX}.
+     * Default value for {@link #SSL_CTX_FACTORY} parameter :
+     * {@value #DEFAULT_SSL_CTX}.
      */
     public static final String DEFAULT_SSL_CTX = "org.restlet.engine.ssl.DefaultSslContextFactory";
     /**
@@ -181,7 +183,8 @@ public class DoiServer extends Component {
     private final DoiSettings settings;
 
     /**
-     * Creates an instance of the server with settings coming from the config.properties
+     * Creates an instance of the server with settings coming from the
+     * config.properties
      *
      * @param settings settings
      */
@@ -206,7 +209,8 @@ public class DoiServer extends Component {
              *
              * @param context context
              * @return Filter
-             * @see org.restlet.service.LogService#createInboundFilter(org.restlet.Context)
+             * @see
+             * org.restlet.service.LogService#createInboundFilter(org.restlet.Context)
              */
             @Override
             public Filter createInboundFilter(final Context context) {
@@ -288,7 +292,8 @@ public class DoiServer extends Component {
     }
 
     /**
-     * Inits supported protocols. Theses protocols are used by the server to access to resources
+     * Inits supported protocols. Theses protocols are used by the server to
+     * access to resources
      */
     private void initClients() {
         LOG.traceEntry();
@@ -406,10 +411,10 @@ public class DoiServer extends Component {
         // create embedding https jetty server
         final Server server = new Server(new Context(), Protocol.HTTPS, port, this);
         final Series<Parameter> parameters = server.getContext().getParameters();
-        
-        LOG.debug(MESSAGE_TPL, USE_FORWARDED_FOR_HEADER, "true", "true");        
+
+        LOG.debug(MESSAGE_TPL, USE_FORWARDED_FOR_HEADER, "true", "true");
         parameters.set(USE_FORWARDED_FOR_HEADER, "true");
-        
+
         LOG.debug(MESSAGE_TPL, RESTLET_MAX_TOTAL_CONNECTIONS, DoiSettings.getInstance().getString(
                 fr.cnes.doi.settings.Consts.RESTLET_MAX_TOTAL_CONNECTIONS,
                 DEFAULT_MAX_TOTAL_CONNECTIONS));

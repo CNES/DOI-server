@@ -19,7 +19,8 @@
 package fr.cnes.doi.settings;
 
 /**
- * Consts contains all configuration variables, which are possible to use in the config.properties.
+ * Consts contains all configuration variables, which are possible to use in the
+ * config.properties.
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
@@ -104,9 +105,8 @@ public final class Consts {
             = "Starter.Server.HTTPS.TrustStorePassword";
 
     /**
-     * Type of proxy.
-     * It can be one of the following values NO_PROXY, PROXY_BASIC, PROXY_SPNEGO_API, 
-     * PROXY_SPNEGO_JAAS.
+     * Type of proxy. It can be one of the following values NO_PROXY,
+     * PROXY_BASIC, PROXY_SPNEGO_API, PROXY_SPNEGO_JAAS.
      */
     public static final String SERVER_PROXY_TYPE = "Starter.Proxy.type";
 
@@ -210,14 +210,14 @@ public final class Consts {
     public static final String JETTY_THREADS_PRIORITY = "Starter.THREADS_PRIORITY";
 
     /**
-     * Jetty : Thread pool idle timeout in milliseconds; threads that are idle for longer than this
-     * period may be stopped.
+     * Jetty : Thread pool idle timeout in milliseconds; threads that are idle
+     * for longer than this period may be stopped.
      */
     public static final String JETTY_THREAD_MAX_IDLE_TIME_MS = "Starter.THREAD_MAX_IDLE_TIME_MS";
 
     /**
-     * Thread pool stop timeout in milliseconds; the maximum time allowed for the service to
-     * shutdown.
+     * Thread pool stop timeout in milliseconds; the maximum time allowed for
+     * the service to shutdown.
      */
     public static final String JETTY_THREAD_STOP_TIME_MS = "Starter.THREAD_MAX_STOP_TIME_MS";
 
@@ -228,13 +228,14 @@ public final class Consts {
             = "Starter.LOW_RESOURCES_MAX_IDLE_TIME_MS";
 
     /**
-     * Low resource monitor period in milliseconds; when 0, low resource monitoring is disabled.
+     * Low resource monitor period in milliseconds; when 0, low resource
+     * monitoring is disabled.
      */
     public static final String JETTY_LOW_RESOURCES_PERIOD = "Starter.LOW_RESOURCES_PERIOD";
 
     /**
-     * Low resource monitor max memory in bytes; when 0, the check disabled; memory used is
-     * calculated as (totalMemory-freeMemory).
+     * Low resource monitor max memory in bytes; when 0, the check disabled;
+     * memory used is calculated as (totalMemory-freeMemory).
      */
     public static final String JETTY_LOW_RESOURCES_MAX_MEMORY = "Starter.LOW_RESOURCES_MAX_MEMORY";
 
@@ -250,8 +251,8 @@ public final class Consts {
     public static final String JETTY_LOW_RESOURCES_THREADS = "Starter.LOW_RESOURCES_THREADS";
 
     /**
-     * Connector acceptor thread count; when -1, Jetty will default to Runtime.availableProcessors()
-     * / 2, with a minimum of 1.
+     * Connector acceptor thread count; when -1, Jetty will default to
+     * Runtime.availableProcessors() / 2, with a minimum of 1.
      */
     public static final String JETTY_ACCEPTOR_THREADS = "Starter.ACCEPTOR_THREADS";
 
@@ -265,15 +266,16 @@ public final class Consts {
      */
     public static final String JETTY_ACCEPT_QUEUE_SIZE = "Starter.ACCEPT_QUEUE_SIZE";
     /**
-     * HTTP request header size in bytes; larger headers will allow for more and/or larger cookies
-     * plus larger form content encoded in a URL; however, larger headers consume more memory and
-     * can make a server more vulnerable to denial of service attacks.
+     * HTTP request header size in bytes; larger headers will allow for more
+     * and/or larger cookies plus larger form content encoded in a URL; however,
+     * larger headers consume more memory and can make a server more vulnerable
+     * to denial of service attacks.
      */
     public static final String JETTY_REQUEST_HEADER_SIZE = "Starter.REQUEST_HEADER_SIZE";
     /**
-     * HTTP response header size in bytes; larger headers will allow for more and/or larger cookies
-     * and longer HTTP headers (e.g. for redirection); however, larger headers will also consume
-     * more memory
+     * HTTP response header size in bytes; larger headers will allow for more
+     * and/or larger cookies and longer HTTP headers (e.g. for redirection);
+     * however, larger headers will also consume more memory
      */
     public static final String JETTY_RESPONSE_HEADER_SIZE = "Starter.RESPONSE_HEADER_SIZE";
     /**
@@ -281,15 +283,17 @@ public final class Consts {
      */
     public static final String JETTY_REQUEST_BUFFER_SIZE = "Starter.REQUEST_BUFFER_SIZE";
     /**
-     * HTTP output buffer size in bytes; a larger buffer can improve performance by allowing a
-     * content producer to run without blocking, however larger buffers consume more memory and may
-     * induce some latency before a client starts processing the content.
+     * HTTP output buffer size in bytes; a larger buffer can improve performance
+     * by allowing a content producer to run without blocking, however larger
+     * buffers consume more memory and may induce some latency before a client
+     * starts processing the content.
      */
     public static final String JETTY_RESPONSE_BUFFER_SIZE = "Starter.RESPONSE_BUFFER_SIZE";
     /**
-     * Connector idle timeout in milliseconds; see Socket.setSoTimeout(int); this value is
-     * interpreted as the maximum time between some progress being made on the connection; so if a
-     * single byte is read or written, then the timeout is reset.
+     * Connector idle timeout in milliseconds; see Socket.setSoTimeout(int);
+     * this value is interpreted as the maximum time between some progress being
+     * made on the connection; so if a single byte is read or written, then the
+     * timeout is reset.
      */
     public static final String JETTY_IO_MAX_IDLE_TIME_MS = "Starter.IO_MAX_IDLE_TIME_MS";
     /**
@@ -298,7 +302,8 @@ public final class Consts {
      */
     public static final String JETTY_SO_LINGER_TIME = "Starter.SO_LINGER_TIME";
     /**
-     * Connector stop timeout in milliseconds; the maximum time allowed for the service to shutdown
+     * Connector stop timeout in milliseconds; the maximum time allowed for the
+     * service to shutdown
      */
     public static final String JETTY_GRACEFUL_SHUTDOWN = "Starter.GRACEFUL_SHUTDOWN";
     /**
@@ -360,12 +365,12 @@ public final class Consts {
      * Attributes name in LDAP for fullname.
      */
     public static final String ATTRIBUTION = "Starter.attribution";
-    
+
     /**
      * True when login/password are encoded otherwise false.
      */
     public static final String ENCRYPTED_FIELDS = "Starter.encrypted_fields";
-    
+
     /**
      * Get IP client from proxy
      */

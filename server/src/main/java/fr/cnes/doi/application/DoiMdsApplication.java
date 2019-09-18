@@ -55,16 +55,19 @@ import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.utils.spec.Requirement;
 
 /**
- * Provides an application to handle Data Object Identifier within an organization. A Digital Object
- * Identifier (DOI) is a persistent identifier or handle used to uniquely identify objects,
- * standardized by the International Organization. A DOI aims to be "resolvable", usually to some
- * form of access to the information object to which the DOI refers. This is achieved by binding the
- * DOI to metadata about the object, such as a URL, where all the details about the object are
- * accessible. Everytime a URL changes, the publisher has to update the metadata for the DOI to link
- * to the new URL. It is the publisher's responsibility to update the DOI database. If he fails to
+ * Provides an application to handle Data Object Identifier within an
+ * organization. A Digital Object Identifier (DOI) is a persistent identifier or
+ * handle used to uniquely identify objects, standardized by the International
+ * Organization. A DOI aims to be "resolvable", usually to some form of access
+ * to the information object to which the DOI refers. This is achieved by
+ * binding the DOI to metadata about the object, such as a URL, where all the
+ * details about the object are accessible. Everytime a URL changes, the
+ * publisher has to update the metadata for the DOI to link to the new URL. It
+ * is the publisher's responsibility to update the DOI database. If he fails to
  * do so, the DOI resolves to a dead link leaving the DOI useless.
  * <p>
- * Two methods of authentication are defined in this application and both is optional:
+ * Two methods of authentication are defined in this application and both is
+ * optional:
  * <ul>
  * <li>{@link #createAuthenticator authenticator} by login/password</li>
  * <li>{@link #createTokenAuthenticator authenticator} by
@@ -78,7 +81,8 @@ import fr.cnes.doi.utils.spec.Requirement;
  * <code>
  * --------------<br>
  * The authentication is done by the following pipeline:<br>
- * |Method authorization|--&gt;|Authentication login/pwd|--&gt;|Authentication token|<br>
+ * |Method authorization|--&gt;|Authentication login/pwd|--&gt;|Authentication
+ * token|<br>
  * Method authorization : Only GET method does not need an authorization
  * </code>
  *
@@ -158,11 +162,11 @@ public final class DoiMdsApplication extends AbstractApplication {
      * Client to query Mds Datacite.
      */
     private final ClientMDS client;
-    
+
     /**
      * Client to query Search Data Cite.
      */
-    private final ClientSearchDataCite clientSearchDataCite;    
+    private final ClientSearchDataCite clientSearchDataCite;
 
     /**
      * Token DB that contains the set of generated token.
@@ -192,19 +196,24 @@ public final class DoiMdsApplication extends AbstractApplication {
             this.tokenDB = TokenSecurity.getInstance().getTokenDB();
         } catch (ClientMdsException | ClienSearchDataCiteException ex) {
             throw LOG.throwing(new DoiRuntimeException(ex));
-        } 
+        }
     }
 
     /**
      * Creates a router for the DoiMdsApplication.
      *
-     * This router routes the resources for the Mds application, which is protected by two
-     * authentication mechanisms (optional mechanisms) and an authorization by method.
+     * This router routes the resources for the Mds application, which is
+     * protected by two authentication mechanisms (optional mechanisms) and an
+     * authorization by method.
      *
-     * @see DoiMdsApplication#createRouter the router that contains the Mds resources
-     * @see DoiMdsApplication#createAuthenticator the authentication mechanism by login/password
-     * @see DoiMdsApplication#createTokenAuthenticator the authentication mechanism by token
-     * @see DoiMdsApplication#createMethodAuthorizer the method authorization mechanism
+     * @see DoiMdsApplication#createRouter the router that contains the Mds
+     * resources
+     * @see DoiMdsApplication#createAuthenticator the authentication mechanism
+     * by login/password
+     * @see DoiMdsApplication#createTokenAuthenticator the authentication
+     * mechanism by token
+     * @see DoiMdsApplication#createMethodAuthorizer the method authorization
+     * mechanism
      * @return Router
      */
     @Override
@@ -238,14 +247,16 @@ public final class DoiMdsApplication extends AbstractApplication {
     /**
      * Creates the router. The router routes the following resources:
      * <ul>
-     * <li>{@link DoiMdsApplication#DOI_URI} to create/update a DOI and its landing page</li>
-     * <li>{@link DoiMdsApplication#DOI_URI} {@link DoiMdsApplication#DOI_NAME_URI} to get the URL
-     * of the landing page related to a given DOI</li>
-     * <li>{@link DoiMdsApplication#METADATAS_URI} to create/update DOI metadata</li>
-     * <li>{@link DoiMdsApplication#METADATAS_URI} {@link DoiMdsApplication#DOI_NAME_URI} to get
-     * DOI's metadata or delete a given DOI</li>
-     * <li>{@link DoiMdsApplication#MEDIA_URI} {@link DoiMdsApplication#DOI_NAME_URI} to handle
-     * media related to a DOI
+     * <li>{@link DoiMdsApplication#DOI_URI} to create/update a DOI and its
+     * landing page</li>
+     * <li>{@link DoiMdsApplication#DOI_URI} {@link DoiMdsApplication#DOI_NAME_URI}
+     * to get the URL of the landing page related to a given DOI</li>
+     * <li>{@link DoiMdsApplication#METADATAS_URI} to create/update DOI
+     * metadata</li>
+     * <li>{@link DoiMdsApplication#METADATAS_URI} {@link DoiMdsApplication#DOI_NAME_URI}
+     * to get DOI's metadata or delete a given DOI</li>
+     * <li>{@link DoiMdsApplication#MEDIA_URI} {@link DoiMdsApplication#DOI_NAME_URI}
+     * to handle media related to a DOI
      * </ul>
      *
      * @see DoiResource Handles a DOI and its landing page
@@ -271,8 +282,8 @@ public final class DoiMdsApplication extends AbstractApplication {
     }
 
     /**
-     * Creates the method authorizer. GET method can be anonymous. The verbs (POST, PUT, DELETE)
-     * need to be authenticated.
+     * Creates the method authorizer. GET method can be anonymous. The verbs
+     * (POST, PUT, DELETE) need to be authenticated.
      *
      * @return Authorizer based on authorized methods
      */
@@ -299,7 +310,7 @@ public final class DoiMdsApplication extends AbstractApplication {
         LOG.traceEntry();
         return LOG.traceExit(this.getConfig().getSecret(Consts.INIST_LOGIN));
     }
-       
+
     /**
      * Returns the decrypted password for DataCite.
      *
@@ -329,7 +340,7 @@ public final class DoiMdsApplication extends AbstractApplication {
         LOG.traceEntry();
         return LOG.traceExit(this.client);
     }
-    
+
     /**
      * Returns the client.
      *
@@ -338,7 +349,7 @@ public final class DoiMdsApplication extends AbstractApplication {
     public ClientSearchDataCite getClientSearch() {
         LOG.traceEntry();
         return LOG.traceExit(this.clientSearchDataCite);
-    }    
+    }
 
     /**
      * Returns the token database.
@@ -389,9 +400,9 @@ public final class DoiMdsApplication extends AbstractApplication {
     }
 
     /**
-     * Post processing for specific authorization. Specific class to handle the case where the user
-     * is authorized by oauth but non authorized by the service because the user's role is not
-     * related to any projects
+     * Post processing for specific authorization. Specific class to handle the
+     * case where the user is authorized by oauth but non authorized by the
+     * service because the user's role is not related to any projects
      */
     public static class SecurityPostProcessingFilter extends Filter {
 
@@ -424,85 +435,92 @@ public final class DoiMdsApplication extends AbstractApplication {
     }
 
     /**
-     * API related only to the code in this webservice. Other codes can be returned by the
-     * {@link ClientMDS}
+     * API related only to the code in this webservice. Other codes can be
+     * returned by the {@link ClientMDS}
      */
     public enum API_MDS {
         /**
-         * Create metadata. SUCCESS_CREATED is used as status meaning "Operation successful"
+         * Create metadata. SUCCESS_CREATED is used as status meaning "Operation
+         * successful"
          */
         CREATE_METADATA(Status.SUCCESS_CREATED, "Operation successful"),
         /**
-         * Forbidden to use this role. It happens when a user provides a role to the server whereas
-         * he is unknown in this role. CLIENT_ERROR_FORBIDDEN is used as status meaning "Forbidden
-         * to use this role"
+         * Forbidden to use this role. It happens when a user provides a role to
+         * the server whereas he is unknown in this role. CLIENT_ERROR_FORBIDDEN
+         * is used as status meaning "Forbidden to use this role"
          */
         SECURITY_USER_NOT_IN_SELECTED_ROLE(Status.CLIENT_ERROR_FORBIDDEN,
                 "Forbidden to use this role"),
         /**
-         * Fail to authorize the user. It happens when a client is authentified but unauthorized to
-         * use the resource. CLIENT_ERROR_UNAUTHORIZED is used as status meaning "Fail to authorize
-         * the user"
+         * Fail to authorize the user. It happens when a client is authentified
+         * but unauthorized to use the resource. CLIENT_ERROR_UNAUTHORIZED is
+         * used as status meaning "Fail to authorize the user"
          */
         SECURITY_USER_NO_ROLE(Status.CLIENT_ERROR_UNAUTHORIZED, "Fail to authorize the user"),
         /**
-         * Fail to know privileges of a user. It happens when an user is associated to several roles
-         * without selecting one. CLIENT_ERROR_CONFLICT is used as status meaning "Error when an
-         * user is associated to more than one role without setting selectedRole parameter"
+         * Fail to know privileges of a user. It happens when an user is
+         * associated to several roles without selecting one.
+         * CLIENT_ERROR_CONFLICT is used as status meaning "Error when an user
+         * is associated to more than one role without setting selectedRole
+         * parameter"
          */
         SECURITY_USER_CONFLICT(Status.CLIENT_ERROR_CONFLICT,
                 "Error when an user is associated to more than one role without setting selectedRole "
                 + "parameter"),
         /**
-         * Fail to create a DOI. It happens when a user try to create a DOI with the wrong role.
-         * Actually, the role is contained in the DOI name. So if a user is authentified with a
-         * right role and try to create a DOI for another role, an exception is raised.
-         * SECURITY_USER_PERMISSION is used as status meaning "User is not allowed to make this
-         * operation"
+         * Fail to create a DOI. It happens when a user try to create a DOI with
+         * the wrong role. Actually, the role is contained in the DOI name. So
+         * if a user is authentified with a right role and try to create a DOI
+         * for another role, an exception is raised. SECURITY_USER_PERMISSION is
+         * used as status meaning "User is not allowed to make this operation"
          */
         SECURITY_USER_PERMISSION(Status.CLIENT_ERROR_FORBIDDEN,
                 "User is not allowed to make this operation"),
         /**
-         * Cannot access to Datacite. It happens when a network problem may happen with Datacite.
-         * SERVER_ERROR_GATEWAY_TIMEOUT is used as status meaning "Cannot access to Datacite"
+         * Cannot access to Datacite. It happens when a network problem may
+         * happen with Datacite. SERVER_ERROR_GATEWAY_TIMEOUT is used as status
+         * meaning "Cannot access to Datacite"
          */
         NETWORK_PROBLEM(Status.CONNECTOR_ERROR_COMMUNICATION, "Cannot access to Datacite"),
         /**
-         * Fail to validate user input parameter for creating the DOI. It happens in the following
-         * cases:
+         * Fail to validate user input parameter for creating the DOI. It
+         * happens in the following cases:
          * <ul>
          * <li>the DOI or metadata are not provided</li>
          * <li>the prefix is not allowed</li>
          * <li>some characters are not allowed in the DOI name</li>
          * </ul>
-         * CLIENT_ERROR_BAD_REQUEST is used as status meaning "Failed to validate the user inputs
-         * parameters"
+         * CLIENT_ERROR_BAD_REQUEST is used as status meaning "Failed to
+         * validate the user inputs parameters"
          */
         METADATA_VALIDATION(Status.CLIENT_ERROR_BAD_REQUEST,
                 "Failed to validate the user inputs parameters"),
         /**
-         * Fail to create the media related to the DOI. CLIENT_ERROR_BAD_REQUEST is used as status
-         * meaning "DOI not provided or one or more of the specified mime-types or urls are invalid
-         * (e.g. non supported mime-type, not allowed url domain, etc.)"
+         * Fail to create the media related to the DOI. CLIENT_ERROR_BAD_REQUEST
+         * is used as status meaning "DOI not provided or one or more of the
+         * specified mime-types or urls are invalid (e.g. non supported
+         * mime-type, not allowed url domain, etc.)"
          */
         MEDIA_VALIDATION(Status.CLIENT_ERROR_BAD_REQUEST,
                 "DOI not provided or one or more of the specified mime-types or urls are invalid "
                 + "(e.g. non supported mime-type, not allowed url domain, etc.)"),
         /**
-         * Fail to create the landing page related to the DOI. CLIENT_ERROR_BAD_REQUEST is used as
-         * status meaning "Validation error when defining the DOI and its landing page"
+         * Fail to create the landing page related to the DOI.
+         * CLIENT_ERROR_BAD_REQUEST is used as status meaning "Validation error
+         * when defining the DOI and its landing page"
          */
         LANGING_PAGE_VALIDATION(Status.CLIENT_ERROR_BAD_REQUEST,
                 "Validation error when defining the DOI and its landing page"),
         /**
-         * DOI validation error. CLIENT_ERROR_BAD_REQUEST is used as status meaning "Character or
-         * prefix not allowed in the DOI"
+         * DOI validation error. CLIENT_ERROR_BAD_REQUEST is used as status
+         * meaning "Character or prefix not allowed in the DOI"
          */
         DOI_VALIDATION(Status.CLIENT_ERROR_BAD_REQUEST, "Character or prefix not allowed in the "
                 + "DOI"),
         /**
-         * Internal server error. Fail to communicate with DataCite using the interface
-         * specification meaning "Interface problem between Datacite and DOI-Server"
+         * Internal server error. Fail to communicate with DataCite using the
+         * interface specification meaning "Interface problem between Datacite
+         * and DOI-Server"
          */
         DATACITE_PROBLEM(Status.SERVER_ERROR_INTERNAL,
                 "Interface problem between Datacite and DOI-Server");

@@ -50,7 +50,7 @@ public class ConfigIhmResource extends AbstractResource {
 
     /**
      * {@inheritDoc }
-     */    
+     */
     @Override
     protected void doInit() throws ResourceException {
         super.doInit();
@@ -62,8 +62,8 @@ public class ConfigIhmResource extends AbstractResource {
     }
 
     /**
-     * Creates a data model. The data model is used to replace values in the template
-     * ihm_config.ftl.
+     * Creates a data model. The data model is used to replace values in the
+     * template ihm_config.ftl.
      *
      * @return the data model
      */
@@ -91,7 +91,7 @@ public class ConfigIhmResource extends AbstractResource {
 
     /**
      * {@inheritDoc }
-     */    
+     */
     @Override
     protected void describeGet(final MethodInfo info) {
         info.setName(Method.GET);

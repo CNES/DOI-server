@@ -69,7 +69,8 @@ public final class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService 
     public static final String DB_MAX_IDLE_CONNECTIONS = "Starter.Database.MaxIdleConnections";
 
     /**
-     * Maximum number of active connections that can be allocated at the same time.
+     * Maximum number of active connections that can be allocated at the same
+     * time.
      */
     public static final String DB_MAX_ACTIVE_CONNECTIONS = "Starter.Database.MaxActiveConnections";
 
@@ -84,7 +85,8 @@ public final class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService 
      */
     private static final String FIELD_USERNAME = "username";
     /**
-     * SQL field that contains the information telling if a user is admin {@value #FIELD_ADMIN}.
+     * SQL field that contains the information telling if a user is admin
+     * {@value #FIELD_ADMIN}.
      */
     private static final String FIELD_ADMIN = "admin";
     /**
@@ -92,11 +94,13 @@ public final class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService 
      */
     private static final String FIELD_EMAIL = "email";
     /**
-     * SQL field that contains the projectname related to a user {@value #FIELD_PROJECTNAME}.
+     * SQL field that contains the projectname related to a user
+     * {@value #FIELD_PROJECTNAME}.
      */
     private static final String FIELD_PROJECTNAME = "projectname";
     /**
-     * SQL field that contains the DOI suffix for the project name {@value #FIELD_PROJECT_SUFFIX}.
+     * SQL field that contains the DOI suffix for the project name
+     * {@value #FIELD_PROJECT_SUFFIX}.
      */
     private static final String FIELD_PROJECT_SUFFIX = "suffix";
     /**
@@ -286,8 +290,8 @@ public final class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService 
     }
 
     /**
-     * Create the implementation of DOI database by creation the JDBC connection from a specific
-     * configuration file.
+     * Create the implementation of DOI database by creation the JDBC connection
+     * from a specific configuration file.
      *
      * @param dbUrl database URL
      * @param dbUser database user
@@ -1051,7 +1055,7 @@ public final class DOIDbDataAccessServiceImpl implements DOIDbDataAccessService 
     @Override
     public void close() throws DOIDbException {
         LOGGER.traceEntry();
-        if(this.dbConnector != null) {
+        if (this.dbConnector != null) {
             this.dbConnector.close();
             this.dbConnector = null;
         }

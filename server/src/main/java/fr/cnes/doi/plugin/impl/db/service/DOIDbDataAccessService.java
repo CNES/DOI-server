@@ -173,7 +173,8 @@ public interface DOIDbDataAccessService {
      *
      * @param suffix suffix
      * @return project name
-     * @throws fr.cnes.doi.exception.DOIDbException When an Database exception happens
+     * @throws fr.cnes.doi.exception.DOIDbException When an Database exception
+     * happens
      */
     public String getDOIProjectName(int suffix) throws DOIDbException;
 
@@ -181,7 +182,8 @@ public interface DOIDbDataAccessService {
      * Add token
      *
      * @param token Adds a token to the database
-     * @throws fr.cnes.doi.exception.DOIDbException When an Database exception happens
+     * @throws fr.cnes.doi.exception.DOIDbException When an Database exception
+     * happens
      */
     public void addToken(String token) throws DOIDbException;
 
@@ -189,7 +191,8 @@ public interface DOIDbDataAccessService {
      * Delete token
      *
      * @param token token to delete
-     * @throws fr.cnes.doi.exception.DOIDbException When an Database exception happens
+     * @throws fr.cnes.doi.exception.DOIDbException When an Database exception
+     * happens
      */
     public void deleteToken(String token) throws DOIDbException;
 
@@ -197,7 +200,8 @@ public interface DOIDbDataAccessService {
      * Get tokens
      *
      * @return List of tokens
-     * @throws fr.cnes.doi.exception.DOIDbException When an Database exception happens
+     * @throws fr.cnes.doi.exception.DOIDbException When an Database exception
+     * happens
      */
     public List<String> getTokens() throws DOIDbException;
 

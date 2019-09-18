@@ -29,8 +29,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 
@@ -60,7 +58,8 @@ public class ClientSearchDataCite extends BaseClient {
     /**
      * Constructor.
      *
-     * @throws fr.cnes.doi.exception.ClienSearchDataCiteException when an error happens
+     * @throws fr.cnes.doi.exception.ClienSearchDataCiteException when an error
+     * happens
      */
     public ClientSearchDataCite() throws ClienSearchDataCiteException {
         this(DoiSettings.getInstance().getString(Consts.INIST_DOI));
@@ -129,7 +128,8 @@ public class ClientSearchDataCite extends BaseClient {
     }
 
     /**
-     * Returns only the dois within the specified project from the search result.
+     * Returns only the dois within the specified project from the search
+     * result.
      *
      * @param idProject project ID
      * @return the search result

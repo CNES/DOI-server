@@ -37,7 +37,8 @@ import org.restlet.security.SecretVerifier;
 import org.restlet.security.User;
 
 /**
- * Had to change method "unmap" l.520, which threw ArrayIndexOutOfBoundsException
+ * Had to change method "unmap" l.520, which threw
+ * ArrayIndexOutOfBoundsException
  *
  * @author disto
  */
@@ -74,8 +75,8 @@ public final class MyMemoryRealm extends Realm {
      * @param userGroups The set of user groups to update.
      * @param currentGroup The current group to inspect.
      * @param stack The stack of ancestor groups.
-     * @param inheritOnly Indicates if only the ancestors groups that have their "inheritRoles"
-     * property enabled should be added.
+     * @param inheritOnly Indicates if only the ancestors groups that have their
+     * "inheritRoles" property enabled should be added.
      */
     private void addGroups(final User user, final Set<Group> userGroups,
             final Group currentGroup, final List<Group> stack, final boolean inheritOnly) {
@@ -104,8 +105,8 @@ public final class MyMemoryRealm extends Realm {
     }
 
     /**
-     * Finds the set of groups where a given user is a member. Note that inheritable ancestors
-     * groups are also returned.
+     * Finds the set of groups where a given user is a member. Note that
+     * inheritable ancestors groups are also returned.
      *
      * @param user The member user.
      * @return The set of groups.
@@ -118,8 +119,8 @@ public final class MyMemoryRealm extends Realm {
      * Finds the set of groups where a given user is a member.
      *
      * @param user The member user.
-     * @param inheritOnly Indicates if only the ancestors groups that have their "inheritRoles"
-     * property enabled should be added.
+     * @param inheritOnly Indicates if only the ancestors groups that have their
+     * "inheritRoles" property enabled should be added.
      * @return The set of groups.
      */
     public Set<Group> findGroups(final User user, final boolean inheritOnly) {
@@ -369,8 +370,8 @@ public final class MyMemoryRealm extends Realm {
     }
 
     /**
-     * Sets the modifiable list of root groups. This method clears the current list and adds all
-     * entries in the parameter list.
+     * Sets the modifiable list of root groups. This method clears the current
+     * list and adds all entries in the parameter list.
      *
      * @param rootGroups A list of root groups.
      */
@@ -387,8 +388,8 @@ public final class MyMemoryRealm extends Realm {
     }
 
     /**
-     * Sets the modifiable list of users. This method clears the current list and adds all entries
-     * in the parameter list.
+     * Sets the modifiable list of users. This method clears the current list
+     * and adds all entries in the parameter list.
      *
      * @param users A list of users.
      */
@@ -405,7 +406,8 @@ public final class MyMemoryRealm extends Realm {
     }
 
     /**
-     * Unmaps a group defined in a component from a role defined in the application.
+     * Unmaps a group defined in a component from a role defined in the
+     * application.
      *
      * @param group The source group.
      * @param application The parent application. Can't be null.
@@ -417,7 +419,8 @@ public final class MyMemoryRealm extends Realm {
     }
 
     /**
-     * Unmaps a group defined in a component from a role defined in the application.
+     * Unmaps a group defined in a component from a role defined in the
+     * application.
      *
      * @param group The source group.
      * @param role The target role.
@@ -427,8 +430,8 @@ public final class MyMemoryRealm extends Realm {
     }
 
     /**
-     * Unmaps an element (user, group or organization) defined in a component from a role defined in
-     * the application.
+     * Unmaps an element (user, group or organization) defined in a component
+     * from a role defined in the application.
      *
      * @param source The source group.
      * @param role The target role.
@@ -446,7 +449,8 @@ public final class MyMemoryRealm extends Realm {
     }
 
     /**
-     * Unmaps a user defined in a component from a role defined in the application.
+     * Unmaps a user defined in a component from a role defined in the
+     * application.
      *
      * @param user The source user.
      * @param application The parent application. Can't be null.
@@ -458,7 +462,8 @@ public final class MyMemoryRealm extends Realm {
     }
 
     /**
-     * Unmaps a user defined in a component from a role defined in the application.
+     * Unmaps a user defined in a component from a role defined in the
+     * application.
      *
      * @param user The source user.
      * @param role The target role.
@@ -501,7 +506,8 @@ public final class MyMemoryRealm extends Realm {
     }
 
     /**
-     * Verifier based on the default security model. It looks up users in the mapped organizations.
+     * Verifier based on the default security model. It looks up users in the
+     * mapped organizations.
      */
     private class DefaultVerifier extends SecretVerifier {
 

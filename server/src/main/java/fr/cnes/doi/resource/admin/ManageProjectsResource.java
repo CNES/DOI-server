@@ -46,8 +46,8 @@ import org.restlet.ext.wadl.ParameterStyle;
 public class ManageProjectsResource extends AbstractResource {
 
     /**
-     * Parameter for the project name {@value #PROJECT_NAME_PARAMETER}. This parameter is send to
-     * create a new identifier for the project.
+     * Parameter for the project name {@value #PROJECT_NAME_PARAMETER}. This
+     * parameter is send to create a new identifier for the project.
      */
     public static final String PROJECT_NAME_PARAMETER = "newProjectName";
 
@@ -62,7 +62,8 @@ public class ManageProjectsResource extends AbstractResource {
     private volatile String suffixProject;
 
     /**
-     * Set-up method that can be overridden in order to initialize the state of the resource.
+     * Set-up method that can be overridden in order to initialize the state of
+     * the resource.
      *
      * @throws ResourceException - if a problem happens
      */
@@ -156,7 +157,7 @@ public class ManageProjectsResource extends AbstractResource {
 
     /**
      * {@inheritDoc }
-     */    
+     */
     @Override
     protected void describePost(final MethodInfo info) {
         info.setName(Method.POST);
@@ -178,7 +179,7 @@ public class ManageProjectsResource extends AbstractResource {
 
     /**
      * {@inheritDoc }
-     */    
+     */
     @Override
     protected void describeDelete(final MethodInfo info) {
         info.setName(Method.DELETE);

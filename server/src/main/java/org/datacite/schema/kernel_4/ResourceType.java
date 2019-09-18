@@ -16,7 +16,8 @@ import javax.xml.bind.annotation.XmlType;
  * Java class for resourceType.
  *
  * <p>
- * The following schema fragment specifies the expected content contained within this class.
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * <p>
  * &nbsp;
  *
@@ -51,8 +52,9 @@ import javax.xml.bind.annotation.XmlType;
 public enum ResourceType {
 
     /**
-     * A series of visual representations imparting an impression of motion when shown in
-     * succession. May or may not include sound. May be used for films, video, etc,
+     * A series of visual representations imparting an impression of motion when
+     * shown in succession. May or may not include sound. May be used for films,
+     * video, etc,
      * <p>
      * Ex: http://data.datacite.org/10.7916/D8610XCB
      *
@@ -60,8 +62,9 @@ public enum ResourceType {
     @XmlEnumValue("Audiovisual")
     AUDIOVISUAL("Audiovisual"),
     /**
-     * An aggregation of resources of various types, or a list of resources that form part of a
-     * publication. If a collection exists of a single type, use the single type to describe it.
+     * An aggregation of resources of various types, or a list of resources that
+     * form part of a publication. If a collection exists of a single type, use
+     * the single type to describe it.
      * <p>
      * A collection of samples, or various files making up a report. Ex:
      * http://data.datacite.org/10.5284/1001038
@@ -81,9 +84,10 @@ public enum ResourceType {
     /**
      * A non‐persistent, time‐based occurrence.
      * <p>
-     * Descriptive information and/or content that is the basis for discovery of the purpose,
-     * location, duration, and responsible agents associated with an event such as a webcast or
-     * convention. Ex: http://data.datacite.org/10.7269/P3RN35SZ
+     * Descriptive information and/or content that is the basis for discovery of
+     * the purpose, location, duration, and responsible agents associated with
+     * an event such as a webcast or convention. Ex:
+     * http://data.datacite.org/10.7269/P3RN35SZ
      */
     @XmlEnumValue("Event")
     EVENT("Event"),
@@ -96,19 +100,21 @@ public enum ResourceType {
     @XmlEnumValue("Image")
     IMAGE("Image"),
     /**
-     * A resource requiring interaction from the user to be understood, executed, or experienced.
+     * A resource requiring interaction from the user to be understood,
+     * executed, or experienced.
      * <p>
-     * Training modules, files that require use of a viewer (e.g., Flash), or query/response
-     * portals. Ex: http://data.datacite.org/10.7269/P3TB14TR
+     * Training modules, files that require use of a viewer (e.g., Flash), or
+     * query/response portals. Ex: http://data.datacite.org/10.7269/P3TB14TR
      */
     @XmlEnumValue("InteractiveResource")
     INTERACTIVE_RESOURCE("InteractiveResource"),
     /**
-     * An abstract, conceptual, graphical, mathematical or visualization model that represents
-     * empirical objects, phenomena, or physical processes.
+     * An abstract, conceptual, graphical, mathematical or visualization model
+     * that represents empirical objects, phenomena, or physical processes.
      * <p>
-     * Modelled descriptions of, for example, different aspects of languages or a molecular biology
-     * reaction chain. Ex: http://data.datacite.org/10.5285/4D866CD2‐C907‐4CE2‐B070‐084CA9779DC2
+     * Modelled descriptions of, for example, different aspects of languages or
+     * a molecular biology reaction chain. Ex:
+     * http://data.datacite.org/10.5285/4D866CD2‐C907‐4CE2‐B070‐084CA9779DC2
      */
     @XmlEnumValue("Model")
     MODEL("Model"),
@@ -129,7 +135,8 @@ public enum ResourceType {
     /**
      * A computer program in source code (text) or compiled form.
      * <p>
-     * Software supporting research. Ex: http://data.datacite.org/10.7938/M1057CV9
+     * Software supporting research. Ex:
+     * http://data.datacite.org/10.7938/M1057CV9
      */
     @XmlEnumValue("Software")
     SOFTWARE("Software"),
@@ -149,12 +156,13 @@ public enum ResourceType {
     @XmlEnumValue("Text")
     TEXT("Text"),
     /**
-     * A structured series of steps which can be executed to produce a final outcome, allowing users
-     * a means to specify and enact their work in a more reproducible manner.
+     * A structured series of steps which can be executed to produce a final
+     * outcome, allowing users a means to specify and enact their work in a more
+     * reproducible manner.
      * <p>
-     * Computational workflows involving sequential operations made on data by wrapped software and
-     * may be specified in a format belonging to a workflow management system, such as Taverna
-     * (http://www.taverna.org.uk/).
+     * Computational workflows involving sequential operations made on data by
+     * wrapped software and may be specified in a format belonging to a workflow
+     * management system, such as Taverna (http://www.taverna.org.uk/).
      */
     @XmlEnumValue("Workflow")
     WORKFLOW("Workflow"),

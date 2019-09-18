@@ -65,11 +65,13 @@ public class MetadatasResource extends BaseMdsResource {
     }
 
     /**
-     * Create Metadata for a given DOI. The DOI name is given in the metadata entity. This request
-     * stores new version of metadata and returns a 201 status when the operation is successful.
+     * Create Metadata for a given DOI. The DOI name is given in the metadata
+     * entity. This request stores new version of metadata and returns a 201
+     * status when the operation is successful.
      *
      * @param entity Metadata representation
-     * @return short explanation of status code e.g. CREATED, HANDLE_ALREADY_EXISTS etc
+     * @return short explanation of status code e.g. CREATED,
+     * HANDLE_ALREADY_EXISTS etc
      * @throws DoiServerException - if the response is not a success
      * <ul>
      * <li>{@link API_MDS#SECURITY_USER_NO_ROLE}</li>
@@ -148,7 +150,8 @@ public class MetadatasResource extends BaseMdsResource {
      *
      * @param entity metadata representation
      * @return the metadata object
-     * @throws JAXBException - if an error was encountered while creating the JAXBContex
+     * @throws JAXBException - if an error was encountered while creating the
+     * JAXBContex
      * @throws SAXException - if a SAX error occurs during parsing.
      * @throws ValidationException - if metadata is not valid against the schema
      */
@@ -163,7 +166,8 @@ public class MetadatasResource extends BaseMdsResource {
     /**
      * Describes the POST method.
      *
-     * This request stores new version of DOI metadata. The request body must contain a valid XML.
+     * This request stores new version of DOI metadata. The request body must
+     * contain a valid XML.
      *
      * <ul>
      * <li>{@link API_MDS#CREATE_METADATA}</li>

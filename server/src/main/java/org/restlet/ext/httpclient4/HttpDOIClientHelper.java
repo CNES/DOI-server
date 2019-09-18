@@ -120,9 +120,11 @@ public class HttpDOIClientHelper extends org.restlet.engine.connector.HttpClient
     }
 
     /**
-     * Returns the maximum number of connections that will be created for any particular host.
+     * Returns the maximum number of connections that will be created for any
+     * particular host.
      *
-     * @return The maximum number of connections that will be created for any particular host.
+     * @return The maximum number of connections that will be created for any
+     * particular host.
      */
     public int getMaxConnectionsPerHost() {
         return Integer.parseInt(getHelpedParameters().getFirstValue(
@@ -140,10 +142,11 @@ public class HttpDOIClientHelper extends org.restlet.engine.connector.HttpClient
     }
 
     /**
-     * Returns the time in ms beyond which idle connections are eligible for reaping. The default
-     * value is 60000 ms.
+     * Returns the time in ms beyond which idle connections are eligible for
+     * reaping. The default value is 60000 ms.
      *
-     * @return The time in millis beyond which idle connections are eligible for reaping.
+     * @return The time in millis beyond which idle connections are eligible for
+     * reaping.
      */
     public long getIdleTimeout() {
         return Long.parseLong(getHelpedParameters().getFirstValue(
@@ -198,7 +201,7 @@ public class HttpDOIClientHelper extends org.restlet.engine.connector.HttpClient
         try {
             result = new HttpMethodCall(this, request.getMethod().toString(),
                     ReferenceUtils.update(request.getResourceRef(), request)
-                            .toString(), request.isEntityAvailable());
+                    .toString(), request.isEntityAvailable());
         } catch (IOException ioe) {
             getLogger().log(Level.WARNING,
                     "Unable to create the HTTP client call", ioe);

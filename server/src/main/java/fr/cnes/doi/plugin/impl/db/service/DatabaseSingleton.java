@@ -32,7 +32,7 @@ public final class DatabaseSingleton {
      * DOI db access.
      */
     private final DOIDbDataAccessService das;
-    
+
     /**
      * Returns the instance
      *

@@ -38,8 +38,8 @@ import org.restlet.resource.ResourceException;
 /**
  * Abstract resource.
  *
- * Each resource must extend from this abstract class. This abstract class allows the WADL
- * description.
+ * Each resource must extend from this abstract class. This abstract class
+ * allows the WADL description.
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  * @see <a href="https://www.w3.org/Submission/wadl/">WADL</a>
@@ -68,7 +68,8 @@ public abstract class AbstractResource extends WadlServerResource {
      *
      * @param form submitted form
      * @param parameterName parameter name in the form
-     * @return True when the form is not null and the parameter exists in the form otherwise False
+     * @return True when the form is not null and the parameter exists in the
+     * form otherwise False
      */
     public boolean isValueExist(final Form form,
             final String parameterName) {
@@ -87,7 +88,8 @@ public abstract class AbstractResource extends WadlServerResource {
      *
      * @param form submitted form
      * @param parameterName parameter name
-     * @return False when the form is not null and the parameter exists in the form otherwise True
+     * @return False when the form is not null and the parameter exists in the
+     * form otherwise True
      */
     public boolean isValueNotExist(final Form form,
             final String parameterName) {

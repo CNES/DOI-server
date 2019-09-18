@@ -17,7 +17,7 @@
  * MA 02110-1301  USA
  */
 /**
- * Provides classes to monitor the speed of {@link fr.cnes.doi.application.DoiMdsApplication Meta 
+ * Provides classes to monitor the speed of {@link fr.cnes.doi.application.DoiMdsApplication Meta
  * Data Store application}.
  */
 package fr.cnes.doi.services;

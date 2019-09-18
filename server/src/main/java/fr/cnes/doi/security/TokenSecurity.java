@@ -62,7 +62,7 @@ public final class TokenSecurity {
      * token key.
      */
     private String tokenKey;
-    
+
     /**
      * Project ID name in token.
      */
@@ -142,7 +142,8 @@ public final class TokenSecurity {
      * @param timeUnit The time unit for the date expiration
      * @param amount the amount of timeUnit for the date expiration
      * @return JWT token
-     * @throws fr.cnes.doi.exception.TokenSecurityException if the projectID is not first registered
+     * @throws fr.cnes.doi.exception.TokenSecurityException if the projectID is
+     * not first registered
      */
     public String generate(final String userID,
             final int projectID,
@@ -234,9 +235,10 @@ public final class TokenSecurity {
         LOG.debug(String.format("Set tokenKey to %s", tokenKey));
         LOG.traceExit();
     }
-    
+
     /**
      * Returns true when the token is expired otherwise false.
+     *
      * @param token token
      * @return true when the token is expired otherwise false.
      */
@@ -251,7 +253,8 @@ public final class TokenSecurity {
      *
      * @param jwtToken token JWT
      * @return the information or null when the token is expired.
-     * @throws DoiRuntimeException - if an error happens getting information from the token
+     * @throws DoiRuntimeException - if an error happens getting information
+     * from the token
      */
     public Jws<Claims> getTokenInformation(final String jwtToken) throws DoiRuntimeException {
         LOG.traceEntry("Parameter : {}", jwtToken);
@@ -261,9 +264,7 @@ public final class TokenSecurity {
                     .requireIssuer(DoiSettings.getInstance().getString(Consts.APP_NAME))
                     .setSigningKey(TextCodec.BASE64.decode(getTokenKey()))
                     .parseClaimsJws(jwtToken);
-        } catch (UnsupportedJwtException
-                | MalformedJwtException | SignatureException
-                | IllegalArgumentException ex) {
+        } catch (UnsupportedJwtException | MalformedJwtException | SignatureException | IllegalArgumentException ex) {
             throw LOG.throwing(new DoiRuntimeException("Unable to get the token information", ex));
         } catch (ExpiredJwtException e) {
             LOG.info("Cannot get the token information", e);

@@ -98,7 +98,8 @@ public class TokenResource extends AbstractResource {
     private volatile Logger LOG;
 
     /**
-     * Set-up method that can be overridden in order to initialize the state of the resource
+     * Set-up method that can be overridden in order to initialize the state of
+     * the resource
      *
      * @throws ResourceException - if a problem happens
      */
@@ -114,14 +115,15 @@ public class TokenResource extends AbstractResource {
         LOG.debug("Token Param : {}", this.tokenParam);
         LOG.traceExit();
     }
-     
+
     /**
      * Creates and stores a token.
      *
      * The token creation is based on several actions :
      * <ul>
      * <li>creates the {@link fr.cnes.doi.security.TokenSecurity#generate}</li>
-     * <li>stores the token in {@link fr.cnes.doi.db.AbstractTokenDBHelper token database}</li>
+     * <li>stores the token in
+     * {@link fr.cnes.doi.db.AbstractTokenDBHelper token database}</li>
      * </ul>
      *
      * @param infoForm submitted information when requesting the token creation
@@ -136,7 +138,7 @@ public class TokenResource extends AbstractResource {
             final String user = this.getClientInfo().getUser().getIdentifier();
             LOG.debug("Identified user : {}", user);
             final String userID;
-            if(isInRole(RoleAuthorizer.ROLE_ADMIN)) {
+            if (isInRole(RoleAuthorizer.ROLE_ADMIN)) {
                 // The admin can generate for everybody
                 LOG.debug("User {} is admin", user);
                 userID = info.getFirstValue(IDENTIFIER_PARAMETER, user);
@@ -146,12 +148,12 @@ public class TokenResource extends AbstractResource {
             }
             final String projectID = info.getFirstValue(PROJECT_ID_PARAMETER, null);
             final String defaultTimeUnit = DoiSettings.getInstance().getString(
-                    Consts.TOKEN_EXPIRATION_UNIT, 
+                    Consts.TOKEN_EXPIRATION_UNIT,
                     String.valueOf(TokenSecurity.TimeUnit.HOUR.getTimeUnit())
             );
             final String defaultTimeDelay = DoiSettings.getInstance().getString(
                     Consts.TOKEN_EXPIRATION_DELAY, "1");
-            
+
             final String timeParam = info.getFirstValue(UNIT_OF_TIME_PARAMETER, defaultTimeUnit);
             final int timeUnit = Integer.parseInt(timeParam);
             final TimeUnit unit = TokenSecurity.TimeUnit.getTimeUnitFrom(timeUnit);
@@ -160,18 +162,18 @@ public class TokenResource extends AbstractResource {
 
             final String tokenJwt;
             if (projectID == null) {
-                 tokenJwt = TokenSecurity.getInstance().generate(
+                tokenJwt = TokenSecurity.getInstance().generate(
                         userID,
                         unit,
                         amount
-                );                  
+                );
             } else {
                 tokenJwt = TokenSecurity.getInstance().generate(
                         userID,
                         Integer.parseInt(projectID),
                         unit,
                         amount
-                );                
+                );
             }
 
             LOG.info("Token created {} for project {} during {} {}",
@@ -189,7 +191,8 @@ public class TokenResource extends AbstractResource {
     }
 
     /**
-     * Sends the token to the user when the administrator creates a token for theuser
+     * Sends the token to the user when the administrator creates a token for
+     * theuser
      *
      * @param userAdmin User administration
      * @param userID user to send the message

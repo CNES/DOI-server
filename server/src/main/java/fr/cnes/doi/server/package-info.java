@@ -34,13 +34,13 @@
  * <img src="{@docRoot}/doc-files/server.png" alt="Server overview">
  *
  * <p>
- * A user can basically query DataCite for getting, creating, updating, deleting and searching a
- * DOI. For this, he should use the web services of each application or the web page available in
- * the administration application.
+ * A user can basically query DataCite for getting, creating, updating, deleting
+ * and searching a DOI. For this, he should use the web services of each
+ * application or the web page available in the administration application.
  *
- * According to the web service, the authentication/authorization system must be different. The
- * different system could be one of the following or all of them in the same time with some of them
- * optional :
+ * According to the web service, the authentication/authorization system must be
+ * different. The different system could be one of the following or all of them
+ * in the same time with some of them optional :
  * <ul>
  * <li>An authentication based on Token</li>
  * <li>An authentication based on simple login/password</li>

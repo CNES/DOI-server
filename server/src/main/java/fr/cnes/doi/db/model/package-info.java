@@ -19,8 +19,10 @@
 /**
  * Provides the data models for:
  * <ul>
- * <li>{@link fr.cnes.doi.db.model.DOIProject DOIProject} representing the project data model</li>
- * <li>{@link fr.cnes.doi.db.model.DOIUser DOIUser} representing the user data model</li>
+ * <li>{@link fr.cnes.doi.db.model.DOIProject DOIProject} representing the
+ * project data model</li>
+ * <li>{@link fr.cnes.doi.db.model.DOIUser DOIUser} representing the user data
+ * model</li>
  * </ul>
  */
 package fr.cnes.doi.db.model;

@@ -33,7 +33,8 @@ import org.restlet.resource.ResourceException;
 public class DoiServerException extends ResourceException {
 
     /**
-     * Creates an exception based on the app and the error coming from Doi-server.
+     * Creates an exception based on the app and the error coming from
+     * Doi-server.
      *
      * @param app MDS application
      * @param error MDS error
@@ -43,7 +44,8 @@ public class DoiServerException extends ResourceException {
     }
 
     /**
-     * Creates an exception based on the app and the error coming from Doi-server.
+     * Creates an exception based on the app and the error coming from
+     * Doi-server.
      *
      * @param app MDS application
      * @param error MDS error
@@ -54,7 +56,8 @@ public class DoiServerException extends ResourceException {
     }
 
     /**
-     * Creates an exception based on the app and the error coming from Doi-server.
+     * Creates an exception based on the app and the error coming from
+     * Doi-server.
      *
      * @param app MDS application
      * @param error MDS error
@@ -65,7 +68,8 @@ public class DoiServerException extends ResourceException {
     }
 
     /**
-     * Creates an exception based on the app and the error coming from Doi-server.
+     * Creates an exception based on the app and the error coming from
+     * Doi-server.
      *
      * @param app MDS application
      * @param error MDS error
@@ -80,7 +84,8 @@ public class DoiServerException extends ResourceException {
     }
 
     /**
-     * Creates an exception based on the app and the error coming from Doi-server.
+     * Creates an exception based on the app and the error coming from
+     * Doi-server.
      *
      * @param app MDS application
      * @param error Datacite error
@@ -94,7 +99,8 @@ public class DoiServerException extends ResourceException {
     }
 
     /**
-     * Creates an exception based on the app and the error coming from Doi-server.
+     * Creates an exception based on the app and the error coming from
+     * Doi-server.
      *
      * @param app MDS application
      * @param error Datacite error
@@ -111,7 +117,8 @@ public class DoiServerException extends ResourceException {
     }
 
     /**
-     * Creates an exception based on the app and the error coming from Doi-server.
+     * Creates an exception based on the app and the error coming from
+     * Doi-server.
      *
      * @param app MDS application
      * @param error Datacite error
@@ -128,7 +135,8 @@ public class DoiServerException extends ResourceException {
     }
 
     /**
-     * Creates an exception based on the app and the error coming from Doi-server.
+     * Creates an exception based on the app and the error coming from
+     * Doi-server.
      *
      * @param app MDS application
      * @param error Datacite error
@@ -147,7 +155,8 @@ public class DoiServerException extends ResourceException {
     }
 
     /**
-     * Creates an exception based on the app and the error coming from Doi-server.
+     * Creates an exception based on the app and the error coming from
+     * Doi-server.
      *
      * @param app MDS application
      * @param status Status
@@ -163,7 +172,8 @@ public class DoiServerException extends ResourceException {
     }
 
     /**
-     * Creates an exception based on the app and the error coming from Doi-server.
+     * Creates an exception based on the app and the error coming from
+     * Doi-server.
      *
      * @param app MDS application
      * @param status Status

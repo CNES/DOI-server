@@ -20,33 +20,31 @@
  * Provides resources for Meta Data Store application.
  *
  * The {@link fr.cnes.doi.application.DoiMdsApplication} is the main DOI
- * {@link fr.cnes.doi.application application} that brings together a set of resources handling the
- * life of DOIs.
+ * {@link fr.cnes.doi.application application} that brings together a set of
+ * resources handling the life of DOIs.
  *
  * <p>
- * An application is instantiated only once when the server starts. On the contrary a resource is
- * instantiated at each call. The {@link fr.cnes.doi.application.DoiMdsApplication}
- * {@link fr.cnes.doi.application.DoiMdsApplication#createRouter routes} the different resources
- * according to an URI.
+ * An application is instantiated only once when the server starts. On the
+ * contrary a resource is instantiated at each call. The {@link fr.cnes.doi.application.DoiMdsApplication}
+ * {@link fr.cnes.doi.application.DoiMdsApplication#createRouter routes} the
+ * different resources according to an URI.
  *
  * <ul>
  * <li>the {@link fr.cnes.doi.resource.mds.DoisResource} is routed by the URI
  * {@value fr.cnes.doi.application.DoiMdsApplication#DOI_URI}</li>
- * <li>the {@link fr.cnes.doi.resource.mds.DoiResource} is routed by the URI
- * {@value fr.cnes.doi.application.DoiMdsApplication#DOI_URI}
+ * <li>the {@link fr.cnes.doi.resource.mds.DoiResource} is routed by the URI  {@value fr.cnes.doi.application.DoiMdsApplication#DOI_URI}
  * {@value fr.cnes.doi.application.DoiMdsApplication#DOI_NAME_URI}</li>
- * <li>the {@link fr.cnes.doi.resource.mds.MetadatasResource} is routed by the URI
- * {@value fr.cnes.doi.application.DoiMdsApplication#METADATAS_URI}</li>
- * <li>the {@link fr.cnes.doi.resource.mds.MetadataResource} is routed by the URI
- * {@value fr.cnes.doi.application.DoiMdsApplication#METADATAS_URI}
+ * <li>the {@link fr.cnes.doi.resource.mds.MetadatasResource} is routed by the
+ * URI {@value fr.cnes.doi.application.DoiMdsApplication#METADATAS_URI}</li>
+ * <li>the {@link fr.cnes.doi.resource.mds.MetadataResource} is routed by the
+ * URI  {@value fr.cnes.doi.application.DoiMdsApplication#METADATAS_URI}
  * {@value fr.cnes.doi.application.DoiMdsApplication#DOI_NAME_URI}</li>
- * <li>the {@link fr.cnes.doi.resource.mds.MediaResource} is routed by the URI
- * {@value fr.cnes.doi.application.DoiMdsApplication#MEDIA_URI}
+ * <li>the {@link fr.cnes.doi.resource.mds.MediaResource} is routed by the URI  {@value fr.cnes.doi.application.DoiMdsApplication#MEDIA_URI}
  * {@value fr.cnes.doi.application.DoiMdsApplication#DOI_NAME_URI}</li>
  * </ul>
  *
- * Some of the above resources are protected by several mechanism. This mechanism is defined as a
- * pipeline:
+ * Some of the above resources are protected by several mechanism. This
+ * mechanism is defined as a pipeline:
  * <ul>
  * <li>Request: --&gt;
  * {@link fr.cnes.doi.application.DoiMdsApplication#createAuthenticator Basic auth}(optional)
@@ -54,17 +52,17 @@
  * (optional)
  * --&gt;{@link fr.cnes.doi.application.DoiMdsApplication#createMethodAuthorizer Method auth}
  * --&gt;{@link fr.cnes.doi.application.DoiMdsApplication#createRouter router}</li>
- * <li>Response: &lt;--
- * {@link fr.cnes.doi.application.DoiMdsApplication.SecurityPostProcessingFilter 
- * SecurityPostProcessing}
- * &lt;---</li>
+ * <li>Response: &lt;--  {@link fr.cnes.doi.application.DoiMdsApplication.SecurityPostProcessingFilter 
+ * SecurityPostProcessing} &lt;---</li>
  * </ul>
  *
  * The {@link fr.cnes.doi.client.ClientMDS clientMDS} implements the call to
- * <a href="https://support.datacite.org/docs/mds-api-guide">DataCite</a>. This clients supports the
- * proxy by the use of {@link org.restlet.ext.httpclient4.HttpDOIClientHelper} plugin. This plugin is
- * registered by default when the method {@link fr.cnes.doi.client.BaseClient#getClient} is used.
- * The proxy parameters are automatically set from the config.properties by the use of
+ * <a href="https://support.datacite.org/docs/mds-api-guide">DataCite</a>. This
+ * clients supports the proxy by the use of
+ * {@link org.restlet.ext.httpclient4.HttpDOIClientHelper} plugin. This plugin
+ * is registered by default when the method
+ * {@link fr.cnes.doi.client.BaseClient#getClient} is used. The proxy parameters
+ * are automatically set from the config.properties by the use of
  * {@link fr.cnes.doi.settings.ProxySettings}
  *
  *
@@ -75,17 +73,20 @@
  * <ul>
  * <li>1. Create a project on the server by using the
  * {@link fr.cnes.doi.application.AdminApplication} through the resource
- * {@link fr.cnes.doi.resource.admin.SuffixProjectsResource#createProject}. The response at this
- * resource is an identifier, which is a part of the DOI suffix. This suffix guarantees the
- * uniqueness of the DOI within the institution at condition that the project defines an identifier
- * for each data. This data identifier will be part of the DOI suffix. Thus, the new DOI suffix has
- * the following syntax <b>projectIdentifier/dataIdentifier</b></li>
+ * {@link fr.cnes.doi.resource.admin.SuffixProjectsResource#createProject}. The
+ * response at this resource is an identifier, which is a part of the DOI
+ * suffix. This suffix guarantees the uniqueness of the DOI within the
+ * institution at condition that the project defines an identifier for each
+ * data. This data identifier will be part of the DOI suffix. Thus, the new DOI
+ * suffix has the following syntax <b>projectIdentifier/dataIdentifier</b></li>
  * <li>2 - Create the DOI metadata according to the
  * {@value fr.cnes.doi.client.ClientMDS#SCHEMA_DATACITE} schema.</li>
- * <li>3 - Upload the DOI metadata by using the {@link fr.cnes.doi.application.DoiMdsApplication}
- * application through the {@link fr.cnes.doi.resource.mds.MetadatasResource}</li>
- * <li>4 - Upload the landing page URL using {@link fr.cnes.doi.application.DoiMdsApplication}
- * application through the {@link fr.cnes.doi.resource.mds.DoisResource}</li>
+ * <li>3 - Upload the DOI metadata by using the
+ * {@link fr.cnes.doi.application.DoiMdsApplication} application through the
+ * {@link fr.cnes.doi.resource.mds.MetadatasResource}</li>
+ * <li>4 - Upload the landing page URL using
+ * {@link fr.cnes.doi.application.DoiMdsApplication} application through the
+ * {@link fr.cnes.doi.resource.mds.DoisResource}</li>
  * </ul>
  * As below, an example of a code to create a DOI.
  * <pre>

@@ -92,7 +92,8 @@ public final class DoiSettings {
     private String pathApp;
 
     /**
-     * private constructor Loads the defautl configuration properties {@value #CONFIG_PROPERTIES}
+     * private constructor Loads the defautl configuration properties
+     * {@value #CONFIG_PROPERTIES}
      */
     private DoiSettings() {
         final Properties properties = loadConfigurationFile();
@@ -235,7 +236,8 @@ public final class DoiSettings {
      *
      * @param properties configuration
      * @param keyword keyword to test
-     * @return True when the keyword does not exist in configuration otherwise False
+     * @return True when the keyword does not exist in configuration otherwise
+     * False
      */
     private boolean isNotExist(final ConcurrentHashMap<String, String> properties,
             final String keyword) {
@@ -320,12 +322,14 @@ public final class DoiSettings {
     }
 
     /**
-     * Returns the value of the key or null if no mapping for the key. A special processing
-     * inputStream done for the key {@value fr.cnes.doi.settings.Consts#INIST_DOI}. When this key
-     * inputStream called the value changes in respect of
+     * Returns the value of the key or null if no mapping for the key. A special
+     * processing inputStream done for the key
+     * {@value fr.cnes.doi.settings.Consts#INIST_DOI}. When this key inputStream
+     * called the value changes in respect of
      * {@value fr.cnes.doi.settings.Consts#CONTEXT_MODE}. When
-     * {@value fr.cnes.doi.settings.Consts#CONTEXT_MODE} inputStream set to PRE_PROD,
-     * {@value fr.cnes.doi.settings.Consts#INIST_DOI} inputStream set to {@value #INIST_TEST_DOI}.
+     * {@value fr.cnes.doi.settings.Consts#CONTEXT_MODE} inputStream set to
+     * PRE_PROD, {@value fr.cnes.doi.settings.Consts#INIST_DOI} inputStream set
+     * to {@value #INIST_TEST_DOI}.
      *
      * @param key key to search
      * @return the value of the key orl null if does not exist
@@ -344,8 +348,8 @@ public final class DoiSettings {
     }
 
     /**
-     * Returns the decoded value of the key. An exception inputStream raised when the key
-     * inputStream not encoded on 16bits.
+     * Returns the decoded value of the key. An exception inputStream raised
+     * when the key inputStream not encoded on 16bits.
      *
      * @param key key to search
      * @return the decoded vale
@@ -358,17 +362,17 @@ public final class DoiSettings {
                 this.getString(Consts.ENCRYPTED_FIELDS, "true"));
         if (Utils.isEmpty(value)) {
             result = value;
-        } else if(isEncrypted) {
+        } else if (isEncrypted) {
             result = UtilsCryptography.decrypt(value, getSecretKey());
         } else {
             result = value;
         }
         return LOG.traceExit(result);
     }
-    
+
     /**
-     * Returns the decoded value of the value. An exception inputStream raised when the key
-     * inputStream not encoded on 16bits.
+     * Returns the decoded value of the value. An exception inputStream raised
+     * when the key inputStream not encoded on 16bits.
      *
      * @param value value to decrypt
      * @return the decoded vale
@@ -380,21 +384,23 @@ public final class DoiSettings {
                 this.getString(Consts.ENCRYPTED_FIELDS, "true"));
         if (Utils.isEmpty(value)) {
             result = value;
-        } else if(isEncrypted) {
+        } else if (isEncrypted) {
             result = UtilsCryptography.decrypt(value, getSecretKey());
         } else {
             result = value;
         }
         return LOG.traceExit(result);
-    }    
+    }
 
     /**
-     * Returns the value of the key as an integer. NumberFormatException inputStream raisen when the
-     * value of the key in not compatible with an integer.
+     * Returns the value of the key as an integer. NumberFormatException
+     * inputStream raisen when the value of the key in not compatible with an
+     * integer.
      *
      * @param key key to search
      * @return the value
-     * @exception NumberFormatException if the string does not contain a parsable integer.
+     * @exception NumberFormatException if the string does not contain a
+     * parsable integer.
      */
     public int getInt(final String key) {
         LOG.traceEntry("Parameter\n\tkey : {}", key);
@@ -402,13 +408,14 @@ public final class DoiSettings {
     }
 
     /**
-     * Returns the value of the key as an integer. NumberFormatException inputStream raisen when the
-     * value of the key in not compatible
+     * Returns the value of the key as an integer. NumberFormatException
+     * inputStream raisen when the value of the key in not compatible
      *
      * @param key key to search
      * @param defaultValue default value
      * @return the value
-     * @exception NumberFormatException if the string does not contain a parsable integer.
+     * @exception NumberFormatException if the string does not contain a
+     * parsable integer.
      */
     public int getInt(final String key, final String defaultValue) {
         LOG.traceEntry("Parameter\n\tkey : {}\n\tdefaultValue", key, defaultValue);
@@ -416,8 +423,8 @@ public final class DoiSettings {
     }
 
     /**
-     * Returns the value of the key as a boolean. An exception inputStream raisen when the value of
-     * the key in not compatible with a boolean
+     * Returns the value of the key as a boolean. An exception inputStream
+     * raisen when the value of the key in not compatible with a boolean
      *
      * @param key key to search
      * @return the value
@@ -433,12 +440,13 @@ public final class DoiSettings {
     }
 
     /**
-     * Returns the value of the key as a long. NumberFormatException inputStream raisen when the
-     * value of the key in not compatible
+     * Returns the value of the key as a long. NumberFormatException inputStream
+     * raisen when the value of the key in not compatible
      *
      * @param key key to search
      * @return the value
-     * @exception NumberFormatException - if the string does not contain a parsable long
+     * @exception NumberFormatException - if the string does not contain a
+     * parsable long
      */
     public Long getLong(final String key) {
         LOG.traceEntry("Parameter\n\tkey : {}", key);
@@ -446,13 +454,14 @@ public final class DoiSettings {
     }
 
     /**
-     * Returns the value of the key as a long. NumberFormatException inputStream raisen when the
-     * value of the key in not compatible
+     * Returns the value of the key as a long. NumberFormatException inputStream
+     * raisen when the value of the key in not compatible
      *
      * @param key key to search
      * @param defaultValue default value
      * @return the value
-     * @exception NumberFormatException - if the string does not contain a parsable long
+     * @exception NumberFormatException - if the string does not contain a
+     * parsable long
      */
     public Long getLong(final String key, final String defaultValue) {
         LOG.traceEntry("Parameter\n\tkey : {}\n\tdefaultValue", key, defaultValue);
@@ -482,7 +491,8 @@ public final class DoiSettings {
      * Sets a custom properties file.
      *
      * @param path Path to the properties file
-     * @throws IOException - if an error occurred when reading from the input stream.
+     * @throws IOException - if an error occurred when reading from the input
+     * stream.
      */
     public void setPropertiesFile(final String path) throws IOException {
         LOG.traceEntry("Parameter\n\tpath : {}", path);
@@ -496,7 +506,8 @@ public final class DoiSettings {
      * Sets a custom properties file.
      *
      * @param inputStream Input stream
-     * @throws java.io.IOException - if an error occurred when reading from the input stream.
+     * @throws java.io.IOException - if an error occurred when reading from the
+     * input stream.
      */
     public void setPropertiesFile(final InputStream inputStream) throws IOException {
         LOG.traceEntry("With an inputstream");

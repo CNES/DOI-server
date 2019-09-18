@@ -90,7 +90,7 @@ public final class Starter {
         help.append("                                 If not provided, a default one is used\n");
         help.append("  -s|--start                   : Starts the server\n");
         help.append("  -t|--stop                    : Stops the server\n");
-        help.append("  -l|--status                  : Status of the server\n");        
+        help.append("  -l|--status                  : Status of the server\n");
         help.append("with OPTIONS:\n");
         help.append("  -h|--help                    : This output\n");
         help.append("  -k|--key-sign                : Creates a key to sign JWT token\n");
@@ -145,7 +145,7 @@ public final class Starter {
         final String stopPid = getCurrentPid(progName);
         if (stopPid == null) {
             try {
-                server.start();  
+                server.start();
                 infoProject();
             } catch (Exception ex) {
                 LOG.info("Unable to start the server");
@@ -154,7 +154,7 @@ public final class Starter {
             LOG.info("The server is already started");
         }
     }
-    
+
     /**
      * Info about project.
      */
@@ -167,7 +167,7 @@ public final class Starter {
         LOG.info("Issues : https://github.com/CNES/DOI-server");
         LOG.info("Copyright (C) 2017-2019 Centre National d'Etudes Spatiales (CNES)");
         LOG.info("License : LGPLV3");
-        
+
     }
 
     /**
@@ -190,7 +190,7 @@ public final class Starter {
             LOG.info("Stopping the DOI server .... Failed");
         }
     }
-    
+
     /**
      * Status of the server
      *
@@ -204,8 +204,9 @@ public final class Starter {
             LOG.info("The DOI server is running with the pid {}", stopPid);
         } else {
             LOG.info("The DOI server is stopped");
-        }      
+        }
     }
+
     /**
      * Launches the server.
      *
@@ -320,7 +321,7 @@ public final class Starter {
         longopts[6] = new LongOpt("key-sign-secret", LongOpt.REQUIRED_ARGUMENT, null, 'a');
         longopts[7] = new LongOpt("start", LongOpt.NO_ARGUMENT, null, 's');
         longopts[8] = new LongOpt("stop", LongOpt.NO_ARGUMENT, null, 't');
-        longopts[8] = new LongOpt("status", LongOpt.NO_ARGUMENT, null, 'l');        
+        longopts[8] = new LongOpt("status", LongOpt.NO_ARGUMENT, null, 'l');
         //
         final Getopt g = new Getopt(progNameWithJar, argv, "hvdstke:c:f:y:z:a:b:", longopts);
         //
@@ -357,7 +358,7 @@ public final class Starter {
                 case 'l':
                     LOG.debug("l option is selected");
                     statusServer();
-                    break ;                   
+                    break;
                 //
                 case 'k':
                     LOG.debug("k option is selected");

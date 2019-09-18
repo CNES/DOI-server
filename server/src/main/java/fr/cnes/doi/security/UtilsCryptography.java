@@ -46,7 +46,8 @@ public final class UtilsCryptography {
     public static final String CIPHER_ALGORITHM = "AES";
 
     /**
-     * Name of the secret-key algorithm to be associated with the given key material.
+     * Name of the secret-key algorithm to be associated with the given key
+     * material.
      */
     public static final String KEY_ALGORITHM = CIPHER_ALGORITHM;
 
@@ -104,9 +105,7 @@ public final class UtilsCryptography {
                         cipher.doFinal(Base64.getDecoder().decode(encryptedInput)),
                         StandardCharsets.UTF_8
                 ));
-            } catch (NoSuchAlgorithmException | NoSuchPaddingException
-                    | InvalidKeyException | IllegalBlockSizeException
-                    | BadPaddingException ex) {
+            } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException ex) {
                 throw LOG.throwing(new DoiRuntimeException(ex));
             }
         } else {
@@ -143,9 +142,7 @@ public final class UtilsCryptography {
             return LOG.traceExit(Base64.getEncoder().encodeToString(
                     cipher.doFinal(str.getBytes("UTF-8"))
             ));
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException
-                | InvalidKeyException | UnsupportedEncodingException
-                | IllegalBlockSizeException | BadPaddingException ex) {
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | UnsupportedEncodingException | IllegalBlockSizeException | BadPaddingException ex) {
             throw LOG.throwing(new DoiRuntimeException(ex));
         }
     }

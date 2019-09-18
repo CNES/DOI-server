@@ -37,7 +37,8 @@ import fr.cnes.doi.resource.AbstractResource;
 import fr.cnes.doi.utils.spec.Requirement;
 
 /**
- * Provides a unique identifier to the project. This identifier is used as part of the DOI name.
+ * Provides a unique identifier to the project. This identifier is used as part
+ * of the DOI name.
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
@@ -54,7 +55,8 @@ public class SuffixProjectsDoisResource extends AbstractResource {
     private volatile String suffixProject;
 
     /**
-     * Set-up method that can be overridden in order to initialize the state of the resource.
+     * Set-up method that can be overridden in order to initialize the state of
+     * the resource.
      *
      * Init by getting the DOI name in the template URL.
      *

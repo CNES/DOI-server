@@ -48,8 +48,8 @@ import org.restlet.security.Role;
 import org.restlet.security.User;
 
 /**
- * Default implementation of the authentication plugin. This implementation defines
- * users/groups/roles.
+ * Default implementation of the authentication plugin. This implementation
+ * defines users/groups/roles.
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
@@ -432,14 +432,14 @@ public final class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
     public void release() {
         final List<User> users = REALM.getUsers();
         // we unmap all roles for each user
-        for (final User user:users) {            
+        for (final User user : users) {
             final Set<Role> roles = REALM.findRoles(user);
-            final Iterator<Role> roleIter  = roles.iterator();
-            while(roleIter.hasNext()) {
-                final Role role = roleIter.next();                ;
+            final Iterator<Role> roleIter = roles.iterator();
+            while (roleIter.hasNext()) {
+                final Role role = roleIter.next();
                 REALM.unmap(user, role);
             }
-        }        
+        }
         try {
             if (this.das != null) {
                 this.das.close();

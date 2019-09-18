@@ -69,8 +69,8 @@ public class ClientCrossCiteCitation extends BaseClient {
     private final Context contextUse;
 
     /**
-     * Creates a client to {@value CROSS_CITE_URL} with a {@link Context#PROD prod} context and
-     * without a proxy.
+     * Creates a client to {@value CROSS_CITE_URL} with a
+     * {@link Context#PROD prod} context and without a proxy.
      */
     public ClientCrossCiteCitation() {
         super(CROSS_CITE_URL);
@@ -99,7 +99,8 @@ public class ClientCrossCiteCitation extends BaseClient {
      *
      * @param segment resource name
      * @return the response
-     * @throws ClientCrossCiteException - if an error happens when requesting CrossCite
+     * @throws ClientCrossCiteException - if an error happens when requesting
+     * CrossCite
      */
     private List<String> getList(final String segment) throws ClientCrossCiteException {
         try {
@@ -124,8 +125,8 @@ public class ClientCrossCiteCitation extends BaseClient {
      * Returns styles by calling {@value #STYLE_URI}.
      *
      * @return list of possible styles
-     * @throws fr.cnes.doi.exception.ClientCrossCiteException Will thrown an Exception when a
-     * problem happens during the request to Cross Cite
+     * @throws fr.cnes.doi.exception.ClientCrossCiteException Will thrown an
+     * Exception when a problem happens during the request to Cross Cite
      */
     public List<String> getStyles() throws ClientCrossCiteException {
         init();
@@ -136,8 +137,8 @@ public class ClientCrossCiteCitation extends BaseClient {
      * Returns languages by calling {@value #LOCALE_URI}.
      *
      * @return List of possible languages
-     * @throws fr.cnes.doi.exception.ClientCrossCiteException Will thrown an Exception when a
-     * problem happens during the request to Cross Cite
+     * @throws fr.cnes.doi.exception.ClientCrossCiteException Will thrown an
+     * Exception when a problem happens during the request to Cross Cite
      */
     public List<String> getLanguages() throws ClientCrossCiteException {
         init();
@@ -151,8 +152,8 @@ public class ClientCrossCiteCitation extends BaseClient {
      * @param style Selected style to format the citation
      * @param language Selected language to format the citation
      * @return The formatted citation
-     * @throws fr.cnes.doi.exception.ClientCrossCiteException Will thrown an Exception when a
-     * problem happens during the request to Cross Cite
+     * @throws fr.cnes.doi.exception.ClientCrossCiteException Will thrown an
+     * Exception when a problem happens during the request to Cross Cite
      */
     public String getFormat(final String doiName,
             final String style,
@@ -188,23 +189,23 @@ public class ClientCrossCiteCitation extends BaseClient {
     public enum Context {
 
         /**
-         * Development context. This context uses the {@link #CROSS_CITE_MOCK_URL} end point with a
-         * log level sets to OFF.
+         * Development context. This context uses the
+         * {@link #CROSS_CITE_MOCK_URL} end point with a log level sets to OFF.
          */
         DEV(CROSS_CITE_MOCK_URL, Level.OFF),
         /**
-         * Post development context. This context uses the {@link #CROSS_CITE_URL} end point with a
-         * log level sets to ALL.
+         * Post development context. This context uses the
+         * {@link #CROSS_CITE_URL} end point with a log level sets to ALL.
          */
         POST_DEV(CROSS_CITE_URL, Level.ALL),
         /**
-         * Pre production context. This context uses the {@link #CROSS_CITE_URL} end point with a
-         * log level sets to FINE.
+         * Pre production context. This context uses the {@link #CROSS_CITE_URL}
+         * end point with a log level sets to FINE.
          */
         PRE_PROD(CROSS_CITE_URL, Level.FINE),
         /**
-         * Production context. This context uses the {@link #CROSS_CITE_URL} end point with a log
-         * level sets to INFO.
+         * Production context. This context uses the {@link #CROSS_CITE_URL} end
+         * point with a log level sets to INFO.
          */
         PROD(CROSS_CITE_URL, Level.INFO);
 

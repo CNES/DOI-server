@@ -35,8 +35,8 @@ import java.util.Map;
 import org.apache.logging.log4j.Level;
 
 /**
- * Class that handles the connection to the DOI database. As below, the structure of the DOI
- * database.
+ * Class that handles the connection to the DOI database. As below, the
+ * structure of the DOI database.
  * <pre>
  * {@code
  * CREATE TABLE doi_schema.T_DOI_USERS (
@@ -114,7 +114,8 @@ public class JDBCConnector {
      * @param dbUser database user
      * @param dbPwd database password
      * @param options database options
-     * @throws DoiRuntimeException Cannot decrypt the database pwd from the configuration file
+     * @throws DoiRuntimeException Cannot decrypt the database pwd from the
+     * configuration file
      */
     private void init(final String dbUrl, final String dbUser, final String dbPwd,
             final Map<String, Integer> options) {
@@ -165,8 +166,8 @@ public class JDBCConnector {
     }
 
     /**
-     * Closes and releases all idle connections that are currently stored in the connection pool
-     * associated with this data source.
+     * Closes and releases all idle connections that are currently stored in the
+     * connection pool associated with this data source.
      */
     public void close() {
         LOGGER.traceEntry();

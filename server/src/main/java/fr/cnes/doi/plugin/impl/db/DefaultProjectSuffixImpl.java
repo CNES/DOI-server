@@ -127,7 +127,6 @@ public final class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginH
         this.configured = true;
     }
 
-
     @Override
     public void initConnection() throws DoiRuntimeException {
         DatabaseSingleton.getInstance().init(
@@ -351,7 +350,7 @@ public final class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginH
      * @param key keyword to check
      * @return True when the keyword is a password otherwise False
      */
-    public static boolean isPassword(String key) {
+    public static boolean isPassword(final String key) {
         return false;
     }
 
@@ -361,7 +360,7 @@ public final class DefaultProjectSuffixImpl extends AbstractProjectSuffixPluginH
     @Override
     public void release() {
         try {
-            if(this.das != null) {
+            if (this.das != null) {
                 this.das.close();
             }
         } catch (DOIDbException ex) {
