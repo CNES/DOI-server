@@ -26,7 +26,12 @@ import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.utils.spec.Requirement;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.ThreadContext;
+import org.restlet.Request;
+import org.restlet.Response;
 import org.restlet.Restlet;
+import org.restlet.data.ClientInfo;
+import org.restlet.routing.Filter;
 import org.restlet.routing.Router;
 
 /**
@@ -157,12 +162,26 @@ public final class DoiCrossCiteApplication extends AbstractApplication {
     public Restlet createInboundRoot() {
         LOG.traceEntry();
 
+        final Filter logContext = new Filter() {
+            @Override
+            protected int beforeHandle(Request request, Response response) {
+                final ClientInfo clientInfo = request.getClientInfo();
+                final String ipAddress = request.getHeaders().getFirstValue(
+                        Consts.PROXIFIED_IP, clientInfo.getUpstreamAddress()
+                );
+                ThreadContext.put(Consts.LOG_IP_ADDRESS, ipAddress);
+                return Filter.CONTINUE;
+            }
+        };          
+        
         final Router router = new Router(getContext());
         router.attach(STYLES_URI, StyleCitationResource.class);
         router.attach(LANGUAGE_URI, LanguageCitationResource.class);
         router.attach(FORMAT_URI, FormatCitationResource.class);
+        
+        logContext.setNext(router);
 
-        return LOG.traceExit(router);
+        return LOG.traceExit(logContext);
     }
 
     /**

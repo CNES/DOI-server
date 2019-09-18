@@ -60,6 +60,8 @@ import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.utils.spec.CoverageAnnotation;
 import fr.cnes.doi.utils.spec.Requirement;
+import org.apache.logging.log4j.ThreadContext;
+import org.restlet.data.ClientInfo;
 import org.restlet.routing.Template;
 
 /**
@@ -364,6 +366,19 @@ public final class AdminApplication extends AbstractApplication {
     @Override
     public Restlet createInboundRoot() {
         LOG.traceEntry();
+        
+        final Filter logContext = new Filter() {
+            @Override
+            protected int beforeHandle(Request request, Response response) {
+                final ClientInfo clientInfo = request.getClientInfo();
+                final String ipAddress = request.getHeaders().getFirstValue(
+                        Consts.PROXIFIED_IP, clientInfo.getUpstreamAddress()
+                );
+                ThreadContext.put(Consts.LOG_IP_ADDRESS, ipAddress);
+                return Filter.CONTINUE;
+            }
+        }; 
+        
         // Defines the strategy of authentication (authentication is not required)
         //   - authentication with login/pwd
         final ChallengeAuthenticator challAuth = createAuthenticatorLoginBased();
@@ -386,7 +401,7 @@ public final class AdminApplication extends AbstractApplication {
         // Defines the routers
         final Router webSiteRouter = createWebSiteRouter();
         final Router adminRouter = createAdminRouter();
-
+        
         // pipeline of authentication and authorization
         challAuth.setNext(challTokenAuth);
         challTokenAuth.setNext(authorizer);
@@ -397,8 +412,10 @@ public final class AdminApplication extends AbstractApplication {
         router.attachDefault(webSiteRouter);
 
         router.attach(ADMIN_URI, challAuth);
+        
+        logContext.setNext(router);        
 
-        return LOG.traceExit(router);
+        return LOG.traceExit(logContext);
     }
 
     /**

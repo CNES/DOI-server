@@ -18,19 +18,26 @@
  */
 package fr.cnes.doi.logging.security;
 
+import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.utils.Utils;
 import fr.cnes.doi.utils.spec.Requirement;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.ThreadContext;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.data.ClientInfo;
+import org.restlet.data.Header;
 import org.restlet.data.Status;
 import org.restlet.routing.Filter;
 import org.restlet.security.Role;
 import org.restlet.security.User;
+import org.restlet.util.Series;
 
 /**
  * Log filter for DOI security
@@ -65,7 +72,7 @@ public class DoiSecurityLogFilter extends Filter {
         final String targetUri = request.getResourceRef().getIdentifier();
         final String method = request.getMethod().getName();
         final ClientInfo clientInfo = request.getClientInfo();
-        final String upStreamIp = clientInfo.getUpstreamAddress();
+        final String upStreamIp = ThreadContext.get(Consts.LOG_IP_ADDRESS);
         if (request.getClientInfo().isAuthenticated()) {
             final String authenticationMethod = request.getChallengeResponse().getScheme().
                     getTechnicalName();
@@ -82,10 +89,15 @@ public class DoiSecurityLogFilter extends Filter {
             final String identifier;
             final User user = request.getClientInfo().getUser();
             if (user == null) {
-                identifier = "";                
+                final String auth = request.getChallengeResponse().getRawValue();
+                final String decodedAuth = new String(
+                        Base64.getDecoder().decode(auth), Charset.defaultCharset()
+                );
+                final String[] userLogin = decodedAuth.split(":");                
+                identifier = userLogin[0];                
             } else {
                 identifier = user.getIdentifier();                
-            }
+            }            
             LogManager.getLogger(Utils.SECURITY_LOGGER_NAME).info(
                     "Authentication failed for user: {} \t - [{}] - [{}] {} {} - {}",
                     identifier, upStreamIp, authenticationMethod,

@@ -53,6 +53,8 @@ import fr.cnes.doi.resource.mds.MetadatasResource;
 import fr.cnes.doi.security.TokenSecurity;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.utils.spec.Requirement;
+import org.apache.logging.log4j.ThreadContext;
+import org.restlet.data.ClientInfo;
 
 /**
  * Provides an application to handle Data Object Identifier within an
@@ -220,6 +222,18 @@ public final class DoiMdsApplication extends AbstractApplication {
     public Restlet createInboundRoot() {
         LOG.traceEntry();
 
+        final Filter logContext = new Filter() {
+            @Override
+            protected int beforeHandle(Request request, Response response) {
+                final ClientInfo clientInfo = request.getClientInfo();
+                final String ipAddress = request.getHeaders().getFirstValue(
+                        Consts.PROXIFIED_IP, clientInfo.getUpstreamAddress()
+                );
+                ThreadContext.put(Consts.LOG_IP_ADDRESS, ipAddress);
+                return Filter.CONTINUE;
+            }
+        };        
+
         // Defines the strategy of authentication (authentication is not required)
         //   - authentication with login/pwd
         final ChallengeAuthenticator challAuth = createAuthenticatorLoginBased();
@@ -232,15 +246,17 @@ public final class DoiMdsApplication extends AbstractApplication {
         // Set specific authorization on method after checking authentication
         final MethodAuthorizer methodAuth = createMethodAuthorizer();
 
+        // set information available for Log4j
+        logContext.setNext(challAuth);
+        
         //  create a pipeline of authentication
         challAuth.setNext(challTokenAuth);
-
         challTokenAuth.setNext(methodAuth);
 
         // Router
         methodAuth.setNext(createRouter());
 
-        final Filter filter = new SecurityPostProcessingFilter(getContext(), challAuth);
+        final Filter filter = new SecurityPostProcessingFilter(getContext(), logContext);
         return LOG.traceExit(filter);
     }
 

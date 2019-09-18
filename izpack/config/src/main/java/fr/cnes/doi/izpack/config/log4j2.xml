@@ -3,8 +3,8 @@
     <properties>
             <property name="servicename">doiserver</property>
             <property name="patternPerfo">%-5p | %d{yyyy-MM-dd HH:mm:ss} | [%t] %C{2} (%F:%L) - %m%n</property>
-            <property name="patternFile">%-5level %d{yyyy-MM-dd HH:mm:ss} [%X{IP}] %C{2} (%F:%L) - %m%n</property> 
-            <property name="patternApi">[%-5p - %t] %d %c [%X{IP}] - %m%n</property>     
+            <property name="patternFile">%-5level %d{yyyy-MM-dd HH:mm:ss} [%X{ipAddress}] %C{2} (%F:%L) - %m%n</property> 
+            <property name="patternApi">[%-5p - %t] %d %c [%X{ipAddress}] - %m%n</property>     
     </properties>
     
     <Appenders>

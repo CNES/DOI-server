@@ -372,9 +372,19 @@ public final class Consts {
     public static final String ENCRYPTED_FIELDS = "Starter.encrypted_fields";
 
     /**
-     * Get IP client from proxy
+     * Option to configure IP client.
      */
     public static final String USE_FORWARDED_FOR_HEADER = "useForwardedForHeader";
+    
+    /**
+     * Get IP client forwarded to proxy.
+     */
+    public static final String PROXIFIED_IP = "X-Forwarded-For";
+    
+    /**
+     * Log for IP client forwarded to proxy.
+     */
+    public static final String LOG_IP_ADDRESS = "ipAddress";
 
     /**
      * "Static" class cannot be instantiated
