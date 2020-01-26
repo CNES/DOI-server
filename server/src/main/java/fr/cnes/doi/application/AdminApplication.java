@@ -18,6 +18,8 @@
  */
 package fr.cnes.doi.application;
 
+import fr.cnes.doi.client.ClientMDS;
+import fr.cnes.doi.exception.ClientMdsException;
 import fr.cnes.doi.services.DOIUsersUpdate;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
@@ -60,6 +62,7 @@ import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.utils.spec.CoverageAnnotation;
 import fr.cnes.doi.utils.spec.Requirement;
+import java.util.List;
 import org.apache.logging.log4j.ThreadContext;
 import org.restlet.data.ClientInfo;
 import org.restlet.routing.Template;
@@ -212,14 +215,14 @@ public final class AdminApplication extends AbstractApplication {
     public static final String TOKEN_NAME_URI = "/{" + TOKEN_TEMPLATE + "}";
 
     /**
-     * Logger.
-     */
-    private static final Logger LOG = LogManager.getLogger(AdminApplication.class.getName());
-
-    /**
      * URI {@value #IHM_URI} where the web site is located.
      */
     public static final String IHM_URI = "/ihm";
+    
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = LogManager.getLogger(AdminApplication.class.getName());
 
     /**
      * URI {@value #IHM_CONFIG_URI} where the configuration file is located.
@@ -271,12 +274,19 @@ public final class AdminApplication extends AbstractApplication {
      * DataCite Stats page {@value #TARGET_STATS_URL}.
      */
     private static final String TARGET_STATS_URL = "https://stats.datacite.org/#tab-prefixes";
+    
+    /**
+     * ClientMDS
+     */
+    private final ClientMDS client;
 
     /**
      * Constructor.
+     * @param client Client MDS
      */
-    public AdminApplication() {
+    public AdminApplication(final ClientMDS client) {
         super();
+        this.client = client;
         init();
     }
 
@@ -286,7 +296,7 @@ public final class AdminApplication extends AbstractApplication {
     private void init() {
         setName(NAME);
         setDescription("Provides an application for handling features related to "
-                + "the administration system of the DOI server.");
+                + "the administration system of the DOI server.");        
         this.setTaskService(createTaskService());
         this.setTaskService(createUpdateDataBaseTaskService());
         this.setTaskService(periodicalyDeleteExpiredTokenFromDB());
@@ -304,7 +314,7 @@ public final class AdminApplication extends AbstractApplication {
         final TaskService checkLandingPageTask = new TaskService(true);
         LOG.info("Sets CheckLandingPage running at each {} {}", PERIOD_SCHEDULER, PERIOD_UNIT);
         checkLandingPageTask.scheduleAtFixedRate(
-                new LandingPageMonitoring(), 0,
+                new LandingPageMonitoring(this.client), 0,
                 PERIOD_SCHEDULER, PERIOD_UNIT
         );
         return LOG.traceExit(checkLandingPageTask);
@@ -665,4 +675,17 @@ public final class AdminApplication extends AbstractApplication {
         return LOG;
     }
 
+
+    /**
+     * Returns only the dois within the specified project from the search
+     * result.
+     *
+     * @param idProject project ID
+     * @return the search result
+     * @throws fr.cnes.doi.exception.ClientMdsException it happens when a problem
+     * happens with Datacite
+     */
+    public List<String> getDois(final String idProject) throws ClientMdsException {
+        return this.client.getDois(idProject);
+    }    
 }

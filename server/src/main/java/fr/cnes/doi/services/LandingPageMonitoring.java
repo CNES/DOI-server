@@ -19,7 +19,7 @@
 package fr.cnes.doi.services;
 
 import fr.cnes.doi.client.ClientLandingPage;
-import fr.cnes.doi.client.ClientSearchDataCite;
+import fr.cnes.doi.client.ClientMDS;
 import fr.cnes.doi.db.AbstractProjectSuffixDBHelper;
 import fr.cnes.doi.db.model.DOIUser;
 import fr.cnes.doi.exception.DOIDbException;
@@ -51,7 +51,16 @@ public class LandingPageMonitoring implements Runnable {
      * Logger.
      */
     private static final Logger LOG = LogManager.getLogger(LandingPageMonitoring.class.getName());
+    
+    /**
+     * Client MDS to get all DOIs.
+     */
+    private final ClientMDS client;
 
+    public LandingPageMonitoring(final ClientMDS client) {
+        this.client = client;
+    }
+    
     /**
      * run.
      */
@@ -62,8 +71,7 @@ public class LandingPageMonitoring implements Runnable {
         final StringBuffer msg = new StringBuffer();
         try {
             final String subject;
-            final Map<String, Map<String, Status>> doiErrors = new ConcurrentHashMap<>();
-            final ClientSearchDataCite client = new ClientSearchDataCite();
+            final Map<String, Map<String, Status>> doiErrors = new ConcurrentHashMap<>();           
             final List<String> response = client.getDois();
             final ClientLandingPage clientLandingPage = new ClientLandingPage(response);
 

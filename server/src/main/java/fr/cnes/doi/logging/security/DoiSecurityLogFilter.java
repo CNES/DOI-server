@@ -25,19 +25,16 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.ThreadContext;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.data.ClientInfo;
-import org.restlet.data.Header;
 import org.restlet.data.Status;
 import org.restlet.routing.Filter;
 import org.restlet.security.Role;
 import org.restlet.security.User;
-import org.restlet.util.Series;
 
 /**
  * Log filter for DOI security

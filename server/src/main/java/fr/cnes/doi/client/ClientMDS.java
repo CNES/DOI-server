@@ -26,7 +26,11 @@ import fr.cnes.doi.utils.spec.Requirement;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import javax.xml.XMLConstants;
@@ -78,7 +82,7 @@ public class ClientMDS extends BaseClient {
     /**
      * DOI resource {@value #DOI_RESOURCE}.
      */
-    public static final String DOI_RESOURCE = "doi";
+    public static final String DOI_RESOURCE = "doi";      
 
     /**
      * Metadata resource {@value #METADATA_RESOURCE}.
@@ -369,6 +373,33 @@ public class ClientMDS extends BaseClient {
         }
         return result;
     }
+    
+    /**
+     * Returns the response as a list of String of an URI.
+     *
+     * @param segment resource name
+     * @return the response
+     * @throws ClientMdsException - if an error happens when requesting
+     * CrossCite
+     */
+    private List<String> getList(final String segment) throws ClientMdsException {
+        try {
+            final Reference ref = this.createReference(segment);
+            this.getClient().setReference(ref);
+            final Representation rep = this.getClient().get();
+            final Status status = this.getClient().getStatus();
+            if (status.isSuccess()) {
+                final String result = rep.getText();
+                return Arrays.asList(result.split("\n"));
+            } else {
+                throw new ClientMdsException(status, status.getDescription());
+            }
+        } catch (IOException | ResourceException ex) {
+            throw new ClientMdsException(Status.SERVER_ERROR_INTERNAL, ex.getMessage(), ex);
+        } finally {
+            this.getClient().release();
+        }
+    }    
 
     /**
      * This request returns an URL associated with a given DOI. A 200 status is
@@ -404,6 +435,29 @@ public class ClientMDS extends BaseClient {
             this.getClient().release();
         }
     }
+    
+    public List<String> getDois() throws ClientMdsException {
+        return getList(DOI_RESOURCE);
+    }
+    
+    /**
+     * Returns only the dois within the specified project from the search
+     * result.
+     *
+     * @param idProject project ID
+     * @return the search result
+     * @throws fr.cnes.doi.exception.ClientMdsException When an error happens 
+     * with Datacite
+     */
+    public List<String> getDois(final String idProject) throws ClientMdsException {
+        final List<String> doiListFiltered = new ArrayList<>();
+        for (final String doi : this.getDois()) {
+            if (doi.contains(idProject)) {
+                doiListFiltered.add(doi);
+            }
+        }
+        return Collections.unmodifiableList(doiListFiltered);
+    }    
 
     /**
      * Will mint new DOI if specified DOI doesn't exist.

@@ -18,6 +18,7 @@
  */
 package fr.cnes.doi.server;
 
+import fr.cnes.doi.exception.ClientMdsException;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -42,6 +43,7 @@ import fr.cnes.doi.utils.spec.Requirement;
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 import java.nio.charset.Charset;
+import java.util.logging.Level;
 
 /**
  * DOI server
@@ -233,9 +235,9 @@ public final class Starter {
             });
 
             server.start();
-        } catch (DoiRuntimeException ex) {
+        } catch (ClientMdsException| DoiRuntimeException ex) {
             LOG.info("Error when starting the server: " + ex.getMessage());
-        }
+        } 
         LOG.traceExit();
     }
 

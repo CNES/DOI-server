@@ -28,8 +28,7 @@ import org.junit.Test;
 
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.UnitTest;
-import fr.cnes.doi.client.ClientSearchDataCite;
-import java.util.List;
+
 import org.junit.Assert;
 import static org.junit.Assert.assertTrue;
 import org.junit.Ignore;
@@ -64,16 +63,7 @@ public class ProxySettingsTest {
     @After
     public void tearDown() {
     }
-    
-    @Test
-    @Ignore("The API has changed => Client must be updated")
-    public void testGetDois() throws Exception {
-        ClientSearchDataCite searchDatacite = new ClientSearchDataCite("10.24400");
-//        ClientSearchDataCite searchDatacite = new ClientSearchDataCite("10.5072"); TODO
-        List<String> dois = searchDatacite.getDois(); 
-        //System.out.println(dois);
-        assertTrue("IT Test searchDatacite",dois.size() > 0);
-    }    
+     
 
     /**
      * Test of isWithProxy method, of class ProxySettings.

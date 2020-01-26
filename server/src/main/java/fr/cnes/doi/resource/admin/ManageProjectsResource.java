@@ -31,7 +31,6 @@ import org.restlet.resource.ResourceException;
 
 import fr.cnes.doi.application.AdminApplication;
 import static fr.cnes.doi.application.AdminApplication.SUFFIX_PROJECT_NAME_TEMPLATE;
-import fr.cnes.doi.client.ClientSearchDataCite;
 import fr.cnes.doi.db.AbstractProjectSuffixDBHelper;
 import fr.cnes.doi.plugin.PluginFactory;
 import fr.cnes.doi.resource.AbstractResource;
@@ -112,11 +111,9 @@ public class ManageProjectsResource extends AbstractResource {
     public void deleteProject() {
         LOG.traceEntry();
 
-        final ClientSearchDataCite client;
         final List<String> response = new ArrayList<>();
         try {
-            client = new ClientSearchDataCite();
-            response.addAll(client.getDois(suffixProject));
+            response.addAll(((AdminApplication)getApplication()).getDois(suffixProject));
 
         } catch (Exception ex) {
             LOG.error(ex + "\n"
