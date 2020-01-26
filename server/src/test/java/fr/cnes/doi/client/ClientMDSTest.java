@@ -27,6 +27,9 @@ import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -104,7 +107,65 @@ public class ClientMDSTest {
         ClientMDS.checkIfAllCharsAreValid(test);
         assertTrue("Test the DOI chars are valid", true);
     }
+    
+    @Test
+    public void testGetDoisPrefix() throws ClientMdsException {
+        String key = "329360";
+        List expMessage = Arrays.asList("10.24400/329360/F7Q52MNK");
+        
+        // Creates the MetadataStoreService stub
+        mdsServerStub.createSpec(MdsSpec.Spec.GET_DOIS);        
 
+        // Requests the DOIServer using the stub (mode DEV)
+        ClientMDS instance = new ClientMDS(ClientMDS.Context.DEV, login, pwd);
+        int expResult = MdsSpec.Spec.GET_DOIS.getStatus();
+        int result;
+        List<String> message = new ArrayList<>();
+        try {
+            message = instance.getDois(key);
+            result = MdsSpec.Spec.GET_DOIS.getStatus();
+        } catch (ClientMdsException ex) {
+            result = ex.getStatus().getCode();
+        }
+        assertEquals("Test the status code", expResult, result);
+        if(!message.isEmpty()) {
+            assertEquals("Test the response", expMessage, message);
+        }
+
+        // Checks the stub.
+        mdsServerStub.verifySpec(MdsSpec.Spec.GET_DOIS);        
+    }
+
+    /**
+     * Test the Get DOI
+     * @param spec spec
+     */
+    private void testSpecGetDois(MdsSpec.Spec spec) throws ClientMdsException {
+        // Creates the MetadataStoreService stub
+        mdsServerStub.createSpec(spec);
+
+        // Requests the DOIServer using the stub (mode DEV)
+        ClientMDS instance = new ClientMDS(ClientMDS.Context.DEV, login, pwd);
+        int expResult = spec.getStatus();
+        List<String> expMessage = Arrays.asList(spec.getBody().split("\n"));
+        int result;
+        List<String> message = new ArrayList<>();
+        try {
+            message = instance.getDois();
+            result = spec.getStatus();
+        } catch (ClientMdsException ex) {
+            result = ex.getStatus().getCode();
+        }
+        assertEquals("Test the status code", expResult, result);
+        if(!message.isEmpty()) {
+            assertEquals("Test the response", expMessage, message);
+        }
+
+        // Checks the stub.
+        mdsServerStub.verifySpec(spec);
+    }  
+    
+    
     /**
      * Test the Get DOI
      * @param spec spec
@@ -133,7 +194,7 @@ public class ClientMDSTest {
 
         // Checks the stub.
         mdsServerStub.verifySpec(spec);
-    }   
+    }     
 
     /**
      * Test of creating DOI.
@@ -215,6 +276,12 @@ public class ClientMDSTest {
         // Checks the stub.        
         mdsServerStub.verifySpec(spec);
     }
+    
+    
+    @Test
+    public void testGetDois() throws Exception {
+        testSpecGetDois(MdsSpec.Spec.GET_DOIS);
+    }    
 
     /**
      * Test of getDoi method, of class ClientMDS with a wrong DOI. A mock server is set for this

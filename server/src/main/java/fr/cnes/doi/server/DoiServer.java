@@ -47,6 +47,7 @@ import org.restlet.util.Series;
 import fr.cnes.doi.application.AdminApplication;
 import fr.cnes.doi.application.DoiCrossCiteApplication;
 import fr.cnes.doi.application.DoiMdsApplication;
+import fr.cnes.doi.client.ClientMDS;
 import fr.cnes.doi.db.AbstractUserRoleDBHelper;
 import fr.cnes.doi.exception.AuthenticationAccessException;
 import fr.cnes.doi.db.model.AuthSystemUser;
@@ -64,6 +65,7 @@ import fr.cnes.doi.utils.spec.Requirement;
 import fr.cnes.doi.plugin.PluginFactory;
 import static fr.cnes.doi.plugin.Utils.addPath;
 import fr.cnes.doi.db.IAuthenticationDBHelper;
+import fr.cnes.doi.exception.ClientMdsException;
 import static fr.cnes.doi.settings.Consts.USE_FORWARDED_FOR_HEADER;
 
 /**
@@ -187,8 +189,10 @@ public class DoiServer extends Component {
      * config.properties
      *
      * @param settings settings
+     * @throws fr.cnes.doi.exception.ClientMdsException It happens when the server
+     * cannot access to Datacite account
      */
-    public DoiServer(final DoiSettings settings) {
+    public DoiServer(final DoiSettings settings) throws ClientMdsException {
         super();
         this.settings = settings;
         startWithProxy();
@@ -225,7 +229,7 @@ public class DoiServer extends Component {
      * Configures the Server in HTTP and HTTPS.
      */
     @Requirement(reqId = Requirement.DOI_ARCHI_010, reqName = Requirement.DOI_ARCHI_010_NAME)
-    private void configureServer() {
+    private void configureServer() throws ClientMdsException {
         LOG.traceEntry();
         final boolean isHttpStarted = initHttpServer();
         final boolean isHttpsStarted = initHttpsServer();
@@ -307,10 +311,15 @@ public class DoiServer extends Component {
     /**
      * Routes the applications.
      */
-    private void initAttachApplication() {
+    private void initAttachApplication() throws ClientMdsException {
         LOG.traceEntry();
-        final Application appDoiProject = new DoiMdsApplication();
-        final Application appAdmin = new AdminApplication();
+        final DoiSettings doiConfig = DoiSettings.getInstance();
+        final String contextMode = doiConfig.getString(Consts.CONTEXT_MODE);
+        final ClientMDS client = new ClientMDS(ClientMDS.Context.valueOf(contextMode), 
+                doiConfig.getSecret(Consts.INIST_LOGIN),
+                doiConfig.getSecret(Consts.INIST_PWD));          
+        final Application appDoiProject = new DoiMdsApplication(client);
+        final Application appAdmin = new AdminApplication(client);
         this.getDefaultHost().attach(MDS_URI, appDoiProject);
         this.getDefaultHost().attach(CITATION_URI, new DoiCrossCiteApplication());
         this.getDefaultHost().attachDefault(appAdmin);
@@ -362,7 +371,7 @@ public class DoiServer extends Component {
      * Starts with proxy.
      *
      */
-    private void startWithProxy() {
+    private void startWithProxy() throws ClientMdsException {
         LOG.traceEntry();
         initLogServices();
         RoleAuthorizer.getInstance();
