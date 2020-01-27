@@ -18,6 +18,7 @@
  */
 package fr.cnes.doi.client;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import static fr.cnes.doi.client.ClientMDS.METADATA_RESOURCE;
 import fr.cnes.doi.exception.ClientMdsException;
 import fr.cnes.doi.settings.DoiSettings;
