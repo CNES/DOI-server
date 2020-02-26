@@ -42,6 +42,12 @@ public final class Utils {
     private static final Logger LOG = LogManager.getLogger(Utils.class.getName());
 
     /**
+     * "Static" class cannot be instantiated
+     */
+    private Utils() {
+    }
+    
+    /**
      * Adds a path in the classPath.
      *
      * @param path path
@@ -94,12 +100,6 @@ public final class Utils {
         final Method method = urlClass.getDeclaredMethod("addURL", new Class[]{URL.class});
         method.setAccessible(true);
         method.invoke(urlClassLoader, new Object[]{uri.toURL()});
-    }
-
-    /**
-     * "Static" class cannot be instantiated
-     */
-    private Utils() {
     }
 
 }

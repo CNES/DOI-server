@@ -81,15 +81,22 @@ public class DoisResource extends BaseMdsResource {
      */
     @Get
     public List<String> getDois() throws DoiServerException {
-        LOG.traceEntry();
-        setStatus(Status.SUCCESS_OK);
-        final List<String> dois = this.getDoiApp().getClientSearch().getDois();
-        if (dois == null || dois.isEmpty()) {
-            setStatus(Status.SUCCESS_NO_CONTENT);
-        } else {
+        try {
+            LOG.traceEntry();
             setStatus(Status.SUCCESS_OK);
+            final List<String> dois = this.getDoiApp().getClient().getDois();
+            if (dois == null || dois.isEmpty()) {
+                setStatus(Status.SUCCESS_NO_CONTENT);
+            } else {
+                setStatus(Status.SUCCESS_OK);
+            }
+            return LOG.traceExit(dois);
+        } catch (ClientMdsException ex) {
+                throw LOG.throwing(
+                        Level.ERROR,
+                        new DoiServerException(getApplication(), API_MDS.DATACITE_PROBLEM, ex)
+                );
         }
-        return LOG.traceExit(dois);
     }
 
     /**

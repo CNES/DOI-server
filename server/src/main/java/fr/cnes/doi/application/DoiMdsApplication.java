@@ -40,10 +40,7 @@ import org.restlet.security.ChallengeAuthenticator;
 import org.restlet.security.MethodAuthorizer;
 
 import fr.cnes.doi.client.ClientMDS;
-import fr.cnes.doi.client.ClientSearchDataCite;
 import fr.cnes.doi.db.AbstractTokenDBHelper;
-import fr.cnes.doi.exception.ClienSearchDataCiteException;
-import fr.cnes.doi.exception.ClientMdsException;
 import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.resource.mds.DoiResource;
 import fr.cnes.doi.resource.mds.DoisResource;
@@ -166,11 +163,6 @@ public final class DoiMdsApplication extends AbstractApplication {
     private final ClientMDS client;
 
     /**
-     * Client to query Search Data Cite.
-     */
-    private final ClientSearchDataCite clientSearchDataCite;
-
-    /**
      * Token DB that contains the set of generated token.
      */
     private final AbstractTokenDBHelper tokenDB;
@@ -178,27 +170,21 @@ public final class DoiMdsApplication extends AbstractApplication {
     /**
      * Creates the Digital Object Identifier server application.
      *
+     * @param client ClientMDS
      * @throws DoiRuntimeException When the DataCite schema is not available
      */
-    public DoiMdsApplication() {
+    public DoiMdsApplication(final ClientMDS client) {
         super();
-        try {
-            setName(NAME);
-            setDescription(
-                    "Provides an application for handling Data Object Identifier at CNES<br/>"
-                    + "This application provides 3 API:" + "<ul>" + "<li>dois : DOI minting</li>"
-                    + "<li>metadata : Registration of the associated metadata</li>"
-                    + "<li>media : Possbility to obtain metadata in various formats and/or get "
-                    + "automatic, direct access to an object rather than via the \"landing page\"</li>"
-                    + "</ul>");
-            final String contextMode = this.getConfig().getString(Consts.CONTEXT_MODE);
-            client = new ClientMDS(ClientMDS.Context.valueOf(contextMode), getLoginMds(),
-                    getPwdMds());
-            clientSearchDataCite = new ClientSearchDataCite(getDataCentrePrefix());
-            this.tokenDB = TokenSecurity.getInstance().getTokenDB();
-        } catch (ClientMdsException | ClienSearchDataCiteException ex) {
-            throw LOG.throwing(new DoiRuntimeException(ex));
-        }
+        setName(NAME);
+        setDescription(
+                "Provides an application for handling Data Object Identifier at CNES<br/>"
+                + "This application provides 3 API:" + "<ul>" + "<li>dois : DOI minting</li>"
+                + "<li>metadata : Registration of the associated metadata</li>"
+                + "<li>media : Possbility to obtain metadata in various formats and/or get "
+                + "automatic, direct access to an object rather than via the \"landing page\"</li>"
+                + "</ul>");
+        this.client = client;
+        this.tokenDB = TokenSecurity.getInstance().getTokenDB();
     }
 
     /**
@@ -232,7 +218,7 @@ public final class DoiMdsApplication extends AbstractApplication {
                 ThreadContext.put(Consts.LOG_IP_ADDRESS, ipAddress);
                 return Filter.CONTINUE;
             }
-        };        
+        };
 
         // Defines the strategy of authentication (authentication is not required)
         //   - authentication with login/pwd
@@ -248,7 +234,7 @@ public final class DoiMdsApplication extends AbstractApplication {
 
         // set information available for Log4j
         logContext.setNext(challAuth);
-        
+
         //  create a pipeline of authentication
         challAuth.setNext(challTokenAuth);
         challTokenAuth.setNext(methodAuth);
@@ -355,16 +341,6 @@ public final class DoiMdsApplication extends AbstractApplication {
     public ClientMDS getClient() {
         LOG.traceEntry();
         return LOG.traceExit(this.client);
-    }
-
-    /**
-     * Returns the client.
-     *
-     * @return the client
-     */
-    public ClientSearchDataCite getClientSearch() {
-        LOG.traceEntry();
-        return LOG.traceExit(this.clientSearchDataCite);
     }
 
     /**

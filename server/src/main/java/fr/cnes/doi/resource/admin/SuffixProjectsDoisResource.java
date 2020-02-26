@@ -32,7 +32,6 @@ import org.restlet.resource.Get;
 import org.restlet.resource.ResourceException;
 
 import fr.cnes.doi.application.AdminApplication;
-import fr.cnes.doi.client.ClientSearchDataCite;
 import fr.cnes.doi.resource.AbstractResource;
 import fr.cnes.doi.utils.spec.Requirement;
 
@@ -90,13 +89,10 @@ public class SuffixProjectsDoisResource extends AbstractResource {
         LOG.traceEntry();
 //        checkInput(this.suffixProject);
 
-        final ClientSearchDataCite client;
         List<String> response = new ArrayList<>();
 
         try {
-            client = new ClientSearchDataCite();
-            response = client.getDois(this.suffixProject);
-
+            response = (((AdminApplication)getApplication()).getDois(suffixProject));
         } catch (Exception ex) {
             LOG.error("Error in SuffixProjectsDoisResource while searching for dois in project {}",
                     this.suffixProject, ex);
