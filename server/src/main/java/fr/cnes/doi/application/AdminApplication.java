@@ -252,7 +252,7 @@ public final class AdminApplication extends AbstractApplication {
     /**
      * The period between successive executions : {@value #PERIOD_SCHEDULER}.
      */
-    private static final int PERIOD_SCHEDULER = 30;
+    private static final int PERIOD_SCHEDULER = 1;
 
     /**
      * The period between successive executions :
