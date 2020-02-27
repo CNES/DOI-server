@@ -177,17 +177,17 @@
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">void</span> addGroups(<span class="keyword">final</span> User user, <span class="keyword">final</span> Set&lt;Group&gt; userGroups,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;82</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> Group currentGroup, <span class="keyword">final</span> List&lt;Group&gt; stack, <span class="keyword">final</span> <span class="keyword">boolean</span> inheritOnly) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;83</td>  <td class="nbHitsUncovered"><a title="Line 83: Conditional coverage 50% (2/4) [each condition: 50%, 50%].">&nbsp;236</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 83: Conditional coverage 50% (2/4) [each condition: 50%, 50%].">        <span class="keyword">if</span> ((currentGroup != <span class="keyword">null</span>) &amp;&amp; !stack.contains(currentGroup)) {</a></span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;84</td>  <td class="nbHitsCovered">&nbsp;236</td>  <td class="src"><pre class="src">&nbsp;            stack.add(currentGroup);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;83</td>  <td class="nbHitsUncovered"><a title="Line 83: Conditional coverage 50% (2/4) [each condition: 50%, 50%].">&nbsp;235</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 83: Conditional coverage 50% (2/4) [each condition: 50%, 50%].">        <span class="keyword">if</span> ((currentGroup != <span class="keyword">null</span>) &amp;&amp; !stack.contains(currentGroup)) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;84</td>  <td class="nbHitsCovered">&nbsp;235</td>  <td class="src"><pre class="src">&nbsp;            stack.add(currentGroup);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;85</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;86</td>  <td class="nbHitsCovered"><a title="Line 86: Conditional coverage 100% (2/2).">&nbsp;236</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 86: Conditional coverage 100% (2/2).">            <span class="keyword">if</span> (currentGroup.getMemberUsers().contains(user)) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;86</td>  <td class="nbHitsCovered"><a title="Line 86: Conditional coverage 100% (2/2).">&nbsp;235</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 86: Conditional coverage 100% (2/2).">            <span class="keyword">if</span> (currentGroup.getMemberUsers().contains(user)) {</a></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;87</td>  <td class="nbHitsCovered">&nbsp;223</td>  <td class="src"><pre class="src">&nbsp;                userGroups.add(currentGroup);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;88</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;89</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                <span class="comment">// Add the ancestor groups as well</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;90</td>  <td class="nbHitsUncovered"><a title="Line 90: Conditional coverage 50% (1/2).">&nbsp;222</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 90: Conditional coverage 50% (1/2).">                <span class="keyword">boolean</span> inherit = !inheritOnly</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;90</td>  <td class="nbHitsUncovered"><a title="Line 90: Conditional coverage 50% (1/2).">&nbsp;223</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 90: Conditional coverage 50% (1/2).">                <span class="keyword">boolean</span> inherit = !inheritOnly</a></span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;91</td>  <td class="nbHitsUncovered"><a title="Line 91: Conditional coverage 50% (1/2).">&nbsp;222</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 91: Conditional coverage 50% (1/2).">                        || currentGroup.isInheritingRoles();</a></span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;92</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                Group group;</pre></td></tr>
@@ -203,7 +203,7 @@
   <td class="src"><pre class="src">&nbsp;            }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;100</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;101</td>  <td class="nbHitsUncovered"><a title="Line 101: Conditional coverage 50% (1/2).">&nbsp;236</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 101: Conditional coverage 50% (1/2).">            <span class="keyword">for</span> (<span class="keyword">final</span> Group group : currentGroup.getMemberGroups()) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;101</td>  <td class="nbHitsUncovered"><a title="Line 101: Conditional coverage 50% (1/2).">&nbsp;235</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 101: Conditional coverage 50% (1/2).">            <span class="keyword">for</span> (<span class="keyword">final</span> Group group : currentGroup.getMemberGroups()) {</a></span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;102</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;                addGroups(user, userGroups, group, stack, inheritOnly);</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;103</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;            }</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;104</td>  <td class="nbHits">&nbsp;</td>
@@ -227,7 +227,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;114</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> Set&lt;Group&gt; findGroups(<span class="keyword">final</span> User user) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;115</td>  <td class="nbHitsCovered">&nbsp;236</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> findGroups(user, <span class="keyword">true</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;115</td>  <td class="nbHitsCovered">&nbsp;235</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> findGroups(user, <span class="keyword">true</span>);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;116</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;117</td>  <td class="nbHits">&nbsp;</td>
@@ -250,7 +250,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;126</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> Set&lt;Group&gt; findGroups(<span class="keyword">final</span> User user, <span class="keyword">final</span> <span class="keyword">boolean</span> inheritOnly) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;127</td>  <td class="nbHitsCovered">&nbsp;236</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Set&lt;Group&gt; result = <span class="keyword">new</span> HashSet&lt;&gt;();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;127</td>  <td class="nbHitsCovered">&nbsp;235</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Set&lt;Group&gt; result = <span class="keyword">new</span> HashSet&lt;&gt;();</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;128</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        List&lt;Group&gt; stack;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;129</td>  <td class="nbHits">&nbsp;</td>
@@ -258,8 +258,8 @@
 <tr>  <td class="numLine">&nbsp;130</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="comment">// Recursively find user groups</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;131</td>  <td class="nbHitsCovered"><a title="Line 131: Conditional coverage 100% (2/2).">&nbsp;236</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 131: Conditional coverage 100% (2/2).">        <span class="keyword">for</span> (<span class="keyword">final</span> Group group : getRootGroups()) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;132</td>  <td class="nbHitsCovered">&nbsp;236</td>  <td class="src"><pre class="src">&nbsp;            stack = <span class="keyword">new</span> ArrayList&lt;&gt;();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;133</td>  <td class="nbHitsCovered">&nbsp;236</td>  <td class="src"><pre class="src">&nbsp;            addGroups(user, result, group, stack, inheritOnly);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;132</td>  <td class="nbHitsCovered">&nbsp;235</td>  <td class="src"><pre class="src">&nbsp;            stack = <span class="keyword">new</span> ArrayList&lt;&gt;();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;133</td>  <td class="nbHitsCovered">&nbsp;235</td>  <td class="src"><pre class="src">&nbsp;            addGroups(user, result, group, stack, inheritOnly);</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;134</td>  <td class="nbHitsCovered">&nbsp;236</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;135</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
@@ -473,14 +473,14 @@
 <tr>  <td class="numLine">&nbsp;259</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;260</td>  <td class="nbHitsCovered"><a title="Line 260: Conditional coverage 100% (2/2).">&nbsp;235</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 260: Conditional coverage 100% (2/2).">        <span class="keyword">for</span> (<span class="keyword">final</span> RoleMapping mapping : getRoleMappings()) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;261</td>  <td class="nbHitsCovered">&nbsp;3973</td>  <td class="src"><pre class="src">&nbsp;            source = mapping.getSource();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;261</td>  <td class="nbHitsCovered">&nbsp;3966</td>  <td class="src"><pre class="src">&nbsp;            source = mapping.getSource();</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;262</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;263</td>  <td class="nbHitsUncovered"><a title="Line 263: Conditional coverage 75% (3/4) [each condition: 50%, 100%].">&nbsp;3973</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 263: Conditional coverage 75% (3/4) [each condition: 50%, 100%].">            <span class="keyword">if</span> (userGroups != <span class="keyword">null</span> &amp;&amp; userGroups.contains(source)) {</a></span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;264</td>  <td class="nbHitsCovered">&nbsp;2205</td>  <td class="src"><pre class="src">&nbsp;                result.add(mapping.getTarget());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;263</td>  <td class="nbHitsUncovered"><a title="Line 263: Conditional coverage 75% (3/4) [each condition: 50%, 100%].">&nbsp;3967</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 263: Conditional coverage 75% (3/4) [each condition: 50%, 100%].">            <span class="keyword">if</span> (userGroups != <span class="keyword">null</span> &amp;&amp; userGroups.contains(source)) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;264</td>  <td class="nbHitsCovered">&nbsp;2204</td>  <td class="src"><pre class="src">&nbsp;                result.add(mapping.getTarget());</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;265</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;266</td>  <td class="nbHitsCovered">&nbsp;3973</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;266</td>  <td class="nbHitsCovered">&nbsp;3963</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;267</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;268</td>  <td class="nbHitsCovered">&nbsp;236</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> result;</pre></td></tr>
@@ -507,18 +507,18 @@
   <td class="src"><pre class="src">&nbsp;        Object source;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;280</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;281</td>  <td class="nbHitsCovered"><a title="Line 281: Conditional coverage 100% (2/2).">&nbsp;348</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 281: Conditional coverage 100% (2/2).">        <span class="keyword">for</span> (<span class="keyword">final</span> RoleMapping mapping : getRoleMappings()) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;282</td>  <td class="nbHitsCovered">&nbsp;5349</td>  <td class="src"><pre class="src">&nbsp;            source = mapping.getSource();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;281</td>  <td class="nbHitsCovered"><a title="Line 281: Conditional coverage 100% (2/2).">&nbsp;346</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 281: Conditional coverage 100% (2/2).">        <span class="keyword">for</span> (<span class="keyword">final</span> RoleMapping mapping : getRoleMappings()) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;282</td>  <td class="nbHitsCovered">&nbsp;5360</td>  <td class="src"><pre class="src">&nbsp;            source = mapping.getSource();</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;283</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;284</td>  <td class="nbHitsUncovered"><a title="Line 284: Conditional coverage 75% (3/4) [each condition: 50%, 100%].">&nbsp;5366</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 284: Conditional coverage 75% (3/4) [each condition: 50%, 100%].">            <span class="keyword">if</span> (user != <span class="keyword">null</span> &amp;&amp; user.equals(source)) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;284</td>  <td class="nbHitsUncovered"><a title="Line 284: Conditional coverage 75% (3/4) [each condition: 50%, 100%].">&nbsp;5359</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 284: Conditional coverage 75% (3/4) [each condition: 50%, 100%].">            <span class="keyword">if</span> (user != <span class="keyword">null</span> &amp;&amp; user.equals(source)) {</a></span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;285</td>  <td class="nbHitsCovered">&nbsp;342</td>  <td class="src"><pre class="src">&nbsp;                result.add(mapping.getTarget());</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;286</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;287</td>  <td class="nbHitsCovered">&nbsp;5369</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;287</td>  <td class="nbHitsCovered">&nbsp;5360</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;288</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;289</td>  <td class="nbHitsCovered">&nbsp;348</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> result;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;289</td>  <td class="nbHitsCovered">&nbsp;347</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> result;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;290</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;291</td>  <td class="nbHits">&nbsp;</td>
@@ -537,17 +537,17 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;298</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> User findUser(<span class="keyword">final</span> String userIdentifier) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;299</td>  <td class="nbHitsCovered">&nbsp;814</td>  <td class="src"><pre class="src">&nbsp;        User result = <span class="keyword">null</span>;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;299</td>  <td class="nbHitsCovered">&nbsp;811</td>  <td class="src"><pre class="src">&nbsp;        User result = <span class="keyword">null</span>;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;300</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        User user;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;301</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;302</td>  <td class="nbHitsUncovered"><a title="Line 302: Conditional coverage 75% (3/4) [each condition: 100%, 50%].">&nbsp;2800</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 302: Conditional coverage 75% (3/4) [each condition: 100%, 50%].">        <span class="keyword">for</span> (<span class="keyword">int</span> i = 0; (result == <span class="keyword">null</span>) &amp;&amp; (i &lt; getUsers().size()); i++) {</a></span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;303</td>  <td class="nbHitsCovered">&nbsp;1987</td>  <td class="src"><pre class="src">&nbsp;            user = getUsers().get(i);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;302</td>  <td class="nbHitsUncovered"><a title="Line 302: Conditional coverage 75% (3/4) [each condition: 100%, 50%].">&nbsp;2797</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 302: Conditional coverage 75% (3/4) [each condition: 100%, 50%].">        <span class="keyword">for</span> (<span class="keyword">int</span> i = 0; (result == <span class="keyword">null</span>) &amp;&amp; (i &lt; getUsers().size()); i++) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;303</td>  <td class="nbHitsCovered">&nbsp;1986</td>  <td class="src"><pre class="src">&nbsp;            user = getUsers().get(i);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;304</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;305</td>  <td class="nbHitsCovered"><a title="Line 305: Conditional coverage 100% (2/2).">&nbsp;1987</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 305: Conditional coverage 100% (2/2).">            <span class="keyword">if</span> (user.getIdentifier().equals(userIdentifier)) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;306</td>  <td class="nbHitsCovered">&nbsp;813</td>  <td class="src"><pre class="src">&nbsp;                result = user;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;305</td>  <td class="nbHitsCovered"><a title="Line 305: Conditional coverage 100% (2/2).">&nbsp;1984</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 305: Conditional coverage 100% (2/2).">            <span class="keyword">if</span> (user.getIdentifier().equals(userIdentifier)) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;306</td>  <td class="nbHitsCovered">&nbsp;812</td>  <td class="src"><pre class="src">&nbsp;                result = user;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;307</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;308</td>  <td class="nbHits">&nbsp;</td>
@@ -571,7 +571,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;318</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> List&lt;RoleMapping&gt; getRoleMappings() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;319</td>  <td class="nbHitsCovered">&nbsp;2336</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> roleMappings;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;319</td>  <td class="nbHitsCovered">&nbsp;2334</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> roleMappings;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;320</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;321</td>  <td class="nbHits">&nbsp;</td>
@@ -588,7 +588,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;327</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> List&lt;Group&gt; getRootGroups() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;328</td>  <td class="nbHitsCovered">&nbsp;254</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> rootGroups;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;328</td>  <td class="nbHitsCovered">&nbsp;253</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> rootGroups;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;329</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;330</td>  <td class="nbHits">&nbsp;</td>
@@ -605,7 +605,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;336</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> List&lt;User&gt; getUsers() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;337</td>  <td class="nbHitsCovered">&nbsp;3995</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> users;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;337</td>  <td class="nbHitsCovered">&nbsp;3992</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> users;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;338</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;339</td>  <td class="nbHits">&nbsp;</td>
@@ -866,13 +866,13 @@
   <td class="src"><pre class="src">&nbsp;        @Override</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;484</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">public</span> <span class="keyword">void</span> enrole(<span class="keyword">final</span> ClientInfo clientInfo) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;485</td>  <td class="nbHitsCovered">&nbsp;236</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> User user = findUser(clientInfo.getUser().getIdentifier());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;485</td>  <td class="nbHitsCovered">&nbsp;235</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> User user = findUser(clientInfo.getUser().getIdentifier());</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;486</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;487</td>  <td class="nbHitsUncovered"><a title="Line 487: Conditional coverage 50% (1/2).">&nbsp;236</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 487: Conditional coverage 50% (1/2).">            <span class="keyword">if</span> (user != <span class="keyword">null</span>) {</a></span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;488</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                <span class="comment">// Find all the inherited groups of this user</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;489</td>  <td class="nbHitsCovered">&nbsp;236</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">final</span> Set&lt;Group&gt; userGroups = findGroups(user);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;489</td>  <td class="nbHitsCovered">&nbsp;235</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">final</span> Set&lt;Group&gt; userGroups = findGroups(user);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;490</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;491</td>  <td class="nbHits">&nbsp;</td>
@@ -881,21 +881,21 @@
 <tr>  <td class="numLine">&nbsp;493</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;494</td>  <td class="nbHitsCovered"><a title="Line 494: Conditional coverage 100% (2/2).">&nbsp;235</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 494: Conditional coverage 100% (2/2).">                <span class="keyword">for</span> (<span class="keyword">final</span> Role role : userRoles) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;495</td>  <td class="nbHitsCovered">&nbsp;229</td>  <td class="src"><pre class="src">&nbsp;                    clientInfo.getRoles().add(role);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;495</td>  <td class="nbHitsCovered">&nbsp;230</td>  <td class="src"><pre class="src">&nbsp;                    clientInfo.getRoles().add(role);</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;496</td>  <td class="nbHitsCovered">&nbsp;231</td>  <td class="src"><pre class="src">&nbsp;                }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;497</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;498</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                <span class="comment">// Add roles common to group members</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;499</td>  <td class="nbHitsCovered">&nbsp;236</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">final</span> Set&lt;Role&gt; groupRoles = findRoles(userGroups);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;499</td>  <td class="nbHitsCovered">&nbsp;235</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">final</span> Set&lt;Role&gt; groupRoles = findRoles(userGroups);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;500</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;501</td>  <td class="nbHitsCovered"><a title="Line 501: Conditional coverage 100% (2/2).">&nbsp;236</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 501: Conditional coverage 100% (2/2).">                <span class="keyword">for</span> (<span class="keyword">final</span> Role role : groupRoles) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;502</td>  <td class="nbHitsCovered">&nbsp;2205</td>  <td class="src"><pre class="src">&nbsp;                    clientInfo.getRoles().add(role);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;503</td>  <td class="nbHitsCovered">&nbsp;2206</td>  <td class="src"><pre class="src">&nbsp;                }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;501</td>  <td class="nbHitsCovered"><a title="Line 501: Conditional coverage 100% (2/2).">&nbsp;235</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 501: Conditional coverage 100% (2/2).">                <span class="keyword">for</span> (<span class="keyword">final</span> Role role : groupRoles) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;502</td>  <td class="nbHitsCovered">&nbsp;2201</td>  <td class="src"><pre class="src">&nbsp;                    clientInfo.getRoles().add(role);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;503</td>  <td class="nbHitsCovered">&nbsp;2196</td>  <td class="src"><pre class="src">&nbsp;                }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;504</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;505</td>  <td class="nbHitsCovered">&nbsp;236</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;505</td>  <td class="nbHitsCovered">&nbsp;235</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;506</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;507</td>  <td class="nbHits">&nbsp;</td>
@@ -975,6 +975,6 @@
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.1.1 on 9/18/19 10:46 PM.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.1.1 on 2/27/20 5:22 AM.</div>
 </body>
 </html>

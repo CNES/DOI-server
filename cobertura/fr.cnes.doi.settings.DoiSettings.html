@@ -174,8 +174,8 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;79</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">static</span> DoiSettings getInstance() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;80</td>  <td class="nbHitsCovered">&nbsp;872</td>  <td class="src"><pre class="src">&nbsp;        LOG.traceEntry();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;81</td>  <td class="nbHitsCovered">&nbsp;872</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> LOG.traceExit(DoiSettingsHolder.INSTANCE);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;80</td>  <td class="nbHitsCovered">&nbsp;867</td>  <td class="src"><pre class="src">&nbsp;        LOG.traceEntry();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;81</td>  <td class="nbHitsCovered">&nbsp;867</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> LOG.traceExit(DoiSettingsHolder.INSTANCE);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;82</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;83</td>  <td class="nbHits">&nbsp;</td>
@@ -549,8 +549,8 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;319</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> String getString(<span class="keyword">final</span> String key, <span class="keyword">final</span> String defaultValue) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;320</td>  <td class="nbHitsCovered">&nbsp;2737</td>  <td class="src"><pre class="src">&nbsp;        LOG.traceEntry(<span class="string">"Parameters\n\tkey : {}\n\tdefaultValue : {}"</span>, key, defaultValue);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;321</td>  <td class="nbHitsCovered">&nbsp;2736</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> LOG.traceExit(MAP_PROPERTIES.getOrDefault(key, defaultValue));</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;320</td>  <td class="nbHitsCovered">&nbsp;2662</td>  <td class="src"><pre class="src">&nbsp;        LOG.traceEntry(<span class="string">"Parameters\n\tkey : {}\n\tdefaultValue : {}"</span>, key, defaultValue);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;321</td>  <td class="nbHitsCovered">&nbsp;2663</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> LOG.traceExit(MAP_PROPERTIES.getOrDefault(key, defaultValue));</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;322</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;323</td>  <td class="nbHits">&nbsp;</td>
@@ -583,19 +583,19 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;337</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> String getString(<span class="keyword">final</span> String key) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;338</td>  <td class="nbHitsCovered">&nbsp;1468</td>  <td class="src"><pre class="src">&nbsp;        LOG.traceEntry(<span class="string">"Parameter\n\tkey : {}"</span>, key);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;338</td>  <td class="nbHitsCovered">&nbsp;1425</td>  <td class="src"><pre class="src">&nbsp;        LOG.traceEntry(<span class="string">"Parameter\n\tkey : {}"</span>, key);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;339</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> String value;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;340</td>  <td class="nbHitsCovered"><a title="Line 340: Conditional coverage 100% (2/2).">&nbsp;1468</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 340: Conditional coverage 100% (2/2).">        <span class="keyword">if</span> (Consts.INIST_DOI.equals(key)) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;341</td>  <td class="nbHitsCovered">&nbsp;259</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> String context = <span class="keyword">this</span>.getString(Consts.CONTEXT_MODE, <span class="string">"DEV"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;342</td>  <td class="nbHitsUncovered"><a title="Line 342: Conditional coverage 50% (1/2).">&nbsp;262</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 342: Conditional coverage 50% (1/2).">            value = <span class="string">"PRE_PROD"</span>.equals(context) ? INIST_TEST_DOI : <span class="keyword">this</span>.getString(Consts.INIST_DOI,</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;340</td>  <td class="nbHitsCovered"><a title="Line 340: Conditional coverage 100% (2/2).">&nbsp;1422</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 340: Conditional coverage 100% (2/2).">        <span class="keyword">if</span> (Consts.INIST_DOI.equals(key)) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;341</td>  <td class="nbHitsCovered">&nbsp;222</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> String context = <span class="keyword">this</span>.getString(Consts.CONTEXT_MODE, <span class="string">"DEV"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;342</td>  <td class="nbHitsUncovered"><a title="Line 342: Conditional coverage 50% (1/2).">&nbsp;223</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 342: Conditional coverage 50% (1/2).">            value = <span class="string">"PRE_PROD"</span>.equals(context) ? INIST_TEST_DOI : <span class="keyword">this</span>.getString(Consts.INIST_DOI,</a></span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;343</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                    <span class="keyword">null</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;344</td>  <td class="nbHitsCovered">&nbsp;259</td>  <td class="src"><pre class="src">&nbsp;        } <span class="keyword">else</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;345</td>  <td class="nbHitsCovered">&nbsp;1208</td>  <td class="src"><pre class="src">&nbsp;            value = <span class="keyword">this</span>.getString(key, <span class="keyword">null</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;344</td>  <td class="nbHitsCovered">&nbsp;224</td>  <td class="src"><pre class="src">&nbsp;        } <span class="keyword">else</span> {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;345</td>  <td class="nbHitsCovered">&nbsp;1201</td>  <td class="src"><pre class="src">&nbsp;            value = <span class="keyword">this</span>.getString(key, <span class="keyword">null</span>);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;346</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;347</td>  <td class="nbHitsCovered">&nbsp;1467</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> LOG.traceExit(value);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;347</td>  <td class="nbHitsCovered">&nbsp;1425</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> LOG.traceExit(value);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;348</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;349</td>  <td class="nbHits">&nbsp;</td>
@@ -616,14 +616,14 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;357</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> String getSecret(<span class="keyword">final</span> String key) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;358</td>  <td class="nbHitsCovered">&nbsp;249</td>  <td class="src"><pre class="src">&nbsp;        LOG.traceEntry(<span class="string">"Parameter\n\tkey : {}"</span>, key);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;358</td>  <td class="nbHitsCovered">&nbsp;253</td>  <td class="src"><pre class="src">&nbsp;        LOG.traceEntry(<span class="string">"Parameter\n\tkey : {}"</span>, key);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;359</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> String result;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;360</td>  <td class="nbHitsCovered">&nbsp;249</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> String value = getString(key, <span class="string">""</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;361</td>  <td class="nbHitsCovered">&nbsp;498</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> <span class="keyword">boolean</span> isEncrypted = Boolean.parseBoolean(</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;362</td>  <td class="nbHitsCovered">&nbsp;249</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">this</span>.getString(Consts.ENCRYPTED_FIELDS, <span class="string">"true"</span>));</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;363</td>  <td class="nbHitsCovered"><a title="Line 363: Conditional coverage 100% (2/2).">&nbsp;249</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 363: Conditional coverage 100% (2/2).">        <span class="keyword">if</span> (Utils.isEmpty(value)) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;364</td>  <td class="nbHitsCovered">&nbsp;185</td>  <td class="src"><pre class="src">&nbsp;            result = value;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;360</td>  <td class="nbHitsCovered">&nbsp;253</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> String value = getString(key, <span class="string">""</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;361</td>  <td class="nbHitsCovered">&nbsp;506</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> <span class="keyword">boolean</span> isEncrypted = Boolean.parseBoolean(</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;362</td>  <td class="nbHitsCovered">&nbsp;253</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">this</span>.getString(Consts.ENCRYPTED_FIELDS, <span class="string">"true"</span>));</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;363</td>  <td class="nbHitsCovered"><a title="Line 363: Conditional coverage 100% (2/2).">&nbsp;253</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 363: Conditional coverage 100% (2/2).">        <span class="keyword">if</span> (Utils.isEmpty(value)) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;364</td>  <td class="nbHitsCovered">&nbsp;189</td>  <td class="src"><pre class="src">&nbsp;            result = value;</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;365</td>  <td class="nbHitsUncovered"><a title="Line 365: Conditional coverage 50% (1/2).">&nbsp;64</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 365: Conditional coverage 50% (1/2).">        } <span class="keyword">else</span> <span class="keyword">if</span> (isEncrypted) {</a></span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;366</td>  <td class="nbHitsCovered">&nbsp;64</td>  <td class="src"><pre class="src">&nbsp;            result = UtilsCryptography.decrypt(value, getSecretKey());</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;367</td>  <td class="nbHits">&nbsp;</td>
@@ -631,7 +631,7 @@
 <tr>  <td class="numLineCover">&nbsp;368</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;            result = value;</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;369</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;370</td>  <td class="nbHitsCovered">&nbsp;249</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> LOG.traceExit(result);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;370</td>  <td class="nbHitsCovered">&nbsp;253</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> LOG.traceExit(result);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;371</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;372</td>  <td class="nbHits">&nbsp;</td>
@@ -957,7 +957,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     * Holder</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;564</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;565</td>  <td class="nbHitsCovered">&nbsp;871</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">class</span> DoiSettingsHolder {</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;565</td>  <td class="nbHitsCovered">&nbsp;868</td>  <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">class</span> DoiSettingsHolder {</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;566</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;567</td>  <td class="nbHits">&nbsp;</td>
@@ -973,6 +973,6 @@
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.1.1 on 9/18/19 10:46 PM.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.1.1 on 2/27/20 5:22 AM.</div>
 </body>
 </html>

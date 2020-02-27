@@ -324,12 +324,12 @@
   <td class="src"><pre class="src">&nbsp;            <span class="keyword">public</span> <span class="keyword">int</span> beforeHandle(<span class="keyword">final</span> Request request, <span class="keyword">final</span> Response response) {</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;167</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                <span class="keyword">final</span> <span class="keyword">int</span> status;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;168</td>  <td class="nbHitsCovered"><a title="Line 168: Conditional coverage 100% (2/2).">&nbsp;250</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 168: Conditional coverage 100% (2/2).">                <span class="keyword">if</span> (request.getMethod().equals(Method.OPTIONS)) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;168</td>  <td class="nbHitsCovered"><a title="Line 168: Conditional coverage 100% (2/2).">&nbsp;249</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 168: Conditional coverage 100% (2/2).">                <span class="keyword">if</span> (request.getMethod().equals(Method.OPTIONS)) {</a></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;169</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;                    response.setStatus(Status.SUCCESS_OK);</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;170</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;                    status = org.restlet.routing.Filter.CONTINUE;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;171</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                } <span class="keyword">else</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;172</td>  <td class="nbHitsCovered">&nbsp;244</td>  <td class="src"><pre class="src">&nbsp;                    status = <span class="keyword">super</span>.beforeHandle(request, response);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;172</td>  <td class="nbHitsCovered">&nbsp;242</td>  <td class="src"><pre class="src">&nbsp;                    status = <span class="keyword">super</span>.beforeHandle(request, response);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;173</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                }</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;174</td>  <td class="nbHitsCovered">&nbsp;252</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">return</span> status;</pre></td></tr>
@@ -392,7 +392,7 @@
 <tr>  <td class="numLineCover">&nbsp;207</td>  <td class="nbHitsCovered">&nbsp;3</td>  <td class="src"><pre class="src">&nbsp;                    status = org.restlet.routing.Filter.CONTINUE;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;208</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                } <span class="keyword">else</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;209</td>  <td class="nbHitsCovered">&nbsp;249</td>  <td class="src"><pre class="src">&nbsp;                    status = <span class="keyword">super</span>.beforeHandle(request, response);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;209</td>  <td class="nbHitsCovered">&nbsp;247</td>  <td class="src"><pre class="src">&nbsp;                    status = <span class="keyword">super</span>.beforeHandle(request, response);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;210</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                }</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;211</td>  <td class="nbHitsCovered">&nbsp;252</td>  <td class="src"><pre class="src">&nbsp;                <span class="keyword">return</span> status;</pre></td></tr>
@@ -464,8 +464,8 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;250</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">protected</span> <span class="keyword">final</span> DoiSettings getConfig() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;251</td>  <td class="nbHitsCovered">&nbsp;301</td>  <td class="src"><pre class="src">&nbsp;        LOG.traceEntry();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;252</td>  <td class="nbHitsCovered">&nbsp;297</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> LOG.traceExit(config);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;251</td>  <td class="nbHitsCovered">&nbsp;233</td>  <td class="src"><pre class="src">&nbsp;        LOG.traceEntry();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;252</td>  <td class="nbHitsCovered">&nbsp;233</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> LOG.traceExit(config);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;253</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;254</td>  <td class="nbHits">&nbsp;</td>
@@ -508,6 +508,6 @@
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.1.1 on 9/18/19 10:46 PM.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.1.1 on 2/27/20 5:22 AM.</div>
 </body>
 </html>

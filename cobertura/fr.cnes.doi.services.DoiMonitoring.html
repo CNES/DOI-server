@@ -144,14 +144,14 @@
   <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> String path,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;67</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> <span class="keyword">float</span> duration) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;68</td>  <td class="nbHitsCovered">&nbsp;212</td>  <td class="src"><pre class="src">&nbsp;        LOG.traceEntry(<span class="string">"Parameters : {} {} {}"</span>, name.getName(), path, duration);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;69</td>  <td class="nbHitsCovered">&nbsp;212</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> String identifier = name.getName() + path;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;70</td>  <td class="nbHitsCovered"><a title="Line 70: Conditional coverage 100% (2/2).">&nbsp;212</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 70: Conditional coverage 100% (2/2).">        <span class="keyword">if</span> (<span class="keyword">this</span>.applications.containsKey(identifier)) {</a></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;71</td>  <td class="nbHitsCovered">&nbsp;211</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> DoiMonitoringRecord record = <span class="keyword">this</span>.applications.get(name.getName() + path);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;68</td>  <td class="nbHitsCovered">&nbsp;211</td>  <td class="src"><pre class="src">&nbsp;        LOG.traceEntry(<span class="string">"Parameters : {} {} {}"</span>, name.getName(), path, duration);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;69</td>  <td class="nbHitsCovered">&nbsp;211</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> String identifier = name.getName() + path;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;70</td>  <td class="nbHitsCovered"><a title="Line 70: Conditional coverage 100% (2/2).">&nbsp;211</a></td>  <td class="src"><pre class="src">&nbsp;<a title="Line 70: Conditional coverage 100% (2/2).">        <span class="keyword">if</span> (<span class="keyword">this</span>.applications.containsKey(identifier)) {</a></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;71</td>  <td class="nbHitsCovered">&nbsp;210</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> DoiMonitoringRecord record = <span class="keyword">this</span>.applications.get(name.getName() + path);</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;72</td>  <td class="nbHitsCovered">&nbsp;211</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> <span class="keyword">float</span> previousSpeedAverage = (<span class="keyword">float</span>) record.getAverage();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;73</td>  <td class="nbHitsCovered">&nbsp;211</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> <span class="keyword">int</span> previousNbAccess = (<span class="keyword">int</span>) record.getNbAccess();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;74</td>  <td class="nbHitsCovered">&nbsp;210</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> <span class="keyword">float</span> newSpeedAverage = (previousSpeedAverage * previousNbAccess + duration) / (previousNbAccess + 1);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;75</td>  <td class="nbHitsCovered">&nbsp;421</td>  <td class="src"><pre class="src">&nbsp;            LOG.info(<span class="string">"{} | speed average = {} ms | duration = {} ms"</span>, identifier, newSpeedAverage,</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;73</td>  <td class="nbHitsCovered">&nbsp;210</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> <span class="keyword">int</span> previousNbAccess = (<span class="keyword">int</span>) record.getNbAccess();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;74</td>  <td class="nbHitsCovered">&nbsp;211</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> <span class="keyword">float</span> newSpeedAverage = (previousSpeedAverage * previousNbAccess + duration) / (previousNbAccess + 1);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;75</td>  <td class="nbHitsCovered">&nbsp;420</td>  <td class="src"><pre class="src">&nbsp;            LOG.info(<span class="string">"{} | speed average = {} ms | duration = {} ms"</span>, identifier, newSpeedAverage,</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;76</td>  <td class="nbHitsCovered">&nbsp;210</td>  <td class="src"><pre class="src">&nbsp;                    duration);</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;77</td>  <td class="nbHitsCovered">&nbsp;211</td>  <td class="src"><pre class="src">&nbsp;            record.setAverage(newSpeedAverage);</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;78</td>  <td class="nbHitsCovered">&nbsp;211</td>  <td class="src"><pre class="src">&nbsp;            record.setNbAccess(previousNbAccess + 1);</pre></td></tr>
@@ -181,11 +181,11 @@
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">boolean</span> isRegistered(<span class="keyword">final</span> Method name,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;93</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;            <span class="keyword">final</span> String path) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;94</td>  <td class="nbHitsCovered">&nbsp;669</td>  <td class="src"><pre class="src">&nbsp;        LOG.traceEntry(<span class="string">"Parameters : {} and {}"</span>, name.getName(), path);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;95</td>  <td class="nbHitsCovered">&nbsp;669</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> String identifier = name.getName() + path;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;96</td>  <td class="nbHitsCovered">&nbsp;669</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> <span class="keyword">boolean</span> isRegistered = <span class="keyword">this</span>.applications.containsKey(identifier);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;97</td>  <td class="nbHitsCovered">&nbsp;669</td>  <td class="src"><pre class="src">&nbsp;        LOG.debug(<span class="string">"{} {}  is registered : {}"</span>, name, path, isRegistered);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;98</td>  <td class="nbHitsCovered">&nbsp;669</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> LOG.traceExit(isRegistered);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;94</td>  <td class="nbHitsCovered">&nbsp;668</td>  <td class="src"><pre class="src">&nbsp;        LOG.traceEntry(<span class="string">"Parameters : {} and {}"</span>, name.getName(), path);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;95</td>  <td class="nbHitsCovered">&nbsp;668</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> String identifier = name.getName() + path;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;96</td>  <td class="nbHitsCovered">&nbsp;668</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> <span class="keyword">boolean</span> isRegistered = <span class="keyword">this</span>.applications.containsKey(identifier);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;97</td>  <td class="nbHitsCovered">&nbsp;668</td>  <td class="src"><pre class="src">&nbsp;        LOG.debug(<span class="string">"{} {}  is registered : {}"</span>, name, path, isRegistered);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;98</td>  <td class="nbHitsCovered">&nbsp;668</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> LOG.traceExit(isRegistered);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;99</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;100</td>  <td class="nbHits">&nbsp;</td>
@@ -254,6 +254,6 @@
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.1.1 on 9/18/19 10:46 PM.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.1.1 on 2/27/20 5:22 AM.</div>
 </body>
 </html>

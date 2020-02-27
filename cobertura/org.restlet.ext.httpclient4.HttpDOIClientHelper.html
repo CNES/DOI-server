@@ -138,11 +138,11 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;61</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> HttpDOIClientHelper(<span class="keyword">final</span> Client client) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;62</td>  <td class="nbHitsCovered">&nbsp;396</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">super</span>(client);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;63</td>  <td class="nbHitsCovered">&nbsp;396</td>  <td class="src"><pre class="src">&nbsp;        getProtocols().add(Protocol.HTTP);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;64</td>  <td class="nbHitsCovered">&nbsp;398</td>  <td class="src"><pre class="src">&nbsp;        getProtocols().add(Protocol.HTTPS);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;65</td>  <td class="nbHitsCovered">&nbsp;398</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.httpClient = <span class="keyword">null</span>;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;66</td>  <td class="nbHitsCovered">&nbsp;398</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;62</td>  <td class="nbHitsCovered">&nbsp;350</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">super</span>(client);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;63</td>  <td class="nbHitsCovered">&nbsp;350</td>  <td class="src"><pre class="src">&nbsp;        getProtocols().add(Protocol.HTTP);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;64</td>  <td class="nbHitsCovered">&nbsp;352</td>  <td class="src"><pre class="src">&nbsp;        getProtocols().add(Protocol.HTTPS);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;65</td>  <td class="nbHitsCovered">&nbsp;352</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.httpClient = <span class="keyword">null</span>;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;66</td>  <td class="nbHitsCovered">&nbsp;352</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;67</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;68</td>  <td class="nbHits">&nbsp;</td>
@@ -157,7 +157,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;73</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> String getKeyStoreType() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;74</td>  <td class="nbHitsCovered">&nbsp;248</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> getHelpedParameters().getFirstValue(HttpClient.KEYSTORE_TYPE, <span class="keyword">null</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;74</td>  <td class="nbHitsCovered">&nbsp;229</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> getHelpedParameters().getFirstValue(HttpClient.KEYSTORE_TYPE, <span class="keyword">null</span>);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;75</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;76</td>  <td class="nbHits">&nbsp;</td>
@@ -174,7 +174,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;82</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> String getKeyStorePath() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;83</td>  <td class="nbHitsCovered">&nbsp;252</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> getHelpedParameters().getFirstValue(HttpClient.KEYSTORE_PATH, <span class="keyword">null</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;83</td>  <td class="nbHitsCovered">&nbsp;229</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> getHelpedParameters().getFirstValue(HttpClient.KEYSTORE_PATH, <span class="keyword">null</span>);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;84</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;85</td>  <td class="nbHits">&nbsp;</td>
@@ -191,7 +191,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;91</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> String getKeyStorePwd() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;92</td>  <td class="nbHitsCovered">&nbsp;251</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> getHelpedParameters().getFirstValue(HttpClient.KEYSTORE_PWD, <span class="keyword">null</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;92</td>  <td class="nbHitsCovered">&nbsp;229</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> getHelpedParameters().getFirstValue(HttpClient.KEYSTORE_PWD, <span class="keyword">null</span>);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;93</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;94</td>  <td class="nbHits">&nbsp;</td>
@@ -208,7 +208,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;100</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> String getTrustStoreType() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;101</td>  <td class="nbHitsCovered">&nbsp;250</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> getHelpedParameters().getFirstValue(HttpClient.TRUSTSTORE_TYPE, <span class="keyword">null</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;101</td>  <td class="nbHitsCovered">&nbsp;229</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> getHelpedParameters().getFirstValue(HttpClient.TRUSTSTORE_TYPE, <span class="keyword">null</span>);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;102</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;103</td>  <td class="nbHits">&nbsp;</td>
@@ -225,7 +225,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;109</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> String getTrustStorePath() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;110</td>  <td class="nbHitsCovered">&nbsp;251</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> getHelpedParameters().getFirstValue(HttpClient.TRUSTSTORE_PATH, <span class="keyword">null</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;110</td>  <td class="nbHitsCovered">&nbsp;229</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> getHelpedParameters().getFirstValue(HttpClient.TRUSTSTORE_PATH, <span class="keyword">null</span>);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;111</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;112</td>  <td class="nbHits">&nbsp;</td>
@@ -242,7 +242,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;118</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> String getTrustStorePwd() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;119</td>  <td class="nbHitsCovered">&nbsp;251</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> getHelpedParameters().getFirstValue(HttpClient.TRUSTSTORE_PWD, <span class="keyword">null</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;119</td>  <td class="nbHitsCovered">&nbsp;230</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> getHelpedParameters().getFirstValue(HttpClient.TRUSTSTORE_PWD, <span class="keyword">null</span>);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;120</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;121</td>  <td class="nbHits">&nbsp;</td>
@@ -263,7 +263,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;129</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">int</span> getMaxConnectionsPerHost() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;130</td>  <td class="nbHitsCovered">&nbsp;250</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> Integer.parseInt(getHelpedParameters().getFirstValue(</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;130</td>  <td class="nbHitsCovered">&nbsp;230</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> Integer.parseInt(getHelpedParameters().getFirstValue(</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;131</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                HttpClient.CONNECTION_MAX_PER_ROUTE, <span class="string">"10"</span>));</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;132</td>  <td class="nbHits">&nbsp;</td>
@@ -282,7 +282,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;139</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">int</span> getMaxTotalConnections() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;140</td>  <td class="nbHitsCovered">&nbsp;249</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> Integer.parseInt(getHelpedParameters().getFirstValue(</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;140</td>  <td class="nbHitsCovered">&nbsp;230</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> Integer.parseInt(getHelpedParameters().getFirstValue(</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;141</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                HttpClient.CONNECTION_MAX_TOTAL, <span class="string">"20"</span>));</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;142</td>  <td class="nbHits">&nbsp;</td>
@@ -305,7 +305,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;151</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">long</span> getIdleTimeout() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;152</td>  <td class="nbHitsCovered">&nbsp;249</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> Long.parseLong(getHelpedParameters().getFirstValue(</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;152</td>  <td class="nbHitsCovered">&nbsp;230</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> Long.parseLong(getHelpedParameters().getFirstValue(</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;153</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                HttpClient.CONNECTION_TIME_TO_LIVE_MS, <span class="string">"60000"</span>));</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;154</td>  <td class="nbHits">&nbsp;</td>
@@ -324,7 +324,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;161</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">int</span> getRetry() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;162</td>  <td class="nbHitsCovered">&nbsp;251</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> Integer.parseInt(getHelpedParameters().getFirstValue(HttpClient.MAX_RETRY, <span class="string">"3"</span>));</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;162</td>  <td class="nbHitsCovered">&nbsp;230</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> Integer.parseInt(getHelpedParameters().getFirstValue(HttpClient.MAX_RETRY, <span class="string">"3"</span>));</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;163</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;164</td>  <td class="nbHits">&nbsp;</td>
@@ -341,7 +341,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;170</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">long</span> getRetryDelay() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;171</td>  <td class="nbHitsCovered">&nbsp;251</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> Long.parseLong(getHelpedParameters().getFirstValue(HttpClient.RETRY_DELAY, <span class="string">"1000"</span>));</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;171</td>  <td class="nbHitsCovered">&nbsp;228</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> Long.parseLong(getHelpedParameters().getFirstValue(HttpClient.RETRY_DELAY, <span class="string">"1000"</span>));</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;172</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;173</td>  <td class="nbHits">&nbsp;</td>
@@ -358,8 +358,8 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;179</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">int</span> getMaxRedirects() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;180</td>  <td class="nbHitsCovered">&nbsp;503</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> Integer.</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;181</td>  <td class="nbHitsCovered">&nbsp;251</td>  <td class="src"><pre class="src">&nbsp;                parseInt(getHelpedParameters().getFirstValue(HttpClient.MAX_REDIRECTION, <span class="string">"5"</span>));</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;180</td>  <td class="nbHitsCovered">&nbsp;463</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> Integer.</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;181</td>  <td class="nbHitsCovered">&nbsp;231</td>  <td class="src"><pre class="src">&nbsp;                parseInt(getHelpedParameters().getFirstValue(HttpClient.MAX_REDIRECTION, <span class="string">"5"</span>));</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;182</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;183</td>  <td class="nbHits">&nbsp;</td>
@@ -376,7 +376,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;189</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">boolean</span> isDisabledSSL() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;190</td>  <td class="nbHitsCovered">&nbsp;253</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> Boolean.parseBoolean(getHelpedParameters().getFirstValue(HttpClient.IS_DISABLED_SSL,</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;190</td>  <td class="nbHitsCovered">&nbsp;232</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> Boolean.parseBoolean(getHelpedParameters().getFirstValue(HttpClient.IS_DISABLED_SSL,</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;191</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                <span class="string">"false"</span>));</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;192</td>  <td class="nbHits">&nbsp;</td>
@@ -393,22 +393,22 @@
   <td class="src"><pre class="src">&nbsp;    @Override</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;198</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> ClientCall create(<span class="keyword">final</span> Request request) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;199</td>  <td class="nbHitsCovered">&nbsp;593</td>  <td class="src"><pre class="src">&nbsp;        ClientCall result = <span class="keyword">null</span>;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;199</td>  <td class="nbHitsCovered">&nbsp;630</td>  <td class="src"><pre class="src">&nbsp;        ClientCall result = <span class="keyword">null</span>;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;200</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;201</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        <span class="keyword">try</span> {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;202</td>  <td class="nbHitsCovered">&nbsp;595</td>  <td class="src"><pre class="src">&nbsp;            result = <span class="keyword">new</span> HttpMethodCall(<span class="keyword">this</span>, request.getMethod().toString(),</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;203</td>  <td class="nbHitsCovered">&nbsp;594</td>  <td class="src"><pre class="src">&nbsp;                    ReferenceUtils.update(request.getResourceRef(), request)</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;204</td>  <td class="nbHitsCovered">&nbsp;595</td>  <td class="src"><pre class="src">&nbsp;                    .toString(), request.isEntityAvailable());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;202</td>  <td class="nbHitsCovered">&nbsp;629</td>  <td class="src"><pre class="src">&nbsp;            result = <span class="keyword">new</span> HttpMethodCall(<span class="keyword">this</span>, request.getMethod().toString(),</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;203</td>  <td class="nbHitsCovered">&nbsp;629</td>  <td class="src"><pre class="src">&nbsp;                    ReferenceUtils.update(request.getResourceRef(), request)</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;204</td>  <td class="nbHitsCovered">&nbsp;630</td>  <td class="src"><pre class="src">&nbsp;                    .toString(), request.isEntityAvailable());</pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;205</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;        } <span class="keyword">catch</span> (IOException ioe) {</span></pre></td></tr>
 <tr>  <td class="numLineCover">&nbsp;206</td>  <td class="nbHitsUncovered">&nbsp;0</td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;            getLogger().log(Level.WARNING,</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;207</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;                    <span class="string">"Unable to create the HTTP client call"</span>, ioe);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;208</td>  <td class="nbHitsCovered">&nbsp;593</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;208</td>  <td class="nbHitsCovered">&nbsp;630</td>  <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;209</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;210</td>  <td class="nbHitsCovered">&nbsp;592</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> result;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;210</td>  <td class="nbHitsCovered">&nbsp;630</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> result;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;211</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;212</td>  <td class="nbHits">&nbsp;</td>
@@ -425,7 +425,7 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;218</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> HttpClient getHttpClient() {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;219</td>  <td class="nbHitsCovered">&nbsp;798</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> <span class="keyword">this</span>.httpClient;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;219</td>  <td class="nbHitsCovered">&nbsp;820</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">return</span> <span class="keyword">this</span>.httpClient;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;220</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;221</td>  <td class="nbHits">&nbsp;</td>
@@ -442,30 +442,30 @@
   <td class="src"><pre class="src">&nbsp;<span class="comment">     */</span></pre></td></tr>
 <tr>  <td class="numLine">&nbsp;227</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">private</span> <span class="keyword">void</span> configure(<span class="keyword">final</span> Series&lt;Parameter&gt; parameters) {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;228</td>  <td class="nbHitsCovered">&nbsp;251</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Map&lt;String, String&gt; config = <span class="keyword">new</span> HashMap&lt;&gt;();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;229</td>  <td class="nbHitsCovered">&nbsp;501</td>  <td class="src"><pre class="src">&nbsp;        config.put(HttpClient.CONNECTION_MAX_PER_ROUTE, String.valueOf(<span class="keyword">this</span>.</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;230</td>  <td class="nbHitsCovered">&nbsp;250</td>  <td class="src"><pre class="src">&nbsp;                getMaxConnectionsPerHost()));</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;231</td>  <td class="nbHitsCovered">&nbsp;251</td>  <td class="src"><pre class="src">&nbsp;        config.put(HttpClient.CONNECTION_MAX_TOTAL, String.valueOf(<span class="keyword">this</span>.getMaxTotalConnections()));</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;232</td>  <td class="nbHitsCovered">&nbsp;251</td>  <td class="src"><pre class="src">&nbsp;        config.put(HttpClient.CONNECTION_TIME_TO_LIVE_MS, String.valueOf(<span class="keyword">this</span>.getIdleTimeout()));</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;233</td>  <td class="nbHitsCovered">&nbsp;251</td>  <td class="src"><pre class="src">&nbsp;        config.put(HttpClient.MAX_RETRY, String.valueOf(<span class="keyword">this</span>.getRetry()));</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;234</td>  <td class="nbHitsCovered">&nbsp;251</td>  <td class="src"><pre class="src">&nbsp;        config.put(HttpClient.RETRY_DELAY, String.valueOf(<span class="keyword">this</span>.getRetryDelay()));</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;235</td>  <td class="nbHitsCovered">&nbsp;251</td>  <td class="src"><pre class="src">&nbsp;        config.put(HttpClient.MAX_REDIRECTION, String.valueOf(<span class="keyword">this</span>.getMaxRedirects()));</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;236</td>  <td class="nbHitsCovered">&nbsp;502</td>  <td class="src"><pre class="src">&nbsp;        config.computeIfAbsent(HttpClient.KEYSTORE_TYPE, v -&gt; <span class="keyword">this</span>.getKeyStoreType());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;237</td>  <td class="nbHitsCovered">&nbsp;502</td>  <td class="src"><pre class="src">&nbsp;        config.computeIfAbsent(HttpClient.KEYSTORE_PATH, v -&gt; <span class="keyword">this</span>.getKeyStorePath());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;238</td>  <td class="nbHitsCovered">&nbsp;502</td>  <td class="src"><pre class="src">&nbsp;        config.computeIfAbsent(HttpClient.KEYSTORE_PWD, v -&gt; <span class="keyword">this</span>.getKeyStorePwd());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;239</td>  <td class="nbHitsCovered">&nbsp;503</td>  <td class="src"><pre class="src">&nbsp;        config.computeIfAbsent(HttpClient.TRUSTSTORE_TYPE, v -&gt; <span class="keyword">this</span>.getTrustStoreType());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;240</td>  <td class="nbHitsCovered">&nbsp;504</td>  <td class="src"><pre class="src">&nbsp;        config.computeIfAbsent(HttpClient.TRUSTSTORE_PATH, v -&gt; <span class="keyword">this</span>.getTrustStorePath());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;241</td>  <td class="nbHitsCovered">&nbsp;503</td>  <td class="src"><pre class="src">&nbsp;        config.computeIfAbsent(HttpClient.TRUSTSTORE_PWD, v -&gt; <span class="keyword">this</span>.getTrustStorePwd());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;228</td>  <td class="nbHitsCovered">&nbsp;230</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Map&lt;String, String&gt; config = <span class="keyword">new</span> HashMap&lt;&gt;();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;229</td>  <td class="nbHitsCovered">&nbsp;462</td>  <td class="src"><pre class="src">&nbsp;        config.put(HttpClient.CONNECTION_MAX_PER_ROUTE, String.valueOf(<span class="keyword">this</span>.</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;230</td>  <td class="nbHitsCovered">&nbsp;230</td>  <td class="src"><pre class="src">&nbsp;                getMaxConnectionsPerHost()));</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;231</td>  <td class="nbHitsCovered">&nbsp;231</td>  <td class="src"><pre class="src">&nbsp;        config.put(HttpClient.CONNECTION_MAX_TOTAL, String.valueOf(<span class="keyword">this</span>.getMaxTotalConnections()));</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;232</td>  <td class="nbHitsCovered">&nbsp;231</td>  <td class="src"><pre class="src">&nbsp;        config.put(HttpClient.CONNECTION_TIME_TO_LIVE_MS, String.valueOf(<span class="keyword">this</span>.getIdleTimeout()));</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;233</td>  <td class="nbHitsCovered">&nbsp;232</td>  <td class="src"><pre class="src">&nbsp;        config.put(HttpClient.MAX_RETRY, String.valueOf(<span class="keyword">this</span>.getRetry()));</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;234</td>  <td class="nbHitsCovered">&nbsp;231</td>  <td class="src"><pre class="src">&nbsp;        config.put(HttpClient.RETRY_DELAY, String.valueOf(<span class="keyword">this</span>.getRetryDelay()));</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;235</td>  <td class="nbHitsCovered">&nbsp;232</td>  <td class="src"><pre class="src">&nbsp;        config.put(HttpClient.MAX_REDIRECTION, String.valueOf(<span class="keyword">this</span>.getMaxRedirects()));</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;236</td>  <td class="nbHitsCovered">&nbsp;460</td>  <td class="src"><pre class="src">&nbsp;        config.computeIfAbsent(HttpClient.KEYSTORE_TYPE, v -&gt; <span class="keyword">this</span>.getKeyStoreType());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;237</td>  <td class="nbHitsCovered">&nbsp;458</td>  <td class="src"><pre class="src">&nbsp;        config.computeIfAbsent(HttpClient.KEYSTORE_PATH, v -&gt; <span class="keyword">this</span>.getKeyStorePath());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;238</td>  <td class="nbHitsCovered">&nbsp;460</td>  <td class="src"><pre class="src">&nbsp;        config.computeIfAbsent(HttpClient.KEYSTORE_PWD, v -&gt; <span class="keyword">this</span>.getKeyStorePwd());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;239</td>  <td class="nbHitsCovered">&nbsp;461</td>  <td class="src"><pre class="src">&nbsp;        config.computeIfAbsent(HttpClient.TRUSTSTORE_TYPE, v -&gt; <span class="keyword">this</span>.getTrustStoreType());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;240</td>  <td class="nbHitsCovered">&nbsp;461</td>  <td class="src"><pre class="src">&nbsp;        config.computeIfAbsent(HttpClient.TRUSTSTORE_PATH, v -&gt; <span class="keyword">this</span>.getTrustStorePath());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;241</td>  <td class="nbHitsCovered">&nbsp;462</td>  <td class="src"><pre class="src">&nbsp;        config.computeIfAbsent(HttpClient.TRUSTSTORE_PWD, v -&gt; <span class="keyword">this</span>.getTrustStorePwd());</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;242</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;243</td>  <td class="nbHitsCovered">&nbsp;252</td>  <td class="src"><pre class="src">&nbsp;        LOG.info(<span class="string">"Http Config : {}"</span>, config);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;243</td>  <td class="nbHitsCovered">&nbsp;232</td>  <td class="src"><pre class="src">&nbsp;        LOG.info(<span class="string">"Http Config : {}"</span>, config);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;244</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;245</td>  <td class="nbHitsCovered">&nbsp;253</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Type type = HttpClientFactory.Type.valueOf(ProxySettings.getInstance().getProxyType());</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;246</td>  <td class="nbHitsCovered">&nbsp;253</td>  <td class="src"><pre class="src">&nbsp;        ProxySettings.getInstance().configureProxy();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;247</td>  <td class="nbHitsCovered">&nbsp;253</td>  <td class="src"><pre class="src">&nbsp;        LOG.info(<span class="string">"Httpclient type : {}"</span>, type);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;248</td>  <td class="nbHitsCovered">&nbsp;253</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.httpClient = HttpClientFactory.create(type, <span class="keyword">this</span>.isDisabledSSL(), config);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;249</td>  <td class="nbHitsCovered">&nbsp;250</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;245</td>  <td class="nbHitsCovered">&nbsp;232</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Type type = HttpClientFactory.Type.valueOf(ProxySettings.getInstance().getProxyType());</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;246</td>  <td class="nbHitsCovered">&nbsp;232</td>  <td class="src"><pre class="src">&nbsp;        ProxySettings.getInstance().configureProxy();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;247</td>  <td class="nbHitsCovered">&nbsp;232</td>  <td class="src"><pre class="src">&nbsp;        LOG.info(<span class="string">"Httpclient type : {}"</span>, type);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;248</td>  <td class="nbHitsCovered">&nbsp;232</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">this</span>.httpClient = HttpClientFactory.create(type, <span class="keyword">this</span>.isDisabledSSL(), config);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;249</td>  <td class="nbHitsCovered">&nbsp;231</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;250</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;251</td>  <td class="nbHits">&nbsp;</td>
@@ -478,10 +478,10 @@
   <td class="src"><pre class="src">&nbsp;    @Override</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;255</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> start() <span class="keyword">throws</span> Exception {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;256</td>  <td class="nbHitsCovered">&nbsp;251</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Series&lt;Parameter&gt; parameters = getHelpedParameters();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;257</td>  <td class="nbHitsCovered">&nbsp;249</td>  <td class="src"><pre class="src">&nbsp;        configure(parameters);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;258</td>  <td class="nbHitsCovered">&nbsp;251</td>  <td class="src"><pre class="src">&nbsp;        LOG.info(<span class="string">"Starting the internal HTTP client"</span>);</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;259</td>  <td class="nbHitsCovered">&nbsp;253</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;256</td>  <td class="nbHitsCovered">&nbsp;230</td>  <td class="src"><pre class="src">&nbsp;        <span class="keyword">final</span> Series&lt;Parameter&gt; parameters = getHelpedParameters();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;257</td>  <td class="nbHitsCovered">&nbsp;231</td>  <td class="src"><pre class="src">&nbsp;        configure(parameters);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;258</td>  <td class="nbHitsCovered">&nbsp;231</td>  <td class="src"><pre class="src">&nbsp;        LOG.info(<span class="string">"Starting the internal HTTP client"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;259</td>  <td class="nbHitsCovered">&nbsp;232</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;260</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;261</td>  <td class="nbHits">&nbsp;</td>
@@ -494,19 +494,19 @@
   <td class="src"><pre class="src">&nbsp;    @Override</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;265</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;    <span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> stop() <span class="keyword">throws</span> Exception {</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;266</td>  <td class="nbHitsUncovered"><a title="Line 266: Conditional coverage 50% (1/2).">&nbsp;203</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 266: Conditional coverage 50% (1/2).">        <span class="keyword">if</span> (<span class="keyword">this</span>.httpClient != <span class="keyword">null</span>) {</a></span></pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;267</td>  <td class="nbHitsCovered">&nbsp;202</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.getHttpClient().close();</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;268</td>  <td class="nbHitsCovered">&nbsp;203</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.httpClient = <span class="keyword">null</span>;</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;269</td>  <td class="nbHitsCovered">&nbsp;203</td>  <td class="src"><pre class="src">&nbsp;            LOG.info(<span class="string">"Stopping the internal HTTP client"</span>);</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;266</td>  <td class="nbHitsUncovered"><a title="Line 266: Conditional coverage 50% (1/2).">&nbsp;193</a></td>  <td class="src"><pre class="src"><span class="srcUncovered">&nbsp;<a title="Line 266: Conditional coverage 50% (1/2).">        <span class="keyword">if</span> (<span class="keyword">this</span>.httpClient != <span class="keyword">null</span>) {</a></span></pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;267</td>  <td class="nbHitsCovered">&nbsp;192</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.getHttpClient().close();</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;268</td>  <td class="nbHitsCovered">&nbsp;193</td>  <td class="src"><pre class="src">&nbsp;            <span class="keyword">this</span>.httpClient = <span class="keyword">null</span>;</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;269</td>  <td class="nbHitsCovered">&nbsp;195</td>  <td class="src"><pre class="src">&nbsp;            LOG.info(<span class="string">"Stopping the internal HTTP client"</span>);</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;270</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;        }</pre></td></tr>
-<tr>  <td class="numLineCover">&nbsp;271</td>  <td class="nbHitsCovered">&nbsp;203</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
+<tr>  <td class="numLineCover">&nbsp;271</td>  <td class="nbHitsCovered">&nbsp;195</td>  <td class="src"><pre class="src">&nbsp;    }</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;272</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;</pre></td></tr>
 <tr>  <td class="numLine">&nbsp;273</td>  <td class="nbHits">&nbsp;</td>
   <td class="src"><pre class="src">&nbsp;}</pre></td></tr>
 </table>
 
-<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.1.1 on 9/18/19 10:46 PM.</div>
+<div class="footer">Report generated by <a href="http://cobertura.sourceforge.net/" target="_top">Cobertura</a> 2.1.1 on 2/27/20 5:22 AM.</div>
 </body>
 </html>
