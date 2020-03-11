@@ -4,7 +4,7 @@
 
     <a href="www.cnes.fr" target="_blank">
     	<img src="/resources/images/Cnes-logo.png" width="50px" height="50px"/>
-    	&nbsp;&copy; CNES 2019
+    	&nbsp;&copy; CNES 2020
     </a>    
 
 </div>

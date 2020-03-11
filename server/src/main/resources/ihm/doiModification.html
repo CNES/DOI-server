@@ -516,7 +516,9 @@
                         $("#doi").append("<option disabled selected>Choix d'un doi</option>");
                         for (var doi of list) {
                             var identifierDOI = doi.replace(prefixCnes + projectId + "/", "");
-                            $("#doi").append("<option>" + identifierDOI + "</option>");
+                            if (identifierDOI !== doi) {
+                                $("#doi").append("<option>" + identifierDOI + "</option>");
+                            }                          
                         }
                     }
                 });
@@ -580,7 +582,8 @@
                     contentType: "text",
                     dataType: "text",
                     headers: {
-                        'Authorization': "Bearer " + sessionStorage.getItem("token")
+                        'Authorization': "Bearer " + sessionStorage.getItem("token"),
+                        'selectedRole' : sessionStorage.getItem("projectId")
                     },
                     crossDomain: true,
                     cache: false,
