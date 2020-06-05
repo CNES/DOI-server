@@ -30,24 +30,19 @@ import static fr.cnes.doi.server.DoiServer.RESTLET_MAX_TOTAL_CONNECTIONS;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 //import static java.lang.Thread.sleep;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
 import org.junit.Ignore;
+import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.restlet.Client;
 import org.restlet.Context;
-import org.restlet.data.ChallengeScheme;
 import org.restlet.data.Parameter;
 import org.restlet.data.Protocol;
-import org.restlet.representation.Representation;
-import org.restlet.resource.ClientResource;
 import org.restlet.util.Series;
 
 /**
@@ -92,7 +87,7 @@ public class test {
      * @throws java.io.IOException - if OutOfMemoryErrors
      */
     @Test
-    //@Ignore
+    @Ignore
     public void testApiWithHttp() throws IOException, InterruptedException {
          Thread.sleep(2000000);
     }

@@ -18,6 +18,7 @@
  */
 package fr.cnes.doi.plugin.impl.db;
 
+import fr.cnes.doi.application.DoiMdsApplication;
 import fr.cnes.doi.db.MyMemoryRealm;
 import fr.cnes.doi.db.model.DOIUser;
 import fr.cnes.doi.exception.DOIDbException;
@@ -31,6 +32,7 @@ import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_URL;
 import static fr.cnes.doi.plugin.impl.db.impl.DOIDbDataAccessServiceImpl.DB_USER;
 import fr.cnes.doi.plugin.impl.db.service.DOIDbDataAccessService;
 import fr.cnes.doi.plugin.impl.db.service.DatabaseSingleton;
+import fr.cnes.doi.security.RoleAuthorizer;
 import fr.cnes.doi.settings.EmailSettings;
 import fr.cnes.doi.utils.Utils;
 
@@ -176,14 +178,16 @@ public final class DefaultUserRoleImpl extends AbstractUserRolePluginHelper {
         boolean isAdded = false;
         try {
             das.addDOIProjectToUser(user, role);
-            isAdded = true;
+            final Application app = RoleAuthorizer.getInstance().loadApplicationBy(DoiMdsApplication.NAME);
+            
             LOG.info("The user {} is added to role {} for {}.", user, role,
-                    Application.getCurrent().getName());
+                    app.getName());
 
             final User userFromRealm = REALM.findUser(user);
-            final Role roleFromRealm = new Role(Application.getCurrent(), String.valueOf(role),
-                    "Role " + String.valueOf(role) + " for " + Application.getCurrent().getName());
+            final Role roleFromRealm = new Role(app, String.valueOf(role),
+                    "Role " + String.valueOf(role) + " for " + app.getName());
             REALM.map(userFromRealm, roleFromRealm);
+            isAdded = true;
 
         } catch (DOIDbException e) {
             LOG.fatal("An error occured while trying to add user " + user + " to project " + role,

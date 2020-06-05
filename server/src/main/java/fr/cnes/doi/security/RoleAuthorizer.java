@@ -146,7 +146,7 @@ public final class RoleAuthorizer implements Observer {
      */
     private void initForMds(final Application app) {
         LOG.traceEntry(new JsonMessage(app));
-
+        
         // we load projects from database
         List<DOIProject> projects;
         try {
@@ -183,6 +183,9 @@ public final class RoleAuthorizer implements Observer {
                 RoleAuthorizer.REALM.map(user, role);
             }
         }
+        
+        final Group admin = findGroupByName(GROUP_ADMIN);
+        RoleAuthorizer.REALM.map(admin, Role.get(app, ROLE_ADMIN));        
 
         app.getContext().setDefaultEnroler(RoleAuthorizer.REALM.getEnroler());
         app.getContext().setDefaultVerifier(RoleAuthorizer.REALM.getVerifier());
@@ -222,8 +225,8 @@ public final class RoleAuthorizer implements Observer {
      */
     private void initForAdmin(final Application app) {
         LOG.traceEntry(new JsonMessage(app));
+        
         final Group admin = findGroupByName(GROUP_ADMIN);
-
         RoleAuthorizer.REALM.map(admin, Role.get(app, ROLE_ADMIN));
         app.getContext().setDefaultEnroler(RoleAuthorizer.REALM.getEnroler());
         app.getContext().setDefaultVerifier(RoleAuthorizer.REALM.getVerifier());
@@ -276,11 +279,8 @@ public final class RoleAuthorizer implements Observer {
         LOG.traceEntry(new JsonMessage(obs));
         LOG.traceEntry(new JsonMessage(obj));
 
-        // Loads the admin group - admin group is defined by default
-        final Group adminGroup = findGroupByName(GROUP_ADMIN);
-
         // Loads the application MDS related to admin group
-        final Application mds = loadApplicationBy(adminGroup, DoiMdsApplication.NAME);
+        final Application mds = loadApplicationBy(DoiMdsApplication.NAME);
 
         if (mds == null) {
             LOG.info("{} is not defined in the REALM", DoiMdsApplication.NAME);
@@ -350,28 +350,30 @@ public final class RoleAuthorizer implements Observer {
     /**
      * Loads the application related to a group with a name
      *
-     * @param group group linked to an application
      * @param appName application name
      * @return the application or null if the application is not defined in the
      * REALM
      */
-    private Application loadApplicationBy(final Group group,
-            final String appName) {
-        LOG.traceEntry("Parameters : {} and {}", group, appName);
-
-        final Set<Role> roles = RoleAuthorizer.REALM.findRoles(group);
-        final Iterator<Role> roleIter = roles.iterator();
+    public Application loadApplicationBy(final String appName) {
+        LOG.traceEntry("Parameters : {}", appName);
         Application searchedApp = null;
+        final List<Group> groups = RoleAuthorizer.REALM.getRootGroups();                
+        final Iterator<Group> groupIter = groups.iterator();
         boolean isFound = false;
-        while (roleIter.hasNext() && !isFound) {
-            final Role role = roleIter.next();
-            final Application app = role.getApplication();
-            if (app.getName().equals(appName)) {
-                searchedApp = app;
-                isFound = true;
-                break;
+        while (groupIter.hasNext() && !isFound) {
+            final Group group = groupIter.next();
+            final Set<Role> roles = RoleAuthorizer.REALM.findRoles(group);
+            final Iterator<Role> roleIter = roles.iterator();
+            while (roleIter.hasNext() && !isFound) {
+                final Role role = roleIter.next();
+                final Application app = role.getApplication();
+                if (app.getName().equals(appName)) {
+                    searchedApp = app;
+                    isFound = true;
+                }                
             }
         }
+        
 
         return LOG.traceExit(searchedApp);
     }

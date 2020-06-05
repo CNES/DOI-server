@@ -646,6 +646,7 @@ public class ClientMDS extends BaseClient {
             result.setCharacterSet(CharacterSet.UTF_8);
             result.setMediaType(MediaType.APPLICATION_XML);
             this.getClient().setReference(url);
+            this.getClient().getRequestAttributes().put("Content-Type", "application/xml");
             this.getClient().getRequestAttributes().put("charset", "UTF-8");
             this.getClient().setMethod(null);
             final Representation response = this.getClient().put(result);
