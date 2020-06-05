@@ -101,7 +101,13 @@ echo "
                 <!-- password for doiserver user -->
                 <doiserver-pwd></doiserver-pwd>
                 <!-- password for the DOI-server admin -->
-                <doi-admin-pwd></doi-admin-pwd>                
+                <doi-admin-pwd></doi-admin-pwd>   
+                <!-- test DOI -->
+                <inist.doi></inist.doi>
+                <!-- login to connect to the Datacite test plateform -->
+                <inist.login></inist.login>
+                <!-- pwd to connect to the Datacite test plateform -->
+                <inist.pwd></inist.pwd>             
             </properties>            
         </profile>
     </profiles>

@@ -202,7 +202,7 @@ public class MediaResourceTest {
 
     /**
      * Test of createMedia method, of class MediaResource.
-     * A Status.SUCCESS_OK is expected
+     * A 403 is expected
      */
     @Test    
     public void testCreateMediaForbidden() throws IOException {   

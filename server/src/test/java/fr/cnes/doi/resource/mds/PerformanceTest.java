@@ -179,8 +179,8 @@ public class PerformanceTest {
         long startTime = System.currentTimeMillis();
         ConcurrentHashMap map = new ConcurrentHashMap();
         map.put("nbErrors", 0);
-        mdsServerStub.createSpec(MdsSpec.Spec.POST_METADATA_201);
-        mdsServerStub.createSpec(MdsSpec.Spec.POST_DOI_201);
+        mdsServerStub.createSpec(MdsSpec.Spec.PUT_METADATA_201);
+        mdsServerStub.createSpec(MdsSpec.Spec.PUT_DOI_201_2);
         
         
         testMultiThreads(CreateDOI.class, map, NB_ITERS);        
@@ -206,8 +206,8 @@ public class PerformanceTest {
         long startTime = System.currentTimeMillis();
         ConcurrentHashMap map = new ConcurrentHashMap();
         map.put("nbErrors", 0);
-        mdsServerStub.createSpec(MdsSpec.Spec.POST_METADATA_201);
-        mdsServerStub.createSpec(MdsSpec.Spec.POST_DOI_201);
+        mdsServerStub.createSpec(MdsSpec.Spec.PUT_METADATA_201);
+        mdsServerStub.createSpec(MdsSpec.Spec.PUT_DOI_201_2);
         
         
         testMultiThreads(CreateDOI.class, map, 1);        
@@ -266,7 +266,7 @@ public class PerformanceTest {
             final String password = "pwd";
             
             Form doiForm = new Form();
-            doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b"));
+            doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.80163/828606/8c3e91ad45ca855b477126bc073ae44b"));
             doiForm.add(new Parameter(DoisResource.URL_PARAMETER, "http://www.cnes.fr"));
 
             String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);

@@ -68,7 +68,7 @@ public class TokenResourceTest {
     private static Client cl;
     private static boolean isDatabaseConfigured;
 
-    public static final String DOI = "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b";
+    public static final String DOI = "10.80163/828606/8c3e91ad45ca855b477126bc073ae44b";
     
     @Rule
     public ExpectedException exceptions = ExpectedException.none();    

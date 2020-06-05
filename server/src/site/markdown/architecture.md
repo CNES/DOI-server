@@ -1513,6 +1513,12 @@ echo "
                 <doiserver-pwd></doiserver-pwd>
                 <!-- password for the DOI-server admin -->
                 <doi-admin-pwd></doi-admin-pwd>
+                <!-- test DOI -->
+                <inist.doi>xx.xxxxx</inist.doi>
+                <!-- login to connect to the Datacite test plateform -->
+                <inist.login>xxxxxxx</inist.login>
+                <!-- pwd to connect to the Datacite test plateform -->
+                <inist.pwd>xxxxxxxx</inist.pwd>
             </properties>
         </profile>
     </profiles>

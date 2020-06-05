@@ -30,6 +30,7 @@ import org.junit.Test;
 
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.settings.EmailSettings;
+import org.junit.Assume;
 import org.junit.Rule;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
@@ -42,6 +43,7 @@ import org.junit.rules.ExpectedException;
 public class ITemailSettings {
 
     private static EmailSettings instance;
+    private static boolean isSMTConfigured;
 
     @Rule
     public ExpectedException exceptions = ExpectedException.none();
@@ -50,6 +52,8 @@ public class ITemailSettings {
     public static void setUpClass() {
         InitSettingsForTest.init(InitSettingsForTest.CONFIG_IT_PROPERTIES);
         instance = EmailSettings.getInstance();
+        String result = instance.getSmtpURL();
+        isSMTConfigured = !result.isEmpty();
     }
 
     @AfterClass
@@ -58,6 +62,7 @@ public class ITemailSettings {
 
     @Before
     public void setUp() {
+        Assume.assumeTrue("SMT is not configured, please configure it and rerun the tests", isSMTConfigured);
     }
 
     @After

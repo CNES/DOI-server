@@ -103,7 +103,7 @@ public class ClientMDS extends BaseClient {
     /**
      * Test DOI prefix {@value #TEST_DOI_PREFIX}.
      */
-    public static final String TEST_DOI_PREFIX = "10.5072";
+    public static final String TEST_DOI_PREFIX = "10.80163";
 
     /**
      * DOI query parameter {@value #POST_DOI}.
@@ -487,8 +487,8 @@ public class ClientMDS extends BaseClient {
     public String createDoi(final Form form) throws ClientMdsException {
         try {
             this.checkInputForm(form);
-            final Reference url = createReference(DOI_RESOURCE);
-            this.getLog().debug("POST {0}", url.toString());
+            final Reference url = createReference(DOI_RESOURCE+"/"+form.getFirstValue(POST_DOI));
+            this.getLog().debug("PUT {0}", url.toString());
             final Representation rep = createRequest(url, form);
             return getText(rep);
         } catch (ResourceException ex) {
@@ -517,8 +517,8 @@ public class ClientMDS extends BaseClient {
         final Map<String, Object> requestAttributes = this.getClient().getRequestAttributes();
         requestAttributes.put("charset", StandardCharsets.UTF_8);
         requestAttributes.put("Content-Type", "text/plain");
-        this.getLog().info("POST {} with parameters {}", url, requestBody);
-        return this.getClient().post(requestBody, MediaType.TEXT_PLAIN);
+        this.getLog().info("PUT {} with parameters {}", url, requestBody);
+        return this.getClient().put(requestBody, MediaType.TEXT_PLAIN);
     }
 
     /**
@@ -640,7 +640,7 @@ public class ClientMDS extends BaseClient {
         try {
             final Identifier identifier = entity.getIdentifier();
             identifier.setValue(getDoiAccorgindToContext(identifier.getValue()));
-            final Reference url = createReference(METADATA_RESOURCE);
+            final Reference url = createReference(METADATA_RESOURCE+"/"+identifier.getValue());
             this.getLog().debug("PUT {}", url.toString());
             final JaxbRepresentation<Resource> result = new JaxbRepresentation<>(entity);
             result.setCharacterSet(CharacterSet.UTF_8);
@@ -648,7 +648,7 @@ public class ClientMDS extends BaseClient {
             this.getClient().setReference(url);
             this.getClient().getRequestAttributes().put("charset", "UTF-8");
             this.getClient().setMethod(null);
-            final Representation response = this.getClient().post(result);
+            final Representation response = this.getClient().put(result);
             return getText(response);
         } catch (ResourceException ex) {
             throw new ClientMdsException(ex.getStatus(), ex.getMessage(), this.getClient().

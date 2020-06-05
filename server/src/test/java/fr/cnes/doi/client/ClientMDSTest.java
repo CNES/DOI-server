@@ -97,13 +97,13 @@ public class ClientMDSTest {
     @Test
     public void testCheckIfOneCharIsNotValid() {  
         exceptions.expect(IllegalArgumentException.class);
-        String test = "10.5072/éabscd";
+        String test = "10.80163/éabscd";
         ClientMDS.checkIfAllCharsAreValid(test);
     }
 
     @Test
     public void testCheckIfAllCharsAreValid() {
-        String test = "10.5072/eabscd";
+        String test = "10.80163/eabscd";
         ClientMDS.checkIfAllCharsAreValid(test);
         assertTrue("Test the DOI chars are valid", true);
     }
@@ -205,7 +205,7 @@ public class ClientMDSTest {
         mdsServerStub.createSpec(spec);
 
         Form form = new Form();
-        form.add("doi", "10.5072/EDU/TESTID");
+        form.add("doi", "10.80163/EDU/TESTID");
         form.add("url", "https://edutheque.cnes.fr/fr/web/CNES-fr/10884-edutheque.php");
 
         // Requests the DOIServer using the stub (mode DEV)        
@@ -287,7 +287,7 @@ public class ClientMDSTest {
      * Test of getDoi method, of class ClientMDS with a wrong DOI. A mock server is set for this
      * test in order to emulate the response of the server on a path:
      * <ul>
-     * <li>GET /doi/10.5072/2783446.2783605</li>
+     * <li>GET /doi/10.80163/2783446.2783605</li>
      * <li>404 : DOI not found</li>
      * </ul>
      * @throws java.lang.Exception
@@ -301,7 +301,7 @@ public class ClientMDSTest {
      * Test of getDoi method, of class ClientMDS with a wrong authentication. A mock server is set
      * for this test in order to emulate the response of the server on a path:
      * <ul>
-     * <li>GET /doi/10.5072/2783446.2783605</li>
+     * <li>GET /doi/10.80163/2783446.2783605</li>
      * <li>401 : Bad credentials</li>
      * </ul>
      * @throws java.lang.Exception
@@ -315,7 +315,7 @@ public class ClientMDSTest {
      * Test of getDoi method, of class ClientMDS with no content as result. A mock server is set for
      * this test in order to emulate the response of the server on a path:
      * <ul>
-     * <li>GET /doi/10.5072/2783446.2783605</li>
+     * <li>GET /doi/10.80163/2783446.2783605</li>
      * <li>204 : ""</li>
      * </ul>
      * @throws java.lang.Exception
@@ -329,7 +329,7 @@ public class ClientMDSTest {
      * Test of getDoi method, of class ClientMDS with a login problem. A mock server is set for this
      * test in order to emulate the response of the server on a path:
      * <ul>
-     * <li>GET /doi/10.5072/2783446.2783605</li>
+     * <li>GET /doi/10.80163/2783446.2783605</li>
      * <li>403 : ""</li>
      * </ul>
      * @throws java.lang.Exception
@@ -343,7 +343,7 @@ public class ClientMDSTest {
      * Test of getDoi method, of class ClientMDS with an internal error. A mock server is set for
      * this test in order to emulate the response of the server on a path:
      * <ul>
-     * <li>GET /doi/10.5072/2783446.2783605</li>
+     * <li>GET /doi/10.80163/2783446.2783605</li>
      * <li>500 : "server internal error, try later and if problem persists please contact us"</li>
      * </ul>
      * @throws java.lang.Exception
@@ -357,7 +357,7 @@ public class ClientMDSTest {
      * Test of getDoi method, of class ClientMDS, with a right DOI. A mock server is set for this
      * test in order to emulate the response of the server on a path:
      * <ul>
-     * <li>GET /doi/10.5072/2783446.2783605</li>
+     * <li>GET /doi/10.80163/2783446.2783605</li>
      * <li>200 : "https://edutheque.cnes.fr/fr/web/CNES-fr/10884-edutheque.php"</li>
      * </ul>
      * @throws java.lang.Exception
@@ -373,7 +373,7 @@ public class ClientMDSTest {
      */
     @Test
     public void testCreateDoi201() throws Exception {
-        testSpecCreateDoi(MdsSpec.Spec.POST_DOI_201);
+        testSpecCreateDoi(MdsSpec.Spec.PUT_DOI_201);
     }
 
     /**
@@ -382,7 +382,7 @@ public class ClientMDSTest {
      */
     @Test
     public void testCreateDoi400() throws Exception {
-        testSpecCreateDoi(MdsSpec.Spec.POST_DOI_400);
+        testSpecCreateDoi(MdsSpec.Spec.PUT_DOI_400);
     }
 
     /**
@@ -391,7 +391,7 @@ public class ClientMDSTest {
      */
     @Test
     public void testCreateDoi401() throws Exception {
-        testSpecCreateDoi(MdsSpec.Spec.POST_DOI_401);
+        testSpecCreateDoi(MdsSpec.Spec.PUT_DOI_401);
     }
 
     /**
@@ -400,7 +400,7 @@ public class ClientMDSTest {
      */
     @Test
     public void testCreateDoi403() throws Exception {
-        testSpecCreateDoi(MdsSpec.Spec.POST_DOI_403);
+        testSpecCreateDoi(MdsSpec.Spec.PUT_DOI_403);
     }
 
     /**
@@ -409,7 +409,7 @@ public class ClientMDSTest {
      */
     @Test
     public void testCreateDoi412() throws Exception {
-        testSpecCreateDoi(MdsSpec.Spec.POST_DOI_412);
+        testSpecCreateDoi(MdsSpec.Spec.PUT_DOI_412);
     }
 
     /**
@@ -418,7 +418,7 @@ public class ClientMDSTest {
      */
     @Test
     public void testCreateDoi500() throws Exception {
-        testSpecCreateDoi(MdsSpec.Spec.POST_DOI_500);
+        testSpecCreateDoi(MdsSpec.Spec.PUT_DOI_500);
     }
 
     /**
@@ -545,7 +545,7 @@ public class ClientMDSTest {
      */
     @Test
     public void testCreateMetadata201() throws Exception {
-        testSpecCreateMetadata(MdsSpec.Spec.POST_METADATA_201);
+        testSpecCreateMetadata(MdsSpec.Spec.PUT_METADATA_201);
     }
 
     /**
@@ -554,7 +554,7 @@ public class ClientMDSTest {
      */
     @Test
     public void testCreateMetadata400() throws Exception {
-        testSpecCreateMetadata(MdsSpec.Spec.POST_METADATA_400);
+        testSpecCreateMetadata(MdsSpec.Spec.PUT_METADATA_400);
     }
 
     /**
@@ -563,7 +563,7 @@ public class ClientMDSTest {
      */
     @Test
     public void testCreateMetadata401() throws Exception {
-        testSpecCreateMetadata(MdsSpec.Spec.POST_METADATA_401);
+        testSpecCreateMetadata(MdsSpec.Spec.PUT_METADATA_401);
     }
 
     /**
@@ -572,7 +572,7 @@ public class ClientMDSTest {
      */
     @Test
     public void testCreateMetadata403() throws Exception {
-        testSpecCreateMetadata(MdsSpec.Spec.POST_METADATA_403);
+        testSpecCreateMetadata(MdsSpec.Spec.PUT_METADATA_403);
     }
 
     /**
@@ -581,7 +581,7 @@ public class ClientMDSTest {
      */
     @Test
     public void testCreateMetadata500() throws Exception {
-        testSpecCreateMetadata(MdsSpec.Spec.POST_METADATA_500);
+        testSpecCreateMetadata(MdsSpec.Spec.PUT_METADATA_500);
     }
     
     /**
@@ -590,7 +590,7 @@ public class ClientMDSTest {
      */
     @Test
     public void testCreateMetadataObj201() throws Exception {
-        testSpecCreateMetadataAsObj(MdsSpec.Spec.POST_METADATA_201);
+        testSpecCreateMetadataAsObj(MdsSpec.Spec.PUT_METADATA_201);
     }
 
     /**
@@ -599,7 +599,7 @@ public class ClientMDSTest {
      */
     @Test
     public void testCreateMetadataObj400() throws Exception {
-        testSpecCreateMetadataAsObj(MdsSpec.Spec.POST_METADATA_400);
+        testSpecCreateMetadataAsObj(MdsSpec.Spec.PUT_METADATA_400);
     }
 
     /**
@@ -608,7 +608,7 @@ public class ClientMDSTest {
      */
     @Test
     public void testCreateMetadataObj401() throws Exception {
-        testSpecCreateMetadataAsObj(MdsSpec.Spec.POST_METADATA_401);
+        testSpecCreateMetadataAsObj(MdsSpec.Spec.PUT_METADATA_401);
     }
 
     /**
@@ -617,7 +617,7 @@ public class ClientMDSTest {
      */
     @Test
     public void testCreateMetadataObj403() throws Exception {
-        testSpecCreateMetadataAsObj(MdsSpec.Spec.POST_METADATA_403);
+        testSpecCreateMetadataAsObj(MdsSpec.Spec.PUT_METADATA_403);
     }
 
     /**
@@ -626,7 +626,7 @@ public class ClientMDSTest {
      */
     @Test
     public void testCreateMetadataObj500() throws Exception {
-        testSpecCreateMetadataAsObj(MdsSpec.Spec.POST_METADATA_500);
+        testSpecCreateMetadataAsObj(MdsSpec.Spec.PUT_METADATA_500);
     }    
 
 
