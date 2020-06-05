@@ -46,6 +46,11 @@ public final class InitSettingsForTest {
      * Properties file for tests.
      */
     public static final String CONFIG_TEST_PROPERTIES = "config-test.properties";
+    
+    /**
+     * Properties file for testing DOI creation on Datacite (file no commited)
+     */
+    public static final String CONFIG_IT_DATACITE_PROPERTIES = "config-it-datacite.properties";
 
     /**
      * Properties files for it.

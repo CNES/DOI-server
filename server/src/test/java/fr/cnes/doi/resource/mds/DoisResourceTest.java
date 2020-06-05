@@ -25,7 +25,6 @@ import static fr.cnes.doi.server.DoiServer.JKS_DIRECTORY;
 import static fr.cnes.doi.server.DoiServer.JKS_FILE;
 import static fr.cnes.doi.server.DoiServer.RESTLET_MAX_CONNECTIONS_PER_HOST;
 import static fr.cnes.doi.server.DoiServer.RESTLET_MAX_TOTAL_CONNECTIONS;
-import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,6 +58,7 @@ import fr.cnes.doi.UnitTest;
 import fr.cnes.doi.security.UtilsHeader;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Tests the DoisResource
@@ -106,7 +106,7 @@ public class DoisResourceTest {
         try {
             Form doiForm = new Form();
             doiForm.add(new Parameter(DoisResource.DOI_PARAMETER,
-                    "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b"));
+                    "10.80163/828606/8c3e91ad45ca855b477126bc073ae44b"));
             doiForm.add(new Parameter(DoisResource.URL_PARAMETER, "https://cfosat.cnes.fr/"));
 
             String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
@@ -161,7 +161,7 @@ public class DoisResourceTest {
     public void testCreateDoiConflictHttps() throws IOException {
         Form doiForm = new Form();
         doiForm.add(new Parameter(DoisResource.DOI_PARAMETER,
-                "10.5072/100378/8c3e91ad45ca855b477126bc073ae44b"));
+                "10.80163/100378/8c3e91ad45ca855b477126bc073ae44b"));
         doiForm.add(new Parameter(DoisResource.URL_PARAMETER, "http://www.cnes.fr"));
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + DOIS_SERVICE);
@@ -188,10 +188,10 @@ public class DoisResourceTest {
      */
     @Test
     public void testCreateDoiHttps() throws IOException {
-        mdsSpecStub.createSpec(MdsSpec.Spec.POST_DOI_201);
+        mdsSpecStub.createSpec(MdsSpec.Spec.PUT_DOI_201_2);
         
         Form doiForm = new Form();
-        doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b"));
+        doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.80163/828606/8c3e91ad45ca855b477126bc073ae44b"));
         doiForm.add(new Parameter(DoisResource.URL_PARAMETER, "http://www.cnes.fr"));
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + DOIS_SERVICE);
@@ -215,9 +215,9 @@ public class DoisResourceTest {
             code = ex.getStatus().getCode();
         }
         client.release();
-        assertEquals("Test if the DOI is related to several accounts with a specific account", MdsSpec.Spec.POST_DOI_201.getStatus(), code);
+        assertEquals("Test if the DOI is related to several accounts with a specific account", MdsSpec.Spec.PUT_DOI_201_2.getStatus(), code);
         
-        mdsSpecStub.verifySpec(MdsSpec.Spec.POST_DOI_201);       
+        mdsSpecStub.verifySpec(MdsSpec.Spec.PUT_DOI_201_2);       
     }
     
     /**
@@ -227,10 +227,10 @@ public class DoisResourceTest {
      */
     @Test
     public void testCreateDoiHttp() throws IOException {        
-        mdsSpecStub.createSpec(MdsSpec.Spec.POST_DOI_201);        
+        mdsSpecStub.createSpec(MdsSpec.Spec.PUT_DOI_201_2);        
 
         Form doiForm = new Form();
-        doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b"));
+        doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.80163/828606/8c3e91ad45ca855b477126bc073ae44b"));
         doiForm.add(new Parameter(DoisResource.URL_PARAMETER, "http://www.cnes.fr"));
 
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);
@@ -253,9 +253,9 @@ public class DoisResourceTest {
         } catch (ResourceException ex) {
             code = ex.getStatus().getCode();
         }
-        assertEquals("Test the creation of a DOI, related to several accounts with a specific account", MdsSpec.Spec.POST_DOI_201.getStatus(), code);
+        assertEquals("Test the creation of a DOI, related to several accounts with a specific account", MdsSpec.Spec.PUT_DOI_201_2.getStatus(), code);
         
-        mdsSpecStub.verifySpec(MdsSpec.Spec.POST_DOI_201);              
+        mdsSpecStub.verifySpec(MdsSpec.Spec.PUT_DOI_201_2);              
     }  
     
     /**
@@ -266,10 +266,10 @@ public class DoisResourceTest {
      */
     @Test
     public void testCreateFalseDoiHttps() throws IOException {        
-        mdsSpecStub.createSpec(MdsSpec.Spec.POST_DOI_412);                        
+        mdsSpecStub.createSpec(MdsSpec.Spec.PUT_DOI_412_2);                        
 
         Form doiForm = new Form();
-        doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.5072/828606/8c3e91ad45ca855b477126bc073ae"));
+        doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.80163/828606/8c3e91ad45ca855b477126bc073ae"));
         doiForm.add(new Parameter(DoisResource.URL_PARAMETER, "http://www.cnes.fr"));
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
         ClientResource client = new ClientResource("https://localhost:" + port + DOIS_SERVICE);
@@ -293,9 +293,9 @@ public class DoisResourceTest {
             code = ex.getStatus().getCode();
         }
         client.release();
-        assertEquals("Test an error of the creation of a DOI when the metadata is not uploaded first",MdsSpec.Spec.POST_DOI_412.getStatus(), code);
+        assertEquals("Test an error of the creation of a DOI when the metadata is not uploaded first",MdsSpec.Spec.PUT_DOI_412_2.getStatus(), code);
         
-        mdsSpecStub.verifySpec(MdsSpec.Spec.POST_DOI_201);                     
+        mdsSpecStub.verifySpec(MdsSpec.Spec.PUT_DOI_412_2);                     
     }    
     
     /**

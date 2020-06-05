@@ -28,12 +28,8 @@ import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 
 import fr.cnes.doi.InitSettingsForTest;
-import fr.cnes.doi.UnitTest;
 import fr.cnes.doi.exception.ClientMdsException;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.junit.experimental.categories.Category;
 import org.restlet.Client;
 import org.restlet.resource.ResourceException;
 

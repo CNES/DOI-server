@@ -25,8 +25,6 @@ import static fr.cnes.doi.server.DoiServer.JKS_DIRECTORY;
 import static fr.cnes.doi.server.DoiServer.JKS_FILE;
 import static fr.cnes.doi.server.DoiServer.RESTLET_MAX_CONNECTIONS_PER_HOST;
 import static fr.cnes.doi.server.DoiServer.RESTLET_MAX_TOTAL_CONNECTIONS;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -63,6 +61,8 @@ import fr.cnes.doi.UnitTest;
 import fr.cnes.doi.security.UtilsHeader;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests the metadataResource.

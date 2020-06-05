@@ -172,8 +172,7 @@ public class MediaResource extends BaseMdsResource {
             final Form mediaForm) throws DoiServerException {
         LOG.traceEntry("Parameters\n\tdoi={}\n\tmediaForm={}", doi, mediaForm);
         final StringBuilder errorMsg = new StringBuilder();
-        if (doi == null || doi.isEmpty() || !doi.startsWith(DoiSettings.getInstance().getString(
-                Consts.INIST_DOI))) {
+        if (doi == null || doi.isEmpty() || !doi.startsWith(DoiSettings.getInstance().getString(Consts.INIST_DOI))) {
             errorMsg.append(DOI_PARAMETER).append(" value is not set.");
         } else {
             try {

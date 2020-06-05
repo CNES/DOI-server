@@ -347,10 +347,14 @@ public final class AdminApplication extends AbstractApplication {
         LOG.traceEntry();
         final TaskService updateDataBaseTask = new TaskService(true);
         LOG.info("Sets UpdateDataBaseTask running at each {} {}", PERIOD_SCHEDULER, PERIOD_UNIT);
-        updateDataBaseTask.scheduleAtFixedRate(
-                new DOIUsersUpdate(), 0,
-                DoiSettings.getInstance().getInt(Consts.DB_UPDATE_JOB_PERIOD), TimeUnit.MINUTES
-        );
+        try {
+            updateDataBaseTask.scheduleAtFixedRate(
+                    new DOIUsersUpdate(), 0,
+                    DoiSettings.getInstance().getInt(Consts.DB_UPDATE_JOB_PERIOD), TimeUnit.MINUTES
+            );
+        } catch(NoClassDefFoundError e) {
+            LOG.error(e);
+        }
         return LOG.traceExit(updateDataBaseTask);
     }
 

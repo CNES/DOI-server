@@ -62,8 +62,6 @@ public class ITauthentication {
 
     private static Client cl;
     private static boolean isDatabaseConfigured;
-
-    public static final String DOI = "10.5072/828606/8c3e91ad45ca855b477126bc073ae44b";
     
     private static String userAdmin;
     private static String password;

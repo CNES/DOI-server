@@ -25,7 +25,6 @@ import static fr.cnes.doi.server.DoiServer.JKS_DIRECTORY;
 import static fr.cnes.doi.server.DoiServer.JKS_FILE;
 import static fr.cnes.doi.server.DoiServer.RESTLET_MAX_CONNECTIONS_PER_HOST;
 import static fr.cnes.doi.server.DoiServer.RESTLET_MAX_TOTAL_CONNECTIONS;
-import static org.junit.Assert.assertEquals;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -67,6 +66,7 @@ import fr.cnes.doi.security.UtilsHeader;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import org.restlet.data.Form;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test class for {@link fr.cnes.doi.resource.mds.MetadatasResource}
@@ -152,7 +152,7 @@ public class MetadatasResourceTest {
      */
     @Test
     public void testCreateMetadataHttpsAsNonAdminWithWrongProjectDOIWithToken() throws IOException {
-        testSpecCreateMetadataAsObjWithToken(MdsSpec.Spec.POST_METADATA_403, inputStream, "testMe", "testMe", "100378", 0);        
+        testSpecCreateMetadataAsObjWithToken(MdsSpec.Spec.PUT_METADATA_403, inputStream, "testMe", "testMe", "100378", 0);        
     }
     
     /**
@@ -161,7 +161,7 @@ public class MetadatasResourceTest {
      */
     @Test
     public void testCreateMetadataHttpsAsNonAdminWithWrongUserWithToken() throws IOException {
-        testSpecCreateMetadataAsObjWithToken(MdsSpec.Spec.POST_METADATA_403, inputStream, "doi_kerberos", "doi_kerberos", "828606", 0);        
+        testSpecCreateMetadataAsObjWithToken(MdsSpec.Spec.PUT_METADATA_403, inputStream, "doi_kerberos", "doi_kerberos", "828606", 0);        
     }   
     
     /**
@@ -170,7 +170,7 @@ public class MetadatasResourceTest {
      */
     @Test
     public void testCreateMetadataHttpsAsNonAdminWithToken() throws IOException {
-        testSpecCreateMetadataAsObjWithToken(MdsSpec.Spec.POST_METADATA_201, inputStream, "nonadmin", "nonadmin", "828606", 1);        
+        testSpecCreateMetadataAsObjWithToken(MdsSpec.Spec.PUT_METADATA_201, inputStream, "nonadmin", "nonadmin", "828606", 1);        
     }       
     
     /**
@@ -179,7 +179,7 @@ public class MetadatasResourceTest {
      */
     @Test
     public void testCreateMetadataHttpsWithToken() throws IOException {
-        testSpecCreateMetadataAsObjWithToken(MdsSpec.Spec.POST_METADATA_201, inputStream, "malapert", "pwd", "828606", 1);        
+        testSpecCreateMetadataAsObjWithToken(MdsSpec.Spec.PUT_METADATA_201, inputStream, "malapert", "pwd", "828606", 1);        
     }
     
     /**
@@ -189,7 +189,7 @@ public class MetadatasResourceTest {
      */    
     @Test
     public void testCreateMetadataHttpsWithWrongFileWithToken() throws IOException {
-        testSpecCreateMetadataAsObjWithToken(MdsSpec.Spec.POST_METADATA_400, inputStreamFileError, "malapert", "pwd", "828606", 0);
+        testSpecCreateMetadataAsObjWithToken(MdsSpec.Spec.PUT_METADATA_400, inputStreamFileError, "malapert", "pwd", "828606", 0);
     }  
     
     
@@ -200,7 +200,7 @@ public class MetadatasResourceTest {
      */
     @Test
     public void testCreateMetadataHttpsWithNoRoleWithToken() throws IOException {
-        testSpecCreateMetadataAsObjWithToken(MdsSpec.Spec.POST_METADATA_401, inputStream, "norole", "norole", null, 0);        
+        testSpecCreateMetadataAsObjWithToken(MdsSpec.Spec.PUT_METADATA_401, inputStream, "norole", "norole", null, 0);        
     }
    
     /**
@@ -209,7 +209,7 @@ public class MetadatasResourceTest {
      */
     @Test
     public void testCreateMetadataHttpsAsNonAdminWithNonAllowProject() throws IOException {
-        testSpecCreateMetadataAsObj(MdsSpec.Spec.POST_METADATA_403, inputStream, "doi_kerberos", "doi_kerberos", "828606", 0);        
+        testSpecCreateMetadataAsObj(MdsSpec.Spec.PUT_METADATA_403, inputStream, "doi_kerberos", "doi_kerberos", "828606", 0);        
     }
     
     /**
@@ -218,7 +218,7 @@ public class MetadatasResourceTest {
      */
     @Test
     public void testCreateMetadataHttpsAsNonAdminWithWrongProjectDOI() throws IOException {
-        testSpecCreateMetadataAsObj(MdsSpec.Spec.POST_METADATA_403, inputStream, "testMe", "testMe", "100378", 0);        
+        testSpecCreateMetadataAsObj(MdsSpec.Spec.PUT_METADATA_403, inputStream, "testMe", "testMe", "100378", 0);        
     }
     
     /**
@@ -227,7 +227,7 @@ public class MetadatasResourceTest {
      */
     @Test
     public void testCreateMetadataHttpsAsNonAdminWithWrongUser() throws IOException {
-        testSpecCreateMetadataAsObj(MdsSpec.Spec.POST_METADATA_403, inputStream, "doi_kerberos", "doi_kerberos", "828606", 0);        
+        testSpecCreateMetadataAsObj(MdsSpec.Spec.PUT_METADATA_403, inputStream, "doi_kerberos", "doi_kerberos", "828606", 0);        
     }   
     
     /**
@@ -236,7 +236,7 @@ public class MetadatasResourceTest {
      */
     @Test
     public void testCreateMetadataHttpsAsNonAdmin() throws IOException {
-        testSpecCreateMetadataAsObj(MdsSpec.Spec.POST_METADATA_201, inputStream, "nonadmin", "nonadmin", "828606", 1);        
+        testSpecCreateMetadataAsObj(MdsSpec.Spec.PUT_METADATA_201, inputStream, "nonadmin", "nonadmin", "828606", 1);        
     }       
     
     /**
@@ -245,7 +245,7 @@ public class MetadatasResourceTest {
      */
     @Test
     public void testCreateMetadataHttps() throws IOException {
-        testSpecCreateMetadataAsObj(MdsSpec.Spec.POST_METADATA_201, inputStream, "malapert", "pwd", "828606", 1);        
+        testSpecCreateMetadataAsObj(MdsSpec.Spec.PUT_METADATA_201, inputStream, "malapert", "pwd", "828606", 1);        
     }
     
     /**
@@ -255,7 +255,7 @@ public class MetadatasResourceTest {
      */    
     @Test
     public void testCreateMetadataHttpsWithWrongFile() throws IOException {
-        testSpecCreateMetadataAsObj(MdsSpec.Spec.POST_METADATA_400, inputStreamFileError, "malapert", "pwd", "828606", 0);
+        testSpecCreateMetadataAsObj(MdsSpec.Spec.PUT_METADATA_400, inputStreamFileError, "malapert", "pwd", "828606", 0);
     }  
     
     
@@ -266,7 +266,7 @@ public class MetadatasResourceTest {
      */
     @Test
     public void testCreateMetadataHttpsWithNoRole() throws IOException {
-        testSpecCreateMetadataAsObj(MdsSpec.Spec.POST_METADATA_401, inputStream, "norole", "norole", null, 0);        
+        testSpecCreateMetadataAsObj(MdsSpec.Spec.PUT_METADATA_401, inputStream, "norole", "norole", null, 0);        
     }
     
     /**
@@ -278,7 +278,7 @@ public class MetadatasResourceTest {
      */    
     @Test
     public void testCreateMetadataHttpsWithConflict() throws IOException {
-        testSpecCreateMetadataAsObjWithConflict(MdsSpec.Spec.POST_METADATA_401, inputStream, "malapert", "pwd", null, 0);        
+        testSpecCreateMetadataAsObjWithConflict(MdsSpec.Spec.PUT_METADATA_401, inputStream, "malapert", "pwd", null, 0);        
     }
     
     /**

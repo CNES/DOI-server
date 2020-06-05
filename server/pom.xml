@@ -17,6 +17,9 @@
              <properties>
                 <doiserver-pwd>myPassword</doiserver-pwd>
                 <doi-admin-pwd>myPassword</doi-admin-pwd>
+                <inist.doi>xx.xxxxx</inist.doi>
+                <inist.login>xxxxxxx</inist.login>
+                <inist.pwd>xxxxxxxx</inist.pwd>                
              </properties>
         </profile>
       </profiles>
