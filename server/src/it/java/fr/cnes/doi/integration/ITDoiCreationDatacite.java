@@ -46,9 +46,7 @@ import org.restlet.util.Series;
 import fr.cnes.doi.InitServerForTest;
 import fr.cnes.doi.InitSettingsForTest;
 import fr.cnes.doi.MdsSpec;
-import fr.cnes.doi.UnitTest;
 import fr.cnes.doi.client.ClientProxyTest;
-import fr.cnes.doi.integration.IntegrationTest;
 import fr.cnes.doi.resource.mds.DoisResource;
 import fr.cnes.doi.security.UtilsHeader;
 import static fr.cnes.doi.server.DoiServer.DEFAULT_MAX_CONNECTIONS_PER_HOST;
@@ -155,7 +153,7 @@ public class ITDoiCreationDatacite {
         client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "testMe", "testMe");
         client.setNext(cl);
         Form form = new Form();
-        form.add("identifier", "100378/flatsim2020test");
+        form.add("identifier", "100378/test");
         form.add("projectID", "100378");
         Representation response = client.post(form);
         String token = response.getText();
@@ -191,8 +189,7 @@ public class ITDoiCreationDatacite {
 
         // set the landing page
         final Form doiForm = new Form();
-        doiForm.add(new Parameter(DoisResource.DOI_PARAMETER,
-                "10.80163/100378/flatsim2020test"));
+        doiForm.add(new Parameter(DoisResource.DOI_PARAMETER, "10.80163/100378/test"));
         doiForm.add(new Parameter(DoisResource.URL_PARAMETER, "http://www.cnes.fr"));
         client = new ClientResource("https://localhost:" + port + DOIS_SERVICE);
         client.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "testMe",

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource xmlns="http://datacite.org/schema/kernel-4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://datacite.org/schema/kernel-4 http://schema.datacite.org/meta/kernel-4/metadata.xsd">
+<identifier identifierType="DOI">10.80163/100378/test</identifier>
+<titles>
+	<title>FLATSIM</title>
+</titles>
+<creators>
+	<creator>
+		<creatorName nameType="Personal">PROY Catherine</creatorName>
+		<affiliation>Centre National D&apos;Etudes Spatiales (CNES)</affiliation>
+	</creator>
+</creators>
+<publisher>Centre National D’Etudes Spatiales (CNES)</publisher>
+<publicationYear>2020</publicationYear>
+<resourceType resourceTypeGeneral="Service"></resourceType>
+<subjects>
+	<subject>Provide through a web interface Sentinel-1 interferograms and time series analysis at large scale, using the CNES HPC and based on NSBAS</subject>
+</subjects>
+</resource>

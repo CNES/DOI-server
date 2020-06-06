@@ -80,6 +80,7 @@
                 $("#prefix").text(prefixCnes);
 
                 $("#doi").change(function () {
+                    var projectId = sessionStorage.getItem("projectId");
                     doi = prefixCnes + projectId + "/" + $("#doi").val();
                     console.log("uri = " + doi);
                 });
@@ -98,12 +99,14 @@
             });
 
             function requestDelete() {
+                var projectId = sessionStorage.getItem("projectId");
+                var token = sessionStorage.getItem("token");
                 $.ajax({
                     type: "DELETE",
                     url: "/mds/metadata/" + doi,
                     headers: {
-                        'Authorization': "Bearer " + sessionStorage.getItem("token"),
-                        'selectedRole' : sessionStorage.getItem("projectId")
+                        'Authorization': "Bearer " + token,
+                        'selectedRole' : projectId
                     },
                     crossDomain: true,
                     cache: false,
@@ -121,19 +124,20 @@
                 });
             }
 
-            var projectId;
             function setProjectID() {
-                projectId = sessionStorage.getItem("projectId");
+                var projectId = sessionStorage.getItem("projectId");
                 $("#idprojet").text(projectId + "/");
             }
 
             function getDoisFromProject() {
+                var projectId = sessionStorage.getItem("projectId");
+                var token = sessionStorage.getItem("token");
                 $.ajax({
                     type: "GET",
                     url: "/admin/projects/" + projectId + "/dois",
                     headers: {
-                        'Authorization': "Bearer " + sessionStorage.getItem("token"),
-                        'selectedRole' : $("#projectID").val()
+                        'Authorization': "Bearer " + token,
+                        'selectedRole' : projectId
                     },
                     crossDomain: true,
                     cache: false,
@@ -150,9 +154,7 @@
                         $("#doi").append("<option disabled selected>Choix d'un doi</option>");
                         for (var doi of list) {
                             var identifierDOI = doi.replace(prefixCnes + projectId + "/", "");
-                            if (identifierDOI !== doi) {
-                                $("#doi").append("<option>" + identifierDOI + "</option>");
-                            }
+                            $("#doi").append("<option>" + identifierDOI + "</option>");
                         }
                     }
                 });

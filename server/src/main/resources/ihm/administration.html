@@ -127,11 +127,12 @@
             });
 
             function getListProjet() {
+                var token = sessionStorage.getItem("token");
                 $.ajax({
                     type: "GET",
                     url: "/admin/projects",
                     headers: {
-                        'Authorization': "Bearer " + sessionStorage.getItem("token")
+                        'Authorization': "Bearer " + token
                     },
                     crossDomain: true,
                     cache: false,
@@ -155,11 +156,12 @@
             }
 
             function getListAdmin() {
+                var token = sessionStorage.getItem("token");
                 $.ajax({
                     type: "GET",
                     url: "/admin/superusers",
                     headers: {
-                        'Authorization': "Bearer " + sessionStorage.getItem("token")
+                        'Authorization': "Bearer " + token
                     },
                     crossDomain: true,
                     cache: false,
@@ -181,6 +183,7 @@
 
             // modification Projets
             function addProject() {
+                var token = sessionStorage.getItem("token");
                 var projet = prompt("Entrer le nom du projet:", "projet");
                 if (projet === null || projet === "") {
                     return;
@@ -192,7 +195,7 @@
                             'projectName': projet
                         },
                         headers: {
-                            'Authorization': "Bearer " + sessionStorage.getItem("token")
+                            'Authorization': "Bearer " + token
                         },
                         crossDomain: true,
                         cache: false,
@@ -214,6 +217,7 @@
             }
 
             function renameProject() {
+                var token = sessionStorage.getItem("token");
                 var text = $("#listProjet option:selected").text();
                 if (text === "") {
                     alert("Veuillez selectionner un projet à renommer.");
@@ -233,7 +237,7 @@
                             'newProjectName': projet
                         },
                         headers: {
-                            'Authorization': "Bearer " + sessionStorage.getItem("token")
+                            'Authorization': "Bearer " + token
                         },
                         crossDomain: true,
                         cache: false,
@@ -266,6 +270,7 @@
             }
 
             function deleteProject() {
+                var token = sessionStorage.getItem("token");
                 var text = $("#listProjet option:selected").text();
                 if (text === "") {
                     alert("Veuillez selectionner un projet à supprimer.");
@@ -279,7 +284,7 @@
                         type: "DELETE",
                         url: "/admin/projects/" + idText,
                         headers: {
-                            'Authorization': "Bearer " + sessionStorage.getItem("token")
+                            'Authorization': "Bearer " + token
                         },
                         crossDomain: true,
                         cache: false,
@@ -305,6 +310,7 @@
                 }
             }
             function modifyListUser() {
+                var token = sessionStorage.getItem("token");
                 var project = $("#listProjet").val();
                 $("#titreProjet").text("Utilisateurs du projet: " + project);
                 $("#listUser").empty();
@@ -316,7 +322,7 @@
                     type: "GET",
                     url: "/admin/projects/" + suffixProject + "/users",
                     headers: {
-                        'Authorization': "Bearer " + sessionStorage.getItem("token")
+                        'Authorization': "Bearer " + token
                     },
                     crossDomain: true,
                     cache: false,
@@ -338,6 +344,7 @@
 
             // modification users
             function addUser() {
+                var token = sessionStorage.getItem("token");
                 var project = $("#listProjet").val();
                 if (project === null) {
                     alert("Veuillez selectionner un projet.");
@@ -355,7 +362,7 @@
                         type: "POST",
                         url: "/admin/projects/" + suffixProject + "/users",
                         headers: {
-                            'Authorization': "Bearer " + sessionStorage.getItem("token")
+                            'Authorization': "Bearer " + token
                         },
                         data: {
                             "user": user
@@ -389,6 +396,7 @@
             }
 
             function deleteUser() {
+                var token = sessionStorage.getItem("token");
                 var project = $("#listProjet").val();
                 if (project === null) {
                     alert("Veuillez selectionner un projet.");
@@ -410,7 +418,7 @@
                         type: "DELETE",
                         url: "/admin/projects/" + suffixProject + "/users/" + user,
                         headers: {
-                            'Authorization': "Bearer " + sessionStorage.getItem("token")
+                            'Authorization': "Bearer " + token
                         },
                         crossDomain: true,
                         cache: false,
@@ -436,6 +444,7 @@
 
             // modification Admin   //TODO maybe show up a hidden select button that allow to find any user...
             function addAdmin() {
+                var token = sessionStorage.getItem("token");
                 var user = prompt("Entrer le \"nom.prenom\" de l'utilisateur qui passera Admin:", "utilisateur");
                 if (user === null || user === "") {
                     return;
@@ -444,7 +453,7 @@
                         type: "POST",
                         url: "/admin/superusers",
                         headers: {
-                            'Authorization': "Bearer " + sessionStorage.getItem("token")
+                            'Authorization': "Bearer " + token
                         },
                         data: {
                             "superUserName": user
@@ -472,6 +481,7 @@
                 }
             }
             function deleteAdmin() {
+                var token = sessionStorage.getItem("token");
                 var user = $("#listAdmin option:selected").text();
                 if (user === "") {
                     return;
@@ -481,7 +491,7 @@
                         type: "DELETE",
                         url: "/admin/superusers/" + user,
                         headers: {
-                            'Authorization': "Bearer " + sessionStorage.getItem("token")
+                            'Authorization': "Bearer " + token
                         },
                         crossDomain: true,
                         cache: false,
