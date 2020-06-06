@@ -427,6 +427,7 @@
                 $("#prefix").text(prefixCnes);
 
                 $("#doi").change(function () {
+                    var projectId = sessionStorage.getItem("projectId");
                     identifier = $("#doi").val();
                     $("input[title='identifier']").val(prefixCnes + projectId + "/" + identifier);
                     // just to show metadata
@@ -440,15 +441,17 @@
             });
 
             function loadMetaData() {
+                var projectId = sessionStorage.getItem("projectId");
                 var fullDoiName = prefixCnes + projectId + "/" + identifier;
+                var token = sessionStorage.getItem("token");
                 $.ajax({
                     type: "GET",
                     url: "/mds/metadata/" + fullDoiName,
                     contentType: "text/xml",
                     dataType: "xml",                     
                     headers: {
-                        'Authorization': "Bearer " + sessionStorage.getItem("token"),
-                        'selectedRole' : $("#projectID").val()
+                        'Authorization': "Bearer " + token,
+                        'selectedRole' : projectId
                     },
                     crossDomain: true,
                     cache: false,
@@ -471,12 +474,14 @@
             }
 
             function getUrl() {
+                var projectId = sessionStorage.getItem("projectId");
                 var fullName = prefixCnes + projectId + "/" + identifier;
+                var token = sessionStorage.getItem("token");
                 $.ajax({
                     type: "GET",
                     url: "/mds/dois/" + fullName,
                     headers: {
-                        'Authorization': "Bearer " + sessionStorage.getItem("token")
+                        'Authorization': "Bearer " + token
                     },
                     crossDomain: true,
                     cache: false,
@@ -495,11 +500,13 @@
             }
 
             function getDoisFromProject() {
+                var projectId = sessionStorage.getItem("projectId");
+                var token = sessionStorage.getItem("token");
                 $.ajax({
                     type: "GET",
                     url: "/admin/projects/" + projectId + "/dois",
                     headers: {
-                        'Authorization': "Bearer " + sessionStorage.getItem("token")
+                        'Authorization': "Bearer " + token
                     },
                     crossDomain: true,
                     cache: false,
@@ -524,9 +531,8 @@
                 });
             }
 
-            var projectId;
             function setProjectID() {
-                projectId = sessionStorage.getItem("projectId");
+                var projectId = sessionStorage.getItem("projectId");
                 $("#idprojet").text(projectId + "/");
             }
 
@@ -546,7 +552,9 @@
             }
 
             function requestURL() {
+                var projectId = sessionStorage.getItem("projectId");
                 var fullDoiName = prefixCnes + projectId + "/" + identifier;
+                var token = sessionStorage.getItem("token");
                 var formData = {
                     'doi': fullDoiName,
                     'url': url
@@ -556,7 +564,8 @@
                     url: "/mds/dois",
                     data: formData,
                     headers: {
-                        'Authorization': "Bearer " + sessionStorage.getItem("token")
+                        'Authorization': "Bearer " + token,
+                        'selectedRole' : projectId
                     },
                     crossDomain: true,
                     cache: false,
@@ -575,15 +584,17 @@
             }
 
             function requestPost(xml) {
+                var projectId = sessionStorage.getItem("projectId");
+                var token = sessionStorage.getItem("token");
                 $.ajax({
                     type: "POST",
                     url: "/mds/metadata",
                     data: xml,
-                    contentType: "text",
+                    contentType: "application/xml; charset=UTF-8",
                     dataType: "text",
                     headers: {
-                        'Authorization': "Bearer " + sessionStorage.getItem("token"),
-                        'selectedRole' : sessionStorage.getItem("projectId")
+                        'Authorization': "Bearer " + token,
+                        'selectedRole' : projectId
                     },
                     crossDomain: true,
                     cache: false,

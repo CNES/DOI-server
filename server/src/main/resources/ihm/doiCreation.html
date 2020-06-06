@@ -431,7 +431,7 @@
                 // Save doi and url values as soon as its change
                 $("#doi").change(function () {
                     identifier = $("#doi").val();
-                    $("input[title='identifier']").val(prefixCnes + projectId + "/" + identifier);
+                    $("input[title='identifier']").val(prefixCnes + sessionStorage.getItem("projectId") + "/" + identifier);
                     // just to show metadata
                     $("input[title='identifierType'").keyup();
                 });
@@ -441,6 +441,7 @@
 
                 // Chargement du fichier xml
                 $("#xmlfile").change(function () {
+                    var projectId = sessionStorage.getItem("projectId");
                     var xmlDoc = this.files[0];
                     var readXml = null;
                     var xmlToSend = null;
@@ -455,8 +456,8 @@
 // 		                console.log(doc);
                             loadXML(doc);
 
-                            // Can only import doi metadata from a project where the user has rights
-                            var prefix = prefixCnes + projectId + "/";
+                            // Can only import doi metadata from a project where the user has rights                            
+                            var prefix = prefixCnes + projectId + "/";                            
                             if ($("input[title='identifier']").val().includes(prefix)) {
                                 var doiName = $("input[title='identifier']").val().replace(prefix, "");
                                 $("#doi").val(doiName);
@@ -464,7 +465,7 @@
                             } else {
                                 alert("Les métadonnées ne sont pas sur le projet " +
                                         sessionStorage.getItem("project") + "(" +
-                                        sessionStorage.getItem("projectId") + ")."
+                                        projectId + ")."
                                         );
                                 clearForm();
                             }
@@ -474,9 +475,8 @@
                 });
             });
 
-            var projectId;
             function setProjectID() {
-                projectId = sessionStorage.getItem("projectId");
+                var projectId = sessionStorage.getItem("projectId");
                 $("#idprojet").text(projectId + "/");
             }
 
@@ -493,7 +493,9 @@
             }
 
             function requestURL() {
+                var projectId = sessionStorage.getItem("projectId");
                 var fullDoiName = prefixCnes + projectId + "/" + identifier;
+                var token = sessionStorage.getItem("token");
                 var formData = {
                     'doi': fullDoiName,
                     'url': url
@@ -503,7 +505,7 @@
                     url: "/mds/dois",
                     data: formData,
                     headers: {
-                        'Authorization': "Bearer " + sessionStorage.getItem("token"),
+                        'Authorization': "Bearer " + token,
                         'selectedRole' : projectId
                     },
                     crossDomain: true,
@@ -523,14 +525,16 @@
             }
 
             function requestPost(xml) {
+                var projectId = sessionStorage.getItem("projectId");
+                var token = sessionStorage.getItem("token");
                 $.ajax({
                     type: "POST",
                     url: "/mds/metadata",
                     data: xml,
-                    contentType: "text",
+                    contentType: "application/xml; charset=UTF-8",
                     dataType: "text",
                     headers: {
-                        'Authorization': "Bearer " + sessionStorage.getItem("token"),
+                        'Authorization': "Bearer " + token,
                         'selectedRole' : projectId
                     },
                     crossDomain: true,

@@ -144,11 +144,12 @@
 
             function getAssociatedProject() {
                 var admin = sessionStorage.getItem("admin");
+                var token = sessionStorage.getItem("token");
                 $.ajax({
                     type: "GET",
                     url: "/admin/projects?user=" + userId,
                     beforeSend : function( xhr ) {
-                        xhr.setRequestHeader( 'Authorization', 'BEARER ' + sessionStorage.getItem("token") );
+                        xhr.setRequestHeader( 'Authorization', 'BEARER ' + token );
                     },
                     crossDomain: true,
                     cache: false,
@@ -186,13 +187,13 @@
             }
 
             function deleteToken() {
-                token = sessionStorage.getItem("token");
+                var token = sessionStorage.getItem("token");
 
                 $.ajax({
                     type: "DELETE",
-                    url: "/admin/token/" + sessionStorage.getItem("token"),
+                    url: "/admin/token/" + token,
                     headers: {
-                        'Authorization': "Bearer " + sessionStorage.getItem("token")
+                        'Authorization': "Bearer " + token
                     },
                     data: {
                         "token": token
