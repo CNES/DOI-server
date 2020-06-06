@@ -1,0 +1,8 @@
+izpack/*
+server/LibJS/*
+server/ConfTools/*
+server/scripts/*
+server/it/*
+server/test/*
+server/site/*
+server/src/main/resources/ihm/*
