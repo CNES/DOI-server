@@ -36,7 +36,7 @@
     <parent>
         <artifactId>DOI</artifactId>
         <groupId>fr.cnes.doi</groupId>
-        <version>1.0.4</version>
+        <version>1.0.5</version>
     </parent>
         
     <artifactId>DOI-server</artifactId>
