@@ -132,31 +132,33 @@
 <a name="122" href="#122">122</a> 
 <a name="123" href="#123">123</a>     <em class="jxr_javadoccomment">/**</em>
 <a name="124" href="#124">124</a> <em class="jxr_javadoccomment">     * Test method for {@link fr.cnes.doi.utils.UniqueProjectName#getShortName}</em>
-<a name="125" href="#125">125</a> <em class="jxr_javadoccomment">     */</em>
-<a name="126" href="#126">126</a>     @Test
-<a name="127" href="#127">127</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testGetShortName() <strong class="jxr_keyword">throws</strong> DOIDbException {
-<a name="128" href="#128">128</a> 	<em class="jxr_comment">// New id</em>
-<a name="129" href="#129">129</a> 	<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> idSWOT = UniqueProjectName.getInstance().getShortName(<span class="jxr_string">"SWOT"</span>, 6);
-<a name="130" href="#130">130</a> 	Assert.assertTrue(UniqueProjectName.getInstance().getShortName(<span class="jxr_string">"SWOT"</span>, 6) == idSWOT);
-<a name="131" href="#131">131</a> 
-<a name="132" href="#132">132</a> 	<em class="jxr_comment">// Id already in the file</em>
-<a name="133" href="#133">133</a> 	Assert.assertTrue(UniqueProjectName.getInstance().getShortName(<span class="jxr_string">"CFOSAT"</span>, 6) == 828606);
-<a name="134" href="#134">134</a>     }
-<a name="135" href="#135">135</a> 
-<a name="136" href="#136">136</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="137" href="#137">137</a> <em class="jxr_javadoccomment">     * Test method for {@link fr.cnes.doi.utils.UniqueProjectName#getShortName}</em>
-<a name="138" href="#138">138</a> <em class="jxr_javadoccomment">     */</em>
-<a name="139" href="#139">139</a>     @Test
-<a name="140" href="#140">140</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testGetShortNameWithLongName() <strong class="jxr_keyword">throws</strong> DOIDbException {
-<a name="141" href="#141">141</a> 	exceptions.expect(DoiRuntimeException.<strong class="jxr_keyword">class</strong>);
-<a name="142" href="#142">142</a> 	exceptions.expectMessage(
-<a name="143" href="#143">143</a> 		<span class="jxr_string">"The short name cannot be build because the length requested is too big"</span>);
-<a name="144" href="#144">144</a> 
-<a name="145" href="#145">145</a> 	<em class="jxr_comment">// lenght requested out of range</em>
-<a name="146" href="#146">146</a> 	UniqueProjectName.getInstance().getShortName(<span class="jxr_string">"CFOSAT"</span>, 10);
-<a name="147" href="#147">147</a>     }
-<a name="148" href="#148">148</a> 
-<a name="149" href="#149">149</a> }
+<a name="125" href="#125">125</a> <em class="jxr_javadoccomment">     * @throws fr.cnes.doi.exception.DOIDbException</em>
+<a name="126" href="#126">126</a> <em class="jxr_javadoccomment">     */</em>
+<a name="127" href="#127">127</a>     @Test
+<a name="128" href="#128">128</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testGetShortName() <strong class="jxr_keyword">throws</strong> DOIDbException {
+<a name="129" href="#129">129</a> 	<em class="jxr_comment">// New id</em>
+<a name="130" href="#130">130</a> 	<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> idSWOT = UniqueProjectName.getInstance().getShortName(<span class="jxr_string">"SWOT"</span>, 6);
+<a name="131" href="#131">131</a> 	Assert.assertTrue(UniqueProjectName.getInstance().getShortName(<span class="jxr_string">"SWOT"</span>, 6) == idSWOT);
+<a name="132" href="#132">132</a> 
+<a name="133" href="#133">133</a> 	<em class="jxr_comment">// Id already in the file</em>
+<a name="134" href="#134">134</a> 	Assert.assertTrue(UniqueProjectName.getInstance().getShortName(<span class="jxr_string">"CFOSAT"</span>, 6) == 828606);
+<a name="135" href="#135">135</a>     }
+<a name="136" href="#136">136</a> 
+<a name="137" href="#137">137</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="138" href="#138">138</a> <em class="jxr_javadoccomment">     * Test method for {@link fr.cnes.doi.utils.UniqueProjectName#getShortName}</em>
+<a name="139" href="#139">139</a> <em class="jxr_javadoccomment">     * @throws fr.cnes.doi.exception.DOIDbException</em>
+<a name="140" href="#140">140</a> <em class="jxr_javadoccomment">     */</em>
+<a name="141" href="#141">141</a>     @Test
+<a name="142" href="#142">142</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testGetShortNameWithLongName() <strong class="jxr_keyword">throws</strong> DOIDbException {
+<a name="143" href="#143">143</a> 	exceptions.expect(DoiRuntimeException.<strong class="jxr_keyword">class</strong>);
+<a name="144" href="#144">144</a> 	exceptions.expectMessage(
+<a name="145" href="#145">145</a> 		<span class="jxr_string">"The short name cannot be build because the length requested is too big"</span>);
+<a name="146" href="#146">146</a> 
+<a name="147" href="#147">147</a> 	<em class="jxr_comment">// lenght requested out of range</em>
+<a name="148" href="#148">148</a> 	UniqueProjectName.getInstance().getShortName(<span class="jxr_string">"CFOSAT"</span>, 10);
+<a name="149" href="#149">149</a>     }
+<a name="150" href="#150">150</a> 
+<a name="151" href="#151">151</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>

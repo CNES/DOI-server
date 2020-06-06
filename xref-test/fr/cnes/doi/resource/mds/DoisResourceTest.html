@@ -35,40 +35,40 @@
 <a name="25" href="#25">25</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> fr.cnes.doi.server.DoiServer.JKS_FILE;
 <a name="26" href="#26">26</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> fr.cnes.doi.server.DoiServer.RESTLET_MAX_CONNECTIONS_PER_HOST;
 <a name="27" href="#27">27</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> fr.cnes.doi.server.DoiServer.RESTLET_MAX_TOTAL_CONNECTIONS;
-<a name="28" href="#28">28</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.Assert.assertEquals;
-<a name="29" href="#29">29</a>  
-<a name="30" href="#30">30</a>  <strong class="jxr_keyword">import</strong> java.io.File;
-<a name="31" href="#31">31</a>  <strong class="jxr_keyword">import</strong> java.io.IOException;
-<a name="32" href="#32">32</a>  <strong class="jxr_keyword">import</strong> java.util.Map;
-<a name="33" href="#33">33</a>  
-<a name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> org.junit.After;
-<a name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> org.junit.AfterClass;
-<a name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> org.junit.Assume;
-<a name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> org.junit.Before;
-<a name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> org.junit.BeforeClass;
-<a name="39" href="#39">39</a>  <strong class="jxr_keyword">import</strong> org.junit.Test;
-<a name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> org.junit.experimental.categories.Category;
-<a name="41" href="#41">41</a>  <strong class="jxr_keyword">import</strong> org.restlet.Client;
-<a name="42" href="#42">42</a>  <strong class="jxr_keyword">import</strong> org.restlet.Context;
-<a name="43" href="#43">43</a>  <strong class="jxr_keyword">import</strong> org.restlet.data.ChallengeResponse;
-<a name="44" href="#44">44</a>  <strong class="jxr_keyword">import</strong> org.restlet.data.ChallengeScheme;
-<a name="45" href="#45">45</a>  <strong class="jxr_keyword">import</strong> org.restlet.data.Form;
-<a name="46" href="#46">46</a>  <strong class="jxr_keyword">import</strong> org.restlet.data.Header;
-<a name="47" href="#47">47</a>  <strong class="jxr_keyword">import</strong> org.restlet.data.Parameter;
-<a name="48" href="#48">48</a>  <strong class="jxr_keyword">import</strong> org.restlet.data.Protocol;
-<a name="49" href="#49">49</a>  <strong class="jxr_keyword">import</strong> org.restlet.data.Status;
-<a name="50" href="#50">50</a>  <strong class="jxr_keyword">import</strong> org.restlet.representation.Representation;
-<a name="51" href="#51">51</a>  <strong class="jxr_keyword">import</strong> org.restlet.resource.ClientResource;
-<a name="52" href="#52">52</a>  <strong class="jxr_keyword">import</strong> org.restlet.resource.ResourceException;
-<a name="53" href="#53">53</a>  <strong class="jxr_keyword">import</strong> org.restlet.util.Series;
-<a name="54" href="#54">54</a>  
-<a name="55" href="#55">55</a>  <strong class="jxr_keyword">import</strong> fr.cnes.doi.InitServerForTest;
-<a name="56" href="#56">56</a>  <strong class="jxr_keyword">import</strong> fr.cnes.doi.InitSettingsForTest;
-<a name="57" href="#57">57</a>  <strong class="jxr_keyword">import</strong> fr.cnes.doi.MdsSpec;
-<a name="58" href="#58">58</a>  <strong class="jxr_keyword">import</strong> fr.cnes.doi.UnitTest;
-<a name="59" href="#59">59</a>  <strong class="jxr_keyword">import</strong> fr.cnes.doi.security.UtilsHeader;
-<a name="60" href="#60">60</a>  <strong class="jxr_keyword">import</strong> fr.cnes.doi.settings.Consts;
-<a name="61" href="#61">61</a>  <strong class="jxr_keyword">import</strong> fr.cnes.doi.settings.DoiSettings;
+<a name="28" href="#28">28</a>  
+<a name="29" href="#29">29</a>  <strong class="jxr_keyword">import</strong> java.io.File;
+<a name="30" href="#30">30</a>  <strong class="jxr_keyword">import</strong> java.io.IOException;
+<a name="31" href="#31">31</a>  <strong class="jxr_keyword">import</strong> java.util.Map;
+<a name="32" href="#32">32</a>  
+<a name="33" href="#33">33</a>  <strong class="jxr_keyword">import</strong> org.junit.After;
+<a name="34" href="#34">34</a>  <strong class="jxr_keyword">import</strong> org.junit.AfterClass;
+<a name="35" href="#35">35</a>  <strong class="jxr_keyword">import</strong> org.junit.Assume;
+<a name="36" href="#36">36</a>  <strong class="jxr_keyword">import</strong> org.junit.Before;
+<a name="37" href="#37">37</a>  <strong class="jxr_keyword">import</strong> org.junit.BeforeClass;
+<a name="38" href="#38">38</a>  <strong class="jxr_keyword">import</strong> org.junit.Test;
+<a name="39" href="#39">39</a>  <strong class="jxr_keyword">import</strong> org.junit.experimental.categories.Category;
+<a name="40" href="#40">40</a>  <strong class="jxr_keyword">import</strong> org.restlet.Client;
+<a name="41" href="#41">41</a>  <strong class="jxr_keyword">import</strong> org.restlet.Context;
+<a name="42" href="#42">42</a>  <strong class="jxr_keyword">import</strong> org.restlet.data.ChallengeResponse;
+<a name="43" href="#43">43</a>  <strong class="jxr_keyword">import</strong> org.restlet.data.ChallengeScheme;
+<a name="44" href="#44">44</a>  <strong class="jxr_keyword">import</strong> org.restlet.data.Form;
+<a name="45" href="#45">45</a>  <strong class="jxr_keyword">import</strong> org.restlet.data.Header;
+<a name="46" href="#46">46</a>  <strong class="jxr_keyword">import</strong> org.restlet.data.Parameter;
+<a name="47" href="#47">47</a>  <strong class="jxr_keyword">import</strong> org.restlet.data.Protocol;
+<a name="48" href="#48">48</a>  <strong class="jxr_keyword">import</strong> org.restlet.data.Status;
+<a name="49" href="#49">49</a>  <strong class="jxr_keyword">import</strong> org.restlet.representation.Representation;
+<a name="50" href="#50">50</a>  <strong class="jxr_keyword">import</strong> org.restlet.resource.ClientResource;
+<a name="51" href="#51">51</a>  <strong class="jxr_keyword">import</strong> org.restlet.resource.ResourceException;
+<a name="52" href="#52">52</a>  <strong class="jxr_keyword">import</strong> org.restlet.util.Series;
+<a name="53" href="#53">53</a>  
+<a name="54" href="#54">54</a>  <strong class="jxr_keyword">import</strong> fr.cnes.doi.InitServerForTest;
+<a name="55" href="#55">55</a>  <strong class="jxr_keyword">import</strong> fr.cnes.doi.InitSettingsForTest;
+<a name="56" href="#56">56</a>  <strong class="jxr_keyword">import</strong> fr.cnes.doi.MdsSpec;
+<a name="57" href="#57">57</a>  <strong class="jxr_keyword">import</strong> fr.cnes.doi.UnitTest;
+<a name="58" href="#58">58</a>  <strong class="jxr_keyword">import</strong> fr.cnes.doi.security.UtilsHeader;
+<a name="59" href="#59">59</a>  <strong class="jxr_keyword">import</strong> fr.cnes.doi.settings.Consts;
+<a name="60" href="#60">60</a>  <strong class="jxr_keyword">import</strong> fr.cnes.doi.settings.DoiSettings;
+<a name="61" href="#61">61</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.Assert.assertEquals;
 <a name="62" href="#62">62</a>  
 <a name="63" href="#63">63</a>  <em class="jxr_javadoccomment">/**</em>
 <a name="64" href="#64">64</a>  <em class="jxr_javadoccomment"> * Tests the DoisResource</em>
@@ -116,7 +116,7 @@
 <a name="106" href="#106">106</a>         <strong class="jxr_keyword">try</strong> {
 <a name="107" href="#107">107</a>             Form doiForm = <strong class="jxr_keyword">new</strong> Form();
 <a name="108" href="#108">108</a>             doiForm.add(<strong class="jxr_keyword">new</strong> Parameter(DoisResource.DOI_PARAMETER,
-<a name="109" href="#109">109</a>                     <span class="jxr_string">"10.5072/828606/8c3e91ad45ca855b477126bc073ae44b"</span>));
+<a name="109" href="#109">109</a>                     <span class="jxr_string">"10.80163/828606/8c3e91ad45ca855b477126bc073ae44b"</span>));
 <a name="110" href="#110">110</a>             doiForm.add(<strong class="jxr_keyword">new</strong> Parameter(DoisResource.URL_PARAMETER, <span class="jxr_string">"https://cfosat.cnes.fr/"</span>));
 <a name="111" href="#111">111</a> 
 <a name="112" href="#112">112</a>             String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
@@ -171,7 +171,7 @@
 <a name="161" href="#161">161</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testCreateDoiConflictHttps() <strong class="jxr_keyword">throws</strong> IOException {
 <a name="162" href="#162">162</a>         Form doiForm = <strong class="jxr_keyword">new</strong> Form();
 <a name="163" href="#163">163</a>         doiForm.add(<strong class="jxr_keyword">new</strong> Parameter(DoisResource.DOI_PARAMETER,
-<a name="164" href="#164">164</a>                 <span class="jxr_string">"10.5072/100378/8c3e91ad45ca855b477126bc073ae44b"</span>));
+<a name="164" href="#164">164</a>                 <span class="jxr_string">"10.80163/100378/8c3e91ad45ca855b477126bc073ae44b"</span>));
 <a name="165" href="#165">165</a>         doiForm.add(<strong class="jxr_keyword">new</strong> Parameter(DoisResource.URL_PARAMETER, <span class="jxr_string">"http://www.cnes.fr"</span>));
 <a name="166" href="#166">166</a>         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
 <a name="167" href="#167">167</a>         ClientResource client = <strong class="jxr_keyword">new</strong> ClientResource(<span class="jxr_string">"https://localhost:"</span> + port + DOIS_SERVICE);
@@ -198,10 +198,10 @@
 <a name="188" href="#188">188</a> <em class="jxr_javadoccomment">     */</em>
 <a name="189" href="#189">189</a>     @Test
 <a name="190" href="#190">190</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testCreateDoiHttps() <strong class="jxr_keyword">throws</strong> IOException {
-<a name="191" href="#191">191</a>         mdsSpecStub.createSpec(MdsSpec.Spec.POST_DOI_201);
+<a name="191" href="#191">191</a>         mdsSpecStub.createSpec(MdsSpec.Spec.PUT_DOI_201_2);
 <a name="192" href="#192">192</a>         
 <a name="193" href="#193">193</a>         Form doiForm = <strong class="jxr_keyword">new</strong> Form();
-<a name="194" href="#194">194</a>         doiForm.add(<strong class="jxr_keyword">new</strong> Parameter(DoisResource.DOI_PARAMETER, <span class="jxr_string">"10.5072/828606/8c3e91ad45ca855b477126bc073ae44b"</span>));
+<a name="194" href="#194">194</a>         doiForm.add(<strong class="jxr_keyword">new</strong> Parameter(DoisResource.DOI_PARAMETER, <span class="jxr_string">"10.80163/828606/8c3e91ad45ca855b477126bc073ae44b"</span>));
 <a name="195" href="#195">195</a>         doiForm.add(<strong class="jxr_keyword">new</strong> Parameter(DoisResource.URL_PARAMETER, <span class="jxr_string">"http://www.cnes.fr"</span>));
 <a name="196" href="#196">196</a>         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
 <a name="197" href="#197">197</a>         ClientResource client = <strong class="jxr_keyword">new</strong> ClientResource(<span class="jxr_string">"https://localhost:"</span> + port + DOIS_SERVICE);
@@ -225,9 +225,9 @@
 <a name="215" href="#215">215</a>             code = ex.getStatus().getCode();
 <a name="216" href="#216">216</a>         }
 <a name="217" href="#217">217</a>         client.release();
-<a name="218" href="#218">218</a>         assertEquals(<span class="jxr_string">"Test if the DOI is related to several accounts with a specific account"</span>, MdsSpec.Spec.POST_DOI_201.getStatus(), code);
+<a name="218" href="#218">218</a>         assertEquals(<span class="jxr_string">"Test if the DOI is related to several accounts with a specific account"</span>, MdsSpec.Spec.PUT_DOI_201_2.getStatus(), code);
 <a name="219" href="#219">219</a>         
-<a name="220" href="#220">220</a>         mdsSpecStub.verifySpec(MdsSpec.Spec.POST_DOI_201);       
+<a name="220" href="#220">220</a>         mdsSpecStub.verifySpec(MdsSpec.Spec.PUT_DOI_201_2);       
 <a name="221" href="#221">221</a>     }
 <a name="222" href="#222">222</a>     
 <a name="223" href="#223">223</a>     <em class="jxr_javadoccomment">/**</em>
@@ -237,10 +237,10 @@
 <a name="227" href="#227">227</a> <em class="jxr_javadoccomment">     */</em>
 <a name="228" href="#228">228</a>     @Test
 <a name="229" href="#229">229</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testCreateDoiHttp() <strong class="jxr_keyword">throws</strong> IOException {        
-<a name="230" href="#230">230</a>         mdsSpecStub.createSpec(MdsSpec.Spec.POST_DOI_201);        
+<a name="230" href="#230">230</a>         mdsSpecStub.createSpec(MdsSpec.Spec.PUT_DOI_201_2);        
 <a name="231" href="#231">231</a> 
 <a name="232" href="#232">232</a>         Form doiForm = <strong class="jxr_keyword">new</strong> Form();
-<a name="233" href="#233">233</a>         doiForm.add(<strong class="jxr_keyword">new</strong> Parameter(DoisResource.DOI_PARAMETER, <span class="jxr_string">"10.5072/828606/8c3e91ad45ca855b477126bc073ae44b"</span>));
+<a name="233" href="#233">233</a>         doiForm.add(<strong class="jxr_keyword">new</strong> Parameter(DoisResource.DOI_PARAMETER, <span class="jxr_string">"10.80163/828606/8c3e91ad45ca855b477126bc073ae44b"</span>));
 <a name="234" href="#234">234</a>         doiForm.add(<strong class="jxr_keyword">new</strong> Parameter(DoisResource.URL_PARAMETER, <span class="jxr_string">"http://www.cnes.fr"</span>));
 <a name="235" href="#235">235</a> 
 <a name="236" href="#236">236</a>         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTP_PORT);
@@ -263,9 +263,9 @@
 <a name="253" href="#253">253</a>         } <strong class="jxr_keyword">catch</strong> (ResourceException ex) {
 <a name="254" href="#254">254</a>             code = ex.getStatus().getCode();
 <a name="255" href="#255">255</a>         }
-<a name="256" href="#256">256</a>         assertEquals(<span class="jxr_string">"Test the creation of a DOI, related to several accounts with a specific account"</span>, MdsSpec.Spec.POST_DOI_201.getStatus(), code);
+<a name="256" href="#256">256</a>         assertEquals(<span class="jxr_string">"Test the creation of a DOI, related to several accounts with a specific account"</span>, MdsSpec.Spec.PUT_DOI_201_2.getStatus(), code);
 <a name="257" href="#257">257</a>         
-<a name="258" href="#258">258</a>         mdsSpecStub.verifySpec(MdsSpec.Spec.POST_DOI_201);              
+<a name="258" href="#258">258</a>         mdsSpecStub.verifySpec(MdsSpec.Spec.PUT_DOI_201_2);              
 <a name="259" href="#259">259</a>     }  
 <a name="260" href="#260">260</a>     
 <a name="261" href="#261">261</a>     <em class="jxr_javadoccomment">/**</em>
@@ -276,10 +276,10 @@
 <a name="266" href="#266">266</a> <em class="jxr_javadoccomment">     */</em>
 <a name="267" href="#267">267</a>     @Test
 <a name="268" href="#268">268</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testCreateFalseDoiHttps() <strong class="jxr_keyword">throws</strong> IOException {        
-<a name="269" href="#269">269</a>         mdsSpecStub.createSpec(MdsSpec.Spec.POST_DOI_412);                        
+<a name="269" href="#269">269</a>         mdsSpecStub.createSpec(MdsSpec.Spec.PUT_DOI_412_2);                        
 <a name="270" href="#270">270</a> 
 <a name="271" href="#271">271</a>         Form doiForm = <strong class="jxr_keyword">new</strong> Form();
-<a name="272" href="#272">272</a>         doiForm.add(<strong class="jxr_keyword">new</strong> Parameter(DoisResource.DOI_PARAMETER, <span class="jxr_string">"10.5072/828606/8c3e91ad45ca855b477126bc073ae"</span>));
+<a name="272" href="#272">272</a>         doiForm.add(<strong class="jxr_keyword">new</strong> Parameter(DoisResource.DOI_PARAMETER, <span class="jxr_string">"10.80163/828606/8c3e91ad45ca855b477126bc073ae"</span>));
 <a name="273" href="#273">273</a>         doiForm.add(<strong class="jxr_keyword">new</strong> Parameter(DoisResource.URL_PARAMETER, <span class="jxr_string">"http://www.cnes.fr"</span>));
 <a name="274" href="#274">274</a>         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
 <a name="275" href="#275">275</a>         ClientResource client = <strong class="jxr_keyword">new</strong> ClientResource(<span class="jxr_string">"https://localhost:"</span> + port + DOIS_SERVICE);
@@ -303,9 +303,9 @@
 <a name="293" href="#293">293</a>             code = ex.getStatus().getCode();
 <a name="294" href="#294">294</a>         }
 <a name="295" href="#295">295</a>         client.release();
-<a name="296" href="#296">296</a>         assertEquals(<span class="jxr_string">"Test an error of the creation of a DOI when the metadata is not uploaded first"</span>,MdsSpec.Spec.POST_DOI_412.getStatus(), code);
+<a name="296" href="#296">296</a>         assertEquals(<span class="jxr_string">"Test an error of the creation of a DOI when the metadata is not uploaded first"</span>,MdsSpec.Spec.PUT_DOI_412_2.getStatus(), code);
 <a name="297" href="#297">297</a>         
-<a name="298" href="#298">298</a>         mdsSpecStub.verifySpec(MdsSpec.Spec.POST_DOI_201);                     
+<a name="298" href="#298">298</a>         mdsSpecStub.verifySpec(MdsSpec.Spec.PUT_DOI_412_2);                     
 <a name="299" href="#299">299</a>     }    
 <a name="300" href="#300">300</a>     
 <a name="301" href="#301">301</a>     <em class="jxr_javadoccomment">/**</em>

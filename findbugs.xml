@@ -1,2 +1,2 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<BugCollection version='3.0.1' threshold='medium' effort='min'><Error></Error><Project><SrcDir>/home/malapert/Documents/dev/DOI-server/server/src/main/java</SrcDir><SrcDir>/home/malapert/Documents/dev/DOI-server/server/src/test/java</SrcDir></Project></BugCollection>
+<BugCollection version='3.0.1' threshold='medium' effort='min'><Error></Error><Project><SrcDir>/home/malapert/DOI/DOI-server/server/src/main/java</SrcDir><SrcDir>/home/malapert/DOI/DOI-server/server/src/test/java</SrcDir></Project></BugCollection>

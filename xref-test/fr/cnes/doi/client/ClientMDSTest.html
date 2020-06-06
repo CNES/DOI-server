@@ -107,13 +107,13 @@
 <a name="97" href="#97">97</a>      @Test
 <a name="98" href="#98">98</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testCheckIfOneCharIsNotValid() {  
 <a name="99" href="#99">99</a>          exceptions.expect(IllegalArgumentException.<strong class="jxr_keyword">class</strong>);
-<a name="100" href="#100">100</a>         String test = <span class="jxr_string">"10.5072/éabscd"</span>;
+<a name="100" href="#100">100</a>         String test = <span class="jxr_string">"10.80163/éabscd"</span>;
 <a name="101" href="#101">101</a>         ClientMDS.checkIfAllCharsAreValid(test);
 <a name="102" href="#102">102</a>     }
 <a name="103" href="#103">103</a> 
 <a name="104" href="#104">104</a>     @Test
 <a name="105" href="#105">105</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testCheckIfAllCharsAreValid() {
-<a name="106" href="#106">106</a>         String test = <span class="jxr_string">"10.5072/eabscd"</span>;
+<a name="106" href="#106">106</a>         String test = <span class="jxr_string">"10.80163/eabscd"</span>;
 <a name="107" href="#107">107</a>         ClientMDS.checkIfAllCharsAreValid(test);
 <a name="108" href="#108">108</a>         assertTrue(<span class="jxr_string">"Test the DOI chars are valid"</span>, <strong class="jxr_keyword">true</strong>);
 <a name="109" href="#109">109</a>     }
@@ -215,7 +215,7 @@
 <a name="205" href="#205">205</a>         mdsServerStub.createSpec(spec);
 <a name="206" href="#206">206</a> 
 <a name="207" href="#207">207</a>         Form form = <strong class="jxr_keyword">new</strong> Form();
-<a name="208" href="#208">208</a>         form.add(<span class="jxr_string">"doi"</span>, <span class="jxr_string">"10.5072/EDU/TESTID"</span>);
+<a name="208" href="#208">208</a>         form.add(<span class="jxr_string">"doi"</span>, <span class="jxr_string">"10.80163/EDU/TESTID"</span>);
 <a name="209" href="#209">209</a>         form.add(<span class="jxr_string">"url"</span>, <span class="jxr_string">"https://edutheque.cnes.fr/fr/web/CNES-fr/10884-edutheque.php"</span>);
 <a name="210" href="#210">210</a> 
 <a name="211" href="#211">211</a>         <em class="jxr_comment">// Requests the DOIServer using the stub (mode DEV)        </em>
@@ -297,7 +297,7 @@
 <a name="287" href="#287">287</a> <em class="jxr_javadoccomment">     * Test of getDoi method, of class ClientMDS with a wrong DOI. A mock server is set for this</em>
 <a name="288" href="#288">288</a> <em class="jxr_javadoccomment">     * test in order to emulate the response of the server on a path:</em>
 <a name="289" href="#289">289</a> <em class="jxr_javadoccomment">     * &lt;ul&gt;</em>
-<a name="290" href="#290">290</a> <em class="jxr_javadoccomment">     * &lt;li&gt;GET /doi/10.5072/2783446.2783605&lt;/li&gt;</em>
+<a name="290" href="#290">290</a> <em class="jxr_javadoccomment">     * &lt;li&gt;GET /doi/10.80163/2783446.2783605&lt;/li&gt;</em>
 <a name="291" href="#291">291</a> <em class="jxr_javadoccomment">     * &lt;li&gt;404 : DOI not found&lt;/li&gt;</em>
 <a name="292" href="#292">292</a> <em class="jxr_javadoccomment">     * &lt;/ul&gt;</em>
 <a name="293" href="#293">293</a> <em class="jxr_javadoccomment">     * @throws java.lang.Exception</em>
@@ -311,7 +311,7 @@
 <a name="301" href="#301">301</a> <em class="jxr_javadoccomment">     * Test of getDoi method, of class ClientMDS with a wrong authentication. A mock server is set</em>
 <a name="302" href="#302">302</a> <em class="jxr_javadoccomment">     * for this test in order to emulate the response of the server on a path:</em>
 <a name="303" href="#303">303</a> <em class="jxr_javadoccomment">     * &lt;ul&gt;</em>
-<a name="304" href="#304">304</a> <em class="jxr_javadoccomment">     * &lt;li&gt;GET /doi/10.5072/2783446.2783605&lt;/li&gt;</em>
+<a name="304" href="#304">304</a> <em class="jxr_javadoccomment">     * &lt;li&gt;GET /doi/10.80163/2783446.2783605&lt;/li&gt;</em>
 <a name="305" href="#305">305</a> <em class="jxr_javadoccomment">     * &lt;li&gt;401 : Bad credentials&lt;/li&gt;</em>
 <a name="306" href="#306">306</a> <em class="jxr_javadoccomment">     * &lt;/ul&gt;</em>
 <a name="307" href="#307">307</a> <em class="jxr_javadoccomment">     * @throws java.lang.Exception</em>
@@ -325,7 +325,7 @@
 <a name="315" href="#315">315</a> <em class="jxr_javadoccomment">     * Test of getDoi method, of class ClientMDS with no content as result. A mock server is set for</em>
 <a name="316" href="#316">316</a> <em class="jxr_javadoccomment">     * this test in order to emulate the response of the server on a path:</em>
 <a name="317" href="#317">317</a> <em class="jxr_javadoccomment">     * &lt;ul&gt;</em>
-<a name="318" href="#318">318</a> <em class="jxr_javadoccomment">     * &lt;li&gt;GET /doi/10.5072/2783446.2783605&lt;/li&gt;</em>
+<a name="318" href="#318">318</a> <em class="jxr_javadoccomment">     * &lt;li&gt;GET /doi/10.80163/2783446.2783605&lt;/li&gt;</em>
 <a name="319" href="#319">319</a> <em class="jxr_javadoccomment">     * &lt;li&gt;204 : ""&lt;/li&gt;</em>
 <a name="320" href="#320">320</a> <em class="jxr_javadoccomment">     * &lt;/ul&gt;</em>
 <a name="321" href="#321">321</a> <em class="jxr_javadoccomment">     * @throws java.lang.Exception</em>
@@ -339,7 +339,7 @@
 <a name="329" href="#329">329</a> <em class="jxr_javadoccomment">     * Test of getDoi method, of class ClientMDS with a login problem. A mock server is set for this</em>
 <a name="330" href="#330">330</a> <em class="jxr_javadoccomment">     * test in order to emulate the response of the server on a path:</em>
 <a name="331" href="#331">331</a> <em class="jxr_javadoccomment">     * &lt;ul&gt;</em>
-<a name="332" href="#332">332</a> <em class="jxr_javadoccomment">     * &lt;li&gt;GET /doi/10.5072/2783446.2783605&lt;/li&gt;</em>
+<a name="332" href="#332">332</a> <em class="jxr_javadoccomment">     * &lt;li&gt;GET /doi/10.80163/2783446.2783605&lt;/li&gt;</em>
 <a name="333" href="#333">333</a> <em class="jxr_javadoccomment">     * &lt;li&gt;403 : ""&lt;/li&gt;</em>
 <a name="334" href="#334">334</a> <em class="jxr_javadoccomment">     * &lt;/ul&gt;</em>
 <a name="335" href="#335">335</a> <em class="jxr_javadoccomment">     * @throws java.lang.Exception</em>
@@ -353,7 +353,7 @@
 <a name="343" href="#343">343</a> <em class="jxr_javadoccomment">     * Test of getDoi method, of class ClientMDS with an internal error. A mock server is set for</em>
 <a name="344" href="#344">344</a> <em class="jxr_javadoccomment">     * this test in order to emulate the response of the server on a path:</em>
 <a name="345" href="#345">345</a> <em class="jxr_javadoccomment">     * &lt;ul&gt;</em>
-<a name="346" href="#346">346</a> <em class="jxr_javadoccomment">     * &lt;li&gt;GET /doi/10.5072/2783446.2783605&lt;/li&gt;</em>
+<a name="346" href="#346">346</a> <em class="jxr_javadoccomment">     * &lt;li&gt;GET /doi/10.80163/2783446.2783605&lt;/li&gt;</em>
 <a name="347" href="#347">347</a> <em class="jxr_javadoccomment">     * &lt;li&gt;500 : "server internal error, try later and if problem persists please contact us"&lt;/li&gt;</em>
 <a name="348" href="#348">348</a> <em class="jxr_javadoccomment">     * &lt;/ul&gt;</em>
 <a name="349" href="#349">349</a> <em class="jxr_javadoccomment">     * @throws java.lang.Exception</em>
@@ -367,7 +367,7 @@
 <a name="357" href="#357">357</a> <em class="jxr_javadoccomment">     * Test of getDoi method, of class ClientMDS, with a right DOI. A mock server is set for this</em>
 <a name="358" href="#358">358</a> <em class="jxr_javadoccomment">     * test in order to emulate the response of the server on a path:</em>
 <a name="359" href="#359">359</a> <em class="jxr_javadoccomment">     * &lt;ul&gt;</em>
-<a name="360" href="#360">360</a> <em class="jxr_javadoccomment">     * &lt;li&gt;GET /doi/10.5072/2783446.2783605&lt;/li&gt;</em>
+<a name="360" href="#360">360</a> <em class="jxr_javadoccomment">     * &lt;li&gt;GET /doi/10.80163/2783446.2783605&lt;/li&gt;</em>
 <a name="361" href="#361">361</a> <em class="jxr_javadoccomment">     * &lt;li&gt;200 : "https://edutheque.cnes.fr/fr/web/CNES-fr/10884-edutheque.php"&lt;/li&gt;</em>
 <a name="362" href="#362">362</a> <em class="jxr_javadoccomment">     * &lt;/ul&gt;</em>
 <a name="363" href="#363">363</a> <em class="jxr_javadoccomment">     * @throws java.lang.Exception</em>
@@ -383,7 +383,7 @@
 <a name="373" href="#373">373</a> <em class="jxr_javadoccomment">     */</em>
 <a name="374" href="#374">374</a>     @Test
 <a name="375" href="#375">375</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testCreateDoi201() <strong class="jxr_keyword">throws</strong> Exception {
-<a name="376" href="#376">376</a>         testSpecCreateDoi(MdsSpec.Spec.POST_DOI_201);
+<a name="376" href="#376">376</a>         testSpecCreateDoi(MdsSpec.Spec.PUT_DOI_201);
 <a name="377" href="#377">377</a>     }
 <a name="378" href="#378">378</a> 
 <a name="379" href="#379">379</a>     <em class="jxr_javadoccomment">/**</em>
@@ -392,7 +392,7 @@
 <a name="382" href="#382">382</a> <em class="jxr_javadoccomment">     */</em>
 <a name="383" href="#383">383</a>     @Test
 <a name="384" href="#384">384</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testCreateDoi400() <strong class="jxr_keyword">throws</strong> Exception {
-<a name="385" href="#385">385</a>         testSpecCreateDoi(MdsSpec.Spec.POST_DOI_400);
+<a name="385" href="#385">385</a>         testSpecCreateDoi(MdsSpec.Spec.PUT_DOI_400);
 <a name="386" href="#386">386</a>     }
 <a name="387" href="#387">387</a> 
 <a name="388" href="#388">388</a>     <em class="jxr_javadoccomment">/**</em>
@@ -401,7 +401,7 @@
 <a name="391" href="#391">391</a> <em class="jxr_javadoccomment">     */</em>
 <a name="392" href="#392">392</a>     @Test
 <a name="393" href="#393">393</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testCreateDoi401() <strong class="jxr_keyword">throws</strong> Exception {
-<a name="394" href="#394">394</a>         testSpecCreateDoi(MdsSpec.Spec.POST_DOI_401);
+<a name="394" href="#394">394</a>         testSpecCreateDoi(MdsSpec.Spec.PUT_DOI_401);
 <a name="395" href="#395">395</a>     }
 <a name="396" href="#396">396</a> 
 <a name="397" href="#397">397</a>     <em class="jxr_javadoccomment">/**</em>
@@ -410,7 +410,7 @@
 <a name="400" href="#400">400</a> <em class="jxr_javadoccomment">     */</em>
 <a name="401" href="#401">401</a>     @Test
 <a name="402" href="#402">402</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testCreateDoi403() <strong class="jxr_keyword">throws</strong> Exception {
-<a name="403" href="#403">403</a>         testSpecCreateDoi(MdsSpec.Spec.POST_DOI_403);
+<a name="403" href="#403">403</a>         testSpecCreateDoi(MdsSpec.Spec.PUT_DOI_403);
 <a name="404" href="#404">404</a>     }
 <a name="405" href="#405">405</a> 
 <a name="406" href="#406">406</a>     <em class="jxr_javadoccomment">/**</em>
@@ -419,7 +419,7 @@
 <a name="409" href="#409">409</a> <em class="jxr_javadoccomment">     */</em>
 <a name="410" href="#410">410</a>     @Test
 <a name="411" href="#411">411</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testCreateDoi412() <strong class="jxr_keyword">throws</strong> Exception {
-<a name="412" href="#412">412</a>         testSpecCreateDoi(MdsSpec.Spec.POST_DOI_412);
+<a name="412" href="#412">412</a>         testSpecCreateDoi(MdsSpec.Spec.PUT_DOI_412);
 <a name="413" href="#413">413</a>     }
 <a name="414" href="#414">414</a> 
 <a name="415" href="#415">415</a>     <em class="jxr_javadoccomment">/**</em>
@@ -428,7 +428,7 @@
 <a name="418" href="#418">418</a> <em class="jxr_javadoccomment">     */</em>
 <a name="419" href="#419">419</a>     @Test
 <a name="420" href="#420">420</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testCreateDoi500() <strong class="jxr_keyword">throws</strong> Exception {
-<a name="421" href="#421">421</a>         testSpecCreateDoi(MdsSpec.Spec.POST_DOI_500);
+<a name="421" href="#421">421</a>         testSpecCreateDoi(MdsSpec.Spec.PUT_DOI_500);
 <a name="422" href="#422">422</a>     }
 <a name="423" href="#423">423</a> 
 <a name="424" href="#424">424</a>     <em class="jxr_javadoccomment">/**</em>
@@ -555,7 +555,7 @@
 <a name="545" href="#545">545</a> <em class="jxr_javadoccomment">     */</em>
 <a name="546" href="#546">546</a>     @Test
 <a name="547" href="#547">547</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testCreateMetadata201() <strong class="jxr_keyword">throws</strong> Exception {
-<a name="548" href="#548">548</a>         testSpecCreateMetadata(MdsSpec.Spec.POST_METADATA_201);
+<a name="548" href="#548">548</a>         testSpecCreateMetadata(MdsSpec.Spec.PUT_METADATA_201);
 <a name="549" href="#549">549</a>     }
 <a name="550" href="#550">550</a> 
 <a name="551" href="#551">551</a>     <em class="jxr_javadoccomment">/**</em>
@@ -564,7 +564,7 @@
 <a name="554" href="#554">554</a> <em class="jxr_javadoccomment">     */</em>
 <a name="555" href="#555">555</a>     @Test
 <a name="556" href="#556">556</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testCreateMetadata400() <strong class="jxr_keyword">throws</strong> Exception {
-<a name="557" href="#557">557</a>         testSpecCreateMetadata(MdsSpec.Spec.POST_METADATA_400);
+<a name="557" href="#557">557</a>         testSpecCreateMetadata(MdsSpec.Spec.PUT_METADATA_400);
 <a name="558" href="#558">558</a>     }
 <a name="559" href="#559">559</a> 
 <a name="560" href="#560">560</a>     <em class="jxr_javadoccomment">/**</em>
@@ -573,7 +573,7 @@
 <a name="563" href="#563">563</a> <em class="jxr_javadoccomment">     */</em>
 <a name="564" href="#564">564</a>     @Test
 <a name="565" href="#565">565</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testCreateMetadata401() <strong class="jxr_keyword">throws</strong> Exception {
-<a name="566" href="#566">566</a>         testSpecCreateMetadata(MdsSpec.Spec.POST_METADATA_401);
+<a name="566" href="#566">566</a>         testSpecCreateMetadata(MdsSpec.Spec.PUT_METADATA_401);
 <a name="567" href="#567">567</a>     }
 <a name="568" href="#568">568</a> 
 <a name="569" href="#569">569</a>     <em class="jxr_javadoccomment">/**</em>
@@ -582,7 +582,7 @@
 <a name="572" href="#572">572</a> <em class="jxr_javadoccomment">     */</em>
 <a name="573" href="#573">573</a>     @Test
 <a name="574" href="#574">574</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testCreateMetadata403() <strong class="jxr_keyword">throws</strong> Exception {
-<a name="575" href="#575">575</a>         testSpecCreateMetadata(MdsSpec.Spec.POST_METADATA_403);
+<a name="575" href="#575">575</a>         testSpecCreateMetadata(MdsSpec.Spec.PUT_METADATA_403);
 <a name="576" href="#576">576</a>     }
 <a name="577" href="#577">577</a> 
 <a name="578" href="#578">578</a>     <em class="jxr_javadoccomment">/**</em>
@@ -591,7 +591,7 @@
 <a name="581" href="#581">581</a> <em class="jxr_javadoccomment">     */</em>
 <a name="582" href="#582">582</a>     @Test
 <a name="583" href="#583">583</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testCreateMetadata500() <strong class="jxr_keyword">throws</strong> Exception {
-<a name="584" href="#584">584</a>         testSpecCreateMetadata(MdsSpec.Spec.POST_METADATA_500);
+<a name="584" href="#584">584</a>         testSpecCreateMetadata(MdsSpec.Spec.PUT_METADATA_500);
 <a name="585" href="#585">585</a>     }
 <a name="586" href="#586">586</a>     
 <a name="587" href="#587">587</a>     <em class="jxr_javadoccomment">/**</em>
@@ -600,7 +600,7 @@
 <a name="590" href="#590">590</a> <em class="jxr_javadoccomment">     */</em>
 <a name="591" href="#591">591</a>     @Test
 <a name="592" href="#592">592</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testCreateMetadataObj201() <strong class="jxr_keyword">throws</strong> Exception {
-<a name="593" href="#593">593</a>         testSpecCreateMetadataAsObj(MdsSpec.Spec.POST_METADATA_201);
+<a name="593" href="#593">593</a>         testSpecCreateMetadataAsObj(MdsSpec.Spec.PUT_METADATA_201);
 <a name="594" href="#594">594</a>     }
 <a name="595" href="#595">595</a> 
 <a name="596" href="#596">596</a>     <em class="jxr_javadoccomment">/**</em>
@@ -609,7 +609,7 @@
 <a name="599" href="#599">599</a> <em class="jxr_javadoccomment">     */</em>
 <a name="600" href="#600">600</a>     @Test
 <a name="601" href="#601">601</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testCreateMetadataObj400() <strong class="jxr_keyword">throws</strong> Exception {
-<a name="602" href="#602">602</a>         testSpecCreateMetadataAsObj(MdsSpec.Spec.POST_METADATA_400);
+<a name="602" href="#602">602</a>         testSpecCreateMetadataAsObj(MdsSpec.Spec.PUT_METADATA_400);
 <a name="603" href="#603">603</a>     }
 <a name="604" href="#604">604</a> 
 <a name="605" href="#605">605</a>     <em class="jxr_javadoccomment">/**</em>
@@ -618,7 +618,7 @@
 <a name="608" href="#608">608</a> <em class="jxr_javadoccomment">     */</em>
 <a name="609" href="#609">609</a>     @Test
 <a name="610" href="#610">610</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testCreateMetadataObj401() <strong class="jxr_keyword">throws</strong> Exception {
-<a name="611" href="#611">611</a>         testSpecCreateMetadataAsObj(MdsSpec.Spec.POST_METADATA_401);
+<a name="611" href="#611">611</a>         testSpecCreateMetadataAsObj(MdsSpec.Spec.PUT_METADATA_401);
 <a name="612" href="#612">612</a>     }
 <a name="613" href="#613">613</a> 
 <a name="614" href="#614">614</a>     <em class="jxr_javadoccomment">/**</em>
@@ -627,7 +627,7 @@
 <a name="617" href="#617">617</a> <em class="jxr_javadoccomment">     */</em>
 <a name="618" href="#618">618</a>     @Test
 <a name="619" href="#619">619</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testCreateMetadataObj403() <strong class="jxr_keyword">throws</strong> Exception {
-<a name="620" href="#620">620</a>         testSpecCreateMetadataAsObj(MdsSpec.Spec.POST_METADATA_403);
+<a name="620" href="#620">620</a>         testSpecCreateMetadataAsObj(MdsSpec.Spec.PUT_METADATA_403);
 <a name="621" href="#621">621</a>     }
 <a name="622" href="#622">622</a> 
 <a name="623" href="#623">623</a>     <em class="jxr_javadoccomment">/**</em>
@@ -636,7 +636,7 @@
 <a name="626" href="#626">626</a> <em class="jxr_javadoccomment">     */</em>
 <a name="627" href="#627">627</a>     @Test
 <a name="628" href="#628">628</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testCreateMetadataObj500() <strong class="jxr_keyword">throws</strong> Exception {
-<a name="629" href="#629">629</a>         testSpecCreateMetadataAsObj(MdsSpec.Spec.POST_METADATA_500);
+<a name="629" href="#629">629</a>         testSpecCreateMetadataAsObj(MdsSpec.Spec.PUT_METADATA_500);
 <a name="630" href="#630">630</a>     }    
 <a name="631" href="#631">631</a> 
 <a name="632" href="#632">632</a> 

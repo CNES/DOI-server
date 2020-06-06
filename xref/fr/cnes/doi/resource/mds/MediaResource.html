@@ -182,137 +182,136 @@
 <a name="172" href="#172">172</a>             <strong class="jxr_keyword">final</strong> Form mediaForm) <strong class="jxr_keyword">throws</strong> DoiServerException {
 <a name="173" href="#173">173</a>         LOG.traceEntry(<span class="jxr_string">"Parameters\n\tdoi={}\n\tmediaForm={}"</span>, doi, mediaForm);
 <a name="174" href="#174">174</a>         <strong class="jxr_keyword">final</strong> StringBuilder errorMsg = <strong class="jxr_keyword">new</strong> StringBuilder();
-<a name="175" href="#175">175</a>         <strong class="jxr_keyword">if</strong> (doi == <strong class="jxr_keyword">null</strong> || doi.isEmpty() || !doi.startsWith(DoiSettings.getInstance().getString(
-<a name="176" href="#176">176</a>                 Consts.INIST_DOI))) {
-<a name="177" href="#177">177</a>             errorMsg.append(DOI_PARAMETER).append(<span class="jxr_string">" value is not set."</span>);
-<a name="178" href="#178">178</a>         } <strong class="jxr_keyword">else</strong> {
-<a name="179" href="#179">179</a>             <strong class="jxr_keyword">try</strong> {
-<a name="180" href="#180">180</a>                 ClientMDS.checkIfAllCharsAreValid(doi);
-<a name="181" href="#181">181</a>             } <strong class="jxr_keyword">catch</strong> (IllegalArgumentException ex) {
-<a name="182" href="#182">182</a>                 errorMsg.append(DOI_PARAMETER).append(<span class="jxr_string">" no valid syntax."</span>);
-<a name="183" href="#183">183</a>             }
-<a name="184" href="#184">184</a>         }
-<a name="185" href="#185">185</a>         <strong class="jxr_keyword">if</strong> (errorMsg.length() == 0) {
-<a name="186" href="#186">186</a>             LOG.debug(<span class="jxr_string">"The form is valid"</span>);
-<a name="187" href="#187">187</a>         } <strong class="jxr_keyword">else</strong> {
-<a name="188" href="#188">188</a>             <strong class="jxr_keyword">throw</strong> LOG.throwing(
-<a name="189" href="#189">189</a>                     Level.ERROR,
-<a name="190" href="#190">190</a>                     <strong class="jxr_keyword">new</strong> <a href="../../../../../fr/cnes/doi/exception/DoiServerException.html">DoiServerException</a>(getApplication(), API_MDS.MEDIA_VALIDATION, errorMsg.
-<a name="191" href="#191">191</a>                             toString())
-<a name="192" href="#192">192</a>             );
-<a name="193" href="#193">193</a>         }
-<a name="194" href="#194">194</a>         LOG.traceExit();
-<a name="195" href="#195">195</a>     }
-<a name="196" href="#196">196</a> 
-<a name="197" href="#197">197</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="198" href="#198">198</a> <em class="jxr_javadoccomment">     * Media representation.</em>
-<a name="199" href="#199">199</a> <em class="jxr_javadoccomment">     *</em>
-<a name="200" href="#200">200</a> <em class="jxr_javadoccomment">     * @return Wadl description for a Media representation</em>
-<a name="201" href="#201">201</a> <em class="jxr_javadoccomment">     */</em>
-<a name="202" href="#202">202</a>     <strong class="jxr_keyword">private</strong> RepresentationInfo mediaRepresentation() {
-<a name="203" href="#203">203</a>         <strong class="jxr_keyword">final</strong> RepresentationInfo repInfo = <strong class="jxr_keyword">new</strong> RepresentationInfo();
-<a name="204" href="#204">204</a>         repInfo.setMediaType(MediaType.TEXT_PLAIN);
-<a name="205" href="#205">205</a>         <strong class="jxr_keyword">final</strong> DocumentationInfo docInfo = <strong class="jxr_keyword">new</strong> DocumentationInfo();
-<a name="206" href="#206">206</a>         docInfo.setTitle(<span class="jxr_string">"Media representation"</span>);
-<a name="207" href="#207">207</a>         docInfo.setTextContent(<span class="jxr_string">"This request returns a key-value list of media "</span>
-<a name="208" href="#208">208</a>                 + <span class="jxr_string">"types/urls for a given DOI name"</span>);
-<a name="209" href="#209">209</a>         repInfo.setDocumentation(docInfo);
-<a name="210" href="#210">210</a>         <strong class="jxr_keyword">return</strong> repInfo;
-<a name="211" href="#211">211</a>     }
-<a name="212" href="#212">212</a> 
-<a name="213" href="#213">213</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="214" href="#214">214</a> <em class="jxr_javadoccomment">     * Describes the GET method. The different representations are the</em>
-<a name="215" href="#215">215</a> <em class="jxr_javadoccomment">     * followings:</em>
-<a name="216" href="#216">216</a> <em class="jxr_javadoccomment">     * &lt;ul&gt;</em>
-<a name="217" href="#217">217</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link DATACITE_API_RESPONSE#SUCCESS}&lt;/li&gt;</em>
-<a name="218" href="#218">218</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link DATACITE_API_RESPONSE#DOI_NOT_FOUND}&lt;/li&gt;</em>
-<a name="219" href="#219">219</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link API_MDS#DATACITE_PROBLEM}&lt;/li&gt;</em>
-<a name="220" href="#220">220</a> <em class="jxr_javadoccomment">     * &lt;/ul&gt;</em>
-<a name="221" href="#221">221</a> <em class="jxr_javadoccomment">     *</em>
-<a name="222" href="#222">222</a> <em class="jxr_javadoccomment">     * @param info Wadl description for a GET method</em>
-<a name="223" href="#223">223</a> <em class="jxr_javadoccomment">     */</em>
-<a name="224" href="#224">224</a>     @Requirement(reqId = Requirement.DOI_DOC_010, reqName = Requirement.DOI_DOC_010_NAME)
-<a name="225" href="#225">225</a>     @Override
-<a name="226" href="#226">226</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">void</strong> describeGet(<strong class="jxr_keyword">final</strong> MethodInfo info) {
-<a name="227" href="#227">227</a>         info.setName(Method.GET);
-<a name="228" href="#228">228</a>         info.setDocumentation(<span class="jxr_string">"Get a specific media for a given DOI"</span>);
-<a name="229" href="#229">229</a> 
-<a name="230" href="#230">230</a>         addRequestDocToMethod(info, createQueryParamDoc(
-<a name="231" href="#231">231</a>                 DoiMdsApplication.DOI_TEMPLATE, ParameterStyle.TEMPLATE,
-<a name="232" href="#232">232</a>                 <span class="jxr_string">"DOI name"</span>, <strong class="jxr_keyword">true</strong>, <span class="jxr_string">"xs:string"</span>)
-<a name="233" href="#233">233</a>         );
-<a name="234" href="#234">234</a>         addResponseDocToMethod(info, createResponseDoc(
-<a name="235" href="#235">235</a>                 DATACITE_API_RESPONSE.SUCCESS.getStatus(),
-<a name="236" href="#236">236</a>                 DATACITE_API_RESPONSE.SUCCESS.getShortMessage(),
-<a name="237" href="#237">237</a>                 mediaRepresentation())
-<a name="238" href="#238">238</a>         );
-<a name="239" href="#239">239</a>         addResponseDocToMethod(info, createResponseDoc(
-<a name="240" href="#240">240</a>                 DATACITE_API_RESPONSE.DOI_NOT_FOUND.getStatus(),
-<a name="241" href="#241">241</a>                 DATACITE_API_RESPONSE.DOI_NOT_FOUND.getShortMessage(),
-<a name="242" href="#242">242</a>                 <span class="jxr_string">"explainRepresentationID"</span>)
-<a name="243" href="#243">243</a>         );
-<a name="244" href="#244">244</a>         addResponseDocToMethod(info, createResponseDoc(
-<a name="245" href="#245">245</a>                 API_MDS.DATACITE_PROBLEM.getStatus(),
-<a name="246" href="#246">246</a>                 API_MDS.DATACITE_PROBLEM.getShortMessage(),
-<a name="247" href="#247">247</a>                 <span class="jxr_string">"explainRepresentationID"</span>)
-<a name="248" href="#248">248</a>         );
-<a name="249" href="#249">249</a>     }
-<a name="250" href="#250">250</a> 
-<a name="251" href="#251">251</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="252" href="#252">252</a> <em class="jxr_javadoccomment">     * Describes the POST method. The different representations are the</em>
-<a name="253" href="#253">253</a> <em class="jxr_javadoccomment">     * followings:</em>
-<a name="254" href="#254">254</a> <em class="jxr_javadoccomment">     * &lt;ul&gt;</em>
-<a name="255" href="#255">255</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link DATACITE_API_RESPONSE#SUCCESS}&lt;/li&gt;</em>
-<a name="256" href="#256">256</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link API_MDS#MEDIA_VALIDATION}&lt;/li&gt;</em>
-<a name="257" href="#257">257</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link API_MDS#DATACITE_PROBLEM}&lt;/li&gt;</em>
-<a name="258" href="#258">258</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link API_MDS#SECURITY_USER_NO_ROLE}&lt;/li&gt;</em>
-<a name="259" href="#259">259</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link API_MDS#SECURITY_USER_NOT_IN_SELECTED_ROLE}&lt;/li&gt;</em>
-<a name="260" href="#260">260</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link API_MDS#SECURITY_USER_PERMISSION}&lt;/li&gt;</em>
-<a name="261" href="#261">261</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link API_MDS#SECURITY_USER_CONFLICT}&lt;/li&gt;</em>
-<a name="262" href="#262">262</a> <em class="jxr_javadoccomment">     * &lt;/ul&gt;</em>
-<a name="263" href="#263">263</a> <em class="jxr_javadoccomment">     *</em>
-<a name="264" href="#264">264</a> <em class="jxr_javadoccomment">     * @param info Wadl description for describing POST method</em>
-<a name="265" href="#265">265</a> <em class="jxr_javadoccomment">     */</em>
-<a name="266" href="#266">266</a>     @Requirement(reqId = Requirement.DOI_DOC_010, reqName = Requirement.DOI_DOC_010_NAME)
-<a name="267" href="#267">267</a>     @Override
-<a name="268" href="#268">268</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">void</strong> describePost(<strong class="jxr_keyword">final</strong> MethodInfo info) {
-<a name="269" href="#269">269</a>         info.setName(Method.POST);
-<a name="270" href="#270">270</a>         info.setDocumentation(
-<a name="271" href="#271">271</a>                 <span class="jxr_string">"POST will add/update media type/urls pairs to a DOI. Standard domain restrictions check will be performed."</span>);
-<a name="272" href="#272">272</a>         <strong class="jxr_keyword">final</strong> ParameterInfo param = <strong class="jxr_keyword">new</strong> ParameterInfo();
-<a name="273" href="#273">273</a>         param.setName(<span class="jxr_string">"{mediaType}"</span>);
-<a name="274" href="#274">274</a>         param.setStyle(ParameterStyle.PLAIN);
-<a name="275" href="#275">275</a>         param.setRequired(false);
-<a name="276" href="#276">276</a>         param.setType(<span class="jxr_string">"xs:string"</span>);
-<a name="277" href="#277">277</a>         param.setFixed(<span class="jxr_string">"{url}"</span>);
-<a name="278" href="#278">278</a>         param.setRepeating(<strong class="jxr_keyword">true</strong>);
-<a name="279" href="#279">279</a>         param.setDocumentation(<span class="jxr_string">"(key/value) = (mediaType/url)"</span>);
-<a name="280" href="#280">280</a>         <strong class="jxr_keyword">final</strong> RepresentationInfo rep = <strong class="jxr_keyword">new</strong> RepresentationInfo(MediaType.APPLICATION_WWW_FORM);
-<a name="281" href="#281">281</a>         rep.getParameters().add(param);
-<a name="282" href="#282">282</a> 
-<a name="283" href="#283">283</a>         addRequestDocToMethod(info,
-<a name="284" href="#284">284</a>                 Arrays.asList(createQueryParamDoc(SELECTED_ROLE_PARAMETER, ParameterStyle.HEADER,
-<a name="285" href="#285">285</a>                         <span class="jxr_string">"A user can select one role when he is associated to several roles"</span>, false,
-<a name="286" href="#286">286</a>                         <span class="jxr_string">"xs:string"</span>)),
-<a name="287" href="#287">287</a>                 rep);
-<a name="288" href="#288">288</a>         addResponseDocToMethod(info, createResponseDoc(
-<a name="289" href="#289">289</a>                 DATACITE_API_RESPONSE.SUCCESS.getStatus(),
-<a name="290" href="#290">290</a>                 DATACITE_API_RESPONSE.SUCCESS.getShortMessage(),
-<a name="291" href="#291">291</a>                 <span class="jxr_string">"explainRepresentationID"</span>)
-<a name="292" href="#292">292</a>         );
-<a name="293" href="#293">293</a>         addResponseDocToMethod(info, createResponseDoc(
-<a name="294" href="#294">294</a>                 API_MDS.MEDIA_VALIDATION.getStatus(),
-<a name="295" href="#295">295</a>                 API_MDS.MEDIA_VALIDATION.getShortMessage(),
-<a name="296" href="#296">296</a>                 <span class="jxr_string">"explainRepresentationID"</span>)
-<a name="297" href="#297">297</a>         );
-<a name="298" href="#298">298</a>         addResponseDocToMethod(info, createResponseDoc(
-<a name="299" href="#299">299</a>                 API_MDS.DATACITE_PROBLEM.getStatus(),
-<a name="300" href="#300">300</a>                 API_MDS.DATACITE_PROBLEM.getShortMessage(),
-<a name="301" href="#301">301</a>                 <span class="jxr_string">"explainRepresentationID"</span>)
-<a name="302" href="#302">302</a>         );
-<a name="303" href="#303">303</a>         <strong class="jxr_keyword">super</strong>.describePost(info);
-<a name="304" href="#304">304</a>     }
-<a name="305" href="#305">305</a> }
+<a name="175" href="#175">175</a>         <strong class="jxr_keyword">if</strong> (doi == <strong class="jxr_keyword">null</strong> || doi.isEmpty() || !doi.startsWith(DoiSettings.getInstance().getString(Consts.INIST_DOI))) {
+<a name="176" href="#176">176</a>             errorMsg.append(DOI_PARAMETER).append(<span class="jxr_string">" value is not set."</span>);
+<a name="177" href="#177">177</a>         } <strong class="jxr_keyword">else</strong> {
+<a name="178" href="#178">178</a>             <strong class="jxr_keyword">try</strong> {
+<a name="179" href="#179">179</a>                 ClientMDS.checkIfAllCharsAreValid(doi);
+<a name="180" href="#180">180</a>             } <strong class="jxr_keyword">catch</strong> (IllegalArgumentException ex) {
+<a name="181" href="#181">181</a>                 errorMsg.append(DOI_PARAMETER).append(<span class="jxr_string">" no valid syntax."</span>);
+<a name="182" href="#182">182</a>             }
+<a name="183" href="#183">183</a>         }
+<a name="184" href="#184">184</a>         <strong class="jxr_keyword">if</strong> (errorMsg.length() == 0) {
+<a name="185" href="#185">185</a>             LOG.debug(<span class="jxr_string">"The form is valid"</span>);
+<a name="186" href="#186">186</a>         } <strong class="jxr_keyword">else</strong> {
+<a name="187" href="#187">187</a>             <strong class="jxr_keyword">throw</strong> LOG.throwing(
+<a name="188" href="#188">188</a>                     Level.ERROR,
+<a name="189" href="#189">189</a>                     <strong class="jxr_keyword">new</strong> <a href="../../../../../fr/cnes/doi/exception/DoiServerException.html">DoiServerException</a>(getApplication(), API_MDS.MEDIA_VALIDATION, errorMsg.
+<a name="190" href="#190">190</a>                             toString())
+<a name="191" href="#191">191</a>             );
+<a name="192" href="#192">192</a>         }
+<a name="193" href="#193">193</a>         LOG.traceExit();
+<a name="194" href="#194">194</a>     }
+<a name="195" href="#195">195</a> 
+<a name="196" href="#196">196</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="197" href="#197">197</a> <em class="jxr_javadoccomment">     * Media representation.</em>
+<a name="198" href="#198">198</a> <em class="jxr_javadoccomment">     *</em>
+<a name="199" href="#199">199</a> <em class="jxr_javadoccomment">     * @return Wadl description for a Media representation</em>
+<a name="200" href="#200">200</a> <em class="jxr_javadoccomment">     */</em>
+<a name="201" href="#201">201</a>     <strong class="jxr_keyword">private</strong> RepresentationInfo mediaRepresentation() {
+<a name="202" href="#202">202</a>         <strong class="jxr_keyword">final</strong> RepresentationInfo repInfo = <strong class="jxr_keyword">new</strong> RepresentationInfo();
+<a name="203" href="#203">203</a>         repInfo.setMediaType(MediaType.TEXT_PLAIN);
+<a name="204" href="#204">204</a>         <strong class="jxr_keyword">final</strong> DocumentationInfo docInfo = <strong class="jxr_keyword">new</strong> DocumentationInfo();
+<a name="205" href="#205">205</a>         docInfo.setTitle(<span class="jxr_string">"Media representation"</span>);
+<a name="206" href="#206">206</a>         docInfo.setTextContent(<span class="jxr_string">"This request returns a key-value list of media "</span>
+<a name="207" href="#207">207</a>                 + <span class="jxr_string">"types/urls for a given DOI name"</span>);
+<a name="208" href="#208">208</a>         repInfo.setDocumentation(docInfo);
+<a name="209" href="#209">209</a>         <strong class="jxr_keyword">return</strong> repInfo;
+<a name="210" href="#210">210</a>     }
+<a name="211" href="#211">211</a> 
+<a name="212" href="#212">212</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="213" href="#213">213</a> <em class="jxr_javadoccomment">     * Describes the GET method. The different representations are the</em>
+<a name="214" href="#214">214</a> <em class="jxr_javadoccomment">     * followings:</em>
+<a name="215" href="#215">215</a> <em class="jxr_javadoccomment">     * &lt;ul&gt;</em>
+<a name="216" href="#216">216</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link DATACITE_API_RESPONSE#SUCCESS}&lt;/li&gt;</em>
+<a name="217" href="#217">217</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link DATACITE_API_RESPONSE#DOI_NOT_FOUND}&lt;/li&gt;</em>
+<a name="218" href="#218">218</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link API_MDS#DATACITE_PROBLEM}&lt;/li&gt;</em>
+<a name="219" href="#219">219</a> <em class="jxr_javadoccomment">     * &lt;/ul&gt;</em>
+<a name="220" href="#220">220</a> <em class="jxr_javadoccomment">     *</em>
+<a name="221" href="#221">221</a> <em class="jxr_javadoccomment">     * @param info Wadl description for a GET method</em>
+<a name="222" href="#222">222</a> <em class="jxr_javadoccomment">     */</em>
+<a name="223" href="#223">223</a>     @Requirement(reqId = Requirement.DOI_DOC_010, reqName = Requirement.DOI_DOC_010_NAME)
+<a name="224" href="#224">224</a>     @Override
+<a name="225" href="#225">225</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">void</strong> describeGet(<strong class="jxr_keyword">final</strong> MethodInfo info) {
+<a name="226" href="#226">226</a>         info.setName(Method.GET);
+<a name="227" href="#227">227</a>         info.setDocumentation(<span class="jxr_string">"Get a specific media for a given DOI"</span>);
+<a name="228" href="#228">228</a> 
+<a name="229" href="#229">229</a>         addRequestDocToMethod(info, createQueryParamDoc(
+<a name="230" href="#230">230</a>                 DoiMdsApplication.DOI_TEMPLATE, ParameterStyle.TEMPLATE,
+<a name="231" href="#231">231</a>                 <span class="jxr_string">"DOI name"</span>, <strong class="jxr_keyword">true</strong>, <span class="jxr_string">"xs:string"</span>)
+<a name="232" href="#232">232</a>         );
+<a name="233" href="#233">233</a>         addResponseDocToMethod(info, createResponseDoc(
+<a name="234" href="#234">234</a>                 DATACITE_API_RESPONSE.SUCCESS.getStatus(),
+<a name="235" href="#235">235</a>                 DATACITE_API_RESPONSE.SUCCESS.getShortMessage(),
+<a name="236" href="#236">236</a>                 mediaRepresentation())
+<a name="237" href="#237">237</a>         );
+<a name="238" href="#238">238</a>         addResponseDocToMethod(info, createResponseDoc(
+<a name="239" href="#239">239</a>                 DATACITE_API_RESPONSE.DOI_NOT_FOUND.getStatus(),
+<a name="240" href="#240">240</a>                 DATACITE_API_RESPONSE.DOI_NOT_FOUND.getShortMessage(),
+<a name="241" href="#241">241</a>                 <span class="jxr_string">"explainRepresentationID"</span>)
+<a name="242" href="#242">242</a>         );
+<a name="243" href="#243">243</a>         addResponseDocToMethod(info, createResponseDoc(
+<a name="244" href="#244">244</a>                 API_MDS.DATACITE_PROBLEM.getStatus(),
+<a name="245" href="#245">245</a>                 API_MDS.DATACITE_PROBLEM.getShortMessage(),
+<a name="246" href="#246">246</a>                 <span class="jxr_string">"explainRepresentationID"</span>)
+<a name="247" href="#247">247</a>         );
+<a name="248" href="#248">248</a>     }
+<a name="249" href="#249">249</a> 
+<a name="250" href="#250">250</a>     <em class="jxr_javadoccomment">/**</em>
+<a name="251" href="#251">251</a> <em class="jxr_javadoccomment">     * Describes the POST method. The different representations are the</em>
+<a name="252" href="#252">252</a> <em class="jxr_javadoccomment">     * followings:</em>
+<a name="253" href="#253">253</a> <em class="jxr_javadoccomment">     * &lt;ul&gt;</em>
+<a name="254" href="#254">254</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link DATACITE_API_RESPONSE#SUCCESS}&lt;/li&gt;</em>
+<a name="255" href="#255">255</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link API_MDS#MEDIA_VALIDATION}&lt;/li&gt;</em>
+<a name="256" href="#256">256</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link API_MDS#DATACITE_PROBLEM}&lt;/li&gt;</em>
+<a name="257" href="#257">257</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link API_MDS#SECURITY_USER_NO_ROLE}&lt;/li&gt;</em>
+<a name="258" href="#258">258</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link API_MDS#SECURITY_USER_NOT_IN_SELECTED_ROLE}&lt;/li&gt;</em>
+<a name="259" href="#259">259</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link API_MDS#SECURITY_USER_PERMISSION}&lt;/li&gt;</em>
+<a name="260" href="#260">260</a> <em class="jxr_javadoccomment">     * &lt;li&gt;{@link API_MDS#SECURITY_USER_CONFLICT}&lt;/li&gt;</em>
+<a name="261" href="#261">261</a> <em class="jxr_javadoccomment">     * &lt;/ul&gt;</em>
+<a name="262" href="#262">262</a> <em class="jxr_javadoccomment">     *</em>
+<a name="263" href="#263">263</a> <em class="jxr_javadoccomment">     * @param info Wadl description for describing POST method</em>
+<a name="264" href="#264">264</a> <em class="jxr_javadoccomment">     */</em>
+<a name="265" href="#265">265</a>     @Requirement(reqId = Requirement.DOI_DOC_010, reqName = Requirement.DOI_DOC_010_NAME)
+<a name="266" href="#266">266</a>     @Override
+<a name="267" href="#267">267</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">void</strong> describePost(<strong class="jxr_keyword">final</strong> MethodInfo info) {
+<a name="268" href="#268">268</a>         info.setName(Method.POST);
+<a name="269" href="#269">269</a>         info.setDocumentation(
+<a name="270" href="#270">270</a>                 <span class="jxr_string">"POST will add/update media type/urls pairs to a DOI. Standard domain restrictions check will be performed."</span>);
+<a name="271" href="#271">271</a>         <strong class="jxr_keyword">final</strong> ParameterInfo param = <strong class="jxr_keyword">new</strong> ParameterInfo();
+<a name="272" href="#272">272</a>         param.setName(<span class="jxr_string">"{mediaType}"</span>);
+<a name="273" href="#273">273</a>         param.setStyle(ParameterStyle.PLAIN);
+<a name="274" href="#274">274</a>         param.setRequired(false);
+<a name="275" href="#275">275</a>         param.setType(<span class="jxr_string">"xs:string"</span>);
+<a name="276" href="#276">276</a>         param.setFixed(<span class="jxr_string">"{url}"</span>);
+<a name="277" href="#277">277</a>         param.setRepeating(<strong class="jxr_keyword">true</strong>);
+<a name="278" href="#278">278</a>         param.setDocumentation(<span class="jxr_string">"(key/value) = (mediaType/url)"</span>);
+<a name="279" href="#279">279</a>         <strong class="jxr_keyword">final</strong> RepresentationInfo rep = <strong class="jxr_keyword">new</strong> RepresentationInfo(MediaType.APPLICATION_WWW_FORM);
+<a name="280" href="#280">280</a>         rep.getParameters().add(param);
+<a name="281" href="#281">281</a> 
+<a name="282" href="#282">282</a>         addRequestDocToMethod(info,
+<a name="283" href="#283">283</a>                 Arrays.asList(createQueryParamDoc(SELECTED_ROLE_PARAMETER, ParameterStyle.HEADER,
+<a name="284" href="#284">284</a>                         <span class="jxr_string">"A user can select one role when he is associated to several roles"</span>, false,
+<a name="285" href="#285">285</a>                         <span class="jxr_string">"xs:string"</span>)),
+<a name="286" href="#286">286</a>                 rep);
+<a name="287" href="#287">287</a>         addResponseDocToMethod(info, createResponseDoc(
+<a name="288" href="#288">288</a>                 DATACITE_API_RESPONSE.SUCCESS.getStatus(),
+<a name="289" href="#289">289</a>                 DATACITE_API_RESPONSE.SUCCESS.getShortMessage(),
+<a name="290" href="#290">290</a>                 <span class="jxr_string">"explainRepresentationID"</span>)
+<a name="291" href="#291">291</a>         );
+<a name="292" href="#292">292</a>         addResponseDocToMethod(info, createResponseDoc(
+<a name="293" href="#293">293</a>                 API_MDS.MEDIA_VALIDATION.getStatus(),
+<a name="294" href="#294">294</a>                 API_MDS.MEDIA_VALIDATION.getShortMessage(),
+<a name="295" href="#295">295</a>                 <span class="jxr_string">"explainRepresentationID"</span>)
+<a name="296" href="#296">296</a>         );
+<a name="297" href="#297">297</a>         addResponseDocToMethod(info, createResponseDoc(
+<a name="298" href="#298">298</a>                 API_MDS.DATACITE_PROBLEM.getStatus(),
+<a name="299" href="#299">299</a>                 API_MDS.DATACITE_PROBLEM.getShortMessage(),
+<a name="300" href="#300">300</a>                 <span class="jxr_string">"explainRepresentationID"</span>)
+<a name="301" href="#301">301</a>         );
+<a name="302" href="#302">302</a>         <strong class="jxr_keyword">super</strong>.describePost(info);
+<a name="303" href="#303">303</a>     }
+<a name="304" href="#304">304</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>
