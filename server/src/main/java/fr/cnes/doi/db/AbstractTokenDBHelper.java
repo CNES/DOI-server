@@ -20,7 +20,6 @@ package fr.cnes.doi.db;
 
 import fr.cnes.doi.exception.DOIDbException;
 import java.util.List;
-import java.util.Observable;
 
 import fr.cnes.doi.utils.spec.Requirement;
 
@@ -30,7 +29,7 @@ import fr.cnes.doi.utils.spec.Requirement;
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 @Requirement(reqId = Requirement.DOI_INTER_040, reqName = Requirement.DOI_INTER_040_NAME)
-public abstract class AbstractTokenDBHelper extends Observable {
+public abstract class AbstractTokenDBHelper {
 
     /**
      * Adds a token in the database

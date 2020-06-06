@@ -93,7 +93,6 @@ public final class PluginFactory {
         if (!plugin.isConfigured()) {
             plugin.setConfiguration(SETTINGS);
             plugin.initConnection();
-            //plugin.addObserver(RoleAuthorizer.getInstance());
         }
         return plugin;
     }

@@ -20,7 +20,6 @@ package fr.cnes.doi.db;
 
 import fr.cnes.doi.db.model.DOIUser;
 import java.util.List;
-import java.util.Observable;
 
 import fr.cnes.doi.exception.DOIDbException;
 import fr.cnes.doi.utils.spec.Requirement;
@@ -32,7 +31,7 @@ import fr.cnes.doi.utils.spec.Requirement;
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 @Requirement(reqId = Requirement.DOI_INTER_050, reqName = Requirement.DOI_INTER_050_NAME)
-public abstract class AbstractUserRoleDBHelper extends Observable {
+public abstract class AbstractUserRoleDBHelper {
 
     /**
      * Notification message when an user is added

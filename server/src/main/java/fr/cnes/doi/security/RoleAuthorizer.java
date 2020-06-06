@@ -21,8 +21,6 @@ package fr.cnes.doi.security;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
@@ -34,7 +32,6 @@ import org.restlet.security.User;
 
 import fr.cnes.doi.application.AdminApplication;
 import fr.cnes.doi.application.DoiMdsApplication;
-import fr.cnes.doi.db.AbstractProjectSuffixDBHelper;
 import fr.cnes.doi.db.AbstractUserRoleDBHelper;
 import fr.cnes.doi.db.MyMemoryRealm;
 import fr.cnes.doi.db.model.DOIProject;
@@ -52,7 +49,7 @@ import fr.cnes.doi.utils.spec.Requirement;
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 @Requirement(reqId = Requirement.DOI_AUTH_010, reqName = Requirement.DOI_AUTH_010_NAME)
-public final class RoleAuthorizer implements Observer {
+public final class RoleAuthorizer {
 
     /**
      * Role name for the administrators {@value #ROLE_ADMIN}.
@@ -184,6 +181,10 @@ public final class RoleAuthorizer implements Observer {
             }
         }
         
+        // Add the group admin in REALM of MDS
+        // When no project is created, only the group is attached to the 
+        // application. So, in this way, we can retrieve the application from
+        // the REALM to set rights even when no project is created
         final Group admin = findGroupByName(GROUP_ADMIN);
         RoleAuthorizer.REALM.map(admin, Role.get(app, ROLE_ADMIN));        
 
@@ -265,90 +266,7 @@ public final class RoleAuthorizer implements Observer {
     }
 
     /**
-     * Adds/removes the <i>users</i> group to the new role name related to the
-     * application MDS
-     *
-     * @param obs observable
-     * @param obj message
-     */
-    @Requirement(reqId = Requirement.DOI_SRV_130, reqName = Requirement.DOI_SRV_130_NAME)
-    @Requirement(reqId = Requirement.DOI_INTER_030, reqName = Requirement.DOI_INTER_030_NAME)
-    @Override
-    public void update(final Observable obs,
-            final Object obj) {
-        LOG.traceEntry(new JsonMessage(obs));
-        LOG.traceEntry(new JsonMessage(obj));
-
-        // Loads the application MDS related to admin group
-        final Application mds = loadApplicationBy(DoiMdsApplication.NAME);
-
-        if (mds == null) {
-            LOG.info("{} is not defined in the REALM", DoiMdsApplication.NAME);
-        } else {
-            updateObserver(obs, obj, mds);
-        }
-        LOG.traceExit();
-    }
-
-    /**
-     * Updates REALM for mds.
-     *
-     * @param obs observable
-     * @param obj message
-     * @param mds application
-     */
-    private void updateObserver(final Observable obs,
-            final Object obj,
-            final Application mds) {
-        LOG.traceEntry(new JsonMessage(obs));
-        LOG.traceEntry(new JsonMessage(obj));
-        LOG.traceEntry(new JsonMessage(mds));
-
-        if (obs instanceof AbstractProjectSuffixDBHelper) {
-            LOG.debug("Observable is a ProjectSuffixDB type");
-
-            final String[] message = (String[]) obj;
-
-            final String operation = message[0];
-            final String roleName = message[1];
-            final AbstractUserRoleDBHelper manageUsers = PluginFactory.getUserManagement();
-            List<DOIUser> doiUsers;
-            try {
-                doiUsers = manageUsers.getUsersFromRole(Integer.parseInt(roleName));
-            } catch (DOIDbException ex) {
-                doiUsers = new ArrayList<>();
-            }
-            final List<User> usersFromProject = new ArrayList<>();
-            for (final DOIUser doiUser : doiUsers) {
-                final User user = new User(doiUser.getUsername());
-                usersFromProject.add(user);
-            }
-            final List<User> users = usersFromProject;
-            switch (operation) {
-                case AbstractProjectSuffixDBHelper.ADD_RECORD:
-                    for (final User user : users) {
-                        RoleAuthorizer.REALM.map(user, Role.get(mds, roleName));
-                        LOG.debug("Adds the user {} to the new role {} related to the {}", user,
-                                roleName, mds.getName());
-                    }
-                    break;
-                case AbstractProjectSuffixDBHelper.DELETE_RECORD:
-                    for (final User user : users) {
-                        RoleAuthorizer.REALM.unmap(user, mds, roleName);
-                        LOG.info("Remove the user {} to the role {} related to the {}", user,
-                                roleName, mds.getName());
-                    }
-                    break;
-                default:
-                    LOG.error("operation {} was not expected", operation);
-                    break;
-            }
-        }
-        LOG.traceExit();
-    }
-
-    /**
-     * Loads the application related to a group with a name
+     * Loads the application
      *
      * @param appName application name
      * @return the application or null if the application is not defined in the
@@ -372,9 +290,7 @@ public final class RoleAuthorizer implements Observer {
                     isFound = true;
                 }                
             }
-        }
-        
-
+        }       
         return LOG.traceExit(searchedApp);
     }
 

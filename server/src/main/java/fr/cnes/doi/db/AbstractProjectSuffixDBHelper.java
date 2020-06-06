@@ -23,7 +23,6 @@ import fr.cnes.doi.db.model.DOIUser;
 import fr.cnes.doi.exception.DOIDbException;
 import fr.cnes.doi.utils.spec.Requirement;
 import java.util.List;
-import java.util.Observable;
 
 /**
  * Interface for handling the project suffix database.
@@ -31,22 +30,7 @@ import java.util.Observable;
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 @Requirement(reqId = Requirement.DOI_INTER_030, reqName = Requirement.DOI_INTER_030_NAME)
-public abstract class AbstractProjectSuffixDBHelper extends Observable {
-
-    /**
-     * Notification message when the record is added {@value #ADD_RECORD}.
-     */
-    public static final String ADD_RECORD = "ADD";
-
-    /**
-     * Notification message when the record is added {@value #DELETE_RECORD}.
-     */
-    public static final String DELETE_RECORD = "DELETE";
-
-    /**
-     * Notification message when the record is added {@value #RENAME_RECORD}.
-     */
-    public static final String RENAME_RECORD = "RENAME";
+public abstract class AbstractProjectSuffixDBHelper {
 
     /**
      * Adds a suffix project in the database.
