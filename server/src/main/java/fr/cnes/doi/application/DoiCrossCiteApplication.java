@@ -163,8 +163,16 @@ public final class DoiCrossCiteApplication extends AbstractApplication {
         LOG.traceEntry();
 
         final Filter logContext = new Filter() {
-            @Override
-            protected int beforeHandle(Request request, Response response) {
+            /**
+             * Get the IP client from proxy (if there is one) and set it in
+             * the header.
+             * 
+             * @param request request
+             * @param response response
+             * @return 0
+             */            
+            @Override            
+            protected int beforeHandle(final Request request, final Response response) {
                 final ClientInfo clientInfo = request.getClientInfo();
                 final String ipAddress = request.getHeaders().getFirstValue(
                         Consts.PROXIFIED_IP, clientInfo.getUpstreamAddress()

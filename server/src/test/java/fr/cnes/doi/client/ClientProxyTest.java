@@ -48,6 +48,7 @@ public class ClientProxyTest {
 
     /**
      * Init the settings
+     * @throws fr.cnes.doi.exception.ClientMdsException
      */    
     @BeforeClass
     public static void setUpClass() throws ClientMdsException {

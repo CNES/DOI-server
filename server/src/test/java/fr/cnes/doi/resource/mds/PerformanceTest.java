@@ -71,7 +71,6 @@ import fr.cnes.doi.MdsSpec;
 import fr.cnes.doi.UnitTest;
 import fr.cnes.doi.client.ClientProxyTest;
 import fr.cnes.doi.exception.ClientMdsException;
-import fr.cnes.doi.plugin.impl.db.DefaultLDAPImpl;
 import fr.cnes.doi.security.UtilsHeader;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;

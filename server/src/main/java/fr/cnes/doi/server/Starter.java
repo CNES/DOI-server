@@ -43,7 +43,6 @@ import fr.cnes.doi.utils.spec.Requirement;
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 import java.nio.charset.Charset;
-import java.util.logging.Level;
 
 /**
  * DOI server

@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
 import fr.cnes.doi.client.ClientProxyTest;
 import fr.cnes.doi.security.UtilsCryptography;
 import fr.cnes.doi.settings.DoiSettings;
-import java.util.logging.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

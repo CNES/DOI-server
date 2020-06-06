@@ -122,6 +122,7 @@ public class UniqueProjectNameTest {
 
     /**
      * Test method for {@link fr.cnes.doi.utils.UniqueProjectName#getShortName}
+     * @throws fr.cnes.doi.exception.DOIDbException
      */
     @Test
     public void testGetShortName() throws DOIDbException {
@@ -135,6 +136,7 @@ public class UniqueProjectNameTest {
 
     /**
      * Test method for {@link fr.cnes.doi.utils.UniqueProjectName#getShortName}
+     * @throws fr.cnes.doi.exception.DOIDbException
      */
     @Test
     public void testGetShortNameWithLongName() throws DOIDbException {

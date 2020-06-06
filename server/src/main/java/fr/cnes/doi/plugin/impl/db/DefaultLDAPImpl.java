@@ -167,7 +167,7 @@ public final class DefaultLDAPImpl extends AbstractAuthenticationPluginHelper {
     @Override
     public void initConnection() throws DoiRuntimeException {
         try {
-            InitialLdapContext context = getContext();
+            final InitialLdapContext context = getContext();
             if (context == null) {
                 throw new DoiRuntimeException("LDAPAccessImpl: Unable to connect to Ldap");
             } else {

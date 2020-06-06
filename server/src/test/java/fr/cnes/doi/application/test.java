@@ -85,6 +85,7 @@ public class test {
     /**
      * Test of the API description with a HTTP server, of class AdminApplication.
      * @throws java.io.IOException - if OutOfMemoryErrors
+     * @throws java.lang.InterruptedException
      */
     @Test
     @Ignore

@@ -19,7 +19,6 @@
 package fr.cnes.doi.plugin;
 
 import fr.cnes.doi.exception.DoiRuntimeException;
-import fr.cnes.doi.security.RoleAuthorizer;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.utils.spec.Requirement;
 import java.lang.reflect.InvocationTargetException;

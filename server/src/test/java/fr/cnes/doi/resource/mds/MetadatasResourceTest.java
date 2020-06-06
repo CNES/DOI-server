@@ -149,6 +149,7 @@ public class MetadatasResourceTest {
     /**
      * Test of createMetadata method through HTTPS server, of class MetadatasResource.
      * A SUCCESS_CREATED status is expected.
+     * @throws java.io.IOException
      */
     @Test
     public void testCreateMetadataHttpsAsNonAdminWithWrongProjectDOIWithToken() throws IOException {
@@ -158,6 +159,7 @@ public class MetadatasResourceTest {
     /**
      * Test of createMetadata method through HTTPS server, of class MetadatasResource.
      * A SUCCESS_CREATED status is expected.
+     * @throws java.io.IOException
      */
     @Test
     public void testCreateMetadataHttpsAsNonAdminWithWrongUserWithToken() throws IOException {
@@ -167,6 +169,7 @@ public class MetadatasResourceTest {
     /**
      * Test of createMetadata method through HTTPS server, of class MetadatasResource.
      * A SUCCESS_CREATED status is expected.
+     * @throws java.io.IOException
      */
     @Test
     public void testCreateMetadataHttpsAsNonAdminWithToken() throws IOException {
@@ -176,6 +179,7 @@ public class MetadatasResourceTest {
     /**
      * Test of createMetadata method through HTTPS server, of class MetadatasResource.
      * A SUCCESS_CREATED status is expected.
+     * @throws java.io.IOException
      */
     @Test
     public void testCreateMetadataHttpsWithToken() throws IOException {
@@ -186,6 +190,7 @@ public class MetadatasResourceTest {
      * Test of createMetadata method through HTTPS server, of class MetadatasResource.
      * A CLIENT_ERROR_BAD_REQUEST status is expected because the metadata file is not valid.
      * The file is validated at the DOIServer level then DataCite is not requested.
+     * @throws java.io.IOException
      */    
     @Test
     public void testCreateMetadataHttpsWithWrongFileWithToken() throws IOException {
@@ -197,6 +202,7 @@ public class MetadatasResourceTest {
      * Test of createMetadata method through HTTPS server with no role, of class MetadatasResource.
      * A CLIENT_ERROR_UNAUTHORIZED is expected because the user is not related to a project then he
      * is not allowed to create a metadata.
+     * @throws java.io.IOException
      */
     @Test
     public void testCreateMetadataHttpsWithNoRoleWithToken() throws IOException {
@@ -206,6 +212,7 @@ public class MetadatasResourceTest {
     /**
      * Test of createMetadata method through HTTPS server, of class MetadatasResource.
      * A SUCCESS_CREATED status is expected.
+     * @throws java.io.IOException
      */
     @Test
     public void testCreateMetadataHttpsAsNonAdminWithNonAllowProject() throws IOException {
@@ -215,6 +222,7 @@ public class MetadatasResourceTest {
     /**
      * Test of createMetadata method through HTTPS server, of class MetadatasResource.
      * A SUCCESS_CREATED status is expected.
+     * @throws java.io.IOException
      */
     @Test
     public void testCreateMetadataHttpsAsNonAdminWithWrongProjectDOI() throws IOException {
@@ -224,6 +232,7 @@ public class MetadatasResourceTest {
     /**
      * Test of createMetadata method through HTTPS server, of class MetadatasResource.
      * A SUCCESS_CREATED status is expected.
+     * @throws java.io.IOException
      */
     @Test
     public void testCreateMetadataHttpsAsNonAdminWithWrongUser() throws IOException {
@@ -233,6 +242,7 @@ public class MetadatasResourceTest {
     /**
      * Test of createMetadata method through HTTPS server, of class MetadatasResource.
      * A SUCCESS_CREATED status is expected.
+     * @throws java.io.IOException
      */
     @Test
     public void testCreateMetadataHttpsAsNonAdmin() throws IOException {
@@ -242,6 +252,7 @@ public class MetadatasResourceTest {
     /**
      * Test of createMetadata method through HTTPS server, of class MetadatasResource.
      * A SUCCESS_CREATED status is expected.
+     * @throws java.io.IOException
      */
     @Test
     public void testCreateMetadataHttps() throws IOException {
@@ -252,6 +263,7 @@ public class MetadatasResourceTest {
      * Test of createMetadata method through HTTPS server, of class MetadatasResource.
      * A CLIENT_ERROR_BAD_REQUEST status is expected because the metadata file is not valid.
      * The file is validated at the DOIServer level then DataCite is not requested.
+     * @throws java.io.IOException
      */    
     @Test
     public void testCreateMetadataHttpsWithWrongFile() throws IOException {
@@ -263,6 +275,7 @@ public class MetadatasResourceTest {
      * Test of createMetadata method through HTTPS server with no role, of class MetadatasResource.
      * A CLIENT_ERROR_UNAUTHORIZED is expected because the user is not related to a project then he
      * is not allowed to create a metadata.
+     * @throws java.io.IOException
      */
     @Test
     public void testCreateMetadataHttpsWithNoRole() throws IOException {
@@ -275,6 +288,7 @@ public class MetadatasResourceTest {
      * A CLIENT_ERROR_CONFLICT is expected because the user is related to several project and no 
      * role is provided then the DOIServer does not know which role must be applied. No request is 
      * done to DataCite
+     * @throws java.io.IOException
      */    
     @Test
     public void testCreateMetadataHttpsWithConflict() throws IOException {

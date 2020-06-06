@@ -382,8 +382,16 @@ public final class AdminApplication extends AbstractApplication {
         LOG.traceEntry();
         
         final Filter logContext = new Filter() {
+            /**
+             * Get the IP client from proxy (if there is one) and set it in
+             * the header.
+             * 
+             * @param request request
+             * @param response response
+             * @return 0
+             */
             @Override
-            protected int beforeHandle(Request request, Response response) {
+            protected int beforeHandle(final Request request, final Response response) {
                 final ClientInfo clientInfo = request.getClientInfo();
                 final String ipAddress = request.getHeaders().getFirstValue(
                         Consts.PROXIFIED_IP, clientInfo.getUpstreamAddress()
