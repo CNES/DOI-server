@@ -6,3 +6,4 @@ server/it/**
 server/test/**
 server/site/**
 server/src/main/resources/ihm/**
+server/src/main/java/org/**
