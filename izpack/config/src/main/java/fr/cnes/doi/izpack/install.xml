@@ -149,8 +149,8 @@
         </pack>    
         <pack name="JavaDoiApiClient" preselected="no" required="no" parent="Clients">
             <description>This package installs the JAVA client</description>            
-            <file override="true" src="javaClient/fr.cnes.doi.client-1.0.3.jar" targetdir="$INSTALL_PATH/javaClient" unpack="false" />
-            <file override="true" src="javaClient/fr.cnes.doi.client-1.0.3-sources.jar" targetdir="$INSTALL_PATH/javaClient" unpack="false" />
+            <file override="true" src="javaClient/fr.cnes.doi.client-1.0.4.jar" targetdir="$INSTALL_PATH/javaClient" unpack="false" />
+            <file override="true" src="javaClient/fr.cnes.doi.client-1.0.4-sources.jar" targetdir="$INSTALL_PATH/javaClient" unpack="false" />
         </pack> 
     
         
