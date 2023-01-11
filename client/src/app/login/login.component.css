@@ -1,0 +1,39 @@
+.main-div mat-card {
+    padding: 0px;
+}
+
+.login-form {
+    padding: 20px;
+}
+
+.logoDoi {
+    background-image: url(../../assets/logo_doi_login.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    position: relative;
+    height: 100px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+
+.logoCnes {
+    background-image: url(../../assets/logo_cnes_footer.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    position: relative;
+    height: 140px;
+    margin-top: 10px;
+    margin-bottom: 30px;
+  }
+
+.span {
+    margin: auto !important;
+}
+
+button {
+    transition: 0.3s;
+    color: white !important;
+    background-color: #004e90 !important;
+  }

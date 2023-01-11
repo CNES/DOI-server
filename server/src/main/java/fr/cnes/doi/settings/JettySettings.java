@@ -21,6 +21,8 @@ package fr.cnes.doi.settings;
 import fr.cnes.doi.utils.spec.Requirement;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.jetty.server.ConnectionFactory;
+import org.eclipse.jetty.server.HttpConfiguration;
 import org.restlet.Server;
 import org.restlet.data.Parameter;
 import org.restlet.ext.jetty.JettyServerHelper;
@@ -567,4 +569,10 @@ public final class JettySettings extends JettyServerHelper {
         }
         LOG.traceExit();
     }
+
+	@Override
+	protected ConnectionFactory[] createConnectionFactories(HttpConfiguration configuration) {
+		//TODO To override if necessary
+		return null;
+	}
 }

@@ -1,0 +1,3 @@
+<p class="m-3"*ngFor="let alert of alerts">
+    <ngb-alert [type]="alert.type" (closed)="closeAlert(alert)">{{ alert.message }}</ngb-alert>
+</p>

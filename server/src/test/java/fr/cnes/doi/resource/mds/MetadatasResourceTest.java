@@ -372,7 +372,7 @@ public class MetadatasResourceTest {
         client = new ClientResource("https://localhost:" + port + METADATA_SERVICE);
         client.setNext(cl);
         ChallengeResponse cr = new ChallengeResponse(ChallengeScheme.HTTP_OAUTH_BEARER);
-        cr.setRawValue(token);
+        cr.setRawValue(token.substring(1, token.length()-1));
         client.setChallengeResponse(cr);
         final String RESTLET_HTTP_HEADERS = "org.restlet.http.headers";
         Map<String, Object> reqAttribs = client.getRequestAttributes();

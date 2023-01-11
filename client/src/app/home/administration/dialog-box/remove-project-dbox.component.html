@@ -1,0 +1,6 @@
+<h1 mat-dialog-title><strong>Suppression d'un projet</strong></h1>
+Êtes vous sûr de vouloir supprimer le projet {{local_project.projectname}} ? 
+<div mat-dialog-actions class="m-3" fxLayoutAlign="end">
+    <button mat-button mat-flat-button color="primary" (click)="closeDialog()">Annuler</button>
+    <button mat-button  mat-flat-button color="primary" (click)="doAction()">Suprimer</button>
+</div>

@@ -140,25 +140,6 @@ public class SuffixProjectsResourceTest {
     }
 
     /**
-     * Test of getProjectsNameAsXml method, of class SuffixProjectsResource.
-     *
-     * @throws java.io.IOException
-     *             - if OutOfMemoryErrors
-     */
-    @Test
-    public void testGetProjectsNameAsXml() throws IOException {
-	String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-	ClientResource client = new ClientResource("https://localhost:" + port + "/admin/projects");
-	client.setNext(cl);
-	client.setChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin", "admin");
-	Representation response = client.get(MediaType.APPLICATION_XML);
-	String projects = response.getText();
-	client.release();
-	assertNotNull("Test if the response is not null", projects);
-	assertTrue("Test is the response is in XML format", projects.contains("<CFOSAT>"));
-    }
-
-    /**
      * Test of createProject method, of class SuffixProjectsResource. This method is
      * used to create a short DOI suffix given for a specific project.
      *

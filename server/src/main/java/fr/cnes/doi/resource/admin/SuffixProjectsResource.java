@@ -18,7 +18,7 @@
  */
 package fr.cnes.doi.resource.admin;
 
-import java.util.Map;
+import java.util.List;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
@@ -36,14 +36,15 @@ import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import fr.cnes.doi.application.AdminApplication;
 import fr.cnes.doi.db.model.DOIProject;
 import fr.cnes.doi.exception.DOIDbException;
 import fr.cnes.doi.resource.AbstractResource;
 import fr.cnes.doi.utils.UniqueProjectName;
 import fr.cnes.doi.utils.spec.Requirement;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Provides a unique identifier to the project. This identifier is used as part
@@ -105,8 +106,8 @@ public class SuffixProjectsResource extends AbstractResource {
      * @return the list of projects as Json or xml format
      */
     @Requirement(reqId = Requirement.DOI_SRV_140, reqName = Requirement.DOI_SRV_140_NAME)
-    @Get("json|xml")
-    public Map<String, Integer> getProjectsNameAsJson() {
+    @Get("json")
+    public String getProjectsNameAsJson() {
         LOG.traceEntry();
         try {
             final List<DOIProject> projects;
@@ -115,12 +116,17 @@ public class SuffixProjectsResource extends AbstractResource {
             } else {
                 projects = UniqueProjectName.getInstance().getProjectsFromUser(this.userName);
             }
-            return projects.stream().collect(
-                    Collectors.toMap(DOIProject::getProjectname, DOIProject::getSuffix));
+
+            ObjectMapper mapper = new ObjectMapper();
+
+            return mapper.writeValueAsString(projects);
+
         } catch (DOIDbException ex) {
             throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST,
                     this.userName + " already exists");
-        }
+        } catch (JsonProcessingException e) {
+        	throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST);
+		}
     }
 
     /**

@@ -30,7 +30,7 @@ import org.junit.runners.Suite;
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({fr.cnes.doi.resource.admin.IhmTest.class, fr.cnes.doi.resource.admin.ServicesTest.class, fr.cnes.doi.resource.admin.SuffixProjectsResourceTest.class, fr.cnes.doi.resource.admin.TokenResourceTest.class})
+@Suite.SuiteClasses({fr.cnes.doi.resource.admin.IhmTest.class, fr.cnes.doi.resource.admin.SuffixProjectsResourceTest.class, fr.cnes.doi.resource.admin.TokenResourceTest.class})
 public class AdminSuite {
 
     @BeforeClass

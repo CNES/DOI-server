@@ -152,40 +152,6 @@ public class MetadataResourceTest {
 
         mdsServerStub.verifySpec(MdsSpec.Spec.GET_METADATA_200);
     }
-    
-    /**
-     * Test of getMetadata method throw a HTTPS server with a Json response, of
-     * class MetadataResource. Status.SUCCESS_OK is expected when the metadata
-     * is available whereas a Status.CLIENT_ERROR_GONE is expected when the
-     * metadata is deleted.
-     *
-     * @throws java.io.IOException - if OutOfMemoryErrors
-     * @throws javax.xml.bind.JAXBException - if a parsing problem occurs
-     * @throws org.xml.sax.SAXException - if a parsing problem occurs
-     */
-    @Test
-    public void testGetMetadataAsJson() throws IOException, JAXBException, SAXException {
-        mdsServerStub.createSpec(MdsSpec.Spec.GET_METADATA_200);
-    
-        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-        ClientResource client = new ClientResource("https://localhost:" + port + METADATA_SERVICE + MdsSpec.Spec.GET_METADATA_200.getTemplatePath());
-        client.setNext(cl);
-        int code;
-        String result;
-        try {
-            Representation rep = client.get(MediaType.APPLICATION_JSON);
-            result = rep.getText();
-            code = client.getStatus().getCode();
-        } catch (ResourceException ex) {
-            code = ex.getStatus().getCode();
-            result = "";
-        }
-        client.release();
-        assertTrue(MdsSpec.Spec.GET_METADATA_200.getStatus() == code);
-        assertTrue(result.contains("{") || result.isEmpty());
-        
-        mdsServerStub.verifySpec(MdsSpec.Spec.GET_METADATA_200);
-    }
 
     /**
      * Test of getMetadata method with a wrong DOI through a HTTPS server, of

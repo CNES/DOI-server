@@ -35,12 +35,16 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import fr.cnes.doi.exception.AuthenticationAccessException;
+import fr.cnes.doi.db.IAuthenticationDBHelper;
 import fr.cnes.doi.db.model.AuthSystemUser;
 import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.utils.Utils;
 import fr.cnes.doi.plugin.AbstractAuthenticationPluginHelper;
+import fr.cnes.doi.plugin.PluginFactory;
+import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Implementation of the LDAP.
@@ -533,4 +537,21 @@ public final class DefaultLDAPImpl extends AbstractAuthenticationPluginHelper {
     public boolean isConfigured() {
         return this.configured;
     }
+    
+    /**
+     * FOR TESTING
+     * @param args
+     */
+    public static void main(String[] args) {
+    	
+    	ConcurrentHashMap<String, String> settings = new ConcurrentHashMap<>();
+    	settings.put(Consts.PLUGIN_USER_GROUP_MGT, "fr.cnes.doi.plugin.impl.db.DefaultUserRoleImpl");
+    	settings.put(Consts.PLUGIN_PROJECT_SUFFIX, "fr.cnes.doi.plugin.impl.db.DefaultProjectSuffixImpl");
+    	settings.put(Consts.PLUGIN_TOKEN, "fr.cnes.doi.plugin.impl.db.DefaultTokenImpl");
+    	settings.put(Consts.PLUGIN_AUTHENTICATION, "fr.cnes.doi.plugin.impl.db.DefaultLDAPImpl");
+    	
+    	PluginFactory.init(settings);
+    	PluginFactory.getAuthenticationSystem();
+
+	}
 }

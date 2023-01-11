@@ -18,11 +18,6 @@
  */
 package fr.cnes.doi.client;
 
-import static fr.cnes.doi.client.ClientMDS.METADATA_RESOURCE;
-import fr.cnes.doi.exception.ClientMdsException;
-import fr.cnes.doi.settings.DoiSettings;
-import fr.cnes.doi.utils.Utils;
-import fr.cnes.doi.utils.spec.Requirement;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
@@ -33,12 +28,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
-import javax.xml.XMLConstants;
+
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.ValidationEvent;
 import javax.xml.bind.ValidationEventHandler;
 import javax.xml.bind.ValidationException;
-import javax.xml.validation.SchemaFactory;
+
 import org.datacite.schema.kernel_4.Resource;
 import org.datacite.schema.kernel_4.Resource.Identifier;
 import org.restlet.data.ChallengeScheme;
@@ -53,6 +48,10 @@ import org.restlet.ext.jaxb.JaxbRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ResourceException;
+
+import fr.cnes.doi.exception.ClientMdsException;
+import fr.cnes.doi.utils.Utils;
+import fr.cnes.doi.utils.spec.Requirement;
 
 /**
  * Client to query Metadata store service at
@@ -88,6 +87,11 @@ public class ClientMDS extends BaseClient {
      * Metadata resource {@value #METADATA_RESOURCE}.
      */
     public static final String METADATA_RESOURCE = "metadata";
+    
+    /**
+     * Metadata resource {@value #INIST_RESOURCE}.
+     */
+    public static final String INIST_RESOURCE = "inist";
 
     /**
      * Media resource {@value #MEDIA_RESOURCE}.
@@ -117,19 +121,7 @@ public class ClientMDS extends BaseClient {
     /**
      * Default XML schema for Datacite: {@value #SCHEMA_DATACITE}
      */
-    public static final String SCHEMA_DATACITE = "https://schema.datacite.org/meta/kernel-4-1/metadata.xsd";
-
-    /**
-     * SCHEMA_FACTORY.
-     */
-    private static final SchemaFactory SCHEMA_FACTORY = SchemaFactory.newInstance(
-            XMLConstants.W3C_XML_SCHEMA_NS_URI
-    );
-
-    /**
-     * Loads DOI settings.
-     */
-    private static final DoiSettings DOI_SETTINGS = DoiSettings.getInstance();
+    public static final String SCHEMA_DATACITE = "https://schema.datacite.org/meta/kernel-4-4/metadata.xsd";
 
     /**
      * DataCite recommends that only the following characters are used within a

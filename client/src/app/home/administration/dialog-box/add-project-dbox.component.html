@@ -1,0 +1,11 @@
+<h1 mat-dialog-title><strong>Création d'un nouveau projet</strong></h1>
+<div mat-dialog-actions class="m-1" fxLayoutAlign="start">
+    <mat-form-field fxFlex="100">
+        <mat-label>Nom</mat-label>
+        <input matInput [(ngModel)]="local_newName">
+    </mat-form-field>
+</div>
+<div mat-dialog-actions class="m-1" fxLayoutAlign="end">
+    <button mat-button mat-flat-button color="primary" (click)="closeDialog()">Annuler</button>
+    <button mat-button mat-flat-button color="primary" (click)="doAction()" [disabled]="local_newName === ''">Créer</button>
+</div>

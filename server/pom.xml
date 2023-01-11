@@ -36,7 +36,7 @@
     <parent>
         <artifactId>DOI</artifactId>
         <groupId>fr.cnes.doi</groupId>
-        <version>1.0.5</version>
+        <version>1.1.7</version>
     </parent>
         
     <artifactId>DOI-server</artifactId>
@@ -68,7 +68,9 @@
     </repositories>   
      
     <properties>
-        <restlet-version>3.0-M1</restlet-version>
+        <jetty-version>9.4.44.v20210927</jetty-version>
+        <restlet-version>2.4.0</restlet-version>
+		<log4j-version>2.17.1</log4j-version>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <skip.unit.tests>false</skip.unit.tests>
         <skip.integration.tests>true</skip.integration.tests>
@@ -119,6 +121,8 @@
                     <include> **/*.css </include>
                     <include> **/*.html </include>
                     <include> **/*.js </include>
+					<include> **/*.map </include>
+					<include> **/*.json </include>
                     <include> **/*.txt </include>
                     <include> **/*.xsd </include>
                     <include> **/*.sh </include>
@@ -133,7 +137,39 @@
                 </includes>
             </resource>                    
         </resources>               
-        <plugins>  
+        <plugins>
+	       <plugin>
+	           <artifactId>maven-resources-plugin</artifactId>
+			   <version>3.2.0</version>
+	            <executions>
+	               <execution>
+	                   <id>copy-angular-ihm</id>
+	                   <phase>validate</phase>
+	                   <goals><goal>copy-resources</goal></goals>
+	                   <configuration>
+	                       <outputDirectory>${project.build.directory}/classes/ihm/</outputDirectory>
+	                       <resources>
+	                           <resource>
+	                               <directory>${project.parent.basedir}/client/dist/DOI-client/</directory>
+	                           </resource>
+	                       </resources>
+	                   </configuration>
+	               </execution>
+	               <execution>
+	                   <id>copy-datacite-xsd</id>
+	                   <phase>validate</phase>
+	                   <goals><goal>copy-resources</goal></goals>
+	                   <configuration>
+	                       <outputDirectory>${project.build.directory}/classes/xsd/</outputDirectory>
+	                       <resources>
+	                           <resource>
+	                               <directory>${project.parent.basedir}/server/xsd/</directory>
+	                           </resource>
+	                       </resources>
+	                   </configuration>
+	               </execution>
+	           </executions>
+	       </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>sql-maven-plugin</artifactId>
@@ -144,7 +180,7 @@
                     <dependency>
                         <groupId>org.postgresql</groupId>
                         <artifactId>postgresql</artifactId>
-                        <version>42.2.8</version>
+                        <version>42.2.25</version>
                     </dependency>
                 </dependencies>
 
@@ -509,8 +545,48 @@
                 </executions>
             </plugin>                                                                    
         </plugins>
+        <pluginManagement>
+        	<plugins>
+        		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+        		<plugin>
+        			<groupId>org.eclipse.m2e</groupId>
+        			<artifactId>lifecycle-mapping</artifactId>
+        			<version>1.0.0</version>
+        			<configuration>
+        				<lifecycleMappingMetadata>
+        					<pluginExecutions>
+        						<pluginExecution>
+        							<pluginExecutionFilter>
+        								<groupId>
+        									org.codehaus.mojo
+        								</groupId>
+        								<artifactId>
+        									sql-maven-plugin
+        								</artifactId>
+        								<versionRange>
+        									[1.5,)
+        								</versionRange>
+        								<goals>
+        									<goal>execute</goal>
+        								</goals>
+        							</pluginExecutionFilter>
+        							<action>
+        								<ignore></ignore>
+        							</action>
+        						</pluginExecution>
+        					</pluginExecutions>
+        				</lifecycleMappingMetadata>
+        			</configuration>
+        		</plugin>
+        	</plugins>
+        </pluginManagement>
     </build>
-    <dependencies>    
+    <dependencies>
+        <dependency>
+            <groupId>fr.cnes.doi</groupId>
+            <artifactId>client</artifactId>
+            <version>1.1.7</version>             
+        </dependency>     
         <dependency>
             <groupId>fr.cnes.jproxy</groupId>
             <artifactId>jproxy</artifactId>
@@ -584,7 +660,91 @@
             <groupId>org.restlet.jee</groupId>
             <artifactId>org.restlet.ext.jaxb</artifactId>
             <version>${restlet-version}</version>
-        </dependency>      
+        </dependency>  
+        
+        
+                  
+        
+<!--         <dependency> -->
+<!-- 			<groupId>org.eclipse.jetty.websocket</groupId> -->
+<!-- 			<artifactId>websocket-client</artifactId> -->
+<!-- 			<version>${jetty-version}</version> -->
+<!-- 		</dependency>         -->
+<!--         <dependency> -->
+<!-- 			<groupId>org.eclipse.jetty</groupId> -->
+<!-- 			<artifactId>jetty-webapp</artifactId> -->
+<!-- 			<version>${jetty-version}</version> -->
+<!-- 		</dependency>   -->
+<!--         <dependency> -->
+<!-- 			<groupId>org.eclipse.jetty</groupId> -->
+<!-- 			<artifactId>jetty-xml</artifactId> -->
+<!-- 			<version>${jetty-version}</version> -->
+<!-- 		</dependency> -->
+<!--         <dependency> -->
+<!-- 			<groupId>org.eclipse.jetty</groupId> -->
+<!-- 			<artifactId>jetty-servlet</artifactId> -->
+<!-- 			<version>${jetty-version}</version> -->
+<!-- 		</dependency> -->
+<!--         <dependency> -->
+<!-- 			<groupId>org.eclipse.jetty</groupId> -->
+<!-- 			<artifactId>jetty-security</artifactId> -->
+<!-- 			<version>${jetty-version}</version> -->
+<!-- 		</dependency>    -->
+<!--         <dependency> -->
+<!-- 			<groupId>org.eclipse.jetty</groupId> -->
+<!-- 			<artifactId>jetty-servlets</artifactId> -->
+<!-- 			<version>${jetty-version}</version> -->
+<!-- 		</dependency>    -->
+<!--         <dependency> -->
+<!-- 			<groupId>org.eclipse.jetty</groupId> -->
+<!-- 			<artifactId>jetty-continuation</artifactId> -->
+<!-- 			<version>${jetty-version}</version> -->
+<!-- 		</dependency>    -->
+<!--         <dependency> -->
+<!-- 			<groupId>org.eclipse.jetty</groupId> -->
+<!-- 			<artifactId>jetty-annotations</artifactId> -->
+<!-- 			<version>${jetty-version}</version> -->
+<!-- 		</dependency>       -->
+<!--         <dependency> -->
+<!-- 			<groupId>org.eclipse.jetty</groupId> -->
+<!-- 			<artifactId>jetty-plus</artifactId> -->
+<!-- 			<version>${jetty-version}</version> -->
+<!-- 		</dependency> -->
+        
+        
+        
+        
+        
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-alpn-client</artifactId>
+			<version>${jetty-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-client</artifactId>
+			<version>${jetty-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-http</artifactId>
+			<version>${jetty-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-server</artifactId>
+			<version>${jetty-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-io</artifactId>
+			<version>${jetty-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-util</artifactId>
+			<version>${jetty-version}</version>
+		</dependency>
         <dependency>
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>
@@ -615,18 +775,18 @@
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
-            <version>2.12.1</version>
+            <version>${log4j-version}</version>
         </dependency>         
         <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
-            <version>2.12.1</version>
+            <version>${log4j-version}</version>
         </dependency>     
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-jul</artifactId>
-            <version>2.12.1</version>
+            <version>${log4j-version}</version>
         </dependency>
                     
         <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-surefire-report-plugin -->
@@ -641,12 +801,18 @@
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>cobertura-maven-plugin</artifactId>
             <version>2.7</version>
-            <scope>test</scope>            
+            <scope>test</scope>
+		    <exclusions>
+		        <exclusion>
+		            <artifactId>tools</artifactId>
+		            <groupId>com.sun</groupId>
+		        </exclusion>
+		    </exclusions>
         </dependency>   
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.2.9</version>
+            <version>42.2.25</version>
         </dependency>
         <dependency>
             <groupId>commons-dbcp</groupId>

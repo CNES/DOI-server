@@ -36,10 +36,14 @@ import fr.cnes.doi.settings.EmailSettings;
 import fr.cnes.doi.utils.spec.Requirement;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
+
+import java.io.IOException;
 import java.util.List;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
+import org.restlet.data.CharacterSet;
 import org.restlet.data.Form;
+import org.restlet.data.Language;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
 import org.restlet.data.Status;
@@ -49,16 +53,20 @@ import org.restlet.ext.wadl.MethodInfo;
 import org.restlet.ext.wadl.ParameterStyle;
 import org.restlet.ext.wadl.RepresentationInfo;
 import org.restlet.representation.Representation;
+import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Delete;
 import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Provides a resource to create token and to decrypt token
  *
  * @author Jean-Christophe Malapert (jean-christophe.malapert@cnes.fr)
  */
+@SuppressWarnings("deprecation")
 @Requirement(reqId = Requirement.DOI_INTER_040, reqName = Requirement.DOI_INTER_040_NAME)
 public class TokenResource extends AbstractResource {
 
@@ -131,7 +139,7 @@ public class TokenResource extends AbstractResource {
      */
     @Requirement(reqId = Requirement.DOI_SRV_150, reqName = Requirement.DOI_SRV_150_NAME)
     @Post
-    public String createToken(final Form infoForm) {
+    public Representation createToken(final Form infoForm) {
         LOG.traceEntry("Paramater : {}", infoForm);
         final Form info = (infoForm == null) ? new Form() : infoForm;
         try {
@@ -183,10 +191,15 @@ public class TokenResource extends AbstractResource {
                 sendTokenToUser(user, userID, tokenJwt, amount, timeUnit);
             }
 
-            return LOG.traceExit(tokenJwt);
+            ObjectMapper mapper = new ObjectMapper();
+
+            return new StringRepresentation(LOG.traceExit(mapper.writeValueAsString(tokenJwt)),
+    				MediaType.APPLICATION_JSON, Language.ENGLISH, CharacterSet.UTF_8);
         } catch (TokenSecurityException ex) {
             throw LOG.throwing(Level.INFO, new ResourceException(ex.getStatus(), ex.getMessage(),
                     ex));
+        } catch (IOException e) {
+            throw LOG.throwing(Level.INFO, new ResourceException(e));
         }
     }
 

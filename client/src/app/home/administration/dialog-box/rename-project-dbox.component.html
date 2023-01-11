@@ -1,0 +1,11 @@
+<h1 mat-dialog-title><strong>Renommage d'un projet</strong></h1>
+<div mat-dialog-actions class="m-1" fxLayoutAlign="start">
+    <mat-form-field fxFlex="100">
+        <mat-label>Nouveau nom</mat-label>
+        <input matInput [(ngModel)]="local_newName">
+    </mat-form-field>
+</div>
+<div mat-dialog-actions class="m-3" fxLayoutAlign="end">
+    <button mat-button (click)="closeDialog()" mat-flat-button color="warn">Annuler</button>
+    <button mat-button (click)="doAction()" [disabled]="local_newName === ''" mat-flat-button color="primary">Renommer</button>
+</div>

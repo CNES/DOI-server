@@ -50,7 +50,7 @@ public abstract class AbstractResource extends WadlServerResource {
     /**
      * Logger.
      */
-    private volatile Logger LOG;
+	private volatile Logger LOG;
 
     /**
      * Init
@@ -300,5 +300,4 @@ public abstract class AbstractResource extends WadlServerResource {
         repInfo.setDocumentation(docInfo);
         return repInfo;
     }
-
 }

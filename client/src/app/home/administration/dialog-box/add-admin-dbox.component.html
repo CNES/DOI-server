@@ -1,0 +1,15 @@
+<h1 mat-dialog-title><strong>Ajout du rôle administateur à un utilisateur</strong></h1>
+<mat-label>Utilisateurs de DOI n'étant pas encore administrateur</mat-label>
+<br>
+<br>
+<mat-select [(value)]="local_selected_user" (selectionChange)="changeSelectedUser($event)">
+  <mat-option *ngFor="let user of local_users" [value]="user">
+    {{user.name}}
+  </mat-option>
+</mat-select>
+<br>
+<br>
+<div mat-dialog-actions class="m-1" fxLayoutAlign="end">
+    <button mat-button mat-flat-button color="primary" (click)="closeDialog()" >Annuler</button>
+    <button mat-button mat-flat-button color="primary" (click)="doAction()">Ajouter</button>
+</div>

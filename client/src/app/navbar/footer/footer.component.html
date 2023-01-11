@@ -1,0 +1,22 @@
+<div class="basic-container">
+  <div fxLayout="row" fxLayoutAlign="space-between">
+    <div fxLayoutAlign="start start">
+      <a (click)="changeLogo()" >
+        <img src="assets/logo_cnes_footer.png" class="logo-cnes" />
+      </a>
+      <a class="mx-3" href="https://cnes.fr/" target="_blank">© CNES 2022 - DOI Server 1.1.7</a>
+      <img *ngIf="capLogo" src="assets/logo_capgemini.png" class="logo-cnes"/>
+    </div>
+    <div fxLayoutAlign="end start">
+      <a
+        href="https://editor.swagger.io/?url=https://raw.githubusercontent.com/CNES/DOI-server/master/server/src/site/api.yaml" target="_blank">DOI-server
+        API</a>
+      <div class="mx-3">|</div>
+      <a href="https://status.datacite.org/" target="_blank">Datacite status</a>
+      <div class="mx-3">|</div>
+      <a href="https://stats.datacite.org/" target="_blank">DOI stats</a>
+      <div class="mx-3">|</div>
+      <a href="https://schema.datacite.org/meta/kernel-4.4/" target="_blank">DOI guidelines (v4.4)</a>
+    </div>
+  </div>
+</div>

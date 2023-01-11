@@ -35,7 +35,7 @@ public class RedirectingResource extends AbstractResource {
     @Get
     public Representation doGet() {
         final Reference newRef = new Reference(
-                getRootRef().toString() + AdminApplication.IHM_URI + "/authentication.html");
+                getRootRef().toString() + AdminApplication.IHM_URI + "/index.html");
         redirectSeeOther(newRef);
         return new EmptyRepresentation();
     }

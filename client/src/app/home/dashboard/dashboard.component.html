@@ -1,0 +1,75 @@
+<header>
+  <app-navbar></app-navbar>
+</header>
+
+<main class="basic-container">
+  <mat-card class="m-3 p-0">
+    <!--CARD TITLE-->
+    <mat-toolbar class="card-title">Tableau de bord</mat-toolbar>
+    <!--CARD CONTENT-->
+    <alert></alert>
+    <form [formGroup]="dashboardFormGroup" class="m-3">
+      <!--CURRENT PROJECT-->
+      <div *ngIf="projects.length > 0" fxLayoutAlign="center">
+        <h3 class="h3-title my-3" fxFlex="10">Projet courant :</h3>
+        <mat-form-field appearance="fill" class="mat-form-projects" fxFlex="30">
+          <mat-select class="mat-select-projects" [(value)]="seletectedProject"
+            (selectionChange)="setSelectedProject($event.value)">
+            <mat-option *ngFor="let project of projects" [value]="project">
+              {{project.projectname}} - {{project.suffix}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <!--SORT & ADD BUTTONS-->
+      <div *ngIf="projects.length > 0" fxLayoutAlign="space-between">
+        <div>
+          <button mat-mini-fab matTooltip="Filtrer les DOIs" matTooltipShowDelay="400" color="primary" class="ml-3 mt-3"
+            (click)="setDoiFilter()">
+            <mat-icon>filter_alt</mat-icon>
+          </button>
+          <mat-form-field *ngIf="this.isDoiFilter" appearance="fill" class="mat-form-size" class="ml-3">
+            <mat-label>Filtrer</mat-label>
+            <input matInput formControlName="doiFilter" (input)="updateDoiList()">
+          </mat-form-field>
+        </div>
+        <button mat-mini-fab matTooltip="Créer un DOI" matTooltipShowDelay="400" color="primary" class="mr-3 mt-3"
+          [routerLink]="['/doi-mgmt', {action: 'create', project: seletectedProject.suffix}]">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+      <!--DOIS LIST-->
+      <div>
+        <mat-expansion-panel *ngFor="let doi of doisFiltered" class="m-3" (opened)="panelOpenState = true"
+          (closed)="panelOpenState = false">
+          <mat-expansion-panel-header>
+            {{doi}}
+          </mat-expansion-panel-header>
+          <div fxLayoutAlign="end center">
+            <button mat-mini-fab matTooltip="Citer le DOI" matTooltipShowDelay="400" color="primary" class="ml-3"
+              (click)="setSelectedDoi(doi)" routerLink="/citation">
+              <mat-icon>textsms</mat-icon>
+            </button>
+            <button mat-mini-fab matTooltip="Modifier le DOI" matTooltipShowDelay="400" color="primary" class="ml-3"
+              [routerLink]="['/doi-mgmt', {action: 'edit', project: seletectedProject.suffix, doi: doi}]">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-mini-fab matTooltip="Dupliquer le DOI" matTooltipShowDelay="400" color="primary" class="ml-3"
+              [routerLink]="['/doi-mgmt', {action: 'duplicate', project: seletectedProject.suffix, doi: doi}]">
+              <mat-icon>file_copy</mat-icon>
+            </button>
+            <button mat-mini-fab matTooltip="Désactiver le DOI" matTooltipShowDelay="400" color="primary" class="ml-3"
+              (click)="deactivateDoi(doi)">
+              <mat-icon>block</mat-icon>
+            </button>
+          </div>
+        </mat-expansion-panel>
+      </div>
+    </form>
+    <span class="m-3"></span>
+  </mat-card>
+</main>
+
+<footer>
+  <app-footer></app-footer>
+</footer>

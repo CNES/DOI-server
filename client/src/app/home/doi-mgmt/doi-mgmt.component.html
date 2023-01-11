@@ -1,0 +1,2242 @@
+<header>
+  <app-navbar></app-navbar>
+</header>
+
+<main class="basic-container">
+  <mat-card class="m-3 p-0">
+    <!--CARD TITLE-->
+    <mat-toolbar class="card-title">{{matCardTitle}}</mat-toolbar>
+    <!--CARD CONTENT-->
+    <alert></alert>
+    <!-- Button import metadata -->
+    <div *ngIf="importActivate" fxLayoutAlign="end" class="m-3">
+      <button mat-button mat-flat-button color="primary">
+        <label class="importXmlLabel">Import metadata
+          <input type="file" style="display: none" accept="application/xml" (change)="readXmlFile($event.target)">
+        </label>
+      </button>
+    </div>
+    <div class="m-3">
+      <mat-horizontal-stepper labelPosition="bottom" [linear]="false" #stepper (selectionChange)="makeXml()">
+        <!--START firstFormGroup-->
+        <mat-step [stepControl]="firstFormGroup">
+          <form [formGroup]="firstFormGroup">
+            <ng-template matStepLabel>DOI</ng-template>
+            <!--DOI-->
+            <h3 class="h3-title">Identifiant DOI</h3>
+            <div fxLayoutAlign="space-between">
+              <mat-form-field appearance="fill" fxFlex="32">
+                <mat-label>DOI Prefix</mat-label>
+                <input matInput formControlName="doi_prefix" readonly value="{{this.firstFormGroup.value.doi_prefix}}">
+              </mat-form-field>
+              <mat-form-field appearance="fill" fxFlex="32" class="mx-3">
+                <mat-label>DOI Project</mat-label>
+                <input matInput formControlName="doi_project" readonly
+                  value="{{this.firstFormGroup.value.doi_project}}">
+              </mat-form-field>
+              <mat-form-field appearance="fill" fxFlex="34">
+                <mat-label>DOI Identifier</mat-label>
+                <input matInput formControlName="doi_identifier" placeholder="DOI Identifier"
+                  (ngModelChange)="updateDoiIdentifier()" required>
+                <mat-error *ngFor="let validation of input_validation_messages.doi_identifier">
+                  <mat-error class="error-message"
+                    *ngIf="firstFormGroup?.get('doi_identifier')?.hasError(validation.type) && (firstFormGroup.get('doi_identifier')?.dirty || firstFormGroup.get('doi_identifier')?.touched)">
+                    {{validation.message}}</mat-error>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <!--URL-->
+            <h3 class="h3-title">Page de destination ( Landing Page )</h3>
+            <mat-form-field appearance="fill" fxLayout="column">
+              <mat-label>URL</mat-label>
+              <input matInput formControlName="url" placeholder="Adresse de la page de destination" required>
+              <mat-error *ngFor="let validation of input_validation_messages.url">
+                <mat-error class="error-message"
+                  *ngIf="firstFormGroup?.get('url')?.hasError(validation.type) && (firstFormGroup.get('url')?.dirty || firstFormGroup.get('url')?.touched)">
+                  {{validation.message}}</mat-error>
+              </mat-error>
+            </mat-form-field>
+            <!--titles #complex #multiple-->
+            <h3 class="h3-title">Titre</h3>
+            <div class="border">
+              <div class="mx-3 mt-3" *ngIf="titles.length > 0">
+                <h4 class="h4-title" fxLayoutAlign="start center">Liste des titres</h4>
+                <mat-table formArrayName="titles" #tableTitles [dataSource]="titles" class="mat-elevation-z8">
+                  <!-- Name Column -->
+                  <ng-container matColumnDef="Titre">
+                    <mat-header-cell *matHeaderCellDef> Title </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element._value}} </mat-cell>
+                  </ng-container>
+                  <!-- Type Column -->
+                  <ng-container matColumnDef="Type">
+                    <mat-header-cell *matHeaderCellDef> Title Type </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element._attr.titleType}} </mat-cell>
+                  </ng-container>
+                  <!-- Language Column -->
+                  <ng-container matColumnDef="Language">
+                    <mat-header-cell *matHeaderCellDef> Language </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element._attr._doiLang}} </mat-cell>
+                  </ng-container>
+                  <!-- Action Column -->
+                  <ng-container matColumnDef="Action">
+                    <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                      <button mat-mini-fab color="primary" class="my-2" (click)="removeTitle(element)">
+                        <mat-icon>clear</mat-icon>
+                      </button>
+                    </mat-cell>
+                  </ng-container>
+                  <mat-header-row *matHeaderRowDef="['Titre', 'Type', 'Language', 'Action']"></mat-header-row>
+                  <mat-row *matRowDef="let row; columns: ['Titre', 'Type', 'Language', 'Action']"
+                    (click)="selectionTitle.toggle(row)" (click)="updateMultiTitleForm()"
+                    [ngClass]="{hovered: row.hovered, highlighted: selectionTitle.isSelected(row)}"
+                    (mouseover)="row.hovered = true" (mouseout)="row.hovered = false"></mat-row>
+                </mat-table>
+              </div>
+              <form [formGroup]="firstFormGroupMultiTitle">
+                <div fxLayout="row" fxLayoutAlign="space-between">
+                  <h4 class="h4-title m-3" fxLayoutAlign="start center">Nouveau titre</h4>
+                  <!-- Expand button -->
+                  <div fxLayoutAlign="end">
+                    <button *ngIf="!isOpenFormTitle" mat-mini-fab color="primary" (click)="isOpenFormTitle=true"
+                      class="m-3">
+                      <mat-icon>expand_more</mat-icon>
+                    </button>
+                    <button *ngIf="isOpenFormTitle" mat-mini-fab color="primary" (click)="isOpenFormTitle=false"
+                      class="m-3">
+                      <mat-icon>expand_less</mat-icon>
+                    </button>
+                  </div>
+                </div>
+                <div *ngIf="isOpenFormTitle">
+                  <div fxLayoutAlign="space-between" class="mx-3">
+                    <!--titleName-->
+                    <mat-form-field appearance="fill" fxFlex="51">
+                      <mat-label>Title *</mat-label>
+                      <input formControlName="titleName" matInput placeholder="Title">
+                      <mat-error *ngFor="let validation of input_validation_messages.empty">
+                        <mat-error class="error-message"
+                          *ngIf="firstFormGroupMultiTitle?.get('titleName')?.hasError(validation.type) && (firstFormGroupMultiTitle.get('titleName')?.dirty || firstFormGroupMultiTitle.get('titleName')?.touched)">
+                          {{validation.message}}</mat-error>
+                      </mat-error>
+                    </mat-form-field>
+                    <!--titleType-->
+                    <mat-form-field appearance="fill" fxFlex="25" class="mx-3">
+                      <mat-label>Title Type</mat-label>
+                      <mat-select formControlName="titleType">
+                        <mat-option *ngFor="let item of titleTypes" [value]="item">{{item}}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" fxFlex="24">
+                      <mat-label>Language</mat-label>
+                      <mat-select formControlName="titleLang">
+                        <mat-option>None</mat-option>
+                        <mat-option *ngFor="let language of languages" [value]="language">{{language}}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div fxLayoutAlign="end" class="mx-3 mb-3">
+                    <button mat-button mat-flat-button color="primary" class="mr-3" (click)="modTitle()"
+                      [hidden]="isModifyTitleButton">Modifier</button>
+                    <button mat-button mat-flat-button color="primary" (click)="addTitle()"
+                      [disabled]="!firstFormGroupMultiTitle.valid">Ajouter</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <!--Back & Next Buttons-->
+            <div fxLayoutAlign="end">
+              <button mat-button mat-flat-button class="mt-3" color="primary"
+                [disabled]="!firstFormGroup.valid || (titles.length == 0) || !this.isAuthorizedDoiId"
+                matStepperNext>Suivant</button>
+            </div>
+          </form>
+        </mat-step>
+        <!--END firstFormGroup-->
+        <!--START secondFormGroup-->
+        <mat-step [stepControl]="secondFormGroup" label="Créateurs">
+          <form [formGroup]="secondFormGroup">
+            <!--creators #complex #multiple-->
+            <h3 class="h3-title">Créateurs</h3>
+            <div class="border mt-3">
+              <!--creatorName-->
+              <div class="mx-3 mt-3" *ngIf="creators.length > 0">
+                <h4 class="h4-title" fxLayoutAlign="start center">Liste des créateurs</h4>
+                <mat-table formArrayName="creators" #tableCreators [dataSource]="creators" class="mat-elevation-z8">
+                  <!-- Name Column -->
+                  <ng-container matColumnDef="Nom">
+                    <mat-header-cell *matHeaderCellDef> Nom </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.creatorName._value}} </mat-cell>
+                  </ng-container>
+                  <!-- Type Column -->
+                  <ng-container matColumnDef="Type">
+                    <mat-header-cell *matHeaderCellDef> Type </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.creatorName._attr.nameType}} </mat-cell>
+                  </ng-container>
+                  <!-- Given name Column -->
+                  <ng-container matColumnDef="Given Name">
+                    <mat-header-cell *matHeaderCellDef> Given Name </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.givenName}} </mat-cell>
+                  </ng-container>
+                  <!-- Family Name Column -->
+                  <ng-container matColumnDef="Family Name">
+                    <mat-header-cell *matHeaderCellDef> Family Name </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.familyName}} </mat-cell>
+                  </ng-container>
+                  <!-- Action Column -->
+                  <ng-container matColumnDef="Action">
+                    <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                      <button mat-mini-fab class="my-2" color="primary" (click)="removeCreator(element)">
+                        <mat-icon>clear</mat-icon>
+                      </button>
+                    </mat-cell>
+                  </ng-container>
+                  <mat-header-row *matHeaderRowDef="['Nom', 'Type', 'Given Name', 'Family Name', 'Action']">
+                  </mat-header-row>
+                  <mat-row *matRowDef="let row; columns: ['Nom', 'Type', 'Given Name', 'Family Name', 'Action']"
+                    (click)="selectionCreator.toggle(row)" (click)="updateMultiCreatorForm()"
+                    [ngClass]="{hovered: row.hovered, highlighted: selectionCreator.isSelected(row)}"
+                    (mouseover)="row.hovered = true" (mouseout)="row.hovered = false"></mat-row>
+                </mat-table>
+              </div>
+              <form [formGroup]="secondFormGroupMultiCreator">
+                <div fxLayout="row" fxLayoutAlign="space-between">
+                  <h4 class="h4-title m-3" fxLayoutAlign="start center">Nouveau créateur</h4>
+                  <!-- Expand button -->
+                  <div fxLayoutAlign="end">
+                    <button *ngIf="!isOpenFormCreator" mat-mini-fab color="primary" (click)="isOpenFormCreator=true"
+                      class="m-3">
+                      <mat-icon>expand_more</mat-icon>
+                    </button>
+                    <button *ngIf="isOpenFormCreator" mat-mini-fab color="primary" (click)="isOpenFormCreator=false"
+                      class="m-3">
+                      <mat-icon>expand_less</mat-icon>
+                    </button>
+                  </div>
+                </div>
+                <div *ngIf="isOpenFormCreator">
+                  <div class="border mx-3">
+                    <div fxLayoutAlign="space-between" class="mx-3 mt-3">
+                      <!--creatorName-->
+                      <mat-form-field appearance="fill" fxFlex="50">
+                        <mat-label>Creator Name</mat-label>
+                        <input formControlName="creatorName" required matInput placeholder="Creator Name">
+                        <mat-error *ngFor="let validation of input_validation_messages.empty">
+                          <mat-error class="error-message"
+                            *ngIf="secondFormGroupMultiCreator?.get('creatorName')?.hasError(validation.type) && (secondFormGroupMultiCreator.get('creatorName')?.dirty || secondFormGroupMultiCreator.get('creatorName')?.touched)">
+                            {{validation.message}}</mat-error>
+                        </mat-error>
+                      </mat-form-field>
+                      <!--nameType-->
+                      <mat-form-field appearance="fill" fxFlex="24" class="mx-3">
+                        <mat-label>Creator Type</mat-label>
+                        <mat-select formControlName="creatorNameType"
+                          (ngModelChange)="updateMultiCreatorFormSpec($event)">
+                          <mat-option>None</mat-option>
+                          <mat-option *ngFor="let item of nameTypes" [value]="item">{{item}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      <!--lang-->
+                      <mat-form-field appearance="fill" fxFlex="24">
+                        <mat-label>Language</mat-label>
+                        <mat-select formControlName="creatorLang">
+                          <mat-option>None</mat-option>
+                          <mat-option *ngFor="let language of languages" [value]="language">{{language}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div fxLayoutAlign="space-between" class="mx-3">
+                      <!--givenName-->
+                      <mat-form-field appearance="fill" fxFlex="50">
+                        <mat-label>Given Name</mat-label>
+                        <input formControlName="creatorGivenName" matInput placeholder="Given Name"
+                          (input)="updateMultiCreatorFormSpec($event)" [required]="isFamilyAndGivenNameRequired">
+                        <mat-error *ngFor="let validation of input_validation_messages.empty">
+                          <mat-error class="error-message"
+                            *ngIf="secondFormGroupMultiCreator?.get('creatorGivenName')?.hasError(validation.type) && (secondFormGroupMultiCreator.get('creatorGivenName')?.dirty || secondFormGroupMultiCreator.get('creatorGivenName')?.touched)">
+                            {{validation.message}}</mat-error>
+                        </mat-error>
+                      </mat-form-field>
+                      <!--familyName-->
+                      <mat-form-field appearance="fill" fxFlex="49" class="ml-3">
+                        <mat-label>Family Name</mat-label>
+                        <input formControlName="creatorFamilyName" matInput placeholder="Family Name"
+                          (input)="updateMultiCreatorFormSpec($event)" [required]="isFamilyAndGivenNameRequired">
+                        <mat-error *ngFor="let validation of input_validation_messages.empty">
+                          <mat-error class="error-message"
+                            *ngIf="secondFormGroupMultiCreator?.get('creatorFamilyName')?.hasError(validation.type) && (secondFormGroupMultiCreator.get('creatorFamilyName')?.dirty || secondFormGroupMultiCreator.get('creatorFamilyName')?.touched)">
+                            {{validation.message}}</mat-error>
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                    <hr>
+                    <!--nameIdentifier #complex #multiple-->
+                    <div fxLayout="row" fxLayoutAlign="space-between">
+                      <h5 class="h3-title m-3" fxLayoutAlign="start center">Identifiant du nom du créateur</h5>
+                      <!-- +1 -->
+                      <div fxLayoutAlign="end" class="mx-3">
+                        <button mat-mini-fab color="primary"
+                          (click)="addSubItemOnly('creatorNameIdentifier', nbCreatorNameIdentifiers)">
+                          <mat-icon>add</mat-icon>
+                        </button>
+                      </div>
+                    </div>
+                    <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3"
+                      *ngFor="let in of counter(this.nbCreatorNameIdentifiers); let j = index">
+                      <mat-form-field appearance="fill" fxFlex="31">
+                        <mat-label>Name Identifier {{j+1}}</mat-label>
+                        <input formControlName="creatorNameIdentifier_{{j}}" matInput
+                          (input)="creatorNameIdentifierChange($event, j)" placeholder="Name Identifier">
+                      </mat-form-field>
+                      <!--nameIdentifierScheme-->
+                      <mat-form-field appearance="fill" fxFlex="31" class="mx-3">
+                        <mat-label>Name Id Scheme {{j+1}}</mat-label>
+                        <input formControlName="creatorNameIdentifierScheme_{{j}}" matInput
+                          [required]="isCreatorNameIdShemeRequired[j]" placeholder="Name Identifier Scheme">
+                      </mat-form-field>
+                      <!--schemeURI-->
+                      <mat-form-field appearance="fill" fxFlex="31">
+                        <mat-label>Identifier Scheme URI {{j+1}}</mat-label>
+                        <input formControlName="creatorSchemeURI_{{j}}" matInput placeholder="Scheme URI">
+                        <mat-error *ngIf="item.invalid">{{getErrorMessage('uri')}}</mat-error>
+                      </mat-form-field>
+                      <span class="spacer"></span>
+                      <!-- Remove button -->
+                      <div fxLayoutAlign="end" class="ml-3 mt-2">
+                        <button mat-mini-fab color="primary" (click)="removeSubItemOnly('creatorNameIdentifier', j);">
+                          <mat-icon>remove</mat-icon>
+                        </button>
+                      </div>
+                    </div>
+                    <hr>
+                    <div class="mb-3">
+                      <!--affiliation #multiple-->
+                      <div fxLayout="row" fxLayoutAlign="space-between">
+                        <h5 class="h3-title m-3" fxLayoutAlign="start center">Affiliation du créateur</h5>
+                        <!-- +1 -->
+                        <div fxLayoutAlign="end" class="mx-3">
+                          <button mat-mini-fab color="primary"
+                            (click)="addSubItemOnly('creatorAffiliation', this.nbCreatorAffiliations)">
+                            <mat-icon>add</mat-icon>
+                          </button>
+                        </div>
+                      </div>
+                      <div *ngFor="let in of counter(this.nbCreatorAffiliations); let j = index;">
+                        <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3">
+                          <mat-form-field appearance="fill" fxFlex="100">
+                            <mat-label>Creator Affiliation {{j+1}}</mat-label>
+                            <input formControlName="creatorAffiliation_{{j}}" matInput
+                              placeholder="Creator Affiliation">
+                          </mat-form-field>
+                        </div>
+                        <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3">
+                          <mat-form-field appearance="fill" fxFlex="31">
+                            <mat-label>Creator Affiliation Identifier {{j+1}}</mat-label>
+                            <input formControlName="creatorAffiliationIdentifier_{{j}}" matInput
+                              placeholder="Creator Affiliation Identifier">
+                          </mat-form-field>
+                          <mat-form-field appearance="fill" fxFlex="31" class="mx-3">
+                            <mat-label>Creator Affiliation Identifier Scheme {{j+1}}</mat-label>
+                            <input formControlName="creatorAffiliationIdentifierScheme_{{j}}" matInput
+                              placeholder="Creator Affiliation Identifier Scheme">
+                          </mat-form-field>
+                          <mat-form-field appearance="fill" fxFlex="31">
+                            <mat-label>Creator Affiliation Scheme URI {{j+1}}</mat-label>
+                            <input formControlName="creatorAffiliationSchemeURI_{{j}}" matInput
+                              placeholder="Creator Affiliation Sheme URI">
+                            <mat-error *ngIf="item.invalid">{{getErrorMessage('uri')}}</mat-error>
+                          </mat-form-field>
+                          <span class="spacer"></span>
+                          <!-- Remove button -->
+                          <div fxLayoutAlign="end" class="ml-3 mt-2">
+                            <button mat-mini-fab color="primary" (click)="removeSubItemOnly('creatorAffiliation', j)">
+                              <mat-icon>remove</mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div fxLayoutAlign="end" class="m-3">
+                    <button mat-button mat-flat-button color="primary" class="mr-3" (click)="modCreator()"
+                      [hidden]="isModifyCreatorButton">Modifier</button>
+                    <button mat-button mat-flat-button color="primary" (click)="addCreator()"
+                      [disabled]="!secondFormGroupMultiCreator.valid">Ajouter</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <!--Back & Next Buttons-->
+            <div fxLayoutAlign="end">
+              <button mat-button mat-flat-button class="mt-3 mr-2" color="primary" matStepperPrevious>Précédent</button>
+              <button mat-button mat-flat-button class="mt-3" color="primary"
+                [disabled]="!secondFormGroup.valid || (creators.length == 0)" matStepperNext>Suivant</button>
+            </div>
+          </form>
+        </mat-step>
+        <!--END secondFormGroup-->
+        <!--START thirdFormGroup-->
+        <mat-step [stepControl]="thirdFormGroup" label="Publ. / Res.">
+          <form [formGroup]="thirdFormGroup">
+            <!--publication-->
+            <h3 class="h3-title">Publication</h3>
+            <div fxLayout="row" fxLayoutAlign="space-between" class="mt-3">
+              <!--publisher-->
+              <mat-form-field appearance="fill" fxFlex="51">
+                <mat-label>Publisher</mat-label>
+                <input formControlName="publisher" matInput placeholder="Publisher" required>
+                <mat-error *ngFor="let validation of input_validation_messages.empty">
+                  <mat-error class="error-message"
+                    *ngIf="thirdFormGroup?.get('publisher')?.hasError(validation.type) && (thirdFormGroup.get('publisher')?.dirty || thirdFormGroup.get('publisher')?.touched)">
+                    {{validation.message}}</mat-error>
+                </mat-error>
+              </mat-form-field>
+              <!--publicationYear-->
+              <mat-form-field appearance="fill" fxFlex="23" class="mx-3">
+                <mat-label>Publication Year</mat-label>
+                <input formControlName="publicationYear" matInput placeholder="AAAA" required>
+                <mat-error *ngFor="let validation of input_validation_messages.publicationYear">
+                  <mat-error class="error-message"
+                    *ngIf="thirdFormGroup?.get('publicationYear')?.hasError(validation.type) && (thirdFormGroup.get('publicationYear')?.dirty || thirdFormGroup.get('publicationYear')?.touched)">
+                    {{validation.message}}</mat-error>
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field appearance="fill" fxFlex="24">
+                <mat-label>Language</mat-label>
+                <mat-select formControlName="publicationLang">
+                  <mat-option>None</mat-option>
+                  <mat-option *ngFor="let language of languages" [value]="language">{{language}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <!--resources-->
+            <h3 class="h3-title" fxLayoutAlign="start center" class="mt-3">Ressources</h3>
+            <div fxLayout="row" fxLayoutAlign="space-between" class="mt-3">
+              <!--resourceType-->
+              <mat-form-field appearance="fill" fxFlex="69">
+                <mat-label>Resource Type</mat-label>
+                <input formControlName="resourceType" matInput placeholder="Resource Type" required>
+                <mat-error *ngFor="let validation of input_validation_messages.empty">
+                  <mat-error class="error-message"
+                    *ngIf="thirdFormGroup?.get('resourceType')?.hasError(validation.type) && (thirdFormGroup.get('resourceType')?.dirty || thirdFormGroup.get('resourceType')?.touched)">
+                    {{validation.message}}</mat-error>
+                </mat-error>
+              </mat-form-field>
+              <!--Resource Type General-->
+              <mat-form-field appearance="fill" fxFlex="30" class="ml-3">
+                <mat-label>Resource Type General</mat-label>
+                <mat-select formControlName="resourceTypeGeneral" required>
+                  <mat-option *ngFor="let item of resourceTypes" [value]="item">{{item}}</mat-option>
+                </mat-select>
+                <mat-error *ngFor="let validation of input_validation_messages.empty">
+                  <mat-error class="error-message"
+                    *ngIf="thirdFormGroup?.get('resourceTypeGeneral')?.hasError(validation.type) && (thirdFormGroup.get('resourceTypeGeneral')?.dirty || thirdFormGroup.get('resourceTypeGeneral')?.touched)">
+                    {{validation.message}}</mat-error>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <!--Back & Next Buttons-->
+            <div fxLayoutAlign="end">
+              <button mat-button mat-flat-button class="mt-3 mr-2" color="primary" matStepperPrevious>Précédent</button>
+              <button mat-button mat-flat-button class="mt-3" color="primary" [disabled]="!thirdFormGroup.valid"
+                matStepperNext>Suivant</button>
+            </div>
+          </form>
+        </mat-step>
+        <!--END thirdFormGroup-->
+        <!--START fourthFormGroup-->
+        <mat-step [stepControl]="fourthFormGroup" label="Sujets / Dates / Descr." optional="false">
+          <form [formGroup]="fourthFormGroupSubject">
+            <!--subjects #complex #multiple-->
+            <h3 class="h3-title">Sujets</h3>
+            <div class="border">
+              <div class="mx-3 mt-3" *ngIf="subjects.length > 0">
+                <h4 class="h4-title" fxLayoutAlign="start center">Liste des sujets</h4>
+                <mat-table formArrayName="subjects" #tableSubjects [dataSource]="subjects" class="mat-elevation-z8">
+                  <!-- Subject Column -->
+                  <ng-container matColumnDef="Subject">
+                    <mat-header-cell *matHeaderCellDef> Subject </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element._value}} </mat-cell>
+                  </ng-container>
+                  <!-- Subject scheme Column -->
+                  <ng-container matColumnDef="Scheme">
+                    <mat-header-cell *matHeaderCellDef> Scheme </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element._attr.subjectScheme}} </mat-cell>
+                  </ng-container>
+                  <!-- Action Column -->
+                  <ng-container matColumnDef="Action">
+                    <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                      <button mat-mini-fab class="my-2" color="primary" (click)="removeSubject(element)">
+                        <mat-icon>clear</mat-icon>
+                      </button>
+                    </mat-cell>
+                  </ng-container>
+                  <mat-header-row *matHeaderRowDef="['Subject', 'Scheme', 'Action']"></mat-header-row>
+                  <mat-row *matRowDef="let row; columns: ['Subject', 'Scheme', 'Action']"
+                    (click)="selectionSubject.toggle(row)" (click)="updateMultiSubjectForm()"
+                    [ngClass]="{hovered: row.hovered, highlighted: selectionSubject.isSelected(row)}"
+                    (mouseover)="row.hovered = true" (mouseout)="row.hovered = false"></mat-row>
+                </mat-table>
+              </div>
+              <div fxLayout="row" fxLayoutAlign="space-between">
+                <h4 class="h4-title m-3" fxLayoutAlign="start center">Nouveau sujet</h4>
+                <!-- Expand button -->
+                <div fxLayoutAlign="end">
+                  <button *ngIf="!isOpenFormSubject" mat-mini-fab color="primary" (click)="isOpenFormSubject=true"
+                    class="m-3">
+                    <mat-icon>expand_more</mat-icon>
+                  </button>
+                  <button *ngIf="isOpenFormSubject" mat-mini-fab color="primary" (click)="isOpenFormSubject=false"
+                    class="m-3">
+                    <mat-icon>expand_less</mat-icon>
+                  </button>
+                </div>
+              </div>
+              <div *ngIf="isOpenFormSubject">
+                <!--subject-->
+                <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3">
+                  <mat-form-field appearance="fill" fxFlex="50">
+                    <mat-label>Subject</mat-label>
+                    <input formControlName="subject" matInput placeholder="Subject" required>
+                    <mat-error *ngFor="let validation of input_validation_messages.empty">
+                      <mat-error class="error-message"
+                        *ngIf="fourthFormGroupSubject?.get('subject')?.hasError(validation.type) && (fourthFormGroupSubject.get('subject')?.dirty || fourthFormGroupSubject.get('subject')?.touched)">
+                        {{validation.message}}</mat-error>
+                    </mat-error>
+                  </mat-form-field>
+                  <!--subjectScheme-->
+                  <mat-form-field appearance="fill" fxFlex="49" class="ml-3">
+                    <mat-label>Subject Scheme</mat-label>
+                    <input formControlName="subjectScheme" matInput placeholder="Subject Scheme">
+                  </mat-form-field>
+                </div>
+                <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3">
+                  <!--schemeURI-->
+                  <mat-form-field appearance="fill" fxFlex="50">
+                    <mat-label>Subject Scheme URI</mat-label>
+                    <input formControlName="subjectSchemeURI" matInput placeholder="Subject Scheme URI">
+                    <mat-error *ngFor="let validation of input_validation_messages.uri">
+                      <mat-error class="error-message"
+                        *ngIf="fourthFormGroupSubject?.get('subjectSchemeURI')?.hasError(validation.type) && (fourthFormGroupSubject.get('subjectSchemeURI')?.dirty || fourthFormGroupSubject.get('subjectSchemeURI')?.touched)">
+                        {{validation.message}}</mat-error>
+                    </mat-error>
+                  </mat-form-field>
+                  <!--valueURI-->
+                  <mat-form-field appearance="fill" fxFlex="49" class="ml-3">
+                    <mat-label>Subject Value URI</mat-label>
+                    <input formControlName="subjectValueURI" matInput placeholder="Subject Value URI">
+                    <mat-error *ngFor="let validation of input_validation_messages.uri">
+                      <mat-error class="error-message"
+                        *ngIf="fourthFormGroupSubject?.get('subjectValueURI')?.hasError(validation.type) && (fourthFormGroupSubject.get('subjectValueURI')?.dirty || fourthFormGroupSubject.get('subjectValueURI')?.touched)">
+                        {{validation.message}}</mat-error>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3">
+                  <!--classificationCode-->
+                  <mat-form-field appearance="fill" fxFlex="50">
+                    <mat-label>Classification Code</mat-label>
+                    <input formControlName="subjectClassificationCode" matInput placeholder="Classification Code">
+                  </mat-form-field>
+                  <!--language-->
+                  <mat-form-field appearance="fill" fxFlex="49" class="ml-3">
+                    <mat-label>Language</mat-label>
+                    <mat-select formControlName="subjectLang">
+                      <mat-option>None</mat-option>
+                      <mat-option *ngFor="let language of languages" [value]="language">{{language}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div fxLayoutAlign="end" class="mx-3 mb-3">
+                  <button mat-button mat-flat-button color="primary" class="mr-3" (click)="modSubject()"
+                    [hidden]="isModifySubjectButton">Modifier</button>
+                  <button mat-button mat-flat-button color="primary" (click)="addSubject()"
+                    [disabled]="!fourthFormGroupSubject.valid">Ajouter</button>
+                </div>
+              </div>
+            </div>
+          </form>
+          <form [formGroup]="fourthFormGroupDate">
+            <!--dates #complex #multiple-->
+            <h3 class="h3-title mt-3">Dates</h3>
+            <div class="border">
+              <div class="mx-3 mt-3" *ngIf="dates.length > 0">
+                <h4 class="h4-title" fxLayoutAlign="start center">Liste des dates</h4>
+                <mat-table formArrayName="dates" #tableDates [dataSource]="dates" class="mat-elevation-z8">
+                  <!-- Subject Column -->
+                  <ng-container matColumnDef="Date">
+                    <mat-header-cell *matHeaderCellDef> Date </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element._value}} </mat-cell>
+                  </ng-container>
+                  <!-- Subject scheme Column -->
+                  <ng-container matColumnDef="Date Type">
+                    <mat-header-cell *matHeaderCellDef> Date Type </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element._attr.dateType}} </mat-cell>
+                  </ng-container>
+                  <!-- Action Column -->
+                  <ng-container matColumnDef="Action">
+                    <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                      <button mat-mini-fab class="my-2" color="primary" (click)="removeDate(element)">
+                        <mat-icon>clear</mat-icon>
+                      </button>
+                    </mat-cell>
+                  </ng-container>
+                  <mat-header-row *matHeaderRowDef="['Date', 'Date Type', 'Action']"></mat-header-row>
+                  <mat-row *matRowDef="let row; columns: ['Date', 'Date Type', 'Action']"
+                    (click)="selectionDate.toggle(row)" (click)="updateMultiDateForm()"
+                    [ngClass]="{hovered: row.hovered, highlighted: selectionDate.isSelected(row)}"
+                    (mouseover)="row.hovered = true" (mouseout)="row.hovered = false"></mat-row>
+                </mat-table>
+              </div>
+              <div fxLayout="row" fxLayoutAlign="space-between">
+                <h4 class="h4-title m-3" fxLayoutAlign="start center">Nouvelle date</h4>
+                <!-- Expand button -->
+                <div fxLayoutAlign="end">
+                  <button *ngIf="!isOpenFormDate" mat-mini-fab color="primary" (click)="isOpenFormDate=true"
+                    class="m-3">
+                    <mat-icon>expand_more</mat-icon>
+                  </button>
+                  <button *ngIf="isOpenFormDate" mat-mini-fab color="primary" (click)="isOpenFormDate=false"
+                    class="m-3">
+                    <mat-icon>expand_less</mat-icon>
+                  </button>
+                </div>
+              </div>
+              <div *ngIf="isOpenFormDate">
+                <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3">
+                  <!--date-->
+                  <mat-form-field appearance="fill" fxFlex="70">
+                    <mat-label>Date</mat-label>
+                    <input formControlName="date" matInput placeholder="Date" required>
+                    <mat-error *ngFor="let validation of input_validation_messages.date">
+                      <mat-error class="error-message"
+                        *ngIf="fourthFormGroupDate?.get('date')?.hasError(validation.type) && (fourthFormGroupDate.get('date')?.dirty || fourthFormGroupDate.get('date')?.touched)">
+                        {{validation.message}}</mat-error>
+                    </mat-error>
+                  </mat-form-field>
+                  <!--dateType-->
+                  <mat-form-field appearance="fill" fxFlex="29">
+                    <mat-label>Date Type</mat-label>
+                    <mat-select formControlName="dateType" required>
+                      <mat-option *ngFor="let item of dateTypes" [value]="item">{{item}}</mat-option>
+                    </mat-select>
+                    <mat-error *ngFor="let validation of input_validation_messages.empty">
+                      <mat-error class="error-message"
+                        *ngIf="fourthFormGroupDate?.get('dateType')?.hasError(validation.type) && (fourthFormGroupDate.get('dateType')?.dirty || fourthFormGroupDate.get('dateType')?.touched)">
+                        {{validation.message}}</mat-error>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <!--dateInformation-->
+                <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3">
+                  <mat-form-field appearance="fill" fxFlex="100">
+                    <mat-label>Date Information</mat-label>
+                    <input formControlName="dateInformation" matInput placeholder="Date Information">
+                  </mat-form-field>
+                </div>
+                <div fxLayoutAlign="end" class="mx-3 mb-3">
+                  <button mat-button mat-flat-button color="primary" class="mr-3" (click)="modDate()"
+                    [hidden]="isModifyDateButton">Modifier</button>
+                  <button mat-button mat-flat-button color="primary" (click)="addDate()"
+                    [disabled]="!fourthFormGroupDate.valid">Ajouter</button>
+                </div>
+              </div>
+            </div>
+          </form>
+          <form [formGroup]="fourthFormGroupDescription">
+            <!--descriptions #complex #multiple-->
+            <h3 class="h3-title mt-3">Descriptions</h3>
+            <div class="border">
+              <div class="mx-3 mt-3" *ngIf="descriptions.length > 0">
+                <h4 class="h4-title" fxLayoutAlign="start center">Liste des descriptions</h4>
+                <mat-table formArrayName="descriptions" #tableDescriptions [dataSource]="descriptions"
+                  class="mat-elevation-z8">
+                  <!-- Subject Column -->
+                  <ng-container matColumnDef="Description">
+                    <mat-header-cell *matHeaderCellDef> Description </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element._value}} </mat-cell>
+                  </ng-container>
+                  <!-- Subject scheme Column -->
+                  <ng-container matColumnDef="Description Type">
+                    <mat-header-cell *matHeaderCellDef> Description Type </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element._attr.descriptionType}} </mat-cell>
+                  </ng-container>
+                  <!-- Action Column -->
+                  <ng-container matColumnDef="Action">
+                    <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                      <button mat-mini-fab class="my-2" color="primary" (click)="removeDescription(element)">
+                        <mat-icon>clear</mat-icon>
+                      </button>
+                    </mat-cell>
+                  </ng-container>
+                  <mat-header-row *matHeaderRowDef="['Description', 'Description Type', 'Action']"></mat-header-row>
+                  <mat-row *matRowDef="let row; columns: ['Description', 'Description Type', 'Action']"
+                    (click)="selectionDescription.toggle(row)" (click)="updateMultiDescriptionForm()"
+                    [ngClass]="{hovered: row.hovered, highlighted: selectionDescription.isSelected(row)}"
+                    (mouseover)="row.hovered = true" (mouseout)="row.hovered = false"></mat-row>
+                </mat-table>
+              </div>
+              <div fxLayout="row" fxLayoutAlign="space-between">
+                <h4 class="h4-title m-3" fxLayoutAlign="start center">Nouvelle description</h4>
+                <!-- Expand button -->
+                <div fxLayoutAlign="end">
+                  <button *ngIf="!isOpenFormDescription" mat-mini-fab color="primary"
+                    (click)="isOpenFormDescription=true" class="m-3">
+                    <mat-icon>expand_more</mat-icon>
+                  </button>
+                  <button *ngIf="isOpenFormDescription" mat-mini-fab color="primary"
+                    (click)="isOpenFormDescription=false" class="m-3">
+                    <mat-icon>expand_less</mat-icon>
+                  </button>
+                </div>
+              </div>
+              <div *ngIf="isOpenFormDescription">
+                <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3">
+                  <!--description-->
+                  <mat-form-field appearance="fill" fxFlex="50">
+                    <mat-label>Description</mat-label>
+                    <input formControlName="description" matInput placeholder="Description" required>
+                    <mat-error *ngFor="let validation of input_validation_messages.empty">
+                      <mat-error class="error-message"
+                        *ngIf="fourthFormGroupDescription?.get('description')?.hasError(validation.type) && (fourthFormGroupDescription.get('description')?.dirty || fourthFormGroupDescription.get('description')?.touched)">
+                        {{validation.message}}</mat-error>
+                    </mat-error>
+                  </mat-form-field>
+                  <!--descriptionType-->
+                  <mat-form-field appearance="fill" fxFlex="24">
+                    <mat-label>Description Type</mat-label>
+                    <mat-select formControlName="descriptionType" required>
+                      <mat-option *ngFor="let item of descriptionTypes" [value]="item">{{item}}</mat-option>
+                    </mat-select>
+                    <mat-error *ngFor="let validation of input_validation_messages.empty">
+                      <mat-error class="error-message"
+                        *ngIf="fourthFormGroupDescription?.get('descriptionType')?.hasError(validation.type) && (fourthFormGroupDescription.get('descriptionType')?.dirty || fourthFormGroupDescription.get('descriptionType')?.touched)">
+                        {{validation.message}}</mat-error>
+                    </mat-error>
+                  </mat-form-field>
+                  <!--descriptionlang-->
+                  <mat-form-field appearance="fill" fxFlex="24">
+                    <mat-label>Language</mat-label>
+                    <mat-select formControlName="descriptionLang">
+                      <mat-option>None</mat-option>
+                      <mat-option *ngFor="let language of languages" [value]="language">{{language}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div fxLayoutAlign="end" class="mx-3 mb-3">
+                  <button mat-button mat-flat-button color="primary" class="mr-3" (click)="modDescription()"
+                    [hidden]="isModifyDescriptionButton">Modifier</button>
+                  <button mat-button mat-flat-button color="primary" (click)="addDescription()"
+                    [disabled]="!fourthFormGroupDescription.valid">Ajouter</button>
+                </div>
+              </div>
+            </div>
+            <!--Back & Next Buttons-->
+            <div fxLayoutAlign="end">
+              <button mat-button mat-flat-button class="mt-3 mr-2" color="primary" matStepperPrevious>Précédent</button>
+              <button mat-button mat-flat-button class="mt-3" color="primary" matStepperNext>Suivant</button>
+            </div>
+          </form>
+        </mat-step>
+        <!--END fourthFormGroup-->
+        <!--START fifthFormGroup-->
+        <mat-step [stepControl]="fifthFormGroup" label="Contributeurs" optional="false">
+          <form [formGroup]="fifthFormGroup">
+            <h3 class="h3-title">Contributeurs</h3>
+            <div class="border mt-3">
+              <div class="mx-3 mt-3" *ngIf="contributors.length > 0">
+                <h4 class="h4-title" fxLayoutAlign="start center">Liste des contributeurs</h4>
+                <mat-table formArrayName="contributors" #tableContributors [dataSource]="contributors"
+                  class="mat-elevation-z8">
+                  <!-- Name Column -->
+                  <ng-container matColumnDef="Name">
+                    <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.contributorName._value}} </mat-cell>
+                  </ng-container>
+                  <!-- Name Type Column -->
+                  <ng-container matColumnDef="Name Type">
+                    <mat-header-cell *matHeaderCellDef> Name Type </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.contributorName._attr.nameType}} </mat-cell>
+                  </ng-container>
+                  <!-- Action Column -->
+                  <ng-container matColumnDef="Action">
+                    <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                      <button mat-mini-fab class="my-2" color="primary" (click)="removeContributor(element)">
+                        <mat-icon>clear</mat-icon>
+                      </button>
+                    </mat-cell>
+                  </ng-container>
+                  <mat-header-row *matHeaderRowDef="['Name', 'Name Type', 'Action']"></mat-header-row>
+                  <mat-row *matRowDef="let row; columns: ['Name', 'Name Type', 'Action']"
+                    (click)="selectionContributor.toggle(row)" (click)="updateMultiContributorForm()"
+                    [ngClass]="{hovered: row.hovered, highlighted: selectionContributor.isSelected(row)}"
+                    (mouseover)="row.hovered = true" (mouseout)="row.hovered = false"></mat-row>
+                </mat-table>
+              </div>
+              <form [formGroup]="fifthFormGroupMultiContributor">
+                <div fxLayout="row" fxLayoutAlign="space-between">
+                  <h4 class="h4-title m-3" fxLayoutAlign="start center">Nouveau contributeur</h4>
+                  <!-- Expand button -->
+                  <div fxLayoutAlign="end">
+                    <button *ngIf="!isOpenFormContributor" mat-mini-fab color="primary"
+                      (click)="isOpenFormContributor=true" class="m-3">
+                      <mat-icon>expand_more</mat-icon>
+                    </button>
+                    <button *ngIf="isOpenFormContributor" mat-mini-fab color="primary"
+                      (click)="isOpenFormContributor=false" class="m-3">
+                      <mat-icon>expand_less</mat-icon>
+                    </button>
+                  </div>
+                </div>
+                <div *ngIf="isOpenFormContributor">
+                  <div class="border mx-3">
+                    <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3 mt-3">
+                      <!--contributorName-->
+                      <mat-form-field appearance="fill" fxFlex="50">
+                        <mat-label>Contributor Name</mat-label>
+                        <input formControlName="contributorName" matInput placeholder="Contributor Name" required>
+                        <mat-error *ngFor="let validation of input_validation_messages.empty">
+                          <mat-error class="error-message"
+                            *ngIf="fifthFormGroupMultiContributor?.get('contributorName')?.hasError(validation.type) && (fifthFormGroupMultiContributor.get('contributorName')?.dirty || fifthFormGroupMultiContributor.get('contributorName')?.touched)">
+                            {{validation.message}}</mat-error>
+                        </mat-error>
+                      </mat-form-field>
+                      <!--nameType-->
+                      <mat-form-field appearance="fill" fxFlex="24" class="mx-3">
+                        <mat-label>Contributor Name Type</mat-label>
+                        <mat-select formControlName="contributorNameType"
+                          (ngModelChange)="updateMultiContributorFormSpec($event)">
+                          <mat-option>None</mat-option>
+                          <mat-option *ngFor="let item of nameTypes" [value]="item">{{item}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      <!--lang-->
+                      <mat-form-field appearance="fill" fxFlex="24">
+                        <mat-label>Language</mat-label>
+                        <mat-select formControlName="contributorLang">
+                          <mat-option>None</mat-option>
+                          <mat-option *ngFor="let language of languages" [value]="language">{{language}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3">
+                      <!--givenName-->
+                      <mat-form-field appearance="fill" fxFlex="33">
+                        <mat-label>Given Name</mat-label>
+                        <input formControlName="contributorGivenName" matInput placeholder="Given Name"
+                          (input)="updateMultiContributorFormSpec($event)">
+                        <mat-error *ngFor="let validation of input_validation_messages.empty">
+                          <mat-error class="error-message"
+                            *ngIf="fifthFormGroupMultiContributor?.get('contributorGivenName')?.hasError(validation.type) && (fifthFormGroupMultiContributor.get('contributorGivenName')?.dirty || fifthFormGroupMultiContributor.get('contributorGivenName')?.touched)">
+                            {{validation.message}}</mat-error>
+                        </mat-error>
+                      </mat-form-field>
+                      <!--familyName-->
+                      <mat-form-field appearance="fill" fxFlex="33" class="mx-3">
+                        <mat-label>Family Name</mat-label>
+                        <input formControlName="contributorFamilyName" matInput placeholder="Family Name"
+                          (input)="updateMultiContributorFormSpec($event)">
+                        <mat-error *ngFor="let validation of input_validation_messages.empty">
+                          <mat-error class="error-message"
+                            *ngIf="fifthFormGroupMultiContributor?.get('contributorFamilyName')?.hasError(validation.type) && (fifthFormGroupMultiContributor.get('contributorFamilyName')?.dirty || fifthFormGroupMultiContributor.get('contributorFamilyName')?.touched)">
+                            {{validation.message}}</mat-error>
+                        </mat-error>
+                      </mat-form-field>
+                      <!--contributorType-->
+                      <mat-form-field appearance="fill" fxFlex="32">
+                        <mat-label>Contributor Type</mat-label>
+                        <mat-select formControlName="contributorType" required>
+                          <mat-option *ngFor="let item of contributorTypes" [value]="item">{{item}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <hr>
+                    <!--nameIdentifier #complex #multiple-->
+                    <div fxLayout="row" fxLayoutAlign="space-between">
+                      <h5 class="h3-title m-3" fxLayoutAlign="start center">Identifiant du nom du contributeur</h5>
+                      <!-- +1 -->
+                      <div fxLayoutAlign="end" class="ml-3 mt-2">
+                        <button mat-mini-fab color="primary"
+                          (click)="addSubItemOnly('contributorNameIdentifier', this.nbContributorNameIdentifiers)"
+                          class="mr-3">
+                          <mat-icon>add</mat-icon>
+                        </button>
+                      </div>
+                    </div>
+                    <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3 mt-3"
+                      *ngFor="let in of counter(this.nbContributorNameIdentifiers); let j = index">
+                      <mat-form-field appearance="fill" fxFlex="31">
+                        <mat-label>Name Identifier {{j+1}}</mat-label>
+                        <input formControlName="contributorNameIdentifier_{{j}}" matInput
+                          (input)="contributorNameIdentifierChange($event, j)" placeholder="Name Identifier">
+                      </mat-form-field>
+                      <!--nameIdentifierScheme-->
+                      <mat-form-field appearance="fill" fxFlex="31" class="mx-3">
+                        <mat-label>Name Id Scheme {{j+1}}</mat-label>
+                        <input formControlName="contributorNameIdentifierScheme_{{j}}" matInput
+                          [required]="isContributorNameIdShemeRequired[j]" placeholder="Name Identifier Scheme">
+                      </mat-form-field>
+                      <!--schemeURI-->
+                      <mat-form-field appearance="fill" fxFlex="31">
+                        <mat-label>Identifier Scheme URI {{j+1}}</mat-label>
+                        <input formControlName="contributorSchemeURI_{{j}}" matInput placeholder="Scheme URI">
+                        <mat-error *ngIf="item.invalid">{{getErrorMessage('uri')}}</mat-error>
+                      </mat-form-field>
+                      <span class="spacer"></span>
+                      <!-- Remove button -->
+                      <div fxLayoutAlign="end" class="ml-3 mt-2">
+                        <button mat-mini-fab color="primary"
+                          (click)="removeSubItemOnly('contributorNameIdentifier', j);">
+                          <mat-icon>remove</mat-icon>
+                        </button>
+                      </div>
+                    </div>
+                    <hr>
+                    <div class="mb-3">
+                      <!--affiliation #multiple-->
+                      <div fxLayout="row" fxLayoutAlign="space-between">
+                        <h5 class="h3-title m-3" fxLayoutAlign="start center">Affiliation du contributeur</h5>
+                        <!-- +1 -->
+                        <div fxLayoutAlign="end" class="mx-3">
+                          <button mat-mini-fab color="primary"
+                            (click)="addSubItemOnly('contributorAffiliation', this.nbContributorAffiliations)">
+                            <mat-icon>add</mat-icon>
+                          </button>
+                        </div>
+                      </div>
+                      <div *ngFor="let in of counter(this.nbContributorAffiliations); let j = index;">
+                        <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3">
+                          <mat-form-field appearance="fill" fxFlex="100">
+                            <mat-label>Contributor Affiliation {{j+1}}</mat-label>
+                            <input formControlName="contributorAffiliation_{{j}}" matInput
+                              placeholder="Contributor Affiliation">
+                          </mat-form-field>
+                        </div>
+                        <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3">
+                          <mat-form-field appearance="fill" fxFlex="31">
+                            <mat-label>Contributor Affiliation Identifier {{j+1}}</mat-label>
+                            <input formControlName="contributorAffiliationIdentifier_{{j}}" matInput
+                              placeholder="Contributor Affiliation Identifier">
+                          </mat-form-field>
+                          <mat-form-field appearance="fill" fxFlex="31" class="mx-3">
+                            <mat-label>Contributor Affiliation Identifier Sheme {{j+1}}</mat-label>
+                            <input formControlName="contributorAffiliationIdentifierScheme_{{j}}" matInput
+                              placeholder="Contributor Affiliation Identifier Scheme">
+                          </mat-form-field>
+                          <mat-form-field appearance="fill" fxFlex="31">
+                            <mat-label>Contributor Affiliation Scheme URI {{j+1}}</mat-label>
+                            <input formControlName="contributorAffiliationSchemeURI_{{j}}" matInput
+                              placeholder="Contributor Affiliation Sheme URI">
+                            <mat-error *ngIf="item.invalid">{{getErrorMessage('uri')}}</mat-error>
+                          </mat-form-field>
+                          <span class="spacer"></span>
+                          <!-- Remove button -->
+                          <div fxLayoutAlign="end" class="ml-3 mt-2">
+                            <button mat-mini-fab color="primary"
+                              (click)="removeSubItemOnly('contributorAffiliation', j)">
+                              <mat-icon>remove</mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div fxLayoutAlign="end" class="m-3">
+                    <button mat-button mat-flat-button color="primary" class="mr-3" (click)="modContributor()"
+                      [hidden]="isModifyContributorButton">Modifier</button>
+                    <button mat-button mat-flat-button color="primary" (click)="addContributor()"
+                      [disabled]="!fifthFormGroupMultiContributor.valid">Ajouter</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <!--Back & Next Buttons-->
+            <div fxLayoutAlign="end">
+              <button mat-button mat-flat-button class="mt-3 mr-2" color="primary" matStepperPrevious>Précédent</button>
+              <button mat-button mat-flat-button class="mt-3" color="primary" matStepperNext>Suivant</button>
+            </div>
+          </form>
+        </mat-step>
+        <!--END fifthFormGroup-->
+        <!--START sixthFormGroup-->
+        <mat-step [stepControl]="sixthFormGroup" label="Identifiants Ass." optional="false">
+          <form [formGroup]="sixthFormGroup">
+            <h3 class="h3-title">Identifiants associés</h3>
+            <div class="border">
+              <div class="mx-3 mt-3" *ngIf="relIdentifiers.length > 0">
+                <h4 class="h4-title" fxLayoutAlign="start center">Liste des identifiants associés</h4>
+                <mat-table formArrayName="relatedIdentifiers" #tableRelatedIdentifiers [dataSource]="relIdentifiers"
+                  class="mat-elevation-z8">
+                  <!-- Identifier Column -->
+                  <ng-container matColumnDef="Identifier">
+                    <mat-header-cell *matHeaderCellDef> Identifier </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element._value}} </mat-cell>
+                  </ng-container>
+                  <!-- Type General Column -->
+                  <ng-container matColumnDef="Type général">
+                    <mat-header-cell *matHeaderCellDef> Type General </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element._attr.resourceTypeGeneral}} </mat-cell>
+                  </ng-container>
+                  <!-- Identifier type Column -->
+                  <ng-container matColumnDef="Identifier Type">
+                    <mat-header-cell *matHeaderCellDef> Identifier Type </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element._attr.relatedIdentifierType}} </mat-cell>
+                  </ng-container>
+                  <!-- Relation Type type Column -->
+                  <ng-container matColumnDef="Relation Type">
+                    <mat-header-cell *matHeaderCellDef> Relation Type </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element._attr.relationType}} </mat-cell>
+                  </ng-container>
+                  <!-- Action Column -->
+                  <ng-container matColumnDef="Action">
+                    <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                      <button mat-mini-fab class="my-2" color="primary" (click)="removeRelatedIdentifier(element)">
+                        <mat-icon>clear</mat-icon>
+                      </button>
+                    </mat-cell>
+                  </ng-container>
+                  <mat-header-row
+                    *matHeaderRowDef="['Identifier', 'Type général', 'Identifier Type', 'Relation Type', 'Action']">
+                  </mat-header-row>
+                  <mat-row
+                    *matRowDef="let row; columns: ['Identifier', 'Type général', 'Identifier Type', 'Relation Type', 'Action']"
+                    (click)="selectionRelIdentifier.toggle(row)" (click)="updateMultiRelIdentifierForm()"
+                    [ngClass]="{hovered: row.hovered, highlighted: selectionRelIdentifier.isSelected(row)}"
+                    (mouseover)="row.hovered = true" (mouseout)="row.hovered = false"></mat-row>
+                </mat-table>
+              </div>
+              <form [formGroup]="sixthFormGroupMultiRelIdentifier">
+                <div fxLayout="row" fxLayoutAlign="space-between">
+                  <h4 class="h4-title m-3" fxLayoutAlign="start center">Nouvel identifiant associé</h4>
+                  <!-- Expand button -->
+                  <div fxLayoutAlign="end">
+                    <button *ngIf="!isOpenFormRelatedIdentifier" mat-mini-fab color="primary"
+                      (click)="isOpenFormRelatedIdentifier=true" class="m-3">
+                      <mat-icon>expand_more</mat-icon>
+                    </button>
+                    <button *ngIf="isOpenFormRelatedIdentifier" mat-mini-fab color="primary"
+                      (click)="isOpenFormRelatedIdentifier=false" class="m-3">
+                      <mat-icon>expand_less</mat-icon>
+                    </button>
+                  </div>
+                </div>
+                <div *ngIf="isOpenFormRelatedIdentifier">
+                  <div class="border mx-3 mb-3">
+                    <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3 mt-3">
+                      <!--relatedIdentifier-->
+                      <mat-form-field appearance="fill" fxFlex="100">
+                        <mat-label>Related Identifier</mat-label>
+                        <input formControlName="relatedIdentifier" matInput placeholder="Related Identifier" required>
+                        <mat-error *ngFor="let validation of input_validation_messages.empty">
+                          <mat-error class="error-message"
+                            *ngIf="sixthFormGroupMultiRelIdentifier?.get('relatedIdentifier')?.hasError(validation.type) && (sixthFormGroupMultiRelIdentifier.get('relatedIdentifier')?.dirty || sixthFormGroupMultiRelIdentifier.get('relatedIdentifier')?.touched)">
+                            {{validation.message}}</mat-error>
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                    <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3">
+                      <!--resourceTypeGeneral-->
+                      <mat-form-field appearance="fill" fxFlex="33">
+                        <mat-label>Related Resource Type General</mat-label>
+                        <mat-select formControlName="relatedResourceTypeGeneral">
+                          <mat-option>None</mat-option>
+                          <mat-option *ngFor="let item of resourceTypes" [value]="item">{{item}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      <!--relatedIdentifierType-->
+                      <mat-form-field appearance="fill" fxFlex="33" class="mx-3">
+                        <mat-label>Related Identifier Type</mat-label>
+                        <mat-select formControlName="relatedIdentifierType" required>
+                          <mat-option *ngFor="let item of relatedIdentifierTypes" [value]="item">{{item}}</mat-option>
+                        </mat-select>
+                        <mat-error *ngFor="let validation of input_validation_messages.empty">
+                          <mat-error class="error-message"
+                            *ngIf="sixthFormGroupMultiRelIdentifier?.get('relatedIdentifierType')?.hasError(validation.type) && (sixthFormGroupMultiRelIdentifier.get('relatedIdentifierType')?.dirty || sixthFormGroupMultiRelIdentifier.get('relatedIdentifierType')?.touched)">
+                            {{validation.message}}</mat-error>
+                        </mat-error>
+                      </mat-form-field>
+                      <!--relatedIdentifierRelationType-->
+                      <mat-form-field appearance="fill" fxFlex="33">
+                        <mat-label>Related Relation Type</mat-label>
+                        <mat-select formControlName="relatedRelationType" required>
+                          <mat-option *ngFor="let item of relationTypes" [value]="item">{{item}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3">
+                      <!--relatedMetadataScheme-->
+                      <mat-form-field appearance="fill" fxFlex="33">
+                        <mat-label>Related Metadata Scheme</mat-label>
+                        <input formControlName="relatedMetadataScheme" matInput placeholder="Related Metadata Scheme">
+                      </mat-form-field>
+                      <!--schemeURI-->
+                      <mat-form-field appearance="fill" fxFlex="33" class="mx-3">
+                        <mat-label>Related Scheme URI</mat-label>
+                        <input formControlName="relatedSchemeURI" matInput placeholder="Related Scheme URI">
+                        <mat-error *ngFor="let validation of input_validation_messages.uri">
+                          <mat-error class="error-message"
+                            *ngIf="sixthFormGroupMultiRelIdentifier?.get('relatedSchemeURI')?.hasError(validation.type) && (sixthFormGroupMultiRelIdentifier.get('relatedSchemeURI')?.dirty || sixthFormGroupMultiRelIdentifier.get('relatedSchemeURI')?.touched)">
+                            {{validation.message}}</mat-error>
+                        </mat-error>
+                      </mat-form-field>
+                      <!--schemeType-->
+                      <mat-form-field appearance="fill" fxFlex="33">
+                        <mat-label>Related Scheme Type</mat-label>
+                        <input formControlName="relatedSchemeType" matInput placeholder="Related Scheme Type">
+                      </mat-form-field>
+                    </div>
+                    <div fxLayoutAlign="end" class="m-3">
+                      <button mat-button mat-flat-button color="primary" class="mr-3" (click)="modRelatedIdentifier()"
+                        [hidden]="isModifyRelIdentifierButton">Modifier</button>
+                      <button mat-button mat-flat-button color="primary" (click)="addRelatedIdentifier()"
+                        [disabled]="!sixthFormGroupMultiRelIdentifier.valid">Ajouter</button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <!--Back & Next Buttons-->
+            <div fxLayoutAlign="end">
+              <button mat-button mat-flat-button class="mt-3 mr-2" color="primary" matStepperPrevious>Précédent</button>
+              <button mat-button mat-flat-button class="mt-3" color="primary" matStepperNext>Suivant</button>
+            </div>
+          </form>
+        </mat-step>
+        <!--END sixthFormGroup-->
+        <!--START seventhFormGroup-->
+        <mat-step [stepControl]="seventhFormGroup" label="Géo loc" optional="false">
+          <form [formGroup]="seventhFormGroup">
+            <!--geoLocations #complex #multiple-->
+            <h3 class="h3-title">Géolocalisations</h3>
+            <div class="border">
+              <div class="mx-3 mt-3" *ngIf="geoLocations.length > 0">
+                <h4 class="h4-title" fxLayoutAlign="start center">Liste des géolocalisations</h4>
+                <mat-table formArrayName="geoLocations" #tableGeoLocations [dataSource]="geoLocations"
+                  class="mat-elevation-z8">
+                  <!-- Place Column -->
+                  <ng-container matColumnDef="Place">
+                    <mat-header-cell *matHeaderCellDef> Place </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.geoLocationPlace}} </mat-cell>
+                  </ng-container>
+                  <!-- Longitude Column -->
+                  <ng-container matColumnDef="Longitude">
+                    <mat-header-cell *matHeaderCellDef> Longitude </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.geoLocationPoint.pointLongitude}} </mat-cell>
+                  </ng-container>
+                  <!-- Latitude Column -->
+                  <ng-container matColumnDef="Latitude">
+                    <mat-header-cell *matHeaderCellDef> Latitude </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.geoLocationPoint.pointLatitude}} </mat-cell>
+                  </ng-container>
+                  <!-- Action Column -->
+                  <ng-container matColumnDef="Action">
+                    <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                      <button mat-mini-fab class="my-2" color="primary" (click)="removeGeoLocation(element)">
+                        <mat-icon>clear</mat-icon>
+                      </button>
+                    </mat-cell>
+                  </ng-container>
+                  <mat-header-row *matHeaderRowDef="['Place', 'Longitude', 'Latitude', 'Action']"></mat-header-row>
+                  <mat-row *matRowDef="let row; columns: ['Place', 'Longitude', 'Latitude', 'Action']"
+                    (click)="selectionGeoLocation.toggle(row)" (click)="updateMultiGeoLocationForm()"
+                    [ngClass]="{hovered: row.hovered, highlighted: selectionGeoLocation.isSelected(row)}"
+                    (mouseover)="row.hovered = true" (mouseout)="row.hovered = false"></mat-row>
+                </mat-table>
+              </div>
+              <div fxLayout="row" fxLayoutAlign="space-between">
+                <h4 class="h4-title m-3" fxLayoutAlign="start center">Nouvelle géolocalisation</h4>
+                <!-- Expand button -->
+                <div fxLayoutAlign="end">
+                  <button *ngIf="!isOpenFormGeoLocation" mat-mini-fab color="primary"
+                    (click)="isOpenFormGeoLocation=true" class="m-3">
+                    <mat-icon>expand_more</mat-icon>
+                  </button>
+                  <button *ngIf="isOpenFormGeoLocation" mat-mini-fab color="primary"
+                    (click)="isOpenFormGeoLocation=false" class="m-3">
+                    <mat-icon>expand_less</mat-icon>
+                  </button>
+                </div>
+              </div>
+              <div *ngIf="isOpenFormGeoLocation">
+                <div class="border mx-3 mb-3">
+                  <h5 class="h3-title m-3" fxLayoutAlign="start center">Lieu de géolocalisation</h5>
+                  <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3 mt-3">
+                    <!--geoLocationPlace-->
+                    <mat-form-field appearance="fill" fxFlex="50">
+                      <mat-label>Geo Location Place</mat-label>
+                      <input formControlName="geoLocationPlace" matInput placeholder="geoLocationPlace">
+                    </mat-form-field>
+                    <!--geoLocationPoint-->
+                    <!--geoLocationPointLongitude-->
+                    <mat-form-field appearance="fill" fxFlex="24" class="mx-3">
+                      <mat-label>Geo Location Longitude</mat-label>
+                      <input formControlName="pointLongitude" matInput placeholder="Geo Location Longitude">
+                      <mat-error *ngFor="let validation of input_validation_messages.longitude">
+                        <mat-error class="error-message"
+                          *ngIf="seventhFormGroup?.get('pointLongitude')?.hasError(validation.type) && (seventhFormGroup.get('pointLongitude')?.dirty || seventhFormGroup.get('pointLongitude')?.touched)">
+                          {{validation.message}}</mat-error>
+                      </mat-error>
+                    </mat-form-field>
+                    <!--geoLocationPointLatitude-->
+                    <mat-form-field appearance="fill" fxFlex="24">
+                      <mat-label>Geo Location Latitude</mat-label>
+                      <input formControlName="pointLatitude" matInput placeholder="Geo Location Latitude">
+                      <mat-error *ngFor="let validation of input_validation_messages.latitude">
+                        <mat-error class="error-message"
+                          *ngIf="seventhFormGroup?.get('pointLatitude')?.hasError(validation.type) && (seventhFormGroup.get('pointLatitude')?.dirty || seventhFormGroup.get('pointLatitude')?.touched)">
+                          {{validation.message}}</mat-error>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <hr>
+                  <!--geoLocationBox #complex #multiple-->
+                  <h5 class="h3-title m-3" fxLayoutAlign="start center">Zone de géolocalisation</h5>
+                  <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3">
+                    <mat-form-field appearance="fill" fxFlex="24">
+                      <mat-label>North Bound Latitude</mat-label>
+                      <input formControlName="northBoundLatitude" matInput placeholder="North Bound Latitude">
+                      <mat-error *ngFor="let validation of input_validation_messages.latitude">
+                        <mat-error class="error-message"
+                          *ngIf="seventhFormGroup?.get('northBoundLatitude')?.hasError(validation.type) && (seventhFormGroup.get('northBoundLatitude')?.dirty || seventhFormGroup.get('northBoundLatitude')?.touched)">
+                          {{validation.message}}</mat-error>
+                      </mat-error>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" fxFlex="24" class="mx-3">
+                      <mat-label>South Bound Latitude</mat-label>
+                      <input formControlName="southBoundLatitude" matInput placeholder="South Bound Latitude">
+                      <mat-error *ngFor="let validation of input_validation_messages.latitude">
+                        <mat-error class="error-message"
+                          *ngIf="seventhFormGroup?.get('southBoundLatitude')?.hasError(validation.type) && (seventhFormGroup.get('southBoundLatitude')?.dirty || seventhFormGroup.get('southBoundLatitude')?.touched)">
+                          {{validation.message}}</mat-error>
+                      </mat-error>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" fxFlex="24">
+                      <mat-label>West Bound Longitude</mat-label>
+                      <input formControlName="westBoundLongitude" matInput placeholder="West Bound Longitude">
+                      <mat-error *ngFor="let validation of input_validation_messages.longitude">
+                        <mat-error class="error-message"
+                          *ngIf="seventhFormGroup?.get('westBoundLongitude')?.hasError(validation.type) && (seventhFormGroup.get('westBoundLongitude')?.dirty || seventhFormGroup.get('westBoundLongitude')?.touched)">
+                          {{validation.message}}</mat-error>
+                      </mat-error>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" fxFlex="24" class="mx-3">
+                      <mat-label>East Bound Longitude</mat-label>
+                      <input formControlName="eastBoundLongitude" matInput placeholder="East Bound Longitude">
+                      <mat-error *ngFor="let validation of input_validation_messages.longitude">
+                        <mat-error class="error-message"
+                          *ngIf="seventhFormGroup?.get('eastBoundLongitude')?.hasError(validation.type) && (seventhFormGroup.get('eastBoundLongitude')?.dirty || seventhFormGroup.get('eastBoundLongitude')?.touched)">
+                          {{validation.message}}</mat-error>
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <hr>
+                  <!--geoLocationPolygons-->
+                  <div class="mb-3">
+                    <div fxLayout="row" fxLayoutAlign="space-between">
+                      <h5 class="h3-title m-3" fxLayoutAlign="start center">Polygones de géolocalisation</h5>
+                      <!-- +1 -->
+                      <div fxLayoutAlign="end" class="mt-2">
+                        <button mat-mini-fab color="primary"
+                          (click)="addSubItemOnly('geoLocationPolygon', this.nbGeoLocationPolygon)" class="mr-3">
+                          <mat-icon>add</mat-icon>
+                        </button>
+                      </div>
+                    </div>
+                    <div *ngFor="let in of counter(this.nbGeoLocationPolygon); let i = index;">
+                      <div class="border m-3">
+                        <!--geoLocationPolygon-->
+                        <div fxLayout="row" fxLayoutAlign="space-between" class="mb-2">
+                          <h5 class="h3-title m-3" fxLayoutAlign="start center">Polygone de géolocalisation (minimum : 4
+                            points)</h5>
+                          <!-- Remove button -->
+                          <div fxLayoutAlign="end" class="mt-2 mr-3">
+                            <button mat-mini-fab color="primary" (click)="removeSubItemOnly('geoLocationPolygon', i)">
+                              <mat-icon>remove</mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                        <div *ngFor="let in of counter(this.nbGeoLocationPolygonPoints[i]); let j = index;">
+                          <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3">
+                            <mat-form-field appearance="fill" fxFlex="47.5">
+                              <mat-label>Geo Location Polygon Point Longitude {{j+1}}</mat-label>
+                              <input formControlName="polygonPointLongitude_{{i}}_{{j}}" matInput
+                                placeholder="Geo Location Polygon Point Longitude">
+                              <mat-error *ngIf="item.invalid">{{getErrorMessage('longitude')}}</mat-error>
+                            </mat-form-field>
+                            <mat-form-field appearance="fill" fxFlex="47" class="mx-3">
+                              <mat-label>Geo Location Polygon Point Latitude {{j+1}}</mat-label>
+                              <input formControlName="polygonPointLatitude_{{i}}_{{j}}" matInput
+                                placeholder="Geo Location Polygon Point Latitude">
+                              <mat-error *ngIf="item.invalid">{{getErrorMessage('latitude')}}</mat-error>
+                            </mat-form-field>
+                            <span class="spacer"></span>
+                            <!-- Remove button -->
+                            <div *ngIf="this.nbGeoLocationPolygonPoints[i] > 4" fxLayoutAlign="end" class="mt-2">
+                              <button mat-mini-fab color="primary"
+                                (click)="removeSubItemOnly('geoLocationPolygonPoint', i, j)">
+                                <mat-icon>remove</mat-icon>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- +1 -->
+                        <div fxLayout="row" fxLayoutAlign="end">
+                          <button mat-mini-fab color="primary"
+                            (click)="addSubItemOnly('geoLocationPolygonPoint', i, this.nbGeoLocationPolygonPoints[i])"
+                            class="mr-3">
+                            <mat-icon>add</mat-icon>
+                          </button>
+                        </div>
+                        <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3 mt-3">
+                          <mat-form-field appearance="fill" fxFlex="50">
+                            <mat-label>Geo Location In Polygon Point Longitude</mat-label>
+                            <input formControlName="inPolygonPointLongitude_{{i}}" matInput
+                              placeholder="Geo Location In Polygon Point Longitude">
+                            <mat-error *ngIf="item.invalid">{{getErrorMessage('longitude')}}</mat-error>
+                          </mat-form-field>
+                          <mat-form-field appearance="fill" fxFlex="49" class="ml-3">
+                            <mat-label>Geo Location In Polygon Point Latitude</mat-label>
+                            <input formControlName="inPolygonPointLatitude_{{i}}" matInput
+                              placeholder="Geo Location In Polygon Point Latitude">
+                            <mat-error *ngIf="item.invalid">{{getErrorMessage('latitude')}}</mat-error>
+                          </mat-form-field>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Add Geo location button-->
+                <div fxLayoutAlign="end" class="m-3">
+                  <button mat-button mat-flat-button color="primary" class="mr-3" (click)="modGeoLocation()"
+                    [hidden]="isModifyGeoLocationButton">Modifier</button>
+                  <button mat-button mat-flat-button color="primary" (click)="addGeoLocation()">Ajouter</button>
+                </div>
+              </div>
+            </div>
+            <!--Back & Next Buttons-->
+            <div fxLayoutAlign="end">
+              <button mat-button mat-flat-button class="mt-3 mr-2" color="primary" matStepperPrevious>Précédent</button>
+              <button mat-button mat-flat-button class="mt-3" color="primary" matStepperNext>Suivant</button>
+            </div>
+          </form>
+        </mat-step>
+        <!--END seventhFormGroup-->
+        <!--START eighthFormGroup-->
+        <mat-step [stepControl]="eighthFormGroup" label="Langue / ..." optional="false">
+          <form [formGroup]="eighthFormGroup">
+            <!--language-->
+            <h3 class="h3-title" fxLayoutAlign="start center">Langue</h3>
+            <div fxLayout="row" fxLayoutAlign="space-between" class="mt-3">
+              <!--language-->
+              <mat-form-field appearance="fill" fxFlex="100">
+                <mat-label>Language</mat-label>
+                <mat-select formControlName="language">
+                  <mat-option>None</mat-option>
+                  <mat-option *ngFor="let language of languages" [value]="language">{{language}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <!--version #simple-->
+            <div>
+              <div fxLayout="row" class="mt-3">
+                <h3 class="h3-title" fxLayoutAlign="start center">Version</h3>
+                <span class="spacer"></span>
+              </div>
+              <!--version-->
+              <mat-form-field appearance="fill" fxLayout="column">
+                <mat-label>Version</mat-label>
+                <input formControlName="version" matInput placeholder="Version">
+              </mat-form-field>
+            </div>
+            <!--alternateIdentifiers #complex #multiple-->
+            <form [formGroup]="eighthFormGroupAltId">
+              <h3 class="h3-title mt-3">Identifiants Alternatifs</h3>
+              <div class="border">
+                <div class="mx-3 mt-3" *ngIf="altIdentifiers.length > 0">
+                  <h4 class="h4-title" fxLayoutAlign="start center">Liste des identifiants alternatifs</h4>
+                  <mat-table formArrayName="altIdentifiers" #tableAltIdentifiers [dataSource]="altIdentifiers"
+                    class="mat-elevation-z8">
+                    <!-- Alternate identifier Column -->
+                    <ng-container matColumnDef="Alternate Identifier">
+                      <mat-header-cell *matHeaderCellDef> Alternate Identifier </mat-header-cell>
+                      <mat-cell *matCellDef="let element"> {{element._value}} </mat-cell>
+                    </ng-container>
+                    <!-- Alternate identifier Type Column -->
+                    <ng-container matColumnDef="Alternate Identifier Type">
+                      <mat-header-cell *matHeaderCellDef> Alternate Identifier Type</mat-header-cell>
+                      <mat-cell *matCellDef="let element"> {{element._attr.alternateIdentifierType}} </mat-cell>
+                    </ng-container>
+                    <!-- Action Column -->
+                    <ng-container matColumnDef="Action">
+                      <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+                      <mat-cell *matCellDef="let element">
+                        <button mat-mini-fab class="my-2" color="primary" (click)="removeAltIdentifier(element)">
+                          <mat-icon>clear</mat-icon>
+                        </button>
+                      </mat-cell>
+                    </ng-container>
+                    <mat-header-row *matHeaderRowDef="['Alternate Identifier', 'Alternate Identifier Type', 'Action']">
+                    </mat-header-row>
+                    <mat-row
+                      *matRowDef="let row; columns: ['Alternate Identifier', 'Alternate Identifier Type', 'Action']"
+                      (click)="selectionAltIdentifier.toggle(row)" (click)="updateAltIdentifierForm()"
+                      [ngClass]="{hovered: row.hovered, highlighted: selectionAltIdentifier.isSelected(row)}"
+                      (mouseover)="row.hovered = true" (mouseout)="row.hovered = false"></mat-row>
+                  </mat-table>
+                </div>
+                <div fxLayout="row" fxLayoutAlign="space-between">
+                  <h4 class="h4-title m-3" fxLayoutAlign="start center">Nouvel identifiant alternatif</h4>
+                  <!-- Expand button -->
+                  <div fxLayoutAlign="end">
+                    <button *ngIf="!isOpenFormAlternateIdentifier" mat-mini-fab color="primary"
+                      (click)="isOpenFormAlternateIdentifier=true" class="m-3">
+                      <mat-icon>expand_more</mat-icon>
+                    </button>
+                    <button *ngIf="isOpenFormAlternateIdentifier" mat-mini-fab color="primary"
+                      (click)="isOpenFormAlternateIdentifier=false" class="m-3">
+                      <mat-icon>expand_less</mat-icon>
+                    </button>
+                  </div>
+                </div>
+                <div *ngIf="isOpenFormAlternateIdentifier">
+                  <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3">
+                    <!--alternateIdentifier-->
+                    <mat-form-field appearance="fill" fxFlex="46">
+                      <mat-label>Alternate Identifier</mat-label>
+                      <input formControlName="alternateIdentifier" matInput placeholder="Alternate Identifier" required>
+                      <mat-error *ngFor="let validation of input_validation_messages.empty">
+                        <mat-error class="error-message"
+                          *ngIf="eighthFormGroupAltId?.get('alternateIdentifier')?.hasError(validation.type) && (eighthFormGroupAltId.get('alternateIdentifier')?.dirty || eighthFormGroupAltId.get('alternateIdentifier')?.touched)">
+                          {{validation.message}}</mat-error>
+                      </mat-error>
+                    </mat-form-field>
+                    <!--alternateIdentifierType-->
+                    <mat-form-field appearance="fill" fxFlex="46" class="ml-3">
+                      <mat-label>Alternate Identifier Type</mat-label>
+                      <input formControlName="alternateIdentifierType" matInput placeholder="Alternate Identifier Type"
+                        required>
+                      <mat-error *ngFor="let validation of input_validation_messages.empty">
+                        <mat-error class="error-message"
+                          *ngIf="eighthFormGroupAltId?.get('alternateIdentifierType')?.hasError(validation.type) && (eighthFormGroupAltId.get('alternateIdentifierType')?.dirty || eighthFormGroupAltId.get('alternateIdentifierType')?.touched)">
+                          {{validation.message}}</mat-error>
+                      </mat-error>
+                    </mat-form-field>
+                    <div fxLayoutAlign="end start" class="ml-3 mt-2">
+                      <button mat-button mat-flat-button color="primary" class="mr-3" (click)="modAltIdentifier()"
+                        [hidden]="isModifyAltIdentifierButton">Modifier</button>
+                      <button mat-button mat-flat-button color="primary" (click)="addAltIdentifier()"
+                        [disabled]="!eighthFormGroupAltId.valid">Ajouter</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+            <!--sizes #simple #multiple-->
+            <h3 class="h3-title mt-3">Tailles</h3>
+            <div class="border">
+              <div class="mx-3 mt-3" *ngIf="sizes.length > 0">
+                <h4 class="h4-title" fxLayoutAlign="start center">Liste des Tailles</h4>
+                <mat-table formArrayName="sizes" #tableSizes [dataSource]="sizes" class="mat-elevation-z8">
+                  <!-- Subject Column -->
+                  <ng-container matColumnDef="Size">
+                    <mat-header-cell *matHeaderCellDef> Size </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element}} </mat-cell>
+                  </ng-container>
+                  <!-- Action Column -->
+                  <ng-container matColumnDef="Action">
+                    <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                      <button mat-mini-fab class="my-2" color="primary" (click)="removeSize(element)">
+                        <mat-icon>clear</mat-icon>
+                      </button>
+                    </mat-cell>
+                  </ng-container>
+                  <mat-header-row *matHeaderRowDef="['Size', 'Action']"></mat-header-row>
+                  <mat-row *matRowDef="let row; columns: ['Size', 'Action']"></mat-row>
+                </mat-table>
+              </div>
+              <div fxLayout="row" fxLayoutAlign="space-between">
+                <h4 class="h4-title m-3" fxLayoutAlign="start center">Nouvelle taille</h4>
+                <!-- Expand button -->
+                <div fxLayoutAlign="end">
+                  <button *ngIf="!isOpenFormSize" mat-mini-fab color="primary" (click)="isOpenFormSize=true"
+                    class="m-3">
+                    <mat-icon>expand_more</mat-icon>
+                  </button>
+                  <button *ngIf="isOpenFormSize" mat-mini-fab color="primary" (click)="isOpenFormSize=false"
+                    class="m-3">
+                    <mat-icon>expand_less</mat-icon>
+                  </button>
+                </div>
+              </div>
+              <div *ngIf="isOpenFormSize">
+                <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3">
+                  <!--format-->
+                  <mat-form-field appearance="fill" fxFlex="93">
+                    <mat-label>Size</mat-label>
+                    <input formControlName="size" matInput placeholder="Size">
+                  </mat-form-field>
+                  <div fxLayoutAlign="end start" class="ml-3 mt-2">
+                    <button mat-button mat-flat-button color="primary" (click)="addSize()">Ajouter</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--formats #simple #multiple-->
+            <h3 class="h3-title mt-3">Formats</h3>
+            <div class="border">
+              <div class="mx-3 mt-3" *ngIf="formats.length > 0">
+                <h4 class="h4-title" fxLayoutAlign="start center">Liste des formats</h4>
+                <mat-table formArrayName="formats" #tableFormats [dataSource]="formats" class="mat-elevation-z8">
+                  <!-- Subject Column -->
+                  <ng-container matColumnDef="Format">
+                    <mat-header-cell *matHeaderCellDef> Format </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element}} </mat-cell>
+                  </ng-container>
+                  <!-- Action Column -->
+                  <ng-container matColumnDef="Action">
+                    <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                      <button mat-mini-fab class="my-2" color="primary" (click)="removeFormat(element)">
+                        <mat-icon>clear</mat-icon>
+                      </button>
+                    </mat-cell>
+                  </ng-container>
+                  <mat-header-row *matHeaderRowDef="['Format', 'Action']"></mat-header-row>
+                  <mat-row *matRowDef="let row; columns: ['Format', 'Action']"></mat-row>
+                </mat-table>
+              </div>
+              <div fxLayout="row" fxLayoutAlign="space-between">
+                <h4 class="h4-title m-3" fxLayoutAlign="start center">Nouveau format</h4>
+                <!-- Expand button -->
+                <div fxLayoutAlign="end">
+                  <button *ngIf="!isOpenFormFormat" mat-mini-fab color="primary" (click)="isOpenFormFormat=true"
+                    class="m-3">
+                    <mat-icon>expand_more</mat-icon>
+                  </button>
+                  <button *ngIf="isOpenFormFormat" mat-mini-fab color="primary" (click)="isOpenFormFormat=false"
+                    class="m-3">
+                    <mat-icon>expand_less</mat-icon>
+                  </button>
+                </div>
+              </div>
+              <div *ngIf="isOpenFormFormat">
+                <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3">
+                  <!--format-->
+                  <mat-form-field appearance="fill" fxFlex="93">
+                    <mat-label>Format</mat-label>
+                    <input formControlName="format" matInput placeholder="Format">
+                  </mat-form-field>
+                  <div fxLayoutAlign="end start" class="ml-3 mt-2">
+                    <button mat-button mat-flat-button color="primary" (click)="addFormat()">Ajouter</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--Back & Next Buttons-->
+            <div fxLayoutAlign="end">
+              <button mat-button mat-flat-button class="mt-3 mr-2" color="primary" matStepperPrevious>Précédent</button>
+              <button mat-button mat-flat-button class="mt-3" color="primary" matStepperNext>Suivant</button>
+            </div>
+          </form>
+        </mat-step>
+        <!--END eighthFormGroup-->
+        <!--START ninthFormGroup-->
+        <mat-step [stepControl]="ninthFormGroup" label="Droits" optional="false">
+          <form [formGroup]="ninthFormGroupRight">
+            <h3 class="h3-title">Droits</h3>
+            <div class="border">
+              <div class="mx-3 mt-3" *ngIf="rights.length > 0">
+                <h4 class="h4-title" fxLayoutAlign="start center">Liste des droits</h4>
+                <mat-table formArrayName="rights" #tableRights [dataSource]="rights" class="mat-elevation-z8">
+                  <!-- Subject Column -->
+                  <ng-container matColumnDef="Right">
+                    <mat-header-cell *matHeaderCellDef> Right </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element._value}} </mat-cell>
+                  </ng-container>
+                  <!-- Right URI scheme Column -->
+                  <ng-container matColumnDef="Scheme">
+                    <mat-header-cell *matHeaderCellDef> URI </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element._attr.rightsURI}} </mat-cell>
+                  </ng-container>
+                  <!-- Action Column -->
+                  <ng-container matColumnDef="Action">
+                    <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                      <button mat-mini-fab class="my-2" color="primary" (click)="removeRight(element)">
+                        <mat-icon>clear</mat-icon>
+                      </button>
+                    </mat-cell>
+                  </ng-container>
+                  <mat-header-row *matHeaderRowDef="['Right', 'Scheme', 'Action']"></mat-header-row>
+                  <mat-row *matRowDef="let row; columns: ['Right', 'Scheme', 'Action']"
+                    (click)="selectionRight.toggle(row)" (click)="updateRightForm()"
+                    [ngClass]="{hovered: row.hovered, highlighted: selectionRight.isSelected(row)}"
+                    (mouseover)="row.hovered = true" (mouseout)="row.hovered = false"></mat-row>
+                </mat-table>
+              </div>
+              <div fxLayout="row" fxLayoutAlign="space-between">
+                <h4 class="h4-title m-3" fxLayoutAlign="start center">Nouveau droit</h4>
+                <!-- Expand button -->
+                <div fxLayoutAlign="end">
+                  <button *ngIf="!isOpenFormRight" mat-mini-fab color="primary" (click)="isOpenFormRight=true"
+                    class="m-3">
+                    <mat-icon>expand_more</mat-icon>
+                  </button>
+                  <button *ngIf="isOpenFormRight" mat-mini-fab color="primary" (click)="isOpenFormRight=false"
+                    class="m-3">
+                    <mat-icon>expand_less</mat-icon>
+                  </button>
+                </div>
+              </div>
+              <div *ngIf="isOpenFormRight">
+                <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3">
+                  <!--rights-->
+                  <mat-form-field appearance="fill" fxFlex="40">
+                    <mat-label>Right</mat-label>
+                    <input formControlName="right" matInput placeholder="Right" required>
+                    <mat-error *ngFor="let validation of input_validation_messages.empty">
+                      <mat-error class="error-message"
+                        *ngIf="ninthFormGroupRight?.get('right')?.hasError(validation.type) && (ninthFormGroupRight.get('right')?.dirty || ninthFormGroupRight.get('right')?.touched)">
+                        {{validation.message}}</mat-error>
+                    </mat-error>
+                  </mat-form-field>
+                  <!--rightsURI-->
+                  <mat-form-field appearance="fill" fxFlex="34" class="mx-3">
+                    <mat-label>Right URI</mat-label>
+                    <input formControlName="rightURI" matInput placeholder="Right URI">
+                    <mat-error *ngFor="let validation of input_validation_messages.uri">
+                      <mat-error class="error-message"
+                        *ngIf="ninthFormGroupRight?.get('rightURI')?.hasError(validation.type) && (ninthFormGroupRight.get('rightURI')?.dirty || ninthFormGroupRight.get('rightURI')?.touched)">
+                        {{validation.message}}</mat-error>
+                    </mat-error>
+                  </mat-form-field>
+                  <!--lang-->
+                  <mat-form-field appearance="fill" fxFlex="24">
+                    <mat-label>Language</mat-label>
+                    <mat-select formControlName="rightLang">
+                      <mat-option>None</mat-option>
+                      <mat-option *ngFor="let language of languages" [value]="language">{{language}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3">
+                  <!--rightsIdentifier-->
+                  <mat-form-field appearance="fill" fxFlex="33">
+                    <mat-label>Right Identifier</mat-label>
+                    <input formControlName="rightIdentifier" matInput placeholder="Right Identifier">
+                  </mat-form-field>
+                  <!--rightsIdentifierScheme-->
+                  <mat-form-field appearance="fill" fxFlex="33" class="mx-3">
+                    <mat-label>Right Identifier Scheme</mat-label>
+                    <input formControlName="rightIdentifierScheme" matInput placeholder="Right Identifier Scheme">
+                  </mat-form-field>
+                  <!--rightsSchemeURI-->
+                  <mat-form-field appearance="fill" fxFlex="32">
+                    <mat-label>Right Scheme URI</mat-label>
+                    <input formControlName="rightSchemeURI" matInput placeholder="Right Scheme URI">
+                    <mat-error *ngFor="let validation of input_validation_messages.uri">
+                      <mat-error class="error-message"
+                        *ngIf="ninthFormGroupRight?.get('rightSchemeURI')?.hasError(validation.type) && (ninthFormGroupRight.get('rightSchemeURI')?.dirty || ninthFormGroupRight.get('rightSchemeURI')?.touched)">
+                        {{validation.message}}</mat-error>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div fxLayoutAlign="end" class="mx-3 mb-3">
+                  <button mat-button mat-flat-button color="primary" class="mr-3" (click)="modRight()"
+                    [hidden]="isModifyRightButton">Modifier</button>
+                  <button mat-button mat-flat-button color="primary" (click)="addRight()"
+                    [disabled]="!ninthFormGroupRight.valid">Ajouter</button>
+                </div>
+              </div>
+            </div>
+          </form>
+          <form [formGroup]="ninthFormGroupFundRef">
+            <h3 class="h3-title mt-3">Références de financement</h3>
+            <div class="border">
+              <div class="mx-3 mt-3" *ngIf="fundingRefs.length > 0">
+                <mat-table formArrayName="fundingRefs" #tableFundingRefs [dataSource]="fundingRefs"
+                  class="mat-elevation-z8">
+                  <!-- Funder name Column -->
+                  <ng-container matColumnDef="Funder Name">
+                    <mat-header-cell *matHeaderCellDef> Funder Name </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.funderName}} </mat-cell>
+                  </ng-container>
+                  <!-- Funder identifier Column -->
+                  <ng-container matColumnDef="Funder Identifier">
+                    <mat-header-cell *matHeaderCellDef> Funder Identifier </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.funderIdentifier._value}} </mat-cell>
+                  </ng-container>
+                  <!-- Funder identifier Type Column -->
+                  <ng-container matColumnDef="Funder Identifier Type">
+                    <mat-header-cell *matHeaderCellDef> Funder Identifier Type </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.funderIdentifier._attr.funderIdentifierType}}
+                    </mat-cell>
+                  </ng-container>
+                  <!-- Action Column -->
+                  <ng-container matColumnDef="Action">
+                    <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                      <button mat-mini-fab class="my-2" color="primary" (click)="removeFundingRef(element)">
+                        <mat-icon>clear</mat-icon>
+                      </button>
+                    </mat-cell>
+                  </ng-container>
+                  <mat-header-row
+                    *matHeaderRowDef="['Funder Name', 'Funder Identifier', 'Funder Identifier Type', 'Action']">
+                  </mat-header-row>
+                  <mat-row
+                    *matRowDef="let row; columns: ['Funder Name', 'Funder Identifier', 'Funder Identifier Type', 'Action']"
+                    (click)="selectionFundingReference.toggle(row)" (click)="updateFundingRefForm()"
+                    [ngClass]="{hovered: row.hovered, highlighted: selectionFundingReference.isSelected(row)}"
+                    (mouseover)="row.hovered = true" (mouseout)="row.hovered = false"></mat-row>
+                </mat-table>
+              </div>
+              <div fxLayout="row" fxLayoutAlign="space-between">
+                <h4 class="h4-title m-3" fxLayoutAlign="start center">Nouvelle référence de financement</h4>
+                <!-- Expand button -->
+                <div fxLayoutAlign="end">
+                  <button *ngIf="!isOpenFormFundingReference" mat-mini-fab color="primary"
+                    (click)="isOpenFormFundingReference=true" class="m-3">
+                    <mat-icon>expand_more</mat-icon>
+                  </button>
+                  <button *ngIf="isOpenFormFundingReference" mat-mini-fab color="primary"
+                    (click)="isOpenFormFundingReference=false" class="m-3">
+                    <mat-icon>expand_less</mat-icon>
+                  </button>
+                </div>
+              </div>
+              <div *ngIf="isOpenFormFundingReference">
+                <!--fundingReferences #complex #multiple-->
+                <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3">
+                  <!--funderName-->
+                  <mat-form-field appearance="fill" fxFlex="100">
+                    <mat-label>Funder Name</mat-label>
+                    <input formControlName="funderName" matInput placeholder="Funder Name" required>
+                    <mat-error *ngFor="let validation of input_validation_messages.empty">
+                      <mat-error class="error-message"
+                        *ngIf="ninthFormGroupFundRef?.get('funderName')?.hasError(validation.type) && (ninthFormGroupFundRef.get('funderName')?.dirty || ninthFormGroupFundRef.get('funderName')?.touched)">
+                        {{validation.message}}</mat-error>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3">
+                  <!--funderIdentifier-->
+                  <mat-form-field appearance="fill" fxFlex="33">
+                    <mat-label>Funder Identifier</mat-label>
+                    <input formControlName="funderIdentifier" matInput placeholder="Funder Identifier"
+                      (input)="funderIdentifierChange($event)">
+                  </mat-form-field>
+                  <!--funderIdentifierType-->
+                  <mat-form-field appearance="fill" fxFlex="33" class="mx-3">
+                    <mat-label>Funder Identifier Type</mat-label>
+                    <mat-select formControlName="funderIdentifierType" [required]="isFunderIdentifierTypeRequired">
+                      <mat-option>None</mat-option>
+                      <mat-option *ngFor="let item of funderIdentifierTypes" [value]="item">{{item}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <!--schemeURI-->
+                  <mat-form-field appearance="fill" fxFlex="33">
+                    <mat-label>Funder Scheme URI</mat-label>
+                    <input formControlName="funderSchemeURI" matInput placeholder="Funder Scheme URI">
+                    <mat-error *ngFor="let validation of input_validation_messages.uri">
+                      <mat-error class="error-message"
+                        *ngIf="ninthFormGroupFundRef?.get('funderSchemeURI')?.hasError(validation.type) && (ninthFormGroupFundRef.get('funderSchemeURI')?.dirty || ninthFormGroupFundRef.get('funderSchemeURI')?.touched)">
+                        {{validation.message}}</mat-error>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3">
+                  <!--awardNumber-->
+                  <mat-form-field appearance="fill" fxFlex="33">
+                    <mat-label>Award Number</mat-label>
+                    <input formControlName="funderAwardNumber" matInput placeholder="Award Number">
+                  </mat-form-field>
+                  <!--awardURI-->
+                  <mat-form-field appearance="fill" fxFlex="33" class="mx-3">
+                    <mat-label>Award URI</mat-label>
+                    <input formControlName="funderAwardURI" matInput placeholder="Award URI">
+                    <mat-error *ngFor="let validation of input_validation_messages.uri">
+                      <mat-error class="error-message"
+                        *ngIf="ninthFormGroupFundRef?.get('funderAwardURI')?.hasError(validation.type) && (ninthFormGroupFundRef.get('funderAwardURI')?.dirty || ninthFormGroupFundRef.get('funderAwardURI')?.touched)">
+                        {{validation.message}}</mat-error>
+                    </mat-error>
+                  </mat-form-field>
+                  <!--awardTitle-->
+                  <mat-form-field appearance="fill" fxFlex="33">
+                    <mat-label>Award Title</mat-label>
+                    <input formControlName="funderAwardTitle" matInput placeholder="Award Title">
+                  </mat-form-field>
+                </div>
+                <div fxLayoutAlign="end" class="mx-3 mb-3">
+                  <button mat-button mat-flat-button color="primary" (click)="addFundingRef()"
+                    [disabled]="!ninthFormGroupFundRef.valid">Ajouter</button>
+                </div>
+              </div>
+            </div>
+            <!--Back & Next Buttons-->
+            <div fxLayoutAlign="end">
+              <button mat-button mat-flat-button class="mt-3 mr-2" color="primary" matStepperPrevious>Précédent</button>
+              <button mat-button mat-flat-button class="mt-3" color="primary" matStepperNext>Suivant</button>
+            </div>
+          </form>
+        </mat-step>
+        <!--END ninthFormGroup-->
+        <!--START tenthFormGroup-->
+        <mat-step [stepControl]="tenthFormGroup" label="Art. Connexes" optional="false">
+          <form [formGroup]="tenthFormGroup">
+            <h3 class="h3-title">Articles connexes</h3>
+            <div class="border">
+              <div class="mx-3 mt-3" *ngIf="relItems.length > 0">
+                <mat-table formArrayName="relItems" #tableRelItems [dataSource]="relItems" class="mat-elevation-z8">
+                  <!-- Related Item Identifier Column -->
+                  <ng-container matColumnDef="Related Item Identifier">
+                    <mat-header-cell *matHeaderCellDef> Related Item Identifier </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element.relatedItemIdentifier._value}} </mat-cell>
+                  </ng-container>
+                  <!-- Related Item Identifier Type Column -->
+                  <ng-container matColumnDef="Related Item Identifier Type">
+                    <mat-header-cell *matHeaderCellDef> Related Item Identifier Type </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                      {{element.relatedItemIdentifier._attr.relatedItemIdentifierType}} </mat-cell>
+                  </ng-container>
+                  <!-- Related Item Type Column -->
+                  <ng-container matColumnDef="Related Item Type">
+                    <mat-header-cell *matHeaderCellDef> Related Item Type </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element._attr.relatedItemType}} </mat-cell>
+                  </ng-container>
+                  <!-- Related Item Relation Type Column -->
+                  <ng-container matColumnDef="Related Item Relation Type">
+                    <mat-header-cell *matHeaderCellDef> Related Item Relation Type </mat-header-cell>
+                    <mat-cell *matCellDef="let element"> {{element._attr.relationType}} </mat-cell>
+                  </ng-container>
+                  <!-- Action Column -->
+                  <ng-container matColumnDef="Action">
+                    <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
+                      <button mat-mini-fab class="my-2" color="primary" (click)="removeRelatedItem(element)">
+                        <mat-icon>clear</mat-icon>
+                      </button>
+                    </mat-cell>
+                  </ng-container>
+                  <mat-header-row
+                    *matHeaderRowDef="['Related Item Identifier', 'Related Item Identifier Type', 'Related Item Type', 'Related Item Relation Type', 'Action']">
+                  </mat-header-row>
+                  <mat-row
+                    *matRowDef="let row; columns: ['Related Item Identifier', 'Related Item Identifier Type', 'Related Item Type', 'Related Item Relation Type', 'Action']"
+                    (click)="selectionRelItem.toggle(row)" (click)="updateRelatedItemForm()"
+                    [ngClass]="{hovered: row.hovered, highlighted: selectionRelItem.isSelected(row)}"
+                    (mouseover)="row.hovered = true" (mouseout)="row.hovered = false"></mat-row>
+                </mat-table>
+              </div>
+              <form [formGroup]="tenthFormGroupMultiRelItems">
+                <div fxLayout="row" fxLayoutAlign="space-between">
+                  <h4 class="h4-title m-3" fxLayoutAlign="start center">Nouvel article connexe</h4>
+                  <!-- Expand button -->
+                  <div fxLayoutAlign="end">
+                    <button *ngIf="!isOpenFormRelatedItem" mat-mini-fab color="primary"
+                      (click)="isOpenFormRelatedItem=true" class="m-3">
+                      <mat-icon>expand_more</mat-icon>
+                    </button>
+                    <button *ngIf="isOpenFormRelatedItem" mat-mini-fab color="primary"
+                      (click)="isOpenFormRelatedItem=false" class="m-3">
+                      <mat-icon>expand_less</mat-icon>
+                    </button>
+                  </div>
+                </div>
+                <div *ngIf="isOpenFormRelatedItem">
+                  <div class="border mx-3">
+                    <h5 class="h3-title m-3" fxLayoutAlign="start center">Identificateur d'article associé</h5>
+                    <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3">
+                      <!--relatedItem-->
+                      <mat-form-field appearance="fill" fxFlex="50">
+                        <mat-label>Related Item Identifier</mat-label>
+                        <input formControlName="relatedItemIdentifier" matInput placeholder="Related Item" required>
+                        <mat-error *ngFor="let validation of input_validation_messages.empty">
+                          <mat-error class="error-message"
+                            *ngIf="tenthFormGroupMultiRelItems?.get('relatedItemIdentifier')?.hasError(validation.type) && (tenthFormGroupMultiRelItems.get('relatedItemIdentifier')?.dirty || tenthFormGroupMultiRelItems.get('relatedItemIdentifier')?.touched)">
+                            {{validation.message}}</mat-error>
+                        </mat-error>
+                      </mat-form-field>
+                      <!--relatedItemIdentifierType-->
+                      <mat-form-field appearance="fill" fxFlex="49" class="ml-3">
+                        <mat-label>Related Item Identifier Type</mat-label>
+                        <mat-select formControlName="relatedItemIdentifierType">
+                          <mat-option>None</mat-option>
+                          <mat-option *ngFor="let item of relatedIdentifierTypes" [value]="item">{{item}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3">
+                      <!--relatedMetadataScheme-->
+                      <mat-form-field appearance="fill" fxFlex="33">
+                        <mat-label>Related Item Metadata Scheme</mat-label>
+                        <input formControlName="relatedItemMetadataScheme" matInput
+                          placeholder="Related Item Metadata Scheme">
+                      </mat-form-field>
+                      <!--schemeURI-->
+                      <mat-form-field appearance="fill" fxFlex="33" class="mx-3">
+                        <mat-label>Related Item Scheme URI</mat-label>
+                        <input formControlName="relatedItemSchemeURI" matInput placeholder="Related Item Scheme URI">
+                        <mat-error *ngFor="let validation of input_validation_messages.uri">
+                          <mat-error class="error-message"
+                            *ngIf="tenthFormGroupMultiRelItems?.get('relatedItemSchemeURI')?.hasError(validation.type) && (tenthFormGroupMultiRelItems.get('relatedItemSchemeURI')?.dirty || tenthFormGroupMultiRelItems.get('relatedItemSchemeURI')?.touched)">
+                            {{validation.message}}</mat-error>
+                        </mat-error>
+                      </mat-form-field>
+                      <!--schemeType-->
+                      <mat-form-field appearance="fill" fxFlex="33">
+                        <mat-label>Related Item Scheme Type</mat-label>
+                        <input formControlName="relatedItemSchemeType" matInput placeholder="Related Item Scheme Type">
+                      </mat-form-field>
+                    </div>
+                    <hr>
+                    <!--relatedItemCreators #complex #multiple-->
+                    <div fxLayout="row" fxLayoutAlign="space-between">
+                      <h5 class="h3-title m-3" fxLayoutAlign="start center">Créateurs</h5>
+                      <!-- +1 -->
+                      <div fxLayoutAlign="end" class="mt-2">
+                        <button mat-mini-fab color="primary"
+                          (click)="addSubItemOnly('relatedItemCreator', this.nbRelatedItemCreators)" class="mr-3">
+                          <mat-icon>add</mat-icon>
+                        </button>
+                      </div>
+                    </div>
+                    <div *ngFor="let in of counter(this.nbRelatedItemCreators); let j = index">
+                      <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3 mt-3">
+                        <mat-form-field appearance="fill" fxFlex="50">
+                          <mat-label>Related Item Creator Name {{j+1}}</mat-label>
+                          <input formControlName="relatedItemCreatorName_{{j}}" matInput
+                            placeholder="Related Item Creator Name">
+                        </mat-form-field>
+                        <!--nameType-->
+                        <mat-form-field appearance="fill" fxFlex="24" class="mx-3">
+                          <mat-label>Related Item Creator Name Type {{j+1}}</mat-label>
+                          <mat-select formControlName="relatedItemCreatorType_{{j}}"
+                            (ngModelChange)="updateRelatedItemFormCreatorSpec($event, j)">
+                            <mat-option>None</mat-option>
+                            <mat-option *ngFor="let item of nameTypes" [value]="item">{{item}}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                        <!--lang-->
+                        <mat-form-field appearance="fill" fxFlex="24">
+                          <mat-label>Related Item Creator Language</mat-label>
+                          <mat-select formControlName="relatedItemCreatorLang_{{j}}">
+                            <mat-option>None</mat-option>
+                            <mat-option *ngFor="let language of languages" [value]="language">{{language}}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                      <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3">
+                        <!--givenName-->
+                        <mat-form-field appearance="fill" fxFlex="47">
+                          <mat-label>Related Item Creator Given Name {{j+1}}</mat-label>
+                          <input formControlName="relatedItemCreatorGivenName_{{j}}" matInput
+                            placeholder="Related Item Creator Given Name"
+                            (input)="updateRelatedItemFormCreatorSpec($event, j)">
+                          <mat-error *ngIf="item.invalid">{{getErrorMessage('required')}}</mat-error>
+                        </mat-form-field>
+                        <!--familyName-->
+                        <mat-form-field appearance="fill" fxFlex="47" class="mx-3">
+                          <mat-label>Related Item Creator Family Name {{j+1}}</mat-label>
+                          <input formControlName="relatedItemCreatorFamilyName_{{j}}" matInput
+                            placeholder="Related Item Creator Family Name"
+                            (input)="updateRelatedItemFormCreatorSpec($event, j)">
+                          <mat-error *ngIf="item.invalid">{{getErrorMessage('required')}}</mat-error>
+                        </mat-form-field>
+                        <span class="spacer"></span>
+                        <!-- Remove button -->
+                        <div fxLayoutAlign="end" class="mt-2">
+                          <button mat-mini-fab color="primary" (click)="removeSubItemOnly('relatedItemCreator', j);">
+                            <mat-icon>remove</mat-icon>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <hr>
+                    <!--relatedItemTitles #complex #multiple-->
+                    <div fxLayout="row" fxLayoutAlign="space-between">
+                      <h5 class="h3-title m-3" fxLayoutAlign="start center">Titres</h5>
+                      <!-- +1 -->
+                      <div fxLayoutAlign="end" class="ml-3 mt-2">
+                        <button mat-mini-fab color="primary"
+                          (click)="addSubItemOnly('relatedItemTitle', this.nbRelatedItemTitles)" class="mr-3">
+                          <mat-icon>add</mat-icon>
+                        </button>
+                      </div>
+                    </div>
+                    <div *ngFor="let in of counter(this.nbRelatedItemTitles); let j = index">
+                      <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3">
+                        <mat-form-field appearance="fill" fxFlex="50">
+                          <mat-label>Related Item Title {{j+1}}</mat-label>
+                          <input formControlName="relatedItemTitle_{{j}}" matInput placeholder="Related Item Title">
+                        </mat-form-field>
+                        <!--titleType-->
+                        <mat-form-field appearance="fill" fxFlex="22" class="mx-3">
+                          <mat-label>Related Item Title Type {{j+1}}</mat-label>
+                          <mat-select formControlName="relatedItemTitleType_{{j}}">
+                            <mat-option>None</mat-option>
+                            <mat-option *ngFor="let item of titleTypes" [value]="item">{{item}}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                        <!--lang-->
+                        <mat-form-field appearance="fill" fxFlex="21">
+                          <mat-label>Related Item Language {{j+1}}</mat-label>
+                          <mat-select formControlName="relatedItemTitleLang_{{j}}">
+                            <mat-option>None</mat-option>
+                            <mat-option *ngFor="let language of languages" [value]="language">{{language}}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                        <span class="spacer"></span>
+                        <!-- Remove button -->
+                        <div fxLayoutAlign="end" class="ml-3 mt-2">
+                          <button mat-mini-fab color="primary" (click)="removeSubItemOnly('relatedItemTitle', j);">
+                            <mat-icon>remove</mat-icon>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <hr>
+                    <!--publicationYear-->
+                    <h5 class="h3-title m-3" fxLayoutAlign="start center">Année de publication</h5>
+                    <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3">
+                      <mat-form-field appearance="fill" fxFlex="100">
+                        <mat-label>Related Item Publication Year</mat-label>
+                        <input formControlName="relatedItemPublicationYear" matInput
+                          placeholder="Related Item Publication Year">
+                        <mat-error *ngFor="let validation of input_validation_messages.publicationYear">
+                          <mat-error class="error-message"
+                            *ngIf="tenthFormGroupMultiRelItems?.get('relatedItemPublicationYear')?.hasError(validation.type) && (tenthFormGroupMultiRelItems.get('relatedItemPublicationYear')?.dirty || tenthFormGroupMultiRelItems.get('relatedItemPublicationYear')?.touched)">
+                            {{validation.message}}</mat-error>
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                    <hr>
+                    <!--volume-->
+                    <h5 class="h3-title m-3" fxLayoutAlign="start center">Volume</h5>
+                    <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3">
+                      <mat-form-field appearance="fill" fxFlex="100">
+                        <mat-label>Related Item Volume</mat-label>
+                        <input formControlName="relatedItemVolume" matInput placeholder="Related Item Volume">
+                      </mat-form-field>
+                    </div>
+                    <hr>
+                    <!--issue-->
+                    <h5 class="h3-title m-3" fxLayoutAlign="start center">Emission</h5>
+                    <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3">
+                      <mat-form-field appearance="fill" fxFlex="100">
+                        <mat-label>Related Item Issue</mat-label>
+                        <input formControlName="relatedItemIssue" matInput placeholder="Related Item Issue">
+                      </mat-form-field>
+                    </div>
+                    <hr>
+                    <!--number-->
+                    <h5 class="h3-title m-3" fxLayoutAlign="start center">Numéro</h5>
+                    <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3">
+                      <mat-form-field appearance="fill" fxFlex="50">
+                        <mat-label>Related Item Number</mat-label>
+                        <input formControlName="relatedItemNumber" matInput placeholder="Related Item Number">
+                      </mat-form-field>
+                      <!--relatedItemNumberType-->
+                      <mat-form-field appearance="fill" fxFlex="50" class="ml-3">
+                        <mat-label>Related Item Number Type</mat-label>
+                        <mat-select formControlName="relatedItemNumberType">
+                          <mat-option>None</mat-option>
+                          <mat-option *ngFor="let item of numberTypes" [value]="item">{{item}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <hr>
+                    <!--firstPage-->
+                    <h5 class="h3-title m-3" fxLayoutAlign="start center">Pages</h5>
+                    <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3">
+                      <mat-form-field appearance="fill" fxFlex="50">
+                        <mat-label>Related Item First Page</mat-label>
+                        <input formControlName="relatedItemFirstPage" matInput placeholder="Related Item First Page">
+                      </mat-form-field>
+                      <!--lastPage-->
+                      <mat-form-field appearance="fill" fxFlex="50" class="ml-3">
+                        <mat-label>Related Item Last Page</mat-label>
+                        <input formControlName="relatedItemLastPage" matInput placeholder="Related Item Last Page">
+                      </mat-form-field>
+                    </div>
+                    <hr>
+                    <!--publisher-->
+                    <h5 class="h3-title m-3" fxLayoutAlign="start center">Publication</h5>
+                    <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3">
+                      <mat-form-field appearance="fill" fxFlex="50">
+                        <mat-label>Related Item Publisher</mat-label>
+                        <input formControlName="relatedItemPublisher" matInput placeholder="Related Item Publisher">
+                      </mat-form-field>
+                      <!--edition-->
+                      <mat-form-field appearance="fill" fxFlex="50" class="ml-3">
+                        <mat-label>Related Item Edition</mat-label>
+                        <input formControlName="relatedItemEdition" matInput placeholder="Related Item Edition">
+                      </mat-form-field>
+                    </div>
+                    <hr>
+                    <!--contributors #complex #multiple-->
+                    <div fxLayout="row" fxLayoutAlign="space-between">
+                      <h5 class="h3-title m-3" fxLayoutAlign="start center">Contributeurs</h5>
+                      <!-- +1 -->
+                      <div fxLayoutAlign="end" class="ml-3 mt-2">
+                        <button mat-mini-fab color="primary"
+                          (click)="addSubItemOnly('relatedItemContributor', this.nbRelatedItemContributors)"
+                          class="mr-3">
+                          <mat-icon>add</mat-icon>
+                        </button>
+                      </div>
+                    </div>
+                    <div *ngFor="let in of counter(this.nbRelatedItemContributors); let j = index">
+                      <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3 mt-3">
+                        <mat-form-field appearance="fill" fxFlex="50">
+                          <mat-label>Related Item Contributor Name {{j+1}}</mat-label>
+                          <input formControlName="relatedItemContributorName_{{j}}" matInput
+                            placeholder="Related Item Contributor Name">
+                        </mat-form-field>
+                        <!--nameType-->
+                        <mat-form-field appearance="fill" fxFlex="24" class="mx-3">
+                          <mat-label>Related Item Name Type {{j+1}}</mat-label>
+                          <mat-select formControlName="relatedItemContributorNameType_{{j}}"
+                            (ngModelChange)="updateRelatedItemFormContributorSpec($event, j)">
+                            <mat-option>None</mat-option>
+                            <mat-option *ngFor="let item of nameTypes" [value]="item">{{item}}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                        <!--lang-->
+                        <mat-form-field appearance="fill" fxFlex="24">
+                          <mat-label>Related Item Contributor Language {{j+1}}</mat-label>
+                          <mat-select formControlName="relatedItemContributorLang_{{j}}">
+                            <mat-option>None</mat-option>
+                            <mat-option *ngFor="let language of languages" [value]="language">{{language}}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                      <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3">
+                        <!--givenName-->
+                        <mat-form-field appearance="fill" fxFlex="31">
+                          <mat-label>Related Item Contributor Given Name {{j+1}}</mat-label>
+                          <input formControlName="relatedItemContributorGivenName_{{j}}" matInput
+                            placeholder="Related Item Contributor Given Name"
+                            (input)="updateRelatedItemFormContributorSpec($event, j)">
+                          <mat-error *ngIf="item.invalid">{{getErrorMessage('required')}}</mat-error>
+                        </mat-form-field>
+                        <!--familyName-->
+                        <mat-form-field appearance="fill" fxFlex="31" class="mx-3">
+                          <mat-label>Related Item Contributor Family Name {{j+1}}</mat-label>
+                          <input formControlName="relatedItemContributorFamilyName_{{j}}" matInput
+                            placeholder="Related Item Contributor Family Name"
+                            (input)="updateRelatedItemFormContributorSpec($event, j)">
+                          <mat-error *ngIf="item.invalid">{{getErrorMessage('required')}}</mat-error>
+                        </mat-form-field>
+                        <!--contributorType-->
+                        <mat-form-field appearance="fill" fxFlex="31">
+                          <mat-label>Related Item Contributor Type {{j+1}}</mat-label>
+                          <mat-select formControlName="relatedItemContributorType_{{j}}" required>
+                            <mat-option *ngFor="let item of contributorTypes" [value]="item">{{item}}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                        <span class="spacer"></span>
+                        <!-- Remove button -->
+                        <div fxLayoutAlign="end" class="ml-3 mt-2">
+                          <button mat-mini-fab color="primary"
+                            (click)="removeSubItemOnly('relatedItemContributor', j);">
+                            <mat-icon>remove</mat-icon>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <hr>
+                    <!--relatedItemType-->
+                    <h5 class="h3-title m-3" fxLayoutAlign="start center">Type</h5>
+                    <div fxLayout="row" fxLayoutAlign="space-between" class="mx-3">
+                      <mat-form-field appearance="fill" fxFlex="50">
+                        <mat-label>Related Item Type</mat-label>
+                        <mat-select formControlName="relatedItemType" required>
+                          <mat-option *ngFor="let item of resourceTypes" [value]="item">{{item}}</mat-option>
+                        </mat-select>
+                        <mat-error *ngFor="let validation of input_validation_messages.empty">
+                          <mat-error class="error-message"
+                            *ngIf="tenthFormGroupMultiRelItems?.get('relatedItemType')?.hasError(validation.type) && (tenthFormGroupMultiRelItems.get('relatedItemType')?.dirty || tenthFormGroupMultiRelItems.get('relatedItemType')?.touched)">
+                            {{validation.message}}</mat-error>
+                        </mat-error>
+                      </mat-form-field>
+                      <!--relationType-->
+                      <mat-form-field appearance="fill" fxFlex="50" class="ml-3">
+                        <mat-label>Related Item Relation Type</mat-label>
+                        <mat-select formControlName="relatedItemRelationType" required>
+                          <mat-option *ngFor="let item of relationTypes" [value]="item">{{item}}</mat-option>
+                        </mat-select>
+                        <mat-error *ngFor="let validation of input_validation_messages.empty">
+                          <mat-error class="error-message"
+                            *ngIf="tenthFormGroupMultiRelItems?.get('relatedItemRelationType')?.hasError(validation.type) && (tenthFormGroupMultiRelItems.get('relatedItemRelationType')?.dirty || tenthFormGroupMultiRelItems.get('relatedItemRelationType')?.touched)">
+                            {{validation.message}}</mat-error>
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div fxLayoutAlign="end" class="m-3">
+                    <button mat-button mat-flat-button color="primary" class="mr-3" (click)="modRelatedItem()"
+                      [hidden]="isModifyRelItemButton">Modifier</button>
+                    <button mat-button mat-flat-button color="primary" (click)="addRelatedItem()"
+                      [disabled]="!tenthFormGroupMultiRelItems.valid">Ajouter</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <!--Back & Next Buttons-->
+            <div fxLayoutAlign="end">
+              <button mat-button mat-flat-button class="mt-3 mr-2" color="primary" matStepperPrevious>Précédent</button>
+              <button mat-button mat-flat-button class="mt-3" color="primary" matStepperNext>Suivant</button>
+            </div>
+          </form>
+        </mat-step>
+        <!--END tenthFormGroup-->
+        <!--START endFormGroup-->
+        <mat-step [stepControl]="endFormGroup" label="Finaliser DOI">
+          <form [formGroup]="endFormGroup">
+            <!--DOI identifier-->
+            <mat-form-field appearance="fill" fxLayout="column">
+              <mat-label>DOI</mat-label>
+              <input name="identifier" readonly formControlName="identifier"
+                value="{{this.endFormGroup.value.identifier}}" matInput placeholder="Identifier">
+            </mat-form-field>
+            <!--Back & Next Buttons-->
+            <div fxLayoutAlign="end">
+              <button mat-button mat-flat-button class="mt-3 mr-2" color="primary" matStepperPrevious>Précédent</button>
+              <button mat-button mat-flat-button class="mt-3 mr-2" color="primary"
+                [disabled]="!firstFormGroup.valid || !secondFormGroup.valid || !thirdFormGroup.valid || alreadySubmit"
+                (click)="onSubmit()">{{actionButton}}</button>
+              <button mat-button mat-flat-button class="mt-3 mr-2" color="primary"
+                [disabled]="!firstFormGroup.valid || !secondFormGroup.valid || !thirdFormGroup.valid"
+                (click)="downloadXml()">Télécharger le XML</button>
+              <button mat-button mat-flat-button class="mt-3" color="primary" (click)="resetForm()"
+                (click)="stepper.reset()" [hidden]="!importActivate">Vider le formulaire</button>
+            </div>
+          </form>
+          <!--XML Metadatas-->
+          <h1 class="h3-title mt-3">Metadatas</h1>
+          <textarea class="m-3" matInput placeholder="xml" rows="{{this.lineCounter(this.xmlDoi)}}"
+            readonly>{{xmlDoi}}</textarea>
+        </mat-step>
+        <!--END endFormGroup-->
+      </mat-horizontal-stepper>
+      <div>
+        <p fxLayoutAlign="start" class="mx-4">* Propriétés obligatoires</p>
+        <br>
+      </div>
+    </div>
+  </mat-card>
+</main>
+<footer>
+  <app-footer></app-footer>
+</footer>

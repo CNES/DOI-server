@@ -1,0 +1,54 @@
+.spacer {
+  flex: 1 1 auto;
+}
+
+.my-width-50-ml {
+  width: 49%;
+  margin-left: 1% !important;
+}
+
+.my-width-50-mr {
+  width: 49%;
+  margin-right: 1% !important;
+}
+
+.basic-container {
+  margin-left: 10%;
+  margin-right: 10%;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.importXmlLabel {
+  margin-bottom: 0% !important;
+}
+
+.mat-row.hovered {
+  background: #eee;
+}
+
+.mat-row.highlighted {
+background: #999;
+}
+
+button {
+  transition: 0.3s;
+  color: white !important;
+  background-color: #004e90 !important;
+}
+
+::ng-deep .mat-step-header .mat-step-icon-selected, ::ng-deep .mat-step-header .mat-step-icon-state-done {
+  color: white !important;
+  background-color: #004e90 !important;
+}
+
+::ng-deep .mat-step-header .mat-step-label-selected {
+  color: #004e90 !important;
+}
+
+::ng-deep .mat-step-header[aria-selected="true"] {
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 5px;
+  border-color: #004e90 !important;
+}

@@ -33,7 +33,7 @@ What things you need to install the software and how to install them
 
 ```
 Openjdk version 1.8
-Apache Maven 3.5.2
+Apache Maven 3.8.1
 Git version 2.17.1
 PostgreSQL version 9.2
 ```

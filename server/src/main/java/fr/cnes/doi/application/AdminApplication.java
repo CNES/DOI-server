@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017-2019 Centre National d'Etudes Spatiales (CNES).
+ * Copyright (C) 2017-2021 Centre National d'Etudes Spatiales (CNES).
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,35 +18,37 @@
  */
 package fr.cnes.doi.application;
 
-import fr.cnes.doi.client.ClientMDS;
-import fr.cnes.doi.exception.ClientMdsException;
-import fr.cnes.doi.services.DOIUsersUpdate;
 import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.ThreadContext;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
+import org.restlet.data.ClientInfo;
 import org.restlet.data.LocalReference;
+import org.restlet.data.MediaType;
 import org.restlet.data.Method;
 import org.restlet.data.Reference;
-import org.restlet.data.MediaType;
 import org.restlet.data.Status;
 import org.restlet.resource.Directory;
 import org.restlet.routing.Filter;
-import org.restlet.routing.Redirector;
 import org.restlet.routing.Router;
+import org.restlet.routing.Template;
 import org.restlet.security.ChallengeAuthenticator;
 import org.restlet.security.Role;
 import org.restlet.security.RoleAuthorizer;
-import org.restlet.service.TaskService;
 
+import fr.cnes.doi.client.ClientMDS;
+import fr.cnes.doi.exception.ClientMdsException;
 import fr.cnes.doi.logging.business.JsonMessage;
 import fr.cnes.doi.resource.admin.AuthenticateResource;
-import fr.cnes.doi.resource.admin.ConfigIhmResource;
-import fr.cnes.doi.resource.admin.FooterIhmResource;
+import fr.cnes.doi.resource.admin.ManageProjectUsersResource;
 import fr.cnes.doi.resource.admin.ManageProjectsResource;
 import fr.cnes.doi.resource.admin.ManageSuperUserResource;
 import fr.cnes.doi.resource.admin.ManageSuperUsersResource;
@@ -56,16 +58,13 @@ import fr.cnes.doi.resource.admin.SuffixProjectsDoisResource;
 import fr.cnes.doi.resource.admin.SuffixProjectsResource;
 import fr.cnes.doi.resource.admin.TokenResource;
 import fr.cnes.doi.security.AllowerIP;
+import fr.cnes.doi.services.DOIUsersUpdate;
 import fr.cnes.doi.services.LandingPageMonitoring;
 import fr.cnes.doi.services.UpdateTokenDataBase;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.settings.DoiSettings;
 import fr.cnes.doi.utils.spec.CoverageAnnotation;
 import fr.cnes.doi.utils.spec.Requirement;
-import java.util.List;
-import org.apache.logging.log4j.ThreadContext;
-import org.restlet.data.ClientInfo;
-import org.restlet.routing.Template;
 
 /**
  * Provides an application for handling features related to the administration
@@ -73,8 +72,12 @@ import org.restlet.routing.Template;
  *
  * The administration application provides the following features:
  * <ul>
- * <li>An asynchronous task to check the availability of created landing pages
- * each {@value #PERIOD_SCHEDULER} days</li>
+ * <li>An asynchronous task to check the availability of created landing pages 
+ * each {@value #PERIOD_SCHEDULER_FOR_LANDINGPAGE} days</li>
+ * <li>An asynchronous task to update users from auth services 
+ * (period in configuration file)</li>
+ * <li>An asynchronous task to check the expired tokens 
+ * each {@value #PERIOD_SCHEDULER_FOR_TOKEN_DB} days</li>
  * <li>The form for creating DOI</li>
  * <li>The Datacite status page to check Datacite services availability</li>
  * <li>The Datacite stats page</li>
@@ -133,21 +136,6 @@ public final class AdminApplication extends AbstractApplication {
      * administration.
      */
     public static final String ADMIN_URI = "/admin";
-
-    /**
-     * URI {@value #RESOURCE_URI} to access to the resources of the status page.
-     */
-    public static final String RESOURCE_URI = "/resources";
-
-    /**
-     * URI {@value #STATUS_URI} to access to the status page.
-     */
-    public static final String STATUS_URI = "/status";
-
-    /**
-     * URI {@value #STATS_URI} to access to Stats page.
-     */
-    public static final String STATS_URI = "/stats";
 
     /**
      * URI {@value #ROLE_USERS_URI} to check access rights.
@@ -225,34 +213,14 @@ public final class AdminApplication extends AbstractApplication {
     private static final Logger LOG = LogManager.getLogger(AdminApplication.class.getName());
 
     /**
-     * URI {@value #IHM_CONFIG_URI} where the configuration file is located.
-     */
-    private static final String IHM_CONFIG_URI = "/js/config.js";
-
-    /**
-     * URI {@value #IHM_FOOTER_URI} where the footer file is located.
-     */
-    private static final String IHM_FOOTER_URI = "/footer.txt";
-
-    /**
-     * Location of the resources for the status page in the classpath.
-     */
-    private static final String STATUS_PAGE_CLASSPATH = "class/website";
-
-    /**
      * Location of the resources for the IHM in the classpath.
      */
     private static final String IHM_CLASSPATH = "class/ihm";
 
     /**
-     * Location of the resources for the API docs in the classpath.
+     * The period between successive executions : {@value #PERIOD_SCHEDULER_FOR_LANDINGPAGE}.
      */
-    private static final String API_CLASSPATH = "class/docs";
-
-    /**
-     * The period between successive executions : {@value #PERIOD_SCHEDULER}.
-     */
-    private static final int PERIOD_SCHEDULER = 1;
+    private static final int PERIOD_SCHEDULER_FOR_LANDINGPAGE = 1;
 
     /**
      * The period between successive executions :
@@ -264,16 +232,6 @@ public final class AdminApplication extends AbstractApplication {
      * The time unit of the initialDelay and period parameters.
      */
     private static final TimeUnit PERIOD_UNIT = TimeUnit.DAYS;
-
-    /**
-     * DataCite Status page {@value #TARGET_URL}.
-     */
-    private static final String TARGET_URL = "http://status.datacite.org";
-
-    /**
-     * DataCite Stats page {@value #TARGET_STATS_URL}.
-     */
-    private static final String TARGET_STATS_URL = "https://stats.datacite.org/#tab-prefixes";
     
     /**
      * ClientMDS
@@ -293,69 +251,39 @@ public final class AdminApplication extends AbstractApplication {
     /**
      * Defines services and metadata.
      */
-    private void init() {
-        setName(NAME);
-        setDescription("Provides an application for handling features related to "
-                + "the administration system of the DOI server.");        
-        this.setTaskService(createTaskService());
-        this.setTaskService(createUpdateDataBaseTaskService());
-        this.setTaskService(periodicalyDeleteExpiredTokenFromDB());
-        getMetadataService().addExtension("xsd", MediaType.TEXT_XML, true);
-    }
-
-    /**
-     * A task checking status of landing pages each 30 days.
-     *
-     * @return A task
-     */
     @Requirement(reqId = Requirement.DOI_DISPO_020, reqName = Requirement.DOI_DISPO_020_NAME)
-    private TaskService createTaskService() {
+    private void init() {
         LOG.traceEntry();
-        final TaskService checkLandingPageTask = new TaskService(true);
-        LOG.info("Sets CheckLandingPage running at each {} {}", PERIOD_SCHEDULER, PERIOD_UNIT);
-        checkLandingPageTask.scheduleAtFixedRate(
-                new LandingPageMonitoring(this.client), 0,
-                PERIOD_SCHEDULER, PERIOD_UNIT
-        );
-        return LOG.traceExit(checkLandingPageTask);
-    }
+        setName(NAME);
+        setDescription(
+                "Provides an application for handling features related to "
+                        + "the administration system of the DOI server.");
 
-    /**
-     * A task removing expired tokens in data base each days.
-     *
-     * @return A task
-     */
-    private TaskService periodicalyDeleteExpiredTokenFromDB() {
-        LOG.traceEntry();
-        final TaskService checkExpiredTokenTask = new TaskService(true);
-        LOG.info("Sets checkExpiredTokenTask running at each {} {}", PERIOD_SCHEDULER_FOR_TOKEN_DB,
-                PERIOD_UNIT);
-        checkExpiredTokenTask.scheduleAtFixedRate(
-                new UpdateTokenDataBase(), 0,
-                PERIOD_SCHEDULER_FOR_TOKEN_DB, PERIOD_UNIT
-        );
-        return LOG.traceExit(checkExpiredTokenTask);
-    }
+        // Create a pool executor with 3 tasks
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(3);
 
-    /**
-     * A task updating DOI users database from authentication service at each
-     * configurable period of time.
-     *
-     * @return A task
-     */
-    private TaskService createUpdateDataBaseTaskService() {
-        LOG.traceEntry();
-        final TaskService updateDataBaseTask = new TaskService(true);
-        LOG.info("Sets UpdateDataBaseTask running at each {} {}", PERIOD_SCHEDULER, PERIOD_UNIT);
-        try {
-            updateDataBaseTask.scheduleAtFixedRate(
-                    new DOIUsersUpdate(), 0,
-                    DoiSettings.getInstance().getInt(Consts.DB_UPDATE_JOB_PERIOD), TimeUnit.MINUTES
-            );
-        } catch(NoClassDefFoundError e) {
-            LOG.error(e);
-        }
-        return LOG.traceExit(updateDataBaseTask);
+        // 1 - Check landing pages
+        LOG.info("Sets CheckLandingPage running at each {} {}",
+                PERIOD_SCHEDULER_FOR_LANDINGPAGE, PERIOD_UNIT);
+        executor.scheduleAtFixedRate(new LandingPageMonitoring(this.client), 0,
+                PERIOD_SCHEDULER_FOR_LANDINGPAGE, PERIOD_UNIT);
+
+        // 2 - Check users from auth service
+        LOG.info("Sets UpdateDataBaseTask running at each {} {}",
+                DoiSettings.getInstance().getInt(Consts.DB_UPDATE_JOB_PERIOD),
+                TimeUnit.MINUTES);
+        executor.scheduleAtFixedRate(new DOIUsersUpdate(), 0,
+                DoiSettings.getInstance().getInt(Consts.DB_UPDATE_JOB_PERIOD),
+                TimeUnit.MINUTES);
+
+        // 3 - Check expired token
+        LOG.info("Sets checkExpiredTokenTask running at each {} {}",
+                PERIOD_SCHEDULER_FOR_TOKEN_DB, PERIOD_UNIT);
+        executor.scheduleAtFixedRate(new UpdateTokenDataBase(), 0,
+                PERIOD_SCHEDULER_FOR_TOKEN_DB, PERIOD_UNIT);
+
+        getMetadataService().addExtension("xsd", MediaType.TEXT_XML, true);
+        LOG.traceExit();
     }
 
     /**
@@ -538,9 +466,11 @@ public final class AdminApplication extends AbstractApplication {
                 SuffixProjectsDoisResource.class);
 
         router.attach(SUFFIX_PROJECT_URI + SUFFIX_PROJECT_NAME + USERS_URI,
-                ManageUsersResource.class);
+                ManageProjectUsersResource.class);
         router.attach(SUFFIX_PROJECT_URI + SUFFIX_PROJECT_NAME + USERS_URI + USERS_NAME,
-                ManageUsersResource.class);
+                ManageProjectUsersResource.class);
+        
+        router.attach(USERS_URI, ManageUsersResource.class);
 
         router.attach(SUPERUSERS_URI, ManageSuperUsersResource.class);
         router.attach(SUPERUSERS_URI + USERS_NAME, ManageSuperUserResource.class);
@@ -558,8 +488,6 @@ public final class AdminApplication extends AbstractApplication {
      * Creates a router for the web site resources. This router contains the
      * following resources:
      * <ul>
-     * <li>{@link AdminApplication#RESOURCE_URI} to distribute the web resources
-     * for the status page</li>
      * <li>the website resources attached by default when it is available</li>
      * </ul>
      * The website is located to {@link AdminApplication#IHM_URI} directory when
@@ -571,84 +499,9 @@ public final class AdminApplication extends AbstractApplication {
         LOG.traceEntry();
 
         final Router router = new Router(getContext());
-        addStatusPage(router);
-        addServicesStatus(router);
-        addServicesStats(router);
         addRouteForWebSite(router);
 
         return LOG.traceExit(router);
-    }
-
-    /**
-     * Adds route {@value #RESOURCE_URI} to the status page.
-     *
-     * The resources of the status page are located in the classpath
-     * {@value #STATUS_PAGE_CLASSPATH}.
-     *
-     * @param router router
-     */
-    private void addStatusPage(final Router router) {
-        LOG.traceEntry("Parameter\n router: {}", new JsonMessage(router));
-
-        final Directory directory = new Directory(
-                getContext(),
-                LocalReference.createClapReference(STATUS_PAGE_CLASSPATH)
-        );
-        directory.setDeeplyAccessible(true);
-        router.attach(RESOURCE_URI, directory);
-
-        LOG.traceExit();
-    }
-
-    /**
-     * Adds route attacURI to the target according to redirection mode.
-     *
-     * @param router router
-     * @param redirectorMode redirection mode
-     * @param target target
-     * @param attachURI attachURI
-     */
-    private void addServices(final Router router, final int redirectorMode, final String target,
-            final String attachURI) {
-        LOG.traceEntry("Parameters\n   router: {}\n   redirectorMode: {}\n   "
-                + "target: {}\n  attachURI: {}",
-                new JsonMessage(router), redirectorMode, target, attachURI);
-
-        final Redirector redirector = new Redirector(getContext(), target, redirectorMode);
-
-        final Filter authentication = new Filter() {
-            /**
-             * {@inheritDoc }
-             */
-            @Override
-            protected int doHandle(final Request request, final Response response) {
-                response.setLocationRef(target);
-                response.setStatus(Status.REDIRECTION_PERMANENT);
-                return super.doHandle(request, response);
-            }
-        };
-        authentication.setNext(redirector);
-        router.attach(attachURI, authentication);
-        LOG.traceExit();
-    }
-
-    /**
-     * Adds route {@value #STATUS_URI} to the services describing the DataCite
-     * status.
-     *
-     * @param router router
-     */
-    private void addServicesStatus(final Router router) {
-        this.addServices(router, Redirector.MODE_SERVER_OUTBOUND, TARGET_URL, STATUS_URI);
-    }
-
-    /**
-     * Adds route {@value #STATS_URI} to the services giving the DataCite stats.
-     *
-     * @param router router
-     */
-    private void addServicesStats(final Router router) {
-        this.addServices(router, Redirector.MODE_CLIENT_PERMANENT, TARGET_STATS_URL, STATS_URI);
     }
 
     /**
@@ -666,12 +519,17 @@ public final class AdminApplication extends AbstractApplication {
         );
         ihm.setListingAllowed(false);
         ihm.setDeeplyAccessible(true);
-        ihm.setIndexName("authentication");
 
+        // Redirecting to the default page (dashboard)
         router.attach(IHM_URI, RedirectingResource.class, Template.MODE_EQUALS);
         router.attach(IHM_URI + "/", RedirectingResource.class, Template.MODE_EQUALS);
-        router.attach(IHM_URI + IHM_FOOTER_URI, FooterIhmResource.class);
-        router.attach(IHM_URI + IHM_CONFIG_URI, ConfigIhmResource.class);
+        router.attach(IHM_URI + "/login", RedirectingResource.class);
+        router.attach(IHM_URI + "/dashboard", RedirectingResource.class);
+        router.attach(IHM_URI + "/creation-token", RedirectingResource.class);
+        router.attach(IHM_URI + "/administration", RedirectingResource.class);
+        router.attach(IHM_URI + "/citation", RedirectingResource.class);
+        router.attach(IHM_URI + "/doi-mgmt", RedirectingResource.class, Template.MODE_STARTS_WITH);
+        
         router.attach(IHM_URI, ihm);
 
         LOG.traceExit();

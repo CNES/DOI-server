@@ -1,0 +1,21 @@
+export enum RelatedIdentifierTypesEnum {
+    ARK="ARK",
+    arXiv="arXiv",
+    bibcode="bibcode",
+    DOI="DOI",
+    EAN13="EAN13",
+    EISSN="EISSN",
+    Handle="Handle",
+    IGSN="IGSN",
+    ISBN="ISBN",
+    ISSN="ISSN",
+    ISTC="ISTC",
+    LISSN="LISSN",
+    LSID="LSID",
+    PMID="PMID",
+    PURL="PURL",
+    UPC="UPC",
+    URL="URL",
+    URN="URN",
+    w3id="w3id"
+}

@@ -18,6 +18,17 @@
  */
 package fr.cnes.doi.resource.mds;
 
+import java.util.Arrays;
+
+import org.apache.logging.log4j.Level;
+import org.restlet.data.Method;
+import org.restlet.data.Status;
+import org.restlet.ext.wadl.MethodInfo;
+import org.restlet.ext.wadl.ParameterStyle;
+import org.restlet.representation.Representation;
+import org.restlet.resource.Delete;
+import org.restlet.resource.Get;
+
 import fr.cnes.doi.application.DoiMdsApplication;
 import fr.cnes.doi.application.DoiMdsApplication.API_MDS;
 import fr.cnes.doi.client.ClientMDS;
@@ -25,18 +36,6 @@ import fr.cnes.doi.client.ClientMDS.DATACITE_API_RESPONSE;
 import fr.cnes.doi.exception.ClientMdsException;
 import fr.cnes.doi.exception.DoiServerException;
 import fr.cnes.doi.utils.spec.Requirement;
-import java.io.IOException;
-import java.util.Arrays;
-import org.apache.logging.log4j.Level;
-import org.datacite.schema.kernel_4.Resource;
-import org.restlet.data.Method;
-import org.restlet.data.Status;
-import org.restlet.ext.jaxb.JaxbRepresentation;
-import org.restlet.ext.wadl.MethodInfo;
-import org.restlet.ext.wadl.ParameterStyle;
-import org.restlet.representation.Representation;
-import org.restlet.resource.Delete;
-import org.restlet.resource.Get;
 
 /**
  * Resources to handle a metadata.
@@ -150,19 +149,6 @@ public class MetadataResource extends BaseMdsResource {
             }
         }
         return LOG.traceExit(resource);
-    }
-
-    /**
-     * Returns the metadata as JSON.
-     *
-     * @return JSON representation.
-     * @throws IOException - if JSON conversion problem occurs
-     */
-    @Get("json")
-    public Resource getMetadataAsJson() throws IOException {
-        final Representation rep = getMetadata();
-        final JaxbRepresentation<Resource> resourceEntity = new JaxbRepresentation<>(rep, Resource.class);
-        return resourceEntity.getObject();
     }
 
     /**

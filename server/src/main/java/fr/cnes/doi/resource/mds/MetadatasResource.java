@@ -99,7 +99,11 @@ public class MetadatasResource extends BaseMdsResource {
             final Resource resource = createDataCiteResourceObject(entity);
             final String selectedRole = extractSelectedRoleFromRequestIfExists();
             checkPermission(resource.getIdentifier().getValue(), selectedRole);
-            resource.setPublisher("CNES");
+            // Create a publisher
+            Resource.Publisher publisher = new Resource.Publisher();
+            publisher.setValue("CNES");
+            // Set it to the resource
+            resource.setPublisher(publisher);
             result = this.getDoiApp().getClient().createMetadata(resource);
         } catch (ClientMdsException ex) {
             throw LOG.throwing(Level.ERROR,

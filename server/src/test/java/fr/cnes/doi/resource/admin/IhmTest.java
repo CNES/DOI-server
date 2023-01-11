@@ -114,47 +114,16 @@ public class IhmTest {
      * @throws java.io.IOException - if OutOfMemoryErrors
      */
     @Test
-    public void testIhmConfig() throws IOException {
-        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-        ClientResource client = new ClientResource("https://localhost:" + port + "/ihm/js/config.js");
-        client.setNext(cl);
-        Representation response = client.get(MediaType.APPLICATION_JAVASCRIPT);
-        String config = response.getText();
-        client.release();
-        assertNotNull("Test if the response is not null", config);
-        assertTrue("Test if the response contains the DOI from config file",
-                config.contains(DoiSettings.getInstance().getString(Consts.INIST_DOI))
-                && config.contains("var ")
-        );
-    }
-    
-    
-    @Test
-    public void testIhmFooter() throws IOException {
-        String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-        ClientResource client = new ClientResource("https://localhost:" + port + "/ihm/footer.txt");
-        client.setNext(cl);
-        Representation response = client.get(MediaType.TEXT_PLAIN);
-        String config = response.getText();
-        client.release();
-        assertNotNull("Test if the response is not null", config);
-        assertTrue("Test if the response contains stats",
-                config.contains("stats")
-        );
-    }    
-    
-    @Test
     public void testIhm() throws IOException {
         String port = DoiSettings.getInstance().getString(Consts.SERVER_HTTPS_PORT);
-        ClientResource client = new ClientResource("https://localhost:" + port + "/ihm/authentication.html");
+        ClientResource client = new ClientResource("https://localhost:" + port + "/ihm/index.html");
         client.setNext(cl);
         Representation response = client.get(MediaType.APPLICATION_JAVASCRIPT);
         String ihm = response.getText();
         client.release();
         assertNotNull("Test if the response is not null", ihm);
-        assertTrue("Test if the response contains Authentication",
-                ihm.contains("Authentication")
+        assertTrue("Test if the response contains >DOI Client",
+                ihm.contains(">DOI Client")
         );
     }    
-
 }

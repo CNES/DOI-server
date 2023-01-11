@@ -90,31 +90,31 @@ public class FormatCitationResource extends BaseCitationResource {
         LOG.traceExit();
     }
 
-    /**
-     * Returns the formatted citation.
-     *
-     * @return the formatted citation
-     * @throws ResourceException - if a problem happens when requesting Cross
-     * Cite or if {@link #DOI_PARAMETER} and {@link #LANG_PARAMETER} and
-     * {@link #STYLE_PARAMETER} are not set
-     */
-    @Requirement(reqId = Requirement.DOI_SRV_120, reqName = Requirement.DOI_SRV_120_NAME)
-    @Requirement(reqId = Requirement.DOI_MONIT_020, reqName = Requirement.DOI_MONIT_020_NAME)
-    @Get
-    public String getFormat() throws ResourceException {
-        LOG.traceEntry();
-        try {
-            checkInputs();
-            final String result = this.getApp().getClient().getFormat(
-                    this.doiName, this.style, this.language
-            );
-            return LOG.traceExit(result);
-        } catch (ClientCrossCiteException ex) {
-            ((AbstractApplication) getApplication()).sendAlertWhenDataCiteFailed(ex);
-            throw LOG.throwing(Level.ERROR, new ResourceException(ex.getStatus(), ex.
-                    getDetailMessage(), ex));
-        }
-    }
+	/**
+	 * Returns the formatted citation.
+	 *
+	 * @return the formatted citation
+	 * @throws ResourceException
+	 *             - if a problem happens when requesting Cross Cite or if
+	 *             {@link #DOI_PARAMETER} and {@link #LANG_PARAMETER} and
+	 *             {@link #STYLE_PARAMETER} are not set
+	 */
+	@Requirement(reqId = Requirement.DOI_SRV_120, reqName = Requirement.DOI_SRV_120_NAME)
+	@Requirement(reqId = Requirement.DOI_MONIT_020, reqName = Requirement.DOI_MONIT_020_NAME)
+	@Get
+	public String getFormat() throws ResourceException {
+		LOG.traceEntry();
+		try {
+			checkInputs();
+			return LOG.traceExit(this.getApp().getClient()
+					.getFormat(this.doiName, this.style, this.language));
+		} catch (ClientCrossCiteException ex) {
+			((AbstractApplication) getApplication())
+					.sendAlertWhenDataCiteFailed(ex);
+			throw LOG.throwing(Level.ERROR, new ResourceException(
+					ex.getStatus(), ex.getDetailMessage(), ex));
+		}
+	}
 
     /**
      * Checks input parameters

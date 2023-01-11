@@ -2,7 +2,7 @@
 <jaxb:bindings xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
     version="2.0"
     xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <jaxb:bindings schemaLocation="https://schema.datacite.org/meta/kernel-4.1/metadata.xsd" node="/xs:schema">
+  <jaxb:bindings schemaLocation="https://schema.datacite.org/meta/kernel-4.4/metadata.xsd" node="/xs:schema">
     <jaxb:globalBindings fixedAttributeAsConstantProperty="true" />
   </jaxb:bindings>
 

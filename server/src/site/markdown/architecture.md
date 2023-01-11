@@ -181,7 +181,7 @@ User credentials are authenticated and user is redirected to application home pa
 > > Critical
 
 > #### Preconditions
-> > The user loads the authenticate.html page
+> > The user loads the login page
 
 
 > #### Basic Course
@@ -189,63 +189,63 @@ User credentials are authenticated and user is redirected to application home pa
 > > - The router of the admin application valids the credentials
 > > - The router calls the resource AuthenticationResource
 > > - The AuthenticationResource generates the token and sends back the token to the GUI
-> > - The authenticate.html page stores the token on the session and redirects on the right page
-> > - The authenticate.html page asks to the server the list of projects related to the user
+> > - The login page stores the token on the session and redirects on the right page
+> > - The login page asks to the server the list of projects related to the user
 > > - The server returns the list of projects
-> > - The authenticate.html page stores the list of projects.
-> > - The authenticate.htlm page asks to the server if the user is an admininstrator
+> > - The login page stores the list of projects.
+> > - The login page asks to the server if the user is an administrator
 > > - The server returns true
-> > - The authenticate.html page stores true.
-> > - The authenticate.html redirects to the doiCreation.html page and get access to the administrator menu
+> > - The login page stores true.
+> > - The login redirects to the dashboard page and get access to the administrator menu
 
 > #### Alternate Course
 > > - The page sends the credentials to the admin application
 > > - The router of the admin application valids the credentials
 > > - The router calls the resource AuthenticationResource
 > > - The AuthenticationResource generates the token and sends back to the GUI the token
-> > - The authenticate.html page stores the token on the session and redirects on the right page
-> > - The authenticate.html page asks to the server the list of projects related to the user
+> > - The login page stores the token on the session and redirects on the right page
+> > - The login page asks to the server the list of projects related to the user
 > > - The server returns the list of projects
-> > - The authenticate.html page stores the list of projects.
-> > - The authenticate.htlm page asks to the server if the user is an admininstrator
+> > - The login page stores the list of projects.
+> > - login page asks to the server if the user is an administrator
 > > - The server returns false
-> > - The authenticate.html page stores false.
-> > - The authenticate.html redirects to the doiCreation.html page and get access to the project and the administrator menu
+> > - The login page stores false.
+> > - The login redirects to the dashboard page and get access to the project and the administrator menu
 
 > #### Alternate Course
 > > - The page sends the credentials to the admin application
 > > - The router of the admin application valids the credentials
 > > - The router calls the resource AuthenticationResource
 > > - The AuthenticationResource generates the token and sends back to the GUI the token
-> > - The authenticate.html page stores the token on the session and redirects on the right page
-> > - The authenticate.html page asks to the server the list of projects related to the user
+> > - The login page stores the token on the session and redirects on the right page
+> > - The login page asks to the server the list of projects related to the user
 > > - The server returns an empty list of projects
-> > - The authenticate.html page stores the empty list.
-> > - The authenticate.htlm page asks to the server if the user is an admininstrator
+> > - The login page stores the empty list.
+> > - The login page asks to the server if the user is an administrator
 > > - The server returns false
-> > - The authenticate.html page stores false.
-> > - The authenticate.html sends an error saying that the user is not linked to a project
+> > - The login page stores false.
+> > - The login sends an error saying that the user is not linked to a project
 
 > #### Alternate Course
 > > - The page sends the credentials to the admin application
 > > - The router of the admin application valids the credentials
 > > - The router calls the resource AuthenticationResource
 > > - The AuthenticationResource generates the token and sends back to the GUI the token
-> > - The authenticate.html page stores the token on the session and redirects on the right page
-> > - The authenticate.html page asks to the server the list of projects related to the user
+> > - The login page stores the token on the session and redirects on the right page
+> > - The login page asks to the server the list of projects related to the user
 > > - The server returns an empty list of projects
-> > - The authenticate.html page stores the empty list.
-> > - The authenticate.htlm page asks to the server if the user is an admininstrator
+> > - The login page stores the empty list.
+> > - The login page asks to the server if the user is an administrator
 > > - The server returns true
-> > - The authenticate.html page stores true.
-> > - The authenticate.html redirects to the administration.html page and get access only to the administrator menu
+> > - The login page stores true.
+> > - The login redirects to the administration page and get access only to the administrator menu
 
 > #### Exception Course
 > > - The server does not accept the credentials.
-> > - The GUI remains on authenticate.html page and display the error
+> > - The GUI remains on login page and display the error
 
 > #### Postconditions
-> > The user is located on the doiCreation.html or on the administration.html
+> > The user is located on the dashboard or on the administration page
 
 
 
@@ -259,7 +259,7 @@ User credentials are authenticated and user is redirected to application home pa
 > > Critical
 
 > #### Preconditions
-> > The user is on the doiCreation.html page
+> > The user is on the doi creation page
 
 > #### Basic Course
 > > - The user selects a project for which he wants to create a DOI
@@ -267,20 +267,20 @@ User credentials are authenticated and user is redirected to application home pa
 > > - When filling the form, the XML representation is displayed closed to the form
 > > - The user fills the landing page field.
 > > - The user click on **Create DOI**
-> > - The doiCreation.html page send the XML metadata and the token to MDS application
+> > - The doi creation page send the XML metadata and the token to MDS application
 > > - MDS application authenticates the user by the token
 > > - MDS application checks if the user is allowed to create the DOI for this project
 > > - MDS application sends the XML metadata to MDS Datacite
 > > - MDS accepts the metadata
-> > - MDS application returns to the doiCreation.hml page that the metadata was accepted
-> > - doiCreation.hml confirms to the user that the metadata is uploaded.
-> > - doiCreation.html sends the DOI and the landing page URL to MDS application
+> > - MDS application returns to the doi creation page that the metadata was accepted
+> > - doi creation page confirms to the user that the metadata is uploaded.
+> > - doi creation page sends the DOI and the landing page URL to MDS application
 > > - MDS application authenticates the user by the token
 > > - MDS application checks if the user is allowed to create the DOI for this project
 > > - MDS application sends the DOI and the landing page URL to MDS Datacite
 > > - MDS Datacite accepts the request
-> > - MDS application returns to the doiCreation.hml page that the DOI is created.
-> > - doiCreation.hml confirms to the user that the DOI is created. 
+> > - MDS application returns to the doi creation page that the DOI is created.
+> > - doi creation page confirms to the user that the DOI is created. 
 
 > #### Exception Course
 > > - The user selects a project for which he wants to create a DOI
@@ -288,20 +288,20 @@ User credentials are authenticated and user is redirected to application home pa
 > > - When filling the form, the XML representation is displayed closed to the form
 > > - The user fills the landing page field.
 > > - The user click on **Create DOI**
-> > - The doiCreation.html page send the XML metadata and the token to MDS application
+> > - The doi creation page send the XML metadata and the token to MDS application
 > > - MDS application authenticates the user by the token
 > > - MDS application checks if the user is allowed to create the DOI for this project
 > > - MDS application sends the XML metadata to MDS Datacite
 > > - MDS accepts the metadata
-> > - MDS application returns to the doiCreation.hml page that the metadata was accepted
-> > - doiCreation.hml confirms to the user that the metadata is uploaded.
-> > - doiCreation.html sends the DOI and the landing page URL to MDS application
+> > - MDS application returns to the doi creation page that the metadata was accepted
+> > - doi creation page confirms to the user that the metadata is uploaded.
+> > - doi creation page sends the DOI and the landing page URL to MDS application
 > > - MDS application authenticates the user by the token
 > > - MDS application checks if the user is allowed to create the DOI for this project
 > > - MDS application sends the DOI and the landing page URL to MDS Datacite
 > > - MDS Datacite refuse the request
-> > - MDS application returns to the doiCreation.hml page that the DOI is not created.
-> > - doiCreation.hml confirms to the user that the DOI is not created. 
+> > - MDS application returns to the doi creation page that the DOI is not created.
+> > - doi creation page confirms to the user that the DOI is not created. 
 
 > #### Exception Course
 > > - The user selects a project for which he wants to create a DOI
@@ -309,17 +309,17 @@ User credentials are authenticated and user is redirected to application home pa
 > > - When filling the form, the XML representation is displayed closed to the form
 > > - The user fills the landing page field.
 > > - The user click on **Create DOI**
-> > - The doiCreation.html page send the XML metadata and the token to MDS application
+> > - The doi creation page send the XML metadata and the token to MDS application
 > > - MDS application authenticates the user by the token
 > > - MDS application checks if the user is allowed to create the DOI for this project
 > > - MDS application sends the XML metadata to MDS Datacite
 > > - MDS accepts the metadata
-> > - MDS application returns to the doiCreation.hml page that the metadata was accepted
-> > - doiCreation.hml confirms to the user that the metadata is uploaded.
-> > - doiCreation.html sends the DOI and the landing page URL to MDS application
+> > - MDS application returns to the doi creation page that the metadata was accepted
+> > - doi creation page confirms to the user that the metadata is uploaded.
+> > - doi creation sends the DOI and the landing page URL to MDS application
 > > - MDS application authenticates the user by the token
 > > - MDS application does not allow to create the DOI for this project
-> > - doiCreation.hml confirms to the user that the DOI is not created. 
+> > - doi creation page confirms to the user that the DOI is not created. 
 
 > #### Exception Course
 > > - The user selects a project for which he wants to create a DOI
@@ -327,13 +327,13 @@ User credentials are authenticated and user is redirected to application home pa
 > > - When filling the form, the XML representation is displayed closed to the form
 > > - The user fills the landing page field.
 > > - The user click on **Create DOI**
-> > - The doiCreation.html page send the XML metadata and the token to MDS application
+> > - The doi creation page send the XML metadata and the token to MDS application
 > > - MDS application authenticates the user by the token
 > > - MDS application checks if the user is allowed to create the DOI for this project
 > > - MDS application sends the XML metadata to MDS Datacite
 > > - MDS refuses the metadata
-> > - MDS application returns to the doiCreation.hml page that the metadata was refused
-> > - doiCreation.hml confirms to the user there is an error.
+> > - MDS application returns to the doi creation page that the metadata was refused
+> > - doi creation page confirms to the user there is an error.
 
 > #### Exception Course
 > > - The user selects a project for which he wants to create a DOI
@@ -341,10 +341,10 @@ User credentials are authenticated and user is redirected to application home pa
 > > - When filling the form, the XML representation is displayed closed to the form
 > > - The user fills the landing page field.
 > > - The user click on **Create DOI**
-> > - The doiCreation.html page sends the XML metadata and the token to MDS application
+> > - The doi creation page sends the XML metadata and the token to MDS application
 > > - MDS application authenticates the user by the token
 > > - MDS application does not allow to create the DOI for this project (the project suffix in the DOI number is not mapped to the user)
-> > - doiCreation.hml confirms to the user there is an error.
+> > - doi creation page confirms to the user there is an error.
 
 > #### Exception Course
 > > - The user selects a project for which he wants to create a DOI
@@ -352,7 +352,7 @@ User credentials are authenticated and user is redirected to application home pa
 > > - When filling the form, the XML representation is displayed closed to the form
 > > - The user fills the landing page field.
 > > - The user click on **Create DOI**
-> > - The doiCreation.html page sends the XML metadata and the token to MDS application
+> > - The doi creation page sends the XML metadata and the token to MDS application
 > > - MDS application cannot authentify the user by the token
 
 > #### Postconditions
@@ -369,7 +369,7 @@ User credentials are authenticated and user is redirected to application home pa
 > > Critical
 
 > #### Preconditions
-> > The user is logged on the doiModification.html page
+> > The user is logged on the doi modification page
 
 > #### Basic Course
 > > - The user selects a project
@@ -400,7 +400,7 @@ User credentials are authenticated and user is redirected to application home pa
 > > Critical
 
 > #### Preconditions
-> > The user is loggued on the doiDeactivation.html page
+> > The user is loggued on the dashboard page
 
 > #### Basic Course
 > > - The user selects a project
@@ -1102,7 +1102,36 @@ paths:
           description: Internal Server Error
           
             
-  
+  /mds/metadata/xsd:
+    post:
+      tags:
+      - "DataCite Metadata Store (MDS) API" 
+      security:
+        - Bearer: []  
+      produces:
+      - text        
+      consumes:
+      - application/xml
+      description: Validate the xml in parameter with the XSD store on the server
+      operationId: postDoiMetadataXsd
+      parameters:
+        - xml
+
+            
+      responses:
+        200:
+          description: XML valid
+          schema:
+            type: string
+            example: true
+        406:
+          description: XML invalid
+          schema:
+            type: string
+            example: Line and error
+        500:
+          description: Interface problem between Datacite and DOI-Server
+
   /mds/media/{prefix}/{project}/{doi_name}:
     get:
       produces:
@@ -1191,6 +1220,23 @@ paths:
           description: Error when an user is associated to more than one role without setting selectedRole parameter   
         500:
           description: Interface problem between Datacite and DOI-Server   
+
+  /mds/inist:
+    get:
+      produces:
+      - text
+      tags:
+      - "DataCite Metadata Store (MDS) API" 
+      description: Return the INIST code configurated on server to the client
+      operationId: getInistCode
+          
+      responses:      
+        200:
+          description: Successful inist retrieval   
+          schema:
+            type: string
+        500:
+          description: Internal Server Error    
 
   /citation/language:
     get:
@@ -1451,7 +1497,7 @@ See the README in the DOI-server sources.
 ### 8.3 Prerequisite <a name="software_prerequisite"/>
 ```
 Openjdk version 1.8
-Apache Maven 3.5.2
+Apache Maven 3.8.1
 Git version 2.17.1
 PostgreSQL version 9.2
 ```

@@ -1,0 +1,6 @@
+<h1 mat-dialog-title><strong>Suppression rôle administateur</strong></h1>
+Êtes vous sûr de vouloir supprimer l'utilisateur {{local_user.name}} des administrateurs ? 
+<div mat-dialog-actions class="m-3" fxLayoutAlign="end">
+    <button mat-button (click)="closeDialog()" mat-flat-button color="warn">Annuler</button>
+    <button mat-button (click)="doAction()" mat-flat-button color="primary">Supprimer</button>
+</div>

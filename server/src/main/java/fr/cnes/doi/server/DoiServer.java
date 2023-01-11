@@ -134,11 +134,6 @@ public class DoiServer extends Component {
     public static final String CITATION_URI = "/citation";
 
     /**
-     * URI of the Datacite status.
-     */
-    public static final String STATUS_URI = "/status";
-
-    /**
      * Number total connections.
      */
     public static final String RESTLET_MAX_TOTAL_CONNECTIONS = "maxTotalConnections";

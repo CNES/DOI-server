@@ -18,16 +18,20 @@
  */
 package fr.cnes.doi.client;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.cnes.doi.exception.ClientCrossCiteException;
-import fr.cnes.doi.utils.spec.Requirement;
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
+
+import org.restlet.data.CharacterSet;
 import org.restlet.data.Reference;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ResourceException;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import fr.cnes.doi.exception.ClientCrossCiteException;
+import fr.cnes.doi.utils.spec.Requirement;
 
 /**
  * Client to query the citation service. This class queries
@@ -169,6 +173,7 @@ public class ClientCrossCiteCitation extends BaseClient {
             final Representation rep = this.getClient().get();
             final Status status = this.getClient().getStatus();
             if (status.isSuccess()) {
+            	rep.setCharacterSet(CharacterSet.UTF_8);
                 result = rep.getText();
             } else {
                 throw new ClientCrossCiteException(status, status.getDescription());

@@ -1,0 +1,55 @@
+<header>
+    <app-navbar></app-navbar>
+</header>
+<main class="basic-container">
+    <form fxLayout="column" [formGroup]="citationForm">
+        <mat-card class="m-3 p-0">
+            <!--CARD TITLE-->
+            <mat-toolbar class="card-title">Citation</mat-toolbar>
+            <alert ></alert>
+            <!--CARD CONTENT-->
+            <!--DOI inputs-->
+            <div fxLayout="column" fxLayoutAlign="space-evenly center" class="m-3">
+                <mat-form-field appearance="fill" class="mat-form-size">
+                    <mat-label>DOI</mat-label>
+                    <input matInput formControlName="selectedDoi" readonly value="{{this.citationForm.value.selectedDoi}}">
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="mat-form-size">
+                    <mat-label>Style</mat-label>
+                    <mat-select formControlName="styles" [(value)]="selectedStyle" (selectionChange)="setSelectedStyle($event)">
+                        <mat-option *ngFor="let style of styles" [value]="style">
+                            {{style}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="mat-form-size">
+                    <mat-label>Langue</mat-label>
+                    <mat-select formControlName="languages" [(value)]="selectedLanguage" (selectionChange)="setSelectedLanguage($event)">
+                        <mat-option *ngFor="let language of languages" [value]="language">
+                            {{language}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="m-3" fxLayoutAlign="center">
+                <button mat-button mat-flat-button (click)="generateCitation()" [disabled]="!citationForm.valid" color="primary">Générer la citation</button>
+            </div>
+            <div class="m-3" fxLayoutAlign="center">
+            </div>
+            <div [hidden]="this.citationForm.value.strCitation.length == 0">
+              <div class="m-3" fxLayoutAlign="center">
+                  <label>Citation générée :</label>
+              </div>
+              <div class="m-3" fxLayoutAlign="center">
+                  <textarea class="textSize background" matInput readonly formControlName="strCitation" value="{{this.citationForm.value.strCitation}}"></textarea>
+              </div>
+              <div class="m-3" fxLayoutAlign="center">
+                  <button mat-button mat-flat-button color="primary" [cdkCopyToClipboard]="this.citationForm.value.strCitation">Copier dans le presse papier</button>
+              </div>
+            </div>
+        </mat-card>
+    </form>
+</main>
+<footer>
+    <app-footer></app-footer>
+</footer>

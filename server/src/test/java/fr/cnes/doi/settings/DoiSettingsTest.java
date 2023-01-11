@@ -76,7 +76,7 @@ public class DoiSettingsTest {
     @Test
     public void testGetString_String() {
         String key = Consts.COPYRIGHT;
-        String expResult = "Copyright 2017-2019 CNES";
+        String expResult = "Copyright 2017-2021 CNES";
         String result = instance.getString(key);
         assertEquals(expResult, result);
     }

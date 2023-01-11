@@ -1,0 +1,25 @@
+<header>
+    <app-navbar></app-navbar>
+</header>
+<main class="basic-container">
+    <form fxLayout="column" [formGroup]="createTokenForm">
+        <mat-card class="m-3 p-0">
+            <!--CARD TITLE-->
+            <mat-toolbar class="card-title">Création d'un token utilisateur</mat-toolbar>
+            <alert></alert>
+            <!--CARD CONTENT-->
+            <div class="m-3" fxLayout="column" fxLayoutAlign="space-evenly center">
+                <br>
+                <button mat-button mat-flat-button class="m-3" color="primary" (click)="createToken()">Créer un token</button>
+                <br>
+                <textarea class="textSize" matInput readonly value="{{this.createTokenForm.value.strToken}}"></textarea>
+                <br>
+                <button mat-button mat-flat-button class="m-3" color="primary" [cdkCopyToClipboard]="this.createTokenForm.value.strToken" (click)="tokenCopied()" [disabled]="this.createTokenForm.value.strToken.length == 0">Copier le token dans le presse papier</button>
+                <br>
+            </div>
+        </mat-card>
+    </form>
+</main>
+<footer>
+    <app-footer></app-footer>
+</footer>

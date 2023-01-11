@@ -1,0 +1,19 @@
+<mat-toolbar class="my-toolbar">
+    <a routerLink="/dashboard">
+        <img src="assets/logo_doi_navbar.png" class="logo-cnes mr-2">
+    </a>
+    <span class="spacer"></span>
+    <h3 class="my-color">Bienvenue {{user}}</h3>
+    <button mat-mini-fab class="mx-3" matTooltip="Tableau de bord" matTooltipShowDelay="400" routerLink="/dashboard">
+        <mat-icon>dashboard</mat-icon>
+    </button>
+    <button mat-mini-fab class="mr-3" matTooltip="Générer un token" matTooltipShowDelay="400" routerLink="/creation-token">
+        <mat-icon>generating_tokens</mat-icon>
+    </button>
+    <button *ngIf="isAdminHidden" mat-button color="primary" mat-mini-fab class="mr-3" matTooltip="Administration" matTooltipShowDelay="400" routerLink="/administration">
+        <mat-icon>settings</mat-icon>
+    </button>
+    <button mat-mini-fab class="mr-3" matTooltip="Déconnexion" matTooltipShowDelay="400" (click)=logout()>
+        <mat-icon>logout</mat-icon>
+    </button>
+</mat-toolbar>

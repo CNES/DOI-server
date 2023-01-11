@@ -44,9 +44,11 @@ import fr.cnes.doi.db.AbstractTokenDBHelper;
 import fr.cnes.doi.exception.DoiRuntimeException;
 import fr.cnes.doi.resource.mds.DoiResource;
 import fr.cnes.doi.resource.mds.DoisResource;
+import fr.cnes.doi.resource.mds.InistResource;
 import fr.cnes.doi.resource.mds.MediaResource;
 import fr.cnes.doi.resource.mds.MetadataResource;
 import fr.cnes.doi.resource.mds.MetadatasResource;
+import fr.cnes.doi.resource.mds.MetadatasValidatorResource;
 import fr.cnes.doi.security.TokenSecurity;
 import fr.cnes.doi.settings.Consts;
 import fr.cnes.doi.utils.spec.Requirement;
@@ -146,6 +148,21 @@ public final class DoiMdsApplication extends AbstractApplication {
      * URI to handle media : {@value #MEDIA_URI}.
      */
     public static final String MEDIA_URI = "/media";
+    
+    /**
+     * URI to handle metadata validation : {@value #XSD}.
+     */
+    public static final String XSD = "/xsd";
+    
+    /**
+     * URI to retrieve the INIST code : {@value #INIST}.
+     */
+    public static final String INIST = "/inist";
+    
+    /**
+     * URI to handle json to xml : {@value #XML}.
+     */
+    public static final String XML = "/xml";
 
     /**
      * Application name : {@value #NAME}
@@ -283,10 +300,12 @@ public final class DoiMdsApplication extends AbstractApplication {
         router.attach(DOI_URI + DOI_NAME_URI, DoiResource.class)
                 .getTemplate().setMatchingMode(Template.MODE_STARTS_WITH);
         router.attach(METADATAS_URI, MetadatasResource.class);
+        router.attach(METADATAS_URI + XSD, MetadatasValidatorResource.class);
         router.attach(METADATAS_URI + DOI_NAME_URI, MetadataResource.class)
                 .getTemplate().setMatchingMode(Template.MODE_STARTS_WITH);
         router.attach(MEDIA_URI + DOI_NAME_URI, MediaResource.class)
                 .getTemplate().setMatchingMode(Template.MODE_STARTS_WITH);
+        router.attach(INIST, InistResource.class);
 
         return LOG.traceExit(router);
     }
@@ -309,26 +328,6 @@ public final class DoiMdsApplication extends AbstractApplication {
         methodAuth.getAuthenticatedMethods().add(Method.DELETE);
 
         return LOG.traceExit(methodAuth);
-    }
-
-    /**
-     * Returns the decrypted login for DataCite.
-     *
-     * @return the DataCite's login
-     */
-    private String getLoginMds() {
-        LOG.traceEntry();
-        return LOG.traceExit(this.getConfig().getSecret(Consts.INIST_LOGIN));
-    }
-
-    /**
-     * Returns the decrypted password for DataCite.
-     *
-     * @return the DataCite's pwd
-     */
-    private String getPwdMds() {
-        LOG.traceEntry();
-        return LOG.traceExit(this.getConfig().getSecret(Consts.INIST_PWD));
     }
 
     /**
@@ -445,6 +444,11 @@ public final class DoiMdsApplication extends AbstractApplication {
          */
         CREATE_METADATA(Status.SUCCESS_CREATED, "Operation successful"),
         /**
+         * Validate metadata. SUCCESS_OK is used as status meaning "Operation
+         * successful"
+         */
+        VALIDATE_METADATA(Status.SUCCESS_OK, "Metadata valid"),
+        /**
          * Forbidden to use this role. It happens when a user provides a role to
          * the server whereas he is unknown in this role. CLIENT_ERROR_FORBIDDEN
          * is used as status meaning "Forbidden to use this role"
@@ -489,6 +493,7 @@ public final class DoiMdsApplication extends AbstractApplication {
          * <li>the DOI or metadata are not provided</li>
          * <li>the prefix is not allowed</li>
          * <li>some characters are not allowed in the DOI name</li>
+         * <li>an error occur on the schema instanciation</li>
          * </ul>
          * CLIENT_ERROR_BAD_REQUEST is used as status meaning "Failed to
          * validate the user inputs parameters"
