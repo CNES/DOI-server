@@ -6,7 +6,7 @@
     <parent>
         <artifactId>DOI-installer</artifactId>
         <groupId>fr.cnes.doi</groupId>
-        <version>1.0.5</version>
+        <version>1.1.7</version>
     </parent>
 
     <artifactId>izpack-doi-config</artifactId>
@@ -36,7 +36,7 @@
         <dependency>
             <groupId>fr.cnes.doi</groupId>
             <artifactId>DOI-server</artifactId>
-            <version>1.0.5</version>
+            <version>1.1.7</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/postgresql/postgresql -->
         <dependency>
@@ -47,7 +47,7 @@
         <dependency>
             <groupId>fr.cnes.doi</groupId>
             <artifactId>izpack-doi-panels</artifactId>
-            <version>1.0.5</version>
+            <version>1.1.7</version>
         </dependency>
     </dependencies>
 
